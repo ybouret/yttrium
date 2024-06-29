@@ -5,6 +5,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include <cstring>
 
 using namespace Yttrium;
 
@@ -67,9 +68,17 @@ Y_UTEST(text_base64)
             for(unsigned j=0;j<256;++j)
             {
                 Base64::Encode::_2(output, char(i), char(j), table, false);
+                Base64::Decode::_2(code,output[0],output[1],output[2]); 
+                Y_ASSERT(i==code[0]);
+                Y_ASSERT(j==code[1]);
+
                 for(unsigned k=0;k<256;++k,++count)
                 {
                     Base64::Encode::_3(output, char(i), char(j), char(k), table );
+                    Base64::Decode::_3(code,output[0],output[1],output[2],output[3]);
+                    Y_ASSERT(i==code[0]);
+                    Y_ASSERT(j==code[1]);
+                    Y_ASSERT(k==code[2]);
                 }
             }
         }

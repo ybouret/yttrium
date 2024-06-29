@@ -47,6 +47,7 @@ namespace Yttrium
         template <typename OUTPUT> inline
         void sendTo(OUTPUT &output) { char C=0; while(query(C)) output << C; }
 
+        //! flush and sendTo(output)
         template <typename OUTPUT> inline
         void flushIn(OUTPUT &output) { flush(); sendTo(output); }
 

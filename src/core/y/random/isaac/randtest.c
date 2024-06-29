@@ -21,7 +21,7 @@ int main()
   {
     for (j=0; j<RANDSIZ; ++j)
     {
-      printf("%.8lx ",rand(&rctx));
+      printf("%.8lx ", (unsigned long)rand(&rctx));
       if (++k == 8) {k=0; printf("\n");}
     }
   }

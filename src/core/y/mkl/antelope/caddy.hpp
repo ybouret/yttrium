@@ -124,7 +124,14 @@ namespace Yttrium
     {
         namespace Antelope
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Types for wary real to add
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class CaddyProxy<T,true>
             {
@@ -169,6 +176,14 @@ namespace Yttrium
         namespace Antelope
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Types for unwary reals to add
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class CaddyProxy<T,false>
             {
@@ -210,6 +225,14 @@ namespace Yttrium
         namespace Antelope
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! list and pool of active ADD<T> for dynamic environmment
+            //
+            //
+            //__________________________________________________________________
             template <typename T>
             class Caddy : public CaddyAPI, public CaddyProxy<T, Wary<T>::Flag >, public CxxListOf< AddNode<T> >
             {

@@ -441,6 +441,7 @@ namespace Yttrium
                     return amax * scaledSqrt(arr,amax,imax);
                 }
 
+                //! normalize array with minimal loss of precision
                 template <typename ARRAY>
                 inline void normalize(ARRAY &arr)
                 {

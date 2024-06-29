@@ -246,13 +246,19 @@ with boundary conditions $\vec C_0$ and $\vec C_L$.
 \end{equation}
 
 \begin{equation}
-	\partial_t C_i = -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} + z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] + \sigma_i
+	\partial_t C_i = \sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} + z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] 
 \end{equation}
 
 \begin{equation}
-	\sum_i z_i C_i = 0 \implies \left(L \sum_i z_i \sigma_i\right) - \sum_i z_i \left[ \hat J_{i+}- \hat J_{i-} \right] = 
-	\Omega_{i+} \eta_+ - \Omega_{i-} \eta_-
+	\partial_t C_i = \sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} \right] - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] = F_i - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right]
 \end{equation}
+
+
+\begin{equation}
+	\sum_i z_i C_i = 0 \implies  = L \langle \vec Z \vert \vec F \rangle
+	 = \Omega_{i+} \eta_+ - \Omega_{i-} \eta_-
+\end{equation}
+
 We look for the smallest field such that 
 \begin{equation}
 \Omega_{i+} \eta_+ - \Omega_{i-} \eta_- = \langle \vec Z \vert \vec F \rangle

@@ -41,11 +41,11 @@ namespace Yttrium
         }
 
         static const uint8_t maskLo2 = 0x03;
-        static const uint8_t maskHi6 = 0xfc;
+        //static const uint8_t maskHi6 = 0xfc;
         static const uint8_t maskLo4 = 0x0f;
-        static const uint8_t maskHi4 = 0xf0;
-        static const uint8_t maskHi2 = 0xc0;
-        static const uint8_t maskLo6 = 0x3f;
+        //static const uint8_t maskHi4 = 0xf0;
+        // static const uint8_t maskHi2 = 0xc0;
+        //static const uint8_t maskLo6 = 0x3f;
 
         void Decode:: _1(uint8_t code[], const char c0, const char c1)
         {
@@ -66,11 +66,28 @@ namespace Yttrium
             const uint8_t b0 = Byte(c0); assert(b0<64);
             const uint8_t b1 = Byte(c1); assert(b1<64);
             const uint8_t b2 = Byte(c2); assert(b2<64);
+            if(0!= (b2&maskLo2) )
+                throw Specific::Exception(Decode::CallSign,
+                                          "invalid third in '%s%s%s'",
+                                          ASCII::Printable::Char[uint8_t(c0)],
+                                          ASCII::Printable::Char[uint8_t(c1)],
+                                          ASCII::Printable::Char[uint8_t(c2)]);
 
-
-            code[0] = (b0<<2) | (b1&maskHi2)>>4;
+            code[0] = (b0<<2) | (b1>>4);
+            code[1] = ((b1&maskLo4) << 4) | (b2>>2);
         }
 
+        void Decode:: _3(uint8_t code[],const char c0, const char c1, const char c2, const char c3)
+        {
+            assert(0!=code);
+            const uint8_t b0 = Byte(c0); assert(b0<64);
+            const uint8_t b1 = Byte(c1); assert(b1<64);
+            const uint8_t b2 = Byte(c2); assert(b2<64);
+            const uint8_t b3 = Byte(c3); assert(b3<64);
+            code[0] = (b0<<2) | (b1>>4);
+            code[1] = ((b1&maskLo4) << 4) | (b2>>2);
+            code[2] = ((b2&maskLo2) << 6) |  b3;
+        }
 
 
     }
