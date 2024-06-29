@@ -268,6 +268,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(net_init);
     Y_UTEST(net_duration);
 
-    Y_UTEST(cipher_base64);
+    Y_UTEST(cipher_base64enc);
+    Y_UTEST(cipher_base64dec);
 }
 Y_UTEST_EXEC()

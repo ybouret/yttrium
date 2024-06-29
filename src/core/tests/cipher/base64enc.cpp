@@ -7,7 +7,7 @@ using namespace Yttrium;
 
 
 
-Y_UTEST(cipher_base64)
+Y_UTEST(cipher_base64enc)
 {
     Base64::Encoder b64(true);
 

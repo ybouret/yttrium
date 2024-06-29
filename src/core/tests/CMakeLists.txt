@@ -349,5 +349,7 @@ add_test(net:init      test-core net_init)
 add_test(net:duration  test-core net_duration)
 
 #cipher
-add_test(cipher:base64 test-core cipher_base64)
+add_test(cipher:base64enc test-core cipher_base64enc)
+add_test(cipher:base64dec test-core cipher_base64dec)
+
 
