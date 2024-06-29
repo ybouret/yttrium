@@ -69,8 +69,9 @@ namespace Yttrium
 
 
         static inline
-        void Store(IO::Chars &io, const uint8_t * const code, const size_t size)
+        void Store(IO::Chars &io, const uint8_t *code, size_t size)
         {
+            while(size-- > 0) io << *(code++);
         }
 
         void Decoder:: flush()
