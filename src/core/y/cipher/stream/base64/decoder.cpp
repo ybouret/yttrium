@@ -57,12 +57,7 @@ namespace Yttrium
                     break;
             }
 
-            std::cerr << "@state=" << state << " -> '" << c << "'" << std::endl;
-
             input[state++] = c;
-
-            // TODO: check padding
-
             if(state>=4)
                 flush();
         }
@@ -77,6 +72,7 @@ namespace Yttrium
         void Decoder:: flush()
         {
             uint8_t code[4] = {0,0,0,0};
+        DECODE:
             switch(state)
             {
                 case 0: return;
@@ -90,7 +86,23 @@ namespace Yttrium
                     break;
 
                 case 4:
-                    Decode::_3(code, input[0], input[1], input[2], input[3]);
+                    if(Padding == input[3])
+                    {
+                        if( Padding == input[2] )
+                        {
+                            state = 2;
+                            goto DECODE;
+                        }
+                        else
+                        {
+                            state = 3;
+                            goto DECODE;
+                        }
+                    }
+                    else
+                    {
+                        Decode::_3(code, input[0], input[1], input[2], input[3]);
+                    }
                     break;
 
                 default:
