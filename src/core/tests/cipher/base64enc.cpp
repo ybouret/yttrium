@@ -14,8 +14,8 @@ Y_UTEST(cipher_base64enc)
     if(argc>1)
     {
         InputFile input(argv[1]);
-        b64(std::cerr,input,true);
-        std::cerr << std::endl;
+        b64(std::cout,input,true);
+        std::cout << std::endl;
     }
     else
     {

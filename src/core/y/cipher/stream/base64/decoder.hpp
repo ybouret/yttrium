@@ -16,15 +16,8 @@ namespace Yttrium
         class Decoder : public BufferedStreamCipher
         {
         public:
-            static const char * const CallSign; //!< "Base64-Decoder"
-
-            enum State
-            {
-                WaitFor1, //!< 0 in store
-                WaitFor2, //!< 1 in store
-                WaitFor3, //!< 2 in store
-                WaitFor4  //!< 3 in store
-            };
+            static const char * const CallSign;      //!< "Base64-Decoder"
+            static const char         Padding = '='; //!< padding char
 
             explicit Decoder() noexcept; //!< setup
             virtual ~Decoder() noexcept; //!< cleanup
@@ -40,11 +33,10 @@ namespace Yttrium
             // [StreamCipher]
             virtual void reset() noexcept;
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Decoder);
-            State state;
-            char  input[4];
+            unsigned state;
+            char     input[4];
 
             void reset1() noexcept;
 
