@@ -250,28 +250,45 @@ with boundary conditions $\vec C_0$ and $\vec C_L$.
 \end{equation}
 
 \begin{equation}
-	\partial_t C_i = \sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} \right] - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] = F_i - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right]
+	\partial_t C_i = \underbrace{\sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} \right]}_{F_i} - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] 
 \end{equation}
 
 
 \begin{equation}
-	\sum_i z_i C_i = 0 \implies  = L \langle \vec Z \vert \vec F \rangle
-	 = \Omega_{i+} \eta_+ - \Omega_{i-} \eta_-
+	\sum_i z_i \partial_t C_i = \left(\sum_i z_i \sigma_i\right) 
+	-\dfrac{1}{L} \left( \sum_i z_i\left[ \hat J_{i+}- \hat J_{i-} \right]  \right)
+	- \dfrac{1}{L}  \left[ \Omega_{i+} \eta_+ - \Omega_{i-} \eta_- \right] 
 \end{equation}
 
+\begin{equation}
+	\dfrac{1}{L}  \left[ \Omega_{i+} \eta_+ - \Omega_{i-} \eta_- \right]  =
+	\left(\sum_i z_i \sigma_i\right) 
+	-\dfrac{1}{L} \left( \sum_i z_i\left[ \hat J_{i+}- \hat J_{i-} \right]  \right)
+	= \langle \vec Z \vert \vec F \rangle
+\end{equation}
+
+ 
 We look for the smallest field such that 
 \begin{equation}
-\Omega_{i+} \eta_+ - \Omega_{i-} \eta_- = \langle \vec Z \vert \vec F \rangle
+\Omega_{i+} \eta_+ - \Omega_{i-} \eta_- = L \langle \vec Z \vert \vec F \rangle
 \end{equation}
 
 \begin{equation}
 \begin{array}{rcl}
-	\eta_- & = & -\dfrac{\Omega_{i-}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+	\eta_- & = & - L \dfrac{\Omega_{i-}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
 	\\
- 	\eta_+ & = &  \dfrac{\Omega_{i+}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+ 	\eta_+ & = &  L \dfrac{\Omega_{i+}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
 \end{array}
 \end{equation}
 
+
+\begin{equation}
+\begin{array}{rcl}
+\partial_t C_i & = & F_i 
+- \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] \\
+& = & F_i - \dfrac{z_i D_i }{ \Omega_{i-}^2 + \Omega_{i+}^2 } \left[ C_{i-} \Omega_{i-} + C_{i+} \Omega_{i+} \right] \langle \vec Z \vert \vec F \rangle
+\end{array}
+\end{equation}
 
 \end{document}
 
