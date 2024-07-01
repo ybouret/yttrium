@@ -16,5 +16,19 @@
 
 \section{Reaction(s)}
 
+Let's assume that we have $N$ equilibria coupling $M$ species.
+We define $a_j$ the activity of species $A_j$, and $\nu_{ij}$ the algebraic
+coefficient of $A_j$ in the $i-$th equilibria $E_i$:
+\begin{equation}
+	E_i : \sum_j \nu_{ij} A_j = 0, \;\;K_i = \prod_j a_j^{\nu_{ij}}
+\end{equation}
+We remove the singularities by defining:
+\begin{equation}
+	\Xi_i(\vec C) = \underbrace{(K_i \prod_{j,\nu_{ij}<0} a_j^{-\nu_{ij}})}_{reactant(s)} - \underbrace{\prod_{j,\nu_{ij}\geq0} a_j^{\nu_{ij}}}_{product(s)}
+\end{equation}
+and we define an equilibrium state by:
+\begin{equation}
+	\vec \Xi ( \vec C ) = \vec 0
+\end{equation}
 
 \end{document}
