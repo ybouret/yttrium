@@ -229,6 +229,8 @@ We want $\delta \vec C(\vec r)$ such that
 
 \subsection{Finite Volumes}
 
+\subsubsection{Generic}
+
 We take a linear part of length $2L$, and a control volume between $L_-=L/2$ and $L_+=3L/2$,
 with boundary conditions $\vec C_0$ and $\vec C_L$.
 
@@ -257,11 +259,11 @@ with boundary conditions $\vec C_0$ and $\vec C_L$.
 \begin{equation}
 	\sum_i z_i \partial_t C_i = \left(\sum_i z_i \sigma_i\right) 
 	-\dfrac{1}{L} \left( \sum_i z_i\left[ \hat J_{i+}- \hat J_{i-} \right]  \right)
-	- \dfrac{1}{L}  \left[ \Omega_{i+} \eta_+ - \Omega_{i-} \eta_- \right] 
+	- \dfrac{1}{L}  \left[ \Omega_{+} \eta_+ - \Omega_{-} \eta_- \right] 
 \end{equation}
 
 \begin{equation}
-	\dfrac{1}{L}  \left[ \Omega_{i+} \eta_+ - \Omega_{i-} \eta_- \right]  =
+	\dfrac{1}{L}  \left[ \Omega_{+} \eta_+ - \Omega_{-} \eta_- \right]  =
 	\left(\sum_i z_i \sigma_i\right) 
 	-\dfrac{1}{L} \left( \sum_i z_i\left[ \hat J_{i+}- \hat J_{i-} \right]  \right)
 	= \langle \vec Z \vert \vec F \rangle
@@ -270,14 +272,14 @@ with boundary conditions $\vec C_0$ and $\vec C_L$.
  
 We look for the smallest field such that 
 \begin{equation}
-\Omega_{i+} \eta_+ - \Omega_{i-} \eta_- = L \langle \vec Z \vert \vec F \rangle
+\Omega_{+} \eta_+ - \Omega_{-} \eta_- = L \langle \vec Z \vert \vec F \rangle
 \end{equation}
 
 \begin{equation}
 \begin{array}{rcl}
-	\eta_- & = & - L \dfrac{\Omega_{i-}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+	\eta_- & = & - L \dfrac{\Omega_{-}}{ \Omega_{-}^2 + \Omega_{+}^2} \langle \vec Z \vert \vec F \rangle \\
 	\\
- 	\eta_+ & = &  L \dfrac{\Omega_{i+}}{ \Omega_{i-}^2 + \Omega_{i+}^2} \langle \vec Z \vert \vec F \rangle \\
+ 	\eta_+ & = &  L \dfrac{\Omega_{+}}{ \Omega_{-}^2 + \Omega_{+}^2} \langle \vec Z \vert \vec F \rangle \\
 \end{array}
 \end{equation}
 
@@ -286,13 +288,42 @@ We look for the smallest field such that
 \begin{array}{rcl}
 \partial_t C_i & = & F_i 
 - \dfrac{1}{L}  \left[ z_i D_i (C_{i+} \eta_+ - C_{i-} \eta_-) \right] \\
-& = & F_i - \dfrac{z_i D_i }{ \Omega_{i-}^2 + \Omega_{i+}^2 } \left[ C_{i-} \Omega_{i-} + C_{i+} \Omega_{i+} \right] \langle \vec Z \vert \vec F \rangle
+& = & F_i - \dfrac{z_i D_i }{ \Omega_{-}^2 + \Omega_{+}^2 } \left[ C_{i-} \Omega_{-} + C_{i+} \Omega_{+} \right] \langle \vec Z \vert \vec F \rangle
 \end{array}
 \end{equation}
 
 \begin{equation}
 	\partial_t \vec C = \left[ \bm{I} - \vert \vec \omega \rangle \langle \vec Z \vert \right] \vec F
 \end{equation}
+
+\begin{equation}
+	C_{i-} = \dfrac{1}{2}(C_{i0}+C_i),\;\;C_{i+} = \dfrac{1}{2}(C_i+C_{iL})
+\end{equation}
+
+\begin{equation}
+	\partial_x C_{i-} = \dfrac{1}{L}(C_i-C_{i_0}),\;\; \partial_x C_{i+} =  \dfrac{1}{L}(C_{iL}-C_{i})
+\end{equation}
+
+\begin{equation}
+	J_{i-} = -D_i \partial_x C_{i-} ,\;\; J_{i+} = -D_i \partial_x C_{i+}  
+\end{equation}
+
+\begin{equation}
+	F_i = \sigma_i -\dfrac{1}{L}\left[ J_{i+} - J_{i-} \right] = \sigma_i + \dfrac{1}{L^2}\left[C_{i_0}-2 C_i + C_{i_L}\right]
+\end{equation}
+
+\subsubsection{$NaCl$}
+ 	$$
+		F_{Na} = \dfrac{D_{Na}}{L^2}\left( [Na^+]_0 - 2[Na^+] + [Na^+]_L\right)
+	$$
+	
+	$$
+		F_{Cl} = \dfrac{D_{Cl}}{L^2}\left( [Cl^-]_0 - 2[Cl^-] + [Cl^-]_L\right)
+	$$
+	
+	$$
+		\Omega_{\pm} = D_{Na}  [Na^+]_\pm + D_{Cl}  [Cl^-]_\pm
+	$$
 
 \end{document}
 
