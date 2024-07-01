@@ -31,4 +31,179 @@ and we define an equilibrium state by:
 	\vec \Xi ( \vec C ) = \vec 0
 \end{equation}
 
+Let us make an external "slow" perturbation 
+\begin{equation}
+	\vec \sigma \, \mathrm{d} t \in \mathbb R ^M
+\end{equation}
+Then the system will respond with:
+\begin{equation}
+	\mathrm{d} \vec C = \bm{\nu}^T \, \mathrm{d}\vec \xi\; (\bm{\nu} \in \mathcal M_{N,M},\;\; \vec \xi \in \mathbb R ^N)
+\end{equation}
+such that
+\begin{equation}
+	\vec \Xi(\vec C + \vec \sigma \, \mathrm{d} t + \mathrm{d} \vec C ) = \vec 0 \iff \vec 0 = 
+	\bm{\Phi} \times ( \vec \sigma \, \mathrm{d} t + \bm{\nu}^T \, \mathrm{d}\vec \xi)
+\end{equation}
+
+\begin{equation}
+	\bm{\Phi} = \partial_{\vec C} \vec \Xi \in \mathcal M_{N,M}
+\end{equation}
+so that, starting from $\vec \Xi ( \vec C ) = \vec 0$, the system evolves locally according to:
+\begin{equation}
+\boxed{
+	\partial_t \vec C = \left[\bm{I}_M - \bm{\nu}^T (\bm \Phi \bm{\nu}^T) ^{-1} \bm \Phi \right] \vec \sigma
+	}
+\end{equation}
+which conserves the charge for valid equilibrium(a).
+
+\section{Diffusion/Migration}
+
+\subsection{Electro Chemical potential}
+
+\begin{equation}
+	\mu_i = RT \ln a_i + z_i \mathcal{F} V = RT \ln (\gamma_i[C_i]) + z_i \mathcal{F} V
+\end{equation}
+where $V$ is the external electric potential and
+%Poisson equation:
+%\begin{equation}
+%	\Delta V = - \dfrac{\rho}{\epsilon} = -\dfrac{\mathcal{F}}{\epsilon} k_1 \sum_i z_i C_i,\;k_1=1000
+%\end{equation}
+%We have $\rho$ in [elementary charges/$m^3$] and $C$ in moles/$dm^3$.
+
+\begin{equation}
+	\vec{E} = -\vec{\nabla} V
+\end{equation}
+is the external electric field.
+
+\subsection{Particular velocity}
+Molecular force:	
+\begin{equation}
+	\vec{F}_i = - \frac{1}{\mathcal{N}_A} \vec{\nabla} \mu_i
+\end{equation}
+
+Molecular motion:
+\begin{equation}
+	m_i \ddot {\vec{r}} = \vec{F}_i - a_i \vec{v}_i \implies \vec{v}_i \simeq \dfrac{1}{a_i} \vec{F}_i
+\end{equation}
+
+\begin{equation}
+	\vec{v}_i = -\underbrace{\dfrac{k_bT}{a_i}}_{D_i} \vec{\nabla}(\ln(\gamma_i C_i))  + z_i \underbrace{\dfrac{ q}{a_i}}_{\lambda_i} \vec{E}
+\end{equation}
+
+\begin{equation}
+	\lambda_i = \frac{q}{k_bT} D_i = \dfrac{\mathcal{F}}{RT} D_i
+\end{equation}
+
+\begin{equation}
+\boxed{
+	\vec{v}_i = D_i \left[ - \vec{\nabla}(\ln(\gamma_i C_i)) + z_i \dfrac{\mathcal{F}}{RT} \vec{E} \right]
+}
+\end{equation}
+
+\subsection{Continuity equations}
+
+Molar flux:
+\begin{equation}
+	\vec{J}_i = C_i \vec{v}_i = D_i \left[z_i C_i  \dfrac{\mathcal{F}}{RT} \vec{E} - \left(\vec{\nabla} C_i + C_i \vec{\nabla}\Gamma_i\right) \right],\;\;\Gamma_i = \ln \gamma_i
+\end{equation}
+
+Continuity equation:
+\begin{equation}
+	\partial_t C_i + \mathrm{div} \vec{J}_i = \sigma_i
+\end{equation}
+which generally doesn't conserve the charge.
+
+We define $\vec \eta$ the local reaction field that modifies the fluxes:
+\begin{equation}
+	\vec \psi_i = z_i D_i C_i \vec \eta
+\end{equation}
+
+Let's find the smallest field in a conservative field.
+
+\subsection{Three Bodies Problem}
+
+\subsubsection{Electric coupling}
+We take a linear part of length $2L$, and a control volume between $L_-=L/2$ and $L_+=3L/2$,
+with boundary conditions $\vec C_0$ and $\vec C_L$.
+
+\begin{equation}
+	\dfrac{1}{V} \iiint \partial_t C_i(\vec r,t)  \mathrm{d}\, \vec r
+	= - \oint  	\vec{J}_i \mathrm{d}\, \vec S + \dfrac{1}{V} \iiint \sigma_i \mathrm{d}\, \vec r
+\end{equation}
+ 
+\begin{equation}
+	\partial_t C_i = -\dfrac{S}{V}(J_{i+}-J_{i-}) + \sigma_i
+\end{equation}
+
+\begin{equation}
+	J_{i\pm} = \underbrace{\hat J_{i\pm}}_{-D_{i\pm} \partial_x C_{i\pm}+\ldots} + z_i D_{i\pm} C_{i\pm} \eta_\pm
+\end{equation}
+
+\begin{equation}
+	\partial_t C_i = \sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} + z_i (D_{i+} C_{i+} \eta_+ - D_{i-}C_{i-} \eta_-) \right] 
+\end{equation}
+that we rewrite as:
+\begin{equation}
+	\partial_t C_i =
+	 \underbrace{\sigma_i -\dfrac{1}{L} \left[ \hat J_{i+}- \hat J_{i-} \right]}_{F_i} 
+	 - \dfrac{1}{L}  \left[ z_i (D_{i+} C_{i+} \eta_+ - D_{i-}C_{i-} \eta_-)\right] 
+\end{equation}
+
+
+\begin{equation}
+	\sum_i z_i \partial_t C_i =  \langle \vec Z \vert \vec F \rangle - \dfrac{1}{L} \left[ \Omega_+ \eta_{+} - \Omega_- \eta_-\right]
+\end{equation}
+
+\begin{equation}
+	\Omega_\pm = \sum_i z_i^2 D_{i\pm} C_{i\pm}
+\end{equation}
+The smallest field is 
+\begin{equation}
+	\eta_\pm = \pm \dfrac{L \langle \vec Z \vert \vec F \rangle \Omega\pm}{\Omega_-^2+\Omega_+^2}
+\end{equation}
+
+\begin{equation}
+	\partial_t C_i = F_i - \underbrace{\dfrac{z_i}{\Omega_{i+}^2 + \Omega_{i-}^2} \left[ D_{i+} C_{i+} \Omega_+ + D_{i-} C_{i-} \Omega_- \right]}_{\omega_i} \langle \vec Z \vert \vec F \rangle
+\end{equation}
+
+We check that $\langle \vec Z \vert \vec \omega \rangle \equiv 1$.
+\begin{equation}
+\boxed{
+	\partial_t \vec C = \left[\bm I_M - \vert\vec \omega \rangle \langle \vec Z \vert \right] \vec F
+	}
+\end{equation}
+We now expand with the chemical part:
+
+
+\subsubsection{Electrochemical Coupling}
+
+\begin{equation}
+	\partial_t \vec C = \left[\bm{I}_M - \bm{\nu}^T (\bm \Phi \bm{\nu}^T) ^{-1} \bm \Phi \right] \left[\bm I_M - \vert\vec \omega \rangle \langle \vec Z \vert \right] \vec F
+\end{equation}
+
+
+\subsubsection{Three Bodies Saline Solution}
+
+
+\section{Data}
+
+\begin{equation}
+\begin{array}{|l|r|}
+\hline
+ \text{} & D[m^2/s]  \\
+ \hline
+ 	H^+	 & 9.31\cdot10^{-9}	\\
+ 	Na^+ & 1.33\cdot10^{-9}	 \\
+ 	K^+	 & 1.96\cdot10^{-9}	 \\
+ 	HO^- & 5.27\cdot10^{-9}	 \\
+ 	Cl^- & 2.03\cdot10^{-9} \\
+ 	Br^- & 2.01\cdot10^{-9} \\
+\hline
+\end{array}
+\end{equation}
+$$
+	K_w = 10^{-14}\; M^2
+$$
+
+
 \end{document}
