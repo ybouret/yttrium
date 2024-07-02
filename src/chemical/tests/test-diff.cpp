@@ -30,7 +30,7 @@ typedef CxxArray<double> Array;
 static double       pH0 = 5.5;
 static double       Osm0 = 0.1;
 
-static double       pH1 = 7.2;
+static double       pH1  = 8.5;
 static double       Osm1 = 0.04;
 
 static const double Kw  = 1e-14;
