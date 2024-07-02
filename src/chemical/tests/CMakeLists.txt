@@ -9,4 +9,5 @@ add_test(eqs        test-chemical eqs)
 add_test(limits     test-chemical limits)
 add_test(weasel     test-chemical weasel)
 add_test(warden     test-chemical warden)
+add_test(diff       test-chemical diff)
 

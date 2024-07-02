@@ -187,7 +187,26 @@ We now expand with the chemical part:
 We have water with $NaCl$, four components, one reaction.
 We define the left and right side by their osmolarity and pH.
 
+\begin{equation}
+\left[\bm{I}_M - \bm{\nu}^T (\bm \Phi \bm{\nu}^T) ^{-1} \bm \Phi \right]
+=
+\begin{bmatrix}
+\frac{h}{w+h} & - \frac{h}{w+h} & 0 & 0\\
+-\frac{w}{w+h} & \frac{w}{w+h}  & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1\\
+\end{bmatrix}
+\end{equation}
 
+\begin{equation}
+\left[\bm I_M - \vert\vec \omega \rangle \langle \vec Z \vert \right] =
+\begin{bmatrix}
+1-\omega_h & \omega_h & -\omega_h & \omega_h\\
+-\omega_w  & 1+\omega_w & -\omega_w & \omega_w\\
+-\omega_{Na}  & \omega_{Na} & 1-\omega_{Na} & \omega_{Na}\\
+-\omega_{Cl}  & \omega_{Cl} & -\omega_{Cl} & 1+\omega_{Cl}\\
+\end{bmatrix}
+\end{equation}
 
 \section{Data}
 

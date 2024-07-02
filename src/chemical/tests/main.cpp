@@ -9,6 +9,7 @@ Y_UTEST_DECL(32)
     Y_UTEST(limits);
     Y_UTEST(weasel);
     Y_UTEST(warden);
+    Y_UTEST(diff);
 }
 Y_UTEST_EXEC()
 
