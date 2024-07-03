@@ -4,9 +4,7 @@
 namespace Yttrium
 {
     StreamCipher:: StreamCipher() noexcept :
-    Cipher(),
-    InputStream(),
-    OutputStream()
+    Cipher() 
     {
     }
 
