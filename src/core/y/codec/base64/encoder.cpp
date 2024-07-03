@@ -1,5 +1,5 @@
 
-#include "y/cipher/stream/base64/encoder.hpp"
+#include "y/codec/base64/encoder.hpp"
 #include "y/text/base64/encode.hpp"
 #include <cstring>
 
@@ -12,7 +12,7 @@ namespace Yttrium
 
 
         Encoder:: Encoder(bool padding) noexcept :
-        BufferedStreamCipher(),
+        BufferedCodec(),
         doPad(padding),
         state(WaitFor1),
         input(),
@@ -81,7 +81,7 @@ namespace Yttrium
 
         void Encoder:: reset() noexcept
         {
-            buffer.release();
+            clearBuffer();
             waitFor1();
         }
     }

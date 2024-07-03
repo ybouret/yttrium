@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Encoder : public BufferedStreamCipher
+        class Encoder : public BufferedCodec
         {
         public:
             //__________________________________________________________________

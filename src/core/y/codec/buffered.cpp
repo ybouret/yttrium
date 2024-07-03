@@ -7,7 +7,7 @@ namespace Yttrium
     {
     }
 
-    BufferedCodec:: BufferedCodec() noexcept : Codec(), buffer()
+    BufferedCodec:: BufferedCodec() noexcept : Codec(), buffer(), supply()
     {
     }
 
@@ -24,6 +24,13 @@ namespace Yttrium
             return false;
         }
     }
+
+
+    bool BufferedCodec:: ready() noexcept
+    {
+        return buffer.size > 0;
+    }
+
 
     void BufferedCodec:: store(const char C)
     {

@@ -3,7 +3,7 @@ memory
 type
 data
 text
-cipher
+codec
 calculus
 concurrent
 random
@@ -349,7 +349,7 @@ add_test(net:init      test-core net_init)
 add_test(net:duration  test-core net_duration)
 
 #cipher
-add_test(cipher:base64enc test-core cipher_base64enc)
-add_test(cipher:base64dec test-core cipher_base64dec)
+add_test(codec:b64 test-core codec_b64)
+add_test(codec:u64 test-core codec_u64)
 
 

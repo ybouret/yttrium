@@ -1,5 +1,5 @@
 
-#include "y/cipher/stream/base64/decoder.hpp"
+#include "y/codec/base64/decoder.hpp"
 #include "y/text/base64/decode.hpp"
 #include "y/system/exception.hpp"
 #include <cstring>
@@ -12,7 +12,7 @@ namespace Yttrium
         const char * const Decoder:: CallSign = "Base64-Decoder";
 
 
-        Decoder:: Decoder() noexcept : BufferedStreamCipher(),
+        Decoder:: Decoder() noexcept : BufferedCodec(),
         state(0),
         input()
         {
@@ -37,8 +37,8 @@ namespace Yttrium
 
         void Decoder:: reset() noexcept
         {
-            buffer.release();
-
+            clearBuffer();
+            reset1();
         }
 
         void Decoder:: write(const char c)

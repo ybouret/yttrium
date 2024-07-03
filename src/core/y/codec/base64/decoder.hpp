@@ -4,7 +4,7 @@
 #ifndef Y_Base64_Decoder_Included
 #define Y_Base64_Decoder_Included 1
 
-#include "y/cipher/stream/buffered.hpp"
+#include "y/codec/buffered.hpp"
 
 
 namespace Yttrium
@@ -13,7 +13,7 @@ namespace Yttrium
     namespace Base64
     {
 
-        class Decoder : public BufferedStreamCipher
+        class Decoder : public BufferedCodec
         {
         public:
             static const char * const CallSign;      //!< "Base64-Decoder"
