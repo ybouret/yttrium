@@ -265,9 +265,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(kemp_ortho);
     Y_UTEST(kemp_rsa);
 
-    Y_UTEST(net_init);
-    Y_UTEST(net_duration);
-
     Y_UTEST(codec_b64);
     Y_UTEST(codec_u64);
 }

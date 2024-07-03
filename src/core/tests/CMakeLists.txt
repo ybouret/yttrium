@@ -28,7 +28,6 @@ woven
 rtld
 field
 color
-net
 )
 
 Y_LinkLibraries(test-core)
@@ -343,10 +342,6 @@ add_test(kemp:kar      test-core kemp_kar)
 add_test(kemp:words    test-core kemp_words)
 add_test(kemp:ortho    test-core kemp_ortho)
 add_test(kemp:rsa      test-core kemp_rsa)
-
-#net
-add_test(net:init      test-core net_init)
-add_test(net:duration  test-core net_duration)
 
 #cipher
 add_test(codec:b64 test-core codec_b64)

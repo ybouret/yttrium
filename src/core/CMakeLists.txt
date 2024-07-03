@@ -127,7 +127,6 @@ field/meta-key
 color
 color/ramp
 color/rgb
-net
 )
 
 add_executable(isaac_rand y/random/isaac/rand.c y/random/isaac/randtest.c)
