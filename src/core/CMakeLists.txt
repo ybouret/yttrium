@@ -43,6 +43,8 @@ text/base64
 cipher
 cipher/stream
 cipher/stream/base64
+codec
+codec/base64
 data
 data/list
 data/pool
