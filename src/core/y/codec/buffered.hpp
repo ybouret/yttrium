@@ -57,7 +57,7 @@ namespace Yttrium
         IO::Chars buffer; //!< temporary output buffer
         IO::Chars supply; //!< temporary supply
         
-        void clearBuffer() noexcept;
+        void clearBuffer() noexcept; //!< send buffer into supply
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(BufferedCodec);

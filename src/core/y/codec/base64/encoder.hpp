@@ -68,11 +68,10 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // [Cipher]
+            // [Codec]
             //
             //__________________________________________________________________
             virtual void reset() noexcept;
-
 
             //__________________________________________________________________
             //
@@ -84,8 +83,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Encoder);
-            State  state;
-            char   input[4];
+            State        state;
+            char         input[4];
             const char * table;
 
             void waitFor1() noexcept;
