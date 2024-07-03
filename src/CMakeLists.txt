@@ -89,6 +89,7 @@ add_subdirectory(lua++)
 #add_subdirectory(chem)
 add_subdirectory(chemical)
 add_subdirectory(ink)
+add_subdirectory(net)
 add_subdirectory(mpi++)
 add_subdirectory(fltk)
 
