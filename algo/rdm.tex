@@ -7,7 +7,7 @@
 \usepackage{chemarr}
 \usepackage{mathptmx}
 \usepackage{bookman}
-
+\usepackage{esint}
   	 
 \begin{document}
 
@@ -128,7 +128,7 @@ with boundary conditions $\vec C_0$ and $\vec C_L$.
 
 \begin{equation}
 	\dfrac{1}{V} \iiint \partial_t C_i(\vec r,t)  \mathrm{d}\, \vec r
-	= - \oint  	\vec{J}_i \mathrm{d}\, \vec S + \dfrac{1}{V} \iiint \sigma_i \mathrm{d}\, \vec r
+	= - \oiint  	\vec{J}_i \mathrm{d}\, \vec S + \dfrac{1}{V} \iiint \sigma_i \mathrm{d}\, \vec r
 \end{equation}
  
 \begin{equation}
@@ -227,6 +227,14 @@ We define the left and right side by their osmolarity and pH.
 $$
 	K_w = 10^{-14}\; M^2
 $$
+
+\section{1D}
+
+We have 
+\begin{equation}
+	\oiint
+\end{equation}
+
 
 
 \end{document}
