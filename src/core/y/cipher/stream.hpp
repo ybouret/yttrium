@@ -32,7 +32,7 @@ namespace Yttrium
     public:
         virtual ~StreamCipher() noexcept; //!< cleanup
 
-        
+        virtual uint8_t call() noexcept = 0;
 
 
     private:
