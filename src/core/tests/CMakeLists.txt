@@ -28,7 +28,6 @@ woven
 rtld
 field
 color
-cipher
 )
 
 Y_LinkLibraries(test-core)
@@ -344,8 +343,6 @@ add_test(kemp:words    test-core kemp_words)
 add_test(kemp:ortho    test-core kemp_ortho)
 add_test(kemp:rsa      test-core kemp_rsa)
 
-#cipher
+#codec
 add_test(codec:b64 test-core codec_b64)
 add_test(codec:u64 test-core codec_u64)
-
-add_test(cipher:arc4 test-core cipher_arc4)

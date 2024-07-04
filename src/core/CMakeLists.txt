@@ -40,8 +40,6 @@ stream/char
 text
 text/ascii
 text/base64
-cipher
-cipher/stream
 codec
 codec/base64
 data
