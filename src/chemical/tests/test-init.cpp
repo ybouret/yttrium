@@ -1,5 +1,5 @@
 #include "y/chemical/library.hpp"
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/components.hpp"
 #include "y/chemical/types.hpp"
 #include "y/utest/run.hpp"
 
@@ -16,17 +16,27 @@ Y_UTEST(init)
     
     for(unsigned nu=1;nu<=3;++nu)
     {
-        const Actor a(nu,h,1);
+        const Actor a(nu,h);
         std::cerr << a << std::endl;
     }
 
-    Actors reac(1);
-    std::cerr << reac << std::endl;
+    {
+        Actors reac;
+        std::cerr << reac << std::endl;
 
-    reac.add(1,h);
-    reac.add(2,w);
+        reac(1,h);
+        reac(2,w);
 
-    std::cerr << reac << std::endl;
+        std::cerr << reac << std::endl;
+    }
+
+    {
+        Components water("water",1);
+        water(1,h);
+        water(1,w);
+        std::cerr << water.name << ":" << water.reac << water.Mark << water.prod <<  std::endl;
+    }
+
 
     Y_SIZEOF(Entity);
     Y_SIZEOF(Species);

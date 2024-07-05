@@ -10,14 +10,37 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Assembly to process output of entity
+        //
+        //
+        //______________________________________________________________________
         class Assembly
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Assembly() noexcept;
             virtual ~Assembly() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! update with entity
             void enroll(const Entity &) noexcept;
 
+            //! left justify
             template <typename OSTREAM> inline
             OSTREAM & lj(OSTREAM      &os,
                          const String &st) const
@@ -27,7 +50,14 @@ namespace Yttrium
                 return os;
             }
 
-            const size_t maxLen;
+            //__________________________________________________________________
+            //
+            //
+            // Mmembers
+            //
+            //__________________________________________________________________
+            const size_t maxLen; //!< max length of entities name
+                                 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Assembly);
         };

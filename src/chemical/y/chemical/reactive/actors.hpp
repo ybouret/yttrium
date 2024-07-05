@@ -29,10 +29,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Actors(const size_t level) noexcept; //!< setup with top-level index
-            virtual ~Actors() noexcept;                   //!< cleanup
-            Actors(const Actors &);                       //!< hard copy
-            Y_OSTREAM_PROTO(Actors);                      //!< display
+            explicit Actors();           //!< setup with top-level index
+            virtual ~Actors() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Actors);     //!< display
 
             //__________________________________________________________________
             //
@@ -40,13 +39,12 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void xch(Actors &other) noexcept;
 
             //! add next actor
-            void add(const unsigned nu, const Species &sp);
+            void operator()(const unsigned nu, const Species &sp);
 
         private:
-            Y_DISABLE_ASSIGN(Actors);
+            Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Actor::List actors;
             virtual ConstInterface & surrogate() const noexcept;
             void growName(const String &);

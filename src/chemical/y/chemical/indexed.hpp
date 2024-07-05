@@ -1,33 +1,48 @@
+
 //! \file
 
-#ifndef Y_Chemical_Species_Included
-#define Y_Chemical_Species_Included 1
+#ifndef Y_Chemical_Indexed_Included
+#define Y_Chemical_Indexed_Included 1
 
-#include "y/chemical/indexed.hpp"
-#include "y/ptr/ark.hpp"
+#include "y/chemical/entity.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //! index level
+        //
+        //______________________________________________________________________
+        enum Level
+        {
+            TopLevel, //!< top     index
+            SubLevel, //!< sub     index
+            AuxLevel  //!< sub-sub index
+        };
+
+
         //______________________________________________________________________
         //
         //
         //
-        //! Species: entity with charge
+        //! Entity with indices
         //
         //
         //______________________________________________________________________
-        class Species : public Indexed
+        class Indexed : public Entity
         {
         public:
             //__________________________________________________________________
             //
             //
-            // Definition
+            // Definitions
             //
             //__________________________________________________________________
-            typedef ArkPtr<String,const Species> Ptr; //!< alias
+            static const size_t Levels = AuxLevel; //!< number of indices
 
             //__________________________________________________________________
             //
@@ -35,18 +50,16 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-          
-            //! setup with gobal name, charge and top-level index
-            template <typename ID> inline
-            explicit Species(const ID    &userName,
-                             const int    spCharge,
-                             const size_t topLevel) :
-            Indexed(userName,topLevel), z(spCharge)
-            {
-            }
 
-            virtual ~Species() noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(Species);    //!< display
+            //! setup with identifier and top level index
+            template <typename ID> inline
+            explicit Indexed(const ID &   userName,
+                             const size_t topLevel) :
+            Entity(userName), indx()
+            {
+                setAllIndices(topLevel);
+            }
+            virtual ~Indexed() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -54,13 +67,14 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const int z; //!< algebraic charge
+            const size_t indx[Levels];  //!< indices
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Species);
+            Y_DISABLE_COPY_AND_ASSIGN(Indexed);
+            void setAllIndices(const size_t level);
+
         };
     }
 }
 
 #endif
-

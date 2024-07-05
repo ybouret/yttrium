@@ -9,24 +9,12 @@ namespace Yttrium
     {
         Actors:: ~Actors() noexcept {}
 
-        Actors:: Actors(const size_t level) noexcept :
-        Entity("",level),
+        Actors:: Actors() :
+        Entity(""),
         Proxy<const Actor::List>(),
         actors() {}
 
-        void Actors:: xch(Actors &other) noexcept
-        {
-            swp(other);
-            actors.swapWith(other.actors);
-        }
 
-
-        Actors:: Actors(const Actors &ac) :
-        Entity(CopyOf,ac),
-        Proxy<const Actor::List>(),
-        actors(ac.actors)
-        {
-        }
         
 
 
@@ -44,13 +32,13 @@ namespace Yttrium
         }
 
 
-        void Actors:: add(const unsigned nu, const Species &sp)
+        void Actors:: operator()(const unsigned nu, const Species &sp)
         {
             //__________________________________________________________________
             //
             // reserve actor
             //__________________________________________________________________
-            Actor         *a = new Actor(nu,sp,actors.size+1);
+            Actor         *a = new Actor(nu,sp);
             AutoPtr<Actor> guard(a);
            
             //__________________________________________________________________

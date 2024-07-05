@@ -38,10 +38,8 @@ namespace Yttrium
 
             //! setup
             explicit Actor(const unsigned n,
-                           const Species &s,
-                           const size_t   i);
+                           const Species &s);
             virtual ~Actor() noexcept;         //!< cleanup
-            Actor(const Actor &);              //!< copy
             Y_OSTREAM_PROTO(Actor);            //!< display
 
             //__________________________________________________________________
@@ -65,7 +63,7 @@ namespace Yttrium
             Actor *         prev;     //!< for list
 
         private:
-            Y_DISABLE_ASSIGN(Actor);
+            Y_DISABLE_COPY_AND_ASSIGN(Actor);
             void initialize();
 
         };

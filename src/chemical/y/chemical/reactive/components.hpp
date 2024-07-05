@@ -12,33 +12,70 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef SuffixSet<String, Component::Ptr> Manifest;
 
-        class Components : public Entity, public Proxy<Manifest>
+        typedef SuffixSet<String, Component::Ptr> Manifest; //!< alias
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Components: database of reac+prod
+        //
+        //
+        //______________________________________________________________________
+        class Components : public Indexed, public Proxy<Manifest>
         {
         public:
-            typedef Manifest::ConstIterator ConstIterator;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Manifest::ConstIterator ConstIterator; //!< alias
+            static const char * const       Mark;          //!< "<=>";
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+          
+            //! setup
             template <typename ID>
-            explicit Components(const ID &   ident,
-                                const size_t level) :
-            Entity(ident,level),
+            explicit Components(const ID & userName,
+                                const size_t topLevel) :
+            Indexed(userName,topLevel),
             Proxy<Manifest>(),
-            reac(level), rfmt(),
-            prod(level), pfmt(),
+            reac(),
+            prod(),
             db()
             {
             }
 
+            //! cleanup
             virtual ~Components() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! insert and dispatch a new component and matching actor
             void operator()(const int      nu,
                             const Species &sp);
 
-            const Actors   reac;
-            const Assembly rfmt;
-            const Actors   prod;
-            const Assembly pfmt;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Actors   reac; //!< reactants
+            const Actors   prod; //!< products
 
         private:
             Manifest db;

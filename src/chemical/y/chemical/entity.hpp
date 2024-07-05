@@ -6,7 +6,6 @@
 
 #include "y/graphviz/vizible.hpp"
 #include "y/string.hpp"
-#include "y/type/copy.hpp"
 
 namespace Yttrium
 {
@@ -15,22 +14,8 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! index level
         //
-        //______________________________________________________________________
-        enum Level
-        {
-            TopLevel, //!< top     index
-            SubLevel, //!< sub     index
-            AuxLevel  //!< sub-sub index
-        };
-
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Base class: name + indices
+        //! base class for entities
         //
         //
         //______________________________________________________________________
@@ -40,28 +25,19 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Definitions
-            //
-            //__________________________________________________________________
-            static const size_t Levels = AuxLevel; //!< number of indices
-
-            //__________________________________________________________________
-            //
-            //
             // C++
             //
             //__________________________________________________________________
           
-            //! setup with identifier and top level index
+            //! setup with any name
             template <typename ID> inline
-            explicit Entity(const ID &   identifier,
-                            const size_t topLevel) :
-            name(identifier), indx()
+            explicit Entity(const ID & userName ) :
+            name(userName)
             {
-                setIndices(topLevel);
             }
-            Entity(const CopyOf_ &, const Entity &); //!< full copy
-            virtual ~Entity() noexcept;              //!< cleanup
+
+            //! cleanup
+            virtual ~Entity() noexcept;
 
             //__________________________________________________________________
             //
@@ -69,8 +45,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const String & key() const noexcept; //!< for sets/maps
-            void           swp(Entity &) noexcept;
+            const String & key() const noexcept;     //!< for sets/maps
 
             //__________________________________________________________________
             //
@@ -78,15 +53,15 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const String name;          //!< uuid
-            const size_t indx[Levels];  //!< indices
-
+            const String name; //!< uuid
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entity);
-            void setIndices(const size_t level);
-            
         };
+
     }
+
 }
 
 #endif
+

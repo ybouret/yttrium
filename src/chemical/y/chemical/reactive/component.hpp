@@ -10,19 +10,50 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Component:: algebraic coefficient + species
+        //
+        //
+        //______________________________________________________________________
         class Component : public Object, public Counted
         {
         public:
-            typedef ArkPtr<String,const Component> Ptr;
-            
-            explicit Component(const int n, const Species &s);
-            virtual ~Component() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,const Component> Ptr; //!< alias
 
-            const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Component(const int n, const Species &s); //!< setup
+            virtual ~Component() noexcept;                     //!< cleanup
+         
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key() const noexcept; //!< for associative
 
-            const int      nu;
-            const Species &sp;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const int      nu; //!< nu != 0
+            const Species &sp; //!< species
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Component);
