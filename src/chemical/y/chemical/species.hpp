@@ -4,6 +4,7 @@
 #define Y_Chemical_Species_Included 1
 
 #include "y/chemical/entity.hpp"
+#include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
@@ -20,6 +21,14 @@ namespace Yttrium
         class Species : public Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,const Species> Ptr;
+
             //__________________________________________________________________
             //
             //

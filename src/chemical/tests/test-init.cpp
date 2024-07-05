@@ -1,3 +1,4 @@
+#include "y/chemical/library.hpp"
 #include "y/chemical/reactive/actors.hpp"
 #include "y/chemical/types.hpp"
 #include "y/utest/run.hpp"
@@ -7,11 +8,12 @@ using namespace Chemical;
 
 Y_UTEST(init)
 {
-    const Species h("H+",1,1);
-    const Species w("HO-",-1,2);
+    Library       lib;
+    const Species & h = lib("H+",1);
+    const Species & w = lib("HO-",-1);
 
-    std::cerr << h << std::endl;
-
+    std::cerr << lib << std::endl;
+    
     for(unsigned nu=1;nu<=3;++nu)
     {
         const Actor a(nu,h,1);
