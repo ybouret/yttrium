@@ -5,6 +5,7 @@
 
 #include "y/chemical/species.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/chemical/types.hpp"
 
 namespace Yttrium
 {
@@ -50,6 +51,15 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & operator*() const noexcept; //!< *this for list
 
+            void massAction(XMul            &xmul,
+                            const XReadable &C,
+                            const Level      level) const;
+
+            void massAction(XMul            &xmul,
+                            const XReadable &C0,
+                            const xreal_t    xi,
+                            const Level      level) const;
+
             //__________________________________________________________________
             //
             //
@@ -57,6 +67,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const unsigned  nu;       //!< coefficient
+            const xreal_t   xn;       //!< nu as xreal_t
             const Species  &sp;       //!< species
             const unsigned  n1;       //!< nu-1
             Actor *         next;     //!< for list

@@ -48,6 +48,42 @@ namespace Yttrium
 
         }
 
+        xreal_t Components:: massAction(const xreal_t    K,
+                                        XMul            &xmul,
+                                        const XReadable &C,
+                                        const Level      level) const
+        {
+            xmul.free();
+            xmul << K;
+            reac.massAction(xmul,C,level);
+            const xreal_t rhs = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << 1;
+            prod.massAction(xmul,C,level);
+            const xreal_t lhs = xmul.product();
+            return rhs - lhs;
+        }
+
+        xreal_t Components:: massAction(const xreal_t    K,
+                                        XMul            &xmul,
+                                        const XReadable &C0,
+                                        const xreal_t    xi,
+                                        const Level      level) const
+        {
+            xmul.free();
+            xmul << K;
+            reac.massAction(xmul,C0,-xi,level);
+            const xreal_t rhs = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << 1;
+            prod.massAction(xmul,C0,xi,level);
+            const xreal_t lhs = xmul.product();
+            return rhs - lhs;
+        }
+
+
 
 
     }

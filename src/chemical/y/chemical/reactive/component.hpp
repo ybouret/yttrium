@@ -5,6 +5,7 @@
 #define Y_Chemical_Component_Included 1
 
 #include "y/chemical/species.hpp"
+#include "y/chemical/assembly.hpp"
 
 namespace Yttrium
 {
@@ -57,6 +58,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Component);
+
+       
         };
 
     }

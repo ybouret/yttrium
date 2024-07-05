@@ -57,6 +57,8 @@ namespace Yttrium
             //! cleanup
             virtual ~Components() noexcept;
 
+
+
             //__________________________________________________________________
             //
             //
@@ -67,6 +69,19 @@ namespace Yttrium
             //! insert and dispatch a new component and matching actor
             void operator()(const int      nu,
                             const Species &sp);
+
+            xreal_t massAction(const xreal_t    K,
+                               XMul            &mul,
+                               const XReadable &C, 
+                               const Level      level) const;
+
+            xreal_t massAction(const xreal_t    K,
+                               XMul            &mul,
+                               const XReadable &C0,
+                               const xreal_t    xi,
+                               const Level      level) const;
+
+            
 
             //__________________________________________________________________
             //
@@ -80,6 +95,23 @@ namespace Yttrium
         private:
             Manifest db;
             virtual ConstInterface & surrogate() const noexcept;
+
+        public:
+            const xreal_t one;
+
+            class Format
+            {
+            public:
+                explicit Format() noexcept;
+                virtual ~Format() noexcept;
+
+                const Assembly uuid;
+                const Assembly reac;
+                const Assembly prod;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Format);
+            };
         };
     }
 

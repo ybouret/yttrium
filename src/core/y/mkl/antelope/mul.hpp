@@ -452,10 +452,11 @@ namespace Yttrium
                     return os << self.my;
                 }
 
+            protected:
+                ListType my;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);
-                ListType my;
 
 
                 inline void pushUnit(const UnitType &u)
@@ -508,6 +509,12 @@ namespace Yttrium
             public:
                 inline virtual ~MulProxy() noexcept {} //!< cleanup
 
+                //! check if is empty
+                inline  bool isEmpty() const noexcept
+                {
+                    return this->my.size <= 0;
+                }
+                
             protected:
                 //! setup empty
                 inline explicit MulProxy() noexcept : MulList<T>() {}
@@ -517,6 +524,8 @@ namespace Yttrium
                 {
                     this->make(n);
                 }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulProxy);
@@ -607,6 +616,12 @@ namespace Yttrium
                     const T res = state;
                     clearState();
                     return res;
+                }
+
+                //! check if is empty
+                inline bool isEmpty() const noexcept
+                {
+                    return empty;
                 }
 
                 //______________________________________________________________

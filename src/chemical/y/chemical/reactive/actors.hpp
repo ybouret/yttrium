@@ -43,6 +43,14 @@ namespace Yttrium
             //! add next actor
             void operator()(const unsigned nu, const Species &sp);
 
+            void massAction(XMul &xmul, const XReadable &C, const Level level) const;
+           
+            void massAction(XMul            &xmul,
+                            const XReadable &C0,
+                            const xreal_t    xi,
+                            const Level      level) const;
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Actor::List actors;
