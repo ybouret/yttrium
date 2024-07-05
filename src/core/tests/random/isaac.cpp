@@ -5,7 +5,7 @@
 
 Y_UTEST(random_isaac)
 {
-    (void) call();
+    (void) isaac_call();
 }
 Y_UDONE()
 

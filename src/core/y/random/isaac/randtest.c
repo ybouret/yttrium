@@ -11,9 +11,9 @@
 static char mytext[] = 
 "This is <i>not</i> the right mytext.";
 
-int call()
+static int isaac_call()
 {
-  randctx rctx;
+  isaac_randctx rctx;
   ub4 i,j,k;
   for (i=0; i<RANDSIZ; ++i) rctx.randrsl[i] = 0;
   memcpy((char *)rctx.randrsl, (char *)mytext, sizeof(mytext));

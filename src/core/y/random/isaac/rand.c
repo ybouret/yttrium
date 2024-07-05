@@ -26,7 +26,7 @@ MODIFIED:
 }
 
 void     isaac(ctx)
-randctx *ctx;
+isaac_randctx *ctx;
 {
    register ub4 a,b,x,y,*m,*mm,*m2,*r,*mend;
    mm=ctx->randmem; r=ctx->randrsl;
@@ -63,7 +63,7 @@ randctx *ctx;
 
 /* if (flag==TRUE), then use the contents of randrsl[] to initialize mm[]. */
 void randinit(ctx, flag)
-randctx *ctx;
+isaac_randctx *ctx;
 word     flag;
 {
    word i;
@@ -120,7 +120,7 @@ word     flag;
 int main()
 {
   ub4 i,j;
-  randctx ctx;
+  isaac_randctx ctx;
   ctx.randa=ctx.randb=ctx.randc=(ub4)0;
   for (i=0; i<256; ++i) ctx.randrsl[i]=(ub4)0;
   randinit(&ctx, TRUE);

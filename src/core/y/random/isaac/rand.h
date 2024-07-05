@@ -25,7 +25,7 @@ extern "C" {
 #define RANDSIZ    (1<<RANDSIZL)
 
     /* context of random number generator */
-    struct randctx
+    struct isaac_randctx
     {
         ub4 randcnt;
         ub4 randrsl[RANDSIZ];
@@ -34,16 +34,16 @@ extern "C" {
         ub4 randb;
         ub4 randc;
     };
-    typedef  struct randctx  randctx;
+    typedef  struct isaac_randctx  isaac_randctx;
 
     /*
      ------------------------------------------------------------------------------
      If (flag==TRUE), then use the contents of randrsl[0..RANDSIZ-1] as the seed.
      ------------------------------------------------------------------------------
      */
-    void randinit(randctx *r, word flag);
+    void randinit(isaac_randctx *r, word flag);
 
-    void isaac(randctx *r);
+    void isaac(isaac_randctx *r);
 
 
     /*
