@@ -125,6 +125,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(random_bits);
     Y_UTEST(random_shuffle);
     Y_UTEST(random_gaussian);
+    Y_UTEST(random_isaac);
 
     Y_UTEST(sort_heap);
     Y_UTEST(sort_merge);

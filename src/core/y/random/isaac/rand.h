@@ -14,43 +14,52 @@ MODIFIED:
 #include "standard.h"
 #endif
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+
 #ifndef RAND
 #define RAND
 #define RANDSIZL   (8)
 #define RANDSIZ    (1<<RANDSIZL)
 
-/* context of random number generator */
-struct randctx
-{
-  ub4 randcnt;
-  ub4 randrsl[RANDSIZ];
-  ub4 randmem[RANDSIZ];
-  ub4 randa;
-  ub4 randb;
-  ub4 randc;
-};
-typedef  struct randctx  randctx;
+    /* context of random number generator */
+    struct randctx
+    {
+        ub4 randcnt;
+        ub4 randrsl[RANDSIZ];
+        ub4 randmem[RANDSIZ];
+        ub4 randa;
+        ub4 randb;
+        ub4 randc;
+    };
+    typedef  struct randctx  randctx;
 
-/*
-------------------------------------------------------------------------------
- If (flag==TRUE), then use the contents of randrsl[0..RANDSIZ-1] as the seed.
-------------------------------------------------------------------------------
-*/
-void randinit(/*_ randctx *r, word flag _*/);
+    /*
+     ------------------------------------------------------------------------------
+     If (flag==TRUE), then use the contents of randrsl[0..RANDSIZ-1] as the seed.
+     ------------------------------------------------------------------------------
+     */
+    void randinit(randctx *r, word flag);
 
-void isaac(/*_ randctx *r _*/);
+    void isaac(randctx *r);
 
 
-/*
-------------------------------------------------------------------------------
- Call rand(/o_ randctx *r _o/) to retrieve a single 32-bit random value
-------------------------------------------------------------------------------
-*/
+    /*
+     ------------------------------------------------------------------------------
+     Call rand(/o_ randctx *r _o/) to retrieve a single 32-bit random value
+     ------------------------------------------------------------------------------
+     */
 #define rand(r) \
-   (!(r)->randcnt-- ? \
-     (isaac(r), (r)->randcnt=RANDSIZ-1, (r)->randrsl[(r)->randcnt]) : \
-     (r)->randrsl[(r)->randcnt])
+(!(r)->randcnt-- ? \
+(isaac(r), (r)->randcnt=RANDSIZ-1, (r)->randrsl[(r)->randcnt]) : \
+(r)->randrsl[(r)->randcnt])
 
 #endif  /* RAND */
 
+
+#if defined(__cplusplus)
+}
+#endif
 

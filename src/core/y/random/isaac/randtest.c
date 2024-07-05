@@ -1,6 +1,7 @@
 #ifndef STANDARD
 #include "standard.h"
 #endif
+
 #ifndef RAND
 #include "rand.h"
 #endif
@@ -10,7 +11,7 @@
 static char mytext[] = 
 "This is <i>not</i> the right mytext.";
 
-int main()
+int call()
 {
   randctx rctx;
   ub4 i,j,k;

@@ -176,6 +176,7 @@ add_test(concurrent:frame2d   test-core concurrent_frame2d)
 add_test(random:bits     test-core random_bits)
 add_test(random:shuffle  test-core random_shuffle)
 add_test(random:gaussian test-core random_gaussian)
+add_test(random:isaac    test-core random_isaac)
 
 
 #hashing

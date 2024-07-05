@@ -4,7 +4,7 @@ message( STATUS "BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../y/zlib)
 
 file(GLOB quark y/concurrent/*.hxx)
-set(srcs ${quark})
+set(srcs ${quark} y/random/isaac/rand.c)
 
 Y_CreateLibrary(y
 .
@@ -127,7 +127,7 @@ color/ramp
 color/rgb
 )
 
-add_executable(isaac_rand y/random/isaac/rand.c y/random/isaac/randtest.c)
+#add_executable(isaac_rand y/random/isaac/rand.c y/random/isaac/randtest.c)
 #set(ISAAC_RAND_OUT ${CMAKE_CURRENT_BINARY_DIR}/isaac.txt)
 
 source_group(concurrent FILES ${quark})
