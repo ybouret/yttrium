@@ -40,6 +40,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            void xch(Actors &other) noexcept;
 
             //! add next actor
             void add(const unsigned nu, const Species &sp);

@@ -1,0 +1,29 @@
+
+#include "y/chemical/reactive/component.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        Component:: ~Component() noexcept
+        {
+        }
+
+        Component:: Component(const int n, const Species &s) :
+        nu(n),
+        sp(s)
+        {
+            if(0==nu) throw Specific::Exception("Component", "zero stoichiometry for '%s'", sp.name.c_str());
+        }
+
+        const String & Component:: key() const noexcept
+        {
+            return sp.key();;
+        }
+
+    }
+
+}

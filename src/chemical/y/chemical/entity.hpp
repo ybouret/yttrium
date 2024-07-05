@@ -70,6 +70,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const String & key() const noexcept; //!< for sets/maps
+            void           swp(Entity &) noexcept;
 
             //__________________________________________________________________
             //

@@ -32,7 +32,18 @@ namespace Yttrium
             memcpy( &Coerce(indx[0]), other.indx, sizeof(indx));
         }
 
+        void Entity:: swp(Entity &other) noexcept
+        {
+            Coerce(name).swapWith(Coerce(other.name));
+            for(size_t i=0;i<Levels;++i)
+            {
+                CoerceSwap(indx[i],other.indx[i]);
+            }
+        }
+
+
     }
+
 
 }
 

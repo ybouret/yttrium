@@ -14,6 +14,13 @@ namespace Yttrium
         Proxy<const Actor::List>(),
         actors() {}
 
+        void Actors:: xch(Actors &other) noexcept
+        {
+            swp(other);
+            actors.swapWith(other.actors);
+        }
+
+
         Actors:: Actors(const Actors &ac) :
         Entity(CopyOf,ac),
         Proxy<const Actor::List>(),
