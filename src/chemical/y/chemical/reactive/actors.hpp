@@ -50,6 +50,9 @@ namespace Yttrium
                             const xreal_t    xi,
                             const Level      level) const;
 
+            //! check each concentration is positive
+            bool wouldRun(const XReadable &C0, const Level level) const;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

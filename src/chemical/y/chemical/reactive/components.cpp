@@ -14,6 +14,33 @@ namespace Yttrium
 
         const char * const Components:: Mark = "<=>";
 
+        void Components:: updateKind() noexcept
+        {
+            if(reac->size<=0)
+            {
+                if(prod->size<=0)
+                {
+                    Coerce(kind) = Nebulous;;
+                }
+                else
+                {
+                    Coerce(kind) = ProdOnly;;
+                }
+            }
+            else
+            {
+                assert(reac->size>0);
+                if(prod->size<=0)
+                {
+                    Coerce(kind) = ReacOnly;
+                }
+                else
+                {
+                    Coerce(kind) = Standard;
+                }
+            }
+        }
+
 
         void Components:: operator()(const int      nu,
                                      const Species &sp)
@@ -45,6 +72,9 @@ namespace Yttrium
             {
                 (void) db.remove(uid);
             }
+
+            
+
 
         }
 

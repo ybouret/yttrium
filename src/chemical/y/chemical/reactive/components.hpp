@@ -15,6 +15,7 @@ namespace Yttrium
 
         typedef SuffixSet<String, Component::Ptr> Manifest; //!< alias
 
+
         //______________________________________________________________________
         //
         //
@@ -34,6 +35,13 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Manifest::ConstIterator ConstIterator; //!< alias
             static const char * const       Mark;          //!< "<=>";
+            enum Category
+            {
+                Nebulous,
+                ReacOnly,
+                ProdOnly,
+                Standard
+            };
 
             //__________________________________________________________________
             //
@@ -50,7 +58,9 @@ namespace Yttrium
             Proxy<Manifest>(),
             reac(),
             prod(),
-            db()
+            kind(Nebulous),
+            db(),
+            one(1)
             {
             }
 
@@ -91,7 +101,10 @@ namespace Yttrium
             //__________________________________________________________________
             const Actors   reac; //!< reactants
             const Actors   prod; //!< products
-
+            const Category kind; //!< precomputed category
+            
+            void updateKind() noexcept;
+            
         private:
             Manifest db;
             virtual ConstInterface & surrogate() const noexcept;

@@ -84,6 +84,19 @@ namespace Yttrium
             for(const Actor *a=actors.head;a;a=a->next) a->massAction(xmul,C0,xi,level);
         }
 
+        bool Actors:: wouldRun(const XReadable &C0, const Level level) const
+        {
+            const xreal_t zero = 0;
+            for(const Actor *a=actors.head;a;a=a->next)
+            {
+                if( C0[a->sp.indx[level]] <= zero )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 
 }
