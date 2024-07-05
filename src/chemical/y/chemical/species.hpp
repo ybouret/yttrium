@@ -9,20 +9,43 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species: entity with charge
+        //
+        //
+        //______________________________________________________________________
         class Species : public Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+          
+            //! setup with gobal name, charge and top-level index
             template <typename ID> inline
-            explicit Species(const ID &id,
-                             const int zz) : Entity(id), z(zz)
+            explicit Species(const ID    &ident,
+                             const int    charge,
+                             const size_t level) :
+            Entity(ident,level), z(charge)
             {
             }
 
-            virtual ~Species() noexcept;
-            Y_OSTREAM_PROTO(Species);
+            virtual ~Species() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Species);    //!< display
 
-
-            const int z;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const int z; //!< algebraic charge
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

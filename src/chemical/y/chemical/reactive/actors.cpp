@@ -9,13 +9,13 @@ namespace Yttrium
     {
         Actors:: ~Actors() noexcept {}
 
-        Actors:: Actors() noexcept :
-        Entity(""),
+        Actors:: Actors(const size_t level) noexcept :
+        Entity("",level),
         Proxy<const Actor::List>(),
         actors() {}
 
         Actors:: Actors(const Actors &ac) :
-        Entity(ac.name),
+        Entity(CopyOf,ac),
         Proxy<const Actor::List>(),
         actors(ac.actors)
         {
@@ -37,36 +37,45 @@ namespace Yttrium
         }
 
 
-        void Actors:: add(Actor *a)
+        void Actors:: add(const unsigned nu, const Species &sp)
         {
-            assert(0!=a);
-
-            // check no multiple species
+            //__________________________________________________________________
+            //
+            // reserve actor
+            //__________________________________________________________________
+            Actor         *a = new Actor(nu,sp,actors.size+1);
             AutoPtr<Actor> guard(a);
+           
+            //__________________________________________________________________
+            //
+            // check no multiple species
+            //__________________________________________________________________
             for(const Actor *mine=actors.head;mine;mine=mine->next)
             {
                 if( & (mine->sp) == &(a->sp) )
                     throw Specific::Exception("Chemical::Actors", "multiple species '%s'", a->sp.name.c_str());
             }
 
+            //__________________________________________________________________
+            //
             // change name
+            //__________________________________________________________________
             if(actors.size<=0)
-                growName(a->sp.name);
+                growName(a->name);
             else
             {
-                const String ext = '+' + a->sp.name;
+                const String ext = '+' + a->name;
                 growName(ext);
             }
 
+            //__________________________________________________________________
+            //
             // store new actor
+            //__________________________________________________________________
             actors.pushTail( guard.yield() );
 
         }
        
-        void Actors:: add(const unsigned nu, const Species &sp)
-        {
-            add( new Actor(nu,sp) );
-        }
 
 
 

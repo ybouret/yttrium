@@ -12,15 +12,36 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of Actors
+        //
+        //
+        //______________________________________________________________________
         class Actors : public Entity, public Proxy<const Actor::List>
         {
         public:
-            explicit Actors() noexcept;
-            virtual ~Actors() noexcept;
-            Actors(const Actors &);
-            Y_OSTREAM_PROTO(Actors);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Actors(const size_t level) noexcept; //!< setup with top-level index
+            virtual ~Actors() noexcept;                   //!< cleanup
+            Actors(const Actors &);                       //!< hard copy
+            Y_OSTREAM_PROTO(Actors);                      //!< display
 
-            void add(Actor *a);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! add next actor
             void add(const unsigned nu, const Species &sp);
 
         private:

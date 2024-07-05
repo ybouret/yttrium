@@ -10,8 +10,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double        real_t;
-        typedef XReal<real_t> xreal_t;
+        typedef double        real_t;  //!< machine real
+        typedef XReal<real_t> xreal_t; //!< soft real
     }
 }
 

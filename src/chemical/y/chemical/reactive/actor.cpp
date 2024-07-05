@@ -7,8 +7,8 @@ namespace Yttrium
     {
 
 
-        Actor:: Actor(const unsigned n, const Species &s) :
-        Entity(s.name),
+        Actor:: Actor(const unsigned n, const Species &s, const size_t i) :
+        Entity(s.name,i),
         nu(n),
         sp(s),
         n1(nu-1),
@@ -26,7 +26,7 @@ namespace Yttrium
         }
 
         Actor:: Actor(const Actor &a) :
-        Entity(a.name),
+        Entity(CopyOf,a),
         nu(a.nu),
         sp(a.sp),
         n1(a.n1),
@@ -34,7 +34,7 @@ namespace Yttrium
         prev(0)
         {
         }
-        
+
 
         Actor:: ~Actor() noexcept
         {
