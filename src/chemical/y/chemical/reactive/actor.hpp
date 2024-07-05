@@ -18,9 +18,10 @@ namespace Yttrium
 
             explicit Actor(const unsigned n, const Species &s);
             virtual ~Actor() noexcept;
+            Actor(const Actor &);
             Y_OSTREAM_PROTO(Actor);
             const Actor & operator*() const noexcept;
-
+            
             const unsigned  nu;
             const Species  &sp;
             const unsigned  n1;
@@ -28,7 +29,7 @@ namespace Yttrium
             Actor *         prev;
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actor);
+            Y_DISABLE_ASSIGN(Actor);
             void initialize();
 
         };

@@ -17,12 +17,18 @@ namespace Yttrium
         public:
             explicit Actors() noexcept;
             virtual ~Actors() noexcept;
+            Actors(const Actors &);
             Y_OSTREAM_PROTO(Actors);
 
+            void add(Actor *a);
+            void add(const unsigned nu, const Species &sp);
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actors);
+            Y_DISABLE_ASSIGN(Actors);
             Actor::List actors;
             virtual ConstInterface & surrogate() const noexcept;
+            void growName(const String &);
+
         };
 
     }

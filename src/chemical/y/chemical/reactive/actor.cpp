@@ -6,6 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+
         Actor:: Actor(const unsigned n, const Species &s) :
         Entity(s.name),
         nu(n),
@@ -23,6 +24,17 @@ namespace Yttrium
             }
 
         }
+
+        Actor:: Actor(const Actor &a) :
+        Entity(a.name),
+        nu(a.nu),
+        sp(a.sp),
+        n1(a.n1),
+        next(0),
+        prev(0)
+        {
+        }
+        
 
         Actor:: ~Actor() noexcept
         {
