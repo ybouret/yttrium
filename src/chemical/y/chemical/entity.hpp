@@ -4,6 +4,7 @@
 #ifndef Y_Chemical_Entity_Included
 #define Y_Chemical_Entity_Included 1
 
+#include "y/graphviz/vizible.hpp"
 #include "y/string.hpp"
 #include "y/type/copy.hpp"
 
@@ -33,7 +34,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Object, public Counted
+        class Entity : public Object, public Counted, public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -43,7 +44,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const size_t Levels = AuxLevel; //!< number of indices
-       
+
             //__________________________________________________________________
             //
             //

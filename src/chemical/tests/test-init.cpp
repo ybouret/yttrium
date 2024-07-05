@@ -8,7 +8,7 @@ using namespace Chemical;
 
 Y_UTEST(init)
 {
-    Library       lib;
+    Library         lib;
     const Species & h = lib("H+",1);
     const Species & w = lib("HO-",-1);
 
@@ -28,5 +28,8 @@ Y_UTEST(init)
 
     std::cerr << reac << std::endl;
 
+    Y_SIZEOF(Entity);
+    Y_SIZEOF(Species);
+    Y_SIZEOF(Actor);
 }
 Y_UDONE()
