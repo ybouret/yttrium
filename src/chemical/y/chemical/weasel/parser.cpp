@@ -28,7 +28,7 @@ namespace Yttrium
                 Agg        & EQ          = agg("EQ") << UUID << SEP;
                 const Agg  & SP          = agg("SP") << UUID << CHARGE << END;
                 {
-                    const Rule & CF          = opt(term("[:digit:]+"));
+                    const Rule & CF          = opt(term("CF","[:digit:]+"));
                     const Rule & ACTOR       = agg("ACTOR") << CF << mark('[') << SP << mark(']');
                     const Rule & FIRST_ACTOR = (grp("FIRST_ACTOR") << opt(PLUS) << ACTOR );
                     const Rule & EXTRA_ACTOR = (grp("EXTRA_ACTOR") << PLUS << ACTOR);

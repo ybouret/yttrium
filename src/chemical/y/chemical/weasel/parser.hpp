@@ -5,7 +5,6 @@
 #ifndef Y_Chemical_Weasel_Parser_Included
 #define Y_Chemical_Weasel_Parser_Included 1
 
-#include "y/chemical/library.hpp"
 #include "y/jive/parser.hpp"
 
 
@@ -24,6 +23,7 @@ namespace Yttrium
             {
             public:
                 
+
                 explicit Parser(const char * const); //!< setup with name
                 virtual ~Parser() noexcept;          //!< cleanup
                 
