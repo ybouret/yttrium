@@ -16,7 +16,16 @@ namespace Yttrium
             {
             }
 
-            Linker:: Linker() : Jive::Syntax::Translator(), lib(0)
+            Linker:: Linker() : 
+            Jive::Syntax::Translator(),
+            UUID(),
+            Z(),
+            SP(),
+            CF(),
+            actors(),
+            REAC(),
+            PROD(),
+            lib(0)
             {
                 Y_Jive_OnTerminal(Linker,UUID);
                 forTerminal("+", *this, & Linker::onDROP);
@@ -35,6 +44,9 @@ namespace Yttrium
                 Z.free();
                 SP.free();
                 CF.free();
+                actors.release();
+                REAC.release();
+                PROD.release();
             }
 
 
@@ -131,7 +143,7 @@ namespace Yttrium
                 }
 
                 // push new actor
-                actors(nu,*sp);
+                actors.pushTail( new Actor(nu,*sp) );
             }
 
         }

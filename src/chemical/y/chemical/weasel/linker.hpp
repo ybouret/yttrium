@@ -30,8 +30,10 @@ namespace Yttrium
                 Vector<int>       Z;
                 Vector<Species *> SP;
                 Vector<unsigned>  CF;
-                Actors            actors;
-
+                Actor::List       actors;
+                Actor::List       REAC;
+                Actor::List       PROD;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Linker);
                 Library *lib;
