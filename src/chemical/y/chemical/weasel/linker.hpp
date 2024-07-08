@@ -20,7 +20,8 @@ namespace Yttrium
             class Linker : public Jive::Syntax::Translator
             {
             public:
-                explicit Linker();
+
+                explicit Linker(const char * const);
                 virtual ~Linker() noexcept;
 
                 void operator()(const Jive::Syntax::XNode &usrAST,
@@ -32,6 +33,7 @@ namespace Yttrium
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Linker);
+                const char * const callSign;
 
                 // data to store info
                 Vector<String>    UUID;

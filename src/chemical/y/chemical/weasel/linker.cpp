@@ -12,13 +12,14 @@ namespace Yttrium
 
         namespace Weasel
         {
-
+            
             Linker:: ~Linker() noexcept
             {
             }
 
-            Linker:: Linker() : 
+            Linker:: Linker(const char * const _) :
             Jive::Syntax::Translator(),
+            callSign(_),
             UUID(),
             Z(),
             SP(),
@@ -30,6 +31,8 @@ namespace Yttrium
             lib(0),
             eqs(0)
             {
+                assert(0!=callSign);
+
                 Y_Jive_OnTerminal(Linker,UUID);
                 forTerminal("+", *this, & Linker::onDROP);
                 forTerminal("-", *this, & Linker::onDROP);
@@ -185,15 +188,46 @@ namespace Yttrium
                 assert(UUID.size()>0);
                 const String name = UUID.pullTail();
                 const String kval = K.pullTail();
+                Equilibrium *eq   = 0;
+
+                if(kval.size()<=0) throw Specific::Exception(callSign,"empty constant for <%s>", name.c_str());
+
+                if(isdigit(kval[1]))
+                {
+                    // assume constant
+                    eq = & eqs->newConstant(name,eqs->lvm->eval<real_t>(kval));
+                }
+                else
+                {
+                    // assume lua
+                    eq = & eqs->newLua(name,kval);
+                }
 
                 std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
+
+                for(const Actor *a=REAC.head;a;a=a->next)
+                {
+                    (*eq)(-int(a->nu),a->sp);
+                }
+                REAC.release();
+
+                for(const Actor *a=PROD.head;a;a=a->next)
+                {
+                    (*eq)(int(a->nu),a->sp);
+                }
+                PROD.release();
+
+                eqs->update(*eq);
+
+
+
             }
 
             void Linker:: onRX(const Jive::Token &t)
             {
                 const String rx = t.toString(1,0);
                 std::cerr << "RX=<" << rx << ">" << std::endl;
-                if(!rxp) throw Specific::Exception("Weasel::Linker", "illegal '@%s'' presence at this stage", rx.c_str());
+                if(!rxp) throw Specific::Exception(callSign, "illegal '@%s'' presence at this stage", rx.c_str());
                 (*rxp) << rx;
             }
 

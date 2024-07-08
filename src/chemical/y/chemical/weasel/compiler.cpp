@@ -16,7 +16,7 @@ namespace Yttrium
             class Compiler:: Code
             {
             public:
-                inline  Code() : parser( CallSign ), linker(), rx() {}
+                inline  Code() : parser( CallSign ), linker( CallSign ), rx() {}
                 inline ~Code() noexcept {}
 
                 Parser         parser;

@@ -19,7 +19,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Equilibria &eqs)
         {
-            os << '{';
+            os << '{' << std::endl;
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
