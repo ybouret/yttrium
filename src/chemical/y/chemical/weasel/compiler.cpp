@@ -23,8 +23,6 @@ namespace Yttrium
                 Linker         linker;
                 Vector<String> rx;
 
-
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
             };
@@ -64,6 +62,11 @@ namespace Yttrium
 
                 // second pass: using rx
                 std::cerr << "rx=" << code->rx << std::endl;
+
+                while(code->rx.size()>0)
+                {
+                    const String id = code->rx.pullHead();
+                }
 
             }
 
