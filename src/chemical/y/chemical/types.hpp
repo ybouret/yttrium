@@ -13,13 +13,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double            real_t;    //!< machine real
-        typedef XReal<real_t>     xreal_t;   //!< soft real
-        typedef Readable<xreal_t> XReadable;
-        typedef Writable<xreal_t> XWritable;
+        typedef double                      real_t;    //!< machine real
+        typedef XReal<real_t>               xreal_t;   //!< soft real
+        
+        typedef Readable<xreal_t>           XReadable; //!< alias
+        typedef Writable<xreal_t>           XWritable; //!< alias
 
-        typedef MKL::Antelope::Add<xreal_t> XAdd;
-        typedef MKL::Antelope::Mul<xreal_t> XMul;
+        typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
+        typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
 
 
     }

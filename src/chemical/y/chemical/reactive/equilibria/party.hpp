@@ -10,20 +10,44 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Helper to format party of [equilibria|cluster|...]
+        //
+        //
+        //______________________________________________________________________
         class Party
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Party() noexcept;
             virtual ~Party() noexcept;
 
-            void           update(const Components &) noexcept;
-            std::ostream & display(std::ostream &os, const Components &) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void           update(const Components &) noexcept;                 //!< update all metrics
+            std::ostream & display(std::ostream &os, const Components &) const; //!< display aligned
 
-
-            const Assembly uuid;
-            const Assembly reac;
-            const Assembly prod;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Assembly uuid; //!< metrics for names
+            const Assembly reac; //!< metrics for reactant names
+            const Assembly prod; //!< metrics for product names
 
             
 

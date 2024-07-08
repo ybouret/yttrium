@@ -17,7 +17,7 @@ Y_UTEST(weasel)
 
     if(argc>1)
     {
-        weasel(lib,eqs,Jive::Module::OpenFile(argv[1]),true);
+        weasel(lib,eqs,Jive::Module::OpenFile(argv[1]));
     }
 
     std::cerr << "lib=" << lib << std::endl;

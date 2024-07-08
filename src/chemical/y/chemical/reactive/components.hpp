@@ -35,12 +35,14 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Manifest::ConstIterator ConstIterator; //!< alias
             static const char * const       Mark;          //!< "<=>";
+         
+            //! category according to cardinality
             enum Category
             {
-                Nebulous,
-                ReacOnly,
-                ProdOnly,
-                Standard
+                Nebulous, //!< no reac/prod => bad!
+                ReacOnly, //!< reactant(s) only
+                ProdOnly, //!< product(s) only
+                Standard  //!< reactant(s) AND product(s)
             };
 
             //__________________________________________________________________
@@ -80,18 +82,22 @@ namespace Yttrium
             void operator()(const int      nu,
                             const Species &sp);
 
+            //! regularized mass action
             xreal_t massAction(const xreal_t    K,
                                XMul            &mul,
                                const XReadable &C, 
                                const Level      level) const;
 
+            //! regularized mass action at C0+nu'*xi
             xreal_t massAction(const xreal_t    K,
                                XMul            &mul,
                                const XReadable &C0,
                                const xreal_t    xi,
                                const Level      level) const;
 
-            
+            //! update kind according to category
+            void updateKind() noexcept;
+
 
             //__________________________________________________________________
             //
@@ -103,28 +109,15 @@ namespace Yttrium
             const Actors   prod; //!< products
             const Category kind; //!< precomputed category
             
-            void updateKind() noexcept;
-            
+
         private:
             Manifest db;
             virtual ConstInterface & surrogate() const noexcept;
 
         public:
-            const xreal_t one;
+            const xreal_t one; //!< alias
 
-            class Format
-            {
-            public:
-                explicit Format() noexcept;
-                virtual ~Format() noexcept;
 
-                const Assembly uuid;
-                const Assembly reac;
-                const Assembly prod;
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Format);
-            };
         };
     }
 

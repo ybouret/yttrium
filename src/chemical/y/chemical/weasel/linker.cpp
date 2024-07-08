@@ -29,7 +29,8 @@ namespace Yttrium
             PROD(),
             K(),
             lib(0),
-            eqs(0)
+            eqs(0),
+            rxp(0)
             {
                 assert(0!=callSign);
 
@@ -79,24 +80,27 @@ namespace Yttrium
 
             void Linker:: onUUID(const Jive::Token &t)
             {
+                // push UUID
                 UUID << t.toString();
             }
 
             void Linker:: onDROP(const Jive::Token &)
             {
+                // drop sign
             }
 
             void Linker:: onPOS(const size_t n)
             {
+                // store positive sign
                 Z << int(n);
-                std::cerr << "Z=" << Z << std::endl;
             }
 
             void Linker:: onNEG(const size_t n)
             {
+                // store negative sign
                 Z << -int(n);
-                std::cerr << "Z=" << Z << std::endl;
             }
+
 
             // build species from name and optional sign
             void Linker:: onSP(const size_t n)
@@ -138,10 +142,12 @@ namespace Yttrium
 
             void Linker:: onCHEMICAL(const size_t)
             {
+                // terminate
             }
 
             void Linker:: onCF(const Jive::Token &t)
             {
+                // convert digits to coefficient
                 const String cfs = t.toString();
                 CF << ASCII::Convert::To<unsigned>(cfs,"CF");
             }
@@ -203,7 +209,7 @@ namespace Yttrium
                     eq = & eqs->newLua(name,kval);
                 }
 
-                std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
+                //std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
 
                 for(const Actor *a=REAC.head;a;a=a->next)
                 {
@@ -217,17 +223,15 @@ namespace Yttrium
                 }
                 PROD.release();
 
+                // update metrics
                 eqs->update(*eq);
-
-
 
             }
 
             void Linker:: onRX(const Jive::Token &t)
             {
                 const String rx = t.toString(1,0);
-                std::cerr << "RX=<" << rx << ">" << std::endl;
-                if(!rxp) throw Specific::Exception(callSign, "illegal '@%s'' presence at this stage", rx.c_str());
+                if(!rxp) throw Specific::Exception(callSign, "illegal '@%s' presence at this stage", rx.c_str());
                 (*rxp) << rx;
             }
 

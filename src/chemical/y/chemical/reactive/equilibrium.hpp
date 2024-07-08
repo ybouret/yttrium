@@ -11,13 +11,35 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium: components with a constant
+        //
+        //
+        //______________________________________________________________________
         class Equilibrium : public Components
         {
         public:
-            typedef ArkPtr<String,Equilibrium> Ptr;
-            virtual ~Equilibrium() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<String,Equilibrium> Ptr; //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Equilibrium() noexcept; //!< cleanup
 
         protected:
+            //! setup with name and topLevel index
             template <typename ID> inline
             explicit Equilibrium(const ID    &userName,
                                  const size_t topLevel) :
@@ -27,7 +49,17 @@ namespace Yttrium
             }
 
         public:
-            xreal_t K(const xreal_t);
+            Y_OSTREAM_PROTO(Equilibrium); //!< display name
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! check private getK(t)
+            xreal_t K(const xreal_t t);
 
 
         private:

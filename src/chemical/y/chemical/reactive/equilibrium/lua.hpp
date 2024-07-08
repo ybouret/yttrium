@@ -12,9 +12,19 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium with a Lua function as constant
+        //
+        //
+        //______________________________________________________________________
         class LuaEquilibrium : public Equilibrium
         {
         public:
+
+            //! setup with name, index and lua function name
             template <typename ID, typename FN>
             explicit LuaEquilibrium(const ID    &userName,
                                     const size_t topLevel,
@@ -25,6 +35,7 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             virtual ~LuaEquilibrium() noexcept;
 
         private:

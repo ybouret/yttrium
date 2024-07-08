@@ -17,13 +17,34 @@ namespace Yttrium
         namespace Weasel
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Translate AST into species/equilibria/regular expressions...
+            //
+            //
+            //__________________________________________________________________
             class Linker : public Jive::Syntax::Translator
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Linker(const char * const); //!< setup with persistent ID
+                virtual ~Linker() noexcept;          //!< cleanup
 
-                explicit Linker(const char * const);
-                virtual ~Linker() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! compile AST
                 void operator()(const Jive::Syntax::XNode &usrAST,
                                 Library                   &usrLib,
                                 LuaEquilibria             &usrEqs,

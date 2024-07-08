@@ -12,17 +12,46 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef SuffixSet<String,Equilibrium::Ptr> EqSet;
+        typedef SuffixSet<String,Equilibrium::Ptr> EqSet; //!< alias
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Set of Equilibria
+        //
+        //
+        //______________________________________________________________________
         class Equilibria : public Proxy<const EqSet>, public Party
         {
         public:
-            typedef EqSet::ConstIterator ConstIterator;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef EqSet::ConstIterator ConstIterator; //!< alias
             
-            explicit Equilibria();
-            virtual ~Equilibria() noexcept;
-            Y_OSTREAM_PROTO(Equilibria);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equilibria();           //!< setup
+            virtual ~Equilibria() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Equilibria);     //!< display through Party
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! append a new constant equilibrium, ready to be filled
             template <typename ID>
             Equilibrium & newConstant(const ID &name, const xreal_t K)
             {
@@ -30,11 +59,18 @@ namespace Yttrium
             }
 
 
-
         protected:
-            EqSet db;
-
+            //! append a newly created equilibrium
             Equilibrium &append(Equilibrium * const);
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            EqSet db; //!< internal database of equilibria
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

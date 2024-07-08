@@ -453,7 +453,7 @@ namespace Yttrium
                 }
 
             protected:
-                ListType my;
+                ListType my; //!< my list of units
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MulList);

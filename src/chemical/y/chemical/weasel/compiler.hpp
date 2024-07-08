@@ -14,17 +14,41 @@ namespace Yttrium
 
         namespace Weasel
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Compiler as a singleton
+            //
+            //
+            //__________________________________________________________________
             class Compiler : public Singleton<Compiler>
             {
             public:
-                static const char * const      CallSign;
-                static const AtExit::Longevity LifeTime = 89;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const      CallSign;        //!< "Weasel"
+                static const AtExit::Longevity LifeTime = 89;   //!< life time
                 class Code;
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! two stages compilation of input
                 void operator()(Library       &usrLib,
                                 LuaEquilibria &usrEqs,
-                                Jive::Module  *input,
-                                const bool     saveAst = false);
+                                Jive::Module  *input);
+
+                void record(const String       &entry); //!< record precompiled
+                void record(const char * const entry);  //!< record precompiled
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);

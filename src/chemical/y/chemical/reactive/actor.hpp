@@ -51,10 +51,12 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & operator*() const noexcept; //!< *this for list
 
+            //! compute mass action
             void massAction(XMul            &xmul,
                             const XReadable &C,
                             const Level      level) const;
 
+            //! compute mass action of C0 + nu*xi
             void massAction(XMul            &xmul,
                             const XReadable &C0,
                             const xreal_t    xi,

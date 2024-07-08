@@ -17,6 +17,13 @@ namespace Yttrium
             if(value<=zero) throw Specific::Exception( name.c_str(), "negative K at t=%g", double(real_t(t)));
             return value;
         }
+
+        std::ostream & operator<<(std::ostream &os, const Equilibrium &eq)
+        {
+            os << eq.name;
+            return os;
+        }
+
     }
 
 }

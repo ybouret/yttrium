@@ -11,16 +11,32 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium with a real constant
+        //
+        //
+        //______________________________________________________________________
         class ConstantEquilibrium : public Equilibrium
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             template <typename ID> inline
             explicit ConstantEquilibrium(const ID     &userName,
                                          const size_t  topLevel,
                                          const xreal_t theValue) :
             Equilibrium(userName,topLevel), value(theValue) {}
 
+            //! cleanup
             virtual ~ConstantEquilibrium() noexcept;
 
 

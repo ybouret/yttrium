@@ -43,8 +43,10 @@ namespace Yttrium
             //! add next actor
             void operator()(const unsigned nu, const Species &sp);
 
+            //! compute mass action
             void massAction(XMul &xmul, const XReadable &C, const Level level) const;
            
+            //! compute mass action of C0+nu*xi
             void massAction(XMul            &xmul,
                             const XReadable &C0,
                             const xreal_t    xi,
