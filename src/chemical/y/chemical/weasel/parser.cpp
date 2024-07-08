@@ -1,6 +1,8 @@
 
 #include "y/chemical/weasel/parser.hpp"
 #include "y/jive/lexical/plugin/rstring.hpp"
+#include "y/jive/lexical/plugin/single-line-comment.hpp"
+#include "y/jive/lexical/plugin/multi-lines-comment.hpp"
 
 namespace Yttrium
 {
@@ -30,6 +32,7 @@ namespace Yttrium
                 {
                     const Rule & CF          = opt(term("CF","[:digit:]+"));
                     const Rule & ACTOR       = agg("ACTOR") << CF << mark('[') << SP << mark(']');
+                    //const Rule & XPLUS       = term("PLUS",'+');
                     const Rule & FIRST_ACTOR = (grp("FIRST_ACTOR") << opt(PLUS) << ACTOR );
                     const Rule & EXTRA_ACTOR = (grp("EXTRA_ACTOR") << PLUS << ACTOR);
                     const Rule & ACTORS      = (grp("ACTORS") << FIRST_ACTOR << zom(EXTRA_ACTOR));
@@ -46,6 +49,9 @@ namespace Yttrium
 
                 lexer.drop("[:blank:]");
                 lexer.endl("[:endl:]");
+                plug<Jive::Lexical::CxxComment>("CxxComment");
+                plug<Jive::Lexical::C_Comment>("C_Comment");
+
 
                 renderGraphViz();
             }
@@ -53,6 +59,34 @@ namespace Yttrium
             Parser:: ~Parser() noexcept
             {
             }
+
+            static inline
+            bool IsPlus(const Jive::Syntax::XNode &node) noexcept
+            {
+                return  '+' == *node.rule.name;
+            }
+
+            XNode *  Parser::  load(Jive::Module *input)
+            {
+                Jive::Parser  &self = *this;
+                AutoPtr<XNode> ast  = self(input);
+
+                assert(ast.isValid());
+                assert( *(ast->rule.name) == "CHEMICAL" );
+                for(XNode *node=ast->branch().head;node;node=node->next)
+                {
+                    if( "EQ" != *(node->rule.name) ) continue;
+                    for(XNode *sub=node->branch().head;sub;sub=sub->next)
+                    {
+                        const String &sid = *(sub->rule.name);
+                        if( "REAC" == sid || "PROD" == sid )
+                            sub->removeChildIf( IsPlus );
+                    }
+                }
+                
+                return ast.yield();
+            }
+
         }
     }
 

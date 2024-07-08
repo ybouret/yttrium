@@ -1,6 +1,6 @@
 Y_CreateTest(chemical)
 
-Y_LinkLibraries(test-chemical y-chemical y-jive)
+Y_LinkLibraries(test-chemical y-chemical y-jive y-lua++ y-lua)
 
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)

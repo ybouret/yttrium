@@ -22,11 +22,11 @@ namespace Yttrium
             class Parser : public Jive::Parser
             {
             public:
-                
 
                 explicit Parser(const char * const); //!< setup with name
                 virtual ~Parser() noexcept;          //!< cleanup
-                
+                XNode *  load(Jive::Module *); //!< parse and post-process
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
             };

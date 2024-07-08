@@ -25,7 +25,9 @@ namespace Yttrium
             actors(),
             REAC(),
             PROD(),
-            lib(0)
+            K(),
+            lib(0),
+            eqs(0)
             {
                 Y_Jive_OnTerminal(Linker,UUID);
                 forTerminal("+", *this, & Linker::onDROP);
@@ -36,6 +38,9 @@ namespace Yttrium
                 Y_Jive_OnInternal(Linker,SP);
                 Y_Jive_OnInternal(Linker,CHEMICAL);
                 Y_Jive_OnInternal(Linker,ACTOR);
+                Y_Jive_OnInternal(Linker,REAC);
+                Y_Jive_OnInternal(Linker,PROD);
+                Y_Jive_OnTerminal(Linker,K);
             }
 
             void Linker:: initialize() noexcept
@@ -47,23 +52,25 @@ namespace Yttrium
                 actors.release();
                 REAC.release();
                 PROD.release();
+                K.free();
             }
 
 
 
             void Linker::  operator()(const Jive::Syntax::XNode &usrAST,
-                                      Library                   &usrLib)
+                                      Library                   &usrLib,
+                                      LuaEquilibria             &usrEqs)
             {
-                const Temporary<Library*> tempLib(lib,&usrLib);
+                const Temporary<Library*>       tempLib(lib,&usrLib);
+                const Temporary<LuaEquilibria*> tempEqs(eqs,&usrEqs);
+
                 translate(usrAST,Yttrium::Jive::Syntax::Permissive);
 
             }
 
             void Linker:: onUUID(const Jive::Token &t)
             {
-                std::cerr << "UUID=" << UUID << "->";
                 UUID << t.toString();
-                std::cerr << UUID << std::endl;
             }
 
             void Linker:: onDROP(const Jive::Token &)
@@ -144,6 +151,25 @@ namespace Yttrium
 
                 // push new actor
                 actors.pushTail( new Actor(nu,*sp) );
+            }
+
+            void Linker:: onREAC(size_t n)
+            {
+                assert(n<=actors.size);
+                while(n-- > 0 )
+                    REAC.pushHead( actors.popTail() );
+            }
+
+            void Linker:: onPROD(size_t n)
+            {
+                assert(n<=actors.size);
+                while(n-- > 0 )
+                    PROD.pushHead( actors.popTail() );
+            }
+
+            void Linker:: onK(const Jive::Token &t)
+            {
+                K << t.toString();
             }
 
         }

@@ -1,4 +1,4 @@
-include_directories(. ../core ../jive)
+include_directories(. ../core ../jive ../lua++ ..)
 
 Y_CreateLibrary(y-chemical
 chemical

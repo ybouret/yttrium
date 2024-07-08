@@ -7,7 +7,7 @@
 #include "y/jive/syntax/translator.hpp"
 #include "y/chemical/library.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/equilibria/lua.hpp"
 
 namespace Yttrium
 {
@@ -24,7 +24,8 @@ namespace Yttrium
                 virtual ~Linker() noexcept;
 
                 void operator()(const Jive::Syntax::XNode &usrAST,
-                                Library                   &usrLib);
+                                Library                   &usrLib,
+                                LuaEquilibria             &usrEqs);
 
                 Vector<String>    UUID;
                 Vector<int>       Z;
@@ -33,10 +34,12 @@ namespace Yttrium
                 Actor::List       actors;
                 Actor::List       REAC;
                 Actor::List       PROD;
+                Vector<String>    K;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Linker);
-                Library *lib;
+                Library       *lib;
+                LuaEquilibria *eqs;
                 virtual void initialize() noexcept;
 
                 void onUUID(const Jive::Token &);
@@ -47,6 +50,10 @@ namespace Yttrium
                 void onSP(const size_t);
                 void onCHEMICAL(const size_t);
                 void onACTOR(const size_t n);
+                void onREAC(size_t n);
+                void onPROD(size_t n);
+                void onK(const Jive::Token &);
+
             };
 
         }
