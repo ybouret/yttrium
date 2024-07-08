@@ -62,6 +62,18 @@ namespace Yttrium
         }
 
 
+        void Actor:: drvsMassAction(XMul            &xmul,
+                                    const XReadable &C,
+                                    const Level      level) const
+        {
+            if(nu>1)
+            {
+                const xreal_t c = C[sp.indx[level]]; assert(c>=xreal_t(0));
+                xmul.insert(c,n1);
+                xmul.insert(xn);
+            }
+        }
+
 
     }
 

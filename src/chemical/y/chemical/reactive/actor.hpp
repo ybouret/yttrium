@@ -56,11 +56,18 @@ namespace Yttrium
                             const XReadable &C,
                             const Level      level) const;
 
+
             //! compute mass action of C0 + nu*xi
             void massAction(XMul            &xmul,
                             const XReadable &C0,
                             const xreal_t    xi,
                             const Level      level) const;
+
+
+            //! compute derviative of mass action
+            void drvsMassAction(XMul            &xmul,
+                                const XReadable &C,
+                                const Level      level) const;
 
             //__________________________________________________________________
             //

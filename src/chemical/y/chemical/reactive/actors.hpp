@@ -52,6 +52,8 @@ namespace Yttrium
                             const xreal_t    xi,
                             const Level      level) const;
 
+            
+
             //! check each concentration is positive
             bool wouldRun(const XReadable &C0, const Level level) const;
 
