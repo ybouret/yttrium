@@ -43,6 +43,7 @@ namespace Yttrium
                 Y_Jive_OnInternal(Linker,PROD);
                 Y_Jive_OnTerminal(Linker,K);
                 Y_Jive_OnInternal(Linker,EQ);
+                Y_Jive_OnTerminal(Linker,RX);
 
             }
 
@@ -62,10 +63,12 @@ namespace Yttrium
 
             void Linker::  operator()(const Jive::Syntax::XNode &usrAST,
                                       Library                   &usrLib,
-                                      LuaEquilibria             &usrEqs)
+                                      LuaEquilibria             &usrEqs,
+                                      Sequence<String>          *usrRxp)
             {
-                const Temporary<Library*>       tempLib(lib,&usrLib);
-                const Temporary<LuaEquilibria*> tempEqs(eqs,&usrEqs);
+                const Temporary<Library*>           tempLib(lib,&usrLib);
+                const Temporary<LuaEquilibria*>     tempEqs(eqs,&usrEqs);
+                const Temporary<Sequence<String> *> tempRxp(rxp,usrRxp);
 
                 translate(usrAST,Yttrium::Jive::Syntax::Permissive);
 
@@ -184,9 +187,16 @@ namespace Yttrium
                 const String kval = K.pullTail();
 
                 std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
-                
-
             }
+
+            void Linker:: onRX(const Jive::Token &t)
+            {
+                const String rx = t.toString(1,0);
+                std::cerr << "RX=<" << rx << ">" << std::endl;
+                if(!rxp) throw Specific::Exception("Weasel::Linker", "illegal '@%s'' presence at this stage", rx.c_str());
+                (*rxp) << rx;
+            }
+
 
         }
     }

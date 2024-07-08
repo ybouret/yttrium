@@ -25,7 +25,8 @@ namespace Yttrium
 
                 void operator()(const Jive::Syntax::XNode &usrAST,
                                 Library                   &usrLib,
-                                LuaEquilibria             &usrEqs);
+                                LuaEquilibria             &usrEqs,
+                                Sequence<String>          *usrRxp);
 
 
                 
@@ -43,10 +44,10 @@ namespace Yttrium
                 Vector<String>    K;
 
                 // temporary parsing
-                Library       *lib;
-                LuaEquilibria *eqs;
+                Library          *lib;
+                LuaEquilibria    *eqs;
+                Sequence<String> *rxp;
 
-                
                 virtual void initialize() noexcept;
 
                 void onUUID(const Jive::Token &);
@@ -61,7 +62,7 @@ namespace Yttrium
                 void onPROD(size_t n);
                 void onK(const Jive::Token &);
                 void onEQ(const size_t);
-
+                void onRX(const Jive::Token &);
             };
 
         }

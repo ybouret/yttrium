@@ -17,9 +17,16 @@ namespace Yttrium
             explicit Party() noexcept;
             virtual ~Party() noexcept;
 
+            void           update(const Components &) noexcept;
+            std::ostream & display(std::ostream &os, const Components &) const;
+
+
             const Assembly uuid;
             const Assembly reac;
             const Assembly prod;
+
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Party);
         };
