@@ -3,6 +3,7 @@
 #include "y/type/temporary.hpp"
 #include "y/system/exception.hpp"
 #include "y/text/ascii/convert.hpp"
+#include "y/container/algo/crop.hpp"
 
 namespace Yttrium
 {
@@ -171,7 +172,9 @@ namespace Yttrium
 
             void Linker:: onK(const Jive::Token &t)
             {
-                K << t.toString(1,1);
+                String kval = t.toString(1,1);
+                Algo::Crop(kval,isspace);
+                K << kval;
             }
 
             void Linker:: onEQ(const size_t)
@@ -181,6 +184,8 @@ namespace Yttrium
                 const String kval = K.pullTail();
 
                 std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
+                
+
             }
 
         }

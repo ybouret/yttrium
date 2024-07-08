@@ -27,6 +27,12 @@ namespace Yttrium
                                 Library                   &usrLib,
                                 LuaEquilibria             &usrEqs);
 
+
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Linker);
+
+                // data to store info
                 Vector<String>    UUID;
                 Vector<int>       Z;
                 Vector<Species *> SP;
@@ -35,11 +41,12 @@ namespace Yttrium
                 Actor::List       REAC;
                 Actor::List       PROD;
                 Vector<String>    K;
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Linker);
+
+                // temporary parsing
                 Library       *lib;
                 LuaEquilibria *eqs;
+
+                
                 virtual void initialize() noexcept;
 
                 void onUUID(const Jive::Token &);
