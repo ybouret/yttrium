@@ -29,12 +29,15 @@ Y_UTEST(weasel)
     Vector<xreal_t> C0(m,0.01);
     Vector<xreal_t> C(m,0);
 
+    std::cerr << "C0=" << C0 << std::endl;
+
     Aftermath       am;
     for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
     {
         Equilibrium &eq = **it;
         std::cerr << eq << " kind=" << eq.kind << std::endl;
         am.solve(C,TopLevel, C0, TopLevel, eq, eq.K(0) );
+        std::cerr << "C=" << C << std::endl;
     }
 
 

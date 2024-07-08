@@ -56,6 +56,9 @@ namespace Yttrium
             //! min of maxExtents
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
+            //! move safely
+            void moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
+
 
             //! check that each concentration is positive
             bool wouldRun(const XReadable &C0, const Level level) const;

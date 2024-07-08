@@ -71,6 +71,7 @@ namespace Yttrium
             catch(...)
             {
                 (void) db.remove(uid);
+                throw;
             }
 
             updateKind();
@@ -111,6 +112,13 @@ namespace Yttrium
             return rhs - lhs;
         }
 
+        void Components:: moveSave(XWritable    &C,
+                                   const xreal_t xi,
+                                   const Level   level) const
+        {
+            reac.moveSafe(C,-xi,level);
+            prod.moveSafe(C,xi,level);
+        }
 
 
 

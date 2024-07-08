@@ -72,6 +72,9 @@ namespace Yttrium
             //! C/nu, C>=0
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
+            //! C += nu*xi >= 0
+            void    moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
+
             //__________________________________________________________________
             //
             //

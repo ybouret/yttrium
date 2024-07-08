@@ -54,7 +54,7 @@ namespace Yttrium
           
             //! setup
             template <typename ID>
-            explicit Components(const ID & userName,
+            explicit Components(const ID &   userName,
                                 const size_t topLevel) :
             Indexed(userName,topLevel),
             Proxy<Manifest>(),
@@ -98,18 +98,22 @@ namespace Yttrium
             //! update kind according to category
             void updateKind() noexcept;
 
+            //! transfer components-wise
             template <typename TARGET, typename SOURCE> inline
             void transfer(TARGET &target, const Level tgtLevel,
                           SOURCE &source, const Level srcLevel) const
             {
-                size_t        n  = db.size();
+                size_t            n  = db.size();
                 for(ConstIterator it = db.begin();n>0;--n,++it)
                 {
                     const Species &sp = (**it).sp;
                     target[sp.indx[tgtLevel]] = source[sp.indx[srcLevel]];
                 }
-
             }
+
+            void moveSave(XWritable    &C,
+                          const xreal_t xi,
+                          const Level   level) const;
 
 
             //__________________________________________________________________

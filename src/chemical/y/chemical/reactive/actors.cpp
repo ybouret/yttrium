@@ -112,6 +112,14 @@ namespace Yttrium
             return xi;
         }
 
+
+        void Actors:: moveSafe(XWritable &C, const xreal_t xi, const Level level) const
+        {
+            for(const Actor *a=actors.head;a;a=a->next) a->moveSafe(C,xi,level);
+        }
+
+
+
     }
 
 }
