@@ -41,6 +41,8 @@ namespace Yttrium
                 Y_Jive_OnInternal(Linker,REAC);
                 Y_Jive_OnInternal(Linker,PROD);
                 Y_Jive_OnTerminal(Linker,K);
+                Y_Jive_OnInternal(Linker,EQ);
+
             }
 
             void Linker:: initialize() noexcept
@@ -169,7 +171,16 @@ namespace Yttrium
 
             void Linker:: onK(const Jive::Token &t)
             {
-                K << t.toString();
+                K << t.toString(1,1);
+            }
+
+            void Linker:: onEQ(const size_t)
+            {
+                assert(UUID.size()>0);
+                const String name = UUID.pullTail();
+                const String kval = K.pullTail();
+
+                std::cerr << name << ":" << REAC << Equilibrium::Mark << PROD << ":" << kval << std::endl;
             }
 
         }

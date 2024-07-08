@@ -53,6 +53,7 @@ namespace Yttrium
                 void onREAC(size_t n);
                 void onPROD(size_t n);
                 void onK(const Jive::Token &);
+                void onEQ(const size_t);
 
             };
 
