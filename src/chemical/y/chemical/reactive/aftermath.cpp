@@ -10,7 +10,7 @@ namespace Yttrium
         {
         }
 
-        Aftermath:: Aftermath()  
+        Aftermath:: Aftermath()  : xmul()
         {
         }
 
