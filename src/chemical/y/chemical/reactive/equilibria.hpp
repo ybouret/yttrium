@@ -33,7 +33,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef EqSet::ConstIterator ConstIterator; //!< alias
-            
+            typedef EqSet::Iterator Iterator; //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -57,6 +58,9 @@ namespace Yttrium
             {
                 return append( new ConstantEquilibrium(name,db.size()+1,K) );
             }
+
+            Iterator begin() noexcept { return db.begin(); }
+            Iterator end()   noexcept { return db.end(); }
 
 
         protected:

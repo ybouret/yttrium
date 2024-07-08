@@ -53,11 +53,15 @@ namespace Yttrium
                             const Level      level) const;
 
 
+            //! min of maxExtents
+            xreal_t maxExtent(const XReadable &C, const Level level) const;
+
 
             //! check that each concentration is positive
             bool wouldRun(const XReadable &C0, const Level level) const;
 
-
+            const unsigned sumNu; //!< sum(nu)
+            const real_t   scale; //!< 1.0/sumNu
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Actor::List actors;

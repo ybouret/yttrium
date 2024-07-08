@@ -73,9 +73,7 @@ namespace Yttrium
                 (void) db.remove(uid);
             }
 
-            
-
-
+            updateKind();
         }
 
         xreal_t Components:: massAction(const xreal_t    K,

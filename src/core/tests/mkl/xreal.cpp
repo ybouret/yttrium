@@ -119,6 +119,12 @@ T makeSum(const Readable<T> &seq)
 }
 
 
+template <typename T>
+static inline void checkPow(const XReal<T> x, const T p)
+{
+    const XReal<T> y = x.pow(p);
+    std::cerr << x << "^(" << p << ")=" << y << std::endl;
+}
 
 Y_UTEST(mkl_xreal)
 {
@@ -153,6 +159,12 @@ Y_UTEST(mkl_xreal)
         std::cerr << " xsum = " << S << " = " << double(S) << std::endl;
 
     }
+
+    std::cerr << "Check Power" << std::endl;
+    checkPow<double>(13,1.3);
+    checkPow<float>(13,-1.3);
+    checkPow<double>(13,0.6);
+    checkPow<double>(13,-0.6);
 
 }
 Y_UDONE()

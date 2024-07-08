@@ -17,10 +17,19 @@ namespace Yttrium
             explicit Aftermath();
             virtual ~Aftermath() noexcept;
 
+            //!
+            /**
+             \param Cout output concentrations, already filled, transformed
+             \param Lout output level
+             \param Cinp input concentrations
+             \param Linp input level
+             \param E    Components part of an equilibrium
+             \param K    precomputed constant of E
+             */
             bool solve(XWritable       &Cout,
-                       const Level      out,
+                       const Level      Lout,
                        const XReadable &Cinp,
-                       const Level      inp,
+                       const Level      Linp,
                        const Components &E,
                        const xreal_t     K);
 
@@ -28,6 +37,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);
+            
+
+            
         };
 
     }

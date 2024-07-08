@@ -64,6 +64,8 @@ namespace Yttrium
         //! log10
         T     log10() const;
 
+        //! this^alpha
+        XReal pow(const T alpha) const;
 
         //______________________________________________________________________
         //

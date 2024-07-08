@@ -98,6 +98,19 @@ namespace Yttrium
             //! update kind according to category
             void updateKind() noexcept;
 
+            template <typename TARGET, typename SOURCE> inline
+            void transfer(TARGET &target, const Level tgtLevel,
+                          SOURCE &source, const Level srcLevel) const
+            {
+                size_t        n  = db.size();
+                for(ConstIterator it = db.begin();n>0;--n,++it)
+                {
+                    const Species &sp = (**it).sp;
+                    target[sp.indx[tgtLevel]] = source[sp.indx[srcLevel]];
+                }
+
+            }
+
 
             //__________________________________________________________________
             //

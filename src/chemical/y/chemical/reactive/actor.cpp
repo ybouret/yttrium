@@ -75,6 +75,12 @@ namespace Yttrium
         }
 
 
+        xreal_t Actor:: maxExtent(const XReadable &C, const Level level) const
+        {
+            const xreal_t c = C[sp.indx[level]]; assert(c>=xreal_t(0));
+            return c/xn;
+        }
+
     }
 
 }

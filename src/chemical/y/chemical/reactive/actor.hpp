@@ -69,6 +69,9 @@ namespace Yttrium
                                 const XReadable &C,
                                 const Level      level) const;
 
+            //! C/nu, C>=0
+            xreal_t maxExtent(const XReadable &C, const Level level) const;
+
             //__________________________________________________________________
             //
             //

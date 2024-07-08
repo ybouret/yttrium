@@ -223,4 +223,22 @@ namespace Yttrium
         return std::log10(mantissa) + exponent * l10r;
     }
 
+    template <>
+    XReal<real_t> XReal<real_t>::  pow(const real_t alpha) const
+    {
+        static const real_t  radix = MKL::Numeric<real_t>::RADIX;
+        if(mantissa<0) throw Libc::Exception(EDOM, "XReal::pow()");
+
+        // (*) (mantissa*r^exponent)^alpha = mantissa^alpha * r*(exponent*alpha)
+        // (*) exponent*alpha = ip + fp
+        const XReal<real_t> ma  = std::pow(mantissa,alpha);
+        const real_t        xp  = alpha * exponent;
+        const real_t        ip  = std::floor(xp);
+        const real_t        fp  = xp-ip;
+        const XReal<real_t> ra  = std::pow(radix,fp);
+        const XReal<real_t> ans = ra * ma;
+        Coerce(ans.exponent) += static_cast<int>(ip);
+        return ans;
+    }
+
 }

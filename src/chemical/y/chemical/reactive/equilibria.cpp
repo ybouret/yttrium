@@ -23,7 +23,9 @@ namespace Yttrium
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
-                eqs.display(os,eq) << std::endl;
+                eqs.display(os,eq);
+                os << Coerce(eq).K(0);
+                os << std::endl;
             }
             os << '}';
             return os;

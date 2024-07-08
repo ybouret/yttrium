@@ -2,6 +2,7 @@
 #include "y/chemical/reactive/actors.hpp"
 #include "y/system/exception.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -12,6 +13,8 @@ namespace Yttrium
         Actors:: Actors() :
         Entity(""),
         Proxy<const Actor::List>(),
+        sumNu(0),
+        scale(1),
         actors() {}
 
 
@@ -68,6 +71,8 @@ namespace Yttrium
             // store new actor
             //__________________________________________________________________
             actors.pushTail( guard.yield() );
+            Coerce(sumNu) += a->nu;
+            Coerce(scale)  = 1.0/(sumNu);
 
         }
        
@@ -95,6 +100,16 @@ namespace Yttrium
                 }
             }
             return true;
+        }
+
+        xreal_t Actors:: maxExtent(const XReadable &C, const Level level) const
+        {
+            assert(actors.size>0);
+            const Actor *ac = actors.head; if(!ac) return 0;
+            xreal_t      xi = ac->maxExtent(C,level);
+            for(ac=ac->next;ac;ac=ac->next)
+                xi = Min(xi,ac->maxExtent(C,level));
+            return xi;
         }
 
     }
