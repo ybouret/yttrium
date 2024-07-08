@@ -15,9 +15,9 @@ Y_UTEST(weasel)
     Library        lib;
     LuaEquilibria  eqs;
 
-    if(argc>1)
+    for(int i=1;i<argc;++i)
     {
-        weasel(lib,eqs,Jive::Module::OpenFile(argv[1]));
+        weasel(lib,eqs,Jive::Module::OpenData(argv[i],argv[i]));
     }
 
     std::cerr << "lib=" << lib << std::endl;

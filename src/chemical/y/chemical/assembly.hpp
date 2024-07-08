@@ -50,6 +50,16 @@ namespace Yttrium
                 return os;
             }
 
+            //! right justify
+            template <typename OSTREAM> inline
+            OSTREAM & rj(OSTREAM      &os,
+                         const String &st) const
+            {
+                for(size_t i=st.size();i<maxLen;++i) os << ' ';
+                os << st;
+                return os;
+            }
+
             //__________________________________________________________________
             //
             //

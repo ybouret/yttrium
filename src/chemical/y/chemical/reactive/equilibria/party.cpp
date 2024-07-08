@@ -22,7 +22,7 @@ namespace Yttrium
         std::ostream & Party:: display(std::ostream &os, const Components &components) const
         {
             uuid.lj(os, components.name) << ':';
-            reac.lj(os, components.reac.name);
+            reac.rj(os, components.reac.name);
             os << ' ' << Equilibrium::Mark << ' ';
             prod.lj(os, components.prod.name) << ':';
             
