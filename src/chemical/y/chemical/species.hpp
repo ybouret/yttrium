@@ -5,6 +5,7 @@
 
 #include "y/chemical/indexed.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -28,6 +29,19 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ArkPtr<String,const Species> Ptr; //!< alias
+            static const int                     PMIN=-15;
+            static const int                     PMAX=1;
+            static double                        Conc(Random::Bits &);
+            template <typename ARRAY> static inline
+            void Conc(ARRAY &arr, Random::Bits &ran, const double probaZero = 0) {
+                for(size_t i=arr.size();i>0;--i)
+                {
+                    if(ran.to<double>()<probaZero)
+                        arr[i] = 0;
+                    else
+                        arr[i] = Conc(ran);
+                }
+            }
 
             //__________________________________________________________________
             //

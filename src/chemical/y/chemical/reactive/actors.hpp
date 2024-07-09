@@ -61,7 +61,11 @@ namespace Yttrium
 
 
             //! check that each concentration is positive
-            bool wouldRun(const XReadable &C0, const Level level) const;
+            bool accounted(const XReadable &C0, const Level level) const;
+           
+            //! check that at least one concentration is missing
+            bool deficient(const XReadable &C0, const Level level) const;
+
 
             const unsigned sumNu; //!< sum(nu)
             const real_t   scale; //!< 1.0/sumNu

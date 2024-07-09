@@ -19,198 +19,220 @@ namespace Yttrium
         }
 
 
-        struct CallMassAction
+        namespace
         {
-            const XReadable &  C;
-            Level              L;
-            const Components & E;
-            xreal_t            K;
-            XMul              &xmul;
+            static unsigned numCalls = 0;
 
-            inline xreal_t operator()(const xreal_t xi)
+            //! wrapper to have a callable object
+            struct CallMassAction
             {
-                return E.massAction(K, xmul, C, xi, L);
-            }
-        };
+                const XReadable &  C;
+                Level              L;
+                const Components & E;
+                xreal_t            K;
+                XMul              &xmul;
 
-        static inline
-        xreal_t xiReacOnly(XWritable        &Cout,
-                           const Level      &Lout,
-                           const Components &E,
-                           const xreal_t     K,
-                           XMul             &xmul)
-        {
-            const xreal_t    zero = 0;
-            Triplet<xreal_t> xi   = { 0, 0, 0 };
-            Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
-
-            std::cerr << "ma=" << ma.a << std::endl;
-
-            switch( Sign::Of(ma.a) )
-            {
-                    //----------------------------------------------------------
-                case __Zero__: // numeric solution
-                    //----------------------------------------------------------
-                    return 0;
-
-                    //----------------------------------------------------------
-                case Negative: // must increase reactant(s) with negative xi
-                    //----------------------------------------------------------
-                    std::cerr << "ReacOnly Xi<0" << std::endl;
-                    xi.c = -K.pow(-E.reac.scale);
-                    while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) < zero )
-                    {
-                        ++Coerce(xi.c.exponent);
-                    }
-                    break;
-
-                    //----------------------------------------------------------
-                case Positive: // must decrease reactant(s) with positive xi
-                    //----------------------------------------------------------
-                    std::cerr << "ReacOnly Xi>0" << std::endl;
-                    xi.c   =  E.reac.maxExtent(Cout,Lout);
-                    ma.c   = -1;
-                    std::cerr << E.massAction(K,xmul,Cout, xi.c, Lout) << std::endl;
-                    break;
-            }
-
-
-            CallMassAction   F  = { Cout, Lout, E, K, xmul };
-            ZBis<xreal_t>    zroot;
-            zroot(F,xi,ma);
-
-            return xi.b;
-        }
-
-
-        static inline
-        xreal_t xiProdOnly(XWritable        &Cout,
-                           const Level      &Lout,
-                           const Components &E,
-                           const xreal_t     K,
-                           XMul             &xmul)
-        {
-            const xreal_t    zero = 0;
-            Triplet<xreal_t> xi   = { 0, 0, 0 };
-            Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
-
-            switch( Sign::Of(ma.a) )
-            {
-                    //----------------------------------------------------------
-                case __Zero__: // numeric solution
-                    //----------------------------------------------------------
-                    return 0;
-
-                    //----------------------------------------------------------
-                case Negative: // must decrease product(s)
-                    //----------------------------------------------------------
-                    xi.c = - E.prod.maxExtent(Cout,Lout);
-                    ma.c =   K;
-                    break;
-
-                    //----------------------------------------------------------
-                case Positive: // must increase product(s)
-                    //----------------------------------------------------------
-                    //std::cerr << "Xi>0" << std::endl;
-                    xi.c = K.pow(E.prod.scale);
-                    while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) > zero )
-                    {
-                        ++Coerce(xi.c.exponent);
-                    }
-                    break;
-            }
-
-            CallMassAction   F  = { Cout, Lout, E, K, xmul };
-            ZBis<xreal_t>    zroot;
-            zroot(F,xi,ma);
-
-            return xi.b;
-        }
-
-        // driver to iterate search
-        template <typename XI_PROC> static inline
-        bool solveWith(XI_PROC &xiProc,
-                       XWritable        &Cout,
-                       const Level      &Lout,
-                       const Components &E,
-                       const xreal_t     K,
-                       XMul             &xmul)
-        {
-            //------------------------------------------------------------------
-            //
-            // initialize
-            //
-            //------------------------------------------------------------------
-            xreal_t xi = xiProc(Cout, Lout, E, K, xmul);
-            E.moveSave(Cout,xi,Lout);
-
-            xreal_t ax = xi.abs();
-            if(ax.mantissa<=0) return true;
-
-            //------------------------------------------------------------------
-            //
-            // improve
-            //
-            //------------------------------------------------------------------
-        IMPROVE:
-            {
-                const xreal_t xi_new = xiProc(Cout, Lout, E, K, xmul);
-                E.moveSave(Cout,xi_new,Lout);
-
-                const xreal_t ax_new = xi_new.abs();
-                if( ax_new.mantissa <= 0 ||  ax_new >= ax )
+                inline xreal_t operator()(const xreal_t xi)
                 {
-                    return true;
+                    ++numCalls;
+                    return E.massAction(K, xmul, C, xi, L);
                 }
-                xi = xi_new;
-                ax = ax_new;
-                goto IMPROVE;
-            }
-        }
+            };
 
-#if 0
-        static inline
-        bool solveProdOnly(XWritable        &Cout,
+            //! solve once zero is bracketed
+            static inline xreal_t xiSolve(Triplet<xreal_t> &xi,
+                                          Triplet<xreal_t> &ma,
+                                          XWritable        &Cout,
+                                          const Level      &Lout,
+                                          const Components &E,
+                                          const xreal_t     K,
+                                          XMul             &xmul)
+            {
+                CallMassAction   F  = { Cout, Lout, E, K, xmul };
+                ZBis<xreal_t>    zroot;
+                //ZRid<xreal_t>    zroot;
+
+                zroot(F,xi,ma);
+                //std::cerr << "#calls=" << numCalls << std::endl;
+                return xi.b;
+            }
+
+            //! driver for ReacOnly components
+            static inline
+            xreal_t xiReacOnly(XWritable        &Cout,
+                               const Level      &Lout,
+                               const Components &E,
+                               const xreal_t     K,
+                               XMul             &xmul)
+            {
+                const xreal_t    zero = 0;
+                Triplet<xreal_t> xi   = { 0, 0, 0 };
+                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+
+
+                switch( Sign::Of(ma.a) )
+                {
+
+                    case __Zero__:
+                        //------------------------------------------------------
+                        // numeric solution
+                        //------------------------------------------------------
+                        return 0;
+
+
+                    case Negative:
+                        //------------------------------------------------------
+                        // must increase reactant(s) with negative xi
+                        //------------------------------------------------------
+                        xi.c = -K.pow(-E.reac.scale);
+                        while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) < zero )
+                        {
+                            ++Coerce(xi.c.exponent);
+                        }
+                        break;
+
+
+                    case Positive:
+                        //------------------------------------------------------
+                        // must decrease reactant(s) with positive xi
+                        //------------------------------------------------------
+                        xi.c   =  E.reac.maxExtent(Cout,Lout);
+                        ma.c   = -1;
+                        std::cerr << E.massAction(K,xmul,Cout, xi.c, Lout) << std::endl;
+                        break;
+                }
+
+                return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
+            }
+
+
+            //! driver for ProdOnly components
+            static inline
+            xreal_t xiProdOnly(XWritable        &Cout,
+                               const Level      &Lout,
+                               const Components &E,
+                               const xreal_t     K,
+                               XMul             &xmul)
+            {
+                const xreal_t    zero = 0;
+                Triplet<xreal_t> xi   = { 0, 0, 0 };
+                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+
+                switch( Sign::Of(ma.a) )
+                {
+                    case __Zero__:
+                        //------------------------------------------------------
+                        // numeric solution
+                        //------------------------------------------------------
+                        return 0;
+
+                    case Negative:
+                        //------------------------------------------------------
+                        // must decrease product(s)
+                        //------------------------------------------------------
+                        xi.c = - E.prod.maxExtent(Cout,Lout);
+                        ma.c =   K;
+                        break;
+
+
+                    case Positive:
+                        //------------------------------------------------------
+                        // must increase product(s)
+                        //----------------------------------------------------------
+                        xi.c = K.pow(E.prod.scale);
+                        while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) > zero )
+                        {
+                            ++Coerce(xi.c.exponent);
+                        }
+                        break;
+                }
+
+                return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
+            }
+
+            static inline
+            xreal_t xiStandard(XWritable        &Cout,
+                               const Level      &Lout,
+                               const Components &E,
+                            const xreal_t     K,
+                               XMul             &xmul)
+            {
+                const xreal_t    zero = 0;
+                Triplet<xreal_t> xi   = { 0, 0, 0 };
+                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+
+                switch( Sign::Of(ma.a) )
+                {
+                    case __Zero__:
+                        //------------------------------------------------------
+                        // numeric solution
+                        //------------------------------------------------------
+                        return 0;
+
+                    case Negative:
+                        //------------------------------------------------------
+                        // must decrease product(s)/increase reactant(s) xi<0
+                        //------------------------------------------------------
+                        xi.c = -E.prod.maxExtent(Cout, Lout);
+                        ma.c = E.massAction(K,xmul,Cout, xi.c, Lout);
+                        break;
+
+
+                    case Positive:
+                        //------------------------------------------------------
+                        // must increase product(s)/decrease reactant(s) xi>0
+                        //----------------------------------------------------------
+                        xi.c = E.reac.maxExtent(Cout, Lout);
+                        ma.c = E.massAction(K,xmul,Cout, xi.c, Lout);
+                        break;
+                }
+
+                return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
+            }
+
+            //! driver to iterate search
+            template <typename XI_PROC> static inline
+            bool solveWith(XI_PROC          &xiProc,
+                           XWritable        &Cout,
                            const Level      &Lout,
                            const Components &E,
                            const xreal_t     K,
                            XMul             &xmul)
-        {
-            //------------------------------------------------------------------
-            //
-            // initialize
-            //
-            //------------------------------------------------------------------
-            xreal_t xi = xiProdOnly(Cout, Lout, E, K, xmul);
-            E.moveSave(Cout,xi,Lout);
-
-            xreal_t ax = xi.abs();
-            if(ax.mantissa<=0) return true;
-
-            //------------------------------------------------------------------
-            //
-            // improve
-            //
-            //------------------------------------------------------------------
-        IMPROVE:
             {
-                const xreal_t xi_new = xiProdOnly(Cout, Lout, E, K, xmul);
-                E.moveSave(Cout,xi_new,Lout);
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
+                xreal_t xi = xiProc(Cout, Lout, E, K, xmul);
+                E.moveSave(Cout,xi,Lout);
 
-                const xreal_t ax_new = xi_new.abs();
-                if( ax_new.mantissa <= 0 ||  ax_new >= ax )
+                xreal_t ax = xi.abs();
+                if(ax.mantissa<=0) return true;
+
+                //--------------------------------------------------------------
+                //
+                // improve
+                //
+                //--------------------------------------------------------------
+            IMPROVE:
                 {
-                    return true;
+                    const xreal_t xi_new = xiProc(Cout, Lout, E, K, xmul);
+                    E.moveSave(Cout,xi_new,Lout);
+
+                    const xreal_t ax_new = xi_new.abs();
+                    if( ax_new.mantissa <= 0 ||  ax_new >= ax )
+                    {
+                        return true;
+                    }
+                    xi = xi_new;
+                    ax = ax_new;
+                    goto IMPROVE;
                 }
-                xi = xi_new;
-                ax = ax_new;
-                goto IMPROVE;
             }
 
+
         }
-#endif
-
-
 
 
 
@@ -236,9 +258,14 @@ namespace Yttrium
                     E.transfer(Cout,Lout,Cinp,Linp);
                     return solveWith(xiReacOnly,Cout,Lout,E,K,xmul);
 
-                case Components::Standard:
+                case Components::Standard: {
+                    if(E.reac.deficient(Cinp, Linp) && E.prod.deficient(Cinp, Linp))
+                        return false;
 
-                    break;
+                    E.transfer(Cout,Lout,Cinp,Linp);
+                    return solveWith(xiStandard,Cout,Lout,E,K,xmul);
+
+                } break;
             }
 
 

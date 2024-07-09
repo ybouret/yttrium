@@ -18,8 +18,6 @@ namespace Yttrium
         actors() {}
 
 
-        
-
 
         Actors::ConstInterface &Actors:: surrogate() const noexcept { return actors; }
 
@@ -89,7 +87,7 @@ namespace Yttrium
             for(const Actor *a=actors.head;a;a=a->next) a->massAction(xmul,C0,xi,level);
         }
 
-        bool Actors:: wouldRun(const XReadable &C0, const Level level) const
+        bool Actors:: accounted(const XReadable &C0, const Level level) const
         {
             const xreal_t zero = 0;
             for(const Actor *a=actors.head;a;a=a->next)
@@ -102,9 +100,24 @@ namespace Yttrium
             return true;
         }
 
+        bool Actors:: deficient(const XReadable &C0, const Level level) const
+        {
+            const xreal_t zero = 0;
+            for(const Actor *a=actors.head;a;a=a->next)
+            {
+                if( C0[a->sp.indx[level]] <= zero )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
         xreal_t Actors:: maxExtent(const XReadable &C, const Level level) const
         {
-            assert(actors.size>0);
             const Actor *ac = actors.head; if(!ac) return 0;
             xreal_t      xi = ac->maxExtent(C,level);
             for(ac=ac->next;ac;ac=ac->next)
