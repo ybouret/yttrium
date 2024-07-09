@@ -9,4 +9,5 @@ enable_testing()
 
 add_test(init test-chemical init)
 add_test(weasel test-chemical weasel)
+add_test(plexus test-chemical plexus)
 

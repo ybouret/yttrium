@@ -49,11 +49,13 @@ namespace Yttrium
 
                 lexer.drop("[:blank:]");
                 lexer.endl("[:endl:]");
-                plug<Jive::Lexical::CxxComment>("CxxComment");
-                plug<Jive::Lexical::C_Comment>("C_Comment");
+                lexer.plug<Jive::Lexical::CxxComment>("CxxComment");
+                lexer.plug<Jive::Lexical::C_Comment>("C_Comment");
 
 
                 renderGraphViz();
+
+                validate();
             }
 
             Parser:: ~Parser() noexcept

@@ -6,6 +6,7 @@ chemical/reactive
 chemical/reactive/equilibrium
 chemical/reactive/equilibria
 chemical/weasel
+chemical/plexus
 )
 
 add_subdirectory(tests)

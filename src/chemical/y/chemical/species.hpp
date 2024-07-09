@@ -6,6 +6,7 @@
 #include "y/chemical/indexed.hpp"
 #include "y/ptr/ark.hpp"
 #include "y/random/bits.hpp"
+#include "y/data/small/light/list/bare.hpp"
 
 namespace Yttrium
 {
@@ -75,6 +76,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
+
+        typedef Small::BareLightList<const Species> SList;
+        typedef SList::NodeType                     SNode;
     }
 }
 

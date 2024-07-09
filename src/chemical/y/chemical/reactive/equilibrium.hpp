@@ -43,8 +43,7 @@ namespace Yttrium
             template <typename ID> inline
             explicit Equilibrium(const ID    &userName,
                                  const size_t topLevel) :
-            Components(userName,topLevel),
-            zero(0)
+            Components(userName,topLevel)
             {
             }
 
@@ -66,9 +65,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             virtual xreal_t getK(const xreal_t) = 0;
             
-            const xreal_t zero;
-        };
+         };
 
+        typedef Small::BareLightList<const Equilibrium> EList;
+        typedef EList::NodeType                         ENode;
     }
 
 }

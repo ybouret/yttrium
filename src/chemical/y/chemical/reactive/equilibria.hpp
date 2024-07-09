@@ -33,7 +33,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef EqSet::ConstIterator ConstIterator; //!< alias
-            typedef EqSet::Iterator Iterator; //!< alias
+            typedef EqSet::Iterator     Iterator; //!< alias
 
             //__________________________________________________________________
             //

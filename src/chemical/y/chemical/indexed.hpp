@@ -5,6 +5,7 @@
 #define Y_Chemical_Indexed_Included 1
 
 #include "y/chemical/entity.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -65,6 +66,31 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            template <Level LEVEL>
+            struct SortBy
+            {
+                template <typename NODE> static inline
+                SignType CompareNodes(const NODE *lhs, const NODE *rhs) noexcept
+                {
+                    return Sign::Of( (**lhs).indx[LEVEL], (**rhs).indx[LEVEL] );
+                }
+
+                template <typename NODE> static inline
+                void Using(ListOf<NODE> &L)
+                {
+                    MergeSort::Call(L, CompareNodes<NODE> );
+                }
+            };
+
+
+
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
@@ -73,8 +99,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Indexed);
             void setAllIndices(const size_t level);
-
         };
+
+
+
     }
 }
 

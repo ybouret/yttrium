@@ -133,6 +133,32 @@ namespace Yttrium
             prod.drvsMassAction(phi, output, mOne, xmul, C, input);
         }
 
+
+        bool Components:: linkedTo(const Species &sp) const noexcept
+        {
+            return 0 != db.search(sp.name);
+        }
+
+        bool Components:: linkedTo(const Components &other) const noexcept
+        {
+            size_t            n  = db.size();
+            for(ConstIterator it = db.begin();n>0;--n,++it)
+            {
+                if( other.linkedTo( (**it).sp ) ) return true;
+            }
+            return false;
+        }
+
+        void Components:: record(AddressBook &book) const
+        {
+            size_t            n  = db.size();
+            for(ConstIterator it = db.begin();n>0;--n,++it)
+            {
+                book |= (**it).sp;
+            }
+        }
+
+
     }
 
 }

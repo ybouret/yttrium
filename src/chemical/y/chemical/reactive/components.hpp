@@ -7,6 +7,7 @@
 #include "y/chemical/reactive/actors.hpp"
 #include "y/chemical/assembly.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -104,6 +105,7 @@ namespace Yttrium
                                 const Level        input,
                                 XMul             &xmul) const;
 
+            //! load topology vector
             template <typename T> inline
             void topology(Writable<T> &Nu, const Level level) const
             {
@@ -132,10 +134,15 @@ namespace Yttrium
                 }
             }
 
+            //! move assuming xi is valid
             void moveSafe(XWritable    &C,
                           const xreal_t xi,
                           const Level   level) const;
 
+
+            bool linkedTo(const Species    &sp) const noexcept;
+            bool linkedTo(const Components &)   const noexcept;
+            void record(AddressBook &) const;
 
             //__________________________________________________________________
             //
