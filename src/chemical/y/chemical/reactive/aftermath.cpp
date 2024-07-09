@@ -205,7 +205,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 xreal_t xi = xiProc(Cout, Lout, E, K, xmul);
-                E.moveSave(Cout,xi,Lout);
+                E.moveSafe(Cout,xi,Lout);
 
                 xreal_t ax = xi.abs();
                 if(ax.mantissa<=0) return true;
@@ -218,7 +218,7 @@ namespace Yttrium
             IMPROVE:
                 {
                     const xreal_t xi_new = xiProc(Cout, Lout, E, K, xmul);
-                    E.moveSave(Cout,xi_new,Lout);
+                    E.moveSafe(Cout,xi_new,Lout);
 
                     const xreal_t ax_new = xi_new.abs();
                     if( ax_new.mantissa <= 0 ||  ax_new >= ax )

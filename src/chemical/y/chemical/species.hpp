@@ -28,10 +28,12 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            typedef ArkPtr<String,const Species> Ptr; //!< alias
-            static const int                     PMIN=-15;
-            static const int                     PMAX=1;
-            static double                        Conc(Random::Bits &);
+            typedef ArkPtr<String,const Species> Ptr;                  //!< alias
+            static const int                     PMIN=-15;             //!< Cmin = 10^PMIN
+            static const int                     PMAX=1;               //!< Cmax = 10^PMAX
+            static double                        Conc(Random::Bits &); //!< ran(Cmin,Cmax)
+          
+            //! fill array with random concentrations and zero with given proba
             template <typename ARRAY> static inline
             void Conc(ARRAY &arr, Random::Bits &ran, const double probaZero = 0) {
                 for(size_t i=arr.size();i>0;--i)

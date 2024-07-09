@@ -10,21 +10,42 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Solving individual
+        //
+        //
+        //______________________________________________________________________
         class Aftermath
         {
         public:
-            explicit Aftermath();
-            virtual ~Aftermath() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Aftermath();          //!< setup
+            virtual ~Aftermath() noexcept; //!< cleanup
 
-            //!
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+         
+            //! solve single components at K
             /**
-             \param Cout output concentrations, already filled, transformed
+             \param Cout output concentrations
              \param Lout output level
              \param Cinp input concentrations
              \param Linp input level
              \param E    Components part of an equilibrium
              \param K    precomputed constant of E
+             \return false if blocked, true if exists
              */
             bool solve(XWritable       &Cout,
                        const Level      Lout,
@@ -33,7 +54,13 @@ namespace Yttrium
                        const Components &E,
                        const xreal_t     K);
 
-            XMul xmul;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            XMul xmul; //!< internal multiplications
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);

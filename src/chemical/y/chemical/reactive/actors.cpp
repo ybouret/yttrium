@@ -89,7 +89,7 @@ namespace Yttrium
 
         bool Actors:: accounted(const XReadable &C0, const Level level) const
         {
-            const xreal_t zero = 0;
+            const xreal_t zero;
             for(const Actor *a=actors.head;a;a=a->next)
             {
                 if( C0[a->sp.indx[level]] <= zero )
@@ -131,7 +131,24 @@ namespace Yttrium
             for(const Actor *a=actors.head;a;a=a->next) a->moveSafe(C,xi,level);
         }
 
-
+        void Actors:: drvsMassAction(XWritable       & phi,
+                                     const Level       output,
+                                     const xreal_t     xfac,
+                                     XMul            & xmul,
+                                     const XReadable & C,
+                                     const Level       input) const
+        {
+            assert(xmul.isEmpty());
+            for(const Actor *a=actors.head;a;a=a->next)
+            {
+                //const Species &sp = a->sp;
+                xmul.insert(xfac);
+                a->drvsMassAction(xmul,C,input);
+                for(const Actor *b=a->prev;b;b=b->prev) b->massAction(xmul,C,input);
+                for(const Actor *b=a->next;b;b=b->next) b->massAction(xmul,C,input);
+                phi[ a->sp.indx[output] ] = xmul.product();
+            }
+        }
 
     }
 

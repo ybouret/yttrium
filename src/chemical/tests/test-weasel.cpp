@@ -28,8 +28,10 @@ Y_UTEST(weasel)
     const size_t    m = lib->size();
     Vector<xreal_t> C0(m,0.01);
     Vector<xreal_t> C(m,0);
+    Vector<xreal_t> phi(m,0);
+    Vector<int>     Nu(m,0);
 
-    //Species::Conc(C0,ran,0.3);
+    Species::Conc(C0,ran,0.3);
     std::cerr << "C0=" << C0 << std::endl;
 
     Aftermath       am;
@@ -37,8 +39,21 @@ Y_UTEST(weasel)
     {
         Equilibrium &eq = **it;
         std::cerr << eq << " kind=" << eq.kind << std::endl;
-        am.solve(C,TopLevel, C0, TopLevel, eq, eq.K(0) );
-        std::cerr << "C=" << C << std::endl;
+        eq.topology(Nu, TopLevel);
+        std::cerr << "Nu=" << Nu << std::endl;
+        const xreal_t K = eq.K(0);
+        if(am.solve(C,TopLevel, C0, TopLevel, eq, K ))
+        {
+            std::cerr << "C="  << C << std::endl;
+            std::cerr << "Xi=" << eq.massAction(K, am.xmul, C, TopLevel) << std::endl;
+            eq.drvsMassAction(K, phi, TopLevel, C, TopLevel, am.xmul);
+            std::cerr << "phi=" << phi << std::endl;
+        }
+        else
+        {
+            std::cerr << "inactive" << std::endl;
+        }
+
     }
 
 

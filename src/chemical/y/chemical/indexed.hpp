@@ -60,6 +60,7 @@ namespace Yttrium
                 setAllIndices(topLevel);
             }
             virtual ~Indexed() noexcept; //!< cleanup
+            
 
             //__________________________________________________________________
             //

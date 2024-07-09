@@ -62,7 +62,8 @@ namespace Yttrium
             prod(),
             kind(Nebulous),
             db(),
-            one(1)
+            zero(0),
+            mOne(1)
             {
             }
 
@@ -83,17 +84,37 @@ namespace Yttrium
                             const Species &sp);
 
             //! regularized mass action
-            xreal_t massAction(const xreal_t    K,
-                               XMul            &mul,
-                               const XReadable &C, 
-                               const Level      level) const;
+            xreal_t massAction(const xreal_t     K,
+                               XMul            & xmul,
+                               const XReadable & C,
+                               const Level       level) const;
 
             //! regularized mass action at C0+nu'*xi
-            xreal_t massAction(const xreal_t    K,
-                               XMul            &mul,
-                               const XReadable &C0,
-                               const xreal_t    xi,
-                               const Level      level) const;
+            xreal_t massAction(const xreal_t     K,
+                               XMul            & xmul,
+                               const XReadable & C0,
+                               const xreal_t     xi,
+                               const Level       level) const;
+
+            //! d_massAction/d_C
+            void drvsMassAction(const xreal_t      K,
+                                XWritable  &       phi,
+                                const Level        output,
+                                const XReadable &  C,
+                                const Level        input,
+                                XMul             &xmul) const;
+
+            template <typename T> inline
+            void topology(Writable<T> &Nu, const Level level) const
+            {
+                { const T _z(0); Nu.ld(_z); }
+                size_t            n  = db.size();
+                for(ConstIterator it = db.begin();n>0;--n,++it)
+                {
+                    const Component &cc = **it;
+                    Nu[ cc.sp.indx[level] ] = cc.nu;
+                }
+            }
 
             //! update kind according to category
             void updateKind() noexcept;
@@ -111,7 +132,7 @@ namespace Yttrium
                 }
             }
 
-            void moveSave(XWritable    &C,
+            void moveSafe(XWritable    &C,
                           const xreal_t xi,
                           const Level   level) const;
 
@@ -132,7 +153,8 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
 
         public:
-            const xreal_t one; //!< alias
+            const xreal_t zero; //!< value
+            const xreal_t mOne; //!< value
 
 
         };

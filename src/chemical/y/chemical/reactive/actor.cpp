@@ -72,6 +72,11 @@ namespace Yttrium
                 xmul.insert(c,n1);
                 xmul.insert(xn);
             }
+            else
+            {
+                assert(1==nu);
+                // do nothing
+            }
         }
 
 
