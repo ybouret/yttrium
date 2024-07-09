@@ -4,7 +4,8 @@
 #define Y_Chemical_Cluster_Included 1
 
 #include "y/chemical/reactive/equilibria.hpp"
-#include "y/stream/xmlog.hpp"
+#include "y/chemical/plexus/cluster/conservation/laws.hpp"
+
 
 namespace Yttrium
 {
@@ -14,6 +15,8 @@ namespace Yttrium
         {
         public:
             typedef CxxListOf<Cluster> List;
+            typedef Conservation::Laws CLaws;
+            typedef Conservation::Law  CLaw;
 
             virtual ~Cluster() noexcept;
             explicit Cluster(const Equilibrium &first);
@@ -28,9 +31,16 @@ namespace Yttrium
             EList       eqs;
 
         public:
-            const SList species;
+            const SList            species; //!< species in this cluster
+            const Matrix<int>      Nu;      //!< primary topology
+            const Matrix<unsigned> Qm;      //!< conservation matrix
+            const AutoPtr<CLaws>   laws;    //!< matching laws
+
             Cluster *   next;
             Cluster *   prev;
+
+        private:
+            void buildConservations(XMLog &);
         };
     }
 

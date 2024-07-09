@@ -85,6 +85,26 @@ namespace Yttrium
                 }
             };
 
+            template <Level LEVEL>
+            struct Revamp
+            {
+                template <typename NODE> static inline
+                void Using(ListOf<NODE> &L)
+                {
+                    size_t i=0;
+                    for(NODE *node=L.head;node;node=node->next)
+                        Coerce( (**node).indx[LEVEL] ) = ++i;
+                }
+            };
+
+            template <typename NODE> static inline
+            void Organize(ListOf<NODE> &L)
+            {
+                SortBy<TopLevel>::Using(L);
+                Revamp<SubLevel>::Using(L);
+            }
+
+
 
 
 
