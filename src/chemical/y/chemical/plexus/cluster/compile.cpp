@@ -8,7 +8,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Cluster:: compile(XMLog &xml)
+        void Cluster:: compile(XMLog &xml, Equilibria &primary)
         {
             EList &eqs = *this;
             Y_XML_SECTION_OPT(xml, "Cluster", " eqs='" << eqs.size << "'");
@@ -82,7 +82,7 @@ namespace Yttrium
             // Build Combinatoris
             //
             //------------------------------------------------------------------
-            buildCombinatorics(xml);
+            buildCombinatorics(xml,primary);
 
         }
 

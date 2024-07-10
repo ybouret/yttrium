@@ -108,7 +108,10 @@ namespace Yttrium
             const Cluster & operator*()      const noexcept; //!< helper to print clusters
             bool accept(const Equilibrium &) const noexcept; //!< accept equilibrium
             bool accept(const Cluster     &) const noexcept; //!< accept other cluster
-            void compile(XMLog &xml);                        //!< compile all
+           
+            //! compile all
+            void compile(XMLog &      xml,
+                         Equilibria & eqs);
 
             //__________________________________________________________________
             //
@@ -129,7 +132,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
-            void buildCombinatorics(XMLog &);
+            void buildCombinatorics(XMLog &, Equilibria &primary);
         };
     }
 

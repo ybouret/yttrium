@@ -61,7 +61,7 @@ namespace Yttrium
 
             for(Cluster *cl = cls.head; cl; cl=cl->next )
             {
-                cl->compile(xml);
+                cl->compile(xml,eqs);
             }
 
         }
