@@ -115,8 +115,8 @@ namespace Yttrium
                                      XWritable  & shK);
 
 
-            void show(std::ostream &) const;
-            void show(std::ostream &, const XReadable &K) const;
+            void show(std::ostream &)                     const; //!< show components
+            void show(std::ostream &, const XReadable &K) const; //!< show components with constant
 
             //__________________________________________________________________
             //

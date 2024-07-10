@@ -30,8 +30,8 @@ namespace Yttrium
             //! in order K evaluation
             const XReadable & K(const xreal_t t);
 
-            void show(std::ostream &os) const;
-            void showK(std::ostream &os) const;
+            void show(std::ostream &os)  const; //!< show components
+            void showK(std::ostream &os) const; //!< show components with constants
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
