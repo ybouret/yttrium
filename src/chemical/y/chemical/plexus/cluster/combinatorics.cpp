@@ -55,15 +55,19 @@ namespace Yttrium
             WOVEn::Indices combined(m);
             WOVEn::Indices vanished(m);
 
+            const ENode *last = tail; assert(0!=last);
             for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
             {
                 original.free();
                 combined.free();
                 vanished.free();
 
+                //--------------------------------------------------------------
+                // compute stoichiometry and collect original species
+                //--------------------------------------------------------------
                 stoich.ld(0);
                 // fetch weights
-                for(size_t i=n;i>0;--i) 
+                for(size_t i=n;i>0;--i)
                 {
                     const int w = weight[i] = (*arr)[i].cast<int>("weight");
                     if(0==w) continue;
@@ -72,6 +76,10 @@ namespace Yttrium
                     for(size_t j=m;j>0;--j)
                         stoich[j] += w * nu[j];
                 }
+
+                //--------------------------------------------------------------
+                // check combined species
+                //--------------------------------------------------------------
                 combined.record(stoich);
 
                 for(size_t k=combined.size();k>0;--k)
@@ -81,25 +89,64 @@ namespace Yttrium
                         throw Specific::Exception("Cluster::Combinatoris","corrupted weights!!");
                 }
 
+                //--------------------------------------------------------------
+                // check vanishing
+                //--------------------------------------------------------------
                 vanished |= original;
                 vanished ^= combined;
 
-                Y_XMLOG(xml, *arr << " => " << stoich << ":" << original << " \\ " << combined << " -> " << vanished);
+                //Y_XMLOG(xml, *arr << " => " << stoich << ":" << original << " \\ " << combined << " -> " << vanished);
                 if(vanished.size()<=0)
                     continue;
 
-                AutoPtr<MixedEquilibrium> eq = new MixedEquilibrium(primary->size()+1,
-                                                               *this,
-                                                               weight);
+                //--------------------------------------------------------------
+                // create mixed equilibrium
+                //--------------------------------------------------------------
+                AutoPtr<MixedEquilibrium> mx = new MixedEquilibrium(primary->size()+1,*this,weight);
+                (*this) << *mx;
+                try {
+                    // insert mx
+                    Equilibrium &eq = primary.append(mx.yield());
 
-                std::cerr << "=>" << eq->name << " : " << eq->source << "*" << eq->mixing << std::endl;
+                    // fill equilibirium
+                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    {
+                        const Species &s  = **sn;
+                        const size_t   j  = s.indx[SubLevel];
+                        const int      nu = stoich[j];
+                        if(0==nu) continue;
+                        eq(nu,s);
+                    }
+
+
+
+                    // update formatting
+                    primary.update(eq);
+                    update(eq);
+
+                    // update sub-level
+                    Coerce(eq.indx[SubLevel]) = size;
+                }
+                catch(...)
+                {
+                    cutTail();
+                    throw;
+                }
+
+
 
             }
 
-
+            if(xml.verbose)
+            {
+                for(last=last->next;last;last=last->next)
+                {
+                    display(xml(), **last) << std::endl;
+                }
+            }
 
         }
-        
+
     }
 
 }

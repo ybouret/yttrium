@@ -49,7 +49,7 @@ namespace Yttrium
         String MakeName(const EList         &eqs,
                         const Readable<int> &cof)
         {
-            const size_t n = eqs.size; assert(cof.size()==eqs.size);
+            const size_t n = cof.size(); assert(cof.size()<=eqs.size);
             String       ans;
             bool         first=true;
             for(size_t i=1;i<=n;++i)
@@ -79,16 +79,16 @@ namespace Yttrium
         mixing()
         {
             { String id = MakeName(eqs,cof); Coerce(name).swapWith(id); }
-            
-            for(const ENode *en=eqs.head;en;en=en->next)
+
+            const size_t n = cof.size();
+            for(size_t i=1;i<=n;++i)
             {
-                const Equilibrium &eq = **en;
-                const int          cf = cof[eq.indx[SubLevel]];
-                if(0!=cf)
-                {
-                    Coerce(source) << eq;
-                    Coerce(mixing) << cf;
-                }
+                const int cf = cof[i];
+                if(0==cf) continue;
+                const Equilibrium &eq = (**eqs.fetch(i));
+                assert(eq.indx[SubLevel]==i);
+                Coerce(source) << eq;
+                Coerce(mixing) << cf;
             }
 
 

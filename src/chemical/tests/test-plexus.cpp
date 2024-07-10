@@ -25,8 +25,6 @@ Y_UTEST(plexus)
     bool     verbose = true;
     XMLog    xml(verbose);
     Clusters clusters(eqs,xml);
-
-    std::cerr << clusters << std::endl;
-
+    
 }
 Y_UDONE()
