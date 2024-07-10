@@ -34,7 +34,14 @@ namespace Yttrium
                 if(Q.cols>0)
                     WOVEn::Explore(Q,survey,true);
             }
-            if(survey.size<=0) 
+
+
+            //------------------------------------------------------------------
+            //
+            // if no result, all species are unbounded
+            //
+            //------------------------------------------------------------------
+            if(survey.size<=0)
             {
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                     Coerce(unbounded) << **sn;
@@ -43,7 +50,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // convert survey to laws
+            // else convert survey to laws
             //
             //------------------------------------------------------------------
             const size_t m = species.size;
@@ -82,7 +89,7 @@ namespace Yttrium
 
             Indexed::SortBy<TopLevel>::Using( Coerce(conserved.list) );
             Indexed::SortBy<TopLevel>::Using( Coerce(unbounded.list) );
-
+            
 
         }
     }

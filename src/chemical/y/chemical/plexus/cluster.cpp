@@ -18,6 +18,7 @@ namespace Yttrium
         laws(),
         conserved(),
         unbounded(),
+        order(),
         next(0),
         prev(0)
         {

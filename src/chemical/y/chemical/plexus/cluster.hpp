@@ -89,6 +89,7 @@ namespace Yttrium
             typedef CxxListOf<Cluster> List;  //!< alias
             typedef Conservation::Laws CLaws; //!< alias
             typedef Conservation::Law  CLaw;  //!< alias
+            typedef CxxArray<EList>    Lists; //!< alias
 
             //__________________________________________________________________
             //
@@ -130,7 +131,8 @@ namespace Yttrium
             const AutoPtr<CLaws>   laws;      //!< matching laws
             const Fragment<SList>  conserved; //!< conserved species
             const Fragment<SList>  unbounded; //!< unbounded species
-
+            const AutoPtr<Lists>   order;     //!< eqs per order
+            
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list
 

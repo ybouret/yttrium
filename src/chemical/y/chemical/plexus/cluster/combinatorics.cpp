@@ -24,6 +24,15 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Combinatorics");
 
+
+            Coerce(order) = new Lists(size);
+            Lists &ord    = Coerce(*order);
+            for(const ENode *en=head;en;en=en->next)
+            {
+                ord[1] << **en;
+            }
+
+
             //------------------------------------------------------------------
             //
             // survey of orthogonal to NuT
@@ -47,7 +56,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // Each survey is a combination of reactions
+            // Each survey is a combination of equilibria
             //
             //------------------------------------------------------------------
             const size_t   n = size;
@@ -58,7 +67,11 @@ namespace Yttrium
             WOVEn::Indices combined(m);
             WOVEn::Indices vanished(m);
 
-            const ENode *last = tail; assert(0!=last);
+            //------------------------------------------------------------------
+            //
+            // build mixed equilibria
+            //
+            //------------------------------------------------------------------
             for(const WOVEn::IntegerArray *arr=survey.head;arr;arr=arr->next)
             {
                 original.free();
@@ -69,11 +82,12 @@ namespace Yttrium
                 // compute stoichiometry and collect original species
                 //--------------------------------------------------------------
                 stoich.ld(0);
-                // fetch weights
+                size_t nc = 0;
                 for(size_t i=n;i>0;--i)
                 {
                     const int w = weight[i] = (*arr)[i].cast<int>("weight");
                     if(0==w) continue;
+                    ++nc;
                     const Readable<int> &nu = Nu[i];
                     original.record(nu);
                     for(size_t j=m;j>0;--j)
@@ -81,7 +95,7 @@ namespace Yttrium
                 }
 
                 //--------------------------------------------------------------
-                // check combined species
+                // retrieve and check combined species
                 //--------------------------------------------------------------
                 combined.record(stoich);
 
@@ -93,12 +107,11 @@ namespace Yttrium
                 }
 
                 //--------------------------------------------------------------
-                // check vanishing
+                // check vanishing species
                 //--------------------------------------------------------------
                 vanished |= original;
                 vanished ^= combined;
 
-                //Y_XMLOG(xml, *arr << " => " << stoich << ":" << original << " \\ " << combined << " -> " << vanished);
                 if(vanished.size()<=0)
                     continue;
 
@@ -108,7 +121,7 @@ namespace Yttrium
                 AutoPtr<MixedEquilibrium> mx = new MixedEquilibrium(eqs->size()+1,*this,weight,shK);
                 (*this) << *mx;
                 try {
-                    // insert mx
+
                     Equilibrium &eq = eqs.append(mx.yield());
 
                     // fill equilibirium
@@ -127,6 +140,8 @@ namespace Yttrium
 
                     // update sub-level
                     Coerce(eq.indx[SubLevel]) = size;
+
+                    ord[nc] << eq;
                 }
                 catch(...)
                 {
@@ -143,11 +158,21 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(xml.verbose)
             {
-                for(last=last->next;last;last=last->next)
+                for(size_t i=1;i<=ord.size();++i)
                 {
-                    display(xml(), **last) << std::endl;
+                    const EList &l = ord[i];
+                    if(l.size<=0) continue;
+                    Y_XML_SECTION_OPT(xml, "Order", " n='" << i << "'");
+                    for(const ENode *en=ord[i].head;en;en=en->next)
+                    {
+                        display(xml(), **en) << std::endl;
+                    }
                 }
+
+
             }
+
+
 
 
 

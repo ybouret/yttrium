@@ -23,15 +23,24 @@ namespace Yttrium
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Clusters(Equilibria &, XMLog &); //!< setup from equilibria
             virtual ~Clusters() noexcept;             //!< cleanup
 
-            //! in order K evaluation
-            const XReadable & K(const xreal_t t);
-
-            void show(std::ostream &os)  const; //!< show components
-            void showK(std::ostream &os) const; //!< show components with constants
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const XReadable & K(const xreal_t t);            //!< in order K evaluation
+            void              show(std::ostream &os)  const; //!< show components
+            void              showK(std::ostream &os) const; //!< show components with constants
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
