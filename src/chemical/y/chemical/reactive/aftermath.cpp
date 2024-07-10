@@ -282,6 +282,7 @@ namespace Yttrium
 
             Components::ConstIterator i = E->begin();
             const size_t              m = E->size();
+            
             for(size_t j = m;j>0;--j,++i)
             {
                 const Component &cc   = **i;

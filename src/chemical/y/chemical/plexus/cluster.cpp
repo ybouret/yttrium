@@ -97,7 +97,7 @@ namespace Yttrium
 
             if(laws.isValid())
             {
-                // write cons
+                // write laws
                 size_t il = 1;
                 for(const CLaw *law = laws->head; law; law=law->next, ++il)
                 {
