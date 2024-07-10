@@ -24,8 +24,8 @@ Y_UTEST(plexus)
 
     bool     verbose = true;
     XMLog    xml(verbose);
-    Clusters        clusters(eqs,xml);
-    const XReadable &K = clusters.K(0);
+    Clusters clusters(eqs,xml);
+    (void) clusters.K(0);
 
     clusters.showK(std::cerr);
 

@@ -32,7 +32,9 @@ namespace Yttrium
 
         std::ostream & Party:: display(std::ostream &os, const Components &eq, const XReadable &K) const
         {
-            return display(os,eq) << " : " << real_t(K[eq.indx[TopLevel]]);
+            const xreal_t k   = K[eq.indx[TopLevel]];
+            const real_t  l10 = k.log10();
+            return display(os,eq) << " : 10^(" << l10 << ")";
         }
 
 
