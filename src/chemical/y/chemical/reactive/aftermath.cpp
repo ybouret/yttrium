@@ -14,7 +14,7 @@ namespace Yttrium
         {
         }
 
-        Aftermath:: Aftermath()  : xmul()
+        Aftermath:: Aftermath()  : xmul(), xadd()
         {
         }
 

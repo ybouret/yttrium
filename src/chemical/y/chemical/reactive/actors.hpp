@@ -84,6 +84,7 @@ namespace Yttrium
 
             const unsigned sumNu; //!< sum(nu)
             const real_t   scale; //!< 1.0/sumNu
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Actor::List actors;

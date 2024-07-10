@@ -4,7 +4,8 @@
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/park-miller.hpp"
-//#include "y/stream/libc/output.hpp"
+#include "y/stream/libc/output.hpp"
+#include "y/graphviz/color-scheme.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -33,12 +34,46 @@ Y_UTEST(weasel)
 
     Species::Conc(C0,ran,0.3);
     std::cerr << "C0=" << C0 << std::endl;
+    
 
     Aftermath       am;
     for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
     {
         Equilibrium &eq = **it;
         std::cerr << eq << " kind=" << eq.kind << std::endl;
+        const String dotFile = eq.name+".dot";
+        {
+            OutputFile fp(dotFile);
+
+            GraphViz::Vizible::Enter(fp, "G");
+            {
+                const String color = GraphViz::Vizible::Color("set18", 1);
+                for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                {
+                    (**it).viz(fp, color, true);
+                }
+            }
+
+            {
+                const String color = GraphViz::Vizible::Color("set18", 2);
+                eq.viz(fp,color);
+#if 0
+                for(const Actor *a=eq.reac->head;a;a=a->next)
+                {
+                    a->viz(fp, eq, color, Iterating::Forward);
+                }
+                for(const Actor *a=eq.prod->head;a;a=a->next)
+                {
+                    a->viz(fp, eq, color, Iterating::Reverse);
+                }
+#endif
+            }
+
+            GraphViz::Vizible::Leave(fp);
+        }
+        GraphViz::Vizible::RenderPNG(dotFile,true);
+
+
         eq.topology(Nu, TopLevel);
         std::cerr << "Nu=" << Nu << std::endl;
         const xreal_t K = eq.K(0);
@@ -55,7 +90,7 @@ Y_UTEST(weasel)
         {
             std::cerr << "inactive" << std::endl;
         }
-
+        
     }
 
 

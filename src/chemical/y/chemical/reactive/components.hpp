@@ -142,8 +142,11 @@ namespace Yttrium
             bool linkedTo(const Species    &sp) const noexcept; //!< linked to species
             bool linkedTo(const Components &)   const noexcept; //!< linked to other compoennts
             void record(AddressBook &) const;                   //!< record (add) all species
+            bool neutral()    const noexcept;                   //!< return neutrality check
 
-            bool neutral() const noexcept;
+            //! assuming species are already in fp
+            void viz(OutputStream &fp,
+                     const String &color) const;
 
             //__________________________________________________________________
             //

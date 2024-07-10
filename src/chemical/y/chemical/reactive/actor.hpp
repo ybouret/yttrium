@@ -78,6 +78,12 @@ namespace Yttrium
             //! C += nu*xi >= 0
             void    moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
 
+            //! assuming species and peer are already in fp
+            void    viz(OutputStream &             fp,
+                        const Entity &             peer,
+                        const String &             color,
+                        const Iterating::Direction dir) const;
+
             //__________________________________________________________________
             //
             //

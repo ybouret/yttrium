@@ -2,7 +2,7 @@
 
 #include "y/chemical/weasel/compiler.hpp"
 #include "y/chemical/plexus/clusters.hpp"
-
+#include "y/stream/libc/output.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -28,6 +28,20 @@ Y_UTEST(plexus)
     (void) clusters.K(0);
 
     clusters.showK(std::cerr);
+
+    {
+        OutputFile fp("clusters.dot");
+        GraphViz::Vizible::Enter(fp, "G");
+        size_t cid=0;
+        for(const Cluster *cl=clusters->head;cl;cl=cl->next,++cid)
+        {
+            cl->viz(fp,cid);
+        }
+        GraphViz::Vizible::Leave(fp);
+    }
+
+    GraphViz::Vizible::RenderPNG("clusters.dot", true);
+
 
 
 }

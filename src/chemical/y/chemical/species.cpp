@@ -30,8 +30,8 @@ namespace Yttrium
         {
             Node(fp,this) << '[';
             Label(fp,name);
-            fp << ",shape=oval,style=" << (conserved ? "dashed" : "solid" );
-            fp << ",color=" << color;
+            fp << ",shape=oval,style=" << (conserved ? "solid" : "dashed" );
+            fp << ",color=" << color << ",fontcolor=" << color;
             fp << ']';
             Endl(fp);
 

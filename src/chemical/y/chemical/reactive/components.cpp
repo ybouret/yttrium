@@ -162,6 +162,19 @@ namespace Yttrium
         }
 
 
+        void Components:: viz(OutputStream &fp,
+                              const String &color) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,name);
+            fp << ",color=" << color << ",fontcolor=" << color;
+            fp << ",shape=box";
+            fp << ']';
+            Endl(fp);
+            for(const Actor *a=reac->head;a;a=a->next) a->viz(fp, *this, color, Iterating::Forward);
+            for(const Actor *a=prod->head;a;a=a->next) a->viz(fp, *this, color, Iterating::Reverse);
+        }
+
     }
 
 }

@@ -119,6 +119,9 @@ namespace Yttrium
             void show(std::ostream &)                     const; //!< show components
             void show(std::ostream &, const XReadable &K) const; //!< show components with constant
 
+            //! output into cluster_id
+            void viz(OutputStream &fp, const size_t cid) const;
+
             //__________________________________________________________________
             //
             //

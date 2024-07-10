@@ -36,6 +36,20 @@ namespace Yttrium
                 os << "d_(" << ac << ")";
                 return os;
             }
+
+            void Law:: viz(OutputStream &fp, const String &color) const
+            {
+                Node(fp,this) << '[';
+                Label(fp,name);
+                fp << ",color=" << color << ",fontcolor=" << color;
+                fp << ",shape=note";
+                fp << ']';
+                Endl(fp);
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    a->viz(fp, *this, color, Iterating::Reverse);
+                }
+            }
         }
 
     }

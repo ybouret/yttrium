@@ -103,6 +103,24 @@ namespace Yttrium
             return int(nu) * sp.z;
         }
 
+        void Actor:: viz(OutputStream &             fp,
+                         const Entity &             peer,
+                         const String &             color,
+                         const Iterating::Direction dir) const
+        {
+            const Vizible *source = &sp;
+            const Vizible *target = &peer;
+            if(dir==Iterating::Reverse) Swap(source,target);
+            Arrow(fp,source,target) << '[';
+            fp << "color=" << color << ",fontcolor=" << color;
+            if(nu>1) {
+                const String label = Formatted::Get("%u",nu);
+                Label(fp << ",",label);
+            }
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 
 }
