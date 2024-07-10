@@ -4,6 +4,7 @@
 #include "y/woven/survey/natural.hpp"
 #include "y/woven/subspaces.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
+#include "y/type/temporary.hpp"
 
 namespace Yttrium
 {
@@ -26,6 +27,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
+                const Temporary<bool> quiet(Coerce(xml.verbose),false);
                 Matrix<apz> Q;
                 if(! MKL::OrthoSpace::Make(Q,Nu) )
                     throw Specific::Exception("Conservations", "singular topology ortho-space");

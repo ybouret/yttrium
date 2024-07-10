@@ -129,6 +129,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
+            void buildCombinatorics(XMLog &);
         };
     }
 

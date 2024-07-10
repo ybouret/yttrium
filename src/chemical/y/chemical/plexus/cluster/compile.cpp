@@ -76,6 +76,14 @@ namespace Yttrium
             buildConservations(xml);
             Y_XMLOG(xml, "conserved=" << conserved.list);
             Y_XMLOG(xml, "unbounded=" << unbounded.list);
+
+            //------------------------------------------------------------------
+            //
+            // Build Combinatoris
+            //
+            //------------------------------------------------------------------
+            buildCombinatorics(xml);
+
         }
 
     }
