@@ -84,7 +84,8 @@ namespace Yttrium
                                  const xreal_t    xi,
                                  const Level      level) const
         {
-            for(const Actor *a=actors.head;a;a=a->next) a->massAction(xmul,C0,xi,level);
+            for(const Actor *a=actors.head;a;a=a->next)
+                a->massAction(xmul,C0,xi,level);
         }
 
         bool Actors:: accounted(const XReadable &C0, const Level level) const

@@ -6,6 +6,7 @@
 
 #include "y/chemical/species.hpp"
 #include "y/chemical/assembly.hpp"
+#include "y/chemical/types.hpp"
 
 namespace Yttrium
 {
@@ -55,6 +56,7 @@ namespace Yttrium
             //__________________________________________________________________
             const int      nu; //!< nu != 0
             const Species &sp; //!< species
+            const xreal_t  xn; //!< nu
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Component);

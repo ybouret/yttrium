@@ -14,7 +14,8 @@ namespace Yttrium
 
         Component:: Component(const int n, const Species &s) :
         nu(n),
-        sp(s)
+        sp(s),
+        xn(nu)
         {
             if(0==nu) throw Specific::Exception("Component", "zero stoichiometry for '%s'", sp.name.c_str());
         }

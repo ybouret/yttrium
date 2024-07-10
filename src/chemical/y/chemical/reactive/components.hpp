@@ -63,7 +63,7 @@ namespace Yttrium
             kind(Nebulous),
             db(),
             zero(0),
-            mOne(1)
+            mOne(-1)
             {
             }
 

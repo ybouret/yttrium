@@ -138,7 +138,7 @@ namespace Yttrium
                     case Positive:
                         //------------------------------------------------------
                         // must increase product(s)
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         xi.c = K.pow(E.prod.scale);
                         while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) > zero )
                         {
@@ -154,7 +154,7 @@ namespace Yttrium
             xreal_t xiStandard(XWritable        &Cout,
                                const Level      &Lout,
                                const Components &E,
-                            const xreal_t     K,
+                               const xreal_t     K,
                                XMul             &xmul)
             {
                 const xreal_t    zero = 0;
@@ -209,6 +209,7 @@ namespace Yttrium
 
                 xreal_t ax = xi.abs();
                 if(ax.mantissa<=0) return true;
+
 
                 //--------------------------------------------------------------
                 //
@@ -268,10 +269,30 @@ namespace Yttrium
                 } break;
             }
 
-
-
-
             return false;
+        }
+
+        xreal_t Aftermath:: eval(const XReadable &  Cout,
+                                 const Level        Lout,
+                                 const XReadable &  Cinp,
+                                 const Level        Linp,
+                                 const Components & E)
+        {
+            xadd.free();
+
+            Components::ConstIterator i = E->begin();
+            const size_t              m = E->size();
+            for(size_t j = m;j>0;--j,++i)
+            {
+                const Component &cc   = **i;
+                const Species   &sp   = cc.sp;
+                const xreal_t    cnew = Cout[sp.indx[Lout]];
+                const xreal_t    cold = Cinp[sp.indx[Linp]];
+                const xreal_t    xi   = (cnew-cold)/cc.xn;
+                xadd << xi;
+            }
+
+            return xadd.sum()/xreal_t(m);
         }
 
     }

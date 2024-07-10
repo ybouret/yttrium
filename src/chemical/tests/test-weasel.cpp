@@ -46,6 +46,8 @@ Y_UTEST(weasel)
         {
             std::cerr << "C="  << C << std::endl;
             std::cerr << "Xi=" << eq.massAction(K, am.xmul, C, TopLevel) << std::endl;
+            const xreal_t xi = am.eval(C, TopLevel, C0, TopLevel, eq);
+            std::cerr << "xi=" << xi << std::endl;
             eq.drvsMassAction(K, phi, TopLevel, C, TopLevel, am.xmul);
             std::cerr << "phi=" << phi << std::endl;
         }

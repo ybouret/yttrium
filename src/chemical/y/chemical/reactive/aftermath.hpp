@@ -54,6 +54,13 @@ namespace Yttrium
                        const Components &E,
                        const xreal_t     K);
 
+            //! eval extent post solve
+            xreal_t eval(const XReadable &  Cout,
+                         const Level        Lout,
+                         const XReadable &  Cinp,
+                         const Level        Linp,
+                         const Components & E);
+
             //__________________________________________________________________
             //
             //
@@ -61,6 +68,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             XMul xmul; //!< internal multiplications
+            XAdd xadd; //!< internal additions
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);
