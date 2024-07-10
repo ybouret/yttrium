@@ -5,6 +5,7 @@
 #define Y_Chemical_Conservation_Laws_Included 1
 
 #include "y/chemical/plexus/cluster/conservation/law.hpp"
+#include "y/chemical/assembly.hpp"
 #include "y/container/matrix.hpp"
 #include "y/stream/xmlog.hpp"
 
@@ -15,7 +16,7 @@ namespace Yttrium
         namespace Conservation
         {
             
-            class Laws : public Proxy<const Law::List>
+            class Laws : public Law::List, public Assembly
             {
             public:
                 virtual ~Laws() noexcept;
@@ -24,8 +25,6 @@ namespace Yttrium
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
-                Law::List laws;
-                virtual ConstInterface & surrogate() const noexcept;
             };
         }
 

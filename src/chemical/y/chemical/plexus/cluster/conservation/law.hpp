@@ -11,7 +11,7 @@ namespace Yttrium
     {
         namespace Conservation
         {
-            class Law :  public Proxy<const Actors>
+            class Law :  public  Actors
             {
             public:
                 typedef CxxListOf<Law> List;
@@ -21,8 +21,6 @@ namespace Yttrium
                 virtual ~Law() noexcept;
                 Y_OSTREAM_PROTO(Law);
                 
-            private:
-                Actors  clan;
 
             public:
                 Law    *next;
@@ -30,7 +28,6 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
-                virtual ConstInterface & surrogate() const noexcept;
                 
             };
         }

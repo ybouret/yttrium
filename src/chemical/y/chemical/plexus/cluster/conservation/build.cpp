@@ -13,16 +13,32 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Conservations");
 
+            //------------------------------------------------------------------
+            //
+            // preparing survey
+            //
+            //------------------------------------------------------------------
             WOVEn::NaturalSurvey survey(xml);
+
+            //------------------------------------------------------------------
+            //
+            // survey orthogonal space of topology
+            //
+            //------------------------------------------------------------------
             {
                 Matrix<apz> Q;
                 if(! MKL::OrthoSpace::Make(Q,Nu) )
-                    throw Specific::Exception("Conservations", "singular topology ortho space");
+                    throw Specific::Exception("Conservations", "singular topology ortho-space");
                 if(Q.cols>0)
                     WOVEn::Explore(Q,survey,true);
             }
             if(survey.size<=0) return;
             
+            //------------------------------------------------------------------
+            //
+            // convert survey to laws
+            //
+            //------------------------------------------------------------------
             const size_t m = species.size;
             {
                 survey.sort();
@@ -40,7 +56,7 @@ namespace Yttrium
             Y_XMLOG(xml, "Qm=" << Qm );
 
             Coerce(laws) = new Conservation::Laws(species,Qm);
-            for(const CLaw *law = (*laws)->head;law;law=law->next)
+            for(const CLaw *law = laws->head;law;law=law->next)
             {
                 Y_XMLOG(xml,*law);
             }

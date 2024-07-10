@@ -16,19 +16,14 @@ namespace Yttrium
 
             Laws:: Laws(const SList            &sp,
                         const Matrix<unsigned> &Qm) :
-            laws()
+            Law::List()
             {
                 assert(Qm.cols==sp.size);
                 for(size_t i=1;i<=Qm.rows;++i)
-                {
-                    laws.pushTail( new Law(sp,Qm[i]) );
-                }
+                    enroll( *pushTail( new Law(sp,Qm[i]) ) );
             }
 
-            Laws:: ConstInterface & Laws:: surrogate() const noexcept
-            {
-                return laws;
-            }
+            
 
         }
 

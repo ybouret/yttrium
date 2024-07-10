@@ -14,8 +14,7 @@ namespace Yttrium
 
             Law:: Law(const SList              &species,
                       const Readable<unsigned> &coef) :
-            Proxy<const Actors>(),
-            clan(),
+            Actors(),
             next(0),
             prev(0)
             {
@@ -25,16 +24,15 @@ namespace Yttrium
                     const Species  &s = **sn;
                     const size_t    j = s.indx[SubLevel];
                     const unsigned  n = coef[j];
-                    if(n>0) clan(n,s);
+                    if(n>0) (*this)(n,s);
                 }
             }
 
-            Law:: ConstInterface  & Law:: surrogate() const noexcept { return clan; }
 
 
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
-                const Actors &ac = law.clan;
+                const Actors &ac = law;
                 os << "d_(" << ac << ")";
                 return os;
             }
