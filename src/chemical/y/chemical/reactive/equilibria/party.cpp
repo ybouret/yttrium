@@ -24,9 +24,15 @@ namespace Yttrium
             uuid.lj(os, components.name) << " : ";
             reac.rj(os, components.reac.name);
             os << ' ' << Equilibrium::Mark << ' ';
-            prod.lj(os, components.prod.name) << " : ";
+            prod.lj(os, components.prod.name);// << " : ";
             
             return os;
+        }
+
+
+        std::ostream & Party:: display(std::ostream &os, const Components &eq, const XReadable &K) const
+        {
+            return display(os,eq) << " : " << real_t(K[eq.indx[TopLevel]]);
         }
 
 

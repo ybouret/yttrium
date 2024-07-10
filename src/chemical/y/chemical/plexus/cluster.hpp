@@ -110,8 +110,13 @@ namespace Yttrium
             bool accept(const Cluster     &) const noexcept; //!< accept other cluster
            
             //! compile all
-            void compile(XMLog &      xml,
-                         Equilibria & eqs);
+            const Cluster  & compile(XMLog &      xml,
+                                     Equilibria & eqs,
+                                     XWritable  & shK);
+
+
+            void show(std::ostream &) const;
+            void show(std::ostream &, const XReadable &K) const;
 
             //__________________________________________________________________
             //
@@ -132,7 +137,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
-            void buildCombinatorics(XMLog &, Equilibria &primary);
+            void buildCombinatorics(XMLog &, Equilibria &eqs, XWritable &shK);
         };
     }
 

@@ -8,18 +8,19 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Cluster:: compile(XMLog &xml, Equilibria &primary)
+        const Cluster & Cluster:: compile(XMLog      & xml,
+                                          Equilibria & eqs,
+                                          XWritable  & shK)
         {
-            EList &eqs = *this;
-            Y_XML_SECTION_OPT(xml, "Cluster", " eqs='" << eqs.size << "'");
+            Y_XML_SECTION_OPT(xml, "Cluster", " eqs='" << size << "'");
 
             //------------------------------------------------------------------
             //
             // revamp equilibria
             //
             //------------------------------------------------------------------
-            Indexed::Organize(eqs);
-            Y_XMLOG(xml, "eqs  = " << eqs);
+            Indexed::Organize(*this);
+            Y_XMLOG(xml, "eqs  = " << *this);
 
             //------------------------------------------------------------------
             //
@@ -28,7 +29,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             AddressBook book;
             {
-                for(ENode *en=eqs.head;en;en=en->next)
+                for(ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     update(eq);
@@ -55,8 +56,8 @@ namespace Yttrium
             // Build Nu
             //
             //------------------------------------------------------------------
-            Coerce(Nu).make(eqs.size,species.size);
-            for(const ENode *en=eqs.head;en;en=en->next)
+            Coerce(Nu).make(size,species.size);
+            for(const ENode *en=head;en;en=en->next)
             {
                 const Equilibrium &eq = **en;
                 MatrixRow<int>    &nu = Coerce(Nu[ eq.indx[SubLevel] ]);
@@ -66,7 +67,7 @@ namespace Yttrium
 
             const size_t rank = MKL::Rank::Of(Nu);
             Y_XMLOG(xml, "rank = " << rank);
-            if(rank!=eqs.size) throw Specific::Exception("Cluster","rank=%u < %u", unsigned(rank), unsigned(eqs.size));
+            if(rank!=size) throw Specific::Exception("Cluster","rank=%u < %u", unsigned(rank), unsigned(size));
 
             //------------------------------------------------------------------
             //
@@ -82,8 +83,9 @@ namespace Yttrium
             // Build Combinatoris
             //
             //------------------------------------------------------------------
-            buildCombinatorics(xml,primary);
+            buildCombinatorics(xml,eqs,shK);
 
+            return *this;
         }
 
     }

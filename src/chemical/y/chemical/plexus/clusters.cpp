@@ -17,7 +17,8 @@ namespace Yttrium
 
         Clusters:: Clusters(Equilibria &eqs, XMLog &xml) :
         Proxy<const Cluster::List>(),
-        cls()
+        cls(),
+        shK()
         {
             Y_XML_SECTION(xml, "Clusters");
             for(Equilibria::ConstIterator it=eqs->begin(); it !=eqs->end(); ++it)
@@ -59,11 +60,44 @@ namespace Yttrium
                 cls.swapWith(store);
             }
 
+            size_t total = 0;
             for(Cluster *cl = cls.head; cl; cl=cl->next )
             {
-                cl->compile(xml,eqs);
+                total += cl->compile(xml,eqs,shK).size;
             }
+            shK.adjust(total,0);
 
+        }
+
+
+        const XReadable & Clusters:: K(const xreal_t t)
+        {
+            for(Cluster *cl = cls.head; cl; cl=cl->next )
+            {
+                for(ENode *en=cl->head;en;en=en->next)
+                {
+                    Equilibrium &eq = Coerce(**en);
+                    shK[eq.indx[TopLevel]] = eq.K(t);
+                }
+            }
+            return shK;
+        }
+
+
+        void Clusters:: show(std::ostream &os) const
+        {
+            for(const Cluster *cl = cls.head; cl; cl=cl->next )
+            {
+                cl->show(os);
+            }
+        }
+
+        void Clusters:: showK(std::ostream &os) const
+        {
+            for(const Cluster *cl = cls.head; cl; cl=cl->next )
+            {
+                cl->show(os,shK);
+            }
         }
 
     }

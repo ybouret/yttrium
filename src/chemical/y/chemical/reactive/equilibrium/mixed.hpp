@@ -12,22 +12,24 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef Small::BareHeavyList<int> Mixing;
-
+        typedef Small::BareHeavyList<int> MixList;
+        typedef MixList::NodeType         MixNode;
 
         class MixedEquilibrium : public Equilibrium
         {
         public:
             explicit MixedEquilibrium(const size_t        topLevel,
                                       const EList         &eqs,
-                                      const Readable<int> &cof);
+                                      const Readable<int> &cof,
+                                      XWritable           &shK);
 
 
             virtual ~MixedEquilibrium() noexcept;
 
-            XMul         xmul;   //!< compute mixed constant
-            const EList  source; //!< source equilibria
-            const Mixing mixing; //!< source coefficients
+            XMul          xmul;   //!< compute mixed constant
+            XWritable &   topK;   //!< top level K
+            const EList   source; //!< source equilibria
+            const MixList mixing; //!< source coefficients
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);

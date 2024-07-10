@@ -7,10 +7,6 @@ namespace Yttrium
     {
         MixedEquilibrium:: ~MixedEquilibrium() noexcept {}
 
-        xreal_t MixedEquilibrium:: getK(const xreal_t)
-        {
-            return 1;
-        }
 
         static const char * const EmptyName = "";
 
@@ -72,9 +68,11 @@ namespace Yttrium
 
         MixedEquilibrium:: MixedEquilibrium(const size_t        topLevel,
                                             const EList         &eqs,
-                                            const Readable<int> &cof) :
+                                            const Readable<int> &cof,
+                                            XWritable           &shK) :
         Equilibrium(EmptyName,topLevel),
         xmul(),
+        topK(shK),
         source(),
         mixing()
         {
@@ -92,6 +90,29 @@ namespace Yttrium
             }
 
 
+        }
+
+        xreal_t MixedEquilibrium:: getK(const xreal_t)
+        {
+            const xreal_t one(1);
+            xmul.free();
+            const ENode       *en = source.head;
+            for(const MixNode *mn = mixing.head;mn;mn=mn->next,en=en->next)
+            {
+                const xreal_t Ki = topK[ (**en).indx[TopLevel] ];
+                const int     ni = **mn;
+                if(ni>0)
+                {
+                    xmul.insert(Ki,ni);
+                }
+                else
+                {
+                    const xreal_t iK = one/Ki;
+                    xmul.insert(iK,-ni);
+                }
+            }
+
+            return xmul.product();
         }
 
     }

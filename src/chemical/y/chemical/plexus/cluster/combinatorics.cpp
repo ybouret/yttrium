@@ -18,7 +18,9 @@ namespace Yttrium
 
 
 
-        void Cluster:: buildCombinatorics(XMLog &xml, Equilibria &primary)
+        void Cluster:: buildCombinatorics(XMLog      &xml,
+                                          Equilibria &eqs,
+                                          XWritable  &shK)
         {
             Y_XML_SECTION(xml, "Combinatorics");
 
@@ -42,6 +44,7 @@ namespace Yttrium
                 WOVEn::Explore(mat,survey,false);
             }
             survey.sort();
+
             //------------------------------------------------------------------
             //
             // Each survey is a combination of reactions
@@ -102,11 +105,11 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // create mixed equilibrium
                 //--------------------------------------------------------------
-                AutoPtr<MixedEquilibrium> mx = new MixedEquilibrium(primary->size()+1,*this,weight);
+                AutoPtr<MixedEquilibrium> mx = new MixedEquilibrium(eqs->size()+1,*this,weight,shK);
                 (*this) << *mx;
                 try {
                     // insert mx
-                    Equilibrium &eq = primary.append(mx.yield());
+                    Equilibrium &eq = eqs.append(mx.yield());
 
                     // fill equilibirium
                     for(const SNode *sn=species.head;sn;sn=sn->next)
@@ -118,10 +121,8 @@ namespace Yttrium
                         eq(nu,s);
                     }
 
-
-
                     // update formatting
-                    primary.update(eq);
+                    eqs.update(eq);
                     update(eq);
 
                     // update sub-level
@@ -133,10 +134,13 @@ namespace Yttrium
                     throw;
                 }
 
-
-
             }
 
+            //------------------------------------------------------------------
+            //
+            // Post-process all equilibria
+            //
+            //------------------------------------------------------------------
             if(xml.verbose)
             {
                 for(last=last->next;last;last=last->next)
@@ -144,6 +148,8 @@ namespace Yttrium
                     display(xml(), **last) << std::endl;
                 }
             }
+
+
 
         }
 

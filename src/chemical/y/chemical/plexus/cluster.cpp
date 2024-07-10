@@ -46,6 +46,28 @@ namespace Yttrium
 
         const Cluster & Cluster:: operator*() const noexcept { return *this; }
 
+        void Cluster:: show(std::ostream &os) const
+        {
+            os << '#' << size << ' ' << '{' << std::endl;
+            for(const ENode *en=head;en;en=en->next)
+            {
+                display(os,**en) << std::endl;
+            }
+            os << '}' << std::endl;
+        }
+
+
+        void Cluster:: show(std::ostream &os, const XReadable &K) const
+        {
+            os << '#' << size << ' ' << '{' << std::endl;
+            for(const ENode *en=head;en;en=en->next)
+            {
+                display(os,**en,K) << std::endl;
+            }
+            os << '}' << std::endl;
+        }
+
+
 
     }
 
