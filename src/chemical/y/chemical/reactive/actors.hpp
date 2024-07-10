@@ -43,6 +43,9 @@ namespace Yttrium
             //! record all species
             void record(AddressBook &) const;
 
+            //! algebraic charge
+            int charge() const noexcept;
+
             //! add next actor
             void operator()(const unsigned nu, const Species &sp);
 

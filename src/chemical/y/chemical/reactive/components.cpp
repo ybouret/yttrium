@@ -156,6 +156,12 @@ namespace Yttrium
         }
 
 
+        bool Components:: neutral() const noexcept
+        {
+            return 0 == reac.charge() - prod.charge();
+        }
+
+
     }
 
 }

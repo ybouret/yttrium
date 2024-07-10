@@ -143,6 +143,8 @@ namespace Yttrium
             bool linkedTo(const Components &)   const noexcept; //!< linked to other compoennts
             void record(AddressBook &) const;                   //!< record (add) all species
 
+            bool neutral() const noexcept;
+
             //__________________________________________________________________
             //
             //

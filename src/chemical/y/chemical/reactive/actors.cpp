@@ -157,6 +157,14 @@ namespace Yttrium
                 a->record(book);
         }
 
+        int Actors:: charge() const noexcept
+        {
+            int z = 0;
+            for(const Actor *a=actors.head;a;a=a->next)
+                z += a->charge();
+            return z;
+        }
+
     }
 
 }

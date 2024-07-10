@@ -35,6 +35,7 @@ namespace Yttrium
                     update(eq);
                     eq.record(book);
                     if(eq->size()<=0) throw Specific::Exception(eq.name.c_str(),"no species!!");
+                    if(!eq.neutral()) throw Specific::Exception(eq.name.c_str(),"not neutral!!");
                 }
             }
 

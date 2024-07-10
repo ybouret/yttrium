@@ -98,6 +98,11 @@ namespace Yttrium
             book |= sp;
         }
 
+        int Actor:: charge() const noexcept
+        {
+            return int(nu) * sp.z;
+        }
+
     }
 
 }

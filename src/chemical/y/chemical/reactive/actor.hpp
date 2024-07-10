@@ -52,6 +52,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & operator*()  const noexcept; //!< *this for list
             void          record(AddressBook &) const; //!< record species
+            int           charge()     const noexcept; //!< algebraic charge
 
             //! compute mass action
             void massAction(XMul            &xmul,
