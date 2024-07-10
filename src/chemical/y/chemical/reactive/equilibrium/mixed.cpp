@@ -74,6 +74,7 @@ namespace Yttrium
                                             const EList         &eqs,
                                             const Readable<int> &cof) :
         Equilibrium(EmptyName,topLevel),
+        xmul(),
         source(),
         mixing()
         {

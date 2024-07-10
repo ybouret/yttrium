@@ -25,8 +25,9 @@ namespace Yttrium
 
             virtual ~MixedEquilibrium() noexcept;
 
-            const EList  source;
-            const Mixing mixing;
+            XMul         xmul;   //!< compute mixed constant
+            const EList  source; //!< source equilibria
+            const Mixing mixing; //!< source coefficients
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
