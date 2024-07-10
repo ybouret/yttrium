@@ -67,8 +67,8 @@ namespace Yttrium
             
          };
 
-        typedef Small::BareLightList<const Equilibrium> EList;
-        typedef EList::NodeType                         ENode;
+        typedef Small::BareLightList<const Equilibrium> EList; //!< alias
+        typedef EList::NodeType                         ENode; //!< alias//! linked to species
     }
 
 }

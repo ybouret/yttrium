@@ -10,8 +10,8 @@ namespace Yttrium
     {
         void Cluster:: compile(XMLog &xml)
         {
+            EList &eqs = *this;
             Y_XML_SECTION_OPT(xml, "Cluster", " eqs='" << eqs.size << "'");
-
 
             //------------------------------------------------------------------
             //

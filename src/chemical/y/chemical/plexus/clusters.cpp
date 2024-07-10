@@ -31,7 +31,7 @@ namespace Yttrium
                 {
                     if(cl->accept(eq))
                     {
-                        Coerce(**cl) << eq;
+                        *cl << eq;
                         goto CHECK_FUSION;
                     }
                 }
@@ -50,7 +50,7 @@ namespace Yttrium
                     {
                         if(cl->accept(*mine))
                         {
-                            Coerce(**cl).mergeTail( Coerce(**mine.yield()) );
+                            (*cl).mergeTail( *(mine.yield()) );
                             break;
                         }
                     }

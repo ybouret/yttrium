@@ -140,9 +140,9 @@ namespace Yttrium
                           const Level   level) const;
 
 
-            bool linkedTo(const Species    &sp) const noexcept;
-            bool linkedTo(const Components &)   const noexcept;
-            void record(AddressBook &) const;
+            bool linkedTo(const Species    &sp) const noexcept; //!< linked to species
+            bool linkedTo(const Components &)   const noexcept; //!< linked to other compoennts
+            void record(AddressBook &) const;                   //!< record (add) all species
 
             //__________________________________________________________________
             //

@@ -15,13 +15,31 @@ namespace Yttrium
     {
         namespace Conservation
         {
-            
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! List of Laws
+            //
+            //
+            //__________________________________________________________________
             class Laws : public Law::List, public Assembly
             {
             public:
-                virtual ~Laws() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+               
+                //! setup
                 explicit Laws(const SList            &sp,
                               const Matrix<unsigned> &Qm);
+
+                //! cleanu[
+                virtual ~Laws() noexcept;
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);

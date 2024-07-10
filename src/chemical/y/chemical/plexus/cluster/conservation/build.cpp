@@ -52,6 +52,7 @@ namespace Yttrium
                     for(size_t j=m;j>0;--j)    q[j] = a[j].cast<unsigned>("conservation");
                 }
             }
+            Y_XML_SECTION(xml, "Summary");
             Y_XMLOG(xml, "Nu=" << Nu );
             Y_XMLOG(xml, "Qm=" << Qm );
 

@@ -19,6 +19,7 @@
 
 \section{Reaction(s)}
 
+\subsection{Notations}
 Let's assume that we have $N$ equilibria coupling $M$ species.
 We define $a_j$ the activity of species $A_j$, and $\nu_{ij}$ the algebraic
 coefficient of $A_j$ in the $i-$th equilibria $E_i$:
@@ -34,6 +35,7 @@ and we define an equilibrium state by:
 	\vec \Xi ( \vec C ) = \vec 0
 \end{equation}
 
+\subsection{Perturbation}
 Let us make an external "slow" perturbation 
 \begin{equation}
 	\vec \sigma \, \mathrm{d} t \in \mathbb R ^M
@@ -58,6 +60,41 @@ so that, starting from $\vec \Xi ( \vec C ) = \vec 0$, the system evolves locall
 	}
 \end{equation}
 which conserves the charge for valid equilibrium(a).
+
+\subsection{Single Root}
+
+For a running (non-blocked) equilibrium:
+\begin{equation}
+	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu_i ) = 0
+\end{equation}
+
+\begin{equation}
+	\Xi_i(\vec C_0 + \delta \vec C + (\xi_i^\star + \delta  \xi_i^\star)\vec \nu_i  ) = 0
+	\implies
+	\langle \vec \Phi_i^\star \vert \delta \vec C +  \delta \xi_i^\star \vec \nu_i \rangle = 0
+\end{equation}
+
+\begin{equation}
+	 \delta \xi_i^\star = - \dfrac{\langle \vec \Phi_i^\star \vert \delta \vec C \rangle }
+	 { \langle \vec \Phi_i^\star \vert \vec \nu_i \rangle  }
+	 =
+	  - \dfrac{\langle \vec \Phi_i^\star \vert \bm{\nu}^T \vert \delta \vec \xi \rangle }
+	 { \langle \vec \Phi_i^\star \vert \vec \nu_i \rangle  }
+\end{equation}
+
+\begin{equation}
+	\delta \vec \xi_i ^\star = - \bm\Upsilon \delta \vec \xi
+\end{equation}
+
+\begin{equation}
+	\bm\Upsilon_{i,j} = 
+	\left\lbrace
+	\begin{array}{rl}
+	1 & \text{if } i=j\\
+	\dfrac{\langle \vec \Phi_i^\star \vert \vec \nu_j \rangle }{\langle \vec \Phi_i^\star \vert \vec \nu_i \rangle } & \text{if } i\not=j\\
+	\end{array}
+	\right.
+\end{equation}
 
 \section{Diffusion/Migration}
 

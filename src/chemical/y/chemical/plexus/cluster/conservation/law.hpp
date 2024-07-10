@@ -11,20 +11,46 @@ namespace Yttrium
     {
         namespace Conservation
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! conservation law as Actors
+            //
+            //
+            //__________________________________________________________________
             class Law :  public  Actors
             {
             public:
-                typedef CxxListOf<Law> List;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<Law> List; //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup from species and some coefficients
                 explicit Law(const SList              &species,
                              const Readable<unsigned> &coef);
-                virtual ~Law() noexcept;
-                Y_OSTREAM_PROTO(Law);
-                
+                virtual ~Law() noexcept; //!< cleanup
+                Y_OSTREAM_PROTO(Law);    //!< display
 
-            public:
-                Law    *next;
-                Law    *prev;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Law    *next; //!< for list
+                Law    *prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);

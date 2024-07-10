@@ -11,35 +11,64 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        class Cluster : public Proxy<const EList>, public Party
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Cluster of coupled equilibria
+        //
+        //
+        //______________________________________________________________________
+        class Cluster : public EList, public Party
         {
         public:
-            typedef CxxListOf<Cluster> List;
-            typedef Conservation::Laws CLaws;
-            typedef Conservation::Law  CLaw;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Cluster> List;  //!< alias
+            typedef Conservation::Laws CLaws; //!< alias
+            typedef Conservation::Law  CLaw;  //!< alias
 
-            virtual ~Cluster() noexcept;
-            explicit Cluster(const Equilibrium &first);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Cluster(const Equilibrium &first); //!< setup non empty
+            virtual ~Cluster() noexcept;                //!< cleanup
 
-            bool accept(const Equilibrium &) const noexcept;
-            bool accept(const Cluster     &) const noexcept;
-            void compile(XMLog &xml);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const Cluster & operator*() const noexcept { return *this; }
+            
+            bool accept(const Equilibrium &) const noexcept; //!< accept equilibrium
+            bool accept(const Cluster     &) const noexcept; //!< accept other cluster
+            void compile(XMLog &xml);                        //!< compile all
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            virtual ConstInterface & surrogate() const noexcept;
-            EList       eqs;
-
-        public:
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const SList            species; //!< species in this cluster
             const Matrix<int>      Nu;      //!< primary topology
             const Matrix<unsigned> Qm;      //!< conservation matrix
             const AutoPtr<CLaws>   laws;    //!< matching laws
 
-            Cluster *   next;
-            Cluster *   prev;
+            Cluster *   next; //!< for list
+            Cluster *   prev; //!< for list
 
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
         };
     }
