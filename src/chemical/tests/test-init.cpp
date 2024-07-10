@@ -2,6 +2,9 @@
 #include "y/chemical/reactive/components.hpp"
 #include "y/chemical/types.hpp"
 #include "y/utest/run.hpp"
+#include "y/stream/libc/output.hpp"
+
+#include "y/graphviz/color-scheme.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -11,6 +14,21 @@ Y_UTEST(init)
     Library         lib;
     const Species & h = lib("H+",1);
     const Species & w = lib("HO-",-1);
+
+    for(size_t i=0;i<GraphViz::ColorScheme::Count;++i)
+    {
+        std::cerr << GraphViz::ColorScheme::Table[i].name << std::endl;
+    }
+
+    const String color = GraphViz::Vizible::Color("set18", 1);
+
+    {
+        OutputFile fp("toto.dot");
+        GraphViz::Vizible::Enter(fp,"G");
+        h.viz(fp, color, true);
+        w.viz(fp, color, false);
+        GraphViz::Vizible::Leave(fp);
+    }
 
     std::cerr << lib << std::endl;
     

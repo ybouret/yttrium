@@ -32,8 +32,13 @@ namespace Yttrium
                 if(Q.cols>0)
                     WOVEn::Explore(Q,survey,true);
             }
-            if(survey.size<=0) return;
-            
+            if(survey.size<=0) 
+            {
+                for(const SNode *sn=species.head;sn;sn=sn->next)
+                    Coerce(unbounded) << **sn;
+                return;
+            }
+
             //------------------------------------------------------------------
             //
             // convert survey to laws
@@ -57,10 +62,26 @@ namespace Yttrium
             Y_XMLOG(xml, "Qm=" << Qm );
 
             Coerce(laws) = new Conservation::Laws(species,Qm);
+            AddressBook cdb;
             for(const CLaw *law = laws->head;law;law=law->next)
             {
+                law->record(cdb);
                 Y_XMLOG(xml,*law);
             }
+
+            for(const SNode *sn=species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                if( cdb.has(sp) )
+                    Coerce(conserved) << sp;
+                else
+                    Coerce(unbounded) << sp;
+            }
+
+            Indexed::SortBy<TopLevel>::Using( Coerce(conserved.list) );
+            Indexed::SortBy<TopLevel>::Using( Coerce(unbounded.list) );
+
+
         }
     }
 

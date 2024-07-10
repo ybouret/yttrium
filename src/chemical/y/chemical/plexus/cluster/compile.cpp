@@ -68,7 +68,14 @@ namespace Yttrium
             Y_XMLOG(xml, "rank = " << rank);
             if(rank!=eqs.size) throw Specific::Exception("Cluster","rank=%u < %u", unsigned(rank), unsigned(eqs.size));
 
+            //------------------------------------------------------------------
+            //
+            // Build Conservations
+            //
+            //------------------------------------------------------------------
             buildConservations(xml);
+            Y_XMLOG(xml, "conserved=" << conserved.list);
+            Y_XMLOG(xml, "unbounded=" << unbounded.list);
         }
 
     }

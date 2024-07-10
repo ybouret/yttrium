@@ -151,11 +151,8 @@ namespace Yttrium
 
         void Components:: record(AddressBook &book) const
         {
-            size_t            n  = db.size();
-            for(ConstIterator it = db.begin();n>0;--n,++it)
-            {
-                book |= (**it).sp;
-            }
+            reac.record(book);
+            prod.record(book);
         }
 
 

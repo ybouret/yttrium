@@ -7,7 +7,6 @@
 #include "y/chemical/reactive/actors.hpp"
 #include "y/chemical/assembly.hpp"
 #include "y/associative/suffix/set.hpp"
-#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {

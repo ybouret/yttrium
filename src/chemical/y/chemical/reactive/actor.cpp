@@ -93,6 +93,11 @@ namespace Yttrium
             c = Max(zero,c+xn*xi);
         }
 
+        void Actor:: record(AddressBook &book) const
+        {
+            book |= sp;
+        }
+
     }
 
 }

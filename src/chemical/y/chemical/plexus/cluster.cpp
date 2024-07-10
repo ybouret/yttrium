@@ -42,7 +42,7 @@ namespace Yttrium
             return false;
         }
 
-        
+        const Cluster & Cluster:: operator*() const noexcept { return *this; }
 
 
     }

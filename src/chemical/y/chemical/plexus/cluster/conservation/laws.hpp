@@ -8,6 +8,7 @@
 #include "y/chemical/assembly.hpp"
 #include "y/container/matrix.hpp"
 #include "y/stream/xmlog.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -37,10 +38,17 @@ namespace Yttrium
                 explicit Laws(const SList            &sp,
                               const Matrix<unsigned> &Qm);
 
-                //! cleanu[
+                //! cleanup
                 virtual ~Laws() noexcept;
 
-                
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+               
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
             };

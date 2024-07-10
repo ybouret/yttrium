@@ -10,12 +10,20 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of independant clusters
+        //
+        //
+        //______________________________________________________________________
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
-            explicit Clusters(Equilibria &, XMLog &);
-            virtual ~Clusters() noexcept;
+
+            explicit Clusters(Equilibria &, XMLog &); //!< setup from equilibria
+            virtual ~Clusters() noexcept;             //!< cleanup
 
 
         private:

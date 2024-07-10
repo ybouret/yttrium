@@ -23,6 +23,19 @@ namespace Yttrium
             return os<<sp.name;
         }
 
+
+        void Species:: viz(OutputStream &fp,
+                           const String &color,
+                           const bool    conserved) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,name);
+            fp << ",shape=oval,style=" << (conserved ? "dashed" : "solid" );
+            fp << ",color=" << color;
+            fp << ']';
+            Endl(fp);
+
+        }
     }
 
 }

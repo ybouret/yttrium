@@ -60,7 +60,7 @@ Y_GV_CS_3_11(NAME),        \
             }
 
 
-            throw Specific::Exception("GraphViz::ColorScheme::Get","no '%s",id);
+            throw Specific::Exception("GraphViz::ColorScheme::Get","no '%s'",id);
         }
 
     }

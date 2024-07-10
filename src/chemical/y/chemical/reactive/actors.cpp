@@ -150,6 +150,13 @@ namespace Yttrium
             }
         }
 
+
+        void Actors:: record(AddressBook &book) const
+        {
+            for(const Actor *a=actors.head;a;a=a->next)
+                a->record(book);
+        }
+
     }
 
 }

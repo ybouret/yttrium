@@ -6,6 +6,7 @@
 #include "y/chemical/species.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/chemical/types.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -49,7 +50,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const Actor & operator*() const noexcept; //!< *this for list
+            const Actor & operator*()  const noexcept; //!< *this for list
+            void          record(AddressBook &) const; //!< record species
 
             //! compute mass action
             void massAction(XMul            &xmul,

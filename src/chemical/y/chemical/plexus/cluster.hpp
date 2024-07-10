@@ -5,12 +5,40 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/plexus/cluster/conservation/laws.hpp"
-
+#include "y/oversized.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+        template <typename LIST>
+        class Fragment : public Object
+        {
+        public:
+            explicit Fragment() {}
+            virtual ~Fragment() noexcept {}
+
+            template <typename T> inline
+            Fragment & operator<<(const T &obj) {
+                try {
+                    Coerce(book) += obj;
+                    Coerce(list) << obj;
+                }
+                catch(...)
+                {
+                    (void) Coerce(book).remove_( &obj );
+                    throw;
+                }
+                return *this;
+            }
+
+            const LIST        list;
+            const AddressBook book;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Fragment);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -19,7 +47,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Cluster : public EList, public Party
+        class Cluster : public Oversized, public EList, public Party
         {
         public:
             //__________________________________________________________________
@@ -47,8 +75,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const Cluster & operator*() const noexcept { return *this; }
-            
+            const Cluster & operator*()      const noexcept; //!< helper to print clusters
             bool accept(const Equilibrium &) const noexcept; //!< accept equilibrium
             bool accept(const Cluster     &) const noexcept; //!< accept other cluster
             void compile(XMLog &xml);                        //!< compile all
@@ -59,10 +86,13 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SList            species; //!< species in this cluster
-            const Matrix<int>      Nu;      //!< primary topology
-            const Matrix<unsigned> Qm;      //!< conservation matrix
-            const AutoPtr<CLaws>   laws;    //!< matching laws
+            const SList            species;   //!< species in this cluster
+            const Matrix<int>      Nu;        //!< primary topology
+            const Matrix<unsigned> Qm;        //!< conservation matrix
+            const AutoPtr<CLaws>   laws;      //!< matching laws
+            const Fragment<SList>  conserved;
+            const Fragment<SList>  unbounded;
+            
 
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list

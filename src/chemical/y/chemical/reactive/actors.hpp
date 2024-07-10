@@ -40,6 +40,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! record all species
+            void record(AddressBook &) const;
+
             //! add next actor
             void operator()(const unsigned nu, const Species &sp);
 

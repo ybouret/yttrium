@@ -68,6 +68,18 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            
+            //! node+label+color+style
+            void viz(OutputStream &fp,
+                     const String &color,
+                     const bool    conserved) const;
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
@@ -77,8 +89,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
 
-        typedef Small::BareLightList<const Species> SList;
-        typedef SList::NodeType                     SNode;
+        typedef Small::BareLightList<const Species> SList; //!< alias
+        typedef SList::NodeType                     SNode; //!< alias
     }
 }
 

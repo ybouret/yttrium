@@ -69,15 +69,19 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! algorithm to sort lists according to level
             template <Level LEVEL>
             struct SortBy
             {
+                //! dedicated comparison
                 template <typename NODE> static inline
                 SignType CompareNodes(const NODE *lhs, const NODE *rhs) noexcept
                 {
                     return Sign::Of( (**lhs).indx[LEVEL], (**rhs).indx[LEVEL] );
                 }
 
+                //! call algorithm
                 template <typename NODE> static inline
                 void Using(ListOf<NODE> &L)
                 {
@@ -85,9 +89,11 @@ namespace Yttrium
                 }
             };
 
+            //! algorithm to revamp indices within a list
             template <Level LEVEL>
             struct Revamp
             {
+                //! call algorithm
                 template <typename NODE> static inline
                 void Using(ListOf<NODE> &L)
                 {
@@ -97,6 +103,7 @@ namespace Yttrium
                 }
             };
 
+            //! SortBy TopLevel, Revamp SubLevel
             template <typename NODE> static inline
             void Organize(ListOf<NODE> &L)
             {
