@@ -11,13 +11,35 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Fragment of lists with database
+        //
+        //
+        //______________________________________________________________________
         template <typename LIST>
         class Fragment : public Object
         {
         public:
-            explicit Fragment() {}
-            virtual ~Fragment() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Fragment() : list(), book() {} //!< setup
+            virtual ~Fragment() noexcept {}         //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+        
+            //! insert new compatible object
             template <typename T> inline
             Fragment & operator<<(const T &obj) {
                 try {
@@ -32,12 +54,20 @@ namespace Yttrium
                 return *this;
             }
 
-            const LIST        list;
-            const AddressBook book;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const LIST        list; //!< content as list
+            const AddressBook book; //!< content as book
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fragment);
         };
+
+        
 
         //______________________________________________________________________
         //
@@ -90,9 +120,8 @@ namespace Yttrium
             const Matrix<int>      Nu;        //!< primary topology
             const Matrix<unsigned> Qm;        //!< conservation matrix
             const AutoPtr<CLaws>   laws;      //!< matching laws
-            const Fragment<SList>  conserved;
-            const Fragment<SList>  unbounded;
-            
+            const Fragment<SList>  conserved; //!< conserved species
+            const Fragment<SList>  unbounded; //!< unbounded species
 
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list

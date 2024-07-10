@@ -16,6 +16,8 @@ namespace Yttrium
         Nu(),
         Qm(),
         laws(),
+        conserved(),
+        unbounded(),
         next(0),
         prev(0)
         {
