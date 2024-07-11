@@ -65,7 +65,7 @@ which conserves the charge for valid equilibrium(a).
 
 For a running (non-blocked) equilibrium:
 \begin{equation}
-	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu_i ) = 0
+	\Xi_i(\vec C_0 + \xi_{i}^\star \vec \nu_i ) = 0
 \end{equation}
 
 \begin{equation}
@@ -95,12 +95,38 @@ For a running (non-blocked) equilibrium:
 	\end{array}
 	\right.
 \end{equation}
-
-If we want
+	
 \begin{equation}
-	\delta \vec \xi_i ^\star = - \vec \alpha \otimes \vec \xi ^\star
+	\xi_i ^\circ = \xi_i^\star - \langle \vec\Upsilon_i \vert \delta \vec \xi \rangle
+\end{equation}
+	
+How to chose $\delta \vec \xi$ so that we decrease:
+\begin{equation}
+	C^\circ = \sum_i \vert \xi_i^\circ \vert 
 \end{equation}
 
+\subsection{Conservation}
+
+A conservation law is a vector of {\bf positive} coefficients $\vec \alpha$ such that:
+\begin{equation}
+	\langle \vec \alpha \vert \vec C \rangle \leq 0
+\end{equation}
+is conserved during shifts in equilibria.\\
+Let's assume that
+\begin{equation}
+	\langle \vec \alpha \vert \vec C \rangle = -X_s < 0 
+\end{equation}
+Then we will inject the smallest $\delta \vec C$ such that:
+\begin{equation}
+	\langle \vec \alpha \vert \delta \vec C \rangle = X_s
+\end{equation}
+
+\begin{equation}
+	\delta \vec C = \dfrac{X_s}{\vec\alpha^2} \vec{\alpha}
+\end{equation}
+
+
+ 	
 
 \section{Diffusion/Migration}
 

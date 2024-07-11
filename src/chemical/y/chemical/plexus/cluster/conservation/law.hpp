@@ -62,8 +62,9 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Law    *next; //!< for list
-                Law    *prev; //!< for list
+                const  xreal_t xden; //!< |nu|^2
+                Law           *next; //!< for list
+                Law           *prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);

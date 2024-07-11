@@ -16,18 +16,25 @@ namespace Yttrium
             Law:: Law(const SList              &species,
                       const Readable<unsigned> &coef) :
             Actors(),
+            xden(0),
             next(0),
             prev(0)
             {
                 assert( species.size == coef.size() );
+                unsigned sq = 0;
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                 {
                     const Species  &s = **sn;
                     const size_t    j = s.indx[SubLevel];
                     const unsigned  n = coef[j];
-                    if(n>0) (*this)(n,s);
+                    if(n>0)
+                    {
+                        (*this)(n,s);
+                        sq += n*n;
+                    }
                 }
                 if((*this)->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
+                Coerce(xden) = sq;
             }
 
 
@@ -35,7 +42,7 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
                 const Actors &ac = law;
-                os << "d_(" << ac << ")";
+                os << "d_(" << ac << ")/"<<real_t(law.xden);
                 return os;
             }
 
