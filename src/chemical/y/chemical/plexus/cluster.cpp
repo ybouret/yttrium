@@ -18,7 +18,7 @@ namespace Yttrium
         laws(),
         conserved(),
         unbounded(),
-        order(),
+        order(0),
         next(0),
         prev(0)
         {
@@ -98,7 +98,7 @@ namespace Yttrium
             // write eqs
             //
             //------------------------------------------------------------------
-            const EList &el = (*order)[1];
+            const EList &el = order[1];
             for(const ENode *node=el.head;node;node=node->next)
             {
                 const Equilibrium &eq    = **node;

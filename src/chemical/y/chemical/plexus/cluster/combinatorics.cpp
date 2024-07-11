@@ -29,8 +29,9 @@ namespace Yttrium
             // Prepare Order and register primary eqs
             //
             //------------------------------------------------------------------
-            Coerce(order) = new Lists(size);
-            Lists &ord    = Coerce(*order);
+            { Lists _(size); Coerce(order).swapWith(_); }
+
+            Lists &ord    = Coerce(order);
             for(const ENode *en=head;en;en=en->next)
             {
                 ord[1] << **en;

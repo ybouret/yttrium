@@ -132,7 +132,7 @@ namespace Yttrium
             const AutoPtr<CLaws>   laws;      //!< matching laws
             const Fragment<SList>  conserved; //!< conserved species
             const Fragment<SList>  unbounded; //!< unbounded species
-            const AutoPtr<Lists>   order;     //!< eqs per order
+            const Lists            order;     //!< eqs per order
             
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list
