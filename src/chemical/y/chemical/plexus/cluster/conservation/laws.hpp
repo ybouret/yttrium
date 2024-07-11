@@ -17,8 +17,8 @@ namespace Yttrium
         namespace Conservation
         {
 
-            typedef Small::BareLightList<const Law> LList;
-            typedef LList::NodeType                 LNode;
+            typedef Small::BareLightList<const Law> LList; //!< alias
+            typedef LList::NodeType                 LNode; //!< alias
 
             //__________________________________________________________________
             //
@@ -48,14 +48,13 @@ namespace Yttrium
                 class Group : public Object, public LList
                 {
                 public:
-                    typedef CxxListOf<Group> List;
+                    typedef CxxListOf<Group> List; //!< alias
 
-                    explicit Group(const Law &first);
-                    virtual ~Group() noexcept;
+                    explicit Group(const Law &first); //!< setup with first law
+                    virtual ~Group() noexcept;        //!< cleanup
 
-                    bool accept(const Law   &) const noexcept;
-                    bool accept(const Group &) const noexcept;
-
+                    bool accept(const Law   &) const noexcept; //!< has common species with law
+                    bool accept(const Group &) const noexcept; //!< has common species with group
 
                     Group *next; //!< for list
                     Group *prev; //!< for list
@@ -84,8 +83,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Group::List groups;
-                const size_t      maxGroupSize;
+                const Group::List groups;          //!< independant groups of dependant laws
+                const size_t      maxGroupSize;    //!< max(groups.size)
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);

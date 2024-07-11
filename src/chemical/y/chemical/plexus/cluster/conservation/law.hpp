@@ -50,11 +50,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 
-                //! assume species are in fp
-                void viz(OutputStream &fp, const String &color) const;
 
-                bool linkedTo(const Species &) const noexcept;
-                bool linkedTo(const Law     &) const noexcept;
+                void viz(OutputStream &fp, const String &color) const;//!< assume species are in fp
+
+                bool linkedTo(const Species &) const noexcept; //!< this->hired(species)
+                bool linkedTo(const Law     &) const noexcept; //!< this hired one of other's species
 
                 //______________________________________________________________
                 //

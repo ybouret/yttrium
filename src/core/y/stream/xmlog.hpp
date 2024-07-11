@@ -74,7 +74,7 @@ do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::
         static std::ostream & Indent(std::ostream &, const unsigned n); //!< indent n times
         std::ostream &        indent(std::ostream &) const;             //!< indent depth
 
-
+        //! display list
         template <typename NAME, typename LIST> inline
         void display(const NAME &name, const LIST &list)
         {
@@ -93,6 +93,7 @@ do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::
             }
         }
 
+        //! display empty tag
         template <typename NAME> inline
         void empty(const NAME &name)
         {

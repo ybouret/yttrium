@@ -12,15 +12,23 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! classified roaming equilbria
+        //
+        //
+        //______________________________________________________________________
         class Roaming
         {
         public:
-            Roaming() noexcept;
+            Roaming()  noexcept;
             ~Roaming() noexcept;
 
-            const EList reacOnly;
-            const EList prodOnly;
-            const EList standard;
+            const EList reacOnly; //!< roaming with reac only
+            const EList prodOnly; //!< roaming with prod onlu
+            const EList standard; //!< roaming with both reac and prod
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Roaming);
