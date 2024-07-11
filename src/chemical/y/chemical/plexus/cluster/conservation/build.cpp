@@ -43,6 +43,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(survey.size<=0)
             {
+                Y_XMLOG(xml, "No conservation law");
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                     Coerce(unbounded) << **sn;
                 return;
@@ -70,14 +71,33 @@ namespace Yttrium
             Y_XMLOG(xml, "Nu=" << Nu );
             Y_XMLOG(xml, "Qm=" << Qm );
 
+            //------------------------------------------------------------------
+            //
+            // Create individual laws
+            //
+            //------------------------------------------------------------------
             Coerce(laws) = new Conservation::Laws(species,Qm);
             AddressBook cdb;
             for(const CLaw *law = laws->head;law;law=law->next)
             {
                 law->record(cdb);
-                Y_XMLOG(xml,*law);
             }
 
+            for(const CLaws::Group *g=laws->groups.head;g;g=g->next)
+            {
+                Y_XML_SECTION_OPT(xml, "Conservation::Group", " size='" << g->size << "'");
+                for(const Conservation::LNode *ln=g->head;ln;ln=ln->next)
+                {
+                    Y_XMLOG(xml,**ln);
+                }
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            // qualify species
+            //
+            //------------------------------------------------------------------
             for(const SNode *sn=species.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;

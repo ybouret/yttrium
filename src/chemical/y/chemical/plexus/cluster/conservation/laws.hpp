@@ -53,6 +53,10 @@ namespace Yttrium
                     explicit Group(const Law &first);
                     virtual ~Group() noexcept;
 
+                    bool accept(const Law   &) const noexcept;
+                    bool accept(const Group &) const noexcept;
+
+
                     Group *next; //!< for list
                     Group *prev; //!< for list
 
@@ -81,10 +85,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const Group::List groups;
-
+                const size_t      maxGroupSize;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
+                static void Fusion(Group::List &) noexcept;
             };
         }
 
