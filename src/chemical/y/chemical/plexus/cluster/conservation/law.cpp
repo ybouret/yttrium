@@ -90,6 +90,51 @@ namespace Yttrium
                 return xadd.sum();
             }
 
+            bool Law :: broken(xreal_t &         score,
+                               XWritable &       Cout,
+                               const Level       Lout,
+                               const XReadable & Cinp,
+                               const Level       Linp,
+                               XAdd             &xadd) const
+            {
+                const xreal_t zero;
+
+                // evaluate negative excess
+                xadd.free();
+                const Actor * const head = (*this)->head;
+                for(const Actor *a=head;a;a=a->next)
+                {
+                    const xreal_t p = Cinp[a->sp.indx[Linp]] * a->xn;
+                    xadd << p;
+                }
+                const xreal_t xs = xadd.sum();  if(xs>=zero) return false;
+                score = (xs*xs)/xden;
+                Cout.ld(zero);
+
+                // projection for actors
+                for(const Actor *i=head;i;i=i->next)
+                {
+                    const XReadable &p = proj[i->sp.indx[AuxLevel]];
+                    xadd.free();
+                    for(const Actor *j=head;j;j=j->next)
+                    {
+                        xadd << p[j->sp.indx[AuxLevel]] * Cinp[j->sp.indx[Linp]];
+                    }
+                    Cout[i->sp.indx[Lout]] = xadd.sum() / xden;
+                }
+
+                // transfer species to keep unchanged
+                for(const SNode *sn=keep.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    Cout[ sp.indx[Lout] ] = Cinp[ sp.indx[Linp] ];
+                }
+
+
+                return true;
+            }
+
+
 #if 0
             xreal_t Law:: inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const
             {

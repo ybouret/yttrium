@@ -20,43 +20,41 @@ namespace Yttrium
             explicit Injector(const Clusters &cls);
             virtual ~Injector() noexcept;
 
+
             class Broken
             {
             public:
+
                 Broken(const Conservation::Law &l,
-                       const xreal_t            s,
-                       XWritable               &d) :
+                       XWritable               &c) noexcept :
+                win(),
                 law(l),
-                score(s),
-                delta(d)
+                Cok(c)
                 {
                 }
 
-                Broken(const Broken &other) noexcept :
-                law(other.law),
-                score(other.score),
-                delta(other.delta)
+                Broken(const Broken &b) noexcept :
+                win(b.win),
+                law(b.law),
+                Cok(b.Cok)
                 {
 
                 }
 
-                ~Broken() noexcept {}
 
-                friend std::ostream & operator<<(std::ostream &os, const Broken &self)
+                ~Broken() noexcept
                 {
-                    os << real_t(self.score) << " @" << self.law << " -> " << self.delta;
-                    return os;
                 }
 
-
+                xreal_t                  win;
                 const Conservation::Law &law;
-                xreal_t                  score;
-                XWritable               &delta;
+                XWritable               &Cok;
+
+
 
             private:
                 Y_DISABLE_ASSIGN(Broken);
             };
-
 
             const bool        used;
             const size_t      rows;
@@ -89,7 +87,7 @@ namespace Yttrium
         used(cls.maxLPG>0),
         rows( used ? cls.maxLPG : 0),
         cols( used ? cls.maxSPC : 0),
-        jail(rows),
+        jail( rows ),
         Cnew( rows, cols),
         Cinj( cols ),
         xadd()
@@ -105,7 +103,9 @@ namespace Yttrium
                                 XMLog          &xml)
         {
             Y_XML_SECTION_OPT(xml,"Inject"," clusters='" << cls->size << "'");
+            
             for(size_t i=cols;i>0;--i) Cinj[i].free();
+
             for(const Cluster *cl=cls->head;cl;cl=cl->next)
             {
                 const bool hasLaws = cl->laws.isValid();
@@ -115,8 +115,8 @@ namespace Yttrium
 
                 for(const Conservation::Laws::Group *g=cl->laws->groups.head;g;g=g->next)
                     process(*g,Cin,xml);
-
             }
+
 
         }
 
@@ -133,22 +133,32 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const xreal_t zero;
-            size_t        nbad = 0;
-            jail.free();
             for(Conservation::LNode *ln=grp.head;ln;ln=ln->next)
             {
                 const Conservation::Law &law = **ln;
-                const xreal_t            xs  = law.excess(Cin,TopLevel,xadd);
-                if(xs<zero)
+                Broken                   broken(law,Cnew[jail.size()+1]);
+                if(law.broken(broken.win, broken.Cok, SubLevel, Cin, TopLevel, xadd))
                 {
-                    XWritable &Cxs = Cnew[++nbad];
-                    Cxs.ld(zero);
-                    const xreal_t scale = -xs;
-                    //const xreal_t score = law.inject(scale, Cxs, SubLevel, xadd);
-                    //const Broken &broken = jail.grow(law, score, Cxs);
-                    //Y_XMLOG(xml, real_t(xs) << " => " << broken);
+                    std::cerr << "score=" << broken.win << " @" << law << " -> " << broken.Cok << std::endl;
+                    jail << broken;
                 }
             }
+
+            //__________________________________________________________________
+            //
+            //
+            // iterative recursion
+            //
+            //__________________________________________________________________
+            while(jail.size()>0)
+            {
+                break;
+            }
+
+
+
+
+
         }
 
     }

@@ -57,6 +57,14 @@ namespace Yttrium
                 bool linkedTo(const Law     &) const noexcept; //!< this hired one of other's species
 
                 xreal_t excess(const XReadable &C, const Level level, XAdd &xadd) const;
+
+                bool    broken(xreal_t &         score,
+                               XWritable &       Cout,
+                               const Level       Lout,
+                               const XReadable & Cinp,
+                               const Level       Linp,
+                               XAdd             &xadd) const;
+
 #if 0
                 xreal_t inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const;
 #endif
