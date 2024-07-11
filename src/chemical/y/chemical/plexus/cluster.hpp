@@ -5,69 +5,26 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/plexus/cluster/conservation/laws.hpp"
+#include "y/chemical/plexus/fragment.hpp"
 #include "y/quantized.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Fragment of lists with database
-        //
-        //
-        //______________________________________________________________________
-        template <typename LIST>
-        class Fragment : public Object
+        class Roaming
         {
         public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit Fragment() : list(), book() {} //!< setup
-            virtual ~Fragment() noexcept {}         //!< cleanup
+            Roaming() noexcept;
+            ~Roaming() noexcept;
 
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-        
-            //! insert new compatible object
-            template <typename T> inline
-            Fragment & operator<<(const T &obj) {
-                try {
-                    Coerce(book) += obj;
-                    Coerce(list) << obj;
-                }
-                catch(...)
-                {
-                    (void) Coerce(book).remove_( &obj );
-                    throw;
-                }
-                return *this;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const LIST        list; //!< content as list
-            const AddressBook book; //!< content as book
+            const EList reacOnly;
+            const EList prodOnly;
+            const EList standard;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fragment);
+            Y_DISABLE_COPY_AND_ASSIGN(Roaming);
         };
-
-        
 
         //______________________________________________________________________
         //
@@ -132,8 +89,10 @@ namespace Yttrium
             const AutoPtr<CLaws>   laws;      //!< matching laws
             const Fragment<SList>  conserved; //!< conserved species
             const Fragment<SList>  unbounded; //!< unbounded species
+            const EList            limited;   //!< limited equilibria
+            const Roaming          roaming;   //!< roaming equilibria
             const Lists            order;     //!< eqs per order
-            
+
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list
 

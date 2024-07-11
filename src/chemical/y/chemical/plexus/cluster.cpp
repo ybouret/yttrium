@@ -5,6 +5,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        Roaming:: ~Roaming() noexcept {}
+
+        Roaming:: Roaming() noexcept : reacOnly(), prodOnly(), standard() {}
+
         Cluster:: ~Cluster() noexcept
         {
         }

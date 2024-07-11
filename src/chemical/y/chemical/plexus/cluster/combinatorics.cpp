@@ -55,6 +55,7 @@ namespace Yttrium
                     throw Specific::Exception("Cluster::Combinatorics","corrupted compressed rank");
 
                 const Temporary<bool> quiet(Coerce(xml.verbose),false);
+                Y_XMLOG(xml,"exploring combinatorics...");
                 WOVEn::Explore(mat,survey,false);
             }
             survey.sort();
@@ -172,6 +173,24 @@ namespace Yttrium
                     {
                         display(xml(), **en) << std::endl;
                     }
+                }
+            }
+
+            {
+                Y_XML_SECTION(xml, "Dispatching");
+                for(const ENode *en=head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    switch(eq.kind)
+                    {
+                        case Components::Nebulous: throw Specific::Exception(eq.name.c_str(), "empty equilibrium in cluster!!");
+                        case Components::ReacOnly: Coerce(roaming.reacOnly) << eq; continue;
+                        case Components::ProdOnly: Coerce(roaming.prodOnly) << eq; continue;
+                        case Components::Standard: break;
+                    }
+
+                    assert(Components::Standard==eq.kind);
+
                 }
             }
 
