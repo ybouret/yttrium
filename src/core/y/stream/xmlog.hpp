@@ -9,6 +9,28 @@
 namespace Yttrium
 {
 
+
+    //! output some optional message
+#define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { (XML)() << MSG << std::endl; } while(false); } while(false)
+
+    //! create the xml sub name
+#define Y_XML_SUB__(X,Y) X##Y
+
+    //! instantiate the xml sub name
+#define Y_XML_SUB_(HOST,ID,NAME,FLAG) volatile Yttrium::XMLog::Section Y_XML_SUB__(__xml,ID)(HOST,NAME,FLAG)
+
+    //! use a local xml sub-section
+#define Y_XML_SECTION(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME,true)
+
+
+    //! make a xml sub-section with options
+#define Y_XML_SECTION_OPT(HOST,NAME,OPTIONS)   \
+Y_XML_SUB_(HOST,__LINE__,NAME,false);          \
+do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
+
+    //! display a named list
+#define Y_XML_LIST(HOST,NAME) do { HOST.display( #NAME, NAME); } while(false)
+
     //__________________________________________________________________________
     //
     //
@@ -51,6 +73,34 @@ namespace Yttrium
 
         static std::ostream & Indent(std::ostream &, const unsigned n); //!< indent n times
         std::ostream &        indent(std::ostream &) const;             //!< indent depth
+
+
+        template <typename NAME, typename LIST> inline
+        void display(const NAME &name, const LIST &list)
+        {
+            const size_t n = list.size;
+            if(n<=0)
+            {
+                empty(name);
+            }
+            else
+            {
+                Y_XML_SECTION_OPT(*this,name, " size='" << n << "'");
+                for(const typename LIST::NodeType *node=list.head;node;node=node->next)
+                {
+                    Y_XMLOG(*this,**node);
+                }
+            }
+        }
+
+        template <typename NAME> inline
+        void empty(const NAME &name)
+        {
+            if(verbose) {
+                (*this)() << LANGLE << name << SLASH << RANGLE << std::endl;
+            }
+        }
+
 
         //______________________________________________________________________
         //
@@ -97,25 +147,6 @@ namespace Yttrium
     private:
         Y_DISABLE_COPY_AND_ASSIGN(XMLog);
     };
-
-    //! output some optional message
-#define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { (XML)() << MSG << std::endl; } while(false); } while(false)
-
-    //! create the xml sub name
-#define Y_XML_SUB__(X,Y) X##Y
-
-    //! instantiate the xml sub name
-#define Y_XML_SUB_(HOST,ID,NAME,FLAG) volatile Yttrium::XMLog::Section Y_XML_SUB__(__xml,ID)(HOST,NAME,FLAG)
-
-    //! use a local xml sub-section
-#define Y_XML_SECTION(HOST,NAME) Y_XML_SUB_(HOST,__LINE__,NAME,true)
-
-
-    //! make a xml sub-section with options
-#define Y_XML_SECTION_OPT(HOST,NAME,OPTIONS)   \
-Y_XML_SUB_(HOST,__LINE__,NAME,false);          \
-do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
-
 
 
 }

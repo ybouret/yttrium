@@ -15,6 +15,14 @@ namespace Yttrium
     {
 
 
+        bool Cluster:: hasConserved(const Actors &actors) const noexcept
+        {
+            for(const Actor *a=actors->head;a;a=a->next)
+            {
+                if(conserved.book.has(a->sp)) return true;
+            }
+            return false;
+        }
 
 
 
@@ -93,11 +101,12 @@ namespace Yttrium
                 {
                     const int w = weight[i] = (*arr)[i].cast<int>("weight");
                     if(0==w) continue;
-                    ++nc;
                     const Readable<int> &nu = Nu[i];
                     original.record(nu);
-                    for(size_t j=m;j>0;--j)
+                    for(size_t j=m;j>0;--j) 
                         stoich[j] += w * nu[j];
+
+                    ++nc;
                 }
 
                 //--------------------------------------------------------------
@@ -188,10 +197,24 @@ namespace Yttrium
                         case Components::ProdOnly: Coerce(roaming.prodOnly) << eq; continue;
                         case Components::Standard: break;
                     }
-
                     assert(Components::Standard==eq.kind);
-
+                    if( hasConserved(eq.reac) || hasConserved(eq.prod) )
+                    {
+                        Coerce(limited) << eq;
+                    }
+                    else
+                    {
+                        Coerce(roaming.standard) << eq;
+                    }
                 }
+
+                Y_XML_LIST(xml,roaming.prodOnly);
+                Y_XML_LIST(xml,roaming.reacOnly);
+                Y_XML_LIST(xml,roaming.standard);
+                Y_XML_LIST(xml,limited);
+
+
+
             }
 
         }

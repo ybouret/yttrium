@@ -77,6 +77,7 @@ namespace Yttrium
             void show(std::ostream &, const XReadable &K) const; //!< show components with constant
             void viz(OutputStream &fp, const size_t cid)  const; //!< output into cluster_id
 
+
             //__________________________________________________________________
             //
             //
@@ -100,6 +101,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             void buildConservations(XMLog &);
             void buildCombinatorics(XMLog &, Equilibria &eqs, XWritable &shK);
+            bool hasConserved(const Actors &) const noexcept;
+
         };
     }
 
