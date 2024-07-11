@@ -19,7 +19,7 @@ namespace Yttrium
         
         typedef Readable<xreal_t>           XReadable; //!< alias
         typedef Writable<xreal_t>           XWritable; //!< alias
-        typedef Matrix<xreal_t>             XMatrix;
+        typedef Matrix<xreal_t>             XMatrix;   //!< alias
 
         typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias

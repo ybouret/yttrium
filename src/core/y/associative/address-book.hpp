@@ -97,6 +97,7 @@ namespace Yttrium
             return os;
         }
 
+        //! helper with conversion
         template <typename TARGET> inline
         TARGET & sendTo(TARGET &target) const
         {

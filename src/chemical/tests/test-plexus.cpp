@@ -197,6 +197,10 @@ namespace Yttrium
                 jail.popTail();
                 
                 // update
+                for(size_t i=jail.size();i>0;)
+                {
+                    --i;
+                }
 
 
                 break;

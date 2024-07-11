@@ -137,7 +137,7 @@ namespace Yttrium
         {
             assert(count>0);
             assert(0!=entry);
-            MutableType *target = &entry[1];
+            MutableType * const target = &entry[1];
             MemOps::Grab(MemOps::Naught(target),target+1,--Coerce(count)*sizeof(T));
         }
 
@@ -169,6 +169,7 @@ namespace Yttrium
         //! free content
         virtual void free() noexcept { free_(); }
         
+        //! grow with one arg constiructor
         template <typename U>
         inline Type & grow(U &args) {
             assert(count<total);
@@ -178,6 +179,7 @@ namespace Yttrium
             return *addr;
         }
 
+        //! grow with two-args constructor
         template <typename U, typename V>
         inline Type & grow(U &u, V &v) {
             assert(count<total);
@@ -187,6 +189,7 @@ namespace Yttrium
             return *addr;
         }
 
+        //! grow with three args constructor
         template <typename U, typename V, typename W>
         inline Type & grow(U &u, V &v, W &w) {
             assert(count<total);
@@ -196,11 +199,22 @@ namespace Yttrium
             return *addr;
         }
 
+        //! remove item[i]
+        inline void remove(const size_t i) noexcept
+        {
+            assert(i>=1);
+            assert(i<=count);
+            MutableType * const target = &entry[i];
+            Memory::OutOfReach::Move( Destructed(target),target+1,(count-i) * sizeof(Type));
+            Memory::OutOfReach::Zero( &entry[count], sizeof(Type) );
+            --Coerce(count);
+        }
+
 
     protected:
         MutableType * const cdata; //!< memory for [0..count-1]
         MutableType * const entry; //!< memory for [1..count]
-        const size_t        count; //!< built objecct
+        const size_t        count; //!< built object
         const size_t        total; //!< initial capacity
         
     private:

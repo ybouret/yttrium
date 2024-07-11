@@ -51,6 +51,26 @@ Y_UTEST(container_cxx_series)
                 }
                 std::cerr << arr << std::endl;
             }
+
+            while(arr.size()<arr.capacity())
+            {
+                const apn tmp(10,ran);
+                if(ran.choice())
+                {
+                    arr.pushHead(tmp);
+                }
+                else
+                {
+                    arr.pushTail(tmp);
+                }
+                std::cerr << arr << std::endl;
+            }
+
+            while(arr.size())
+            {
+                arr.remove( ran.in<size_t>(1,arr.size()) );
+                std::cerr << arr << std::endl;
+            }
         }
     }
 
