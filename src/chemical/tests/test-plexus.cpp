@@ -6,6 +6,8 @@
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/container/cxx/series.hpp"
+#include "y/sort/heap.hpp"
+#include "y/comparison.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -41,14 +43,26 @@ namespace Yttrium
 
                 }
 
+                friend std::ostream & operator<<(std::ostream &os, const Broken &self)
+                {
+                    os << real_t(self.win) << " @" << (self.law); // << " -> " << self.Cok;
+                    return os;
+                }
 
                 ~Broken() noexcept
                 {
                 }
 
+                static int Compare(const Broken &lhs, const Broken &rhs) noexcept
+                {
+                    return Comparison::Increasing(lhs.win, rhs.win);
+                }
+
+
                 xreal_t                  win;
                 const Conservation::Law &law;
                 XWritable               &Cok;
+
 
 
 
@@ -104,6 +118,7 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml,"Inject"," clusters='" << cls->size << "'");
             
+            // clean all injected
             for(size_t i=cols;i>0;--i) Cinj[i].free();
 
             for(const Cluster *cl=cls->head;cl;cl=cl->next)
@@ -111,12 +126,13 @@ namespace Yttrium
                 const bool hasLaws = cl->laws.isValid();
 
                 Y_XML_SECTION_OPT(xml, "Cluster", " laws='" << (hasLaws?cl->laws->size:0) << "'");
-                if(!hasLaws) return;
+                if(!hasLaws) continue;
 
                 for(const Conservation::Laws::Group *g=cl->laws->groups.head;g;g=g->next)
                     process(*g,Cin,xml);
             }
 
+            std::cerr << "Cinj=" << Cinj << std::endl;
 
         }
 
@@ -139,7 +155,7 @@ namespace Yttrium
                 Broken                   broken(law,Cnew[jail.size()+1]);
                 if(law.broken(broken.win, broken.Cok, SubLevel, Cin, TopLevel, xadd))
                 {
-                    std::cerr << "score=" << broken.win << " @" << law << " -> " << broken.Cok << std::endl;
+                    std::cerr << " (+) " << broken << std::endl;
                     jail << broken;
                 }
             }
@@ -152,6 +168,25 @@ namespace Yttrium
             //__________________________________________________________________
             while(jail.size()>0)
             {
+                HeapSort::Call(jail,Broken::Compare);
+                for(size_t i=1;i<=jail.size();++i)
+                {
+                    std::cerr << jail[i] << std::endl;
+                }
+                {
+                    const Broken & best = jail.tail();
+                    std::cerr << "Using " << best << " : " << best.Cok << std::endl;
+                    const Conservation::Law &law = best.law;
+                    const XReadable         &Cok = best.Cok;
+                    for(const Actor *a=law->head;a;a=a->next)
+                    {
+                        const size_t   isub = a->sp.indx[SubLevel];
+                        const xreal_t  Cnew = Cok[ isub ];
+                        xreal_t       &Cold = Cin[ a->sp.indx[TopLevel] ];
+                        assert(Cnew>=Cold);
+                        Cinj[isub] << (Cnew-Cold);
+                    }
+                }
                 break;
             }
 
