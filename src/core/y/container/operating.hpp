@@ -81,8 +81,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const void *entry()  const noexcept; //!< recall entry point
-            size_t      blocks() const noexcept; //!< recall built blocks
+            const void *entry()               const noexcept; //!< recall entry point
+            size_t      blocks()              const noexcept; //!< recall built blocks
+          
+        protected:
+            void        swapCodeWith(Operating &op) noexcept; //!< swap internal codes
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Operating);

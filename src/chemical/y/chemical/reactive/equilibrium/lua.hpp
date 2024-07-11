@@ -23,7 +23,13 @@ namespace Yttrium
         class LuaEquilibrium : public Equilibrium
         {
         public:
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            
             //! setup with name, index and lua function name
             template <typename ID, typename FN>
             explicit LuaEquilibrium(const ID    &userName,

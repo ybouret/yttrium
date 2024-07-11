@@ -1,5 +1,4 @@
 #include "y/chemical/plexus/cluster.hpp"
-//#include "y/system/exception.hpp"
 #include "y/graphviz/color-scheme.hpp"
 
 namespace Yttrium
@@ -39,8 +38,7 @@ namespace Yttrium
 
         bool Cluster:: accept(const Cluster &cl) const noexcept
         {
-            for(const ENode *en=head;en;en=en->next)
-            {
+            for(const ENode *en=head;en;en=en->next) {
                 if(cl.accept(**en)) return true;
             }
             return false;
@@ -73,9 +71,18 @@ namespace Yttrium
         {
             const String spColor = "black";
 
+            //------------------------------------------------------------------
+            //
+            // prolog
+            //
+            //------------------------------------------------------------------
             fp << "subgraph cluster_" << Formatted::Get("%u",unsigned(cid)) << "{\n";
 
+            //------------------------------------------------------------------
+            //
             // write species
+            //
+            //------------------------------------------------------------------
             for(const SNode *sn=conserved.list.head;sn;sn=sn->next)
             {
                 (**sn).viz(fp,spColor,true);
@@ -86,7 +93,11 @@ namespace Yttrium
                 (**sn).viz(fp,spColor,false);
             }
 
+            //------------------------------------------------------------------
+            //
             // write eqs
+            //
+            //------------------------------------------------------------------
             const EList &el = (*order)[1];
             for(const ENode *node=el.head;node;node=node->next)
             {
@@ -95,6 +106,11 @@ namespace Yttrium
                 eq.viz(fp,color);
             }
 
+            //------------------------------------------------------------------
+            //
+            // and laws
+            //
+            //------------------------------------------------------------------
             if(laws.isValid())
             {
                 // write laws

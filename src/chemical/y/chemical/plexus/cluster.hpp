@@ -5,7 +5,7 @@
 
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/plexus/cluster/conservation/laws.hpp"
-#include "y/oversized.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -77,7 +77,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Cluster : public Oversized, public EList, public Party
+        class Cluster : public Quantized, public EList, public Party
         {
         public:
             //__________________________________________________________________
@@ -118,9 +118,7 @@ namespace Yttrium
 
             void show(std::ostream &)                     const; //!< show components
             void show(std::ostream &, const XReadable &K) const; //!< show components with constant
-
-            //! output into cluster_id
-            void viz(OutputStream &fp, const size_t cid) const;
+            void viz(OutputStream &fp, const size_t cid)  const; //!< output into cluster_id
 
             //__________________________________________________________________
             //

@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //
-        //! Combination of equilibria
+        //! Combination of weighted equilibria
         //
         //
         //______________________________________________________________________

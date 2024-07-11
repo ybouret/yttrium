@@ -162,6 +162,15 @@ count( COUNT )
         inline Type *      legacy()       noexcept { return entry; } //!< legacy [1:size()] C-style array
         inline ConstType * legacy() const noexcept { return entry; } //!< legacy [1:size()] C-style array
 
+        //! full no-throw exchange
+        inline void swapWith(CxxArray &array) noexcept
+        {
+            this->swapCodeWith(array);
+            this->swapDataWith(array);
+            CoerceSwap(cdata,array.cdata);
+            CoerceSwap(entry,array.entry);
+            CoerceSwap(count,array.count);
+        }
 
     protected:
         MutableType * const cdata; //!< memory or [0..count-1]

@@ -41,6 +41,9 @@ namespace Yttrium
             return *eq;
         }
 
+        Equilibria::Iterator Equilibria:: begin() noexcept { return db.begin(); } 
+        Equilibria::Iterator Equilibria:: end()   noexcept { return db.end();   }
+
 
     }
 

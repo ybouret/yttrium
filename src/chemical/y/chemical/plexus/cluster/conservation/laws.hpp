@@ -47,7 +47,8 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-               
+                
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);

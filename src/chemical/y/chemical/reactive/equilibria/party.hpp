@@ -36,8 +36,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void           update(const Components &) noexcept;                 //!< update all metrics
-            std::ostream & display(std::ostream &os, const Components &) const; //!< display aligned
+            void           update(const Components &) noexcept;                                     //!< update all metrics
+            std::ostream & display(std::ostream &os, const Components &) const;                     //!< display aligned
             std::ostream & display(std::ostream &os, const Components &, const XReadable &K) const; //!< display aligned
 
             //__________________________________________________________________

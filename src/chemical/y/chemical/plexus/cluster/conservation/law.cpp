@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/cluster/conservation/law.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -26,6 +27,7 @@ namespace Yttrium
                     const unsigned  n = coef[j];
                     if(n>0) (*this)(n,s);
                 }
+                if((*this)->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
             }
 
 
@@ -46,9 +48,7 @@ namespace Yttrium
                 fp << ']';
                 Endl(fp);
                 for(const Actor *a=(*this)->head;a;a=a->next)
-                {
                     a->viz(fp, *this, color, Iterating::Reverse);
-                }
             }
         }
 

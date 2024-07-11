@@ -42,7 +42,8 @@ Y_UTEST(plexus)
 
     GraphViz::Vizible::RenderPNG("clusters.dot", true);
 
-
+    Y_SIZEOF(Cluster);
+    
 
 }
 Y_UDONE()

@@ -168,10 +168,7 @@ namespace Yttrium
         
         //! free content
         virtual void free() noexcept { free_(); }
-
-        inline Type *      legacy()       noexcept { return entry; } //!< legacy [1:size()] C-style array
-        inline ConstType * legacy() const noexcept { return entry; } //!< legacy [1:size()] C-style array
-
+        
 
     protected:
         MutableType * const cdata; //!< memory for [0..count-1]

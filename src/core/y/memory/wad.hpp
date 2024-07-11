@@ -54,8 +54,11 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+
             protected:
-                void         returnTo(Allocator &allocator)               noexcept; //!< return memory and cleanup
+                void returnTo(Allocator &allocator) noexcept; //!< return memory and cleanup
+                void swapDataWith(Wad &wad)         noexcept; //!< swap contents
 
                 //! transform [0..size-1] in [1..size]
                 template <typename T> inline T *Cxx(T * const addr) noexcept

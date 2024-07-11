@@ -37,7 +37,15 @@ Y_UTEST(container_cxx_array)
     IArray vrr(CopyOf,iv);
     std::cerr << "vrr=" << vrr << std::endl;
 
-
+    {
+        IArray A(5);
+        IArray B(0);
+        std::cerr << "A=" << A << std::endl;
+        std::cerr << "B=" << B << std::endl;
+        A.swapWith(B);
+        std::cerr << "A=" << A << std::endl;
+        std::cerr << "B=" << B << std::endl;
+    }
 
 
 }

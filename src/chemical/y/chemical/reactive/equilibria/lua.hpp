@@ -52,7 +52,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Lua::VM lvm; //!< lua
+            Lua::VM lvm; //!< lua virtual machine
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibria);

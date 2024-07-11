@@ -194,6 +194,11 @@ namespace Yttrium
             return code->built;
         }
 
+        void Operating:: swapCodeWith(Operating &op) noexcept
+        {
+            Swap(code,op.code);
+        }
+
     }
 }
 

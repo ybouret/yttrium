@@ -42,6 +42,13 @@ namespace Yttrium
                 assert(blockSize>0);
                 return static_cast<char *>(blockAddr) - blockSize;
             }
+
+            void Wad:: swapDataWith(Wad &wad) noexcept
+            {
+                CoerceSwap(workspace,wad.workspace);
+                CoerceSwap(capacity,wad.capacity);
+                CoerceSwap(numBytes,wad.numBytes);
+            }
         }
     }
 

@@ -62,13 +62,11 @@ namespace Yttrium
                 return append( new ConstantEquilibrium(name,db.size()+1,K) );
             }
 
-            Iterator begin() noexcept { return db.begin(); } //!< alias
-            Iterator end()   noexcept { return db.end();   } //!< alias
+            Iterator begin() noexcept; //!< alias
+            Iterator end()   noexcept; //!< alias
 
 
         protected:
-
-
             //__________________________________________________________________
             //
             //
