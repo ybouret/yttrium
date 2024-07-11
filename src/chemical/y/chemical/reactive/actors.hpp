@@ -49,6 +49,9 @@ namespace Yttrium
             //! add next actor
             void operator()(const unsigned nu, const Species &sp);
 
+            //! check species
+            bool hired(const Species &sp) const noexcept;
+
             //! compute mass action
             void massAction(XMul &xmul, const XReadable &C, const Level level) const;
            
@@ -72,7 +75,6 @@ namespace Yttrium
 
             //! move safely
             void moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
-
 
 
             //! check that each concentration is positive

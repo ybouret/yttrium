@@ -16,6 +16,10 @@ namespace Yttrium
     {
         namespace Conservation
         {
+
+            typedef Small::BareLightList<const Law> LList;
+            typedef LList::NodeType                 LNode;
+
             //__________________________________________________________________
             //
             //
@@ -27,6 +31,35 @@ namespace Yttrium
             class Laws : public Law::List, public Assembly
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+
+
+                //______________________________________________________________
+                //
+                //
+                //! independant group of dependents laws
+                //
+                //______________________________________________________________
+                class Group : public Object, public LList
+                {
+                public:
+                    typedef CxxListOf<Group> List;
+
+                    explicit Group(const Law &first);
+                    virtual ~Group() noexcept;
+
+                    Group *next; //!< for list
+                    Group *prev; //!< for list
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Group);
+                };
+
                 //______________________________________________________________
                 //
                 //
@@ -47,7 +80,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                
+                const Group::List groups;
 
 
             private:

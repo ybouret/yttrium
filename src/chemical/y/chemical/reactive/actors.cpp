@@ -32,6 +32,16 @@ namespace Yttrium
             Coerce(name).swapWith(_);
         }
 
+        bool Actors:: hired(const Species &sp) const noexcept
+        {
+            for(const Actor *mine=actors.head;mine;mine=mine->next)
+            {
+                if( &sp == & mine->sp) return true;
+            }
+            return false;
+        }
+
+
 
         void Actors:: operator()(const unsigned nu, const Species &sp)
         {
@@ -46,11 +56,9 @@ namespace Yttrium
             //
             // check no multiple species
             //__________________________________________________________________
-            for(const Actor *mine=actors.head;mine;mine=mine->next)
-            {
-                if( & (mine->sp) == &(a->sp) )
-                    throw Specific::Exception("Chemical::Actors", "multiple species '%s'", a->sp.name.c_str());
-            }
+            if(hired(sp))
+                throw Specific::Exception("Chemical::Actors", "multiple species '%s'", a->sp.name.c_str());
+
 
             //__________________________________________________________________
             //

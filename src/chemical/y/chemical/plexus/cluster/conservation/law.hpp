@@ -53,6 +53,9 @@ namespace Yttrium
                 //! assume species are in fp
                 void viz(OutputStream &fp, const String &color) const;
 
+                bool linkedTo(const Species &) const noexcept;
+                bool linkedTo(const Law     &) const noexcept;
+
                 //______________________________________________________________
                 //
                 //

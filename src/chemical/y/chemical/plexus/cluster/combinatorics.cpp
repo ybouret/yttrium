@@ -186,7 +186,7 @@ namespace Yttrium
             }
 
             {
-                Y_XML_SECTION(xml, "Dispatching");
+                Y_XML_SECTION(xml, "Classification");
                 for(const ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;

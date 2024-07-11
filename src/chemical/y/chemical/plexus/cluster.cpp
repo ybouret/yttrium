@@ -23,6 +23,8 @@ namespace Yttrium
         laws(),
         conserved(),
         unbounded(),
+        limited(),
+        roaming(),
         order(0),
         next(0),
         prev(0)

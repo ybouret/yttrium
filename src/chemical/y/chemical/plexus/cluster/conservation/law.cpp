@@ -50,6 +50,23 @@ namespace Yttrium
                 for(const Actor *a=(*this)->head;a;a=a->next)
                     a->viz(fp, *this, color, Iterating::Reverse);
             }
+
+
+            bool Law:: linkedTo(const Species &sp) const noexcept
+            {
+                return hired(sp);
+            }
+
+            bool Law:: linkedTo(const Law &law) const noexcept
+            {
+                for(const Actor *a=law->head;a;a=a->next)
+                {
+                    if(hired(a->sp)) return true;
+                }
+                return false;
+            }
+
+
         }
 
     }
