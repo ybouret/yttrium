@@ -58,6 +58,10 @@ namespace Yttrium
                     return Comparison::Increasing(lhs.win, rhs.win);
                 }
 
+                bool still(const XReadable &Cin, XAdd &xadd)
+                {
+                    return law.broken(win, Cok, SubLevel, Cin, TopLevel, xadd);
+                }
 
                 xreal_t                  win;
                 const Conservation::Law &law;
@@ -140,6 +144,8 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Group", " size='" << grp.size << "'");
 
+            jail.free();
+
             //__________________________________________________________________
             //
             //
@@ -169,41 +175,55 @@ namespace Yttrium
             //__________________________________________________________________
             while(jail.size()>0)
             {
-                Y_XML_SECTION_OPT(xml,"Reduction"," broken='" << jail.size() << "'");
-                HeapSort::Call(jail,Broken::Compare);
-                for(size_t i=1;i<jail.size();++i)
                 {
-                    Y_XMLOG(xml," (+) " << jail[i]);
+                    Y_XML_SECTION_OPT(xml,"Reduction"," broken='" << jail.size() << "'");
+                    HeapSort::Call(jail,Broken::Compare);
+                    for(size_t i=1;i<jail.size();++i)
+                    {
+                        Y_XMLOG(xml," (+) " << jail[i]);
+                    }
+
+                    // fixed most broken
+                    {
+                        const Broken & best = jail.tail();
+                        Y_XMLOG(xml," (*) " << best);
+                        const Conservation::Law &law = best.law;
+                        const XReadable         &Cok = best.Cok;
+                        for(const Actor *a=law->head;a;a=a->next)
+                        {
+                            const size_t   isub = a->sp.indx[SubLevel];
+                            const size_t   itop = a->sp.indx[TopLevel];
+                            const xreal_t  Cnew = Cok[ isub ];
+                            xreal_t       &Cold = Cin[ itop ];
+                            assert(Cnew>=Cold);
+                            Cinj[isub] << (Cnew-Cold);
+                            Cold = Cnew;
+                        }
+                    }
+
+                    // remove it
+                    jail.popTail();
+                    if(jail.size()<=0) break;
                 }
 
-                // fixed most broken
+
                 {
-                    const Broken & best = jail.tail();
-                    Y_XMLOG(xml," (*) " << best);
-                    const Conservation::Law &law = best.law;
-                    const XReadable         &Cok = best.Cok;
-                    for(const Actor *a=law->head;a;a=a->next)
+                    // update
+                    Y_XML_SECTION_OPT(xml,"Upgrading"," broken='" << jail.size() << "'");
+                    for(size_t i=jail.size();i>0;--i)
                     {
-                        const size_t   isub = a->sp.indx[SubLevel];
-                        const size_t   itop = a->sp.indx[TopLevel];
-                        const xreal_t  Cnew = Cok[ isub ];
-                        xreal_t       &Cold = Cin[ itop ];
-                        assert(Cnew>=Cold);
-                        Cinj[isub] << (Cnew-Cold);
+                        if( jail[i].still(Cin,xadd) )
+                        {
+                            Y_XMLOG(xml, " (+) " << jail[i]);
+                        }
+                        else
+                        {
+                            Y_XMLOG(xml, " (-) " << jail[i]);
+                            jail.remove(i);
+                        }
                     }
                 }
 
-                // remove it
-                jail.popTail();
-                
-                // update
-                for(size_t i=jail.size();i>0;)
-                {
-                    --i;
-                }
-
-
-                break;
             }
 
 
@@ -260,14 +280,16 @@ Y_UTEST(plexus)
 
     Species::Conc(C0,ran,0.3,0.5);
 
-    std::cerr << "C0=" << C0 << std::endl;
-
+    //std::cerr << "C0=" << C0 << std::endl;
+    lib(std::cerr,"[",C0,"]");
 
     Injector injector(clusters);
     for(const Cluster *cl=clusters->head;cl;cl=cl->next)
     {
         injector.process(*cl, C0, xml);
     }
+    lib(std::cerr,"\t[",C0,"]");
+
 
 }
 Y_UDONE()

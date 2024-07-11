@@ -50,6 +50,15 @@ namespace Yttrium
                 return os;
             }
 
+            template <typename OSTREAM> inline
+            OSTREAM & pad(OSTREAM      &os,
+                          const Entity &en) const
+            {
+                for(size_t i=en.name.size();i<maxLen;++i) os << ' ';
+                return os;
+            }
+
+
             //! right justify
             template <typename OSTREAM> inline
             OSTREAM & rj(OSTREAM      &os,

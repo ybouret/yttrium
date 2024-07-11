@@ -62,6 +62,25 @@ namespace Yttrium
                 return tryInsert(sp);
             }
 
+            template <typename ARRAY> inline
+            void  operator()(std::ostream &os,
+            const char  *pfx,
+            const ARRAY &arr,
+            const char  *sfx) const
+            {
+                if(!pfx) pfx="";
+                if(!sfx) sfx="";
+                os << '{' << std::endl;
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    const Species &sp = **it;
+                    const String  &id = (**it).name;
+                    pad(os << pfx << id << sfx,sp) << " = " << double(arr[sp.indx[TopLevel]]) << std::endl;
+                }
+                os << '}' << std::endl;
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
