@@ -20,6 +20,7 @@ namespace Yttrium
             Actors(),
             xden(0),
             proj(),
+            keep(),
             next(0),
             prev(0)
             {
@@ -39,7 +40,7 @@ namespace Yttrium
                 }
                 if((*this)->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
                 Coerce(xden) = sq.cast<unsigned>("|law|^2");
-                
+
             }
 
 
@@ -47,7 +48,7 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
                 const Actors &ac = law;
-                os << "d_(" << ac << ")/"<<real_t(law.xden);
+                os << "d_(" << ac << ")";// << law.keep;
                 return os;
             }
 

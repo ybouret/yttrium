@@ -152,34 +152,68 @@ namespace Yttrium
 
             void Laws:: Group:: compile()
             {
+                //--------------------------------------------------------------
+                //
+                //
                 // create species with AuxLevel
+                //
+                //
+                //--------------------------------------------------------------
                 {
                     AddressBook book;
                     for(const LNode *ln=head;ln;ln=ln->next) (**ln).record(book);
                     Indexed::AuxOrganize( book.sendTo( Coerce(species) ) );
                 }
-                const size_t    m = species.size;
-                Vector<xreal_t> alpha(m,0);
+
+                //--------------------------------------------------------------
+                //
+                //
+                // update law
+                //
+                //
+                //--------------------------------------------------------------
+                const size_t     m = species.size;
+                Vector<xreal_t > alpha(m,0);
                 for(LNode *ln=head;ln;ln=ln->next)
                 {
                     Law     &law = Coerce(**ln); std::cerr << law << std::endl;
-                    XMatrix &mat = Coerce(law.proj);
-                    mat.make(m,m);
-                    alpha.ld(0);
-                    for(const Actor *a=law->head;a;a=a->next)
+
+                    //----------------------------------------------------------
+                    //
+                    // update projection matrix
+                    //
+                    //----------------------------------------------------------
                     {
-                        alpha[ a->sp.indx[AuxLevel] ] = a->nu;
-                    }
-                    std::cerr << "alpha=" << alpha << std::endl;
-                    for(size_t i=m;i>0;--i)
-                    {
-                        for(size_t j=m;j>0;--j)
+                        XMatrix &mat = Coerce(law.proj);
+                        mat.make(m,m);
+                        alpha.ld(0);
+                        for(const Actor *a=law->head;a;a=a->next)
                         {
-                            mat[i][j] = -alpha[i] * alpha[j];
+                            alpha[ a->sp.indx[AuxLevel] ] = a->nu;
                         }
-                        mat[i][i] += law.xden;
+                        //std::cerr << "alpha=" << alpha << std::endl;
+                        for(size_t i=m;i>0;--i)
+                        {
+                            for(size_t j=m;j>0;--j)
+                            {
+                                mat[i][j] = -alpha[i] * alpha[j];
+                            }
+                            mat[i][i] += law.xden;
+                        }
                     }
-                    std::cerr << "proj=" << mat << std::endl;
+                    //std::cerr << "proj=" << law.proj << std::endl;
+
+                    //----------------------------------------------------------
+                    //
+                    // update species to keep
+                    //
+                    //----------------------------------------------------------
+                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        if(law.hired(sp)) continue;
+                        Coerce(law.keep) << sp;
+                    }
                 }
 
             }
