@@ -18,9 +18,19 @@ namespace Yttrium
         Clusters:: Clusters(Equilibria &eqs, XMLog &xml) :
         Proxy<const Cluster::List>(),
         cls(),
-        shK()
+        shK(),
+        maxSPC(0),
+        maxLPG(0)
         {
             Y_XML_SECTION(xml, "Clusters");
+
+            //------------------------------------------------------------------
+            //
+            //
+            // build clusters
+            //
+            //
+            //------------------------------------------------------------------
             for(Equilibria::ConstIterator it=eqs->begin(); it !=eqs->end(); ++it)
             {
                 const Equilibrium &eq = **it;
@@ -37,11 +47,15 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
                 // create new cluster
+                //--------------------------------------------------------------
                 cls.pushTail(new Cluster(eq) );
                 continue;
 
+                //--------------------------------------------------------------
                 // check fusion
+                //--------------------------------------------------------------
             CHECK_FUSION:
                 Cluster::List store;
                 while( cls.size > 0 )
@@ -60,13 +74,26 @@ namespace Yttrium
                 cls.swapWith(store);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // compile clusters
+            //
+            //
+            //------------------------------------------------------------------
             size_t total = 0;
             for(Cluster *cl = cls.head; cl; cl=cl->next )
             {
                 total += cl->compile(xml,eqs,shK).size;
+                Coerce(maxSPC) = Max(maxSPC,cl->species.size);
+                if(cl->laws.isValid())
+                    Coerce(maxLPG) = Max(maxLPG,cl->laws->maxGroupSize);
             }
             shK.adjust(total,0);
-
+            Y_XML_SECTION(xml, "Metrics");
+            Y_XMLOG(xml, "#equilibria             = " << total);
+            Y_XMLOG(xml, "max Species Per Cluster = " << maxSPC);
+            Y_XMLOG(xml, "max Laws    Per Group   = " << maxLPG);
         }
 
 

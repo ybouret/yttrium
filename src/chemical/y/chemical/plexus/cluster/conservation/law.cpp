@@ -2,6 +2,8 @@
 #include "y/chemical/plexus/cluster/conservation/law.hpp"
 #include "y/system/exception.hpp"
 
+#include "y/sequence/vector.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -17,11 +19,13 @@ namespace Yttrium
                       const Readable<unsigned> &coef) :
             Actors(),
             xden(0),
+            proj(),
             next(0),
             prev(0)
             {
                 assert( species.size == coef.size() );
-                unsigned sq = 0;
+
+                apn sq;
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                 {
                     const Species  &s = **sn;
@@ -34,7 +38,8 @@ namespace Yttrium
                     }
                 }
                 if((*this)->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
-                Coerce(xden) = sq;
+                Coerce(xden) = sq.cast<unsigned>("|law|^2");
+                
             }
 
 
@@ -73,6 +78,30 @@ namespace Yttrium
                 return false;
             }
 
+            xreal_t Law:: excess(const XReadable &C, const Level level, XAdd &xadd) const
+            {
+                xadd.free();
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    const xreal_t p = C[a->sp.indx[level]] * a->xn;
+                    xadd << p;
+                }
+                return xadd.sum();
+            }
+
+#if 0
+            xreal_t Law:: inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const
+            {
+                xadd.free();
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    const xreal_t p = (factor * a->xn)/xden;
+                    xadd << p.abs();
+                    deltaC[a->sp.indx[level]] = p;
+                }
+                return xadd.sum();
+            }
+#endif
 
         }
 

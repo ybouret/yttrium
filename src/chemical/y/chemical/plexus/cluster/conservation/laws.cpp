@@ -61,11 +61,14 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // find max group size
+                // compile groups
                 //
                 //--------------------------------------------------------------
-                for(const Group *g=groups.head;g;g=g->next)
+                for(Group *g=groups.head;g;g=g->next)
+                {
+                    g->compile();
                     Coerce(maxGroupSize) = Max(g->size,maxGroupSize);
+                }
 
 
             }
@@ -106,6 +109,8 @@ namespace Yttrium
     }
 }
 
+#include "y/sequence/vector.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -119,6 +124,7 @@ namespace Yttrium
             Laws:: Group:: Group(const Law &first) :
             Object(),
             LList(),
+            species(),
             next(0),
             prev(0)
             {
@@ -142,6 +148,40 @@ namespace Yttrium
                     if(accept(foreign)) return true;
                 }
                 return false;
+            }
+
+            void Laws:: Group:: compile()
+            {
+                // create species with AuxLevel
+                {
+                    AddressBook book;
+                    for(const LNode *ln=head;ln;ln=ln->next) (**ln).record(book);
+                    Indexed::AuxOrganize( book.sendTo( Coerce(species) ) );
+                }
+                const size_t    m = species.size;
+                Vector<xreal_t> alpha(m,0);
+                for(LNode *ln=head;ln;ln=ln->next)
+                {
+                    Law     &law = Coerce(**ln); std::cerr << law << std::endl;
+                    XMatrix &mat = Coerce(law.proj);
+                    mat.make(m,m);
+                    alpha.ld(0);
+                    for(const Actor *a=law->head;a;a=a->next)
+                    {
+                        alpha[ a->sp.indx[AuxLevel] ] = a->nu;
+                    }
+                    std::cerr << "alpha=" << alpha << std::endl;
+                    for(size_t i=m;i>0;--i)
+                    {
+                        for(size_t j=m;j>0;--j)
+                        {
+                            mat[i][j] = -alpha[i] * alpha[j];
+                        }
+                        mat[i][i] += law.xden;
+                    }
+                    std::cerr << "proj=" << mat << std::endl;
+                }
+
             }
 
 

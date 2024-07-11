@@ -43,7 +43,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t Levels = AuxLevel; //!< number of indices
+            static const size_t Levels = AuxLevel+1; //!< number of indices
 
             //__________________________________________________________________
             //
@@ -105,12 +105,19 @@ namespace Yttrium
 
             //! SortBy TopLevel, Revamp SubLevel
             template <typename NODE> static inline
-            void Organize(ListOf<NODE> &L)
+            void SubOrganize(ListOf<NODE> &L)
             {
                 SortBy<TopLevel>::Using(L);
                 Revamp<SubLevel>::Using(L);
             }
 
+            //! SortBy TopLevel, Revamp AuxLevel
+            template <typename NODE> static inline
+            void AuxOrganize(ListOf<NODE> &L)
+            {
+                SortBy<TopLevel>::Using(L);
+                Revamp<AuxLevel>::Using(L);
+            }
 
 
 

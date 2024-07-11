@@ -98,7 +98,7 @@ namespace Yttrium
                 assert( capacity() >= other.size() );
                 const size_t n = other.size();
                 for(size_t i=1;i<=n;++i)
-                   grow_( other[i] );
+                   (void) grow( other[i] );
             }
             catch(...) { free_(); throw; }
         }
@@ -143,7 +143,7 @@ namespace Yttrium
 
         //! push args at tail
         inline virtual void pushTail(ParamType args) {
-            grow_(args);
+            (void) grow(args);
         }
 
         //! push args at head
@@ -169,6 +169,33 @@ namespace Yttrium
         //! free content
         virtual void free() noexcept { free_(); }
         
+        template <typename U>
+        inline Type & grow(U &args) {
+            assert(count<total);
+            assert(0!=entry);
+            Type * const addr =new ( & entry[count+1] ) MutableType(args);
+            ++Coerce(count);
+            return *addr;
+        }
+
+        template <typename U, typename V>
+        inline Type & grow(U &u, V &v) {
+            assert(count<total);
+            assert(0!=entry);
+            Type * const addr = new ( & entry[count+1] ) MutableType(u,v);
+            ++Coerce(count);
+            return *addr;
+        }
+
+        template <typename U, typename V, typename W>
+        inline Type & grow(U &u, V &v, W &w) {
+            assert(count<total);
+            assert(0!=entry);
+            Type * const addr = new ( & entry[count+1] ) MutableType(u,v,w);
+            ++Coerce(count);
+            return *addr;
+        }
+
 
     protected:
         MutableType * const cdata; //!< memory for [0..count-1]
@@ -181,21 +208,7 @@ namespace Yttrium
         inline void trim_() noexcept { assert(count>0); MemOps::Naught( &entry[ Coerce(count)-- ]); }
         inline void free_() noexcept { while(count>0) trim_(); }
 
-        template <typename U>
-        inline void grow_(const U &args) {
-            assert(count<total);
-            assert(0!=entry);
-            new ( & entry[count+1] ) MutableType(args);
-            ++Coerce(count);
-        }
 
-        template <typename U, typename V>
-        inline void grow_(const U &u, const V &v) {
-            assert(count<total);
-            assert(0!=entry);
-            new ( & entry[count+1] ) MutableType(u,v);
-            ++Coerce(count);
-        }
 
 
 

@@ -29,7 +29,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef CxxListOf<Law> List; //!< alias
-
+                
                 //______________________________________________________________
                 //
                 //
@@ -56,6 +56,10 @@ namespace Yttrium
                 bool linkedTo(const Species &) const noexcept; //!< this->hired(species)
                 bool linkedTo(const Law     &) const noexcept; //!< this hired one of other's species
 
+                xreal_t excess(const XReadable &C, const Level level, XAdd &xadd) const;
+#if 0
+                xreal_t inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const;
+#endif
                 //______________________________________________________________
                 //
                 //
@@ -63,6 +67,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const  xreal_t xden; //!< |nu|^2
+                const  XMatrix proj; //!< projection from group
                 Law           *next; //!< for list
                 Law           *prev; //!< for list
 

@@ -19,7 +19,7 @@ namespace Yttrium
             // revamp equilibria
             //
             //------------------------------------------------------------------
-            Indexed::Organize(*this);
+            Indexed::SubOrganize(*this);
             Y_XMLOG(xml, "eqs  = " << *this);
 
             //------------------------------------------------------------------
@@ -44,12 +44,7 @@ namespace Yttrium
             // gather species
             //
             //------------------------------------------------------------------
-            {
-                SList &mine = Coerce(species);
-                for(AddressBook::Iterator it=book.begin();it!=book.end();++it)
-                    mine << *static_cast<const Species *>(*it);
-                Indexed::Organize(mine);
-            }
+            Indexed::SubOrganize(book.sendTo(Coerce(species)));
             Y_XMLOG(xml, "spc  = " << species);
 
             //------------------------------------------------------------------

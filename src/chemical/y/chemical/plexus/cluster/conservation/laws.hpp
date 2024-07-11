@@ -55,9 +55,11 @@ namespace Yttrium
 
                     bool accept(const Law   &) const noexcept; //!< has common species with law
                     bool accept(const Group &) const noexcept; //!< has common species with group
+                    void compile();                            //!< gather and make AuxLevel
 
-                    Group *next; //!< for list
-                    Group *prev; //!< for list
+                    const SList   species; //!< shared species
+                    Group *       next;    //!< for list
+                    Group *       prev;    //!< for list
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Group);

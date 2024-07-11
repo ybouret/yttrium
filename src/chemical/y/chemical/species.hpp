@@ -36,13 +36,18 @@ namespace Yttrium
           
             //! fill array with random concentrations and zero with given proba
             template <typename ARRAY> static inline
-            void Conc(ARRAY &arr, Random::Bits &ran, const double probaZero = 0) {
+            void Conc(ARRAY &arr, Random::Bits &ran,
+                      const double probaZero = 0,
+                      const double probaNeg  = 0) {
                 for(size_t i=arr.size();i>0;--i)
                 {
                     if(ran.to<double>()<probaZero)
                         arr[i] = 0;
                     else
+                    {
                         arr[i] = Conc(ran);
+                        if(ran.to<double>()<probaNeg) arr[i] = -arr[i];
+                    }
                 }
             }
 

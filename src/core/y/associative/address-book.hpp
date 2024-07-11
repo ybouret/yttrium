@@ -97,6 +97,18 @@ namespace Yttrium
             return os;
         }
 
+        template <typename TARGET> inline
+        TARGET & sendTo(TARGET &target) const
+        {
+            for(ConstIterator it=begin();it!=end();++it)
+                target << *static_cast<typename TARGET::ConstType *>( *it );
+            return target;
+        }
+
+
+
+
+
     private:
         Y_DISABLE_ASSIGN(AddressBook);
         void throwSameAddress(const void *p) const;
