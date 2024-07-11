@@ -20,7 +20,8 @@ namespace Yttrium
         cls(),
         shK(),
         maxSPC(0),
-        maxLPG(0)
+        maxLPG(0),
+        species()
         {
             Y_XML_SECTION(xml, "Clusters");
 
@@ -88,10 +89,13 @@ namespace Yttrium
                 Coerce(maxSPC) = Max(maxSPC,cl->species.size);
                 if(cl->laws.isValid())
                     Coerce(maxLPG) = Max(maxLPG,cl->laws->maxGroupSize);
+                Coerce(species) << cl->species;
             }
             shK.adjust(total,0);
+            Indexed::SortBy<TopLevel>::Using( Coerce(species) );
             Y_XML_SECTION(xml, "Metrics");
             Y_XMLOG(xml, "#equilibria             = " << total);
+            Y_XMLOG(xml, "#species                = " << species.size);
             Y_XMLOG(xml, "max Species Per Cluster = " << maxSPC);
             Y_XMLOG(xml, "max Laws    Per Group   = " << maxLPG);
         }

@@ -78,7 +78,7 @@ namespace Yttrium
             CxxArray<XAdd>    Cinj;
             XAdd              xadd;
 
-            void process(const Clusters &cls,
+            void process(const Cluster  &cls,
                          XWritable      &Cin,
                          XMLog          &xml);
 
@@ -103,7 +103,7 @@ namespace Yttrium
         cols( used ? cls.maxSPC : 0),
         jail( rows ),
         Cnew( rows, cols),
-        Cinj( cols ),
+        Cinj( used ? cls.species.size : 0 ),
         xadd()
         {
         }
@@ -112,28 +112,26 @@ namespace Yttrium
         {
         }
 
-        void Injector:: process(const Clusters &cls,
+        void Injector:: process(const Cluster  &cl,
                                 XWritable      &Cin,
                                 XMLog          &xml)
         {
-            Y_XML_SECTION_OPT(xml,"Inject"," clusters='" << cls->size << "'");
-            
+            Y_XML_SECTION(xml,"Inject");
+
             // clean all injected
             for(size_t i=cols;i>0;--i) Cinj[i].free();
 
-            for(const Cluster *cl=cls->head;cl;cl=cl->next)
+
+            const bool hasLaws = cl.laws.isValid();
+
+            Y_XML_SECTION_OPT(xml, "Cluster", " laws='" << (hasLaws?cl.laws->size:0) << "'");
+            if(hasLaws)
             {
-                const bool hasLaws = cl->laws.isValid();
-
-                Y_XML_SECTION_OPT(xml, "Cluster", " laws='" << (hasLaws?cl->laws->size:0) << "'");
-                if(!hasLaws) continue;
-
-                for(const Conservation::Laws::Group *g=cl->laws->groups.head;g;g=g->next)
-                    process(*g,Cin,xml);
+                    for(const Conservation::Laws::Group *g=cl.laws->groups.head;g;g=g->next)
+                        process(*g,Cin,xml);
             }
 
             std::cerr << "Cinj=" << Cinj << std::endl;
-
         }
 
         void Injector:: process(const Conservation::Laws::Group &grp,
@@ -149,14 +147,17 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const xreal_t zero;
-            for(Conservation::LNode *ln=grp.head;ln;ln=ln->next)
             {
-                const Conservation::Law &law = **ln;
-                Broken                   broken(law,Cnew[jail.size()+1]);
-                if(law.broken(broken.win, broken.Cok, SubLevel, Cin, TopLevel, xadd))
+                Y_XML_SECTION(xml, "Initialize");
+                for(Conservation::LNode *ln=grp.head;ln;ln=ln->next)
                 {
-                    std::cerr << " (+) " << broken << std::endl;
-                    jail << broken;
+                    const Conservation::Law &law = **ln;
+                    Broken                   broken(law,Cnew[jail.size()+1]);
+                    if(law.broken(broken.win, broken.Cok, SubLevel, Cin, TopLevel, xadd))
+                    {
+                        Y_XMLOG(xml," (+) " << broken);
+                        jail << broken;
+                    }
                 }
             }
 
@@ -168,25 +169,36 @@ namespace Yttrium
             //__________________________________________________________________
             while(jail.size()>0)
             {
+                Y_XML_SECTION_OPT(xml,"Reduction"," broken='" << jail.size() << "'");
                 HeapSort::Call(jail,Broken::Compare);
-                for(size_t i=1;i<=jail.size();++i)
+                for(size_t i=1;i<jail.size();++i)
                 {
-                    std::cerr << jail[i] << std::endl;
+                    Y_XMLOG(xml," (+) " << jail[i]);
                 }
+
+                // fixed most broken
                 {
                     const Broken & best = jail.tail();
-                    std::cerr << "Using " << best << " : " << best.Cok << std::endl;
+                    Y_XMLOG(xml," (*) " << best);
                     const Conservation::Law &law = best.law;
                     const XReadable         &Cok = best.Cok;
                     for(const Actor *a=law->head;a;a=a->next)
                     {
                         const size_t   isub = a->sp.indx[SubLevel];
+                        const size_t   itop = a->sp.indx[TopLevel];
                         const xreal_t  Cnew = Cok[ isub ];
-                        xreal_t       &Cold = Cin[ a->sp.indx[TopLevel] ];
+                        xreal_t       &Cold = Cin[ itop ];
                         assert(Cnew>=Cold);
                         Cinj[isub] << (Cnew-Cold);
                     }
                 }
+
+                // remove it
+                jail.popTail();
+                
+                // update
+
+
                 break;
             }
 
@@ -248,8 +260,10 @@ Y_UTEST(plexus)
 
 
     Injector injector(clusters);
-    injector.process(clusters, C0, xml);
-
+    for(const Cluster *cl=clusters->head;cl;cl=cl->next)
+    {
+        injector.process(*cl, C0, xml);
+    }
 
 }
 Y_UDONE()

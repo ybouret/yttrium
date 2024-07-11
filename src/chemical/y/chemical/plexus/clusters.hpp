@@ -49,8 +49,9 @@ namespace Yttrium
             Vector<xreal_t> shK;
 
         public:
-            const size_t maxSPC; //!< max Species per cluster
-            const size_t maxLPG; //!< max Laws per Group
+            const size_t  maxSPC;  //!< max Species per cluster
+            const size_t  maxLPG;  //!< max Laws per Group
+            const SList   species; //!< all reactive species
         };
 
     }
