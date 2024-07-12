@@ -87,6 +87,12 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! fix Ctop from all clusters, store delta(>0) in dTop
+            /**
+             \param cls  clusters
+             \param Ctop TopLevel concentrations
+             \param dTop TopLevel increases in conc
+             \param xml  verbosity
+             */
             void operator()(const Clusters  &cls,
                             XWritable       &Ctop,
                             XWritable       &dTop,
@@ -118,7 +124,7 @@ namespace Yttrium
             const size_t      rows; //!< max group size
             const size_t      cols; //!< max species in sub-level
             CxxSeries<Broken> jail; //!< local array of broken laws
-            XMatrix           Cnew; //!< workspace to store Csub
+            XMatrix           Cnew; //!< workspace(rows,cols) to store Csub
             CxxArray<XAdd>    Cinj; //!< workspace, store incremental increases
             XAdd              xadd; //!< for internal additions
             const xreal_t     zero; //!< alias
