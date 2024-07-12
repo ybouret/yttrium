@@ -50,6 +50,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! pad output w.r.t entity name size
             template <typename OSTREAM> inline
             OSTREAM & pad(OSTREAM      &os,
                           const Entity &en) const

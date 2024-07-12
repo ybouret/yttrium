@@ -28,7 +28,8 @@ namespace Yttrium
         
         int Injector::Broken:: Compare(const Broken &lhs, const Broken &rhs) noexcept
         {
-            return Comparison::Increasing(lhs.gain, rhs.gain);
+            return Comparison::Decreasing(lhs.gain, rhs.gain);
+            //return Comparison::Increasing(lhs.gain, rhs.gain);
         }
 
         std::ostream & operator<<(std::ostream &os, const Injector::Broken &self)

@@ -79,16 +79,7 @@ namespace Yttrium
                 return false;
             }
 
-            xreal_t Law:: excess(const XReadable &C, const Level level, XAdd &xadd) const
-            {
-                xadd.free();
-                for(const Actor *a=(*this)->head;a;a=a->next)
-                {
-                    const xreal_t p = C[a->sp.indx[level]] * a->xn;
-                    xadd << p;
-                }
-                return xadd.sum();
-            }
+            
 
             bool Law :: broken(xreal_t &         gain,
                                XWritable &       Cout,

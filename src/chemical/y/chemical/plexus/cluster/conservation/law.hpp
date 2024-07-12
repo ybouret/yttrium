@@ -56,18 +56,23 @@ namespace Yttrium
                 bool linkedTo(const Species &) const noexcept; //!< this->hired(species)
                 bool linkedTo(const Law     &) const noexcept; //!< this hired one of other's species
 
-                xreal_t excess(const XReadable &C, const Level level, XAdd &xadd) const;
-
-                bool    broken(xreal_t &         score,
+                //! check is and how much broken is the law
+                /**
+                 \param  gain positive if broken
+                 \param  Cout output corrected concentration
+                 \param  Lout output level
+                 \param  Cinp input broken (or not) concentration
+                 \param  Linp input level
+                 \param  xadd to perform internal additions
+                 \return true if broken
+                 */
+                bool    broken(xreal_t &         gain,
                                XWritable &       Cout,
                                const Level       Lout,
                                const XReadable & Cinp,
                                const Level       Linp,
                                XAdd             &xadd) const;
 
-#if 0
-                xreal_t inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const;
-#endif
                 //______________________________________________________________
                 //
                 //

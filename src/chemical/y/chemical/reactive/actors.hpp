@@ -83,7 +83,7 @@ namespace Yttrium
             //! check that at least one concentration is missing
             bool deficient(const XReadable &C0, const Level level) const;
 
-
+            //! display compact array
             template <typename ARRAY> inline
             std::ostream & displayCompact(std::ostream &os, ARRAY &arr, const Level level) const
             {

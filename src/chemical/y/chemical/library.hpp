@@ -62,6 +62,7 @@ namespace Yttrium
                 return tryInsert(sp);
             }
 
+            //! display
             template <typename ARRAY> inline
             void  operator()(std::ostream &os,
             const char  *pfx,
