@@ -90,28 +90,38 @@ namespace Yttrium
                 return xadd.sum();
             }
 
-            bool Law :: broken(xreal_t &         score,
+            bool Law :: broken(xreal_t &         gain,
                                XWritable &       Cout,
                                const Level       Lout,
                                const XReadable & Cinp,
                                const Level       Linp,
                                XAdd             &xadd) const
             {
-                const xreal_t zero;
-
-                // evaluate negative excess
-                xadd.free();
+                const xreal_t       zero;
                 const Actor * const head = (*this)->head;
+
+
+                //--------------------------------------------------------------
+                //
+                // evaluate negative excess
+                //
+                //--------------------------------------------------------------
+                xadd.free();
+                gain = zero;
                 for(const Actor *a=head;a;a=a->next)
                 {
                     const xreal_t p = Cinp[a->sp.indx[Linp]] * a->xn;
                     xadd << p;
                 }
                 const xreal_t xs = xadd.sum();  if(xs>=zero) return false;
-                score = (xs*xs)/xden;
-                Cout.ld(zero);
+                gain = (xs*xs)/xden;
 
+                //--------------------------------------------------------------
+                //
                 // projection for actors
+                //
+                //--------------------------------------------------------------
+                Cout.ld(zero);
                 for(const Actor *i=head;i;i=i->next)
                 {
                     const XReadable &p = proj[i->sp.indx[AuxLevel]];
@@ -123,7 +133,12 @@ namespace Yttrium
                     Cout[i->sp.indx[Lout]] = xadd.sum() / xden;
                 }
 
+                //--------------------------------------------------------------
+                //
                 // transfer species to keep unchanged
+                // \TODO: needed ?
+                //
+                //--------------------------------------------------------------
                 for(const SNode *sn=keep.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;

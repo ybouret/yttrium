@@ -84,6 +84,29 @@ namespace Yttrium
             bool deficient(const XReadable &C0, const Level level) const;
 
 
+            template <typename ARRAY> inline
+            std::ostream & displayCompact(std::ostream &os, ARRAY &arr, const Level level) const
+            {
+                os << '{';
+                const Actor *a=actors.head;
+                if(a)
+                {
+                    Show(os,arr,*a,level);
+                    for(a=a->next;a;a=a->next)
+                    {
+                        Show(os << ';',arr,*a,level);
+                    }
+                }
+                os << '}';
+                return os;
+            }
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
             const unsigned sumNu; //!< sum(nu)
             const real_t   scale; //!< 1.0/sumNu
             
@@ -92,7 +115,11 @@ namespace Yttrium
             Actor::List actors;
             virtual ConstInterface & surrogate() const noexcept;
             void growName(const String &);
-
+            template <typename ARRAY> static inline
+            void Show(std::ostream &os, const ARRAY &arr, const Actor &a, const Level level)
+            {
+                os << '[' << a.sp.name << ']' << '=' << real_t(arr[a.sp.indx[level]]);
+            }
         };
 
     }
