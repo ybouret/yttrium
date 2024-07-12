@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Fix broken conservation by injecting minimal concentration
+        //! Fix broken conservation(s) by injecting minimal concentration
         //
         //
         //______________________________________________________________________
@@ -25,7 +25,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Definition
+            // Definitions
             //
             //__________________________________________________________________
 
@@ -118,8 +118,8 @@ namespace Yttrium
             const size_t      rows; //!< max group size
             const size_t      cols; //!< max species in sub-level
             CxxSeries<Broken> jail; //!< local array of broken laws
-            XMatrix           Cnew; //!< workspace
-            CxxArray<XAdd>    Cinj; //!< workspace
+            XMatrix           Cnew; //!< workspace to store Csub
+            CxxArray<XAdd>    Cinj; //!< workspace, store incremental increases
             XAdd              xadd; //!< for internal additions
             const xreal_t     zero; //!< alias
 
