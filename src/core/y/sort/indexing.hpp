@@ -5,6 +5,7 @@
 
 #include "y/container/writable.hpp"
 #include "y/container/light-array.hpp"
+#include "y/memory/out-of-reach.hpp"
 
 namespace Yttrium
 {
@@ -93,6 +94,38 @@ namespace Yttrium
             }
             for(size_t i=0;i<size;++i) --indx[i];
         }
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! ranking
+        /**
+         \param arr array of items to be ranked
+         \param idx indices
+         \param wksp flat bytes, sizeof(wksp)>=n*sizeof(T)
+         */
+        //______________________________________________________________________
+        template <typename T> static inline
+        void Rank(Writable<T> &arr, const Readable<size_t> &idx, void * const wksp)
+        {
+            typedef typename TypeTraits<T>::MutableType MType;
+            assert( arr.size() == idx.size() );
+            const size_t  n = arr.size(); if(n<=1) return;
+            MType * const w = static_cast<MType *>(wksp)-1;
+            for(size_t i=n;i>0;--i)
+            {
+                Memory::OutOfReach::Move( &w[i],   &arr[i], sizeof(T) );
+                Memory::OutOfReach::Zero( &arr[i], sizeof(T));
+            }
+            for(size_t i=n;i>0;--i)
+            {
+                const size_t j = idx[i];
+                Memory::OutOfReach::Move( &arr[i], &w[j], sizeof(T));
+                Memory::OutOfReach::Zero( &w[j], sizeof(T));
+            }
+        }
+
     };
 
 }
