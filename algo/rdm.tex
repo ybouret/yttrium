@@ -105,6 +105,25 @@ How to chose $\delta \vec \xi$ so that we decrease:
 	C^\circ = \sum_i \vert \xi_i^\circ \vert 
 \end{equation}
 
+\subsection{...}
+
+\begin{equation}
+	\delta \vec C = \dfrac{\langle \delta \vec C \vert \vec \nu _i \rangle}{\vec \nu _i^2} \vec \nu_i 
+	+ \left( \delta \vec C - \dfrac{\langle \delta \vec C \vert \vec \nu _i \rangle}{\vec \nu _i^2} \vec \nu_i \right)
+	= \alpha_i \vec \nu_i + \left(\delta \vec C - \alpha_i \vec\nu_i\right)
+\end{equation}
+
+\begin{equation}
+	\Xi_i(\vec C_0 + \delta \vec C) =
+	 \Xi_i \left( \vec C_0 + \alpha_i \vec \nu_i + \left( \delta \vec C - \alpha_i \vec \nu_i\right) \right)
+\end{equation}
+
+\begin{equation}
+	\Xi_i(\vec C_0 + \delta \vec C) \simeq \Xi_i \left( \vec C_0 + \alpha_i \vec \nu_i  \right) 
+	+ \langle  \vec \Psi_{\alpha_i} \vert \left( \delta \vec C - \alpha_i \vec \nu_i\right)\rangle
+\end{equation}
+
+
 \subsection{Conservation}
 
 A conservation law is a vector of {\bf positive} coefficients $\vec \alpha$ such that:
@@ -125,6 +144,10 @@ Then we will inject the smallest $\delta \vec C$ such that:
 	\delta \vec C = \dfrac{X_s}{\vec\alpha^2} \vec{\alpha}
 \end{equation}
 
+To preserve numeric symmetry
+\begin{equation}
+	\vec C_{new} = \vec C + \delta \vec C = \dfrac{1}{\vec \alpha^2}\left[\vec \alpha^2 \bm{I} - \vert \vec \alpha \rangle \langle \vec \alpha \vert \right] \vec C
+\end{equation}
 
  	
 

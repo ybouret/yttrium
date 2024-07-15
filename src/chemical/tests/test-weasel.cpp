@@ -56,17 +56,6 @@ Y_UTEST(weasel)
 
             {
                 const String color = GraphViz::Vizible::Color("set18", 2);
-                eq.viz(fp,color);
-#if 0
-                for(const Actor *a=eq.reac->head;a;a=a->next)
-                {
-                    a->viz(fp, eq, color, Iterating::Forward);
-                }
-                for(const Actor *a=eq.prod->head;a;a=a->next)
-                {
-                    a->viz(fp, eq, color, Iterating::Reverse);
-                }
-#endif
             }
 
             GraphViz::Vizible::Leave(fp);
@@ -89,6 +78,8 @@ Y_UTEST(weasel)
         else
         {
             std::cerr << "inactive" << std::endl;
+            eq.drvsMassAction(K, phi, TopLevel, C0, TopLevel, am.xmul);
+            std::cerr << "phi=" << phi << std::endl;
         }
         
     }
