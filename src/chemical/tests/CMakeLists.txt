@@ -7,6 +7,7 @@ set( DATA ${HERE}/../../../var)
 
 enable_testing()
 
+add_test(norm   test-chemical norm)
 add_test(init   test-chemical init)
 add_test(weasel test-chemical weasel)
 add_test(inject test-chemical inject)
