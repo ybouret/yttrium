@@ -180,7 +180,7 @@ namespace Yttrium
                 for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
                 {
                     std::cerr << " (-) " << ep->path << std::endl;
-                    vfs.VFS::tryRemoveFile(ep->path);
+                    vfs.tryRemoveFile(ep->path);
                 }
             }
 
