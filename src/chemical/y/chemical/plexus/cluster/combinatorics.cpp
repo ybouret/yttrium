@@ -212,11 +212,19 @@ namespace Yttrium
                 Y_XML_LIST(xml,roaming.reacOnly);
                 Y_XML_LIST(xml,roaming.standard);
                 Y_XML_LIST(xml,limited);
-
-
-
             }
 
+            //------------------------------------------------------------------
+            //
+            // Summary
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml, "Topology");
+                Y_XMLOG(xml, "#primary equilibria: " << Nu.rows);
+                Y_XMLOG(xml, "#derived equilibria: " << size-Nu.rows);
+                Y_XMLOG(xml, "#total   equilibria: " << size << " (*)");
+            }
         }
 
     }

@@ -74,53 +74,78 @@ namespace Yttrium
             os << '}' << std::endl;
         }
 
-        void Cluster:: viz(OutputStream &fp, const size_t cid) const
+        size_t Cluster:: maxOrder() const noexcept
+        {
+            for(size_t i=order.size();i>1;--i)
+            {
+                if(order[i].size>0) return i;
+            }
+            return 1;
+        }
+
+
+
+        void Cluster:: vizSpecies(OutputStream &fp, const EList &el, const String &spColor) const
+        {
+            AddressBook book;
+            for(const ENode *en=el.head;en;en=en->next)
+            {
+                (**en).record(book);
+            }
+
+            for(AddressBook::Iterator it=book.begin();it!=book.end();++it)
+            {
+                const Species &sp = *static_cast<const Species *>( *it );
+                if(conserved.book.has(sp)) sp.viz(fp,spColor,true);
+                if(unbounded.book.has(sp)) sp.viz(fp,spColor,false);
+            }
+
+            
+        }
+
+        void Cluster:: vizEqsList(OutputStream &fp, const EList &el) const
         {
             const String spColor = "black";
-
-            //------------------------------------------------------------------
-            //
-            // prolog
-            //
-            //------------------------------------------------------------------
-            fp << "subgraph cluster_" << Formatted::Get("%u",unsigned(cid)) << "{\n";
-
-            //------------------------------------------------------------------
-            //
-            // write species
-            //
-            //------------------------------------------------------------------
-            for(const SNode *sn=conserved.list.head;sn;sn=sn->next)
-            {
-                (**sn).viz(fp,spColor,true);
-            }
-
-            for(const SNode *sn=unbounded.list.head;sn;sn=sn->next)
-            {
-                (**sn).viz(fp,spColor,false);
-            }
-
-            //------------------------------------------------------------------
-            //
-            // write eqs
-            //
-            //------------------------------------------------------------------
-            const EList &el = order[1];
+            vizSpecies(fp,el,spColor);
             for(const ENode *node=el.head;node;node=node->next)
             {
                 const Equilibrium &eq    = **node;
                 const String       color = GraphViz::Vizible::Color("set18",eq.indx[TopLevel]);
                 eq.viz(fp,color);
             }
+        }
 
-            //------------------------------------------------------------------
-            //
-            // and laws
-            //
-            //------------------------------------------------------------------
-            if(laws.isValid())
+
+        void Cluster:: vizProlog(OutputStream &fp, const size_t cid) const
+        {
+            fp << "subgraph cluster_" << Formatted::Get("%u",unsigned(cid)) << "{\n";
+        }
+
+        void Cluster:: vizEpilog(OutputStream &fp) const
+        {
+            fp << "}\n";
+        }
+
+
+
+        void Cluster:: viz(const size_t  ord, 
+                           OutputStream &fp,
+                           const size_t  cid) const
+        {
+
+            // check populated
+            if(ord>order.size())
+                return;
+            const EList &el = order[ord];
+            if(el.size <= 0) return;
+
+            // write
+            vizProlog(fp,cid);
+            vizEqsList(fp,el);
+
+            // specific
+            if( 1==ord && laws.isValid() )
             {
-                // write laws
                 size_t il = 1;
                 for(const CLaw *law = laws->head; law; law=law->next, ++il)
                 {
@@ -128,10 +153,9 @@ namespace Yttrium
                     law->viz(fp, color);
                 }
             }
-
-            fp << "}\n";
-
+            vizEpilog(fp);
         }
+
 
 
     }

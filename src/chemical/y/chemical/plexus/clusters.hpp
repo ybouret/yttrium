@@ -42,6 +42,19 @@ namespace Yttrium
             void              show(std::ostream &os)  const; //!< show components
             void              showK(std::ostream &os) const; //!< show components with constants
 
+
+            //! write graphViz code for clusters with given order
+            void graphViz(OutputStream &fp, const size_t ord) const;
+
+            //! render rootName.png for given order
+            void render(const String &rootName, const size_t ord) const;
+
+            //! render rootName[ord].png, with pre-cleaning
+            void render(const String &rootName) const;
+
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             virtual ConstInterface & surrogate() const noexcept;
@@ -51,6 +64,7 @@ namespace Yttrium
         public:
             const size_t  maxSPC;  //!< max Species per cluster
             const size_t  maxLPG;  //!< max Laws per Group
+            const size_t  maxORD;  //!< max combination order
             const SList   species; //!< all reactive species
         };
 

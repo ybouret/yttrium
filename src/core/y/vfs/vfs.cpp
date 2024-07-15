@@ -7,7 +7,7 @@ namespace Yttrium
     VFS:: ~VFS() noexcept {}
     VFS::  VFS() noexcept {}
 
-    bool VFS:: tryRemoveFile(const char   *path)
+    bool VFS:: tryRemoveFile(const char *path)
     {
         const String _(path);
         return tryRemoveFile(_);

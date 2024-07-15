@@ -83,8 +83,12 @@ namespace Yttrium
 
             void show(std::ostream &)                     const; //!< show components
             void show(std::ostream &, const XReadable &K) const; //!< show components with constant
-            void viz(OutputStream &fp, const size_t cid)  const; //!< output into cluster_id
 
+            //! output graphViz code for given order and cluster id
+            void   viz(const size_t  ord, OutputStream &fp, const size_t  cid) const;
+           
+            //! max not empty order
+            size_t maxOrder() const noexcept;
 
             //__________________________________________________________________
             //
@@ -110,7 +114,10 @@ namespace Yttrium
             void buildConservations(XMLog &);
             void buildCombinatorics(XMLog &, Equilibria &eqs, XWritable &shK);
             bool hasConserved(const Actors &) const noexcept;
-
+            void vizSpecies(OutputStream &fp, const EList &el, const String &color) const;
+            void vizEqsList(OutputStream &fp, const EList &el)    const;
+            void vizProlog(OutputStream &fp,  const size_t cid)    const;
+            void vizEpilog(OutputStream &fp)                      const;
         };
     }
 

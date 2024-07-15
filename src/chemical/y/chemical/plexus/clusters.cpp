@@ -21,6 +21,7 @@ namespace Yttrium
         shK(),
         maxSPC(0),
         maxLPG(0),
+        maxORD(0),
         species()
         {
             Y_XML_SECTION(xml, "Clusters");
@@ -90,14 +91,17 @@ namespace Yttrium
                 if(cl->laws.isValid())
                     Coerce(maxLPG) = Max(maxLPG,cl->laws->maxGroupSize);
                 Coerce(species) << cl->species;
+                Coerce(maxORD) = Max(maxORD,cl->maxOrder());
             }
             shK.adjust(total,0);
             Indexed::SortBy<TopLevel>::Using( Coerce(species) );
             Y_XML_SECTION(xml, "Metrics");
             Y_XMLOG(xml, "#equilibria             = " << total);
-            Y_XMLOG(xml, "#species                = " << species.size);
+            Y_XMLOG(xml, "#active species         = " << species.size);
             Y_XMLOG(xml, "max Species Per Cluster = " << maxSPC);
             Y_XMLOG(xml, "max Laws    Per Group   = " << maxLPG);
+            Y_XMLOG(xml, "max Combinations Order  = " << maxORD);
+
         }
 
 
@@ -129,6 +133,62 @@ namespace Yttrium
             {
                 cl->show(os,shK);
             }
+        }
+
+    }
+
+}
+
+#include "y/vfs/local-fs.hpp"
+#include "y/jive/pattern/vfs.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        void Clusters:: graphViz(OutputStream &fp, const size_t ord) const
+        {
+            GraphViz::Vizible::Enter(fp,"G");
+            size_t cid = 0;
+            for(const Cluster *cl=cls.head;cl;cl=cl->next,++cid)
+            {
+                cl->viz(ord, fp, cid);
+            }
+            GraphViz::Vizible::Leave(fp);
+
+        }
+
+        void Clusters:: render(const String &rootName, const size_t ord) const
+        {
+
+            const String dotFile = rootName + Formatted::Get("%u",unsigned(ord)) + ".dot";
+            GraphViz::Vizible::DotToPngEx(dotFile,*this,ord);
+
+        }
+
+        void Clusters:: render(const String &rootName) const
+        {
+            {
+                LocalFS       &vfs   = LocalFS:: Instance();
+                const String   rxp   = rootName + "[:digit:]+[.](png|dot)";
+                Jive::Matcher  match = rxp;
+                //GraphViz::Vizible::DotToPng("matching.dot", *match.motif);
+                VFS::Entries   entries;
+                Jive::VirtualFileSystem::Find(vfs, "", entries, match, VFS::Entry::Base);
+                for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
+                {
+                    std::cerr << " (-) " << ep->path << std::endl;
+                    vfs.VFS::tryRemoveFile(ep->path);
+                }
+            }
+
+            for(size_t i=1;i<=maxORD;++i)
+            {
+                render(rootName,i);
+            }
+
         }
 
 
