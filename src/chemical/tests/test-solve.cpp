@@ -11,6 +11,26 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Solver
+        {
+        public:
+            explicit Solver(const Clusters &cls) :
+            Ceq(cls.maxEPC,cls.maxSPC),
+            dCe(cls.maxEPC,cls.maxSPC)
+            {
+
+            }
+
+            virtual ~Solver() noexcept
+            {
+            }
+
+            XMatrix Ceq;
+            XMatrix dCe;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Solver);
+        };
     }
     
 }

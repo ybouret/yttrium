@@ -8,7 +8,7 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/antelope/mul.hpp"
 #include "y/container/matrix.hpp"
-
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -20,6 +20,7 @@ namespace Yttrium
         typedef Readable<xreal_t>           XReadable; //!< alias
         typedef Writable<xreal_t>           XWritable; //!< alias
         typedef Matrix<xreal_t>             XMatrix;   //!< alias
+        typedef Vector<xreal_t>             XVector;   //!< alias
 
         typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
