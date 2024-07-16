@@ -55,7 +55,8 @@ namespace Yttrium
                        const xreal_t     K);
 
             //! eval extent post solve
-            xreal_t eval(const XReadable &  Cout,
+            xreal_t eval(XWritable       &  dOut,
+                         const XReadable &  Cout,
                          const Level        Lout,
                          const XReadable &  Cinp,
                          const Level        Linp,

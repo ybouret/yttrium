@@ -5,6 +5,7 @@
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
+#include "y/sort/heap.hpp"
 
 namespace Yttrium
 {
@@ -120,8 +121,13 @@ namespace Yttrium
             class Hint
             {
             public:
-                Hint(const xreal_t val, XWritable &Ceq, XWritable &dCe) noexcept :
+                Hint(const xreal_t     val,
+                     const Components &com,
+                     XWritable        &Ceq,
+                     XWritable        &dCe) noexcept :
                 xi(val),
+                ax(xi.abs()),
+                eq(com),
                 cc(Ceq),
                 dc(dCe)
                 {
@@ -129,15 +135,23 @@ namespace Yttrium
 
                 Hint(const Hint &_) noexcept :
                 xi(_.xi),
+                ax(_.ax),
+                eq(_.eq),
                 cc(_.cc),
                 dc(_.dc)
                 {
                 }
 
+                static int Compare(const Hint &lhs, const Hint &rhs) noexcept
+                {
+                    return Comparison::Decreasing(lhs.ax,rhs.ax);
+                }
 
-                xreal_t    xi;
-                XWritable &cc;
-                XWritable &dc;
+                const xreal_t     xi;
+                const xreal_t     ax;
+                const Components &eq;
+                XWritable        &cc;
+                XWritable        &dc;
 
             private:
                 Y_DISABLE_ASSIGN(Hint);
@@ -165,28 +179,51 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, "Solve::Cluster", " eqs='" << cl.size << "'");
                 const xreal_t zero;
-                hint.free();
-                for(const ENode *en=cl.head;en;en=en->next)
                 {
-                    const Equilibrium &  eq  = **en;
-                    const xreal_t        eK = K[eq.indx[TopLevel]];
-                    const size_t         jj = hint.size()+1;
-                    XWritable          & Cj = Ceq[jj];
-                    if( am.solve(Cj, SubLevel, C, L, eq, eK) )
+                    Y_XML_SECTION(xml, "Aftermath");
+                    hint.free();
+                    for(const ENode *en=cl.head;en;en=en->next)
                     {
-                        const Hint clue( am.eval(Cj, SubLevel, C, L, eq), Cj, dCe[jj] );
-                        if(xml.verbose)
+                        const Equilibrium &  eq  = **en;
+                        const xreal_t        eK = K[eq.indx[TopLevel]];
+                        const size_t         jj = hint.size()+1;
+                        XWritable          & Cj = Ceq[jj];
+                        XWritable          & Dj = dCe[jj];
+                        if( am.solve(Cj, SubLevel, C, L, eq, eK) )
                         {
-                            cl.uuid.pad(xml() << " (+) " << eq,eq) << " : " << std::setw(15) << real_t(clue.xi);
-                            eq.displayCompact(*xml << " @", Cj, SubLevel) << std::endl;
+                            const Hint clue( am.eval(Dj, Cj, SubLevel, C, L, eq), eq, Cj, Dj );
+                            if(xml.verbose)
+                            {
+                                cl.uuid.pad(xml() << "+ " << eq,eq) << " : " << std::setw(15) << real_t(clue.xi);
+                                eq.displayCompact(*xml << " @", Cj, SubLevel) << std::endl;
+                            }
+                            hint << clue;
                         }
-                        hint << clue;
-                    }
-                    else
-                    {
-                       // Y_XMLOG(xml," (-) " << eq);
+                        else
+                        {
+                            // Y_XMLOG(xml," (-) " << eq);
+                        }
                     }
                 }
+                {
+                    Y_XML_SECTION(xml, "Hinting");
+                    HeapSort::Call(hint,Hint::Compare);
+                    const size_t nh = hint.size();
+                    for(size_t i=1;i<=nh;++i)
+                    {
+                        if(xml.verbose)
+                        {
+                            const Hint &clue = hint[i];
+                            cl.uuid.pad(xml() << "+ " << clue.eq.name, clue.eq) << " : " << std::setw(15) << real_t(clue.xi);
+                            clue.eq.displayCompact(*xml << " d=", clue.dc, SubLevel);
+
+                            *xml << std::endl;
+                        }
+                    }
+
+                }
+
+
             }
 
 
@@ -230,7 +267,17 @@ Y_UTEST(solve)
     XVector      C0(M,0);
     Species::Conc(C0,ran,0.3);
 
+    {
+        C0.ld(0);
+        const Species *sp = lib.query("EtCOO-");
+        if(sp)
+        {
+            C0[sp->indx[TopLevel]] = 1;
+        }
+    }
     lib(std::cerr,"[",C0,"]");
+
+
 
     SBank            sb;
     Boundaries       bnd(sb);

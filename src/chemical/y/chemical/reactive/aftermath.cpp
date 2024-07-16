@@ -273,24 +273,27 @@ namespace Yttrium
             return false;
         }
 
-        xreal_t Aftermath:: eval(const XReadable &  Cout,
+        xreal_t Aftermath:: eval(XWritable       &  dOut,
+                                 const XReadable &  Cout,
                                  const Level        Lout,
                                  const XReadable &  Cinp,
                                  const Level        Linp,
                                  const Components & E)
         {
-            xadd.free();
 
+            xadd.free();
+            dOut.ld(0);
             Components::ConstIterator i = E->begin();
             const size_t              m = E->size();
-            
+
             for(size_t j = m;j>0;--j,++i)
             {
                 const Component &cc   = **i;
                 const Species   &sp   = cc.sp;
-                const xreal_t    cnew = Cout[sp.indx[Lout]];
+                const size_t     iout = sp.indx[Lout];
+                const xreal_t    cnew = Cout[iout];
                 const xreal_t    cold = Cinp[sp.indx[Linp]];
-                const xreal_t    xi   = (cnew-cold)/cc.xn;
+                const xreal_t    xi   = (dOut[iout] = (cnew-cold) )/cc.xn;
                 xadd << xi;
             }
 

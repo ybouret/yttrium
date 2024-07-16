@@ -62,6 +62,16 @@ namespace Yttrium
                 return tryInsert(sp);
             }
 
+            const Species *query(const String &id) const noexcept {
+                const Species::Ptr *ppS = db.search(id);
+                if(!ppS) return 0;
+                return & **ppS;
+            }
+
+            const Species * query(const char * const id) const {
+                const String _(id); return query(_);
+            }
+
             //! display
             template <typename ARRAY> inline
             void  operator()(std::ostream &os,
