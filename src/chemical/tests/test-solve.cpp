@@ -270,7 +270,7 @@ Y_UTEST(solve)
     {
         C0.ld(0);
         const Species *sp = lib.query("EtCOO-");
-        if(sp)
+        if(sp) 
         {
             C0[sp->indx[TopLevel]] = 1;
         }

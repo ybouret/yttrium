@@ -98,7 +98,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c   =  E.reac.maxExtent(Cout,Lout);
                         ma.c   = -1;
-                        std::cerr << E.massAction(K,xmul,Cout, xi.c, Lout) << std::endl;
+                        //std::cerr << E.massAction(K,xmul,Cout, xi.c, Lout) << std::endl;
                         break;
                 }
 
@@ -114,7 +114,7 @@ namespace Yttrium
                                const xreal_t     K,
                                XMul             &xmul)
             {
-                const xreal_t    zero = 0;
+                const xreal_t    zero;
                 Triplet<xreal_t> xi   = { 0, 0, 0 };
                 Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
 
@@ -246,6 +246,7 @@ namespace Yttrium
                                const xreal_t      K)
         {
 
+            //std::cerr << "solving " << E.name << std::endl;
             const xreal_t zero;
             Cout.ld(zero);
             switch(E.kind)

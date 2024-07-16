@@ -56,21 +56,13 @@ namespace Yttrium
             //! record/recall species
             template <typename ID>
             const Species & operator()(const ID &name,
-                                       const int z)
-            {
+                                       const int z) {
                 Species::Ptr sp = new Species(name,z,db.size()+1);
                 return tryInsert(sp);
             }
 
-            const Species *query(const String &id) const noexcept {
-                const Species::Ptr *ppS = db.search(id);
-                if(!ppS) return 0;
-                return & **ppS;
-            }
-
-            const Species * query(const char * const id) const {
-                const String _(id); return query(_);
-            }
+            const Species *query(const String &     id) const noexcept; //!< query species by name
+            const Species *query(const char * const id) const;          //!< query species by name
 
             //! display
             template <typename ARRAY> inline

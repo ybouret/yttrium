@@ -56,6 +56,18 @@ namespace Yttrium
         }
 
 
+        const Species * Library:: query(const String &id) const noexcept {
+            const Species::Ptr *ppS = db.search(id);
+            if(!ppS) return 0;
+            return & **ppS;
+        }
+
+        const Species * Library:: query(const char * const id) const {
+            const String _(id); return query(_);
+        }
+
+        
+
     }
 }
 
