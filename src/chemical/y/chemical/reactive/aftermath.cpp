@@ -246,7 +246,8 @@ namespace Yttrium
                                const xreal_t      K)
         {
 
-
+            const xreal_t zero;
+            Cout.ld(zero);
             switch(E.kind)
             {
                 case Components::Nebulous: break;

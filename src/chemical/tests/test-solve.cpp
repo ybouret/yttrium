@@ -4,7 +4,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
-
+#include "y/chemical/reactive/aftermath.hpp"
 
 namespace Yttrium
 {
@@ -117,7 +117,35 @@ namespace Yttrium
         class Solver
         {
         public:
+            class Hint
+            {
+            public:
+                Hint(const xreal_t val, XWritable &Ceq, XWritable &dCe) noexcept :
+                xi(val),
+                cc(Ceq),
+                dc(dCe)
+                {
+                }
+
+                Hint(const Hint &_) noexcept :
+                xi(_.xi),
+                cc(_.cc),
+                dc(_.dc)
+                {
+                }
+
+
+                xreal_t    xi;
+                XWritable &cc;
+                XWritable &dc;
+
+            private:
+                Y_DISABLE_ASSIGN(Hint);
+            };
+
             explicit Solver(const Clusters &cls) :
+            am(),
+            hint(cls.maxEPC),
             Ceq(cls.maxEPC,cls.maxSPC),
             dCe(cls.maxEPC,cls.maxSPC)
             {
@@ -128,14 +156,50 @@ namespace Yttrium
             {
             }
 
-            XMatrix Ceq;
-            XMatrix dCe;
+
+            void process(const Cluster  & cl,
+                         XWritable      & C,
+                         const Level      L,
+                         const XReadable &K,
+                         XMLog           &xml)
+            {
+                Y_XML_SECTION_OPT(xml, "Solve::Cluster", " eqs='" << cl.size << "'");
+                const xreal_t zero;
+                hint.free();
+                for(const ENode *en=cl.head;en;en=en->next)
+                {
+                    const Equilibrium &  eq  = **en;
+                    const xreal_t        eK = K[eq.indx[TopLevel]];
+                    const size_t         jj = hint.size()+1;
+                    XWritable          & Cj = Ceq[jj];
+                    if( am.solve(Cj, SubLevel, C, L, eq, eK) )
+                    {
+                        const Hint clue( am.eval(Cj, SubLevel, C, L, eq), Cj, dCe[jj] );
+                        if(xml.verbose)
+                        {
+                            cl.uuid.pad(xml() << " (+) " << eq,eq) << " : " << std::setw(15) << real_t(clue.xi);
+                            eq.displayCompact(*xml << " @", Cj, SubLevel) << std::endl;
+                        }
+                        hint << clue;
+                    }
+                    else
+                    {
+                       // Y_XMLOG(xml," (-) " << eq);
+                    }
+                }
+            }
+
+
+            Aftermath       am;
+            CxxSeries<Hint> hint;
+            XMatrix         Ceq;
+            XMatrix         dCe;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
         };
     }
-    
+
 }
 using namespace Yttrium;
 using namespace Chemical;
@@ -168,8 +232,11 @@ Y_UTEST(solve)
 
     lib(std::cerr,"[",C0,"]");
 
-    SBank      sb;
-    Boundaries bnd(sb);
+    SBank            sb;
+    Boundaries       bnd(sb);
+    Solver           solve(clusters);
+    const XReadable &K = clusters.K(0);
+
     for(const Cluster *cl=clusters->head;cl;cl=cl->next)
     {
         for(const ENode *en=cl->head;en;en=en->next)
@@ -178,6 +245,10 @@ Y_UTEST(solve)
             bnd.probe(eq,C0,TopLevel);
             std::cerr << eq << ": " << bnd << std::endl;
         }
+
+        solve.process(*cl,C0,TopLevel,K,xml);
+
+
     }
 
 

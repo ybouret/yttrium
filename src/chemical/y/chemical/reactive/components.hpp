@@ -148,6 +148,21 @@ namespace Yttrium
             void viz(OutputStream &fp,
                      const String &color) const;
 
+
+            //! display compact array
+            template <typename ARRAY> inline
+            std::ostream & displayCompact(std::ostream &os, ARRAY &arr, const Level level) const
+            {
+                os << '{' << ' ';
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    const Species &sp = (**it).sp;
+                    os << '[' << sp.name << ']' << '=' << real_t( arr[sp.indx[level]] ) << ' ';
+                }
+                os << '}';
+                return os;
+            }
+
             //__________________________________________________________________
             //
             //
