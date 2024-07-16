@@ -59,5 +59,19 @@ Y_UTEST(solve)
 
     clusters.showK(std::cerr);
 
+    const size_t M = lib->size();
+    XVector      C0(0,M);
+    Species::Conc(C0,ran,0.3);
+
+    for(const Cluster *cl=clusters->head;cl;cl=cl->next)
+    {
+        for(const ENode *en=cl->head;en;en=en->next)
+        {
+            const Equilibrium &eq = **en;
+            std::cerr << eq << std::endl;
+        }
+    }
+
+
 }
 Y_UDONE()
