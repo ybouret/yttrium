@@ -72,6 +72,8 @@ Y_UTEST(solve)
         }
     }
 
+    SBank sb;
+    SRepo sr(sb);
 
 }
 Y_UDONE()
