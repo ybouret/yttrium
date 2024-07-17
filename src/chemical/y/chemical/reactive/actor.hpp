@@ -67,12 +67,14 @@ namespace Yttrium
                             const Level      level) const;
 
 
-            //! compute derviative of mass action
+            //! compute derivative of mass action
             void drvsMassAction(XMul            &xmul,
                                 const XReadable &C,
                                 const Level      level) const;
+            
 
-            //! C/nu, C>=0
+
+            //! C/nu, assuming C>=0
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
             //! C += nu*xi >= 0

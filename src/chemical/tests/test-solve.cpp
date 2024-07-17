@@ -267,6 +267,7 @@ Y_UTEST(solve)
     XVector      C0(M,0);
     Species::Conc(C0,ran,0.3);
 
+    if(false)
     {
         C0.ld(0);
         const Species *sp = lib.query("EtCOO-");

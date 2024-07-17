@@ -63,17 +63,18 @@ namespace Yttrium
 
             //! derivative of mass action
             void drvsMassAction(XWritable       & phi,
-                                const Level       output,
+                                const Level       Lout,
                                 const xreal_t     xfac,
                                 XMul            & xmul,
-                                const XReadable & C,
-                                const Level       input) const;
+                                const XReadable & Cinp,
+                                const Level       Linp) const;
 
+            
 
             //! min of maxExtents
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
-            //! move safely
+            //! move safely each actor
             void moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
 
 

@@ -141,21 +141,20 @@ namespace Yttrium
         }
 
         void Actors:: drvsMassAction(XWritable       & phi,
-                                     const Level       output,
+                                     const Level       Lout,
                                      const xreal_t     xfac,
                                      XMul            & xmul,
-                                     const XReadable & C,
-                                     const Level       input) const
+                                     const XReadable & Cinp,
+                                     const Level       Linp) const
         {
             assert(xmul.isEmpty());
             for(const Actor *a=actors.head;a;a=a->next)
             {
-                //const Species &sp = a->sp;
                 xmul.insert(xfac);
-                a->drvsMassAction(xmul,C,input);
-                for(const Actor *b=a->prev;b;b=b->prev) b->massAction(xmul,C,input);
-                for(const Actor *b=a->next;b;b=b->next) b->massAction(xmul,C,input);
-                phi[ a->sp.indx[output] ] = xmul.product();
+                a->drvsMassAction(xmul,Cinp,Linp);
+                for(const Actor *b=a->prev;b;b=b->prev) b->massAction(xmul,Cinp,Linp);
+                for(const Actor *b=a->next;b;b=b->next) b->massAction(xmul,Cinp,Linp);
+                phi[ a->sp.indx[Lout] ] = xmul.product();
             }
         }
 
