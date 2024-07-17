@@ -98,11 +98,21 @@ namespace Yttrium
 
             //! d_massAction/d_C
             void drvsMassAction(const xreal_t      K,
-                                XWritable  &       phi,
-                                const Level        output,
-                                const XReadable &  C,
-                                const Level        input,
-                                XMul             &xmul) const;
+                                XWritable  &       drvs,
+                                const Level        Lout,
+                                const XReadable &  Cinp,
+                                const Level        Linp,
+                                XMul             & xmul) const;
+
+            //! derivative of mass action at Cinp+nu*xi
+            void drvsMassAction(const xreal_t     K,
+                                XWritable       & drvs,
+                                XWritable       & Cout,
+                                const Level       Lout,
+                                XMul            & xmul,
+                                const XReadable & Cinp,
+                                const Level       Linp,
+                                const xreal_t     xi) const;
 
             //! load topology vector
             template <typename T> inline

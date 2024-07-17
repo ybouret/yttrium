@@ -134,16 +134,32 @@ namespace Yttrium
 
 
         void Components:: drvsMassAction(const xreal_t     K,
-                                         XWritable  &      phi,
-                                         const Level       output,
-                                         const XReadable & C,
-                                         const Level       input,
+                                         XWritable  &      drvs,
+                                         const Level       Lout,
+                                         const XReadable & Cinp,
+                                         const Level       Linp,
                                          XMul             &xmul) const
         {
-            phi.ld(zero);
+            drvs.ld(zero);
             xmul.free();
-            reac.drvsMassAction(phi, output, K,    xmul, C, input);
-            prod.drvsMassAction(phi, output, mOne, xmul, C, input);
+            reac.drvsMassAction(drvs, Lout, K,    xmul, Cinp, Linp);
+            prod.drvsMassAction(drvs, Lout, mOne, xmul, Cinp, Linp);
+        }
+
+
+        void Components:: drvsMassAction(const xreal_t     K,
+                                         XWritable       & drvs,
+                                         XWritable       & Cout,
+                                         const Level       Lout,
+                                         XMul            & xmul,
+                                         const XReadable & Cinp,
+                                         const Level       Linp,
+                                         const xreal_t     xi) const
+        {
+            drvs.ld(zero);
+            xmul.free();
+            reac.drvsMassAction(drvs, Cout, Lout, K,    xmul, Cinp, Linp, -xi);
+            prod.drvsMassAction(drvs, Cout, Lout, mOne, xmul, Cinp, Linp,  xi);
         }
 
 

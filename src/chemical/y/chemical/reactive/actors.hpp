@@ -55,7 +55,7 @@ namespace Yttrium
             //! compute mass action
             void massAction(XMul &xmul, const XReadable &C, const Level L) const;
 
-            //! compute mass action of C0+nu*xi
+            //! compute mass action of Cinp+nu*xi
             void massAction(XMul            &xmul,
                             const XReadable &Cinp,
                             const Level      Linp,
@@ -69,7 +69,7 @@ namespace Yttrium
                                 const XReadable & Cinp,
                                 const Level       Linp) const;
 
-            //! derivative of mass action
+            //! derivative of mass action at Cinp+nu*xi
             void drvsMassAction(XWritable       & drvs,
                                 XWritable       & Cout,
                                 const Level       Lout,

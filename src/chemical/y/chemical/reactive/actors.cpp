@@ -168,6 +168,19 @@ namespace Yttrium
             }
         }
 
+        void Actors:: drvsMassAction(XWritable       & drvs,
+                                     XWritable       & Cout,
+                                     const Level       Lout,
+                                     const xreal_t     xfac,
+                                     XMul            & xmul,
+                                     const XReadable & Cinp,
+                                     const Level       Linp,
+                                     const xreal_t     xi) const
+        {
+            addSafe(Cout, Lout, Cinp, Linp, xi);
+            drvsMassAction(drvs, Lout, xfac, xmul, Cout, Lout);
+        }
+
 
         void Actors:: record(AddressBook &book) const
         {

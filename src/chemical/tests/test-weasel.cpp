@@ -6,6 +6,7 @@
 #include "y/random/park-miller.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/graphviz/color-scheme.hpp"
+#include "y/mkl/tao/seq/level1.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -38,6 +39,7 @@ Y_UTEST(weasel)
     
 
     Aftermath       am;
+    XAdd            xadd(m);
     for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
     {
         Equilibrium &eq = **it;
@@ -76,6 +78,24 @@ Y_UTEST(weasel)
             eq.drvsMassAction(K, phi, TopLevel, C, TopLevel, am.xmul);
             std::cerr << "phi=" << phi << std::endl;
             std::cerr << "dC =" << dC  << std::endl;
+
+            const String fileName = eq.name + ".dat";
+            OutputFile   fp(fileName);
+            const size_t np = 100;
+            for(size_t i=0;i<=np;++i)
+            {
+                const xreal_t u  = xreal_t(i)/xreal_t(np);
+                const xreal_t x  = (xreal_t(i)*xi)/xreal_t(np);
+                const xreal_t ma = eq.massAction(K, am.xmul, C0, TopLevel, x);
+                eq.addSafe(C, TopLevel, C0, TopLevel, x);
+                eq.drvsMassAction(K, phi, C, TopLevel, am.xmul, C0, TopLevel,  x);
+                //std::cerr << "Nu=" << Nu << "/ phi=" << phi << std::endl;
+                const xreal_t sigma = MKL::Tao::DotProduct<xreal_t>::Of_(phi,Nu,xadd);
+                std::cerr << "sigma=" << real_t(sigma) << std::endl;
+
+                fp("%.15g %.15g %.15g\n", real_t(x), real_t(ma), real_t(sigma));
+            }
+
         }
         else
         {
