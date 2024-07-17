@@ -53,13 +53,13 @@ namespace Yttrium
             bool hired(const Species &sp) const noexcept;
 
             //! compute mass action
-            void massAction(XMul &xmul, const XReadable &C, const Level level) const;
-           
+            void massAction(XMul &xmul, const XReadable &C, const Level L) const;
+
             //! compute mass action of C0+nu*xi
             void massAction(XMul            &xmul,
-                            const XReadable &C0,
-                            const xreal_t    xi,
-                            const Level      level) const;
+                            const XReadable &Cinp,
+                            const Level      Linp,
+                            const xreal_t    xi) const;
 
             //! derivative of mass action
             void drvsMassAction(XWritable       & drvs,
@@ -69,6 +69,15 @@ namespace Yttrium
                                 const XReadable & Cinp,
                                 const Level       Linp) const;
 
+            //! derivative of mass action
+            void drvsMassAction(XWritable       & drvs,
+                                XWritable       & Cout,
+                                const Level       Lout,
+                                const xreal_t     xfac,
+                                XMul            & xmul,
+                                const XReadable & Cinp,
+                                const Level       Linp,
+                                const xreal_t     xi) const;
 
 
             //! min of maxExtents

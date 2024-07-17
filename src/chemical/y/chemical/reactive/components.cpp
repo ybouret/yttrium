@@ -96,18 +96,18 @@ namespace Yttrium
 
         xreal_t Components:: massAction(const xreal_t    K,
                                         XMul            &xmul,
-                                        const XReadable &C0,
-                                        const xreal_t    xi,
-                                        const Level      level) const
+                                        const XReadable &C,
+                                        const Level      L,
+                                        const xreal_t    xi) const
         {
             xmul.free();
             xmul << K;
-            reac.massAction(xmul,C0,-xi,level);
+            reac.massAction(xmul,C,L,-xi);
             const xreal_t rhs = xmul.product();
 
             assert(xmul.isEmpty());
             xmul << mOne;
-            prod.massAction(xmul,C0,xi,level);
+            prod.massAction(xmul,C,L,xi);
             const xreal_t lhs = xmul.product();
             return rhs + lhs;
         }
@@ -119,6 +119,19 @@ namespace Yttrium
             reac.moveSafe(C,L,-xi);
             prod.moveSafe(C,L, xi);
         }
+
+
+        //! Cout = (Cinp + xi * nu) >= 0
+        void Components:: addSafe(XWritable       &Cout,
+                                  const Level      Lout,
+                                  const XReadable &Cinp,
+                                  const Level     &Linp,
+                                  const xreal_t    xi) const
+        {
+            reac.addSafe(Cout, Lout, Cinp, Linp, -xi);
+            prod.addSafe(Cout, Lout, Cinp, Linp,  xi);
+        }
+
 
         void Components:: drvsMassAction(const xreal_t     K,
                                          XWritable  &      phi,

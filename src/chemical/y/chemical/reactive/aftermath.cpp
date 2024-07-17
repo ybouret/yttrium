@@ -35,7 +35,7 @@ namespace Yttrium
                 inline xreal_t operator()(const xreal_t xi)
                 {
                     ++numCalls;
-                    return E.massAction(K, xmul, C, xi, L);
+                    return E.massAction(K, xmul, C, L, xi);
                 }
             };
 
@@ -85,7 +85,7 @@ namespace Yttrium
                         // must increase reactant(s) with negative xi
                         //------------------------------------------------------
                         xi.c = -K.pow(-E.reac.scale);
-                        while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) < zero )
+                        while( (ma.c = E.massAction(K,xmul,Cout,Lout,xi.c)) < zero )
                         {
                             ++Coerce(xi.c.exponent);
                         }
@@ -140,7 +140,7 @@ namespace Yttrium
                         // must increase product(s)
                         //------------------------------------------------------
                         xi.c = K.pow(E.prod.scale);
-                        while( (ma.c = E.massAction(K,xmul,Cout, xi.c, Lout)) > zero )
+                        while( (ma.c = E.massAction(K,xmul,Cout,Lout,xi.c)) > zero )
                         {
                             ++Coerce(xi.c.exponent);
                         }
@@ -174,7 +174,7 @@ namespace Yttrium
                         // must decrease product(s)/increase reactant(s) xi<0
                         //------------------------------------------------------
                         xi.c = -E.prod.maxExtent(Cout, Lout);
-                        ma.c = E.massAction(K,xmul,Cout, xi.c, Lout);
+                        ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
                         break;
 
 
@@ -183,7 +183,7 @@ namespace Yttrium
                         // must increase product(s)/decrease reactant(s) xi>0
                         //----------------------------------------------------------
                         xi.c = E.reac.maxExtent(Cout, Lout);
-                        ma.c = E.massAction(K,xmul,Cout, xi.c, Lout);
+                        ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
                         break;
                 }
 

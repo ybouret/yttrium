@@ -92,9 +92,9 @@ namespace Yttrium
             //! regularized mass action at C0+nu'*xi
             xreal_t massAction(const xreal_t     K,
                                XMul            & xmul,
-                               const XReadable & C0,
-                               const xreal_t     xi,
-                               const Level       level) const;
+                               const XReadable & C,
+                               const Level       L,
+                               const xreal_t     xi) const;
 
             //! d_massAction/d_C
             void drvsMassAction(const xreal_t      K,
@@ -137,6 +137,13 @@ namespace Yttrium
             void moveSafe(XWritable    &C,
                           const Level   L,
                           const xreal_t xi) const;
+            
+            //! Cout = (Cinp + xi * nu) >= 0
+            void addSafe(XWritable       &Cout,
+                         const Level      Lout,
+                         const XReadable &Cinp,
+                         const Level     &Linp,
+                         const xreal_t    xi) const;
 
 
             bool linkedTo(const Species    &sp) const noexcept; //!< linked to species
