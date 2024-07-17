@@ -53,7 +53,7 @@ namespace Yttrium
                 lexer.plug<Jive::Lexical::C_Comment>("C_Comment");
 
 
-                renderGraphViz();
+                //renderGraphViz();
 
                 validate();
             }
