@@ -115,7 +115,21 @@ We want to decrease $\Xi_i$ with $\delta \vec C$.
 
 \begin{equation}
 	\Xi_i(\vec C_0 + \delta \vec C) \simeq \Xi_i(\vec C_0 + \alpha_i \vec \nu_i) + 
-	\langle \vec \Phi_{\alpha_i} \vert \delta \vec C - \alpha_i \vec \nu_i \rangle
+	\langle \vec \Phi_{\alpha_i} \vert \underbrace{\delta \vec C - \alpha_i \vec \nu_i}_{\in\vec\nu_i^\perp} \rangle
+\end{equation}
+
+\begin{equation}
+	\delta \vec C = \sum_j x_j \vec \nu_j \implies 
+	\alpha_i = \dfrac{1}{\vec \nu_i^2} \sum_j x_j \langle \vec \nu_j \vert \vec \nu_i \rangle
+	= x_i + \dfrac{1}{\vec \nu_i^2} \sum_{j\not=i} x_j \langle \vec \nu_j \vert \vec \nu_i \rangle
+\end{equation}
+
+\begin{equation}
+\delta \vec C - \alpha_i \vec\nu_i = x_i \vec\nu_i + \sum_{j\not=i} x_j \vec\nu_j - \left(  x_i + \dfrac{1}{\vec \nu_i^2} \sum_{j\not=i} x_j \langle \vec \nu_j \vert \vec \nu_i \rangle\right) \vec\nu_i
+\end{equation}
+
+\begin{equation}
+\delta \vec C - \alpha_i \vec\nu_i =  \sum_{j\not=i} x_j \underbrace{\left(\vec\nu_j - \dfrac{\langle\vec \nu_j \vert \vec \nu_i \rangle}{\vec\nu_i^2} \vec\nu_i\right)}_{\in\vec\nu_i^\perp}
 \end{equation}
 
 

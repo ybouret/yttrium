@@ -49,6 +49,8 @@ Y_UTEST(weasel)
             OutputFile fp(dotFile);
 
             GraphViz::Vizible::Enter(fp, "G");
+            const String color = "black";
+
             {
                 const String color = GraphViz::Vizible::Color("set18", 1);
                 for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
@@ -59,6 +61,7 @@ Y_UTEST(weasel)
 
             {
                 const String color = GraphViz::Vizible::Color("set18", 2);
+                eq.viz(fp,color);
             }
 
             GraphViz::Vizible::Leave(fp);
@@ -81,6 +84,10 @@ Y_UTEST(weasel)
 
             const String fileName = eq.name + ".dat";
             OutputFile   fp(fileName);
+            const xreal_t sigma1 = MKL::Tao::DotProduct<xreal_t>::Of_(phi,Nu,xadd);
+            std::cerr << "sigma1=" << sigma1 << std::endl;
+            std::cerr << "ma0   =" << eq.massAction(K, am.xmul, C0, TopLevel) << std::endl;
+
             const size_t np = 100;
             for(size_t i=0;i<=np;++i)
             {
@@ -89,9 +96,8 @@ Y_UTEST(weasel)
                 const xreal_t ma = eq.massAction(K, am.xmul, C0, TopLevel, x);
                 eq.addSafe(C, TopLevel, C0, TopLevel, x);
                 eq.drvsMassAction(K, phi, C, TopLevel, am.xmul, C0, TopLevel,  x);
-                //std::cerr << "Nu=" << Nu << "/ phi=" << phi << std::endl;
                 const xreal_t sigma = MKL::Tao::DotProduct<xreal_t>::Of_(phi,Nu,xadd);
-                std::cerr << "sigma=" << real_t(sigma) << std::endl;
+                //std::cerr << "sigma=" << real_t(sigma) << std::endl;
 
                 fp("%.15g %.15g %.15g\n", real_t(x), real_t(ma), real_t(sigma));
             }
