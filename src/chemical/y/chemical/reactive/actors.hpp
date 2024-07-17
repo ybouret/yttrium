@@ -62,20 +62,28 @@ namespace Yttrium
                             const Level      level) const;
 
             //! derivative of mass action
-            void drvsMassAction(XWritable       & phi,
+            void drvsMassAction(XWritable       & drvs,
                                 const Level       Lout,
                                 const xreal_t     xfac,
                                 XMul            & xmul,
                                 const XReadable & Cinp,
                                 const Level       Linp) const;
 
-            
+
 
             //! min of maxExtents
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
             //! move safely each actor
-            void moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
+            void moveSafe(XWritable &C, const Level L, const xreal_t xi) const;
+
+            //! Cout = (Cinp + xi * nu) >= 0
+            void addSafe(XWritable       &Cout,
+                         const Level      Lout,
+                         const XReadable &Cinp,
+                         const Level     &Linp,
+                         const xreal_t    xi) const;
+
 
 
             //! check that each concentration is positive

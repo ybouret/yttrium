@@ -135,12 +135,21 @@ namespace Yttrium
         }
 
 
-        void Actors:: moveSafe(XWritable &C, const xreal_t xi, const Level level) const
+        void Actors:: moveSafe(XWritable &C, const Level L, const xreal_t xi) const
         {
-            for(const Actor *a=actors.head;a;a=a->next) a->moveSafe(C,xi,level);
+            for(const Actor *a=actors.head;a;a=a->next) a->moveSafe(C,L,xi);
         }
 
-        void Actors:: drvsMassAction(XWritable       & phi,
+        void Actors:: addSafe(XWritable       &Cout,
+                              const Level      Lout,
+                              const XReadable &Cinp,
+                              const Level     &Linp,
+                              const xreal_t    xi) const
+        {
+            for(const Actor *a=actors.head;a;a=a->next) a->addSafe(Cout, Lout, Cinp, Linp, xi);
+        }
+
+        void Actors:: drvsMassAction(XWritable       & drvs,
                                      const Level       Lout,
                                      const xreal_t     xfac,
                                      XMul            & xmul,
@@ -154,7 +163,7 @@ namespace Yttrium
                 a->drvsMassAction(xmul,Cinp,Linp);
                 for(const Actor *b=a->prev;b;b=b->prev) b->massAction(xmul,Cinp,Linp);
                 for(const Actor *b=a->next;b;b=b->next) b->massAction(xmul,Cinp,Linp);
-                phi[ a->sp.indx[Lout] ] = xmul.product();
+                drvs[ a->sp.indx[Lout] ] = xmul.product();
             }
         }
 

@@ -78,7 +78,15 @@ namespace Yttrium
             xreal_t maxExtent(const XReadable &C, const Level level) const;
 
             //! C += nu*xi >= 0
-            void    moveSafe(XWritable &C, const xreal_t xi, const Level level) const;
+            void    moveSafe(XWritable &C, const Level L, const xreal_t xi) const;
+
+            //! Cout = (Cinp + xi * nu) >= 0
+            void    addSafe(XWritable       &Cout,
+                            const Level      Lout,
+                            const XReadable &Cinp,
+                            const Level     &Linp,
+                            const xreal_t    xi) const;
+
 
             //! assuming species and peer are already in fp
             void    viz(OutputStream &             fp,

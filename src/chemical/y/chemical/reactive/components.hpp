@@ -135,8 +135,8 @@ namespace Yttrium
 
             //! move assuming xi is valid
             void moveSafe(XWritable    &C,
-                          const xreal_t xi,
-                          const Level   level) const;
+                          const Level   L,
+                          const xreal_t xi) const;
 
 
             bool linkedTo(const Species    &sp) const noexcept; //!< linked to species

@@ -86,11 +86,21 @@ namespace Yttrium
             return c/xn;
         }
 
-        void Actor:: moveSafe(XWritable &C, const xreal_t xi, const Level level) const
+        void Actor:: moveSafe(XWritable &C,const Level L,  const xreal_t xi) const
         {
-            const xreal_t zero = 0;
-            xreal_t &c = C[sp.indx[level]];
+            const xreal_t zero;
+            xreal_t &c = C[sp.indx[L]];
             c = Max(zero,c+xn*xi);
+        }
+
+        void Actor:: addSafe(XWritable       &Cout,
+                             const Level      Lout,
+                             const XReadable &Cinp,
+                             const Level     &Linp,
+                             const xreal_t    xi) const
+        {
+            const xreal_t zero;
+            Cout[sp.indx[Lout]] = Max(zero, Cinp[sp.indx[Linp]] + xn * xi);
         }
 
         void Actor:: record(AddressBook &book) const

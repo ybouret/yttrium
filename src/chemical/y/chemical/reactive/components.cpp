@@ -113,11 +113,11 @@ namespace Yttrium
         }
 
         void Components:: moveSafe(XWritable    &C,
-                                   const xreal_t xi,
-                                   const Level   level) const
+                                   const Level   L,
+                                   const xreal_t xi) const
         {
-            reac.moveSafe(C,-xi,level);
-            prod.moveSafe(C,xi,level);
+            reac.moveSafe(C,L,-xi);
+            prod.moveSafe(C,L, xi);
         }
 
         void Components:: drvsMassAction(const xreal_t     K,
