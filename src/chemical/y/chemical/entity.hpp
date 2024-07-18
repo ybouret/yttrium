@@ -6,6 +6,7 @@
 
 #include "y/graphviz/vizible.hpp"
 #include "y/string.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Object, public Counted, public GraphViz::Vizible
+        class Entity : public Quantized, public Counted, public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -32,6 +33,9 @@ namespace Yttrium
             //! setup with any name
             template <typename ID> inline
             explicit Entity(const ID & userName ) :
+            Quantized(),
+            Counted(),
+            GraphViz::Vizible(),
             name(userName)
             {
             }

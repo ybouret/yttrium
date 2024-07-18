@@ -35,7 +35,8 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Manifest::ConstIterator ConstIterator; //!< alias
             static const char * const       Mark;          //!< "<=>";
-         
+            typedef Small::BareLightList<const Components> List;
+
             //! category according to cardinality
             enum Category
             {
@@ -61,6 +62,7 @@ namespace Yttrium
             reac(),
             prod(),
             kind(Nebulous),
+            sire(),
             db(),
             zero(0),
             mOne(-1)
@@ -192,10 +194,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Actors   reac; //!< reactants
-            const Actors   prod; //!< products
-            const Category kind; //!< precomputed category
-            
+            const Actors             reac; //!< reactants
+            const Actors             prod; //!< products
+            const Category           kind; //!< precomputed category
+            const List               sire; //!< if mixed
 
         private:
             Manifest db;

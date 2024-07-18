@@ -7,7 +7,7 @@
 #include "y/mkl/algebra/rank.hpp"
 #include "y/type/temporary.hpp"
 #include "y/chemical/reactive/equilibrium/mixed.hpp"
-
+#include "y/counting/nested-loop.hpp"
 
 namespace Yttrium
 {
@@ -213,6 +213,19 @@ namespace Yttrium
                 Y_XML_LIST(xml,roaming.standard);
                 Y_XML_LIST(xml,limited);
             }
+
+            //------------------------------------------------------------------
+            //
+            // checking for independent sets
+            //
+            //------------------------------------------------------------------
+            if(false)
+            {
+                const size_t dims = Nu.rows;
+                const size_t nmax = size;
+                std::cerr << "possibilities of independant groups=" << NestedLoop::CardinalityFor(dims,nmax) << std::endl;
+            }
+
 
             //------------------------------------------------------------------
             //
