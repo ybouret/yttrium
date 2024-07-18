@@ -20,6 +20,7 @@ Y_UTEST(init)
         std::cerr << GraphViz::ColorScheme::Table[i].name << std::endl;
     }
 
+#if 0
     const String color = GraphViz::Vizible::Color("set18", 1);
 
     {
@@ -29,7 +30,8 @@ Y_UTEST(init)
         w.viz(fp, color, false);
         GraphViz::Vizible::Leave(fp);
     }
-
+#endif
+    
     std::cerr << lib << std::endl;
     
     for(unsigned nu=1;nu<=3;++nu)

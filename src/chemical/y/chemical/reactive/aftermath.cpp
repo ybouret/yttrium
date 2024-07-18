@@ -301,6 +301,31 @@ namespace Yttrium
             return xadd.sum()/xreal_t(m);
         }
 
+        xreal_t Aftermath:: eval(const XReadable &  Cout,
+                                 const Level        Lout,
+                                 const XReadable &  Cinp,
+                                 const Level        Linp,
+                                 const Components & E)
+        {
+
+            xadd.free();
+            Components::ConstIterator i = E->begin();
+            const size_t              m = E->size();
+
+            for(size_t j = m;j>0;--j,++i)
+            {
+                const Component &cc   = **i;
+                const Species   &sp   = cc.sp;
+                const size_t     iout = sp.indx[Lout];
+                const xreal_t    cnew = Cout[iout];
+                const xreal_t    cold = Cinp[sp.indx[Linp]];
+                const xreal_t    xi   =  (cnew-cold)/cc.xn;
+                xadd << xi;
+            }
+
+            return xadd.sum()/xreal_t(m);
+        }
+
     }
 
 }

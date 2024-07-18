@@ -62,6 +62,14 @@ namespace Yttrium
                          const Level        Linp,
                          const Components & E);
 
+            //! eval extent post solve
+            xreal_t eval(const XReadable &  Cout,
+                         const Level        Lout,
+                         const XReadable &  Cinp,
+                         const Level        Linp,
+                         const Components & E);
+
+
             //__________________________________________________________________
             //
             //
