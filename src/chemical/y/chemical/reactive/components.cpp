@@ -204,6 +204,23 @@ namespace Yttrium
             for(const Actor *a=prod->head;a;a=a->next) a->viz(fp, *this, color, Iterating::Reverse);
         }
 
+
+        xreal_t Components:: dot(const XReadable & array,
+                                 const Level       level,
+                                 XAdd &            xadd) const
+        {
+            xadd.free();
+            size_t n = db.size();
+            for(ConstIterator it=db.begin();n>0;--n,++it)
+            {
+                const Component &cc = **it;
+                const xreal_t    xm = array[cc.sp.indx[level]] * cc.xn;
+                xadd << xm;
+            }
+            return xadd.sum();
+        }
+
+
     }
 
 }

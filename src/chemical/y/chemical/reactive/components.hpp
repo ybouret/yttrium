@@ -180,6 +180,12 @@ namespace Yttrium
                 return os;
             }
 
+            //! Nu * array[level]
+            xreal_t dot(const XReadable & array,
+                        const Level       level,
+                        XAdd &            xadd) const;
+
+
             //__________________________________________________________________
             //
             //
