@@ -255,6 +255,7 @@ add_test(counting:part        test-core counting_part)
 add_test(counting:partition   test-core counting_partition)
 add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
+add_test(counting:nested      test-core counting_nested)
 
 #associatvie
 add_test(associative:suffix-tree  test-core associative_suffix_tree)

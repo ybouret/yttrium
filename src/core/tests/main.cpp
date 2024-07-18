@@ -189,6 +189,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(counting_permutation);
     Y_UTEST(counting_combination);
     Y_UTEST(counting_partition);
+    Y_UTEST(counting_nested);
 
     Y_UTEST(associative_suffix_tree);
     Y_UTEST(associative_suffix_map);

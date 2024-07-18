@@ -211,9 +211,7 @@ namespace Yttrium
                             *xml <<   std::endl;
                         }
                     }
-                    else
-                    {
-                    }
+                    
                 }
 
 
