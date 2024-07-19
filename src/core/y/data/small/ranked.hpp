@@ -5,6 +5,7 @@
 
 #include "y/type/proxy.hpp"
 #include "y/type/signs.hpp"
+#include "y/container/recyclable.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +23,7 @@ namespace Yttrium
         typename LIST,
         typename COMPARE
         >
-        class Ranked : public Proxy<const LIST>
+        class Ranked : public Proxy<const LIST>, public Recyclable
         {
         public:
             //__________________________________________________________________
@@ -52,6 +53,14 @@ namespace Yttrium
 
             //! cleanup
             inline virtual ~Ranked() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            //  [Recyclable]
+            //
+            //__________________________________________________________________
+            inline virtual void free() noexcept { list.free(); }
 
             //__________________________________________________________________
             //
