@@ -4,6 +4,8 @@
 #define Y_Chemical_Eqs_Dependy_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
+#include "y/data/small/ranked.hpp"
+#include "y/data/small/light/list/solo.hpp"
 
 namespace Yttrium
 {
@@ -13,6 +15,11 @@ namespace Yttrium
         class Independence
         {
         public:
+            static const char * const CallSign;
+            
+            typedef Small::SoloLightList<const Equilibrium>      ESolo;
+            typedef Small::Ranked<ESolo,Equilibrium::Comparator> ERank;
+
             explicit Independence(const size_t capacity);
             virtual ~Independence() noexcept;
 
@@ -21,8 +28,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Independence);
-            EBank bank;
-            ERepo repo;
+            ERank list;
 
             bool grow(const Equilibrium &eq);
 

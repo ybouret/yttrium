@@ -30,6 +30,15 @@ namespace Yttrium
             //__________________________________________________________________
             typedef ArkPtr<String,Equilibrium> Ptr; //!< alias
             typedef Small::BareLightList<const Equilibrium> List; //!< alias
+            class Comparator
+            {
+            public:
+                Comparator() noexcept;
+                ~Comparator() noexcept;
+                SignType operator()(const Equilibrium &, const Equilibrium &) const noexcept;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Comparator);
+            };
 
             //__________________________________________________________________
             //
@@ -79,8 +88,8 @@ namespace Yttrium
 
         typedef Equilibrium::List                       EList; //!< alias
         typedef EList::NodeType                         ENode; //!< alias
-        typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
-        typedef ERepo::ProxyType                        EBank; //!< alias
+        //typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
+        //typedef ERepo::ProxyType                        EBank; //!< alias
 
 
     }

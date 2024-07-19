@@ -45,6 +45,11 @@ namespace Yttrium
             //! setup empty
             inline explicit SoloLightList() noexcept : ListType(), Releasable() {}
 
+            //! setup with capacity
+            inline explicit SoloLightList(const size_t capacity) : ListType(), Releasable() {
+                this->proxy->reserve(capacity);
+            }
+
             //! copy
             inline explicit SoloLightList(const SoloLightList &_) : ListType(_), Releasable() {}
 

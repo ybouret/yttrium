@@ -32,10 +32,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef typename LIST::NodeType  NodeType;  //!< alias
-            typedef typename LIST::Type      Type;      //!< alias
-            typedef typename LIST::ConstType ConstType; //!< alias
-            typedef typename LIST::ParamType ParamType; //!< alias
+            typedef typename LIST::NodeType      NodeType;  //!< alias
+            typedef typename NodeType::Type      Type;      //!< alias
+            typedef typename NodeType::ConstType ConstType; //!< alias
+            typedef typename NodeType::ParamType ParamType; //!< alias
 
             //__________________________________________________________________
             //
