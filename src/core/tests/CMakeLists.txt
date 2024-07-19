@@ -135,6 +135,8 @@ add_test(data:coop-light-list test-core data_coop_light_list)
 add_test(data:bare-heavy-list test-core data_bare_heavy_list)
 add_test(data:solo-heavy-list test-core data_solo_heavy_list)
 add_test(data:coop-heavy-list test-core data_coop_heavy_list)
+add_test(data:ranked          test-core data_ranked)
+
 
 
 #calculus
