@@ -16,6 +16,9 @@ namespace Yttrium
             explicit Dependency();
             virtual ~Dependency() noexcept;
 
+            void start();
+            
+
             EBank bank;
             ERepo repo;
 
