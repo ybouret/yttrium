@@ -32,7 +32,7 @@ Y_UTEST(data_ranked)
 
     iBRanked ibr;
     iSRanked isr;
-    iCRanked icr(bnk);
+    iCRanked icr(bnk,AsParameter);
 
     size_t good = 0;
     size_t drop = 0;
