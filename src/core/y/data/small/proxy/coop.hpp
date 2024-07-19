@@ -67,9 +67,22 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            inline explicit CoopProxy()                   noexcept : CachePtr( new CacheType() ) { } //!< setup
-            inline virtual ~CoopProxy()                   noexcept { }                               //!< cleanup
-            inline explicit CoopProxy(const CoopProxy &_) noexcept : CachePtr(_) { }                 //!< copy => share
+
+
+            //! setup with a new empty cache
+            inline explicit CoopProxy() : CachePtr( new CacheType() )            { }
+
+            //! setup and reserve capacity
+            inline explicit CoopProxy(const size_t capacity) : CachePtr( new CacheType() )
+            {
+                (**this).reserve(capacity);
+            }
+
+            //! copy, sharing cache
+            inline explicit CoopProxy(const CoopProxy &_) noexcept : CachePtr(_) { }
+
+            //! cleanup
+            inline virtual ~CoopProxy() noexcept { }
 
 
 

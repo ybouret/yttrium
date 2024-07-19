@@ -10,20 +10,20 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Dependency
+        class Independence
         {
         public:
-            explicit Dependency();
-            virtual ~Dependency() noexcept;
+            explicit Independence(const size_t capacity);
+            virtual ~Independence() noexcept;
 
             void start();
-            
+
 
             EBank bank;
             ERepo repo;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Dependency);
+            Y_DISABLE_COPY_AND_ASSIGN(Independence);
         };
 
     }
