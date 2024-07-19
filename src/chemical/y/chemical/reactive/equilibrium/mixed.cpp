@@ -73,8 +73,7 @@ namespace Yttrium
         Equilibrium(EmptyName,topLevel),
         xmul(),
         topK(shK),
-        source(),
-        mixing()
+        coef()
         {
             { String id = MakeName(eqs,cof); Coerce(name).swapWith(id); }
 
@@ -85,8 +84,8 @@ namespace Yttrium
                 if(0==cf) continue;
                 const Equilibrium &eq = (**eqs.fetch(i));
                 assert(eq.indx[SubLevel]==i);
-                Coerce(source) << eq;
-                Coerce(mixing) << cf;
+                Coerce(sire) << eq;
+                Coerce(coef) << cf;
             }
 
 
@@ -96,8 +95,8 @@ namespace Yttrium
         {
             const xreal_t one(1);
             xmul.free();
-            const ENode       *en = source.head;
-            for(const MixNode *mn = mixing.head;mn;mn=mn->next,en=en->next)
+            const ENode       *en = sire.head;
+            for(const MixNode *mn = coef.head;mn;mn=mn->next,en=en->next)
             {
                 const xreal_t Ki = topK[ (**en).indx[TopLevel] ];
                 const int     ni = **mn;

@@ -12,6 +12,20 @@ namespace Yttrium
 
         Components::ConstInterface & Components:: surrogate() const noexcept { return db; }
 
+#define Y_ChemCompCat(NAME) case NAME : return #NAME
+
+        const char * Components:: CategoryText(const Category cat) noexcept
+        {
+            switch(cat)
+            {
+                    Y_ChemCompCat(Nebulous);
+                    Y_ChemCompCat(ProdOnly);
+                    Y_ChemCompCat(ReacOnly);
+                    Y_ChemCompCat(Standard);
+            }
+            return Core::Unknown;
+        }
+
         const char * const Components:: Mark = "<=>";
 
         void Components:: updateKind() noexcept
@@ -218,6 +232,11 @@ namespace Yttrium
                 xadd << xm;
             }
             return xadd.sum();
+        }
+
+        const char * Components:: kindText() const noexcept
+        {
+            return CategoryText(kind);
         }
 
 

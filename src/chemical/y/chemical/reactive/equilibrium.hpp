@@ -29,6 +29,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ArkPtr<String,Equilibrium> Ptr; //!< alias
+            typedef Small::BareLightList<const Equilibrium> List; //!< alias
 
             //__________________________________________________________________
             //
@@ -43,7 +44,8 @@ namespace Yttrium
             template <typename ID> inline
             explicit Equilibrium(const ID    &userName,
                                  const size_t topLevel) :
-            Components(userName,topLevel)
+            Components(userName,topLevel),
+            sire()
             {
             }
 
@@ -60,6 +62,14 @@ namespace Yttrium
             //! check private getK(t)
             xreal_t K(const xreal_t t);
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const List sire; //!< source equilibria (for mixed)
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
@@ -67,8 +77,8 @@ namespace Yttrium
             
          };
 
-        typedef Small::BareLightList<const Equilibrium> EList; //!< alias
-        typedef EList::NodeType                         ENode; //!< alias//! linked to species
+        typedef Equilibrium::List  EList; //!< alias
+        typedef EList::NodeType    ENode; //!< alias
     }
 
 }

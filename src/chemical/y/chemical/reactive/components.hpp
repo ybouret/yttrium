@@ -35,7 +35,6 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Manifest::ConstIterator ConstIterator; //!< alias
             static const char * const       Mark;          //!< "<=>";
-            typedef Small::BareLightList<const Components> List;
 
             //! category according to cardinality
             enum Category
@@ -45,6 +44,9 @@ namespace Yttrium
                 ProdOnly, //!< product(s) only
                 Standard  //!< reactant(s) AND product(s)
             };
+
+            //! human readable category
+            static const char * CategoryText(const Category) noexcept;
 
             //__________________________________________________________________
             //
@@ -62,7 +64,6 @@ namespace Yttrium
             reac(),
             prod(),
             kind(Nebulous),
-            sire(),
             db(),
             zero(0),
             mOne(-1)
@@ -129,8 +130,11 @@ namespace Yttrium
                 }
             }
 
-            //! update kind according to category
-            void updateKind() noexcept;
+            //! Nu * array[level]
+            xreal_t dot(const XReadable & array,
+                        const Level       level,
+                        XAdd &            xadd) const;
+
 
             //! transfer components-wise
             template <typename TARGET, typename SOURCE> inline
@@ -158,14 +162,15 @@ namespace Yttrium
                          const xreal_t    xi) const;
 
 
+
+            void updateKind()                         noexcept; //!< update kind according to category
             bool linkedTo(const Species    &sp) const noexcept; //!< linked to species
             bool linkedTo(const Components &)   const noexcept; //!< linked to other compoennts
-            void record(AddressBook &) const;                   //!< record (add) all species
-            bool neutral()    const noexcept;                   //!< return neutrality check
+            void record(AddressBook &)                   const; //!< record (add) all species
+            bool neutral()                      const noexcept; //!< return neutrality check
 
             //! assuming species are already in fp
-            void viz(OutputStream &fp,
-                     const String &color) const;
+            void viz(OutputStream &fp, const String &color) const;
 
 
             //! display compact array
@@ -182,10 +187,8 @@ namespace Yttrium
                 return os;
             }
 
-            //! Nu * array[level]
-            xreal_t dot(const XReadable & array,
-                        const Level       level,
-                        XAdd &            xadd) const;
+            //! human readable kind
+            const char *kindText() const noexcept;
 
 
             //__________________________________________________________________
@@ -197,7 +200,6 @@ namespace Yttrium
             const Actors             reac; //!< reactants
             const Actors             prod; //!< products
             const Category           kind; //!< precomputed category
-            const List               sire; //!< if mixed
 
         private:
             Manifest db;
