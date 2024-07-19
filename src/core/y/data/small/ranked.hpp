@@ -6,11 +6,15 @@
 #include "y/type/proxy.hpp"
 #include "y/type/signs.hpp"
 #include "y/container/recyclable.hpp"
+#include "y/type/parameter.hpp"
 
 namespace Yttrium
 {
+
     namespace Small
     {
+
+
         //______________________________________________________________________
         //
         //
@@ -49,10 +53,16 @@ namespace Yttrium
 
             //! setup with one argument
             template <typename ARGS>
-            inline explicit Ranked(ARGS &args) : Proxy<const LIST>(), list(args), compare() {}
+            inline explicit Ranked(ARGS &args, const AsParameter_ &) : Proxy<const LIST>(), list(args), compare() {}
+
+            inline Ranked(const Ranked &other) :
+            Proxy<const LIST>(),
+            list(other),
+            compare() {}
 
             //! cleanup
             inline virtual ~Ranked() noexcept {}
+
 
             //__________________________________________________________________
             //
@@ -145,7 +155,7 @@ namespace Yttrium
         private:
             LIST    list;
             COMPARE compare;
-            Y_DISABLE_COPY_AND_ASSIGN(Ranked);
+            Y_DISABLE_ASSIGN(Ranked);
 
 
             inline virtual
