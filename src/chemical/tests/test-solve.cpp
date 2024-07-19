@@ -6,6 +6,7 @@
 #include "y/random/park-miller.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/sort/heap.hpp"
+#include "y/chemical/reactive/equilibria/linearly-independent.hpp"
 
 namespace Yttrium
 {
@@ -217,19 +218,28 @@ namespace Yttrium
 
 
                 HeapSort::Call(ha,Hint::Compare);
-                const size_t nh = ha.size();
+                const size_t        nh = ha.size();
+                LinearlyIndependent lif(10);
+
+                lif.init();
+
                 for(size_t i=1;i<=nh;++i)
                 {
+                    const Hint &hint = ha[i];
                     if(xml.verbose)
                     {
-                        const Hint &hint = ha[i];
                         cl.uuid.pad(xml() << "+ " << hint.eq.name, hint.eq);
                         *xml << " : xi=" << std::setw(15) << real_t(hint.xi);
                         *xml << " | sl=" << std::setw(15) << real_t(hint.sl);
                         hint.eq.displayCompact(*xml << " @", hint.cc, SubLevel);
-
                         *xml << std::endl;
                     }
+                    (void) lif.keep(hint.eq);
+                }
+
+                if(xml.verbose)
+                {
+                    Y_XMLOG(xml, "Linearly Independent : " << lif);
                 }
 
             }

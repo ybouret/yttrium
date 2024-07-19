@@ -57,7 +57,7 @@ namespace Yttrium
 
             inline Ranked(const Ranked &other) :
             Proxy<const LIST>(),
-            list(other),
+            list(other.list),
             compare() {}
 
             //! cleanup
@@ -80,7 +80,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! master insertion algorithm
-            inline bool grow(ParamType args) {
+            inline bool insert(ParamType args) {
 
                 //______________________________________________________________
                 //
@@ -151,17 +151,79 @@ namespace Yttrium
                 return true;
             }
 
+            //! lookup using comparator
+            inline bool has(ParamType args) const noexcept
+            {
+                return 0 != query(args);
+            }
+
+            inline bool remove(ParamType args) noexcept
+            {
+                const NodeType *node = query(args);
+                if(0!=node)
+                {
+                    list.cutNode( &Coerce(*node) );
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            inline void tradeWith(Ranked &other) noexcept
+            {
+                list.swapWith(other.list);
+            }
+
 
         private:
             LIST    list;
             COMPARE compare;
             Y_DISABLE_ASSIGN(Ranked);
-
-
             inline virtual
             typename Proxy<const LIST>::ConstInterface & surrogate() const noexcept
             {
                 return list;
+            }
+
+            inline const NodeType *query(ParamType args) const noexcept
+            {
+                const NodeType * const lower = list.head;
+                switch(list.size)
+                {
+                    case 0: return 0;                                               // empty
+                    case 1: return (__Zero__ == compare(args,**lower)) ? lower : 0; // must match sole item
+                    default: break;                                                 // generic case
+                }
+
+                switch( compare(args,**lower) )
+                {
+                    case Negative: return 0;      // smaller than smallest
+                    case __Zero__: return lower;  // match!
+                    case Positive: break;         // look aboce
+                }
+
+                const NodeType * const upper = list.tail;
+                switch( compare(args,**upper) )
+                {
+                    case Negative: break;         // look below
+                    case __Zero__: return upper;  // match!
+                    case Positive: return 0;      // greater than greatest
+                }
+
+                for(const NodeType *node=lower->next;upper!=node;node=node->next)
+                {
+                    switch( compare(args,**node) )
+                    {
+                        case Negative: return 0;     // no possible further match
+                        case __Zero__: return node;  // match!
+                        default:          continue;  // next
+                    }
+                }
+
+
+                return 0; // not found
             }
         };
 

@@ -5,32 +5,36 @@
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/data/small/ranked.hpp"
-#include "y/data/small/light/list/solo.hpp"
+#include "y/data/small/light/list/coop.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        class LinearlyIndependent
+        typedef Small::CoopLightList<const Equilibrium> ERepo;
+        typedef ERepo::ProxyType                        EBank;
+
+
+        class LinearlyIndependent : public Proxy<const ERepo>
         {
         public:
             static const char * const CallSign;
-            
-            typedef Small::SoloLightList<const Equilibrium>      ESolo;
-            typedef Small::Ranked<ESolo,Equilibrium::Comparator> ERank;
+
+            typedef Small::Ranked<ERepo,Equilibrium::Comparator> ERank;
 
             explicit LinearlyIndependent(const size_t capacity);
             virtual ~LinearlyIndependent() noexcept;
 
-            void start(const Equilibrium &eq);
-
+            void init() noexcept;
+            bool keep(const Equilibrium &eq);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LinearlyIndependent);
-            ERank list;
-
-            bool grow(const Equilibrium &eq);
+            virtual ConstInterface & surrogate() const noexcept;
+            EBank bank;
+            ERank rank;
+            ERepo list;
 
         };
 
