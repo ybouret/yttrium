@@ -16,14 +16,16 @@ namespace Yttrium
             explicit Independence(const size_t capacity);
             virtual ~Independence() noexcept;
 
-            void start();
+            void start(const Equilibrium &eq);
 
-
-            EBank bank;
-            ERepo repo;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Independence);
+            EBank bank;
+            ERepo repo;
+
+            bool grow(const Equilibrium &eq);
+
         };
 
     }
