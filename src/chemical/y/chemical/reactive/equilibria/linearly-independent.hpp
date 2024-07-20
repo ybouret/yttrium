@@ -4,8 +4,8 @@
 #define Y_Chemical_Eqs_Deps_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
-#include "y/data/small/ranked.hpp"
 #include "y/data/small/light/list/coop.hpp"
+#include "y/orthogonal/family.hpp"
 
 namespace Yttrium
 {
@@ -16,15 +16,17 @@ namespace Yttrium
         typedef ERepo::ProxyType                        EBank;
 
 
-        class LinearlyIndependent : public Proxy<const ERepo>
+        class LinearlyIndependent : public Quantized, public Proxy<const ERepo>
         {
         public:
             static const char * const CallSign;
 
-            typedef Small::Ranked<ERepo,Equilibrium::Comparator> ERank;
 
-            explicit LinearlyIndependent(const size_t capacity);
+            explicit LinearlyIndependent(const size_t primary,
+                                         const size_t species);
             virtual ~LinearlyIndependent() noexcept;
+
+            const size_t & key() const noexcept; //!< number of species
 
             void init() noexcept;
             bool keep(const Equilibrium &eq);
@@ -32,10 +34,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LinearlyIndependent);
             virtual ConstInterface & surrogate() const noexcept;
-            EBank bank;
-            ERank rank;
-            ERepo list;
-
+            EBank              bank;
+            ERepo              list;
+            Orthogonal::Family qfam;
         };
 
     }

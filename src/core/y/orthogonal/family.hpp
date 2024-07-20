@@ -39,10 +39,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Family(const size_t dims) noexcept; //!< setup with dims>0
-            virtual ~Family()                  noexcept; //!< cleanup
-            Family(const Family &);                      //!< copy
-            Y_OSTREAM_PROTO(Family);                     //!< display
+            explicit Family(const size_t dims, const size_t capa=0) noexcept; //!< setup with dims>0
+            virtual ~Family()                                       noexcept; //!< cleanup
+            Family(const Family &);                                           //!< copy
+            Y_OSTREAM_PROTO(Family);                                          //!< display
 
             //__________________________________________________________________
             //
@@ -93,6 +93,7 @@ namespace Yttrium
             const Vector &expandFrom(QArrayType &);
 
             virtual void free() noexcept;
+            void         reserve(const size_t n);
 
             //______________________________________________________________
             //

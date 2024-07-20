@@ -329,7 +329,7 @@ Y_UTEST(solve)
 
     Y_SIZEOF(Components);
     Y_SIZEOF(Equilibrium);
-    
+    Y_SIZEOF(LinearlyIndependent);
 
 
 }

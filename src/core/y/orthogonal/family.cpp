@@ -13,13 +13,14 @@ namespace Yttrium
         {
         }
 
-        Family:: Family(const size_t dims) noexcept :
+        Family:: Family(const size_t dims,
+                        const size_t capa) noexcept :
         Metrics(dims),
         Vectors(),
         remaining(dimensions),
         reservoir()
         {
-
+            reserve(capa);
         }
 
         Family:: Family(const Family &other) :
@@ -92,6 +93,12 @@ namespace Yttrium
             assert(v->dimensions==dimensions);
             reservoir.store(v)->clear();
         }
+
+        void Family:: reserve(size_t n)
+        {
+            while(n-- > 0 ) store( new Vector(dimensions) );
+        }
+
 
         Vector * Family:: query(QArrayType &arr)
         {
