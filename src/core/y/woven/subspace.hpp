@@ -12,11 +12,9 @@ namespace Yttrium
     namespace WOVEn
     {
 
-        typedef Orthogonal::Vector                QVector;  //!< alias
-        typedef Orthogonal::Family                QFamily;  //!< alias
-        typedef Orthogonal::Metrics               QMetrics; //!< alias
-        typedef Orthogonal::Quality               Quality;  //!< alias
-
+        typedef Orthogonal::Metrics QMetrics; //!< alias
+        typedef Orthogonal::Quality Quality;  //!< alias
+        typedef Quantized           QObject;  //!< alias
 
 
 
@@ -28,7 +26,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class SubSpace : public Object, public QFamily
+        class SubSpace : public QObject, public QFamily
         {
         public:
             //__________________________________________________________________
@@ -55,7 +53,7 @@ namespace Yttrium
             template <typename T>
             explicit SubSpace(const Matrix<T> &mu,
                               const size_t     ir) :
-            Object(),
+            QObject(),
             QFamily(  CheckDims(mu) ),
             indices(  CheckDOFs(mu) ),
             staying(  mu.rows       ),

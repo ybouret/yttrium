@@ -30,6 +30,8 @@ namespace Yttrium
             //__________________________________________________________________
             typedef ArkPtr<String,Equilibrium> Ptr; //!< alias
             typedef Small::BareLightList<const Equilibrium> List; //!< alias
+           
+            
             class Comparator
             {
             public:

@@ -53,10 +53,16 @@ namespace Yttrium
 
             //! setup with one argument
             template <typename ARGS>
-            inline explicit Ranked(ARGS &args, const AsParameter_ &) : Proxy<const LIST>(), list(args), compare() {}
+            inline explicit Ranked(ARGS &args, const AsParameter_ &) : 
+            Proxy<const LIST>(),
+            Recyclable(),
+            list(args),
+            compare() {}
 
+            //! copy internal list
             inline Ranked(const Ranked &other) :
             Proxy<const LIST>(),
+            Recyclable(),
             list(other.list),
             compare() {}
 
@@ -157,6 +163,7 @@ namespace Yttrium
                 return 0 != query(args);
             }
 
+            //! remove after lookup
             inline bool remove(ParamType args) noexcept
             {
                 const NodeType *node = query(args);
@@ -171,6 +178,7 @@ namespace Yttrium
                 }
             }
 
+            //! exchange internal lists
             inline void tradeWith(Ranked &other) noexcept
             {
                 list.swapWith(other.list);

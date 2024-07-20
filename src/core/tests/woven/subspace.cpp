@@ -56,7 +56,8 @@ Y_UTEST(woven_subspace)
     }
 
     Y_SIZEOF(WOVEn::QVector);
-    
+    Y_SIZEOF(WOVEn::SubSpace);
+
 
 }
 Y_UDONE()

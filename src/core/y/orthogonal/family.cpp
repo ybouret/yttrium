@@ -16,7 +16,8 @@ namespace Yttrium
         Family:: Family(const size_t dims) noexcept :
         Metrics(dims),
         Vectors(),
-        remaining(dimensions)
+        remaining(dimensions),
+        reservoir()
         {
 
         }
@@ -24,7 +25,8 @@ namespace Yttrium
         Family:: Family(const Family &other) :
         Metrics(other),
         Vectors(other),
-        remaining(dimensions)
+        remaining(dimensions),
+        reservoir()
         {
         }
 
@@ -58,7 +60,7 @@ namespace Yttrium
         const Vector & Family:: expand()
         {
             assert(size<dimensions);
-            pushTail( new Vector(remaining) );
+            pushTail( query(remaining) );
 
             assert(0!=tail);
             assert(tail->norm2>0);
@@ -74,7 +76,7 @@ namespace Yttrium
 
             assert(wouldAccept(arr));
 
-            pushTail( new Vector(arr) );
+            pushTail( query(arr) );
 
             assert(0!=tail);
             assert(tail->norm2>0);
@@ -82,6 +84,36 @@ namespace Yttrium
 
             return *tail;
         }
+
+
+        void Family:: store(Vector *v) noexcept
+        {
+            assert(0!=v);
+            assert(v->dimensions==dimensions);
+            reservoir.store(v)->clear();
+        }
+
+        Vector * Family:: query(QArrayType &arr)
+        {
+            assert(arr.size()==dimensions);
+            if(reservoir.size>0)
+            {
+                Vector *v = reservoir.query();
+                try        { v->update(arr);  }
+                catch(...) { store(v); throw; }
+                return v;
+            }
+            else
+            {
+                return new Vector(arr);
+            }
+        }
+
+        void Family:: free() noexcept
+        {
+            while( size ) store( popTail() );
+        }
+
 
 
         std::ostream & operator<<(std::ostream &os, const Family &F)

@@ -5,6 +5,7 @@
 
 #include "y/orthogonal/vector.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/data/pool/cxx.hpp"
 
 namespace Yttrium
 {
@@ -91,6 +92,7 @@ namespace Yttrium
             //! expand family from another remaining
             const Vector &expandFrom(QArrayType &);
 
+            virtual void free() noexcept;
 
             //______________________________________________________________
             //
@@ -98,14 +100,19 @@ namespace Yttrium
             // Members
             //
             //______________________________________________________________
-            QArrayType   remaining; //!< workspace
+            QArrayType        remaining; //!< workspace
+            CxxPoolOf<Vector> reservoir; //!< zero vector with same metrics
 
         private:
             Y_DISABLE_ASSIGN(Family);
-            bool wouldAccept();
 
+            bool    wouldAccept();
+
+            Vector *query(QArrayType &);
+            void    store(Vector *) noexcept;
 
         public:
+            
             //______________________________________________________________
             //
             //! helper to extract an orthogonal basis from a WOVEn survey
@@ -120,7 +127,8 @@ namespace Yttrium
                             const ARRAY_LIST &survey) :
             Metrics( survey.dimensions() ), 
             Vectors(),
-            remaining(dimensions)
+            remaining(dimensions),
+            reservoir()
             {
                 for( const typename ARRAY_LIST::NodeType *node = survey.head;node;node=node->next)
                 {

@@ -6,7 +6,9 @@
 #include "y/random/park-miller.hpp"
 #include "y/container/light-array.hpp"
 
+
 using namespace Yttrium;
+
 
 
 Y_UTEST(kemp_ortho)
@@ -30,9 +32,12 @@ Y_UTEST(kemp_ortho)
         }
         std::cerr << "F=" << F << std::endl;
 
+        F.free();
+        std::cerr << "reservoir.size=" << F.reservoir.size << std::endl;
     }
 
     Y_SIZEOF(Orthogonal::Vector);
+    Y_SIZEOF(Orthogonal::Family);
     Y_SIZEOF(apn);
     Y_SIZEOF(apz);
     Y_SIZEOF(apq);

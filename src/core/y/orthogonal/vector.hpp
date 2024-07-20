@@ -23,7 +23,7 @@ namespace Yttrium
         typedef CxxArray<const apz,Memory::Pooled> VectorType; //!< base type for a vector
         typedef CxxArray<apq,Memory::Pooled>       QArrayType; //!< workspace
         typedef Quantized                          ObjectType; //!< alias
-
+        class Family;
 
         //______________________________________________________________________
         //
@@ -117,6 +117,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Vector);
+            friend class Family;
             void update(QArrayType &Q);
             void clear() noexcept;
         };
