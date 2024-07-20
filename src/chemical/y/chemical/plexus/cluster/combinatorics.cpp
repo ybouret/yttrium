@@ -7,7 +7,6 @@
 #include "y/mkl/algebra/rank.hpp"
 #include "y/type/temporary.hpp"
 #include "y/chemical/reactive/equilibrium/mixed.hpp"
-#include "y/counting/nested-loop.hpp"
 
 namespace Yttrium
 {
@@ -219,13 +218,19 @@ namespace Yttrium
             // checking for independent sets
             //
             //------------------------------------------------------------------
-            if(false)
             {
-                const size_t dims = Nu.rows;
-                const size_t nmax = size;
-                std::cerr << "possibilities of independant groups=" << NestedLoop::CardinalityFor(dims,nmax) << std::endl;
-            }
+                Y_XML_SECTION(xml, "Topology");
+                Matrix<int> &topo = Coerce(topology);
+                topo.make(size, species.size);
+                for(const ENode *en=head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    Writable<int>     &nu = topo[eq.indx[SubLevel]];
+                    eq.topology(nu,SubLevel);
+                    Y_XMLOG(xml,nu);
+                }
 
+            }
 
             //------------------------------------------------------------------
             //

@@ -105,6 +105,7 @@ namespace Yttrium
             const EList            limited;   //!< limited equilibria
             const Roaming          roaming;   //!< roaming equilibria
             const Lists            order;     //!< eqs per order
+            const Matrix<int>      topology;  //!< full topology
 
             Cluster *   next; //!< for list
             Cluster *   prev; //!< for list

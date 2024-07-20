@@ -24,7 +24,21 @@ namespace Yttrium
         void LinearlyIndependent:: init() noexcept
         {
             list.free();
+            qfam.free();
         }
+
+        bool LinearlyIndependent:: keep(const Equilibrium &eq, const Matrix<int> &topo)
+        {
+            if(qfam.wouldAccept(topo[eq.indx[SubLevel]]))
+            {
+                qfam.expand();
+                list << eq;
+                return true;
+            }
+            else
+                return false;
+        }
+
 
         const size_t & LinearlyIndependent:: key() const noexcept
         {

@@ -29,7 +29,8 @@ namespace Yttrium
             const size_t & key() const noexcept; //!< number of species
 
             void init() noexcept;
-            bool keep(const Equilibrium &eq);
+            bool keep(const Equilibrium &eq,
+                      const Matrix<int> &topo);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LinearlyIndependent);
