@@ -7,7 +7,6 @@
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/sort/heap.hpp"
 #include "y/chemical/reactive/equilibria/linearly-independent.hpp"
-#include "y/orthogonal/family.hpp"
 
 namespace Yttrium
 {
@@ -220,10 +219,9 @@ namespace Yttrium
 
                 HeapSort::Call(ha,Hint::Compare);
                 const size_t         nh = ha.size();
-                Orthogonal::Family   f(cl.species.size);
-                Vector<int>          nu(cl.species.size,0);
-                EList                ef;
+                LinearlyIndependent  li(cl.size,cl.species.size);
 
+                li.init();
                 for(size_t i=1;i<=nh;++i)
                 {
                     const Hint &hint = ha[i];
@@ -235,15 +233,13 @@ namespace Yttrium
                         hint.eq.displayCompact(*xml << " @", hint.cc, SubLevel);
                         *xml << std::endl;
                     }
-                    hint.eq.topology(nu,SubLevel);
-                    if(f.wouldAccept(nu))
+                    if(li.keep(hint.eq,cl.topology))
                     {
-                        f.expand();
-                        ef << hint.eq;
+
                     }
                 }
 
-                Y_XMLOG(xml,"family: " << ef);
+                Y_XMLOG(xml,"family: " << li);
 
 
             }
