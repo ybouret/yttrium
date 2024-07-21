@@ -86,14 +86,11 @@ namespace Yttrium
             bool contains(const Vectors &vecs);
 
 
-            //! expand family from remaining vector
-            const Vector &expand();
 
-            //! expand family from another remaining
-            const Vector &expandFrom(QArrayType &);
-
-            virtual void free() noexcept;
-            void         reserve(const size_t n);
+            const Vector &expand();                 //!< expand family from remaining vector
+            const Vector &expandFrom(QArrayType &); //!< expand family from another remaining
+            virtual void  free() noexcept;          //!< free content
+            void          reserve(size_t n);        //!< reserve empty vectors
 
             //______________________________________________________________
             //
@@ -107,10 +104,9 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Family);
 
-            bool    wouldAccept();
-
-            Vector *query(QArrayType &);
-            void    store(Vector *) noexcept;
+            bool    wouldAccept();            //!< check if projected remaining not nul
+            Vector *query(QArrayType &);      //!< create/update vector
+            void    store(Vector *) noexcept; //!< store/clear vector
 
         public:
             

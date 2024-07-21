@@ -4,9 +4,8 @@
 #include "y/stream/libc/output.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
-#include "y/chemical/reactive/aftermath.hpp"
-#include "y/sort/heap.hpp"
-#include "y/chemical/reactive/equilibria/linearly-independent.hpp"
+#include "y/chemical/plexus/solver.hpp"
+
 
 namespace Yttrium
 {
@@ -116,7 +115,7 @@ namespace Yttrium
         };
 
 
-
+#if 0
         class Solver
         {
         public:
@@ -257,7 +256,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
         };
-
+#endif
+        
     }
 
 }
@@ -318,7 +318,7 @@ Y_UTEST(solve)
             std::cerr << eq << ": " << bnd << std::endl;
         }
 
-        solve.process(*cl,C0,TopLevel,K,xml);
+        solve.process(C0,*cl,K,xml);
 
 
     }

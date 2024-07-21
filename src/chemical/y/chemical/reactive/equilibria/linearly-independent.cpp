@@ -6,8 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        const char * const LinearlyIndependent:: CallSign = "Chemical::LinearlyIndependent";
-
+        
         LinearlyIndependent:: LinearlyIndependent(const size_t primary,
                                                   const size_t species) :
         bank(primary),
@@ -18,6 +17,12 @@ namespace Yttrium
 
         LinearlyIndependent:: ~LinearlyIndependent() noexcept
         {
+        }
+
+        void LinearlyIndependent:: ensure(const size_t primary)
+        {
+            const size_t capa = qfam.size + qfam.reservoir.size;
+            if(capa<primary) { qfam.reserve(primary-capa); }
         }
 
 
@@ -54,6 +59,51 @@ namespace Yttrium
 
         
 
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        const char * const LinearlyIndependentSet:: CallSign = "Chemical::LinearlyIndependentSet";
+
+        LinearlyIndependentSet:: ~LinearlyIndependentSet() noexcept
+        {
+        }
+
+        LinearlyIndependentSet:: LinearlyIndependentSet() : LinearlyIndependent::Set()
+        {
+        }
+
+
+        void LinearlyIndependentSet:: operator()(const size_t primary,
+                                                 const size_t species) 
+        {
+            {
+                LinearlyIndependent::Ptr *pp = search(species);
+                if(pp)
+                {
+                    (**pp).ensure(primary);
+                    return;
+                }
+            }
+
+            {
+                LinearlyIndependent::Ptr p = new LinearlyIndependent(primary,species);
+                if(!insert(p)) throw Specific::Exception(CallSign,"corrupted for #species=%u", unsigned(species));
+            }
+        }
+
+
+        LinearlyIndependent & LinearlyIndependentSet:: operator[](const size_t species)
+        {
+            LinearlyIndependent::Ptr *pp = search(species);
+            if(!pp) throw Specific::Exception(CallSign, "missing for #species=%u", unsigned(species));
+            return **pp;
+        }
 
     }
 

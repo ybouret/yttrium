@@ -246,7 +246,6 @@ namespace Yttrium
                                const xreal_t      K)
         {
 
-            //std::cerr << "solving " << E.name << std::endl;
             const xreal_t zero;
             Cout.ld(zero);
             switch(E.kind)

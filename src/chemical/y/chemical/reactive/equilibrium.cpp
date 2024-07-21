@@ -24,14 +24,6 @@ namespace Yttrium
             return os;
         }
 
-        Equilibrium::Comparator::  Comparator() noexcept {}
-        Equilibrium::Comparator:: ~Comparator() noexcept {}
-
-
-        SignType Equilibrium::Comparator:: operator()(const Equilibrium &lhs, const Equilibrium &rhs) const noexcept
-        {
-            return Sign::Of(lhs.indx[TopLevel],rhs.indx[TopLevel]);
-        }
 
 
     }
