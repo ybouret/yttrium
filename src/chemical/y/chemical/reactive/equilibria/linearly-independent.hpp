@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Eqs_Deps_Included
 #define Y_Chemical_Eqs_Deps_Included 1
 
-#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/plexus/solver/prospect.hpp"
 #include "y/data/small/light/list/coop.hpp"
 #include "y/orthogonal/family.hpp"
 #include "y/associative/hash/set.hpp"
@@ -16,6 +16,10 @@ namespace Yttrium
         typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
         typedef ERepo::ProxyType                        EBank; //!< alias
 
+        typedef Small::CoopLightList<Prospect> PList; //!< alias
+        typedef PList::ProxyType               PBank; //!< alias
+        typedef PList::NodeType                PNode; //!< alias
+        
         //______________________________________________________________________
         //
         //
@@ -24,7 +28,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class LinearlyIndependent : public Quantized, public Counted, public Proxy<const ERepo>
+        class LinearlyIndependent : public Quantized, public Counted, public Proxy<const PList>
         {
         public:
             //__________________________________________________________________
@@ -60,16 +64,16 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const size_t & key() const noexcept;                       //!< number of species
-            void           init()      noexcept;                       //!< initialize all
-            bool keep(const Equilibrium &eq, const Matrix<int> &topo); //!< check if eq is linearly independent of previous
-            void ensure(const size_t primary);                         //!< ensure resources
+            const size_t & key() const noexcept;               //!< number of species
+            void           init()      noexcept;               //!< initialize all
+            bool keep(Prospect &pro, const Matrix<int> &topo); //!< check if eq is linearly independent of previous
+            void ensure(const size_t primary);                 //!< ensure resources
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LinearlyIndependent);
             virtual ConstInterface & surrogate() const noexcept;
-            EBank              bank;
-            ERepo              list;
+            PBank              bank;
+            PList              list;
             Orthogonal::Family qfam;
         };
 

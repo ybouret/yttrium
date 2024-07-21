@@ -32,6 +32,7 @@ namespace Yttrium
             qfam.free();
         }
 
+#if 0
         bool LinearlyIndependent:: keep(const Equilibrium &eq, const Matrix<int> &topo)
         {
             if(qfam.wouldAccept(topo[eq.indx[SubLevel]]))
@@ -43,7 +44,19 @@ namespace Yttrium
             else
                 return false;
         }
+#endif
 
+        bool  LinearlyIndependent:: keep(Prospect &pro, const Matrix<int> &topo)
+        {
+            if(qfam.wouldAccept(topo[pro.eq.indx[SubLevel]]))
+            {
+                qfam.expand();
+                list << pro;
+                return true;
+            }
+            else
+                return false;
+        }
 
         const size_t & LinearlyIndependent:: key() const noexcept
         {

@@ -32,35 +32,59 @@ namespace Yttrium
                               XMLog           &xml)
         {
             Y_XML_SECTION_OPT(xml, "Solver::Cluster", " eqs='" << cl.size << "'");
-            pps.free();
-            for(const ENode *en=cl.head;en;en=en->next)
-            {
-                const Equilibrium    &eq   = **en;
-                const size_t * const  in   = eq.indx;
-                const xreal_t         eK   = K[in[TopLevel]];
-                const size_t          isub = in[SubLevel];
-                XWritable            &Ci   = Ceq[isub];
-                XWritable            &phi  = Phi[isub];
-                if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
-                {
-                    const xreal_t        xi = afm.eval(Ci, SubLevel, C, TopLevel, eq);
-                    const Prospect       pro(eq,xi,Ci,phi);
-                    pps << pro;
-                }
-            }
 
-            HeapSort::Call(pps, Prospect::Compare);
-            const size_t n = pps.size();
-            for(size_t i=1;i<=n;++i)
             {
-                const Prospect &pro = pps[i];
+                Y_XML_SECTION(xml, "Scan");
+                // initialize prospects
+                pps.free();
+
+                // store all prospects
+                for(const ENode *en=cl.head;en;en=en->next)
+                {
+                    const Equilibrium    &eq   = **en;
+                    const size_t * const  in   = eq.indx;
+                    const xreal_t         eK   = K[in[TopLevel]];
+                    const size_t          isub = in[SubLevel];
+                    XWritable            &Ci   = Ceq[isub];
+                    XWritable            &phi  = Phi[isub];
+                    if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
+                    {
+                        const xreal_t        xi = afm.eval(Ci, SubLevel, C, TopLevel, eq);
+                        const Prospect       pro(eq,xi,Ci,phi);
+                        pps << pro;
+                        if(xml.verbose)
+                        {
+                            cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                        }
+                    }
+                }
+
+            }
+            {
+                Y_XML_SECTION(xml, "Base");
+                // order them in decreasing |xi|
+                HeapSort::Call(pps, Prospect::Compare);
+
+                // find sub basis
+                LinearlyIndependent &li = lis[cl.species.size];
+                const size_t         np = pps.size();
+                const size_t         nm = cl.Nu.rows;
+                li.init();
+                for(size_t i=1;i<=np;++i)
+                {
+                    Prospect &pro = pps[i];
+                    if(li.keep(pro,cl.topology) && li->size >= nm) break;
+                }
                 if(xml.verbose)
                 {
-                    cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                    for(PNode *pn=li->head;pn;pn=pn->next)
+                    {
+                        Prospect &pro = **pn;
+                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                    }
                 }
             }
 
-            
 
         }
 

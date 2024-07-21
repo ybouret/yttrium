@@ -26,6 +26,12 @@ namespace Yttrium
 
             Prospect(const Prospect &) noexcept;
 
+            friend std::ostream & operator<<(std::ostream &os, const Prospect &pro)
+            {
+                os << pro.eq;
+                return os;
+            }
+
             static int Compare(const Prospect &lhs,
                                const Prospect &rhs) noexcept;
 
