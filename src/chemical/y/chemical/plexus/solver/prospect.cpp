@@ -38,6 +38,12 @@ namespace Yttrium
         {
             return Comparison::Decreasing(lhs.ax, rhs.ax);
         }
+
+        std::ostream & operator<<(std::ostream &os, const Prospect &pro)
+        {
+            os << pro.eq;
+            return os;
+        }
     }
 
 }

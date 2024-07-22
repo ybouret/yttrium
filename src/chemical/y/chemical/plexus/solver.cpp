@@ -52,18 +52,24 @@ namespace Yttrium
                         const xreal_t        xi = afm.eval(Ci, SubLevel, C, TopLevel, eq);
                         const Prospect       pro(eq,xi,Ci,phi);
                         pps << pro;
-                        if(xml.verbose)
-                        {
-                            cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
-                        }
                     }
                 }
 
-            }
-            {
-                Y_XML_SECTION(xml, "Base");
                 // order them in decreasing |xi|
                 HeapSort::Call(pps, Prospect::Compare);
+                if(xml.verbose)
+                {
+                    for(size_t i=1;i<=pps.size();++i)
+                    {
+                        const Prospect &pro = pps[i];
+                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                    }
+                }
+            }
+
+            {
+                Y_XML_SECTION(xml, "Base");
+
 
                 // find sub basis
                 LinearlyIndependent &li = lis[cl.species.size];

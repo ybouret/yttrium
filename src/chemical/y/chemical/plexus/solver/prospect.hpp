@@ -12,28 +12,62 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Phase space solution of a single equilibrium
+        //
+        //
+        //______________________________________________________________________
+
         class Prospect
         {
         public:
-            typedef CxxSeries<Prospect,Memory::Dyadic> Series;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxSeries<Prospect,Memory::Dyadic> Series; //!< alias
 
-            ~Prospect() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+
+
+            //! setup from solver persistent data and aftermath result
             Prospect(const Equilibrium &_eq,
                      const xreal_t      _xi,
                      const XReadable   &_cc,
                      const XReadable   &_dd) noexcept;
 
-            Prospect(const Prospect &) noexcept;
 
-            friend std::ostream & operator<<(std::ostream &os, const Prospect &pro)
-            {
-                os << pro.eq;
-                return os;
-            }
+            Prospect(const Prospect &) noexcept; //!< copy
+            ~Prospect()                noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Prospect);           //!< display eq.name
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            
+            //! comparison by decreasing |xi|
             static int Compare(const Prospect &lhs,
                                const Prospect &rhs) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Member
+            //
+            //__________________________________________________________________
 
             const Equilibrium &eq; //!< used equilibirum
             const xreal_t      xi; //!< its solving extent
