@@ -215,7 +215,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // checking for independent sets
+            // Make global topology
             //
             //------------------------------------------------------------------
             {
@@ -229,8 +229,35 @@ namespace Yttrium
                     eq.topology(nu,SubLevel);
                     Y_XMLOG(xml,nu);
                 }
-
             }
+
+            //------------------------------------------------------------------
+            //
+            // Creating groups....
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml, "Indep");
+                for(const ENode *en=head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(xml.verbose) {
+                        uuid.pad( xml() << eq.name, eq) << " :";
+                    }
+
+                    for(const ENode *sub=head;sub;sub=sub->next)
+                    {
+                        const Equilibrium &rhs = **sub;
+                        if(!rhs.linkedTo(eq))
+                        {
+                            if(xml.verbose) *xml << ' ' << rhs;
+                        }
+                    }
+
+                    if(xml.verbose) *xml << std::endl;
+                }
+            }
+
 
             //------------------------------------------------------------------
             //
@@ -238,7 +265,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml, "Topology");
+                Y_XML_SECTION(xml, "Summary");
                 Y_XMLOG(xml, "#primary equilibria: " << Nu.rows);
                 Y_XMLOG(xml, "#derived equilibria: " << size-Nu.rows);
                 Y_XMLOG(xml, "#total   equilibria: " << size << " (*)");

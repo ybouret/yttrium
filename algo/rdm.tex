@@ -138,23 +138,40 @@ We know that:
 	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
 \end{equation}
 
-Let us suppose that:
+We assume that we have some covariants equilibria such that:
 \begin{equation}
-	\Xi_1(\vec C_0 + \delta \vec C_1^\star) = 0 \text{ and } \Xi_2(\vec C_0 + \delta \vec C_2^\star) =0 
+	\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle > 0 
 \end{equation}
 
 \begin{equation}
-	\Xi_1(\vec C_0 + \beta_1 \delta \vec C_1^\star + \beta_2 \delta \vec C_2^\star) = 
-	\Xi_1\left(\vec C_0 + (\beta_1 + \alpha_2) \vec C_1^\star + \left(\beta_2 \delta \vec C_2^\star - \alpha_2 \delta \vec C_1^\star\right) \right)
+\begin{array}{rl}
+	 & \Xi_i\left(\vec C_0 + \beta_i \delta \vec C_i^\star + \sum_{j\not=i}  \beta_j\delta\vec C_j^\star \right) \\
+	= & \Xi_i\left( \vec C_0 + (\beta_i + \sum_{j\not=i} \alpha_j) \delta \vec C_i^\star 
+	+ \sum_{j\not=i}  \beta_j \delta\vec C_j^\star - \alpha_j \delta\vec C_i^\star \right)
+	\\
+\end{array}
 \end{equation}
 
 \begin{equation}
-	\alpha_2 = \beta_2 \dfrac{\langle \delta \vec C_2^\star \vert \delta \vec C_1^\star\rangle}{ {\delta \vec C_1^\star} ^2 }
+	\alpha_j = \beta_j \dfrac{\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle}{ {\delta \vec C_i^\star}^2 }
 \end{equation}
 
 \begin{equation}
-	\Xi_1(\vec C_0 + \beta_1 \delta \vec C_1^\star + \beta_2 \delta \vec C_2^\star) 
-	\simeq 
+	 	\beta_j \delta\vec C_j^\star - \alpha_j \delta\vec C_i^\star = 
+		\beta_j
+		 \underbrace{\left(
+		 \delta\vec C_j^\star 
+		-  \dfrac{\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle}{ {\delta \vec C_i^\star}^2 } \delta\vec C_i^\star
+ 	\right)}_{\delta\vec C_j^\perp}
+\end{equation}
+
+\begin{equation}
+\begin{array}{rl}
+ & \Xi_i\left( \vec C_0 + \delta\vec C_i^\star + (\beta_i -1 + \sum_{j\not=i} \alpha_j) \delta \vec C_i^\star 
+	+ \sum_{j\not=i}  \beta_j \delta\vec C_j^\perp\right)\\
+\simeq & (\beta_i -1 + \sum_{j\not=i} \alpha_j) \langle \vec \Phi_i^\star \vert \delta \vec C_i^\star \rangle
+	+ \sum_{j\not=i}  \beta_j \langle \vec \Phi_i^\star \vert \delta\vec C_j^\perp \rangle\\
+\end{array}
 \end{equation}
 
 \subsection{Conservation}
