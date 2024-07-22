@@ -12,12 +12,14 @@ namespace Yttrium
                              const xreal_t      _eK,
                              const xreal_t      _xi,
                              const XReadable   &_cc,
+                             const XReadable   &_dc,
                              XWritable         &_dd) noexcept :
         eq(_eq),
         eK(_eK),
         xi(_xi),
         ax(xi.abs()),
         cc(_cc),
+        dc(_dc),
         dd(_dd),
         sl(0)
         {
@@ -30,6 +32,7 @@ namespace Yttrium
         xi(_.xi),
         ax(_.ax),
         cc(_.cc),
+        dc(_.dc),
         dd(_.dd),
         sl(_.sl)
         {

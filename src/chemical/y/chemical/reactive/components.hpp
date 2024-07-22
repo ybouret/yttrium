@@ -135,6 +135,12 @@ namespace Yttrium
                         const Level       level,
                         XAdd &            xadd) const;
 
+            //! lhs[level] * rhs[level]
+            xreal_t dot(const XReadable &lhs,
+                        const XReadable &rhs,
+                        const Level      level,
+                        XAdd            &xadd) const;
+
 
             //! transfer components-wise
             template <typename TARGET, typename SOURCE> inline

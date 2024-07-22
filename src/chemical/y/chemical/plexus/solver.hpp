@@ -58,6 +58,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             Matrix<xreal_t>        Ceq; //!< all solving phase space
+            Matrix<xreal_t>        dCe; //!< Ceq-C0
             Matrix<xreal_t>        Phi; //!< derivatives
             Aftermath              afm; //!< single eq solving
             Prospect::Series       pps; //!< current prospect

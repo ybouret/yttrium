@@ -43,6 +43,7 @@ namespace Yttrium
                      const xreal_t      _eK,
                      const xreal_t      _xi,
                      const XReadable   &_cc,
+                     const XReadable   &_dc,
                      XWritable         &_dd) noexcept;
 
 
@@ -76,6 +77,7 @@ namespace Yttrium
             const xreal_t      xi; //!< its solving extent
             const xreal_t      ax; //!< |xi|
             const XReadable   &cc; //!< its solving phase space
+            const XReadable   &dc; //!< cc-c0
             XWritable         &dd; //!< derivative
             const xreal_t      sl; //!< slope, initially 0
             

@@ -223,12 +223,29 @@ namespace Yttrium
                                  const Level       level,
                                  XAdd &            xadd) const
         {
-            xadd.free();
             size_t n = db.size();
+            xadd.make(n); assert(xadd.isEmpty());
             for(ConstIterator it=db.begin();n>0;--n,++it)
             {
                 const Component &cc = **it;
                 const xreal_t    xm = array[cc.sp.indx[level]] * cc.xn;
+                xadd << xm;
+            }
+            return xadd.sum();
+        }
+
+        xreal_t Components:: dot(const XReadable &lhs,
+                                 const XReadable &rhs,
+                                 const Level      level,
+                                 XAdd            &xadd) const
+        {
+            size_t n = db.size();
+            xadd.make(n); assert(xadd.isEmpty());
+            for(ConstIterator it=db.begin();n>0;--n,++it)
+            {
+                const Component &cc = **it;
+                const size_t     ii = cc.sp.indx[level];
+                const xreal_t    xm = lhs[ii] * rhs[ii];
                 xadd << xm;
             }
             return xadd.sum();
