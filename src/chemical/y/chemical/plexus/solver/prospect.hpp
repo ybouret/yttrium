@@ -20,7 +20,6 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-
         class Prospect
         {
         public:
@@ -38,8 +37,6 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-
-
 
             //! setup from solver persistent data and aftermath result
             Prospect(const Equilibrium &_eq,
@@ -64,6 +61,7 @@ namespace Yttrium
             static int Compare(const Prospect &lhs,
                                const Prospect &rhs) noexcept;
 
+            //! compute derivative and slope
             void update(XAdd &xadd, XMul &xmul);
 
             //__________________________________________________________________

@@ -311,11 +311,14 @@ Y_UTEST(solve)
 
     for(const Cluster *cl=clusters->head;cl;cl=cl->next)
     {
-        for(const ENode *en=cl->head;en;en=en->next)
+        if(false)
         {
-            const Equilibrium &eq = **en;
-            bnd.probe(eq,C0,TopLevel);
-            std::cerr << eq << ": " << bnd << std::endl;
+            for(const ENode *en=cl->head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                bnd.probe(eq,C0,TopLevel);
+                std::cerr << eq << ": " << bnd << std::endl;
+            }
         }
 
         solve.process(C0,*cl,K,xml);

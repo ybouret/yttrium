@@ -17,25 +17,51 @@ namespace Yttrium
     {
 
 
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Solver
+        //
+        //
+        //______________________________________________________________________
         class Solver
         {
         public:
-            explicit Solver(const Clusters &cls);
-            virtual ~Solver() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            explicit Solver(const Clusters &cls); //!< prepare resource
+            virtual ~Solver() noexcept;           //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! process one cluster
             void process(XWritable       &C,
                          const Cluster   &cl,
                          const XReadable &K,
                          XMLog           &xml);
 
-
-            Matrix<xreal_t>        Ceq;
-            Matrix<xreal_t>        Phi;
-            Aftermath              afm;
-            Prospect::Series       pps;
-            LinearlyIndependentSet lis;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Matrix<xreal_t>        Ceq; //!< all solving phase space
+            Matrix<xreal_t>        Phi; //!< derivatives
+            Aftermath              afm; //!< single eq solving
+            Prospect::Series       pps; //!< current prospect
+            LinearlyIndependentSet lis; //!< find out basis
             
             
         private:
