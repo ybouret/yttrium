@@ -50,7 +50,7 @@ namespace Yttrium
                     if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
                     {
                         const xreal_t        xi = afm.eval(Ci, SubLevel, C, TopLevel, eq);
-                        const Prospect       pro(eq,xi,Ci,phi);
+                        const Prospect       pro(eq,eK,xi,Ci,phi);
                         pps << pro;
                     }
                 }
@@ -81,12 +81,18 @@ namespace Yttrium
                     Prospect &pro = pps[i];
                     if(li.keep(pro,cl.topology) && li->size >= nm) break;
                 }
-                if(xml.verbose)
+
+
+                // update prospect
+                for(PNode *pn=li->head;pn;pn=pn->next)
                 {
-                    for(PNode *pn=li->head;pn;pn=pn->next)
+                    Prospect &pro = **pn;
+                    pro.update(afm.xadd, afm.xmul);
+                    if(xml.verbose)
                     {
-                        Prospect &pro = **pn;
-                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                        cl.uuid.pad(xml() << pro.eq.name,pro.eq);
+                        *xml <<        " @" << std::setw(15) << real_t(pro.xi);
+                        *xml << " : slope=" << std::setw(15) << real_t(pro.sl) << std::endl;
                     }
                 }
             }

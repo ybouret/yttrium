@@ -43,9 +43,10 @@ namespace Yttrium
 
             //! setup from solver persistent data and aftermath result
             Prospect(const Equilibrium &_eq,
+                     const xreal_t      _eK,
                      const xreal_t      _xi,
                      const XReadable   &_cc,
-                     const XReadable   &_dd) noexcept;
+                     XWritable         &_dd) noexcept;
 
 
             Prospect(const Prospect &) noexcept; //!< copy
@@ -62,6 +63,9 @@ namespace Yttrium
             //! comparison by decreasing |xi|
             static int Compare(const Prospect &lhs,
                                const Prospect &rhs) noexcept;
+
+            void update(XAdd &xadd, XMul &xmul);
+
             //__________________________________________________________________
             //
             //
@@ -69,11 +73,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            const Equilibrium &eq; //!< used equilibirum
+            const Equilibrium &eq; //!< used equilibrium
+            const xreal_t      eK; //!< constant
             const xreal_t      xi; //!< its solving extent
             const xreal_t      ax; //!< |xi|
             const XReadable   &cc; //!< its solving phase space
-            const XReadable   &dd; //!< derivative
+            XWritable         &dd; //!< derivative
             const xreal_t      sl; //!< slope, initially 0
             
         private:

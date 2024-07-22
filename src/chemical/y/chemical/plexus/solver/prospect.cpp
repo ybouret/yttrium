@@ -9,10 +9,12 @@ namespace Yttrium
         }
 
         Prospect::  Prospect(const Equilibrium &_eq,
+                             const xreal_t      _eK,
                              const xreal_t      _xi,
                              const XReadable   &_cc,
-                             const XReadable   &_dd) noexcept :
+                             XWritable         &_dd) noexcept :
         eq(_eq),
+        eK(_eK),
         xi(_xi),
         ax(xi.abs()),
         cc(_cc),
@@ -24,6 +26,7 @@ namespace Yttrium
 
         Prospect:: Prospect(const Prospect &_) noexcept :
         eq(_.eq),
+        eK(_.eK),
         xi(_.xi),
         ax(_.ax),
         cc(_.cc),
@@ -44,6 +47,14 @@ namespace Yttrium
             os << pro.eq;
             return os;
         }
+
+
+        void Prospect::  update(XAdd &xadd, XMul &xmul)
+        {
+            eq.drvsMassAction(eK, dd, SubLevel, cc, SubLevel, xmul);
+            Coerce(sl) = eq.dot(dd, SubLevel,xadd);
+        }
+
     }
 
 }
