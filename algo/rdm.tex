@@ -61,117 +61,28 @@ so that, starting from $\vec \Xi ( \vec C ) = \vec 0$, the system evolves locall
 \end{equation}
 which conserves the charge for valid equilibrium(a).
 
-\subsection{Single Root}
-
-For a running (non-blocked) equilibrium:
-\begin{equation}
-	\Xi_i(\vec C_0 + \xi_{i}^\star \vec \nu_i ) = 0
-\end{equation}
-
-\begin{equation}
-	\Xi_i(\vec C_0 + \delta \vec C + (\xi_i^\star + \delta  \xi_i^\star)\vec \nu_i  ) = 0
-	\implies
-	\langle \vec \Phi_i^\star \vert \delta \vec C +  \delta \xi_i^\star \vec \nu_i \rangle = 0
-\end{equation}
-
-\begin{equation}
-	 \delta \xi_i^\star = - \dfrac{\langle \vec \Phi_i^\star \vert \delta \vec C \rangle }
-	 { \langle \vec \Phi_i^\star \vert \vec \nu_i \rangle  }
-	 =
-	  - \dfrac{\langle \vec \Phi_i^\star \vert \bm{\nu}^T \vert \delta \vec \xi \rangle }
-	 { \langle \vec \Phi_i^\star \vert \vec \nu_i \rangle  }
-\end{equation}
-
-\begin{equation}
-	\delta \vec \xi_i ^\star = - \bm\Upsilon \delta \vec \xi
-\end{equation}
-
-\begin{equation}
-	\bm\Upsilon_{i,j} = 
-	\left\lbrace
-	\begin{array}{rl}
-	1 & \text{if } i=j\\
-	\dfrac{\langle \vec \Phi_i^\star \vert \vec \nu_j \rangle }{\langle \vec \Phi_i^\star \vert \vec \nu_i \rangle } & \text{if } i\not=j\\
-	\end{array}
-	\right.
-\end{equation}
-	
-\begin{equation}
-	\xi_i ^\circ = \xi_i^\star - \langle \vec\Upsilon_i \vert \delta \vec \xi \rangle
-\end{equation}
-	
-How to chose $\delta \vec \xi$ so that we decrease:
-\begin{equation}
-	C^\circ = \sum_i \vert \xi_i^\circ \vert 
-\end{equation}
-
-\subsection{...}
-We know that:
-\begin{equation}
-	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_i^\star) = 0
-\end{equation}
-
-We want to decrease $\Xi_i$ with $\delta \vec C$.
-
-\begin{equation}
-	\Xi_i(\vec C_0 + \delta \vec C) \simeq \Xi_i(\vec C_0 + \alpha_i \vec \nu_i) + 
-	\langle \vec \Phi_{\alpha_i} \vert \underbrace{\delta \vec C - \alpha_i \vec \nu_i}_{\in\vec\nu_i^\perp} \rangle
-\end{equation}
-
-\begin{equation}
-	\delta \vec C = \sum_j x_j \vec \nu_j \implies 
-	\alpha_i = \dfrac{1}{\vec \nu_i^2} \sum_j x_j \langle \vec \nu_j \vert \vec \nu_i \rangle
-	= x_i + \dfrac{1}{\vec \nu_i^2} \sum_{j\not=i} x_j \langle \vec \nu_j \vert \vec \nu_i \rangle
-\end{equation}
-
-\begin{equation}
-\delta \vec C - \alpha_i \vec\nu_i = x_i \vec\nu_i + \sum_{j\not=i} x_j \vec\nu_j - \left(  x_i + \dfrac{1}{\vec \nu_i^2} \sum_{j\not=i} x_j \langle \vec \nu_j \vert \vec \nu_i \rangle\right) \vec\nu_i
-\end{equation}
-
-\begin{equation}
-\delta \vec C - \alpha_i \vec\nu_i =  \sum_{j\not=i} x_j \underbrace{\left(\vec\nu_j - \dfrac{\langle\vec \nu_j \vert \vec \nu_i \rangle}{\vec\nu_i^2} \vec\nu_i\right)}_{\in\vec\nu_i^\perp}
-\end{equation}
-
-\subsection{...}
+ 
+\subsection{Solving...}
 We know that:
 \begin{equation}
 	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
 \end{equation}
 
-We assume that we have some covariants equilibria such that:
+Let's focus on coordinate $i$.
 \begin{equation}
-	\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle > 0 
+	\sum_j \beta_j \delta \vec C_j ^\star = 
+	\underbrace{\left( \sum_j \beta_j \alpha_j \right) \delta \vec C_i^\star}_{\parallel \delta \vec C_i^\star} +
+	\underbrace{\sum_j \beta_j \delta \vec C_j^\perp}_{\perp \delta \vec C_i^\star}
 \end{equation}
 
 \begin{equation}
-\begin{array}{rl}
-	 & \Xi_i\left(\vec C_0 + \beta_i \delta \vec C_i^\star + \sum_{j\not=i}  \beta_j\delta\vec C_j^\star \right) \\
-	= & \Xi_i\left( \vec C_0 + (\beta_i + \sum_{j\not=i} \alpha_j) \delta \vec C_i^\star 
-	+ \sum_{j\not=i}  \beta_j \delta\vec C_j^\star - \alpha_j \delta\vec C_i^\star \right)
-	\\
-\end{array}
+	\alpha_j = \dfrac{\langle \delta \vec C_i ^\star\vert \delta \vec C_j ^\star\rangle}{ {\delta \vec C_i ^\star}^2 }
+	,\;\;
+	\delta \vec C_j^\perp = \underbrace{\delta \vec C_j ^\star - \alpha_j \delta \vec C_i ^\star}_{\perp \delta \vec C_i^\star}
 \end{equation}
 
 \begin{equation}
-	\alpha_j = \beta_j \dfrac{\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle}{ {\delta \vec C_i^\star}^2 }
-\end{equation}
-
-\begin{equation}
-	 	\beta_j \delta\vec C_j^\star - \alpha_j \delta\vec C_i^\star = 
-		\beta_j
-		 \underbrace{\left(
-		 \delta\vec C_j^\star 
-		-  \dfrac{\langle \delta \vec C_i^\star \vert \delta \vec C_j^\star \rangle}{ {\delta \vec C_i^\star}^2 } \delta\vec C_i^\star
- 	\right)}_{\delta\vec C_j^\perp}
-\end{equation}
-
-\begin{equation}
-\begin{array}{rl}
- & \Xi_i\left( \vec C_0 + \delta\vec C_i^\star + (\beta_i -1 + \sum_{j\not=i} \alpha_j) \delta \vec C_i^\star 
-	+ \sum_{j\not=i}  \beta_j \delta\vec C_j^\perp\right)\\
-\simeq & (\beta_i -1 + \sum_{j\not=i} \alpha_j) \langle \vec \Phi_i^\star \vert \delta \vec C_i^\star \rangle
-	+ \sum_{j\not=i}  \beta_j \langle \vec \Phi_i^\star \vert \delta\vec C_j^\perp \rangle\\
-\end{array}
+	\alpha_i = 1, \; \delta \vec C_i^\perp = \vec 0
 \end{equation}
 
 \subsection{Conservation}

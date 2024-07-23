@@ -228,6 +228,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
             CHECK_FUSION:
+                std::cerr << "TODO! " << __FILE__ << ":" << __LINE__ << std::endl;
                 ;
             }
 
