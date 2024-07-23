@@ -18,15 +18,19 @@ namespace Yttrium
         dCe(cls.maxEPC,cls.maxSPC),
         Phi(cls.maxEPC,cls.maxSPC),
         afm(),
+        bnk(),
         pps(cls.maxEPC),
-        lis()
+        lis(),
+        sql(),
+        sqp()
         {
-
+            // prepare LinearlyIndependent Set
             for(const Cluster *cl=cls->head;cl;cl=cl->next)
-            {
-                lis(cl->size,cl->species.size);
-            }
+                lis(cl->size,cl->species.size,bnk);
+
         }
+
+
 
         void Solver:: process(XWritable       &C,
                               const Cluster   &cl,
@@ -98,8 +102,8 @@ namespace Yttrium
                 // find basis
                 //
                 //--------------------------------------------------------------
-                const size_t         np = pps.size();
-                const size_t         nm = cl.Nu.rows;
+                const size_t         np = pps.size(); // number of prospect
+                const size_t         nm = cl.Nu.rows; // max base size
                 li.init();
                 for(size_t i=1;i<=np;++i)
                 {
@@ -125,11 +129,8 @@ namespace Yttrium
                 }
             }
 
-            {
-                Y_XML_SECTION(xml, "Squad");
+            sqFrom(*li,cl.attached,xml);
 
-
-            }
 
 
             {
@@ -140,7 +141,7 @@ namespace Yttrium
                 if(xml.verbose)
                 {
                     cl.uuid.pad(xml() << "lead: " << lead.eq.name,lead.eq);
-                    *xml <<        " xi@" << std::setw(15) << real_t(lead.xi);
+                    *xml <<        "  xi @ " << std::setw(15) << real_t(lead.xi);
                     *xml << std::endl;
                 }
 
@@ -161,6 +162,81 @@ namespace Yttrium
 
         }
 
+
+        void Solver:: sqDrop(Squad *squad) noexcept
+        {
+            assert(0!=squad);
+            sqp.store(squad)->free();
+        }
+
+
+        void Solver:: sqFree() noexcept
+        {
+            while(sql.size>0)
+                sqDrop(sql.popTail());
+
+        }
+
+        Squad * Solver:: sqMake(Prospect &first)
+        {
+            Squad *squad = (sqp.size <= 0) ? new Squad(bnk) : sqp.query();
+            try        { (*squad) << first;    }
+            catch(...) { sqDrop(squad); throw; }
+            return squad;
+        }
+
+
+        void Solver:: sqFrom(const PList        &plist,
+                             const Matrix<bool> &attached,
+                             XMLog              &xml)
+        {
+            Y_XML_SECTION(xml, "Squad");
+
+            //------------------------------------------------------------------
+            //
+            // initialize squads
+            //
+            //------------------------------------------------------------------
+            sqFree();
+            for(PNode *pn=plist.head;pn;pn=pn->next)
+            {
+                Prospect &pro = **pn;
+                //--------------------------------------------------------------
+                //
+                // look for accepting squad
+                //
+                //--------------------------------------------------------------
+                for(Squad *squad=sql.head;squad;squad=squad->next)
+                {
+                    if(squad->accept(pro,attached))
+                    {
+                        (*squad) << pro;
+                        goto CHECK_FUSION;
+                    }
+                }
+                //--------------------------------------------------------------
+                //
+                // create a new squad
+                //
+                //--------------------------------------------------------------
+                sql.pushTail( sqMake(pro) );
+                continue;
+
+                //--------------------------------------------------------------
+                //
+                // check fusion
+                //
+                //--------------------------------------------------------------
+            CHECK_FUSION:
+                ;
+            }
+
+            for(const Squad *squad=sql.head;squad;squad=squad->next)
+            {
+                Y_XMLOG(xml, "squad@" << *squad);
+            }
+
+        }
 
     }
 

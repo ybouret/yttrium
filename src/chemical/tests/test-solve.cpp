@@ -322,7 +322,7 @@ Y_UTEST(solve)
         }
 
         solve.process(C0,*cl,K,xml);
-
+        
 
     }
 
@@ -330,6 +330,7 @@ Y_UTEST(solve)
     Y_SIZEOF(Equilibrium);
     Y_SIZEOF(LinearlyIndependent);
     Y_SIZEOF(Cluster);
-
+    Y_SIZEOF(Squad);
+    
 }
 Y_UDONE()

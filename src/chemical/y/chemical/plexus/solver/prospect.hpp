@@ -63,7 +63,8 @@ namespace Yttrium
                                const Prospect &rhs) noexcept;
 
             //! compute derivative and slope
-            void update(XAdd &xadd, XMul &xmul);
+            void   update(XAdd &xadd, XMul &xmul);
+            size_t indx() const noexcept;
 
             //__________________________________________________________________
             //
@@ -84,6 +85,11 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };
+
+
+        typedef Small::CoopLightList<Prospect> PList; //!< alias
+        typedef PList::ProxyType               PBank; //!< alias
+        typedef PList::NodeType                PNode; //!< alias
     }
 
 }

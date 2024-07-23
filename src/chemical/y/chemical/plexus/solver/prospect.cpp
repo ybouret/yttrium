@@ -58,6 +58,12 @@ namespace Yttrium
             Coerce(sl) = eq.dot(dd, SubLevel,xadd);
         }
 
+
+        size_t Prospect:: indx() const noexcept
+        {
+            return eq.indx[SubLevel];
+        }
+
     }
 
 }

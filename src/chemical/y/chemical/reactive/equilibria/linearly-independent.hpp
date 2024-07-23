@@ -16,9 +16,7 @@ namespace Yttrium
         typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
         typedef ERepo::ProxyType                        EBank; //!< alias
 
-        typedef Small::CoopLightList<Prospect> PList; //!< alias
-        typedef PList::ProxyType               PBank; //!< alias
-        typedef PList::NodeType                PNode; //!< alias
+    
         
         //______________________________________________________________________
         //
@@ -51,9 +49,11 @@ namespace Yttrium
             /**
              \param primary number of primary equilibria
              \param species number of active species in cluster
+             \param probank persistent shared cache of PNode
              */
             explicit LinearlyIndependent(const size_t primary,
-                                         const size_t species);
+                                         const size_t species,
+                                         const PBank &probank);
 
             //! cleanup
             virtual ~LinearlyIndependent() noexcept;
@@ -72,7 +72,6 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LinearlyIndependent);
             virtual ConstInterface & surrogate() const noexcept;
-            PBank              bank;
             PList              list;
             Orthogonal::Family qfam;
         };
@@ -107,7 +106,8 @@ namespace Yttrium
 
             //! update/create for primary equilibria and their species
             void operator()(const size_t primary,
-                            const size_t species);
+                            const size_t species,
+                            const PBank &probank);
 
             //! get pre-allocated
             LinearlyIndependent & operator[](const size_t species);

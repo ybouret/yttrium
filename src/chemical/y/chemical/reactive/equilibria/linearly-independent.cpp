@@ -8,9 +8,9 @@ namespace Yttrium
 
         
         LinearlyIndependent:: LinearlyIndependent(const size_t primary,
-                                                  const size_t species) :
-        bank(primary),
-        list(bank),
+                                                  const size_t species,
+                                                  const PBank &probank) :
+        list(probank),
         qfam(species,primary)
         {
         }
@@ -93,7 +93,8 @@ namespace Yttrium
 
 
         void LinearlyIndependentSet:: operator()(const size_t primary,
-                                                 const size_t species) 
+                                                 const size_t species,
+                                                 const PBank &probank)
         {
             {
                 LinearlyIndependent::Ptr *pp = search(species);
@@ -105,7 +106,7 @@ namespace Yttrium
             }
 
             {
-                LinearlyIndependent::Ptr p = new LinearlyIndependent(primary,species);
+                LinearlyIndependent::Ptr p = new LinearlyIndependent(primary,species,probank);
                 if(!insert(p)) throw Specific::Exception(CallSign,"corrupted for #species=%u", unsigned(species));
             }
         }
