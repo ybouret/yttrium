@@ -27,6 +27,7 @@ namespace Yttrium
         roaming(),
         order(0),
         topology(),
+        attached(),
         next(0),
         prev(0)
         {

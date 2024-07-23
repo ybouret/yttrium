@@ -125,6 +125,12 @@ namespace Yttrium
                 }
             }
 
+            {
+                Y_XML_SECTION(xml, "Squad");
+
+
+            }
+
 
             {
                 Y_XML_SECTION(xml, "Global");
@@ -134,7 +140,7 @@ namespace Yttrium
                 if(xml.verbose)
                 {
                     cl.uuid.pad(xml() << "lead: " << lead.eq.name,lead.eq);
-                    *xml <<        " @" << std::setw(15) << real_t(lead.xi);
+                    *xml <<        " xi@" << std::setw(15) << real_t(lead.xi);
                     *xml << std::endl;
                 }
 
