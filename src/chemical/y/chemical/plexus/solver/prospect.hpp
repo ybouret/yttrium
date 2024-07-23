@@ -66,6 +66,9 @@ namespace Yttrium
             void   update(XAdd &xadd, XMul &xmul);
             size_t indx() const noexcept;
 
+            xreal_t ObjectiveFunction(const XReadable  &Ctry,
+                                      XMul             &xmul) const;
+
             //__________________________________________________________________
             //
             //
@@ -81,7 +84,8 @@ namespace Yttrium
             const XReadable   &dc; //!< cc-c0
             XWritable         &dd; //!< derivative
             const xreal_t      sl; //!< slope, initially 0
-            
+            const xreal_t      ox; //!< objective function factor = -1/sl, initially 1
+
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };

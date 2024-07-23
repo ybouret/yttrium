@@ -54,8 +54,10 @@ namespace Yttrium
 
         void Prospect::  update(XAdd &xadd, XMul &xmul)
         {
+            const xreal_t mOne(-1);
             eq.drvsMassAction(eK, dd, SubLevel, cc, SubLevel, xmul);
-            Coerce(sl) = eq.dot(dd, SubLevel,xadd);
+            Coerce(sl) = eq.dot(dd, SubLevel,xadd); assert(sl<xreal_t(0));
+            Coerce(ox) = mOne/sl;
         }
 
 
@@ -64,6 +66,13 @@ namespace Yttrium
             return eq.indx[SubLevel];
         }
 
+
+        xreal_t Prospect:: ObjectiveFunction(const XReadable  &Ctry,
+                                             XMul             &xmul) const
+        {
+            const xreal_t Xi = eq.massAction(eK, xmul, Ctry, SubLevel);
+            return Xi * ox;
+        }
     }
 
 }

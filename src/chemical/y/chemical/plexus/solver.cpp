@@ -2,6 +2,8 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/sort/heap.hpp"
 #include "y/mkl/tao/seq/level1.hpp"
+#include "y/type/temporary.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -17,20 +19,24 @@ namespace Yttrium
         Ceq(cls.maxEPC,cls.maxSPC),
         dCe(cls.maxEPC,cls.maxSPC),
         Phi(cls.maxEPC,cls.maxSPC),
+        Cin(cls.maxSPC,0),
+        Cex(cls.maxSPC,0),
+        Cws(cls.maxSPC,0),
         afm(),
         bnk(),
         pps(cls.maxEPC),
         lis(),
         sql(),
-        sqp()
+        sqp(),
+        obj(cls.maxEPC,0),
+        pli(0)
         {
             // prepare LinearlyIndependent Set
             for(const Cluster *cl=cls->head;cl;cl=cl->next)
                 lis(cl->size,cl->species.size,bnk);
 
         }
-
-
+        
 
         void Solver:: process(XWritable       &C,
                               const Cluster   &cl,
@@ -47,6 +53,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 pps.free();
+                sdb.free();
 
                 //--------------------------------------------------------------
                 //
@@ -64,7 +71,6 @@ namespace Yttrium
                     XWritable            &phi  = Phi[isub];
                     if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
                     {
-                        //const xreal_t        xi = afm.eval(Ci, SubLevel, C, TopLevel, eq);
                         const xreal_t  xi = afm.eval(Di,Ci,SubLevel, C, TopLevel, eq);
                         const Prospect pro(eq,eK,xi,Ci,Di,phi);
                         pps << pro;
@@ -94,6 +100,7 @@ namespace Yttrium
             }
 
             LinearlyIndependent &li = lis[cl.species.size];
+            const Temporary<LinearlyIndependent *> tempLI(pli,&li);
             {
                 Y_XML_SECTION(xml, "Basis");
 
@@ -126,13 +133,36 @@ namespace Yttrium
                         *xml <<        " @" << std::setw(15) << real_t(pro.xi);
                         *xml << " : slope=" << std::setw(15) << real_t(pro.sl) << std::endl;
                     }
+                    pro.eq.record(sdb);
                 }
+                sdb.display<Species>(std::cerr << "species=") << std::endl;
+
             }
 
-            sqFrom(*li,cl.attached,xml);
+            {
+                const Prospect &pro = ** li->head;
+                Cin.ld(0); cl.transfer(Cin,SubLevel,C,TopLevel);
+                Cex.ld(0); cl.transfer(Cex,SubLevel,pro.cc,SubLevel);
 
+                OutputFile  fp("phase.dat");
+                OutputFile  fp2("objective.dat");
 
+                for(size_t j=0;j<=1000;++j)
+                {
+                    const real_t  u = real_t(j)/1000;
+                    const xreal_t Y = ObjectiveFunction(u);
+                    fp("%g",u);
+                    for(size_t i=1;i<=li->size;++i)
+                    {
+                        fp(" %.15g", real_t(obj[i]) );
+                    }
+                    fp << "\n";
+                    fp2("%g %.15g\n", u, real_t(Y));
+                }
 
+            }
+
+            if(false)
             {
                 Y_XML_SECTION(xml, "Global");
                 PNode           * node  = li->head;
@@ -160,6 +190,42 @@ namespace Yttrium
             }
 
 
+        }
+
+
+        xreal_t Solver:: ObjectiveFunction(const xreal_t u)
+        {
+            assert(0!=pli);
+            const xreal_t zero;
+            const xreal_t one(1);
+            XAdd &xadd = afm.xadd;
+            XMul &xmul = afm.xmul;
+            xadd.free();
+            Cws.ld(zero);
+            for(AddressBook::Iterator it=sdb.begin();it!=sdb.end();++it)
+            {
+                const Species & s     = *static_cast<const Species *>(*it);
+                const size_t    i     = s.indx[SubLevel];
+                const xreal_t   c0    = Cin[i];
+                const xreal_t   c1    = Cex[i];
+                xreal_t         lower = c0;
+                xreal_t         upper = c1;
+                if(upper<lower) Swap(lower,upper);
+                const xreal_t v = one-u;
+                Cws[i] = Clamp(lower,v*c0+u*c1,upper);
+            }
+
+            obj.ld(zero);
+            size_t j=0;
+            for(const PNode *pn=(*pli)->head;pn;pn=pn->next)
+            {
+                const Prospect &pro = **pn;
+                const xreal_t   val = pro.ObjectiveFunction(Cws,afm.xmul);
+                obj[++j] = val;
+                xadd << val * val;
+            }
+
+            return xadd.sum();
         }
 
 

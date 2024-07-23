@@ -90,6 +90,18 @@ namespace Yttrium
             //! max not empty order
             size_t maxOrder() const noexcept;
 
+            //! transfer components-wise
+            template <typename TARGET, typename SOURCE> inline
+            void transfer(TARGET &target, const Level tgtLevel,
+                          SOURCE &source, const Level srcLevel) const
+            {
+                for(const SNode *sn=species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    target[sp.indx[tgtLevel]] = source[sp.indx[srcLevel]];
+                }
+            }
+
             //__________________________________________________________________
             //
             //
