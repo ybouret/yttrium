@@ -535,6 +535,8 @@ namespace Yttrium
                     const size_t n    = arr.size();
                     Add<T>      &self = *this;
                     self.make(n); assert(self.isEmpty());
+
+                    // initialize with one for arr[imax]/amax
                     {
                         const T one(1);
                         self << one;

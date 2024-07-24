@@ -200,9 +200,12 @@ namespace Yttrium
             assert(0!=pli);
             const xreal_t zero;
             const xreal_t one(1);
+
             XAdd &xadd = afm.xadd;
             XMul &xmul = afm.xmul;
             xadd.free();
+
+            // construct trial concentration from recorded species
             Cws.ld(zero);
             for(AddressBook::Iterator it=sdb.begin();it!=sdb.end();++it)
             {
@@ -218,17 +221,23 @@ namespace Yttrium
                 Cws[i] = Clamp(lower,v*c0+u*c1,upper);
             }
 
+            // compute all objective functions
+            const LinearlyIndependent &li = *pli;
             obj.ld(zero);
             size_t j=0;
-            for(const PNode *pn=(*pli)->head;pn;pn=pn->next)
+            for(const PNode *pn=li->head;pn;pn=pn->next)
             {
                 const Prospect &pro = **pn;
                 const xreal_t   val = pro.ObjectiveFunction(Cws,xmul);
                 obj[++j] = val;
-                xadd << val * val;
+            }
+            assert(li->size == j);
+            
+            {
+                const LightArray<xreal_t> sub(&obj[1],j);
+                return xadd.normOf(obj);
             }
 
-            return xadd.sum();
         }
 
 
