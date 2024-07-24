@@ -72,7 +72,9 @@ Y_UTEST(weasel)
         eq.topology(Nu, TopLevel);
         std::cerr << "Nu=" << Nu << std::endl;
         const xreal_t K = eq.K(0);
-        if(am.solve(C,TopLevel, C0, TopLevel, eq, K ))
+
+        lib.transfer(C, TopLevel, C0, TopLevel);
+        if(am.solve(C,TopLevel, eq, K ))
         {
             std::cerr << "C="  << C << std::endl;
             std::cerr << "Xi=" << eq.massAction(K, am.xmul, C, TopLevel) << std::endl;

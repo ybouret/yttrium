@@ -70,7 +70,12 @@ namespace Yttrium
                     XWritable            &Ci   = Ceq[isub];
                     XWritable            &Di   = dCe[isub];
                     XWritable            &phi  = Phi[isub];
-                    if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
+
+                    // initialize Ci[SubLevel] with all species from C[TopLevel]
+                    cl.transfer(Ci, SubLevel, C, TopLevel);
+
+                    // solve
+                    if( afm.solve(Ci, SubLevel, eq, eK) )
                     {
                         const xreal_t  xi = afm.eval(Di,Ci,SubLevel,C,TopLevel,eq);
                         const Prospect pro(eq,eK,xi,Ci,Di,phi);
@@ -173,9 +178,9 @@ namespace Yttrium
                     std::cerr << pro2.eq << "_ex=" << real_t(pro2.eq.massAction(pro2.eK, afm.xmul, Cex, SubLevel)) << std::endl;
 
 
-                    for(size_t j=0;j<=100;++j)
+                    for(size_t j=0;j<=1000;++j)
                     {
-                        const real_t  u = real_t(j)/100;
+                        const real_t  u = real_t(j)/1000;
                         const xreal_t Y = ObjectiveFunction(u);
                         fp("%g",u);
                         for(size_t i=1;i<=li->size;++i)

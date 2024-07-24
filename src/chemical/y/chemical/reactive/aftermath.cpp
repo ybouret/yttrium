@@ -238,7 +238,7 @@ namespace Yttrium
 
 
 
-
+#if 0
         bool Aftermath:: solve(XWritable       &  Cout,
                                const Level        Lout,
                                const XReadable &  Cinp,
@@ -267,6 +267,34 @@ namespace Yttrium
 
                     E.transfer(Cout,Lout,Cinp,Linp);
                     return solveWith(xiStandard,Cout,Lout,E,K,xmul);
+
+                } break;
+            }
+
+            return false;
+        }
+#endif
+
+        bool Aftermath:: solve(XWritable        &C,
+                               const Level       L,
+                               const Components &E,
+                               const xreal_t     K)
+        {
+            switch(E.kind)
+            {
+                case Components::Nebulous: break;
+
+                case Components::ProdOnly:
+                    return solveWith(xiProdOnly,C,L,E,K,xmul);
+
+                case Components::ReacOnly:
+                    return solveWith(xiReacOnly,C,L,E,K,xmul);
+
+                case Components::Standard: {
+                    if(E.blockedBy(C,L))
+                        return false;
+
+                    return solveWith(xiStandard,C,L,E,K,xmul);
 
                 } break;
             }

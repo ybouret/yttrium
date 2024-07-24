@@ -37,6 +37,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
          
+#if 0
             //! solve single components at K
             /**
              \param Cout output concentrations
@@ -51,6 +52,20 @@ namespace Yttrium
                        const Level      Lout,
                        const XReadable &Cinp,
                        const Level      Linp,
+                       const Components &E,
+                       const xreal_t     K);
+#endif
+            
+            //! solve single components at K
+            /**
+             \param C pre-loaded concentration with ALL species
+             \param L level to compute
+             \param E Components part
+             \param K precomputed constant of E
+             \return false if blocked, true if exists, C is updated
+             */
+            bool solve(XWritable        &C,
+                       const Level       L,
                        const Components &E,
                        const xreal_t     K);
 
