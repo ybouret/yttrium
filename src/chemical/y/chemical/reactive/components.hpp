@@ -187,7 +187,7 @@ namespace Yttrium
                 for(ConstIterator it=db.begin();it!=db.end();++it)
                 {
                     const Species &sp = (**it).sp;
-                    os << '[' << sp.name << ']' << '=' << real_t( arr[sp.indx[level]] ) << ' ';
+                    os << '[' << sp.name << ']' << '=' << ( arr[sp.indx[level]] ) << ' ';
                 }
                 os << '}';
                 return os;

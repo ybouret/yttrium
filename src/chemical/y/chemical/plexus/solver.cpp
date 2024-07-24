@@ -144,50 +144,39 @@ namespace Yttrium
                 Cin.ld(0); cl.transfer(Cin,SubLevel,C,TopLevel);
                 Cex.ld(0); cl.transfer(Cex,SubLevel,pro.cc,SubLevel);
 
-                OutputFile  fp("phase.dat");
-                OutputFile  fp2("objective.dat");
-
-                for(size_t j=0;j<=1000;++j)
+                if(2==li->size)
                 {
-                    const real_t  u = real_t(j)/1000;
-                    const xreal_t Y = ObjectiveFunction(u);
-                    fp("%g",u);
-                    for(size_t i=1;i<=li->size;++i)
+                    OutputFile  fp("phase.dat");
+                    OutputFile  fp2("objective.dat");
+
+                    const Prospect &pro1 = **li->head;
+                    const Prospect &pro2 = **li->tail;
+                    assert( &pro1 != &pro2 );
+                    
+                    pro1.eq.displayCompact(std::cerr << "@" << pro1.eq, pro1.cc, SubLevel) << std::endl;
+                    pro2.eq.displayCompact(std::cerr << "@" << pro2.eq, pro1.cc, SubLevel) << std::endl;
+
+
+                    Cin.ld(0); cl.transfer(Cin,SubLevel,pro1.cc,SubLevel);
+                    Cex.ld(0); cl.transfer(Cex,SubLevel,pro2.cc,SubLevel);
+
+                    for(size_t j=0;j<=100;++j)
                     {
-                        fp(" %.15g", real_t(obj[i]) );
+                        const real_t  u = real_t(j)/100;
+                        const xreal_t Y = ObjectiveFunction(u);
+                        fp("%g",u);
+                        for(size_t i=1;i<=li->size;++i)
+                        {
+                            fp(" %.15g", real_t(obj[i]) );
+                        }
+                        fp << "\n";
+                        fp2("%g %.15g\n", u, real_t(Y));
                     }
-                    fp << "\n";
-                    fp2("%g %.15g\n", u, real_t(Y));
                 }
 
             }
 
-            if(false)
-            {
-                Y_XML_SECTION(xml, "Global");
-                PNode           * node  = li->head;
-                Prospect        & lead  = **node;
-                const XReadable & dC    = lead.dc;
-                if(xml.verbose)
-                {
-                    cl.uuid.pad(xml() << "lead: " << lead.eq.name,lead.eq);
-                    *xml <<        "  xi @ " << std::setw(15) << real_t(lead.xi);
-                    *xml << std::endl;
-                }
 
-                afm.xadd.make(cl.species.size);
-                for(node=node->next;node;node=node->next)
-                {
-                    Prospect     &pro = **node;
-                    const xreal_t dot = MKL::Tao::DotProduct<xreal_t>::Of_(dC, pro.dc, afm.xadd);
-                    if(xml.verbose)
-                    {
-                        cl.uuid.pad(xml() << "pro : " << pro.eq.name,pro.eq);
-                        *xml <<        " dot = " << std::setw(15) << real_t(dot);
-                        *xml << std::endl;
-                    }
-                }
-            }
 
 
         }
@@ -211,6 +200,7 @@ namespace Yttrium
                 xreal_t         lower = c0;
                 xreal_t         upper = c1;
                 if(upper<lower) Swap(lower,upper);
+                assert(lower<=upper);
                 const xreal_t v = one-u;
                 Cws[i] = Clamp(lower,v*c0+u*c1,upper);
             }
@@ -220,7 +210,7 @@ namespace Yttrium
             for(const PNode *pn=(*pli)->head;pn;pn=pn->next)
             {
                 const Prospect &pro = **pn;
-                const xreal_t   val = pro.ObjectiveFunction(Cws,afm.xmul);
+                const xreal_t   val = pro.ObjectiveFunction(Cws,xmul);
                 obj[++j] = val;
                 xadd << val * val;
             }

@@ -21,7 +21,8 @@ namespace Yttrium
         cc(_cc),
         dc(_dc),
         dd(_dd),
-        sl(0)
+        sl(0),
+        ox(1)
         {
 
         }
@@ -34,7 +35,8 @@ namespace Yttrium
         cc(_.cc),
         dc(_.dc),
         dd(_.dd),
-        sl(_.sl)
+        sl(_.sl),
+        ox(_.ox)
         {
 
         }
