@@ -58,16 +58,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             
-            //! comparison by decreasing |xi|
-            static int Compare(const Prospect &lhs,
-                               const Prospect &rhs) noexcept;
 
-            //! compute derivative and slope
-            void   update(XAdd &xadd, XMul &xmul);
-            size_t indx() const noexcept;
-
-            xreal_t ObjectiveFunction(const XReadable  &Ctry,
-                                      XMul             &xmul) const;
+            static int Compare(const Prospect &, const Prospect &) noexcept;   //!< comparison by decreasing |xi|
+            void       update(XAdd &xadd, XMul &xmul);                         //!< compute derivative and slope
+            size_t     indx() const noexcept;                                  //!< eq.indx[SubLevel]
+            xreal_t    ObjectiveFunction(const XReadable &Ctry, XMul &) const; //!< ox * eq.massAction(Ctry[SubLevel[)
 
             //__________________________________________________________________
             //

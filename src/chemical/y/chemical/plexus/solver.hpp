@@ -51,6 +51,7 @@ namespace Yttrium
                          const XReadable &K,
                          XMLog           &xml);
 
+            //! objective function based on internal state...
             xreal_t ObjectiveFunction(const xreal_t u);
 
 

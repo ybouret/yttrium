@@ -28,6 +28,7 @@ namespace Yttrium
         lis(),
         sql(),
         sqp(),
+        sdb(),
         obj(cls.maxEPC,0),
         pli(0)
         {
