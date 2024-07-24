@@ -16,6 +16,7 @@ namespace Yttrium
     namespace Chemical
     {
       
+        
 
         //______________________________________________________________________
         //
@@ -51,9 +52,13 @@ namespace Yttrium
                          const XReadable &K,
                          XMLog           &xml);
 
-            //! objective function based on internal state...
+            //! objective function at Cin + u * (Cex-Cin)
             xreal_t ObjectiveFunction(const xreal_t u);
 
+            //! C[SubLevel]
+            xreal_t ObjectiveFunction(const XReadable &C);
+
+            xreal_t operator()(const xreal_t u) { return ObjectiveFunction(u); }
 
             //__________________________________________________________________
             //

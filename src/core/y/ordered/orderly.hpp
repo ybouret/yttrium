@@ -14,7 +14,7 @@ namespace Yttrium
     //
     //
     //
-    //! locate/insert withing ordered arrays
+    //! locate/insert within ordered arrays
     //
     //
     //__________________________________________________________________________

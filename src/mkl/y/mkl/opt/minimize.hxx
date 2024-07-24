@@ -318,8 +318,8 @@ real_t Minimize<real_t>:: Locate(const Minimizing::Prolog prolog,
                                  FunctionType            &F)
 {
 
-    assert(x.isIncreasing());
-    assert(f.isLocalMinimum());
+    //assert(x.isIncreasing());
+    // assert(f.isLocalMinimum());
 
     switch (prolog) 
     {

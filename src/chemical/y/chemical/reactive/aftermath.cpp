@@ -238,42 +238,7 @@ namespace Yttrium
 
 
 
-#if 0
-        bool Aftermath:: solve(XWritable       &  Cout,
-                               const Level        Lout,
-                               const XReadable &  Cinp,
-                               const Level        Linp,
-                               const Components & E,
-                               const xreal_t      K)
-        {
-
-            const xreal_t zero;
-            Cout.ld(zero);
-            switch(E.kind)
-            {
-                case Components::Nebulous: break;
-
-                case Components::ProdOnly:
-                    E.transfer(Cout,Lout,Cinp,Linp);
-                    return solveWith(xiProdOnly,Cout,Lout,E,K,xmul);
-
-                case Components::ReacOnly:
-                    E.transfer(Cout,Lout,Cinp,Linp);
-                    return solveWith(xiReacOnly,Cout,Lout,E,K,xmul);
-
-                case Components::Standard: {
-                    if(E.blockedBy(Cinp,Linp))
-                        return false;
-
-                    E.transfer(Cout,Lout,Cinp,Linp);
-                    return solveWith(xiStandard,Cout,Lout,E,K,xmul);
-
-                } break;
-            }
-
-            return false;
-        }
-#endif
+        
 
         bool Aftermath:: solve(XWritable        &C,
                                const Level       L,

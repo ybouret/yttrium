@@ -36,29 +36,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-         
-#if 0
+
+
             //! solve single components at K
             /**
-             \param Cout output concentrations
-             \param Lout output level
-             \param Cinp input concentrations
-             \param Linp input level
-             \param E    Components part of an equilibrium
-             \param K    precomputed constant of E
-             \return false if blocked, true if exists
-             */
-            bool solve(XWritable       &Cout,
-                       const Level      Lout,
-                       const XReadable &Cinp,
-                       const Level      Linp,
-                       const Components &E,
-                       const xreal_t     K);
-#endif
-            
-            //! solve single components at K
-            /**
-             \param C pre-loaded concentration with ALL species
+             \param C pre-loaded concentration with ALL PRELOADED species
              \param L level to compute
              \param E Components part
              \param K precomputed constant of E

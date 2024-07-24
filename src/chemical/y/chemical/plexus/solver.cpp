@@ -4,6 +4,8 @@
 #include "y/mkl/tao/seq/level1.hpp"
 #include "y/type/temporary.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/data/list/ordered.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 namespace Yttrium
 {
@@ -37,7 +39,32 @@ namespace Yttrium
                 lis(cl->size,cl->species.size,bnk);
 
         }
-        
+
+        class Edge  : public Object
+        {
+        public:
+            explicit Edge(XWritable &_C) noexcept : H(0), C(_C), next(0), prev(0) {}
+            virtual ~Edge() noexcept {}
+            xreal_t     H;
+            XWritable  &C;
+            Edge       *next;
+            Edge       *prev;
+
+            class Comparator
+            {
+            public:
+                Comparator() {}
+                ~Comparator() {}
+
+                SignType operator()(const Edge *lhs, const Edge *rhs) const
+                {
+                    return Comparison::CxxDecreasing(lhs->H, rhs->H);
+                }
+            };
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Edge);
+        };
 
         void Solver:: process(XWritable       &C,
                               const Cluster   &cl,
@@ -125,7 +152,7 @@ namespace Yttrium
                     if(li.keep(pro,cl.topology) && li->size >= nm) break;
                 }
 
-                Y_XMLOG(xml, "#found = " << li->size << " / " << nm << " / " << np);
+                Y_XMLOG(xml, "#found base = " << li->size << ", dims = " << nm << ", npro = " << np << ", size=" << cl.size);
                 //--------------------------------------------------------------
                 //
                 // update prospect(s) in basis
@@ -145,39 +172,122 @@ namespace Yttrium
                     pro.eq.record(sdb);
                 }
                 sdb.display<Species>(std::cerr << "species=") << std::endl;
+            }
+
+            {
+                XMatrix           Csm(cl.Nu.rows+1,cl.species.size);
+                OrderedList<Edge,Edge::Comparator,OrderedListQueryHead> edges;
+
+                size_t j = 0;
+                for(const PNode *pn=li->head;pn;pn=pn->next)
+                {
+                    const Prospect &pro = **pn;
+                    XWritable      &csm = Csm[++j];cl.transfer(csm, SubLevel, pro.cc, SubLevel);
+                    const xreal_t   ham = ObjectiveFunction(csm);
+                    if(xml.verbose)
+                    {
+                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " => " << real_t(ham) << "@";
+                        *xml << pro.cc << std::endl;
+                    }
+                    Edge *edge = new Edge(csm);
+                    edge->H = ham;
+                    edges.store( edge );
+                }
+
+                {
+                    XWritable &csm = Csm[++j]; cl.transfer(csm, SubLevel, C,TopLevel);
+                    const xreal_t   ham = ObjectiveFunction(csm);
+                    Y_XMLOG(xml, "ham0=" << real_t(ham));
+                    Edge *edge = new Edge(csm);
+                    edge->H = ham;
+                    edges.store( edge );
+                }
+
+
+                if(xml.verbose)
+                {
+                    for(const Edge *edge=edges.head;edge;edge=edge->next)
+                    {
+                        xml() << std::setw(15) << real_t(edge->H) << "@" << edge->C << std::endl;
+                    }
+                }
+
+                while( edges.size > 1 )
+                {
+                    AutoPtr<Edge> upper = edges.query();
+                    AutoPtr<Edge> lower = edges.query();
+                    std::cerr << "Look between " << real_t(upper->H) << " and " << real_t( lower->H ) << std::endl;
+                    cl.transfer(Cin, SubLevel, upper->C, SubLevel);
+                    cl.transfer(Cex, SubLevel, lower->C, SubLevel);
+                    MKL::Triplet<xreal_t> xx = { 0, -1, 1};
+                    MKL::Triplet<xreal_t> ff = { upper->H, -1, lower->H };
+                    const xreal_t uu = MKL::Minimize<xreal_t>::Locate(MKL::Minimizing::Inside,  *this, xx, ff);
+                    std::cerr << "uu=" << uu << "=>" << real_t(ff.b) << std::endl;
+
+                    {
+                        OutputFile  fp2("objective.dat");
+                        for(size_t j=0;j<=1000;++j)
+                        {
+                            const real_t  u = real_t(j)/1000;
+                            const xreal_t Y = ObjectiveFunction(u);
+                            fp2("%g %.15g\n", u, real_t(Y));
+                        }
+                    }
+
+
+                    lower->H = (*this)(uu);
+                    cl.transfer(lower->C, SubLevel, Cws, SubLevel);
+                    edges.store( lower.yield() );
+
+
+                }
+
+
+
+
+
+                if(2==li->size)
+                {
+
+                    const Prospect &lhs = ** li->head;
+                    const Prospect &rhs = ** li->tail;
+                    Cin.ld(0); cl.transfer(Cin,SubLevel,lhs.cc,SubLevel);
+                    Cex.ld(0); cl.transfer(Cex,SubLevel,rhs.cc,SubLevel);
+
+                    std::cerr << "look between " << lhs.eq << " and " << rhs.eq << std::endl;
+
+                    {
+                        OutputFile  fp("phase.dat");
+                        OutputFile  fp2("objective.dat");
+                        for(size_t j=0;j<=1000;++j)
+                        {
+                            const real_t  u = real_t(j)/1000;
+                            const xreal_t Y = ObjectiveFunction(u);
+                            fp("%g",u);
+                            for(size_t i=1;i<=li->size;++i)
+                            {
+                                fp(" %.15g", real_t(obj[i]) );
+                            }
+                            fp << "\n";
+                            fp2("%g %.15g\n", u, real_t(Y));
+                        }
+                    }
+                }
 
             }
 
+            if(false)
             {
                 const Prospect &pro = ** li->head;
                 Cin.ld(0); cl.transfer(Cin,SubLevel,C,TopLevel);
                 Cex.ld(0); cl.transfer(Cex,SubLevel,pro.cc,SubLevel);
 
-                if(2==li->size)
+                std::cerr << "Cin=" << Cin << std::endl;
+                std::cerr << "Cex=" << Cex << std::endl;
+
                 {
                     OutputFile  fp("phase.dat");
                     OutputFile  fp2("objective.dat");
-
-                    const Prospect &pro1 = **li->head;
-                    const Prospect &pro2 = **li->tail;
-                    assert( &pro1 != &pro2 );
-                    
-                    pro1.eq.displayCompact(std::cerr << "@" << pro1.eq, pro1.cc, SubLevel) << std::endl;
-                    pro2.eq.displayCompact(std::cerr << "@" << pro2.eq, pro2.cc, SubLevel) << std::endl;
-
-
-                    Cin.ld(0); cl.transfer(Cin,SubLevel,pro1.cc,SubLevel);
-                    Cex.ld(0); cl.transfer(Cex,SubLevel,pro2.cc,SubLevel);
-                    std::cerr << "Cin=" << Cin << std::endl;
-                    std::cerr << "Cex=" << Cex << std::endl;
-
-                    std::cerr << pro1.eq << "_in=" << real_t(pro1.eq.massAction(pro1.eK, afm.xmul, Cin, SubLevel)) << std::endl;
-                    std::cerr << pro1.eq << "_ex=" << real_t(pro1.eq.massAction(pro1.eK, afm.xmul, Cex, SubLevel)) << std::endl;
-
-                    std::cerr << pro2.eq << "_in=" << real_t(pro2.eq.massAction(pro2.eK, afm.xmul, Cin, SubLevel)) << std::endl;
-                    std::cerr << pro2.eq << "_ex=" << real_t(pro2.eq.massAction(pro2.eK, afm.xmul, Cex, SubLevel)) << std::endl;
-
-
                     for(size_t j=0;j<=1000;++j)
                     {
                         const real_t  u = real_t(j)/1000;
@@ -200,15 +310,46 @@ namespace Yttrium
         }
 
 
-        xreal_t Solver:: ObjectiveFunction(const xreal_t u)
+        xreal_t Solver:: ObjectiveFunction(const XReadable &C)
         {
             assert(0!=pli);
             const xreal_t zero;
-            const xreal_t one(1);
+            XAdd &        xadd = afm.xadd;
+            XMul &        xmul = afm.xmul;
 
-            XAdd &xadd = afm.xadd;
-            XMul &xmul = afm.xmul;
-            xadd.free();
+            // compute all objective functions
+            const LinearlyIndependent &li = *pli;
+            obj.ld(zero);
+            size_t j=0;
+            for(const PNode *pn=li->head;pn;pn=pn->next)
+            {
+                const Prospect &pro = **pn;
+                const xreal_t   val = pro.ObjectiveFunction(C,xmul);
+                obj[++j] = val;
+            }
+            assert(li->size == j);
+
+            {
+                const LightArray<xreal_t> sub(&obj[1],j);
+                return xadd.normOf(obj);
+            }
+
+#if 0
+            {
+                xadd.free();
+                for(;j>0;--j)
+                    xadd << obj[j].abs();
+                return xadd.sum();
+            }
+#endif
+
+        }
+
+        xreal_t Solver:: ObjectiveFunction(const xreal_t u)
+        {
+            assert(0!=pli);
+            const xreal_t one(1);
+            const xreal_t zero;
 
             // construct trial concentration from recorded species
             Cws.ld(zero);
@@ -226,22 +367,8 @@ namespace Yttrium
                 Cws[i] = Clamp(lower,v*c0+u*c1,upper);
             }
 
-            // compute all objective functions
-            const LinearlyIndependent &li = *pli;
-            obj.ld(zero);
-            size_t j=0;
-            for(const PNode *pn=li->head;pn;pn=pn->next)
-            {
-                const Prospect &pro = **pn;
-                const xreal_t   val = pro.ObjectiveFunction(Cws,xmul);
-                obj[++j] = val;
-            }
-            assert(li->size == j);
-            
-            {
-                const LightArray<xreal_t> sub(&obj[1],j);
-                return xadd.normOf(obj);
-            }
+            // evaluate
+            return ObjectiveFunction(Cws);
 
         }
 

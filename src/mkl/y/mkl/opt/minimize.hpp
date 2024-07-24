@@ -76,9 +76,10 @@ namespace Yttrium
 
             //! starting from local minimum estimation, converge
             static T Locate(const Minimizing::Prolog prolog, Triplet<T> &x, Triplet<T> &f, FunctionType &F);
-            template <typename FUNCTION>  inline
+
 
             //! wrapper
+            template <typename FUNCTION>  inline
             static T Locate(const Minimizing::Prolog prolog, FUNCTION &F, Triplet<T> &x, Triplet<T> &f)
             {
                 Wrapper1D<T,T,FUNCTION> FW(F);
