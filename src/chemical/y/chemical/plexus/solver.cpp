@@ -72,11 +72,8 @@ namespace Yttrium
                     XWritable            &phi  = Phi[isub];
                     if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
                     {
-                        std::cerr << "good " << eq.name << " : " << std::endl;
-                        eq.displayCompact(std::cerr, Ci, SubLevel) << std::endl;
                         const xreal_t  xi = afm.eval(Di,Ci,SubLevel,C,TopLevel,eq);
                         const Prospect pro(eq,eK,xi,Ci,Di,phi);
-                        eq.displayCompact(std::cerr, pro.cc, SubLevel) << std::endl;
                         pps << pro;
                     }
                 }
