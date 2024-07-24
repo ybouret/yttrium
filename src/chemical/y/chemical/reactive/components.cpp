@@ -256,6 +256,10 @@ namespace Yttrium
             return CategoryText(kind);
         }
 
+        bool Components:: blockedBy(const XReadable &C, const Level L) const noexcept
+        {
+            return reac.deficient(C,L) && prod.deficient(C,L);
+        }
 
     }
 

@@ -42,7 +42,7 @@ namespace Yttrium
             //! solve once zero is bracketed
             static inline xreal_t xiSolve(Triplet<xreal_t> &xi,
                                           Triplet<xreal_t> &ma,
-                                          XWritable        &Cout,
+                                          const XReadable  &Cout,
                                           const Level      &Lout,
                                           const Components &E,
                                           const xreal_t     K,
@@ -54,12 +54,13 @@ namespace Yttrium
 
                 zroot(F,xi,ma);
                 //std::cerr << "#calls=" << numCalls << std::endl;
+               // std::cerr << "<" << E.name << ">@xi=" << xi.b << "=>" << ma.b << std::endl;
                 return xi.b;
             }
 
             //! driver for ReacOnly components
             static inline
-            xreal_t xiReacOnly(XWritable        &Cout,
+            xreal_t xiReacOnly(const XReadable  &Cout,
                                const Level      &Lout,
                                const Components &E,
                                const xreal_t     K,
@@ -108,7 +109,7 @@ namespace Yttrium
 
             //! driver for ProdOnly components
             static inline
-            xreal_t xiProdOnly(XWritable        &Cout,
+            xreal_t xiProdOnly(const XReadable  &Cout,
                                const Level      &Lout,
                                const Components &E,
                                const xreal_t     K,
@@ -151,12 +152,13 @@ namespace Yttrium
             }
 
             static inline
-            xreal_t xiStandard(XWritable        &Cout,
+            xreal_t xiStandard(const XReadable  &Cout,
                                const Level      &Lout,
                                const Components &E,
                                const xreal_t     K,
                                XMul             &xmul)
             {
+                //std::cerr << "Solving '" << E.name << "' @XiStandard" << std::endl;
                 const xreal_t    zero = 0;
                 Triplet<xreal_t> xi   = { 0, 0, 0 };
                 Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
@@ -204,8 +206,11 @@ namespace Yttrium
                 // initialize
                 //
                 //--------------------------------------------------------------
+                std::cerr << "(0) " << E.name << "@" << 0 << "->"; E.displayCompact(std::cerr, Cout, Lout) << std::endl;
                 xreal_t xi = xiProc(Cout, Lout, E, K, xmul);
                 E.moveSafe(Cout,Lout,xi);
+                std::cerr << "(*) " << E.name << "@" << xi << "->"; E.displayCompact(std::cerr, Cout, Lout) << std::endl;
+
 
                 xreal_t ax = xi.abs();
                 if(ax.mantissa<=0) return true;
@@ -220,6 +225,7 @@ namespace Yttrium
                 {
                     const xreal_t xi_new = xiProc(Cout, Lout, E, K, xmul);
                     E.moveSafe(Cout,Lout,xi_new);
+                    std::cerr << "(+) " << E.name << "@" << xi_new<< "->"; E.displayCompact(std::cerr, Cout, Lout) << std::endl;
 
                     const xreal_t ax_new = xi_new.abs();
                     if( ax_new.mantissa <= 0 ||  ax_new >= ax )
@@ -261,7 +267,7 @@ namespace Yttrium
                     return solveWith(xiReacOnly,Cout,Lout,E,K,xmul);
 
                 case Components::Standard: {
-                    if(E.reac.deficient(Cinp, Linp) && E.prod.deficient(Cinp, Linp))
+                    if(E.blockedBy(Cinp,Linp))
                         return false;
 
                     E.transfer(Cout,Lout,Cinp,Linp);

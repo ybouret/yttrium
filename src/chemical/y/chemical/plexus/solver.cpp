@@ -71,8 +71,11 @@ namespace Yttrium
                     XWritable            &phi  = Phi[isub];
                     if( afm.solve(Ci, SubLevel, C, TopLevel, eq, eK) )
                     {
-                        const xreal_t  xi = afm.eval(Di,Ci,SubLevel, C, TopLevel, eq);
+                        std::cerr << "good " << eq.name << " : " << std::endl;
+                        eq.displayCompact(std::cerr, Ci, SubLevel) << std::endl;
+                        const xreal_t  xi = afm.eval(Di,Ci,SubLevel,C,TopLevel,eq);
                         const Prospect pro(eq,eK,xi,Ci,Di,phi);
+                        eq.displayCompact(std::cerr, pro.cc, SubLevel) << std::endl;
                         pps << pro;
                     }
                 }
@@ -94,7 +97,8 @@ namespace Yttrium
                     for(size_t i=1;i<=pps.size();++i)
                     {
                         const Prospect &pro = pps[i];
-                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi) << std::endl;
+                        cl.uuid.pad(xml() << pro.eq.name,pro.eq) << " @" << std::setw(15) << real_t(pro.xi);
+                        pro.eq.displayCompact(std::cerr, pro.cc, SubLevel) << std::endl;
                     }
                 }
             }
@@ -109,7 +113,7 @@ namespace Yttrium
                 // find basis
                 //
                 //--------------------------------------------------------------
-                const size_t         np = pps.size(); // number of prospect
+                const size_t         np = pps.size(); // number of prospect(s)
                 const size_t         nm = cl.Nu.rows; // max base size
                 li.init();
                 for(size_t i=1;i<=np;++i)
@@ -118,6 +122,7 @@ namespace Yttrium
                     if(li.keep(pro,cl.topology) && li->size >= nm) break;
                 }
 
+                Y_XMLOG(xml, "#found = " << li->size << " / " << nm << " / " << np);
                 //--------------------------------------------------------------
                 //
                 // update prospect(s) in basis
@@ -131,7 +136,8 @@ namespace Yttrium
                     {
                         cl.uuid.pad(xml() << pro.eq.name,pro.eq);
                         *xml <<        " @" << std::setw(15) << real_t(pro.xi);
-                        *xml << " : slope=" << std::setw(15) << real_t(pro.sl) << std::endl;
+                        *xml << " : slope=" << std::setw(15) << real_t(pro.sl);
+                        pro.eq.displayCompact(std::cerr << " @", pro.cc, SubLevel) << std::endl;
                     }
                     pro.eq.record(sdb);
                 }
@@ -154,11 +160,20 @@ namespace Yttrium
                     assert( &pro1 != &pro2 );
                     
                     pro1.eq.displayCompact(std::cerr << "@" << pro1.eq, pro1.cc, SubLevel) << std::endl;
-                    pro2.eq.displayCompact(std::cerr << "@" << pro2.eq, pro1.cc, SubLevel) << std::endl;
+                    pro2.eq.displayCompact(std::cerr << "@" << pro2.eq, pro2.cc, SubLevel) << std::endl;
 
 
                     Cin.ld(0); cl.transfer(Cin,SubLevel,pro1.cc,SubLevel);
                     Cex.ld(0); cl.transfer(Cex,SubLevel,pro2.cc,SubLevel);
+                    std::cerr << "Cin=" << Cin << std::endl;
+                    std::cerr << "Cex=" << Cex << std::endl;
+
+                    std::cerr << pro1.eq << "_in=" << real_t(pro1.eq.massAction(pro1.eK, afm.xmul, Cin, SubLevel)) << std::endl;
+                    std::cerr << pro1.eq << "_ex=" << real_t(pro1.eq.massAction(pro1.eK, afm.xmul, Cex, SubLevel)) << std::endl;
+
+                    std::cerr << pro2.eq << "_in=" << real_t(pro2.eq.massAction(pro2.eK, afm.xmul, Cin, SubLevel)) << std::endl;
+                    std::cerr << pro2.eq << "_ex=" << real_t(pro2.eq.massAction(pro2.eK, afm.xmul, Cex, SubLevel)) << std::endl;
+
 
                     for(size_t j=0;j<=100;++j)
                     {
