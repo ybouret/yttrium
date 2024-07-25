@@ -93,6 +93,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
+            
         };
 
         typedef Small::BareLightList<const Species> SList; //!< alias

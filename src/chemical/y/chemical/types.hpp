@@ -9,6 +9,7 @@
 #include "y/mkl/antelope/mul.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -21,6 +22,7 @@ namespace Yttrium
         typedef Writable<xreal_t>           XWritable; //!< alias
         typedef Matrix<xreal_t>             XMatrix;   //!< alias
         typedef Vector<xreal_t>             XVector;   //!< alias
+        typedef CxxArray<xreal_t>           XArray;    //!< alias
 
         typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias

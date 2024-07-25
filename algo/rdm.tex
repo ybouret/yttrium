@@ -63,59 +63,34 @@ which conserves the charge for valid equilibrium(a).
 
  
 \subsection{Solving...}
+
+\subsection{Comparing Indicators}
 We know that:
 \begin{equation}
 	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
 \end{equation}
 
-Let's focus on coordinate $i$.
 \begin{equation}
-	\sum_j \beta_j \delta \vec C_j ^\star = 
-	\underbrace{\left( \sum_j \beta_j \alpha_j \right) \delta \vec C_i^\star}_{\parallel \delta \vec C_i^\star} +
-	\underbrace{\sum_j \beta_j \delta \vec C_j^\perp}_{\perp \delta \vec C_i^\star}
-\end{equation}
-
-\begin{equation}
-	\alpha_j = \dfrac{\langle \delta \vec C_i ^\star\vert \delta \vec C_j ^\star\rangle}{ {\delta \vec C_i ^\star}^2 }
-	,\;\;
-	\delta \vec C_j^\perp = \underbrace{\delta \vec C_j ^\star - \alpha_j \delta \vec C_i ^\star}_{\perp \delta \vec C_i^\star}
-\end{equation}
-
-\begin{equation}
-	\alpha_i = 1, \; \delta \vec C_i^\perp = \vec 0
-\end{equation}
-
-\subsection{Solving Bis}
-
-\subsubsection{Encompassing Valid States}
-We know that:
-\begin{equation}
-	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
-\end{equation}
-Each $\vec C_i^\star$ is a valid concentration, so is:
-\begin{equation}
-	\vec C_\beta = \sum_j \beta_j \vec C_i^\star, \; \sum_j \beta_j = 1,\; \beta_j \in [0:1]
-\end{equation}
-
-
-With this assumptions:
-\begin{equation}
-	\vec C_\beta = \sum_j \beta_j (\vec C_0 + \delta \vec C_i^\star) = \vec C_0 + \sum_j \beta_j \delta \vec C_i^\star
-\end{equation}
-
-\subsubsection{Two Equilibria}
-
-\begin{equation}
-\left\lbrace
-\begin{array}{rcll}
-\Xi_1(\beta_1 \vec C_1^\star + \beta_2 \vec C_2^\star) & = & \Xi_1(\vec C_0 + \beta_1 \delta \vec C_1^\star + (1-\beta_1) \delta \vec C_2^\star), & \Xi_1(1)=0 \\
-\Xi_2(\beta_1 \vec C_1^\star + \beta_2 \vec C_2^\star) & = & \Xi_2(\vec C_0 + \beta_1 \delta \vec C_1^\star + (1-\beta_1) \delta \vec C_2^\star), & \Xi_2(0)=0 \\
+\begin{array}{rl}
+ &	\Xi_i(\vec C_0 + \sum_j \xi_j \vec \nu_j) \\
+= &	\Xi_i\left(\vec C_0 + \xi_i^\star \vec \nu_i + (\xi_i-\xi_i^\star) \vec \nu_i + \sum_{j\not=i} \xi_j \vec \nu_j\right)  \\
+\simeq & (\xi_i-\xi_i^\star) \underbrace{\langle \vec \Psi_i^\star \vert \vec \nu_i \rangle}_{<0} + \sum_{j\not=i} \xi_j \langle \vec \Psi_i^\star \vert \vec \nu_j \rangle \\
 \end{array}
-\right.
 \end{equation}
 
-
-
+For $\vec C_0$, $\xi_i^\star$ is the zero value of $\vert \Xi_i(\vec C_0 + \xi_i \vec \nu _i) \vert$
+and 
+\begin{equation}
+\kappa_i = \dfrac{-1}{ \langle \vec \Psi_i^\star \vert \vec \nu_i \rangle }
+\end{equation}
+is the stiffness of the associated quadratic form.
+Hence for a starting point $\vec C_0$, the concentration to decrease is:
+\begin{equation}
+	\mathcal C(\vec C_0 + \delta \vec C) =
+	\sqrt{ 
+	\sum_i \left(\dfrac{\Xi_i(\vec C_0 + \delta \vec C) }{\langle \vec \Psi_i^\star \vert \vec \nu_i \rangle}\right)^2 
+	}
+\end{equation}
 
 
 \subsection{Conservation}
