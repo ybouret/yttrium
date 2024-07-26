@@ -268,9 +268,9 @@ namespace Yttrium
                         if(base.grow(pro, cl.topology) && base->size >= dof) break;
                     }
 
-                    Y_XMLOG(xml, "#dof=" << dof);
-                    Y_XMLOG(xml, "#pro=" << npm);
-                    Y_XMLOG(xml, "#vec=" << base->size);
+                    Y_XMLOG(xml, "#dof = " << std::setw(10) << dof);
+                    Y_XMLOG(xml, "#pro = " << std::setw(10) << npm);
+                    Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
 
                     for(const PNode *pn=base->head;pn;pn=pn->next)
                     {
