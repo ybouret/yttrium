@@ -243,7 +243,7 @@ namespace Yttrium
                 const xreal_t zero;
                 const xreal_t mOne(-1);
 
-                const size_t dof = cl.Nu.rows; // primary equilibria
+                const size_t ndof = cl.Nu.rows; // primary equilibria
 
                 {
                     Y_XML_SECTION(xml, "Scan");
@@ -313,10 +313,10 @@ namespace Yttrium
                     for(size_t i=1;i<=npmx;++i)
                     {
                         const Prospect &pro = pps[i];
-                        if(base.grow(pro, cl.topology) && base->size >= dof) break;
+                        if(base.grow(pro, cl.topology) && base->size >= ndof) break;
                     }
 
-                    Y_XMLOG(xml, "#dof = " << std::setw(10) << dof);
+                    Y_XMLOG(xml, "#dof = " << std::setw(10) << ndof);
                     Y_XMLOG(xml, "#pro = " << std::setw(10) << npmx);
                     Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
 
@@ -325,7 +325,6 @@ namespace Yttrium
                         Y_XMLOG(xml, " (+) " << (**pn).eq);
                     }
                 }
-
             }
 
             Aftermath           afm;
