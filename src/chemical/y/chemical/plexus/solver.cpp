@@ -3,6 +3,8 @@
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 
+#include "y/stream/libc/output.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -15,16 +17,38 @@ namespace Yttrium
                                            const Level      L)
         {
             assert(0!=ppb);
+            obj.free();
             const PList &list = **ppb;
             {
-                size_t indx = 0;
                 for(const PNode *pn=list.head;pn;pn=pn->next)
                 {
-                    obj[++indx] = (**pn).objectiveFunction(C,L,afm.xmul);
+                   obj << (**pn).objectiveFunction(C,L,afm.xmul);
                 }
             }
-            const LightArray<xreal_t> arr( &obj[1], list.size );
-            return afm.xadd.normOf(arr);
+            assert(obj.size() == list.size);
+            //const LightArray<xreal_t> arr( &obj[1], list.size );
+            //std::cerr << "obj: " << obj << "@" << C << std::endl;
+            return afm.xadd.normOf(obj);
+        }
+
+
+        xreal_t Solver::  operator()(const xreal_t u)
+        {
+            assert(0!=pcl);
+            const xreal_t one = 1;
+            const xreal_t v   = one - u;
+
+            for(size_t j=pcl->species.size;j>0;--j)
+            {
+                const xreal_t c0 = Cin[j];
+                const xreal_t c1 = Cex[j];
+                xreal_t cmin  = c0;
+                xreal_t cmax  = c1;
+                if(cmax<cmin) Swap(cmin,cmax);
+                Cws[j] = Clamp(cmin,v*c0+u*c1,cmax);
+            }
+
+            return objectiveFunction(Cws,SubLevel);
         }
 
 
@@ -47,7 +71,6 @@ namespace Yttrium
                 //--------------------------------------------------------------
             SCAN:
                 Y_XMLOG(xml, "(*) [Examine]");
-                obj.free();
                 pps.free();
                 for(const ENode *en=cl.head;en;en=en->next)
                 {
@@ -58,7 +81,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     const Equilibrium &eq = **en;
                     const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
-                    const size_t       ii = obj.size() + 1;
+                    const size_t       ii = pps.size() + 1;
                     XWritable         &cc = ceq[ii];
                     const Situation    id = afm.seek( cl.transfer(cc,SubLevel,Ctop,TopLevel), SubLevel, eq, eK);
                     switch(id)
@@ -82,7 +105,6 @@ namespace Yttrium
                     if(slope>=zero) throw Specific::Exception(eq.name.c_str(),"invalid slope");
                     const Prospect pro(eq, eK, cc, afm.eval(cc,SubLevel,Ctop,TopLevel,eq), mOne/slope );
                     pps << pro;
-                    obj << pro.objectiveFunction(Ctop, TopLevel, afm.xmul);
                 }
 
                 if( pps.size() <= 0 ) {
@@ -96,14 +118,16 @@ namespace Yttrium
                     Y_XML_SECTION_OPT(xml, "Individual", " running='" << pps.size() << "' clusterSize='" << cl.size << "'" );
                     //
                     //----------------------------------------------------------
-                    HeapSort::Call(obj, Comparison::Decreasing<xreal_t>, pps);
+                    //HeapSort::Call(obj, Comparison::Decreasing<xreal_t>, pps);
+                    HeapSort::Call(pps, Prospect::Compare);
+
                     if(xml.verbose)
                     {
                         for(size_t i=1;i<=pps.size();++i)
                         {
                             const Prospect &pro = pps[i];
                             cl.uuid.pad(xml() << pro.eq,pro.eq);
-                            *xml << " | ham=" << std::setw(15) << real_t(obj[i]);
+                            //*xml << " | ham=" << std::setw(15) << real_t(obj[i]);
                             *xml << " | ax =" << std::setw(15) << real_t(pro.xi.abs());
                             pro.eq.displayCompact(*xml << " @", pro.cc, SubLevel);
                             *xml << " ks=" << real_t(pro.ks);
@@ -115,7 +139,8 @@ namespace Yttrium
 
 
             QBuilder &                 base = qdb[cl.species.size];
-            const Temporary<QBuilder*> keep(ppb,&base);
+            const Temporary<QBuilder*> keepBase(ppb,&base);
+            const Temporary<Cluster *> keepData(pcl,&Coerce(cl));
             {
                 //--------------------------------------------------------------
                 //
@@ -159,6 +184,24 @@ namespace Yttrium
                             *xml << std::endl;
                         }
                     }
+
+                    if(base->size>=2)
+                    {
+                        const Prospect &lhs = **(base->head);
+                        const Prospect &rhs = **(base->head->next);
+                        Cin.ld(0); cl.transfer(Cin, SubLevel, lhs.cc, SubLevel);
+                        Cex.ld(0); cl.transfer(Cex, SubLevel, rhs.cc, SubLevel);
+
+                        OutputFile fp("objective.dat");
+                        const size_t NP=1000;
+                        for(size_t j=0;j<=NP;++j)
+                        {
+                            real_t u = real_t(j)/NP;
+                            fp("%.15g %.15g\n", u, real_t( (*this)(u)) );
+                        }
+
+                    }
+
                 }
 
             }

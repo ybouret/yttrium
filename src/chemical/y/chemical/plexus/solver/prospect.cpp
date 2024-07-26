@@ -14,6 +14,7 @@ namespace Yttrium
         eK(_eK),
         cc(_cc),
         xi(_xi),
+        ax( xi.abs() ),
         ks(_ks)
         {
 
@@ -24,6 +25,7 @@ namespace Yttrium
         eK(_.eK),
         cc(_.cc),
         xi(_.xi),
+        ax(_.ax),
         ks(_.ks)
         {
 
@@ -41,7 +43,7 @@ namespace Yttrium
             const xreal_t value = ks * eq.massAction(eK, X, C, L);
             return value.abs();
         }
-        
+
     }
 
 }

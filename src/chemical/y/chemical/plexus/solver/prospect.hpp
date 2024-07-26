@@ -53,6 +53,11 @@ namespace Yttrium
                                       const Level      L,
                                       XMul &           X) const;
 
+            static int Compare(const Prospect &lhs, const Prospect &rhs) noexcept
+            {
+                return Comparison::Increasing(lhs.ax,rhs.ax);
+            }
+
             //__________________________________________________________________
             //
             //
@@ -63,6 +68,7 @@ namespace Yttrium
             const xreal_t      eK; //!< pre-computed constant
             const XReadable   &cc; //!< zero mass action here
             const xreal_t      xi; //!< evaluation of extent from Ctop
+            const xreal_t      ax; //!< |xi|
             const xreal_t      ks; //!< scaling factor
 
         private:

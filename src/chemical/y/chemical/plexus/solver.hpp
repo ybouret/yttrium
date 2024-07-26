@@ -38,9 +38,13 @@ namespace Yttrium
             phi(cls.maxSPC),
             obj(cls.maxEPC),
             pps(cls.maxEPC),
+            Cin(cls.maxSPC,0),
+            Cex(cls.maxSPC,0),
+            Cws(cls.maxSPC,0),
             bnk(),
             qdb(),
-            ppb(0)
+            ppb(0),
+            pcl(0)
             {
                 for(const Cluster *cl=cls->head;cl;cl=cl->next)
                 {
@@ -62,6 +66,8 @@ namespace Yttrium
             xreal_t objectiveFunction(const XReadable &C,
                                       const Level      L);
 
+            xreal_t operator()(const xreal_t u);
+
             //! run
             void run(const Cluster   &cl,
                      XWritable       &Ctop,
@@ -79,13 +85,16 @@ namespace Yttrium
             XArray              phi; //!< temporary gradients
             CxxSeries<xreal_t>  obj; //!< temporary objectice function values
             CxxSeries<Prospect> pps; //!< prospect series
+            XArray              Cin;
+            XArray              Cex;
+            XArray              Cws;
             PBank               bnk; //!< shared bank of PNODE
             QBuilders           qdb; //!< QBuilder for different clusters
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             QBuilder           *ppb; //!< pointer to prospect base
-
+            Cluster            *pcl; //!< pointer to current cluster
         };
 
     }
