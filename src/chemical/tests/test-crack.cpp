@@ -130,11 +130,11 @@ namespace Yttrium
         typedef PList::NodeType                      PNode;
         typedef PList::ProxyType                     PBank;
 
-        class QBuilder : public Quantized, public Proxy<const PList>
+        class QBuilder : public Quantized, public Counted, public Proxy<const PList>
         {
         public:
             typedef ArkPtr<size_t,QBuilder> Ptr;
-            typedef SuffixSet<size_t,Ptr>   Set;
+            typedef HashSet<size_t,Ptr>     Set;
 
             explicit QBuilder(const size_t primary,
                               const size_t species,
@@ -164,6 +164,11 @@ namespace Yttrium
                 return true;
             }
 
+            void ensure(const size_t primary)
+            {
+                qfam.ensure(primary);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QBuilder);
@@ -173,6 +178,44 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept { return list; }
         };
 
+        class QBuilders : public QBuilder::Set
+        {
+        public:
+            static const char * const CallSign;
+
+            explicit QBuilders() : QBuilder::Set() {}
+            virtual ~QBuilders() noexcept {}
+
+            void operator()(const size_t primary,
+                            const size_t species, 
+                            const PBank &probank)
+            {
+                QBuilder::Ptr * const ppb = search(species);
+                if(0!=ppb)
+                {
+                    (**ppb).ensure(primary);
+                    return;
+                }
+                else
+                {
+                    const QBuilder::Ptr ptr = new QBuilder(primary,species,probank);
+                    if(!insert(ptr)) throw Exception("corrupted QBuilders");
+                }
+            }
+
+            QBuilder & operator[](const size_t species)
+            {
+                QBuilder::Ptr * const ppb = search(species);
+                if(0==ppb) throw Exception("no QBuilder for #species=%u", unsigned(species));
+                return **ppb;
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(QBuilders);
+        };
+
+        const char * const QBuilders:: CallSign = "Chemical::QBuilders";
 
         class Solver
         {
@@ -183,8 +226,13 @@ namespace Yttrium
             phi(cls.maxSPC),
             obj(cls.maxEPC),
             pps(cls.maxEPC),
-            bnk()
+            bnk(),
+            qdb()
             {
+                for(const Cluster *cl=cls->head;cl;cl=cl->next)
+                {
+                    qdb(cl->Nu.rows,cl->species.size,bnk);
+                }
             }
 
             void run(const Cluster   &cl,
@@ -258,18 +306,18 @@ namespace Yttrium
 
                 {
                     Y_XML_SECTION(xml, "Base");
-                    QBuilder     base(dof,cl.species.size,bnk);
-                    const size_t npm = pps.size();
+                    QBuilder     &base = qdb[cl.species.size];
+                    const size_t  npmx  = pps.size();
 
                     base.init();
-                    for(size_t i=1;i<=npm;++i)
+                    for(size_t i=1;i<=npmx;++i)
                     {
                         const Prospect &pro = pps[i];
                         if(base.grow(pro, cl.topology) && base->size >= dof) break;
                     }
 
                     Y_XMLOG(xml, "#dof = " << std::setw(10) << dof);
-                    Y_XMLOG(xml, "#pro = " << std::setw(10) << npm);
+                    Y_XMLOG(xml, "#pro = " << std::setw(10) << npmx);
                     Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
 
                     for(const PNode *pn=base->head;pn;pn=pn->next)
@@ -286,7 +334,7 @@ namespace Yttrium
             CxxSeries<xreal_t>  obj;
             CxxSeries<Prospect> pps;
             PBank               bnk;
-
+            QBuilders           qdb;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);

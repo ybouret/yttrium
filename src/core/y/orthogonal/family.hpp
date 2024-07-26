@@ -87,10 +87,12 @@ namespace Yttrium
 
 
 
-            const Vector &expand();                 //!< expand family from remaining vector
-            const Vector &expandFrom(QArrayType &); //!< expand family from another remaining
-            virtual void  free() noexcept;          //!< free content
-            void          reserve(size_t n);        //!< reserve empty vectors
+            const Vector & expand();                  //!< expand family from remaining vector
+            const Vector & expandFrom(QArrayType &);  //!< expand family from another remaining
+            virtual void   free() noexcept;           //!< free content
+            virtual void   reserve(size_t n);         //!< reserve empty vectors
+            virtual size_t capacity() const noexcept; //!< size + reservoir.size
+            void           ensure(const size_t capa); //!< reserve if necessary
 
             //______________________________________________________________
             //

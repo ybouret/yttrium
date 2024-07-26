@@ -121,6 +121,16 @@ namespace Yttrium
             while( size ) store( popTail() );
         }
 
+        size_t Family:: capacity() const noexcept
+        {
+            return size + reservoir.size;
+        }
+
+        void Family:: ensure(const size_t capa)
+        {
+            const size_t here = capacity();
+            if(capa>here) reserve(capa-here);
+        }
 
 
         std::ostream & operator<<(std::ostream &os, const Family &F)
