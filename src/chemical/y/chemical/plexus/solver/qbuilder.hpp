@@ -12,44 +12,114 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        typedef Orthogonal::Family QFamily; //!< alias
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Orthogonal Family Builder, to find independent equilibria
+        //
+        //
+        //______________________________________________________________________
         class QBuilder : public Quantized, public Counted, public Proxy<const PList>
         {
         public:
-            typedef ArkPtr<size_t,QBuilder> Ptr;
-            typedef HashSet<size_t,Ptr>     Set;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<size_t,QBuilder> Ptr; //!< alias
+            typedef HashSet<size_t,Ptr>     Set; //!< alis
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
+            /**
+             \param primary number of primary equilibria (max base size)
+             \param species number of involved species   (dimensions)
+             \param probank shared bank of PNode
+             */
             explicit QBuilder(const size_t primary,
                               const size_t species,
                               const PBank &probank);
-
+            //! cleanup
             virtual ~QBuilder() noexcept;
 
-            const size_t & key() const noexcept;
-            void           init()      noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const size_t & key() const noexcept; //!< key for hash set
+            void           init()      noexcept; //!< free list and family
+
+            //! try insert prospect into family
             bool           grow(const Prospect &pro, const Matrix<int> &topo);
+
+            //! ensure reservoir of QVectors
             void           ensure(const size_t primary);
 
+            //! access internal family
+            const QFamily &family() const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QBuilder);
-            PList              list;
-            Orthogonal::Family qfam;
+            PList   list;
+            QFamily qfam;
             virtual ConstInterface & surrogate() const noexcept { return list; }
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Database of QBuilder for different number of species
+        //
+        //
+        //______________________________________________________________________
         class QBuilders : public QBuilder::Set
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::QBuilders"
 
-            explicit QBuilders();
-            virtual ~QBuilders() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit QBuilders();           //!< setup empty
+            virtual ~QBuilders() noexcept;  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! create/update QBuilder
             void operator()(const size_t primary,
                             const size_t species,
                             const PBank &probank);
 
+            //! QBuilber for number of species, throw on not present
             QBuilder & operator[](const size_t species);
 
         private:

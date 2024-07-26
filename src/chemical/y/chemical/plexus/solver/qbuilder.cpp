@@ -38,6 +38,13 @@ namespace Yttrium
         {
             qfam.ensure(primary);
         }
+
+        const QFamily & QBuilder:: family() const noexcept
+        {
+            return qfam;
+        }
+
+
     }
 
 }

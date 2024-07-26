@@ -15,11 +15,12 @@ namespace Yttrium
 
         typedef SuffixSet<String, Component::Ptr> Manifest; //!< alias
 
+        //! situation of an equilibrium
         enum Situation
         {
             Blocked, //!< deficient in both reactant and product
-            Running, //!< standard with all components or [Reac|Prod]Only
-            Crucial  //!< standard with one lacking size
+            Running, //!< all requested components
+            Crucial  //!< crucially lacking components
         };
 
         //! category according to cardinality
