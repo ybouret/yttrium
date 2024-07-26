@@ -11,6 +11,7 @@
 
 #include "y/orthogonal/family.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/type/temporary.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -227,12 +228,30 @@ namespace Yttrium
             obj(cls.maxEPC),
             pps(cls.maxEPC),
             bnk(),
-            qdb()
+            qdb(),
+            ppb(0)
             {
                 for(const Cluster *cl=cls->head;cl;cl=cl->next)
                 {
                     qdb(cl->Nu.rows,cl->species.size,bnk);
                 }
+            }
+
+
+            xreal_t objectiveFunction(const XReadable &C,
+                                      const Level      L)
+            {
+                assert(0!=ppb);
+                const PList &list = **ppb;
+                {
+                    size_t indx = 0;
+                    for(const PNode *pn=list.head;pn;pn=pn->next)
+                    {
+                        obj[++indx] = (**pn).objectiveFunction(C,L,afm.xmul);
+                    }
+                }
+                const LightArray<xreal_t> arr( &obj[1], list.size );
+                return afm.xadd.normOf(arr);
             }
 
             void run(const Cluster   &cl,
@@ -242,8 +261,7 @@ namespace Yttrium
             {
                 const xreal_t zero;
                 const xreal_t mOne(-1);
-
-                const size_t ndof = cl.Nu.rows; // primary equilibria
+                const size_t  ndof = cl.Nu.rows; // primary equilibria
 
                 {
                     Y_XML_SECTION(xml, "Scan");
@@ -303,11 +321,11 @@ namespace Yttrium
                 }
 
 
-
+                QBuilder &                 base = qdb[cl.species.size];
+                const Temporary<QBuilder*> keep(ppb,&base);
                 {
                     Y_XML_SECTION(xml, "Base");
-                    QBuilder     &base = qdb[cl.species.size];
-                    const size_t  npmx  = pps.size();
+                    const size_t  npmx = pps.size();
 
                     base.init();
                     for(size_t i=1;i<=npmx;++i)
@@ -320,11 +338,26 @@ namespace Yttrium
                     Y_XMLOG(xml, "#pro = " << std::setw(10) << npmx);
                     Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
 
-                    for(const PNode *pn=base->head;pn;pn=pn->next)
                     {
-                        Y_XMLOG(xml, " (+) " << (**pn).eq);
+                        Y_XML_SECTION(xml, "PhaseSpace");
+                        for(const PNode *pn=base->head;pn;pn=pn->next)
+                        {
+                            const Prospect &pro = **pn;
+                            const xreal_t   ham = objectiveFunction(pro.cc,SubLevel);
+                            if(xml.verbose)
+                            {
+                                cl.uuid.pad(xml() << "F(" << pro.eq << ")",pro.eq) << " : " << std::setw(15) << real_t(ham);
+
+                                *xml << std::endl;
+                            }
+                        }
                     }
+
                 }
+
+
+
+
             }
 
             Aftermath           afm;
@@ -334,9 +367,10 @@ namespace Yttrium
             CxxSeries<Prospect> pps;
             PBank               bnk;
             QBuilders           qdb;
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
+            QBuilder           *ppb; //!< pointer to prospect base
+
         };
 
 
