@@ -9,7 +9,6 @@ chemical/weasel
 chemical/plexus
 chemical/plexus/cluster
 chemical/plexus/cluster/conservation
-chemical/plexus/solver
 )
 
 add_subdirectory(tests)

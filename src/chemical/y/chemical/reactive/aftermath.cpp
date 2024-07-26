@@ -239,35 +239,6 @@ namespace Yttrium
 
 
 
-#if 0
-        bool Aftermath:: solve(XWritable        &C,
-                               const Level       L,
-                               const Components &E,
-                               const xreal_t     K)
-        {
-            switch(E.kind)
-            {
-                case  Nebulous: break;
-
-                case  ProdOnly:
-                    return solveWith(xiProdOnly,C,L,E,K,xmul);
-
-                case  ReacOnly:
-                    return solveWith(xiReacOnly,C,L,E,K,xmul);
-
-                case  Standard: {
-                    if(E.blockedBy(C,L))
-                        return false;
-
-                    return solveWith(xiStandard,C,L,E,K,xmul);
-
-                } break;
-            }
-
-            return false;
-        }
-#endif
-
         Situation Aftermath::seek(XWritable        &C,
                                   const Level       L,
                                   const Components &E,
@@ -275,16 +246,31 @@ namespace Yttrium
         {
             switch(E.kind)
             {
-                case Nebulous: return Blocked;
-                case ProdOnly: solveWith(xiProdOnly,C,L,E,K,xmul); return Running;
-                case ReacOnly: solveWith(xiReacOnly,C,L,E,K,xmul); return Running;
-                case Standard: break;
+                case Nebulous: 
+                    return Blocked;
+
+                case ProdOnly:  {
+                    const Situation ans = E.prod.deficient(C,L) ? Crucial : Running;
+                    solveWith(xiProdOnly,C,L,E,K,xmul);
+                    return ans;
+                }
+
+                case ReacOnly: {
+                    const Situation ans = E.reac.deficient(C,L) ? Crucial : Running;
+                    solveWith(xiReacOnly,C,L,E,K,xmul);
+                    return ans;
+                }
+
+                case Standard: 
+                    break;
             }
+            
             assert(Standard==E.kind);
             if( E.reac.deficient(C,L) )
             {
                 if(E.prod.deficient(C,L))
                 {
+                    // deficient in both sides
                     return Blocked;
                 }
                 else

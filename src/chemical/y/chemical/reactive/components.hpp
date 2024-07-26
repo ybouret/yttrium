@@ -204,10 +204,7 @@ namespace Yttrium
 
             //! human readable kind
             const char *kindText() const noexcept;
-
-            //! reac.deficient(C,L) && prod.deficient(C,L)
-            bool      blockedBy(const XReadable &C, const Level L) const noexcept;
-            Situation examine(const XReadable &C, const Level L) const noexcept;
+            
 
             //__________________________________________________________________
             //

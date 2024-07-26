@@ -92,7 +92,7 @@ namespace Yttrium
 
             //! transfer components-wise
             template <typename TARGET, typename SOURCE> inline
-            void transfer(TARGET &target, const Level tgtLevel,
+            TARGET & transfer(TARGET &target, const Level tgtLevel,
                           SOURCE &source, const Level srcLevel) const
             {
                 for(const SNode *sn=species.head;sn;sn=sn->next)
@@ -100,6 +100,7 @@ namespace Yttrium
                     const Species &sp = **sn;
                     target[sp.indx[tgtLevel]] = source[sp.indx[srcLevel]];
                 }
+                return target;
             }
 
             //__________________________________________________________________
@@ -119,8 +120,8 @@ namespace Yttrium
             const Lists            order;     //!< eqs per order
             const Matrix<int>      topology;  //!< full topology
             const Matrix<bool>     attached;  //!< boolean attached
-            Cluster *   next; //!< for list
-            Cluster *   prev; //!< for list
+            Cluster *              next;      //!< for list
+            Cluster *              prev;      //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

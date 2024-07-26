@@ -21,7 +21,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+#if 0
         class Vertex : public Object, public XArray
         {
         public:
@@ -77,206 +77,58 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Simplex);
         };
+#endif
 
-        class Applicant
+
+
+        class Solver
         {
         public:
-            Applicant(const Equilibrium & _eq,
-                      const xreal_t       _eK,
-                      const xreal_t       _xi,
-                      const XReadable &   _cc,
-                      const xreal_t       _ks) noexcept :
-            eq(_eq),
-            eK(_eK),
-            xi(_xi),
-            cc(_cc),
-            ks(_ks)
-            {
-            }
-
-            ~Applicant() noexcept {}
-
-            Applicant(const Applicant &_) noexcept :
-            eq(_.eq),
-            eK(_.eK),
-            xi(_.xi),
-            cc(_.cc),
-            ks(_.ks)
-            {
-            }
-
-            xreal_t operator()(const XReadable &C, const Level L, XMul &xmul) const
-            {
-                return (ks * eq.massAction(eK,xmul,C,L)).abs();
-            }
-
-
-            const Equilibrium &eq;
-            const xreal_t      eK;
-            const xreal_t      xi;
-            const XReadable   &cc;
-            const xreal_t      ks;
-
-        private:
-            Y_DISABLE_ASSIGN(Applicant);
-        };
-
-
-        typedef Small::CoopLightList<const Applicant> AList; //!< alias
-        typedef AList::ProxyType                      ABank; //!< alias
-        typedef AList::NodeType                       ANode; //!< alias
-
-        class BaseBuilder : public Quantized, public Proxy<const AList>
-        {
-        public:
-            explicit BaseBuilder(const size_t primary,
-                                 const size_t  species,
-                                 const ABank & appbank) :
-            list(appbank),
-            qfam(species,primary)
-            {
-            }
-            
-
-            virtual ~BaseBuilder() noexcept {}
-
-            void init() noexcept { list.free(); qfam.free(); }
-            bool keep(const Applicant &app, const Matrix<int> &topo)
-            {
-                if( !qfam.wouldAccept(topo[app.eq.indx[SubLevel]])) 
-                    return false;
-
-                qfam.expand();
-                list << app;
-                return true;
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(BaseBuilder);
-            AList              list;
-            Orthogonal::Family qfam;
-
-            ConstInterface & surrogate() const noexcept { return list; }
-        };
-
-        class Blender
-        {
-        public:
-            explicit Blender(const Clusters &cls) :
+            explicit Solver(const Clusters &cls) :
             afm(),
-            Ceq(cls.maxEPC,cls.maxSPC),
+            ceq(cls.maxEPC,cls.maxSPC),
             phi(cls.maxSPC),
-            asr(cls.maxEPC),
             obj(cls.maxEPC)
             {
             }
 
-            virtual ~Blender() noexcept
-            {
-            }
-
-#if 0
-            void process(const Cluster   &cl,
-                         XWritable       &C0,
-                         const XReadable &K,
-                         XMLog           &xml)
+            void run(const Cluster   &cl,
+                     XWritable       &Ctop,
+                     const XReadable &Ktop,
+                     XMLog           &xml)
             {
 
-                const xreal_t zero;
-                const xreal_t mOne(-1);
-
-                Y_XML_SECTION(xml, "Blender::Process::Cluster");
+                obj.free();
+                for(const ENode *en=cl.head;en;en=en->next)
                 {
-                    Y_XML_SECTION(xml,"Scan");
-                    asr.free();
-                    obj.free();
-                    for(const ENode *en=cl.head;en;en=en->next)
+                    const Equilibrium &eq = **en;
+                    const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
+                    const size_t       ii = obj.size() + 1;
+                    XWritable         &cc = ceq[ii];
+                    
+                    cl.transfer(cc, SubLevel, Ctop, TopLevel);
+                    switch( afm.seek(cc, SubLevel, eq, eK) )
                     {
-                        const Equilibrium &eq = **en;
-                        const xreal_t      eK = K[eq.indx[TopLevel]];
-                        const size_t       ii = asr.size()+1;
-                        XWritable         &Ci = Ceq[ii];
-                        cl.transfer(Ci, SubLevel, C0, TopLevel);
-                        if( afm.solve(Ci,SubLevel, eq, eK) )
-                        {
-                            eq.drvsMassAction(eK, phi, SubLevel, Ci, SubLevel, afm.xmul);
-                            const xreal_t   xi = afm.eval(Ci, SubLevel, C0, TopLevel, eq);
-                            const xreal_t   sl = eq.dot(phi, SubLevel, afm.xadd);
-                            if(sl>=zero)
-                            {
-                                throw Exception("positive slope");
-                            }
-
-                            const Applicant app(eq,eK,xi,Ci,mOne/sl);
-                            const xreal_t   ham = app(C0,TopLevel,afm.xmul);
-                            asr << app;
-                            obj << ham;
-                            //std::cerr << eq << " @" << real_t(xi) << " => " << real_t(ham) << std::endl;
-                        }
+                        case Blocked: Y_XMLOG(xml, "Blocked " << eq); continue;
+                        case Running: Y_XMLOG(xml, "Running " << eq); continue;
+                        case Crucial: Y_XMLOG(xml, "Crucial " << eq); continue;
                     }
-
-                    const size_t napp = asr.size();
-                    if(napp<=0)
-                    {
-                        Y_XMLOG(xml, "<no active equilbrium>");
-                        return;
-                    }
-
-                    HeapSort::Call(obj, Comparison::Decreasing<xreal_t>, asr);
-                    assert(asr.size()==obj.size());
-
-                    if(xml.verbose)
-                    {
-                        for(size_t i=1;i<=napp;++i)
-                        {
-                            const Applicant &app = asr[i];
-                            cl.uuid.pad(xml() << app.eq,app.eq) << " : ";
-                            *xml << std::setw(15) << real_t(obj[i]);
-                            *xml << " @" << app.cc;
-                            *xml << std::endl;
-                        }
-                    }
-                }
-
-                {
-                    Y_XML_SECTION(xml, "Base");
-
-                    BaseBuilder  basis(cl.size,cl.species.size,bnk);
-                    const size_t nbMax = cl.Nu.rows; // max base size
-                    const size_t napps = asr.size();
-
-                    basis.init();
-                    for(size_t i=1;i<=napps;++i)
-                    {
-                        if(basis.keep(asr[i],cl.topology) && basis->size>=nbMax) break;
-                    }
-
-                    if(xml.verbose)
-                    {
-                        for(const ANode *an=basis->head;an;an=an->next)
-                        {
-                            xml() << (**an).eq << std::endl;
-                        }
-                    }
-
 
                 }
-
             }
-#endif
+
+            Aftermath          afm;
+            XMatrix            ceq;
+            XArray             phi;
+            CxxSeries<xreal_t> obj;
 
 
-            Aftermath            afm;
-            XMatrix              Ceq;
-            XArray               phi;
-            ABank                bnk;
-            CxxSeries<Applicant> asr;
-            CxxSeries<xreal_t>   obj;
+
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Blender);
+            Y_DISABLE_COPY_AND_ASSIGN(Solver);
         };
+
 
     }
 
@@ -307,17 +159,17 @@ Y_UTEST(crack)
     XVector C0(lib->size(),0);
     Species::Conc(C0,ran,0.3);
 
+    C0.ld(0);
+
     lib(std::cerr << "C0=","\t[",C0,"]");
 
-
-    Blender blender(clusters);
+    Solver solver(clusters);
     for(const Cluster *cl = clusters->head; cl; cl=cl->next)
     {
-        //blender.process(*cl, C0, K, xml);
+        solver.run(*cl, C0, K, xml);
     }
 
 
-    Y_SIZEOF(Applicant);
 
 }
 Y_UDONE()
