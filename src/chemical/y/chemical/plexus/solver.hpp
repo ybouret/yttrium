@@ -9,10 +9,70 @@
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/container/cxx/series.hpp"
 
+
+#include "y/data/list/ordered.hpp"
+#include "y/data/pool/cxx.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        class Vertex : public Object, public XArray
+        {
+        public:
+            typedef CxxPoolOf<Vertex> Pool;
+            struct Comparator
+            {
+                inline SignType operator()(const Vertex * const lhs, const Vertex * const rhs) const noexcept
+                {
+                    return Comparison::CxxDecreasing(lhs->cost, rhs->cost);
+                }
+            };
+
+
+            explicit Vertex(const size_t maxSpecies) :
+            XArray(maxSpecies), cost(0), next(0), prev(0)
+            {
+
+            }
+
+            virtual ~Vertex() noexcept {}
+
+            void clear() noexcept { ld(cost=0); }
+            
+            xreal_t cost;
+            Vertex *next;
+            Vertex *prev;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+        };
+
+        typedef OrderedList<Vertex,Vertex::Comparator,OrderedListQueryHead> Vertices;
+
+        class Simplex : public Vertices
+        {
+        public:
+            explicit Simplex(size_t       maxEqs, 
+                             const size_t maxSpecies) :
+            Vertices(),
+            pool()
+            {
+                ++maxEqs;
+                while(maxEqs-- > 0) pool.store( new Vertex(maxSpecies) );
+            }
+
+            void free() noexcept {
+                while(size>0) pool.store( popTail() )->clear();
+            }
+
+            Vertex::Pool pool;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Simplex);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -30,31 +90,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+            explicit Solver(const Clusters &cls);  //!< setup resources to solve clusters
+            virtual ~Solver() noexcept;            //!< cleanup
 
-            //! setup resources to solve clusters
-            explicit Solver(const Clusters &cls) :
-            afm(),
-            ceq(cls.maxEPC,cls.maxSPC),
-            phi(cls.maxSPC),
-            obj(cls.maxEPC),
-            pps(cls.maxEPC),
-            Cin(cls.maxSPC,0),
-            Cex(cls.maxSPC,0),
-            Cws(cls.maxSPC,0),
-            bnk(),
-            qdb(),
-            ppb(0),
-            pcl(0)
-            {
-                for(const Cluster *cl=cls->head;cl;cl=cl->next)
-                {
-                    qdb(cl->Nu.rows,cl->species.size,bnk);
-                }
-            }
-
-            //! cleanup
-            virtual ~Solver() noexcept;
-            
             //__________________________________________________________________
             //
             //
@@ -85,11 +123,12 @@ namespace Yttrium
             XArray              phi; //!< temporary gradients
             CxxSeries<xreal_t>  obj; //!< temporary objectice function values
             CxxSeries<Prospect> pps; //!< prospect series
-            XArray              Cin;
-            XArray              Cex;
-            XArray              Cws;
+            XArray              Cin; //!< trial input concentrations
+            XArray              Cex; //!< trial exit  concentrations
+            XArray              Cws; //!< wokspace concentration
             PBank               bnk; //!< shared bank of PNODE
             QBuilders           qdb; //!< QBuilder for different clusters
+            Simplex             sim; //!< simplex
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);

@@ -12,6 +12,26 @@ namespace Yttrium
 
         Solver:: ~Solver() noexcept {}
 
+        Solver:: Solver(const Clusters &cls) :
+        afm(),
+        ceq(cls.maxEPC,cls.maxSPC),
+        phi(cls.maxSPC),
+        obj(cls.maxEPC),
+        pps(cls.maxEPC),
+        Cin(cls.maxSPC,0),
+        Cex(cls.maxSPC,0),
+        Cws(cls.maxSPC,0),
+        bnk(),
+        qdb(),
+        sim(cls.maxEPC,cls.maxSPC),
+        ppb(0),
+        pcl(0)
+        {
+            for(const Cluster *cl=cls->head;cl;cl=cl->next)
+            {
+                qdb(cl->Nu.rows,cl->species.size,bnk);
+            }
+        }
 
         xreal_t Solver:: objectiveFunction(const XReadable &C,
                                            const Level      L)
@@ -26,8 +46,6 @@ namespace Yttrium
                 }
             }
             assert(obj.size() == list.size);
-            //const LightArray<xreal_t> arr( &obj[1], list.size );
-            //std::cerr << "obj: " << obj << "@" << C << std::endl;
             return afm.xadd.normOf(obj);
         }
 
@@ -174,6 +192,10 @@ namespace Yttrium
                     Y_XML_SECTION(xml, "PhaseSpace");
                     //
                     //----------------------------------------------------------
+                    {
+                        const xreal_t ham = objectiveFunction(Ctop, TopLevel);
+                        Y_XMLOG(xml, "F(C0)=" << real_t(ham) );
+                    }
                     for(const PNode *pn=base->head;pn;pn=pn->next)
                     {
                         const Prospect &pro = **pn;
@@ -199,9 +221,10 @@ namespace Yttrium
                             real_t u = real_t(j)/NP;
                             fp("%.15g %.15g\n", u, real_t( (*this)(u)) );
                         }
-
                     }
 
+
+                    sim.free();
                 }
 
             }
