@@ -176,6 +176,7 @@ namespace Yttrium
             {
             }
 
+#if 0
             void process(const Cluster   &cl,
                          XWritable       &C0,
                          const XReadable &K,
@@ -263,7 +264,7 @@ namespace Yttrium
                 }
 
             }
-
+#endif
 
 
             Aftermath            afm;
@@ -312,7 +313,7 @@ Y_UTEST(crack)
     Blender blender(clusters);
     for(const Cluster *cl = clusters->head; cl; cl=cl->next)
     {
-        blender.process(*cl, C0, K, xml);
+        //blender.process(*cl, C0, K, xml);
     }
 
 

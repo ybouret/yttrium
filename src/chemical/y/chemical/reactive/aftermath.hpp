@@ -10,6 +10,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+      
+
         //______________________________________________________________________
         //
         //
@@ -38,18 +41,19 @@ namespace Yttrium
             //__________________________________________________________________
 
 
-            //! solve single components at K
+            //! seek solution of single components at K
             /**
              \param C pre-loaded concentration with ALL PRELOADED species
              \param L level to compute
              \param E Components part
              \param K precomputed constant of E
-             \return false if blocked, true if exists, C is updated
+             \return situation
              */
-            bool solve(XWritable        &C,
-                       const Level       L,
-                       const Components &E,
-                       const xreal_t     K);
+            Situation seek(XWritable        &C,
+                           const Level       L,
+                           const Components &E,
+                           const xreal_t     K);
+
 
             //! eval extent post solve
             xreal_t eval(XWritable       &  dOut,

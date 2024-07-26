@@ -192,7 +192,7 @@ namespace Yttrium
 
             //! driver to iterate search
             template <typename XI_PROC> static inline
-            bool solveWith(XI_PROC          &xiProc,
+            void solveWith(XI_PROC          &xiProc,
                            XWritable        &Cout,
                            const Level      &Lout,
                            const Components &E,
@@ -209,7 +209,7 @@ namespace Yttrium
 
 
                 xreal_t ax = xi.abs();
-                if(ax.mantissa<=0) return true;
+                if(ax.mantissa<=0) return;
 
 
                 //--------------------------------------------------------------
@@ -221,11 +221,11 @@ namespace Yttrium
                 {
                     const xreal_t xi_new = xiProc(Cout, Lout, E, K, xmul);
                     E.moveSafe(Cout,Lout,xi_new);
-                    
+
                     const xreal_t ax_new = xi_new.abs();
                     if( ax_new.mantissa <= 0 ||  ax_new >= ax )
                     {
-                        return true;
+                        return;
                     }
                     xi = xi_new;
                     ax = ax_new;
@@ -238,8 +238,8 @@ namespace Yttrium
 
 
 
-        
 
+#if 0
         bool Aftermath:: solve(XWritable        &C,
                                const Level       L,
                                const Components &E,
@@ -247,15 +247,15 @@ namespace Yttrium
         {
             switch(E.kind)
             {
-                case Components::Nebulous: break;
+                case  Nebulous: break;
 
-                case Components::ProdOnly:
+                case  ProdOnly:
                     return solveWith(xiProdOnly,C,L,E,K,xmul);
 
-                case Components::ReacOnly:
+                case  ReacOnly:
                     return solveWith(xiReacOnly,C,L,E,K,xmul);
 
-                case Components::Standard: {
+                case  Standard: {
                     if(E.blockedBy(C,L))
                         return false;
 
@@ -266,6 +266,48 @@ namespace Yttrium
 
             return false;
         }
+#endif
+
+        Situation Aftermath::seek(XWritable        &C,
+                                  const Level       L,
+                                  const Components &E,
+                                  const xreal_t     K)
+        {
+            switch(E.kind)
+            {
+                case Nebulous: return Blocked;
+                case ProdOnly: solveWith(xiProdOnly,C,L,E,K,xmul); return Running;
+                case ReacOnly: solveWith(xiReacOnly,C,L,E,K,xmul); return Running;
+                case Standard: break;
+            }
+            assert(Standard==E.kind);
+            if( E.reac.deficient(C,L) )
+            {
+                if(E.prod.deficient(C,L))
+                {
+                    return Blocked;
+                }
+                else
+                {
+                    solveWith(xiStandard,C,L,E,K,xmul);
+                    return Crucial;
+                }
+            }
+            else
+            {
+                assert(E.reac.accounted(C,L));
+                solveWith(xiStandard,C,L,E,K,xmul);
+                if(E.prod.deficient(C,L))
+                {
+                    return Crucial;
+                }
+                else
+                {
+                    return Running;
+                }
+            }
+        }
+
 
         xreal_t Aftermath:: eval(XWritable       &  dOut,
                                  const XReadable &  Cout,

@@ -15,6 +15,24 @@ namespace Yttrium
 
         typedef SuffixSet<String, Component::Ptr> Manifest; //!< alias
 
+        enum Situation
+        {
+            Blocked, //!< deficient in both reactant and product
+            Running, //!< standard with all components or [Reac|Prod]Only
+            Crucial  //!< standard with one lacking size
+        };
+
+        //! category according to cardinality
+        enum Category
+        {
+            Nebulous, //!< no reac/prod => bad!
+            ReacOnly, //!< reactant(s) only
+            ProdOnly, //!< product(s) only
+            Standard  //!< reactant(s) AND product(s)
+        };
+
+        //! human readable category
+        const char * CategoryText(const Category) noexcept;
 
         //______________________________________________________________________
         //
@@ -36,17 +54,8 @@ namespace Yttrium
             typedef Manifest::ConstIterator ConstIterator; //!< alias
             static const char * const       Mark;          //!< "<=>";
 
-            //! category according to cardinality
-            enum Category
-            {
-                Nebulous, //!< no reac/prod => bad!
-                ReacOnly, //!< reactant(s) only
-                ProdOnly, //!< product(s) only
-                Standard  //!< reactant(s) AND product(s)
-            };
 
-            //! human readable category
-            static const char * CategoryText(const Category) noexcept;
+
 
             //__________________________________________________________________
             //
@@ -54,7 +63,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-          
+
             //! setup
             template <typename ID>
             explicit Components(const ID &   userName,
@@ -159,7 +168,7 @@ namespace Yttrium
             void moveSafe(XWritable    &C,
                           const Level   L,
                           const xreal_t xi) const;
-            
+
             //! Cout = (Cinp + xi * nu) >= 0
             void addSafe(XWritable       &Cout,
                          const Level      Lout,
@@ -197,7 +206,8 @@ namespace Yttrium
             const char *kindText() const noexcept;
 
             //! reac.deficient(C,L) && prod.deficient(C,L)
-            bool blockedBy(const XReadable &C, const Level L) const noexcept;
+            bool      blockedBy(const XReadable &C, const Level L) const noexcept;
+            Situation examine(const XReadable &C, const Level L) const noexcept;
 
             //__________________________________________________________________
             //

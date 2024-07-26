@@ -14,7 +14,7 @@ namespace Yttrium
 
 #define Y_ChemCompCat(NAME) case NAME : return #NAME
 
-        const char * Components:: CategoryText(const Category cat) noexcept
+        const char *  CategoryText(const Category cat) noexcept
         {
             switch(cat)
             {
@@ -259,6 +259,35 @@ namespace Yttrium
         bool Components:: blockedBy(const XReadable &C, const Level L) const noexcept
         {
             return reac.deficient(C,L) && prod.deficient(C,L);
+        }
+
+        Situation Components:: examine(const XReadable &C, const Level L) const noexcept
+        {
+            switch(kind)
+            {
+                case Nebulous: return Blocked;
+                case ReacOnly: return Running;
+                case ProdOnly: return Running;
+                case Standard:
+                    break;
+            }
+            assert(Standard==kind);
+            if( reac.deficient(C,L) )
+            {
+                if(prod.deficient(C,L))
+                    return Blocked;
+                else
+                    return Crucial;
+            }
+            else
+            {
+                assert(reac.accounted(C,L));
+                if(prod.deficient(C,L))
+                    return Crucial;
+                else
+                    return Running;
+            }
+            
         }
 
     }

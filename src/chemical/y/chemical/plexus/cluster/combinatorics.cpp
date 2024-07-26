@@ -191,12 +191,12 @@ namespace Yttrium
                     const Equilibrium &eq = **en;
                     switch(eq.kind)
                     {
-                        case Components::Nebulous: throw Specific::Exception(eq.name.c_str(), "empty equilibrium in cluster!!");
-                        case Components::ReacOnly: Coerce(roaming.reacOnly) << eq; continue;
-                        case Components::ProdOnly: Coerce(roaming.prodOnly) << eq; continue;
-                        case Components::Standard: break;
+                        case Nebulous: throw Specific::Exception(eq.name.c_str(), "empty equilibrium in cluster!!");
+                        case ReacOnly: Coerce(roaming.reacOnly) << eq; continue;
+                        case ProdOnly: Coerce(roaming.prodOnly) << eq; continue;
+                        case Standard: break;
                     }
-                    assert(Components::Standard==eq.kind);
+                    assert(Standard==eq.kind);
                     if( hasConserved(eq.reac) || hasConserved(eq.prod) )
                     {
                         Coerce(limited) << eq;
