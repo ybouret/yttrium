@@ -107,6 +107,8 @@ namespace Yttrium
 
             }
 
+            inline size_t sub() const noexcept { return eq.indx[SubLevel]; }
+
             inline xreal_t objectiveFunction(const XReadable &C,
                                              const Level      L,
                                              XMul &           X) const
@@ -124,6 +126,54 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Prospect);
         };
 
+        typedef Small::CoopLightList<const Prospect> PList;
+        typedef PList::NodeType                      PNode;
+        typedef PList::ProxyType                     PBank;
+
+        class QBuilder : public Quantized, public Proxy<const PList>
+        {
+        public:
+            typedef ArkPtr<size_t,QBuilder> Ptr;
+            typedef SuffixSet<size_t,Ptr>   Set;
+
+            explicit QBuilder(const size_t primary,
+                              const size_t species,
+                              const PBank &probank) :
+            list(probank),
+            qfam(species,primary)
+            {
+            }
+
+            virtual ~QBuilder() noexcept
+            {
+            }
+
+            const size_t & key() const noexcept { return qfam.dimensions; }
+
+            void init() noexcept
+            {
+                list.free();
+                qfam.free();
+            }
+
+            bool grow(const Prospect &pro, const Matrix<int> &topo)
+            {
+                if( !qfam.wouldAccept(topo[pro.sub()])) return false;
+                list << pro;
+                qfam.expand();
+                return true;
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(QBuilder);
+            PList              list;
+            Orthogonal::Family qfam;
+
+            virtual ConstInterface & surrogate() const noexcept { return list; }
+        };
+
+
         class Solver
         {
         public:
@@ -132,7 +182,8 @@ namespace Yttrium
             ceq(cls.maxEPC,cls.maxSPC),
             phi(cls.maxSPC),
             obj(cls.maxEPC),
-            pps(cls.maxEPC)
+            pps(cls.maxEPC),
+            bnk()
             {
             }
 
@@ -201,11 +252,30 @@ namespace Yttrium
                             }
                         }
                     }
-
                 }
+
+
 
                 {
                     Y_XML_SECTION(xml, "Base");
+                    QBuilder     base(dof,cl.species.size,bnk);
+                    const size_t npm = pps.size();
+
+                    base.init();
+                    for(size_t i=1;i<=npm;++i)
+                    {
+                        const Prospect &pro = pps[i];
+                        if(base.grow(pro, cl.topology) && base->size >= dof) break;
+                    }
+
+                    Y_XMLOG(xml, "#dof=" << dof);
+                    Y_XMLOG(xml, "#pro=" << npm);
+                    Y_XMLOG(xml, "#vec=" << base->size);
+
+                    for(const PNode *pn=base->head;pn;pn=pn->next)
+                    {
+                        Y_XMLOG(xml, " (+) " << (**pn).eq);
+                    }
                 }
 
             }
@@ -215,7 +285,7 @@ namespace Yttrium
             XArray              phi;
             CxxSeries<xreal_t>  obj;
             CxxSeries<Prospect> pps;
-
+            PBank               bnk;
 
 
         private:
