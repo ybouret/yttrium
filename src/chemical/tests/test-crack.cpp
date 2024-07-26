@@ -9,8 +9,9 @@
 #include "y/container/cxx/series.hpp"
 #include "y/sort/heap.hpp"
 
-#include "y/orthogonal/family.hpp"
-#include "y/associative/hash/set.hpp"
+#include "y/chemical/plexus/solver/qbuilder.hpp"
+
+
 #include "y/type/temporary.hpp"
 
 using namespace Yttrium;
@@ -81,142 +82,9 @@ namespace Yttrium
 #endif
 
 
-        class Prospect
-        {
-        public:
-            Prospect(const Equilibrium & _eq,
-                     const xreal_t       _eK,
-                     const XReadable    &_cc,
-                     const xreal_t       _xi,
-                     const xreal_t       _ks) noexcept :
-            eq(_eq),
-            eK(_eK),
-            cc(_cc),
-            xi(_xi),
-            ks(_ks)
-            {
+       
 
-            }
-
-            Prospect(const Prospect &_) noexcept :
-            eq(_.eq),
-            eK(_.eK),
-            cc(_.cc),
-            xi(_.xi),
-            ks(_.ks)
-            {
-
-            }
-
-            inline size_t sub() const noexcept { return eq.indx[SubLevel]; }
-
-            inline xreal_t objectiveFunction(const XReadable &C,
-                                             const Level      L,
-                                             XMul &           X) const
-            {
-                const xreal_t value = ks * eq.massAction(eK, X, C, L);
-                return value.abs();
-            }
-
-            const Equilibrium &eq;
-            const xreal_t      eK;
-            const XReadable   &cc;
-            const xreal_t      xi;
-            const xreal_t      ks;
-        private:
-            Y_DISABLE_ASSIGN(Prospect);
-        };
-
-        typedef Small::CoopLightList<const Prospect> PList;
-        typedef PList::NodeType                      PNode;
-        typedef PList::ProxyType                     PBank;
-
-        class QBuilder : public Quantized, public Counted, public Proxy<const PList>
-        {
-        public:
-            typedef ArkPtr<size_t,QBuilder> Ptr;
-            typedef HashSet<size_t,Ptr>     Set;
-
-            explicit QBuilder(const size_t primary,
-                              const size_t species,
-                              const PBank &probank) :
-            list(probank),
-            qfam(species,primary)
-            {
-            }
-
-            virtual ~QBuilder() noexcept
-            {
-            }
-
-            const size_t & key() const noexcept { return qfam.dimensions; }
-
-            void init() noexcept
-            {
-                list.free();
-                qfam.free();
-            }
-
-            bool grow(const Prospect &pro, const Matrix<int> &topo)
-            {
-                if( !qfam.wouldAccept(topo[pro.sub()])) return false;
-                list << pro;
-                qfam.expand();
-                return true;
-            }
-
-            void ensure(const size_t primary)
-            {
-                qfam.ensure(primary);
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(QBuilder);
-            PList              list;
-            Orthogonal::Family qfam;
-
-            virtual ConstInterface & surrogate() const noexcept { return list; }
-        };
-
-        class QBuilders : public QBuilder::Set
-        {
-        public:
-            static const char * const CallSign;
-
-            explicit QBuilders() : QBuilder::Set() {}
-            virtual ~QBuilders() noexcept {}
-
-            void operator()(const size_t primary,
-                            const size_t species, 
-                            const PBank &probank)
-            {
-                QBuilder::Ptr * const ppb = search(species);
-                if(0!=ppb)
-                {
-                    (**ppb).ensure(primary);
-                    return;
-                }
-                else
-                {
-                    const QBuilder::Ptr ptr = new QBuilder(primary,species,probank);
-                    if(!insert(ptr)) throw Exception("corrupted QBuilders");
-                }
-            }
-
-            QBuilder & operator[](const size_t species)
-            {
-                QBuilder::Ptr * const ppb = search(species);
-                if(0==ppb) throw Exception("no QBuilder for #species=%u", unsigned(species));
-                return **ppb;
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(QBuilders);
-        };
-
-        const char * const QBuilders:: CallSign = "Chemical::QBuilders";
+      
 
         class Solver
         {
@@ -264,7 +132,7 @@ namespace Yttrium
                 const size_t  ndof = cl.Nu.rows; // primary equilibria
 
                 {
-                    Y_XML_SECTION(xml, "Scan");
+                    Y_XML_SECTION(xml, "Scanning");
                 SCAN:
                     Y_XMLOG(xml, "[Examine] @" << Ctop);
                     obj.free();
@@ -303,7 +171,7 @@ namespace Yttrium
                     }
 
                     {
-                        Y_XML_SECTION_OPT(xml, "Output", " running='" << pps.size() << "' clusterSize='" << cl.size << "'" );
+                        Y_XML_SECTION_OPT(xml, "Individual", " running='" << pps.size() << "' clusterSize='" << cl.size << "'" );
                         HeapSort::Call(obj, Comparison::Decreasing<xreal_t>, pps);
                         if(xml.verbose)
                         {
@@ -324,7 +192,7 @@ namespace Yttrium
                 QBuilder &                 base = qdb[cl.species.size];
                 const Temporary<QBuilder*> keep(ppb,&base);
                 {
-                    Y_XML_SECTION(xml, "Base");
+                    Y_XML_SECTION(xml, "Extracting");
                     const size_t  npmx = pps.size();
 
                     base.init();
@@ -403,7 +271,7 @@ Y_UTEST(crack)
     XVector C0(lib->size(),0);
     Species::Conc(C0,ran,0.3);
 
-    C0.ld(0);
+    //C0.ld(0);
 
     lib(std::cerr << "C0=","\t[",C0,"]");
 
