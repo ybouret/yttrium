@@ -275,6 +275,7 @@ namespace Yttrium
                 }
                 else
                 {
+                    // deficient in reac => crucial
                     solveWith(xiStandard,C,L,E,K,xmul);
                     return Crucial;
                 }
@@ -285,10 +286,12 @@ namespace Yttrium
                 solveWith(xiStandard,C,L,E,K,xmul);
                 if(E.prod.deficient(C,L))
                 {
+                    // deficient in prod => crucial
                     return Crucial;
                 }
                 else
                 {
+                    // both sides are all accounted
                     return Running;
                 }
             }

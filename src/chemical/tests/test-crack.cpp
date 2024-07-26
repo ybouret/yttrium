@@ -80,6 +80,49 @@ namespace Yttrium
 #endif
 
 
+        class Prospect
+        {
+        public:
+            Prospect(const Equilibrium & _eq,
+                     const xreal_t       _eK,
+                     const XReadable    &_cc,
+                     const xreal_t       _xi,
+                     const xreal_t       _ks) noexcept :
+            eq(_eq),
+            eK(_eK),
+            cc(_cc),
+            xi(_xi),
+            ks(_ks)
+            {
+
+            }
+
+            Prospect(const Prospect &_) noexcept :
+            eq(_.eq),
+            eK(_.eK),
+            cc(_.cc),
+            xi(_.xi),
+            ks(_.ks)
+            {
+
+            }
+
+            inline xreal_t objectiveFunction(const XReadable &C,
+                                             const Level      L,
+                                             XMul &           X) const
+            {
+                const xreal_t value = ks * eq.massAction(eK, X, C, L);
+                return value.abs();
+            }
+
+            const Equilibrium &eq;
+            const xreal_t      eK;
+            const XReadable   &cc;
+            const xreal_t      xi;
+            const xreal_t      ks;
+        private:
+            Y_DISABLE_ASSIGN(Prospect);
+        };
 
         class Solver
         {
@@ -88,7 +131,8 @@ namespace Yttrium
             afm(),
             ceq(cls.maxEPC,cls.maxSPC),
             phi(cls.maxSPC),
-            obj(cls.maxEPC)
+            obj(cls.maxEPC),
+            pps(cls.maxEPC)
             {
             }
 
@@ -97,31 +141,80 @@ namespace Yttrium
                      const XReadable &Ktop,
                      XMLog           &xml)
             {
+                const xreal_t zero;
+                const xreal_t mOne(-1);
 
-                obj.free();
-                for(const ENode *en=cl.head;en;en=en->next)
+                const size_t dof = cl.Nu.rows; // primary equilibria
+
                 {
-                    const Equilibrium &eq = **en;
-                    const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
-                    const size_t       ii = obj.size() + 1;
-                    XWritable         &cc = ceq[ii];
-                    
-                    cl.transfer(cc, SubLevel, Ctop, TopLevel);
-                    switch( afm.seek(cc, SubLevel, eq, eK) )
+                    Y_XML_SECTION(xml, "Scan");
+                SCAN:
+                    Y_XMLOG(xml, "[Examine] @" << Ctop);
+                    obj.free();
+                    pps.free();
+                    for(const ENode *en=cl.head;en;en=en->next)
                     {
-                        case Blocked: Y_XMLOG(xml, "Blocked " << eq); continue;
-                        case Running: Y_XMLOG(xml, "Running " << eq); continue;
-                        case Crucial: Y_XMLOG(xml, "Crucial " << eq); continue;
+                        const Equilibrium &eq = **en;
+                        const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
+                        const size_t       ii = obj.size() + 1;
+                        XWritable         &cc = ceq[ii];
+                        const Situation    id = afm.seek( cl.transfer(cc,SubLevel,Ctop,TopLevel), SubLevel, eq, eK);
+                        switch(id)
+                        {
+                            case Blocked: Y_XMLOG(xml, "[Blocked] " << eq); continue;
+                            case Running: Y_XMLOG(xml, "[Running] " << eq); break;
+                            case Crucial:
+                                Y_XMLOG(xml, "[Crucial] " << eq << " @" << cc);
+                                cl.transfer(Ctop, TopLevel, cc, SubLevel);
+                                goto SCAN; // abort and restart
+                        }
+                        assert(Running==id);
+
+
+                        // store new running prospect
+                        eq.drvsMassAction(eK, phi, SubLevel, cc, SubLevel, afm.xmul);
+                        const xreal_t  slope = eq.dot(phi, SubLevel, afm.xadd);
+                        if(slope>=zero) throw Exception("invalid slope");
+                        const Prospect pro(eq, eK, cc, afm.eval(cc,SubLevel,Ctop,TopLevel,eq), mOne/slope );
+                        pps << pro;
+                        obj << pro.objectiveFunction(Ctop, TopLevel, afm.xmul);
+                    }
+
+                    if( pps.size() <= 0 ) {
+                        Y_XMLOG(xml, "[Jammed!]");
+                        return;
+                    }
+
+                    {
+                        Y_XML_SECTION_OPT(xml, "Output", " running='" << pps.size() << "' clusterSize='" << cl.size << "'" );
+                        HeapSort::Call(obj, Comparison::Decreasing<xreal_t>, pps);
+                        if(xml.verbose)
+                        {
+                            for(size_t i=1;i<=pps.size();++i)
+                            {
+                                const Prospect &pro = pps[i];
+                                cl.uuid.pad(xml() << pro.eq,pro.eq) << " : ";
+                                *xml << std::setw(15) << real_t(obj[i]);
+                                pro.eq.displayCompact(*xml << " @", pro.cc, SubLevel);
+                                *xml << " ks=" << real_t(pro.ks);
+                                *xml << std::endl;
+                            }
+                        }
                     }
 
                 }
+
+                {
+                    Y_XML_SECTION(xml, "Base");
+                }
+
             }
 
-            Aftermath          afm;
-            XMatrix            ceq;
-            XArray             phi;
-            CxxSeries<xreal_t> obj;
-
+            Aftermath           afm;
+            XMatrix             ceq;
+            XArray              phi;
+            CxxSeries<xreal_t>  obj;
+            CxxSeries<Prospect> pps;
 
 
 
