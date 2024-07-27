@@ -252,12 +252,14 @@ namespace Yttrium
                 case ProdOnly:  {
                     const Situation ans = E.prod.deficient(C,L) ? Crucial : Running;
                     solveWith(xiProdOnly,C,L,E,K,xmul);
+                    assert( E.prod.accounted(C,L) );
                     return ans;
                 }
 
                 case ReacOnly: {
                     const Situation ans = E.reac.deficient(C,L) ? Crucial : Running;
                     solveWith(xiReacOnly,C,L,E,K,xmul);
+                    assert( E.prod.accounted(C,L) );
                     return ans;
                 }
 
@@ -277,6 +279,8 @@ namespace Yttrium
                 {
                     // deficient in reac => crucial
                     solveWith(xiStandard,C,L,E,K,xmul);
+                    assert( E.prod.accounted(C,L) );
+                    assert( E.reac.accounted(C,L) );
                     return Crucial;
                 }
             }
@@ -287,11 +291,15 @@ namespace Yttrium
                 if(E.prod.deficient(C,L))
                 {
                     // deficient in prod => crucial
+                    assert( E.prod.accounted(C,L) );
+                    assert( E.reac.accounted(C,L) );
                     return Crucial;
                 }
                 else
                 {
                     // both sides are all accounted
+                    assert( E.prod.accounted(C,L) );
+                    assert( E.reac.accounted(C,L) );
                     return Running;
                 }
             }
@@ -324,7 +332,7 @@ namespace Yttrium
 
             return xadd.sum()/xreal_t(m);
         }
-
+        
         xreal_t Aftermath:: eval(const XReadable &  Cout,
                                  const Level        Lout,
                                  const XReadable &  Cinp,

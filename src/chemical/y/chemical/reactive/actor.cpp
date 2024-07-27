@@ -89,8 +89,8 @@ namespace Yttrium
         void Actor:: moveSafe(XWritable &C,const Level L, const xreal_t xi) const
         {
             const xreal_t zero;
-            xreal_t &c = C[sp.indx[L]];
-            const xreal_t cnew = c + xn*xi;
+            xreal_t      & c    = C[sp.indx[L]];
+            const xreal_t  cnew = c + xn*xi;
             c = Max(zero,cnew);
         }
 
