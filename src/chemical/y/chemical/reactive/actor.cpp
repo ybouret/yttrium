@@ -75,7 +75,7 @@ namespace Yttrium
             else
             {
                 assert(1==nu);
-                // do nothing
+                // do nothing, derivative is one
             }
         }
 

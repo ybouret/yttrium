@@ -160,8 +160,8 @@ namespace Yttrium
             assert(xmul.isEmpty());
             for(const Actor *a=actors.head;a;a=a->next)
             {
-                xmul.insert(xfac);
-                a->drvsMassAction(xmul,Cinp,Linp);
+                xmul.insert(xfac);                  // initialize xmul
+                a->drvsMassAction(xmul,Cinp,Linp);  // store local
                 for(const Actor *b=a->prev;b;b=b->prev) b->massAction(xmul,Cinp,Linp);
                 for(const Actor *b=a->next;b;b=b->next) b->massAction(xmul,Cinp,Linp);
                 drvs[ a->sp.indx[Lout] ] = xmul.product();
