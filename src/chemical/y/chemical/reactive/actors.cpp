@@ -82,9 +82,12 @@ namespace Yttrium
 
         }
        
-        void Actors:: massAction(XMul &xmul, const XReadable &C, const Level L) const
+        void Actors:: massAction(XMul            &xmul, 
+                                 const XReadable &C,
+                                 const Level      L) const
         {
-            for(const Actor *a=actors.head;a;a=a->next) a->massAction(xmul,C,L);
+            for(const Actor *a=actors.head;a;a=a->next) 
+                a->massAction(xmul,C,L);
         }
 
         void Actors:: massAction(XMul            &xmul,

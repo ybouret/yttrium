@@ -118,13 +118,16 @@ namespace Yttrium
                         cl.transfer(Ctop, TopLevel, cc, SubLevel); // set crucial
                         goto EXAMINE;                                 // abort and restart
                 }
-                assert(Running==id);
 
                 //----------------------------------------------------------
                 //
                 // store new running prospect with final computation
                 //
                 //----------------------------------------------------------
+                assert(Running==id);
+                eq.displayCompact(std::cerr << eq.name << ": cc  = ", cc, SubLevel) << " / " << cc << std::endl;
+                std::cerr << eq.name << ": ma  = " << eq.massAction(eK, afm.xmul, cc, SubLevel) << std::endl;
+
                 eq.drvsMassAction(eK, phi, SubLevel, cc, SubLevel, afm.xmul);
                 const xreal_t  slope = eq.dot(phi, SubLevel, afm.xadd);
                 if(slope>=zero) 

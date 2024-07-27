@@ -97,6 +97,8 @@ namespace Yttrium
                                         const Level      level) const
         {
             xmul.free();
+
+            assert(xmul.isEmpty());
             xmul << K;
             reac.massAction(xmul,C,level);
             const xreal_t rhs = xmul.product();
@@ -105,6 +107,7 @@ namespace Yttrium
             xmul << mOne;
             prod.massAction(xmul,C,level);
             const xreal_t lhs = xmul.product();
+            
             return rhs + lhs;
         }
 
@@ -156,6 +159,7 @@ namespace Yttrium
         {
             drvs.ld(zero);
             xmul.free();
+            //std::cerr << "drvs@" << Cinp << std::endl;
             reac.drvsMassAction(drvs, Lout, K,    xmul, Cinp, Linp);
             prod.drvsMassAction(drvs, Lout, mOne, xmul, Cinp, Linp);
         }
