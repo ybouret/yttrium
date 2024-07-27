@@ -134,6 +134,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             QBuilder           *ppb; //!< pointer to prospect base
             Cluster            *pcl; //!< pointer to current cluster
+            size_t examine(const Cluster   &cl,
+                           XWritable       &Ctop,
+                           const XReadable &Ktop,
+                           bool            &repl,
+                           XMLog           &xml);
         };
 
     }

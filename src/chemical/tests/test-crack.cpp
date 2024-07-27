@@ -13,25 +13,6 @@ using namespace Yttrium;
 using namespace Chemical;
 
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
-#if 1
-     
-#endif
-
-
-       
-
-      
-
-       
-
-    }
-
-}
-
 
 Y_UTEST(crack)
 {
@@ -57,7 +38,7 @@ Y_UTEST(crack)
     XVector C0(lib->size(),0);
     Species::Conc(C0,ran,0.3);
 
-    C0.ld(0);
+    //C0.ld(0);
 
     lib(std::cerr << "C0=","\t[",C0,"]");
 
