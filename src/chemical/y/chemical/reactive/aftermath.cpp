@@ -57,7 +57,12 @@ namespace Yttrium
                 return xi.b;
             }
 
+            //__________________________________________________________________
+            //
+            //
             //! driver for ReacOnly components
+            //
+            //__________________________________________________________________
             static inline
             xreal_t xiReacOnly(const XReadable  &Cout,
                                const Level      &Lout,
@@ -77,7 +82,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // numeric solution
                         //------------------------------------------------------
-                        return 0;
+                        return zero;
 
 
                     case Negative:
@@ -86,9 +91,9 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c = -K.pow(-E.reac.scale);
                         while( (ma.c = E.massAction(K,xmul,Cout,Lout,xi.c)) < zero )
-                        {
                             ++Coerce(xi.c.exponent);
-                        }
+                        assert(ma.a<zero);
+                        assert(ma.c>=zero);
                         break;
 
 
@@ -98,15 +103,21 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c   =  E.reac.maxExtent(Cout,Lout);
                         ma.c   = -1;
-                        //std::cerr << E.massAction(K,xmul,Cout, xi.c, Lout) << std::endl;
+
+                        assert(ma.a>zero);
+                        assert( E.massAction(K,xmul,Cout,Lout,xi.c) < zero );
                         break;
                 }
 
                 return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
             }
 
-
+            //__________________________________________________________________
+            //
+            //
             //! driver for ProdOnly components
+            //
+            //__________________________________________________________________
             static inline
             xreal_t xiProdOnly(const XReadable  &Cout,
                                const Level      &Lout,
@@ -132,6 +143,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c = - E.prod.maxExtent(Cout,Lout);
                         ma.c =   K;
+                        assert(ma.a<zero);
+                        assert( E.massAction(K,xmul,Cout,Lout,xi.c) > zero);
                         break;
 
 
@@ -141,9 +154,9 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c = K.pow(E.prod.scale);
                         while( (ma.c = E.massAction(K,xmul,Cout,Lout,xi.c)) > zero )
-                        {
                             ++Coerce(xi.c.exponent);
-                        }
+                        assert(ma.a>zero);
+                        assert(ma.c<=zero);
                         break;
                 }
 
