@@ -44,6 +44,18 @@ namespace Yttrium
             return value.abs();
         }
 
+
+        std::ostream & Prospect:: display(std::ostream &os, const Assembly &uuid) const
+        {
+
+            uuid.pad(os<< eq, eq);
+            os << " | ax =" << std::setw(15) << real_t(ax);
+            eq.displayCompact(os << " @",cc, SubLevel);
+            os << " ks=" << real_t(ks);
+            return os;
+        }
+
+
     }
 
 }

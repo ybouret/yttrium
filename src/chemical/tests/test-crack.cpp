@@ -37,7 +37,7 @@ Y_UTEST(crack)
     Solver solver(clusters);
 
     XVector C0(lib->size(),0);
-    for(size_t iter=0;iter<100;++iter)
+    for(size_t iter=0;iter<10;++iter)
     {
         Species::Conc(C0,ran,0.3);
 

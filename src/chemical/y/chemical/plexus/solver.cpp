@@ -165,11 +165,7 @@ namespace Yttrium
                 for(size_t i=1;i<=npmx;++i)
                 {
                     const Prospect &pro = pps[i];
-                    cl.uuid.pad(xml() << pro.eq,pro.eq);
-                    *xml << " | ax =" << std::setw(15) << real_t(pro.xi.abs());
-                    pro.eq.displayCompact(*xml << " @", pro.cc, SubLevel);
-                    *xml << " ks=" << real_t(pro.ks);
-                    *xml << std::endl;
+                    pro.display(xml(), cl.uuid) << std::endl;
                 }
             }
 
@@ -183,15 +179,27 @@ namespace Yttrium
                 for(size_t i=1;i<=npmx;++i)
                 {
                     const Prospect &pro = pps[i];
-                    if(base.grow(pro, cl.topology) && base->size >= ndof) break;
+                    if(base.grow(pro, cl.topology))
+                    {
+                        Y_XMLOG(xml, " (+) " << pro.eq);
+                        if(base->size>=ndof)
+                            break;
+                    }
+
                 }
 
                 Y_XMLOG(xml, "#dof = " << std::setw(10) << ndof);
                 Y_XMLOG(xml, "#pro = " << std::setw(10) << npmx);
                 Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
+
+
+            }
+            for(const PNode *pn=base->head;pn;pn=pn->next)
+            {
+                const Prospect &pro = **pn;
+                pro.display(xml(), cl.uuid) << std::endl;
             }
 
-            
         }
     }
 }
