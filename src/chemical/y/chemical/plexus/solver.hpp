@@ -65,14 +65,20 @@ namespace Yttrium
                 while(maxEqs-- > 0) pool.store( new Vertex(dims) );
             }
 
-            void free() noexcept {
-                while(size>0) pool.store( popTail() )->clear();
+            void free( Vertex * const vtx) noexcept
+            {
+                assert(0!=vtx);
+                pool.store( vtx )->clear();
             }
 
-            void load(const xreal_t    cost,
-                      const SList     &spec,
-                      const XReadable &C,
-                      const Level      L)
+            void free() noexcept {
+                while(size>0) free( popTail() );
+            }
+
+            const Vertex & load(const xreal_t    cost,
+                                const SList     &spec,
+                                const XReadable &C,
+                                const Level      L)
             {
                 AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
                 Vertex         &vtx = *ptr;
@@ -83,6 +89,7 @@ namespace Yttrium
                     vtx[ indx[SubLevel] ] = C[ indx[L] ];
                 }
                 this->store( ptr.yield() );
+                return vtx;
             }
 
 

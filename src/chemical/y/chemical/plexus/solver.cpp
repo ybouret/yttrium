@@ -2,6 +2,7 @@
 #include "y/type/temporary.hpp"
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 #include "y/stream/libc/output.hpp"
 
@@ -9,6 +10,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        using namespace MKL;
 
         Solver:: ~Solver() noexcept {}
 
@@ -132,7 +134,7 @@ namespace Yttrium
 
                 eq.drvsMassAction(eK, phi, SubLevel, cc, SubLevel, afm.xmul);
                 const xreal_t  slope = eq.dot(phi, SubLevel, afm.xadd);
-                if(slope>=zero) 
+                if(slope>=zero)
                 {
                     eq.displayCompact(std::cerr << "\tcc  = ", cc, SubLevel) << " / " << cc <<  std::endl;
                     eq.displayCompact(std::cerr << "\tphi = ", phi, SubLevel) << " / " << phi <<  std::endl;
@@ -165,7 +167,7 @@ namespace Yttrium
                 for(size_t i=1;i<=npmx;++i)
                 {
                     const Prospect &pro = pps[i];
-                    pro.display(xml(), cl.uuid) << std::endl;
+                    pro.display(xml(), cl.uuid, true) << std::endl;
                 }
             }
 
@@ -193,12 +195,68 @@ namespace Yttrium
                 Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
             }
 
-            
-            for(const PNode *pn=base->head;pn;pn=pn->next)
+
             {
-                const Prospect &pro = **pn;
-                pro.display(xml(), cl.uuid) << std::endl;
+                Y_XML_SECTION(xml, "LoadSimplex");
+                sim.free();
+                if(!repl)
+                {
+                    const xreal_t cost = sim.load( objectiveFunction(Ctop,TopLevel), cl.species, Ctop, TopLevel ).cost;
+                    Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cost) << " @initial" );
+                }
+                for(const PNode *pn=base->head;pn;pn=pn->next)
+                {
+                    const Prospect &pro  = **pn;
+                    const xreal_t   cost = sim.load( objectiveFunction(pro.cc, SubLevel), cl.species, pro.cc, SubLevel).cost;
+                    if(xml.verbose) pro.display(xml() <<  "(+) " << std::setw(15) << real_t(cost) << " @", cl.uuid, true) << std::endl;
+                }
             }
+
+            unsigned long cycle = 0;
+            OutputFile fp("objective.dat");
+
+            while(sim.size>1)
+            {
+                ++cycle;
+                Y_XMLOG(xml, "#cycle = " << cycle);
+                Triplet<xreal_t> xx = {  0, -1,  1 };
+                Triplet<xreal_t> ff = { -1, -1, -1 };
+
+                // extract upper/lower and load Cin/Cex
+                {
+                    AutoPtr<Vertex> upper = sim.query();
+                    AutoPtr<Vertex> lower = sim.query();
+
+                    ff.a = upper->cost;
+                    ff.c = lower->cost;
+
+                    cl.transfer(Cin, SubLevel, *upper, SubLevel); sim.free( upper.yield() );
+                    cl.transfer(Cex, SubLevel, *lower, SubLevel); sim.free( lower.yield() );
+                }
+
+                Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
+                Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
+
+
+                {
+                    const real_t offset = cycle-1;
+                    const size_t np(1000);
+                    for(size_t j=0;j<=np;++j)
+                    {
+                        const real_t u = real_t(j)/np;
+                        fp("%.15g %.15g\n", offset+u, log10(real_t( (*this)(u) ) ) );
+                    }
+                    fp << "\n";
+                }
+
+                const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
+                const xreal_t cost  = (*this)(u_opt);
+                sim.load(cost,cl.species,Cws,SubLevel);
+                Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
+
+            }
+
+
 
         }
     }

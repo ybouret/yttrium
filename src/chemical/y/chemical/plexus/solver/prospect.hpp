@@ -59,7 +59,9 @@ namespace Yttrium
                 return Comparison::Increasing(lhs.ax,rhs.ax);
             }
 
-            std::ostream & display(std::ostream &os, const Assembly &uuid) const;
+            std::ostream & display(std::ostream   &os,
+                                   const Assembly &uuid,
+                                   const bool      full) const;
 
 
             //__________________________________________________________________
