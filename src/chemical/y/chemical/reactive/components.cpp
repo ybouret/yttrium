@@ -129,7 +129,7 @@ namespace Yttrium
             xmul << mOne;
             prod.massAction(xmul,C,L,xi);
             const xreal_t lhs = xmul.product();
-            std::cerr << "[reac=" << rhs << ", prod=" << lhs << ",xi=" << real_t(xi) << "]" << std::endl;
+            //std::cerr << "[reac=" << rhs << ", prod=" << lhs << ",xi=" << real_t(xi) << "]" << std::endl;
             return rhs + lhs;
         }
 

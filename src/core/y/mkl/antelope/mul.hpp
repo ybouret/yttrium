@@ -461,7 +461,6 @@ namespace Yttrium
                             const UnitType rhs = my.pullTail();
                             const UnitType tmp = lhs * rhs;
                             pushUnit(tmp);
-                            std::cerr << "[" << lhs << "*" << rhs << "=" << tmp << "]" << std::endl;
                         }
                         assert(1==my.size);
                         return *(my.pullHead().value);

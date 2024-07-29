@@ -58,7 +58,6 @@ namespace Yttrium
         {
             const xreal_t zero;
             const xreal_t c = Max(zero,C[sp.indx[L]] + xn * xi);
-            std::cerr << "{([" << sp.name << "]=" << c <<"])^" << nu << "}";
             xmul.insert(c,nu);
         }
 
