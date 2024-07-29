@@ -18,6 +18,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+#if 0
         class Vertex : public Object, public XArray
         {
         public:
@@ -72,6 +73,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Simplex);
         };
+#endif
 
         //______________________________________________________________________
         //
@@ -104,6 +106,7 @@ namespace Yttrium
             xreal_t objectiveFunction(const XReadable &C,
                                       const Level      L);
 
+            //! use solver as callable function
             xreal_t operator()(const xreal_t u);
 
             //! run
@@ -128,7 +131,7 @@ namespace Yttrium
             XArray              Cws; //!< wokspace concentration
             PBank               bnk; //!< shared bank of PNODE
             QBuilders           qdb; //!< QBuilder for different clusters
-            Simplex             sim; //!< simplex
+            // Simplex             sim; //!< simplex
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
