@@ -18,7 +18,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-#if 0
+#if 1
         class Vertex : public Object, public XArray
         {
         public:
@@ -58,18 +58,36 @@ namespace Yttrium
             explicit Simplex(size_t       maxEqs, 
                              const size_t maxSpecies) :
             Vertices(),
-            pool()
+            pool(),
+            dims(maxSpecies)
             {
                 ++maxEqs;
-                while(maxEqs-- > 0) pool.store( new Vertex(maxSpecies) );
+                while(maxEqs-- > 0) pool.store( new Vertex(dims) );
             }
 
             void free() noexcept {
                 while(size>0) pool.store( popTail() )->clear();
             }
 
-            Vertex::Pool pool;
+            void load(const xreal_t    cost,
+                      const SList     &spec,
+                      const XReadable &C,
+                      const Level      L)
+            {
+                AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
+                Vertex         &vtx = *ptr;
+                vtx.cost = cost;
+                for(const SNode *sn=spec.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    vtx[ indx[SubLevel] ] = C[ indx[L] ];
+                }
+                this->store( ptr.yield() );
+            }
 
+
+            Vertex::Pool pool;
+            const size_t dims;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Simplex);
         };
@@ -131,7 +149,7 @@ namespace Yttrium
             XArray              Cws; //!< wokspace concentration
             PBank               bnk; //!< shared bank of PNODE
             QBuilders           qdb; //!< QBuilder for different clusters
-            // Simplex             sim; //!< simplex
+            Simplex             sim; //!< simplex
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);

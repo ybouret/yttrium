@@ -23,7 +23,7 @@ namespace Yttrium
         Cws(cls.maxSPC,0),
         bnk(),
         qdb(),
-        //sim(cls.maxEPC,cls.maxSPC),
+        sim(cls.maxEPC,cls.maxSPC),
         ppb(0),
         pcl(0)
         {
@@ -191,9 +191,9 @@ namespace Yttrium
                 Y_XMLOG(xml, "#dof = " << std::setw(10) << ndof);
                 Y_XMLOG(xml, "#pro = " << std::setw(10) << npmx);
                 Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
-
-
             }
+
+            
             for(const PNode *pn=base->head;pn;pn=pn->next)
             {
                 const Prospect &pro = **pn;
