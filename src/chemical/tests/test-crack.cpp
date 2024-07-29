@@ -34,18 +34,21 @@ Y_UTEST(crack)
     XMLog    xml(verbose);
     Clusters clusters(eqs,xml);
     const XReadable &K = clusters.K(0);
+    Solver solver(clusters);
 
     XVector C0(lib->size(),0);
-    Species::Conc(C0,ran,0.3);
-
-    //C0.ld(0);
-
-    lib(std::cerr << "C0=","\t[",C0,"]");
-
-    Solver solver(clusters);
-    for(const Cluster *cl = clusters->head; cl; cl=cl->next)
+    for(size_t iter=0;iter<10;++iter)
     {
-        solver.run(*cl, C0, K, xml);
+        Species::Conc(C0,ran,0.3);
+
+        //C0.ld(0);
+
+        lib(std::cerr << "C0=","\t[",C0,"]");
+
+        for(const Cluster *cl = clusters->head; cl; cl=cl->next)
+        {
+            solver.run(*cl, C0, K, xml);
+        }
     }
 
 

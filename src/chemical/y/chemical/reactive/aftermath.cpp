@@ -84,7 +84,7 @@ namespace Yttrium
 
                 xreal_t w = xi.c - xi.a;
                 std::cerr << "\t\tw=" << real_t(w) << std::endl;
-
+                
 
 
                 zroot(F,xi,ma);
@@ -220,17 +220,11 @@ namespace Yttrium
                         //------------------------------------------------------
                         // must decrease product(s)/increase reactant(s) xi<0
                         //------------------------------------------------------
-                        xi.c = -E.prod.maxExtent(C,L);
-                        ma.c = E.massAction(K,xmul,C,L,xi.c);
-                    {
-                        XArray Cnew(C.size(),0);
-                        E.transfer(Cnew,L, C, L);
-                        E.moveSafe(Cnew, L, xi.c);
-                        std::cerr << "prod.maxExtent=" << real_t(xi.c) << " =>  ma=" << ma.c << " @";
-                        E.displayCompact(std::cerr, Cnew, L);
-                        std::cerr << " => " << E.massAction(K, xmul, Cnew, L) << std::endl;
-                        std::cerr << std::endl;
-                    }
+                        xi.c = -E.prod.maxExtent(C,L);        // => vanishing product
+                        xmul.free();
+                        xmul << K;
+                        E.reac.massAction(xmul,C,L,-xi.c);    // => increase reactants
+                        ma.c = xmul.product();
 
                         assert(ma.a<zero);
                         assert(ma.c>=zero);
@@ -241,12 +235,18 @@ namespace Yttrium
                         //------------------------------------------------------
                         // must increase product(s)/decrease reactant(s) xi>0
                         //----------------------------------------------------------
-                        xi.c = E.reac.maxExtent(C,L); std::cerr << "reac.maxExtent=" << real_t(xi.c) << std::endl;
-                        ma.c = E.massAction(K,xmul,C,L,xi.c);
+                        xi.c = E.reac.maxExtent(C,L);          // => vanishing reactant
+                        xmul.free();
+                        xmul << E.mOne;
+                        E.prod.massAction(xmul,C,L,xi.c);      // => increase product
+                        ma.c = xmul.product();
+
                         assert(ma.a>zero);
                         assert(ma.c<=zero);
                         break;
                 }
+
+                //std::cerr << "xiStandard: " << xi.a << "," << ma.a << " -> " << xi.c << "," << ma.c << std::endl;
 
                 return xiSolve(xi, ma, C, L, E, K, xmul);
             }
@@ -311,6 +311,9 @@ namespace Yttrium
                                   const Components &E,
                                   const xreal_t     K)
         {
+            std::cerr << "seek " << E.name << ":" << E.reac << E.Mark << E.prod << ":" << K;
+            E.displayCompact(std::cerr << " @",C,L) << std::endl;
+
             switch(E.kind)
             {
                 case Nebulous:
