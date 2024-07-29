@@ -166,6 +166,12 @@ Y_UTEST(mkl_xreal)
     checkPow<double>(13,0.6);
     checkPow<double>(13,-0.6);
 
+    {
+        const XReal<double> x(1,Raised,-1000); std::cerr << "x=" << x << std::endl;
+        const XReal<double> y(7,Raised,-2000); std::cerr << "y=" << y << std::endl;
+        const XReal<double> z = x*y;           std::cerr << "z=" << z << std::endl;
+
+    }
 }
 Y_UDONE()
 

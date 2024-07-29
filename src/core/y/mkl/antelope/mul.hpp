@@ -68,7 +68,14 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                inline  MulUnit(const T args) noexcept : value(args)                {} //!< setup
+
+                //! setup with value
+                inline  MulUnit(const Type &args) noexcept :
+                value(args)
+                {
+                }
+
+
                 inline  MulUnit(const MulUnit &other) noexcept : value(other.value) {} //!< copy
                 inline ~MulUnit() noexcept                                          {} //!< cleanup
 
@@ -123,7 +130,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup
-                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
+                inline MulUnit(const Type &args) noexcept : value(args), exponent(0)
                 {
                     const T av = Fabs<Type>::Of(*value);
                     (void) std::frexp(av, & Coerce(exponent) );
@@ -187,7 +194,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup
-                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
+                inline MulUnit(const Type &args) noexcept : value(args), exponent(0)
                 {
                     const XReal<T> av = Fabs<Type>::Of(*value);
                     Coerce(exponent) = av.exponent;
@@ -252,7 +259,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup
-                inline MulUnit(const Type args) noexcept : value(args), exponent(0)
+                inline MulUnit(const Type &args) noexcept : value(args), exponent(0)
                 {
                     (void) std::frexp(*value, & Coerce(exponent) );
                 }
@@ -313,7 +320,8 @@ namespace Yttrium
             template <typename T>
             inline   MulUnit<T> operator * (const MulUnit<T> &lhs, const MulUnit<T> &rhs) noexcept
             {
-                return MulUnit<T>( (*lhs.value) * (*rhs.value) );
+                const T ans = (*lhs.value) * (*rhs.value);
+                return MulUnit<T>(ans);
             }
 
             //__________________________________________________________________
@@ -371,8 +379,11 @@ namespace Yttrium
                 }
 
                 //! insert args
-                void insert(const T args)
-                { const UnitType u(args); pushUnit(u); }
+                void insert(const T &args)
+                {
+                    const UnitType u(args);
+                    pushUnit(u);
+                }
 
                 //! helper
                 MulList & operator<<(const T &args) {

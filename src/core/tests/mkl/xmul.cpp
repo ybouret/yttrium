@@ -150,5 +150,15 @@ Y_UTEST(mkl_xmul)
     testXMUL<apn>(ran);
 
 
+    {
+        const XReal<double> x(1,Raised,-1000); std::cerr << "x=" << x << std::endl;
+        const XReal<double> y(7,Raised,-2000); std::cerr << "y=" << y << std::endl;
+        const XReal<double> z = x*y;           std::cerr << "z=" << z << std::endl;
+        Antelope::Mul< XReal<double> > xmul;
+        xmul << x;
+        xmul << y;
+        std::cerr << xmul << std::endl;
+        std::cerr << xmul.product() << std::endl;
+    }
 }
 Y_UDONE()

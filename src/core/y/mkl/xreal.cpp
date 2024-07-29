@@ -3,8 +3,14 @@
 #include "y/system/exception.hpp"
 #include "y/mkl/numeric.hpp"
 
+
 #include <cerrno>
 #include <cmath>
+
+namespace Yttrium
+{
+    Y_SHALLOW_IMPL(Raised);
+}
 
 #define real_t float
 #include "xreal.hxx"

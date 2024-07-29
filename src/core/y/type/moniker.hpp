@@ -38,7 +38,10 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! setup from source
-        inline Moniker(ParamType src) : addr(0), wksp() { new ( link() )  MutableType(src); }
+        inline Moniker(ParamType src) : addr(0), wksp() 
+        {
+            new ( link() )  MutableType(src);
+        }
 
 
         //! copy using type copy constructor
@@ -72,7 +75,8 @@ namespace Yttrium
 
         inline void *link() noexcept
         {
-            return (addr = static_cast<MutableType *>( Y_STATIC_ZARR(wksp) ));
+            try { return (addr = static_cast<MutableType *>( Y_STATIC_ZARR(wksp) )); }
+            catch(...) { addr = 0; throw; }
         }
 
     };

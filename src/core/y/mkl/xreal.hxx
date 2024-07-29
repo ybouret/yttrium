@@ -9,7 +9,8 @@ namespace Yttrium
     }
     
     template <> XReal<real_t>:: XReal(const XReal &_) noexcept :
-    exponent(_.exponent), mantissa(_.mantissa)
+    exponent(_.exponent), 
+    mantissa(_.mantissa)
     {
     }
 
@@ -20,10 +21,27 @@ namespace Yttrium
         return *this;
     }
 
+
+
     template <> XReal<real_t>:: XReal(const real_t x)  :
     exponent(0), mantissa( std::frexp(x,&Coerce(exponent)) )
     {
 
+    }
+
+    template <> XReal<real_t>:: XReal(const real_t x, const Raised_ &, const int xp) :
+    exponent(0), mantissa( std::frexp(x,&Coerce(exponent)) )
+    {
+        Coerce(exponent) += xp;
+    }
+
+    template <>
+    XReal<real_t> & XReal<real_t>:: operator=(const real_t x)
+    {
+        const XReal<real_t> _(x);
+        Coerce(exponent) =  _.exponent;
+        Coerce(mantissa) =  _.mantissa;
+        return *this;
     }
 
     template <>

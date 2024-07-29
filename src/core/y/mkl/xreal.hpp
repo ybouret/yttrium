@@ -5,12 +5,14 @@
 #define Y_Type_XReal_Included 1
 
 #include "y/type/signs.hpp"
+#include "y/config/shallow.hpp"
 #include <iostream>
 
 namespace Yttrium
 {
     
-
+    Y_SHALLOW_DECL(Raised);
+    
     //__________________________________________________________________________
     //
     //
@@ -39,7 +41,9 @@ namespace Yttrium
         XReal(const T x);                          //!< decompose
         XReal(const XReal &) noexcept;             //!< copy
         XReal & operator=(const XReal &) noexcept; //!< assign
+        XReal & operator=(const T);                //!< decompose/assign
         ~XReal() noexcept;                         //!< cleanup
+        XReal(const T x, const Raised_ &, const int xp);            //!< x * radix&xp
 
         //______________________________________________________________________
         //
