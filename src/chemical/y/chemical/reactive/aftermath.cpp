@@ -52,8 +52,12 @@ namespace Yttrium
                 ZBis<xreal_t>    zroot;
                 //ZRid<xreal_t>    zroot;
 
+                std::cerr << "\t" << E.name << std::endl;
+                std::cerr << "\t\tF(" << real_t(xi.a) << ")=" << real_t(ma.a) << std::endl;
+                std::cerr << "\t\tF(" << real_t(xi.c) << ")=" << real_t(ma.c) << std::endl;
+
+
                 zroot(F,xi,ma);
-                //std::cerr << "#calls=" << numCalls << std::endl;
                 return xi.b;
             }
 
@@ -188,6 +192,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         xi.c = -E.prod.maxExtent(Cout, Lout);
                         ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
+                        assert(ma.a<zero);
+                        assert(ma.c>=zero);
                         break;
 
 
@@ -197,6 +203,8 @@ namespace Yttrium
                         //----------------------------------------------------------
                         xi.c = E.reac.maxExtent(Cout, Lout);
                         ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
+                        assert(ma.a>zero);
+                        assert(ma.c<=zero);
                         break;
                 }
 
@@ -259,18 +267,18 @@ namespace Yttrium
         {
             switch(E.kind)
             {
-                case Nebulous: 
+                case Nebulous:
                     return Blocked;
 
                 case ProdOnly:  {
-                    const Situation ans = E.prod.deficient(C,L) ? Crucial : Running;
+                    const Situation ans = (E.prod.deficient(C,L) ? Crucial : Running);
                     solveWith(xiProdOnly,C,L,E,K,xmul);
                     assert( E.prod.accounted(C,L) );
                     return ans;
                 }
 
                 case ReacOnly: {
-                    const Situation ans = E.reac.deficient(C,L) ? Crucial : Running;
+                    const Situation ans = (E.reac.deficient(C,L) ? Crucial : Running);
                     solveWith(xiReacOnly,C,L,E,K,xmul);
                     assert( E.prod.accounted(C,L) );
                     return ans;

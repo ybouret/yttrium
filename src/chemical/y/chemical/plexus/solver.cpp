@@ -116,7 +116,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "(!) [Crucial] " << eq << " @" << cc);
                         repl = true;
                         cl.transfer(Ctop, TopLevel, cc, SubLevel); // set crucial
-                        goto EXAMINE;                                 // abort and restart
+                        goto EXAMINE;                              // abort and restart
                 }
 
                 //----------------------------------------------------------
