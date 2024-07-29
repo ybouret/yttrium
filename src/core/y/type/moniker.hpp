@@ -73,7 +73,7 @@ namespace Yttrium
         MutableType *addr;
         void        *wksp[ Y_WORDS_FOR(T) ];
 
-        inline void *link() noexcept
+        inline void *link()  
         {
             try { return (addr = static_cast<MutableType *>( Y_STATIC_ZARR(wksp) )); }
             catch(...) { addr = 0; throw; }

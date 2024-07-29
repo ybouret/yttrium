@@ -11,8 +11,8 @@
 namespace Yttrium
 {
     
-    Y_SHALLOW_DECL(Raised);
-    
+    Y_SHALLOW_DECL(Raised); //!< helper to make arbitrary high/low XReal
+
     //__________________________________________________________________________
     //
     //
@@ -37,13 +37,13 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-        XReal() noexcept;                          //!< zero
-        XReal(const T x);                          //!< decompose
-        XReal(const XReal &) noexcept;             //!< copy
-        XReal & operator=(const XReal &) noexcept; //!< assign
-        XReal & operator=(const T);                //!< decompose/assign
-        ~XReal() noexcept;                         //!< cleanup
-        XReal(const T x, const Raised_ &, const int xp);            //!< x * radix&xp
+        XReal() noexcept;                                //!< zero
+        XReal(const T x);                                //!< decompose
+        XReal(const XReal &) noexcept;                   //!< copy
+        XReal & operator=(const XReal &) noexcept;       //!< assign
+        XReal & operator=(const T);                      //!< decompose/assign
+        ~XReal() noexcept;                               //!< cleanup
+        XReal(const T x, const Raised_ &, const int xp); //!< x * radix&xp
 
         //______________________________________________________________________
         //

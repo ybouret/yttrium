@@ -53,6 +53,7 @@ namespace Yttrium
                                       const Level      L,
                                       XMul &           X) const;
 
+            //! compare by increasing |xi|
             static int Compare(const Prospect &lhs, const Prospect &rhs) noexcept
             {
                 return Comparison::Increasing(lhs.ax,rhs.ax);
