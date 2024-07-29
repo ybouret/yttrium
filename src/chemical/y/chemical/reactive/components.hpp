@@ -75,7 +75,7 @@ namespace Yttrium
             prod(),
             kind(Nebulous),
             db(),
-            zero(0),
+            zero( 0),
             mOne(-1)
             {
             }

@@ -52,12 +52,13 @@ namespace Yttrium
         }
 
         void Actor:: massAction(XMul            &xmul,
-                                const XReadable &C0,
-                                const xreal_t    xi,
-                                const Level      level) const
+                                const XReadable &C,
+                                const Level      L,
+                                const xreal_t    xi) const
         {
-            const xreal_t zero = 0;
-            const xreal_t c = Max(zero,C0[sp.indx[level]] + xn * xi);
+            const xreal_t zero;
+            const xreal_t c = Max(zero,C[sp.indx[L]] + xn * xi);
+            std::cerr << "{([" << sp.name << "]=" << c <<"])^" << nu << "}";
             xmul.insert(c,nu);
         }
 
@@ -80,9 +81,9 @@ namespace Yttrium
         }
 
 
-        xreal_t Actor:: maxExtent(const XReadable &C, const Level level) const
+        xreal_t Actor:: maxExtent(const XReadable &C, const Level L) const
         {
-            const xreal_t c = C[sp.indx[level]]; assert(c>=xreal_t(0));
+            const xreal_t c = C[sp.indx[L]]; assert(c>=xreal_t(0));
             return c/xn;
         }
 

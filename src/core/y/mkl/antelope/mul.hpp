@@ -313,7 +313,7 @@ namespace Yttrium
             template <typename T>
             inline   MulUnit<T> operator * (const MulUnit<T> &lhs, const MulUnit<T> &rhs) noexcept
             {
-                return MulUnit<T>( (*lhs.value)* (*rhs.value) );
+                return MulUnit<T>( (*lhs.value) * (*rhs.value) );
             }
 
             //__________________________________________________________________
@@ -384,8 +384,10 @@ namespace Yttrium
                 //! insert args^n, one if n==0
                 void insert(const T args, size_t n)
                 {
+
                     if(n<=0)
                     {
+                        // insert one if needed
                         if(my.size<=0)
                         {
                             const T one(1);
@@ -394,6 +396,10 @@ namespace Yttrium
                     }
                     else
                     {
+#ifndef NDEBUG
+                        const size_t newSize = my.size + n;
+#endif
+                        // create local list of n units of args
                         CoreList lhs;
                         {
                             const UnitType u(args);
@@ -402,8 +408,11 @@ namespace Yttrium
                                 lhs.pushTail( my.proxy->produce(u) );
                             }
                         }
+
+                        // put my into rhs
                         CoreList rhs; rhs.swapWith(my);
 
+                        // fusion algorithm
                         while(lhs.size>0 && rhs.size>0)
                         {
                             switch( UnitType::Compare( **lhs.head, **rhs.head) )
@@ -421,7 +430,9 @@ namespace Yttrium
                         assert(0==lhs.size||0==rhs.size);
                         my.mergeTail(lhs);
                         my.mergeTail(rhs);
+                        assert(newSize==my.size);
                     }
+
                 }
 
                 //! product algorithm
@@ -439,6 +450,7 @@ namespace Yttrium
                             const UnitType rhs = my.pullTail();
                             const UnitType tmp = lhs * rhs;
                             pushUnit(tmp);
+                            std::cerr << "[" << lhs << "*" << rhs << "=" << tmp << "]" << std::endl;
                         }
                         assert(1==my.size);
                         return *(my.pullHead().value);

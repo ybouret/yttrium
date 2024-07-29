@@ -97,15 +97,15 @@ namespace Yttrium
                                  ) const
         {
             for(const Actor *a=actors.head;a;a=a->next)
-                a->massAction(xmul,C,xi,L);
+                a->massAction(xmul,C,L,xi);
         }
 
-        bool Actors:: accounted(const XReadable &C0, const Level level) const
+        bool Actors:: accounted(const XReadable &C, const Level L) const
         {
             const xreal_t zero;
             for(const Actor *a=actors.head;a;a=a->next)
             {
-                if( C0[a->sp.indx[level]] <= zero )
+                if( C[a->sp.indx[L]] <= zero )
                 {
                     return false;
                 }

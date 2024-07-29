@@ -60,7 +60,7 @@ namespace Yttrium
                     Swap(ma.a,ma.c);
                 }
 
-                std::cerr << "\t xiSolve: " << E.name << " : " << E.reac << E.Mark << E.prod <<  std::endl;
+                std::cerr << "\t xiSolve: " << E.name << " : " << E.reac << E.Mark << E.prod <<  " : " << K << std::endl;
                 E.displayCompact(std::cerr << "\t\tC=",C,L) << std::endl;
                 std::cerr << "\t\tF(" << real_t(xi.a) << ")=" <<  (ma.a) << " / " << F(xi.a) << std::endl;
                 std::cerr << "\t\tF(" << real_t(xi.c) << ")=" <<  (ma.c) << " / " << F(xi.c) << std::endl;
@@ -198,15 +198,15 @@ namespace Yttrium
             }
 
             static inline
-            xreal_t xiStandard(const XReadable  &Cout,
-                               const Level      &Lout,
+            xreal_t xiStandard(const XReadable  &C,
+                               const Level      &L,
                                const Components &E,
                                const xreal_t     K,
                                XMul             &xmul)
             {
                 const xreal_t    zero = 0;
                 Triplet<xreal_t> xi   = { 0, 0, 0 };
-                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+                Triplet<xreal_t> ma   = { E.massAction(K,xmul,C, L), 0, 0 };
 
                 switch( Sign::Of(ma.a) )
                 {
@@ -220,8 +220,18 @@ namespace Yttrium
                         //------------------------------------------------------
                         // must decrease product(s)/increase reactant(s) xi<0
                         //------------------------------------------------------
-                        xi.c = -E.prod.maxExtent(Cout, Lout);
-                        ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
+                        xi.c = -E.prod.maxExtent(C,L);
+                        ma.c = E.massAction(K,xmul,C,L,xi.c);
+                    {
+                        XArray Cnew(C.size(),0);
+                        E.transfer(Cnew,L, C, L);
+                        E.moveSafe(Cnew, L, xi.c);
+                        std::cerr << "prod.maxExtent=" << real_t(xi.c) << " =>  ma=" << ma.c << " @";
+                        E.displayCompact(std::cerr, Cnew, L);
+                        std::cerr << " => " << E.massAction(K, xmul, Cnew, L) << std::endl;
+                        std::cerr << std::endl;
+                    }
+
                         assert(ma.a<zero);
                         assert(ma.c>=zero);
                         break;
@@ -231,14 +241,14 @@ namespace Yttrium
                         //------------------------------------------------------
                         // must increase product(s)/decrease reactant(s) xi>0
                         //----------------------------------------------------------
-                        xi.c = E.reac.maxExtent(Cout, Lout);
-                        ma.c = E.massAction(K,xmul,Cout,Lout,xi.c);
+                        xi.c = E.reac.maxExtent(C,L); std::cerr << "reac.maxExtent=" << real_t(xi.c) << std::endl;
+                        ma.c = E.massAction(K,xmul,C,L,xi.c);
                         assert(ma.a>zero);
                         assert(ma.c<=zero);
                         break;
                 }
 
-                return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
+                return xiSolve(xi, ma, C, L, E, K, xmul);
             }
 
             //------------------------------------------------------------------
