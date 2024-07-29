@@ -1,9 +1,7 @@
 
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/system/exception.hpp"
-
-#include "y/mkl/root/zbis.hpp"
-#include "y/mkl/root/zrid.hpp"
+#include "y/mkl/triplet.hpp"
 
 namespace Yttrium
 {
@@ -23,9 +21,16 @@ namespace Yttrium
 
         namespace
         {
-            static unsigned numCalls = 0;
 
+            //------------------------------------------------------------------
+            //
+            //
+            //
             //! wrapper to have a callable object
+            //
+            //
+            //
+            //------------------------------------------------------------------
             struct CallMassAction
             {
                 const XReadable &  C;
@@ -36,12 +41,17 @@ namespace Yttrium
 
                 inline xreal_t operator()(const xreal_t xi)
                 {
-                    ++numCalls;
                     return E.massAction(K, xmul, C, L, xi);
                 }
             };
 
+            //------------------------------------------------------------------
+            //
+            //
             //! solve once zero is bracketed
+            //
+            //
+            //------------------------------------------------------------------
             static inline xreal_t xiSolve(Triplet<xreal_t> &xi,
                                           Triplet<xreal_t> &ma,
                                           const XReadable  &C,
@@ -50,45 +60,67 @@ namespace Yttrium
                                           const xreal_t     K,
                                           XMul             &xmul)
             {
-                const xreal_t    zero;
+                const xreal_t    half(0.5);
                 CallMassAction   F  = { C, L, E, K, xmul };
-                ZBis<xreal_t>    zroot;
 
+                //--------------------------------------------------------------
+                //
                 // mass action is a decreasing function
+                //
+                //--------------------------------------------------------------
                 if(xi.a>xi.c) {
                     Swap(xi.a,xi.c);
                     Swap(ma.a,ma.c);
                 }
 
-                std::cerr << "\t xiSolve: " << E.name << " : " << E.reac << E.Mark << E.prod <<  " : " << K << std::endl;
-                E.displayCompact(std::cerr << "\t\tC=",C,L) << std::endl;
-                std::cerr << "\t\tF(" << real_t(xi.a) << ")=" <<  (ma.a) << " / " << F(xi.a) << std::endl;
-                std::cerr << "\t\tF(" << real_t(xi.c) << ")=" <<  (ma.c) << " / " << F(xi.c) << std::endl;
-
+                //--------------------------------------------------------------
+                //
+                // check @a
+                //
+                //--------------------------------------------------------------
                 switch( Sign::Of(ma.a) )
                 {
                     case Negative: throw Specific::Exception(E.name.c_str(),"negative highest mass action");
-                    case __Zero__: std::cerr << "@xi.a" << std::endl; return xi.a;
+                    case __Zero__: return xi.a;
                     case Positive: break;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // check @c
+                //
+                //--------------------------------------------------------------
                 switch( Sign::Of(ma.c) )
                 {
                     case Positive: throw Specific::Exception(E.name.c_str(),"positive lowest mass action");
-                    case __Zero__:  std::cerr << "@xi.c" << std::endl; return xi.c;
+                    case __Zero__: return xi.c;
                     case Negative: break;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // bissection up to numerical 0 or machine precision
+                //
+                //--------------------------------------------------------------
                 assert(ma.a > xreal_t(0) );
                 assert(ma.c < xreal_t(0) );
+                xreal_t       width = (xi.c - xi.a).abs();
+                for(;;)
+                {
+                    switch( Sign::Of( ma.b = F( xi.b = half*(xi.a+xi.c) ) ) )
+                    {
+                        case Negative: xi.c = xi.b; ma.c = ma.b; break;
+                        case Positive: xi.a = xi.b; ma.a = ma.b; break;
+                        case __Zero__: return xi.b;
+                    }
+                    const xreal_t newWidth = (xi.c - xi.a).abs();
+                    if( newWidth >= width )
+                    {
+                        return xi.b;
+                    }
+                    width= newWidth;
+                }
 
-                xreal_t w = xi.c - xi.a;
-                std::cerr << "\t\tw=" << real_t(w) << std::endl;
-                
-
-
-                zroot(F,xi,ma);
-                return xi.b;
             }
 
             //__________________________________________________________________
@@ -104,9 +136,9 @@ namespace Yttrium
                                const xreal_t     K,
                                XMul             &xmul)
             {
-                const xreal_t    zero = 0;
-                Triplet<xreal_t> xi   = { 0, 0, 0 };
-                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+                const xreal_t    zero;
+                Triplet<xreal_t> xi = { zero, zero, zero };
+                Triplet<xreal_t> ma = { E.massAction(K,xmul,Cout, Lout), zero, zero };
 
 
                 switch( Sign::Of(ma.a) )
@@ -160,8 +192,8 @@ namespace Yttrium
                                XMul             &xmul)
             {
                 const xreal_t    zero;
-                Triplet<xreal_t> xi   = { 0, 0, 0 };
-                Triplet<xreal_t> ma   = { E.massAction(K,xmul,Cout, Lout), 0, 0 };
+                Triplet<xreal_t> xi = { zero, zero, zero };
+                Triplet<xreal_t> ma = { E.massAction(K,xmul,Cout, Lout), zero, zero };
 
                 switch( Sign::Of(ma.a) )
                 {
@@ -197,6 +229,13 @@ namespace Yttrium
                 return xiSolve(xi, ma, Cout, Lout, E, K, xmul);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            //! driver for tandard equilibrium
+            //
+            //
+            //------------------------------------------------------------------
             static inline
             xreal_t xiStandard(const XReadable  &C,
                                const Level      &L,
@@ -204,9 +243,9 @@ namespace Yttrium
                                const xreal_t     K,
                                XMul             &xmul)
             {
-                const xreal_t    zero = 0;
-                Triplet<xreal_t> xi   = { 0, 0, 0 };
-                Triplet<xreal_t> ma   = { E.massAction(K,xmul,C, L), 0, 0 };
+                const xreal_t    zero;
+                Triplet<xreal_t> xi = { zero, zero, zero };
+                Triplet<xreal_t> ma = { E.massAction(K,xmul,C, L), zero, zero };
 
                 switch( Sign::Of(ma.a) )
                 {
@@ -246,8 +285,7 @@ namespace Yttrium
                         break;
                 }
 
-                //std::cerr << "xiStandard: " << xi.a << "," << ma.a << " -> " << xi.c << "," << ma.c << std::endl;
-
+                
                 return xiSolve(xi, ma, C, L, E, K, xmul);
             }
 
@@ -311,8 +349,8 @@ namespace Yttrium
                                   const Components &E,
                                   const xreal_t     K)
         {
-            std::cerr << "seek " << E.name << ":" << E.reac << E.Mark << E.prod << ":" << K;
-            E.displayCompact(std::cerr << " @",C,L) << std::endl;
+            //std::cerr << "seek " << E.name << ":" << E.reac << E.Mark << E.prod << ":" << K;
+            //E.displayCompact(std::cerr << " @",C,L) << std::endl;
 
             switch(E.kind)
             {

@@ -125,8 +125,8 @@ namespace Yttrium
                 //
                 //----------------------------------------------------------
                 assert(Running==id);
-                eq.displayCompact(std::cerr << eq.name << ": cc  = ", cc, SubLevel) << " / " << cc << std::endl;
-                std::cerr << eq.name << ": ma  = " << eq.massAction(eK, afm.xmul, cc, SubLevel) << std::endl;
+                //eq.displayCompact(std::cerr << eq.name << ": cc  = ", cc, SubLevel) << " / " << cc << std::endl;
+                //std::cerr << eq.name << ": ma  = " << eq.massAction(eK, afm.xmul, cc, SubLevel) << std::endl;
 
                 eq.drvsMassAction(eK, phi, SubLevel, cc, SubLevel, afm.xmul);
                 const xreal_t  slope = eq.dot(phi, SubLevel, afm.xadd);
@@ -138,7 +138,6 @@ namespace Yttrium
                     throw Specific::Exception(eq.name.c_str(),"invalid optimal slope");
                 }
                 const Prospect pro(eq, eK, cc, afm.eval(cc,SubLevel,Ctop,TopLevel,eq), mOne/slope );
-
                 pps << pro;
             }
 
