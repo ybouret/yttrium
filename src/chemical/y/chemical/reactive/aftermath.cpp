@@ -347,9 +347,6 @@ namespace Yttrium
                                   const Components &E,
                                   const xreal_t     K)
         {
-            //std::cerr << "seek " << E.name << ":" << E.reac << E.Mark << E.prod << ":" << K;
-            //E.displayCompact(std::cerr << " @",C,L) << std::endl;
-
             switch(E.kind)
             {
                 case Nebulous:
@@ -378,12 +375,17 @@ namespace Yttrium
             {
                 if(E.prod.deficient(C,L))
                 {
+                    //----------------------------------------------------------
                     // deficient in both sides
+                    //----------------------------------------------------------
                     return Blocked;
                 }
                 else
                 {
+                    //----------------------------------------------------------
                     // deficient in reac => crucial
+                    //----------------------------------------------------------
+                    assert(E.prod.accounted(C,L));
                     solveWith(xiStandard,C,L,E,K,xmul);
                     assert( E.prod.accounted(C,L) );
                     assert( E.reac.accounted(C,L) );
@@ -392,18 +394,26 @@ namespace Yttrium
             }
             else
             {
+                //--------------------------------------------------------------
                 assert(E.reac.accounted(C,L));
-                solveWith(xiStandard,C,L,E,K,xmul);
+                //--------------------------------------------------------------
+
                 if(E.prod.deficient(C,L))
                 {
+                    //----------------------------------------------------------
                     // deficient in prod => crucial
+                    //----------------------------------------------------------
+                    solveWith(xiStandard,C,L,E,K,xmul);
                     assert( E.prod.accounted(C,L) );
                     assert( E.reac.accounted(C,L) );
                     return Crucial;
                 }
                 else
                 {
+                    //----------------------------------------------------------
                     // both sides are all accounted
+                    //----------------------------------------------------------
+                    solveWith(xiStandard,C,L,E,K,xmul);
                     assert( E.prod.accounted(C,L) );
                     assert( E.reac.accounted(C,L) );
                     return Running;

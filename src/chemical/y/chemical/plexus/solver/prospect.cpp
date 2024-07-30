@@ -40,7 +40,8 @@ namespace Yttrium
                                              const Level      L,
                                              XMul &           X) const
         {
-            const xreal_t value = ks * eq.massAction(eK, X, C, L);
+            //const xreal_t value = ks * eq.massAction(eK, X, C, L);
+            const xreal_t value = eq.affinity(eK, X, C, L);
             return value.abs();
         }
 

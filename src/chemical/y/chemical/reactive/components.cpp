@@ -94,22 +94,47 @@ namespace Yttrium
         xreal_t Components:: massAction(const xreal_t    K,
                                         XMul            &xmul,
                                         const XReadable &C,
-                                        const Level      level) const
+                                        const Level      L) const
         {
             xmul.free();
 
             assert(xmul.isEmpty());
             xmul << K;
-            reac.massAction(xmul,C,level);
+            reac.massAction(xmul,C,L);
             const xreal_t rhs = xmul.product();
 
             assert(xmul.isEmpty());
             xmul << mOne;
-            prod.massAction(xmul,C,level);
+            prod.massAction(xmul,C,L);
             const xreal_t lhs = xmul.product();
             
             return rhs + lhs;
         }
+
+        real_t Components:: affinity(const xreal_t    K,
+                                     XMul            &xmul,
+                                     const XReadable &C,
+                                     const Level      L) const
+        {
+            xmul.free();
+
+            assert(xmul.isEmpty());
+            xmul << K;
+            reac.massAction(xmul,C,L);
+            const xreal_t num = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << pOne;
+            prod.massAction(xmul,C,L);
+            const xreal_t den = xmul.product();
+
+
+            const xreal_t K_Over_Q = num/den;
+            //std::cerr << "Num=" << num << " / Den=" << den << " => " << K_Over_Q << std::endl;
+            return K_Over_Q.log();
+
+        }
+
 
         xreal_t Components:: massAction(const xreal_t    K,
                                         XMul            &xmul,

@@ -17,7 +17,7 @@ namespace Yttrium
     {
         typedef double                      real_t;    //!< machine real
         typedef XReal<real_t>               xreal_t;   //!< soft real
-        
+
         typedef Readable<xreal_t>           XReadable; //!< alias
         typedef Writable<xreal_t>           XWritable; //!< alias
         typedef Matrix<xreal_t>             XMatrix;   //!< alias

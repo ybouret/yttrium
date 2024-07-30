@@ -76,7 +76,8 @@ namespace Yttrium
             kind(Nebulous),
             db(),
             zero( 0),
-            mOne(-1)
+            mOne(-1),
+            pOne(+1)
             {
             }
 
@@ -108,6 +109,11 @@ namespace Yttrium
                                const XReadable & C,
                                const Level       L,
                                const xreal_t     xi) const;
+
+            real_t affinity(const xreal_t    K,
+                            XMul            &xmul,
+                            const XReadable &C,
+                            const Level      L) const;
 
             //! d_massAction/d_C
             void drvsMassAction(const xreal_t      K,
@@ -222,9 +228,9 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
 
         public:
-            const xreal_t zero; //!< value
-            const xreal_t mOne; //!< value
-
+            const xreal_t zero; //!< value : 0
+            const xreal_t mOne; //!< value : -1
+            const xreal_t pOne; //!< value : +1
 
         };
     }

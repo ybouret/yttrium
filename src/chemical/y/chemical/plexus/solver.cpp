@@ -144,6 +144,11 @@ namespace Yttrium
                 pps << pro;
             }
 
+            //------------------------------------------------------------------
+            //
+            // sort and check: 
+            //
+            //------------------------------------------------------------------
             Y_XMLOG(xml, " |-[propects]");
             HeapSort::Call(pps, Prospect::Compare);
             const size_t npmx = pps.size();
@@ -158,8 +163,13 @@ namespace Yttrium
                 const char * const id = eq.name.c_str();
                 if(!eq.reac.accounted(Ctop,TopLevel))   throw Specific::Exception(id, "missing initial reactant(s)");
                 if(!eq.prod.accounted(Ctop,TopLevel))   throw Specific::Exception(id, "missing initial product(s)");
-                if(!eq.reac.accounted(pro.cc,SubLevel)) throw Specific::Exception(id, "missing final reactant(s)");
-                if(!eq.prod.accounted(pro.cc,SubLevel)) throw Specific::Exception(id, "missing final product(s)");
+
+                for(size_t j=1;j<=npmx;++j)
+                {
+                    const Prospect    &rhs = pps[j];
+                    if(!eq.reac.accounted(rhs.cc,SubLevel)) throw Specific::Exception(id, "missing final reactant(s) in %s", rhs.eq.name.c_str());
+                    if(!eq.prod.accounted(rhs.cc,SubLevel)) throw Specific::Exception(id, "missing final product(s) in %s", rhs.eq.name.c_str());
+                }
             }
             return npmx;
         }
@@ -203,6 +213,25 @@ namespace Yttrium
                 Y_XMLOG(xml, "#vec = " << std::setw(10) << base->size);
             }
 
+#if 0
+            {
+                Y_XML_SECTION(xml, "Affinity");
+                Y_XMLOG(xml,"@Ctop=" << Ctop);
+
+                for(const PNode *pn=base->head;pn;pn=pn->next)
+                {
+                    const Prospect &pro  = **pn;
+                    if(xml.verbose)
+                    {
+                        cl.uuid.pad( xml() << pro.eq.name, pro.eq);
+                        *xml << " : aff=" << pro.eq.affinity(pro.eK, afm.xmul, Ctop, TopLevel);
+                        *xml << std::endl;
+                    }
+                }
+
+            }
+#endif
+
 
             {
                 Y_XML_SECTION(xml, "LoadSimplex");
@@ -220,6 +249,7 @@ namespace Yttrium
                 }
             }
 
+            
             unsigned long cycle = 0;
             OutputFile fp("objective.dat");
 
