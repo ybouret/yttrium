@@ -175,6 +175,7 @@ namespace Yttrium
         {
         public:
             explicit Normalizer(const Cluster &cl) :
+            afm(),
             ceq(cl.size,cl.species.size),
             aps(cl.size),
             obj(cl.size),
