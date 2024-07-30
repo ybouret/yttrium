@@ -65,6 +65,9 @@ namespace Yttrium
         //! square root
         XReal sqrt() const;
 
+        //! log
+        T     log() const;
+
         //! log10
         T     log10() const;
 
@@ -79,8 +82,7 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! binary multiplication
-        inline friend XReal operator*(const XReal &lhs, const XReal &rhs) noexcept
-        { return Mul(lhs,rhs); }
+        inline friend XReal operator*(const XReal &lhs, const XReal &rhs) noexcept { return Mul(lhs,rhs); }
 
         //! in-place multiplication
         inline XReal & operator*=(const XReal &rhs) noexcept { return (*this=Mul(*this,rhs)); }
@@ -93,8 +95,7 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! binary division
-        inline friend XReal operator/(const XReal &lhs, const XReal &rhs) noexcept
-        { return Div(lhs,rhs); }
+        inline friend XReal operator/(const XReal &lhs, const XReal &rhs) noexcept { return Div(lhs,rhs); }
 
         //! in-place division
         inline XReal & operator/=(const XReal &rhs) noexcept { return (*this=Div(*this,rhs)); }
@@ -110,8 +111,7 @@ namespace Yttrium
         XReal operator+() const noexcept;
 
         //! binary addition
-        inline friend XReal operator+(const XReal &lhs, const XReal &rhs) noexcept
-        { return Add(lhs,rhs); }
+        inline friend XReal operator+(const XReal &lhs, const XReal &rhs) noexcept { return Add(lhs,rhs); }
 
         //! in-place addition
         inline XReal & operator+=(const XReal &rhs) noexcept { return (*this=Add(*this,rhs)); }
@@ -127,8 +127,7 @@ namespace Yttrium
         XReal operator-() const noexcept;
 
         //! binary subtraction
-        inline friend XReal operator-(const XReal &lhs, const XReal &rhs) noexcept
-        { return Sub(lhs,rhs); }
+        inline friend XReal operator-(const XReal &lhs, const XReal &rhs) noexcept { return Sub(lhs,rhs); }
 
         //! in-place subtraction
         inline XReal & operator-=(const XReal &rhs) noexcept { return (*this=Sub(*this,rhs)); }

@@ -242,6 +242,14 @@ namespace Yttrium
     }
 
     template <>
+    real_t XReal<real_t>:: log() const
+    {
+        static const real_t lnr = std::log(  MKL::Numeric<real_t>::RADIX );
+        if(mantissa<=0) throw Libc::Exception(EDOM, "XReal::log()");
+        return std::log(mantissa) + exponent * lnr;
+    }
+
+    template <>
     XReal<real_t> XReal<real_t>::  pow(const real_t alpha) const
     {
         static const real_t  radix = MKL::Numeric<real_t>::RADIX;
