@@ -9,11 +9,97 @@
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 #include "y/orthogonal/family.hpp"
+#include "y/data/list/ordered.hpp"
+
+#include "y/mkl/opt/minimize.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        using namespace MKL;
+
+        class Vertex : public Object, public XArray
+        {
+        public:
+            typedef CxxPoolOf<Vertex> Pool;
+            struct Comparator
+            {
+                inline SignType operator()(const Vertex * const lhs, const Vertex * const rhs) const noexcept
+                {
+                    return Comparison::CxxDecreasing(lhs->cost, rhs->cost);
+                }
+            };
+
+
+            explicit Vertex(const size_t species) :
+            XArray(species), cost(0), next(0), prev(0)
+            {
+
+            }
+
+            virtual ~Vertex() noexcept {}
+
+            void clear() noexcept { ld(cost=0); }
+
+            xreal_t cost;
+            Vertex *next;
+            Vertex *prev;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+        };
+
+        typedef OrderedList<Vertex,Vertex::Comparator,OrderedListQueryHead> Vertices;
+
+        class Simplex : public Vertices
+        {
+        public:
+            explicit Simplex(size_t       maxEqs,
+                             const size_t maxSpecies) :
+            Vertices(),
+            pool(),
+            dims(maxSpecies)
+            {
+                ++maxEqs;
+                while(maxEqs-- > 0) pool.store( new Vertex(dims) );
+            }
+
+            void free( Vertex * const vtx) noexcept
+            {
+                assert(0!=vtx);
+                pool.store( vtx )->clear();
+            }
+
+            void free() noexcept {
+                while(size>0) free( popTail() );
+            }
+
+            const Vertex & load(const xreal_t    cost,
+                                const SList     &spec,
+                                const XReadable &C,
+                                const Level      L)
+            {
+                AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
+                Vertex         &vtx = *ptr; assert(Memory::OutOfReach::Are0(&vtx[1],vtx.size()*sizeof(xreal_t)));
+                vtx.cost = cost;
+                for(const SNode *sn=spec.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    vtx[ indx[SubLevel] ] = C[ indx[L] ];
+                }
+                this->store( ptr.yield() );
+                return vtx;
+            }
+
+
+            Vertex::Pool pool;
+            const size_t dims;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Simplex);
+        };
 
         class Applicant
         {
@@ -92,16 +178,22 @@ namespace Yttrium
             ceq(cl.size,cl.species.size),
             aps(cl.size),
             obj(cl.size),
+            Cin(cl.species.size,0),
+            Cex(cl.species.size,0),
+            Cws(cl.species.size,0),
             dof(cl.Nu.rows),
+            Nus(dof),
             bnk(),
             apl(bnk),
-            qfm(cl.species.size,cl.size)
+            qfm(cl.species.size,cl.size),
+            sim(cl.size,cl.species.size)
             {
             }
 
             virtual ~Normalizer() noexcept
             {
             }
+
 
 
             void run(const Cluster   & cl,
@@ -113,7 +205,7 @@ namespace Yttrium
                 assert(cl.species.size==ceq.cols);
                 Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << cl.size << "' species='" << cl.species.size << "'");
                 bool         repl = false;
-                const size_t nmax = examine(cl, Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                const size_t nmax = compile(cl, Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
                 const size_t base = extract(cl,xml);
 
                 switch(base)
@@ -124,16 +216,84 @@ namespace Yttrium
                         break;
                 }
 
+                // load simplex
+                Y_XML_SECTION(xml, "Simplex");
+                sim.free();
                 if(!repl)
-                    Y_XMLOG(xml, std::setw(15) << real_t(objectiveFunction(Ctop, TopLevel)) << " @Ctop");
+                {
+                    const xreal_t val = sim.load( objectiveFunction(Ctop, TopLevel), cl.species, Ctop, TopLevel).cost;
+                    Y_XMLOG(xml, std::setw(15) << real_t(val) << " @Ctop");
+                }
                 else
+                {
                     Y_XMLOG(xml, "[replaced Ctop]");
+                }
 
                 for(const ANode *an=apl.head;an;an=an->next)
                 {
                     const Applicant &app = **an;
-                    Y_XMLOG(xml,std::setw(15) << real_t(objectiveFunction(app.cc,SubLevel)) << " @" << app.eq);
+                    const xreal_t    val = sim.load( objectiveFunction(app.cc, SubLevel), cl.species, app.cc, SubLevel).cost;
+                    Y_XMLOG(xml,std::setw(15) << real_t(val) << " @" << app.eq);
                 }
+
+
+                unsigned long cycle = 0;
+                OutputFile fp("objective.dat");
+
+                while(sim.size>1)
+                {
+                    ++cycle;
+                    Y_XMLOG(xml, "#cycle = " << cycle);
+                    Triplet<xreal_t> xx = {  0, -1,  1 };
+                    Triplet<xreal_t> ff = { -1, -1, -1 };
+
+                    // extract upper/lower and load Cin/Cex
+                    {
+                        AutoPtr<Vertex> upper = sim.query();
+                        AutoPtr<Vertex> lower = sim.query();
+
+                        ff.a = upper->cost;
+                        ff.c = lower->cost;
+
+                        cl.transfer(Cin, SubLevel, *upper, SubLevel); sim.free( upper.yield() );
+                        cl.transfer(Cex, SubLevel, *lower, SubLevel); sim.free( lower.yield() );
+                    }
+
+                    Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
+                    Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
+
+
+                    {
+                        const real_t offset = cycle-1;
+                        const size_t np(1000);
+                        for(size_t j=0;j<=np;++j)
+                        {
+                            const real_t u = real_t(j)/np;
+                            fp("%.15g %.15g\n", offset+u,  (real_t( (*this)(u) ) ) );
+                        }
+                        fp << "\n";
+                    }
+
+                    const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
+                    const xreal_t cost  = (*this)(u_opt);
+                    sim.load(cost,cl.species,Cws,SubLevel);
+                    Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
+                }
+                std::cerr << "Ctop=" << Ctop << std::endl;
+                std::cerr << "sim= " << *(sim.head) << std::endl;
+                std::cerr << "Cws= " << Cws         << std::endl;
+
+#if 1
+                Matrix<int> Nu(base,cl.species.size);
+                size_t ii = 0;
+                for(const ANode *pn=apl.head;pn;pn=pn->next)
+                {
+                    (**pn).eq.topology(Nu[++ii],SubLevel);
+                }
+                std::cerr << "Nu=" << Nu << std::endl;
+                std::cerr << "dC = Nu' * inv(Nu*Nu')*Nu*(Cws-Ctop)" << std::endl;
+                std::cerr << "[Ctop Ctop+dC Cws]" << std::endl;
+#endif
 
             }
 
@@ -147,21 +307,44 @@ namespace Yttrium
                 return afm.xadd.normOf(obj);
             }
 
+            xreal_t  operator()(const xreal_t u)
+            {
+                const xreal_t one = 1;
+                const xreal_t v   = one - u;
+
+                for(size_t j=Cin.size();j>0;--j)
+                {
+                    const xreal_t c0   = Cin[j];
+                    const xreal_t c1   = Cex[j];
+                    xreal_t       cmin = c0;
+                    xreal_t       cmax = c1;
+                    if(cmax<cmin) Swap(cmin,cmax);
+                    Cws[j] = Clamp(cmin,v*c0+u*c1,cmax);
+                }
+
+                return objectiveFunction(Cws,SubLevel);
+            }
+
             Aftermath          afm;
             XMatrix            ceq;
             Applicant::Series  aps;
             CxxSeries<xreal_t> obj;
+            CxxArray<xreal_t>  Cin;
+            CxxArray<xreal_t>  Cex;
+            CxxArray<xreal_t>  Cws;
             const size_t       dof; //!< primary eqs
-            ABank              bnk;
-            AList              apl;
-            Orthogonal::Family qfm;
+            CxxSeries<XMatrix> Nus; //!< Nu[1x1] -> Nu[dof x dof]
+            ABank              bnk; //!< pool of applicants
+            AList              apl; //!< applicant list
+            Orthogonal::Family qfm; //!< orthogonal family
+            Simplex            sim; //!< simplex
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 
             size_t   extract(const Cluster &cl, XMLog &xml)
             {
-                Y_XML_SECTION(xml, "ExtractFamily");
+                Y_XML_SECTION(xml, "Extract");
 
                 apl.free();
                 qfm.free();
@@ -192,13 +375,13 @@ namespace Yttrium
                 return apl.size;
             }
 
-            size_t examine(const Cluster   & cl,
+            size_t compile(const Cluster   & cl,
                            XWritable       & Ctop,
                            const XReadable & Ktop,
                            bool            & repl,
                            XMLog           &  xml)
             {
-                Y_XML_SECTION(xml, "QueryApplicants");
+                Y_XML_SECTION(xml, "Compile");
                 repl        = false;
                 size_t iter = 0;
             EXAMINE:
