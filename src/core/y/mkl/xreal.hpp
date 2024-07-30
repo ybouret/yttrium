@@ -10,7 +10,7 @@
 
 namespace Yttrium
 {
-    
+
     Y_SHALLOW_DECL(Raised); //!< helper to make arbitrary high/low XReal
 
     //__________________________________________________________________________
@@ -59,20 +59,12 @@ namespace Yttrium
         //! retrieveing floating point value
         operator T() const;
 
-        //! absolute value
-        XReal abs() const noexcept;
 
-        //! square root
-        XReal sqrt() const;
-
-        //! log
-        T     log() const;
-
-        //! log10
-        T     log10() const;
-
-        //! this^alpha
-        XReal pow(const T alpha) const;
+        XReal abs()   const noexcept;   //!< absolute value
+        XReal sqrt()  const;            //!< square root
+        T     log()   const;            //!< log
+        T     log10() const;            //!< log10
+        XReal pow(const T alpha) const; //!< this^alpha
 
         //______________________________________________________________________
         //
@@ -141,10 +133,14 @@ namespace Yttrium
 
         //! generic comparison, C++ style
         static SignType Compare(const XReal &lhs, const XReal &rhs) noexcept;
+        static SignType Compare(const XReal &lhs, const T      rhs) noexcept;
+        static SignType Compare(const T      lhs, const XReal &rhs) noexcept;
 
         //! helper to implement friend functions
 #define Y_XREAL_CMP(OP,RESULT) \
-inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; }
+inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
+inline friend bool operator OP (const XReal &lhs, const T      rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
+inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; }
 
         Y_XREAL_CMP(==,  == __Zero__ )
         Y_XREAL_CMP(!=,  != __Zero__ )
@@ -162,7 +158,7 @@ inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { r
         //______________________________________________________________________
         const int exponent; //!< exponent
         const T   mantissa; //!< mantissa
-        
+
     private:
         explicit XReal(const int, const T) noexcept;
         static XReal Mul(const XReal &, const XReal &) noexcept;

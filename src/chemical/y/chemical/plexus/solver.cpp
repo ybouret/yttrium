@@ -102,11 +102,11 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(const ENode *en=cl.head;en;en=en->next)
             {
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 // get equilibrium and its aftermath
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 const Equilibrium &eq = **en;                      // equilibrium
                 const xreal_t      eK = Ktop[ eq.indx[TopLevel] ]; // current constant
                 const size_t       ii = pps.size() + 1;            // destination indeq
@@ -123,14 +123,13 @@ namespace Yttrium
                         goto EXAMINE;                              // abort and restart
                 }
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 // store new running prospect with final computation
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 assert(Running==id);
-                //eq.displayCompact(std::cerr << eq.name << ": cc  = ", cc, SubLevel) << " / " << cc << std::endl;
-                //std::cerr << eq.name << ": ma  = " << eq.massAction(eK, afm.xmul, cc, SubLevel) << std::endl;
+
 
                 eq.drvsMassAction(eK, phi, SubLevel, cc, SubLevel, afm.xmul);
                 const xreal_t  slope = eq.dot(phi, SubLevel, afm.xadd);
@@ -145,8 +144,24 @@ namespace Yttrium
                 pps << pro;
             }
 
+            Y_XMLOG(xml, " |-[propects]");
             HeapSort::Call(pps, Prospect::Compare);
-            return pps.size();
+            const size_t npmx = pps.size();
+            for(size_t i=1;i<=npmx;++i)
+            {
+                const Prospect &pro = pps[i];
+                if(xml.verbose)
+                    pro.display(xml() << " | ", cl.uuid, true) << std::endl;
+
+                // strict checking
+                const Equilibrium &eq = pro.eq;
+                const char * const id = eq.name.c_str();
+                if(!eq.reac.accounted(Ctop,TopLevel))   throw Specific::Exception(id, "missing initial reactant(s)");
+                if(!eq.prod.accounted(Ctop,TopLevel))   throw Specific::Exception(id, "missing initial product(s)");
+                if(!eq.reac.accounted(pro.cc,SubLevel)) throw Specific::Exception(id, "missing final reactant(s)");
+                if(!eq.prod.accounted(pro.cc,SubLevel)) throw Specific::Exception(id, "missing final product(s)");
+            }
+            return npmx;
         }
 
         void Solver:: run(const Cluster   &cl,
@@ -162,14 +177,7 @@ namespace Yttrium
 
             if( npmx <= 0) { Y_XMLOG(xml, "[Jammed!]"); return; }
 
-            if(xml.verbose)
-            {
-                for(size_t i=1;i<=npmx;++i)
-                {
-                    const Prospect &pro = pps[i];
-                    pro.display(xml(), cl.uuid, true) << std::endl;
-                }
-            }
+
 
             QBuilder &                 base = qdb[cl.species.size];
             const Temporary<QBuilder*> ppbT(ppb,&base);
@@ -244,7 +252,7 @@ namespace Yttrium
                     for(size_t j=0;j<=np;++j)
                     {
                         const real_t u = real_t(j)/np;
-                        fp("%.15g %.15g\n", offset+u, log10(real_t( (*this)(u) ) ) );
+                        fp("%.15g %.15g\n", offset+u,  (real_t( (*this)(u) ) ) );
                     }
                     fp << "\n";
                 }
