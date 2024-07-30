@@ -260,9 +260,8 @@ namespace Yttrium
                         // must decrease product(s)/increase reactant(s) xi<0
                         //------------------------------------------------------
                         xi.c = -E.prod.maxExtent(C,L);        // => vanishing product
-                        xmul.free();
-                        xmul << K;
-                        E.reac.massAction(xmul,C,L,-xi.c);    // => increase reactants
+                        xmul.free(); xmul << K;               // => initialize @K
+                        E.reac.massAction(xmul,C,L,-xi.c);    // => increase reactants (WARNING: sign)
                         ma.c = xmul.product();
 
                         assert(ma.a<zero);
@@ -275,8 +274,7 @@ namespace Yttrium
                         // must increase product(s)/decrease reactant(s) xi>0
                         //----------------------------------------------------------
                         xi.c = E.reac.maxExtent(C,L);          // => vanishing reactant
-                        xmul.free();
-                        xmul << E.mOne;
+                        xmul.free(); xmul << E.mOne;           // => initialize @ -1
                         E.prod.massAction(xmul,C,L,xi.c);      // => increase product
                         ma.c = xmul.product();
 
