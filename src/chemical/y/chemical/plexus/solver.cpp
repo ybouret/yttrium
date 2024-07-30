@@ -249,7 +249,7 @@ namespace Yttrium
                 }
             }
 
-            
+
             unsigned long cycle = 0;
             OutputFile fp("objective.dat");
 
@@ -291,10 +291,18 @@ namespace Yttrium
                 const xreal_t cost  = (*this)(u_opt);
                 sim.load(cost,cl.species,Cws,SubLevel);
                 Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
-
             }
+            std::cerr << "Ctop=" << Ctop << std::endl;
+            std::cerr << "sim= " << *(sim.head) << std::endl;
+            std::cerr << "Cws= " << Cws         << std::endl;
 
-
+            Matrix<int> Nu(base->size,cl.species.size);
+            size_t ii = 0;
+            for(const PNode *pn=base->head;pn;pn=pn->next)
+            {
+                (**pn).eq.topology(Nu[++ii],SubLevel);
+            }
+            std::cerr << "Nu=" << Nu << std::endl;
 
         }
     }

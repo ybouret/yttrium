@@ -81,7 +81,7 @@ namespace Yttrium
                                 const Level      L)
             {
                 AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
-                Vertex         &vtx = *ptr;
+                Vertex         &vtx = *ptr; assert(Memory::OutOfReach::Are0(&vtx[1],vtx.size()*sizeof(xreal_t)));
                 vtx.cost = cost;
                 for(const SNode *sn=spec.head;sn;sn=sn->next)
                 {
