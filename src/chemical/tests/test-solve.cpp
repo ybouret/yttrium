@@ -171,7 +171,7 @@ namespace Yttrium
         typedef AList::ProxyType                      ABank;
 
 
-        class Normalizer : public Counted
+        class Normalizer : public Quantized, public Counted
         {
         public:
             explicit Normalizer(const Cluster &cl) :
@@ -499,6 +499,7 @@ Y_UTEST(solve)
 
     }
 
+    Y_SIZEOF(Normalizer);
 
 
 }
