@@ -209,22 +209,20 @@ namespace Yttrium
                      const XReadable &Ktop,
                      XMLog           & xml)
             {
-                assert(rcl.size<=ceq.rows);
-                assert(rcl.species.size==ceq.cols);
+                assert(rcl.size        == ceq.rows);
+                assert(rcl.species.size== ceq.cols);
                 Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
-                bool          repl = false;
-                const size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                const xreal_t cost = overall(Ctop, repl, xml);
-                Y_XMLOG(xml, "found " << real_t(cost));
+                bool    repl = false;
+                size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                xreal_t ham0 = overall(Ctop, repl, xml);
+                Y_XMLOG(xml, "found " << real_t(ham0));
+
+
+                nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                xreal_t ham1= overall(Ctop, repl, xml);
+                Y_XMLOG(xml, "found " << real_t(ham1));
             }
 
-            xreal_t objectiveFunction(const XReadable &C, const Level L)
-            {
-                obj.free();
-                for(const ANode *an=apl.head;an;an=an->next)
-                    obj << (**an).affinity(afm.xmul,C,L);
-                return afm.xadd.normOf(obj);
-            }
 
             xreal_t  operator()(const xreal_t u)
             {
@@ -244,7 +242,6 @@ namespace Yttrium
                 return objectiveFunction(Cws,SubLevel);
             }
 
-
             const Cluster &    rcl; //!< reference to cluster
             const KeyType_     lek; //!< key
             const size_t       nsp; //!< number of species
@@ -263,6 +260,16 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
+
+            xreal_t objectiveFunction(const XReadable &C, const Level L)
+            {
+                obj.free();
+                for(const ANode *an=apl.head;an;an=an->next)
+                    obj << (**an).affinity(afm.xmul,C,L);
+                return afm.xadd.normOf(obj);
+            }
+
+
 
             //! after a successful compilation
             xreal_t overall(XWritable       & Ctop,
@@ -346,8 +353,8 @@ namespace Yttrium
                             sim.free( lower.yield() );
                         }
 
-                        Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
-                        Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
+                        //Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
+                        //Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
 
 
                         {
@@ -366,8 +373,8 @@ namespace Yttrium
                         sim.load(cost,rcl.species,Cws,SubLevel);
                         Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
                     }
-                    std::cerr << "Ctop=" << Ctop << std::endl;
-                    std::cerr << "Cws= " << Cws         << std::endl;
+                    //std::cerr << "Ctop=" << Ctop << std::endl;
+                    //std::cerr << "Cws= " << Cws         << std::endl;
                 }
 
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
