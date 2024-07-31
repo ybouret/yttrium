@@ -245,16 +245,16 @@ namespace Yttrium
             }
 
 
-            const Cluster &    rcl;
-            const KeyType_     lek;
+            const Cluster &    rcl; //!< reference to cluster
+            const KeyType_     lek; //!< key
             const size_t       nsp; //!< number of species
-            Aftermath          afm;
-            XMatrix            ceq;
-            Applicant::Series  aps;
-            CxxSeries<xreal_t> obj;
-            CxxArray<xreal_t>  Cin;
-            CxxArray<xreal_t>  Cex;
-            CxxArray<xreal_t>  Cws;
+            Aftermath          afm; //!< aftermath
+            XMatrix            ceq; //!< storage of phase space
+            Applicant::Series  aps; //!< applicant store
+            CxxSeries<xreal_t> obj; //!< for objective function
+            CxxArray<xreal_t>  Cin; //!< input  phase space
+            CxxArray<xreal_t>  Cex; //!< output  phase space
+            CxxArray<xreal_t>  Cws; //!< working phase space
             const size_t       dof; //!< primary eqs
             ABank              bnk; //!< pool of applicants
             AList              apl; //!< applicant list
