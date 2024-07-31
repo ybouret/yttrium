@@ -46,6 +46,7 @@ namespace Yttrium
             //
             // C++
             //__________________________________________________________________
+
             //! setup
             inline explicit Code(ConstType * const entry,
                                  const size_t      words) :
@@ -58,6 +59,23 @@ namespace Yttrium
                 for(size_t i=1,j=0;i<=words;++i,++j)
                     LittleEndian::Make( (uint8_t*) &data[i], entry[j]);
             }
+
+            //! setup
+            template <typename U>
+            inline explicit Code(const Readable<U> &arr) :
+            Quantized(),
+            data( arr.size(), 0 ),
+            blockAddr(data.size() > 0 ? & data[1] : 0),
+            blockSize(data.size() *sizeof(Type))
+            {
+                for(size_t i=1;i<=data.size();++i)
+                {
+                    ConstType word( arr[i] );
+                    LittleEndian::Make( (uint8_t*) &data[i], word );
+                }
+            }
+
+
 
             //! copy
             inline explicit Code(const Code &other) :
@@ -90,17 +108,24 @@ namespace Yttrium
         // C++
         //
         //______________________________________________________________________
-       
-        //! setup
+
+        //! setup from array
         inline explicit FlexibleKey(ConstType * const entry,
-                           const size_t      words) :
+                                    const size_t      words) :
         Memory::ReadOnlyBuffer(),
         code( new Code(entry,words) )
         {
         }
 
+        template <typename U>
+        inline explicit FlexibleKey(const Readable<U> &arr) :
+        Memory::ReadOnlyBuffer(),
+        code( new Code(arr) )
+        {
+        }
 
-        //! setup
+
+        //! copy
         inline FlexibleKey(const FlexibleKey &key) :
         Memory::ReadOnlyBuffer(),
         code( new Code( *key.code ) )

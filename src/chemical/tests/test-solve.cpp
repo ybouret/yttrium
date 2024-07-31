@@ -217,10 +217,13 @@ namespace Yttrium
                 xreal_t ham0 = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(ham0));
 
+                for(size_t iter=0;iter<2;++iter)
+                {
+                    nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                    const xreal_t ham1= overall(Ctop, repl, xml);
+                    Y_XMLOG(xml, "found " << real_t(ham1));
+                }
 
-                nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                xreal_t ham1= overall(Ctop, repl, xml);
-                Y_XMLOG(xml, "found " << real_t(ham1));
             }
 
 
