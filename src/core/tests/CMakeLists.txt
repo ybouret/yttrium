@@ -259,7 +259,7 @@ add_test(counting:permutation test-core counting_permutation)
 add_test(counting:combination test-core counting_combination)
 add_test(counting:nested      test-core counting_nested)
 
-#associatvie
+#associative
 add_test(associative:suffix-tree  test-core associative_suffix_tree)
 add_test(associative:suffix-map   test-core associative_suffix_map ${DATA}/small.db)
 add_test(associative:suffix-set   test-core associative_suffix_set ${DATA}/small.db)
@@ -271,6 +271,7 @@ add_test(associative:lek          test-core associative_lek)
 add_test(associative:key-set      test-core associative_key_set)
 add_test(associative:address-book test-core associative_addrbook)
 add_test(associative:pod-key      test-core associative_pod_key)
+add_test(associative:flexible-key test-core associative_flexible_key)
 
 
 

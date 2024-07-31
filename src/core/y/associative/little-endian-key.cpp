@@ -45,8 +45,8 @@ namespace Yttrium
     template <>
     UnsignedInt<2>::Type LittleEndianKey:: get<2>() const noexcept
     {
-        uint16_t b0 = code[1];
-        uint16_t b1 = code[0];
+        const uint16_t b0 = code[1];
+        const uint16_t b1 = code[0];
         return b0 | (b1<<8);
     }
 
@@ -60,10 +60,10 @@ namespace Yttrium
     template <>
     UnsignedInt<4>::Type LittleEndianKey:: get<4>() const noexcept
     {
-        uint32_t b0 = code[3];
-        uint32_t b1 = code[2];
-        uint32_t b2 = code[1];
-        uint32_t b3 = code[0];
+        const uint32_t b0 = code[3];
+        const uint32_t b1 = code[2];
+        const uint32_t b2 = code[1];
+        const uint32_t b3 = code[0];
 
         return b0 | (b1<<8) | (b2<<16) | (b3<<24);
     }
@@ -80,14 +80,14 @@ namespace Yttrium
     template <>
     UnsignedInt<8>::Type LittleEndianKey:: get<8>() const noexcept
     {
-        uint64_t b0 = code[7];
-        uint64_t b1 = code[6];
-        uint64_t b2 = code[5];
-        uint64_t b3 = code[4];
-        uint64_t b4 = code[3];
-        uint64_t b5 = code[2];
-        uint64_t b6 = code[1];
-        uint64_t b7 = code[0];
+        const uint64_t b0 = code[7];
+        const uint64_t b1 = code[6];
+        const uint64_t b2 = code[5];
+        const uint64_t b3 = code[4];
+        const uint64_t b4 = code[3];
+        const uint64_t b5 = code[2];
+        const uint64_t b6 = code[1];
+        const uint64_t b7 = code[0];
 
         return b0 | (b1<<8) | (b2<<16) | (b3<<24) | (b4<<32) | (b5<<40) | (b6<<48) | (b7<<56);
     }
@@ -103,6 +103,8 @@ namespace Yttrium
         code[2] = uint8_t(x>>40);
         code[1] = uint8_t(x>>48);
         code[0] = uint8_t(x>>56);
+
+        assert( x == get<8>() );
 
     }
 
