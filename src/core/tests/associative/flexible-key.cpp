@@ -85,7 +85,7 @@ Y_UTEST(associative_flexible_key)
     }
 
     {
-        const uint32_t data[] = { 1,2,3,4 };
+        const uint32_t data[] = { 0x12345678,2,3,4 };
         FlexibleKey<uint32_t> key(data,sizeof(data)/sizeof(data[1]));
 
         key.displayHexadecimal(std::cerr) << std::endl;
