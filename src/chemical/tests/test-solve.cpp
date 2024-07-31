@@ -204,20 +204,11 @@ namespace Yttrium
                 assert(cl.size<=ceq.rows);
                 assert(cl.species.size==ceq.cols);
                 Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << cl.size << "' species='" << cl.species.size << "'");
-                bool         repl = false;
-                const size_t nmax = compile(cl, Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                const size_t base = extract(cl,xml);
+                bool          repl = false;
+                const size_t  nmax = compile(cl, Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                const xreal_t cost = overall(cl, Ctop, repl, xml);
 
-                switch(base)
-                {
-                    case 1:
-                        break;
-                    default:
-                        break;
-                }
-
-                const xreal_t aff = improve(cl, Ctop, repl, xml);
-
+                Y_XMLOG(xml, "found " << real_t(cost));
             }
 
             xreal_t objectiveFunction(const XReadable &C, const Level L)
@@ -264,6 +255,29 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
+
+            //! after a successful compilation
+            xreal_t overall(const Cluster   & cl,
+                            XWritable       & Ctop,
+                            const bool        repl,
+                            XMLog           & xml)
+            {
+                assert(aps.size()>0);
+                const size_t dims = extract(cl,xml);
+                switch(dims)
+                {
+                    case 0:  // shouldn't happen
+                        throw Specific::Exception("Normalizer", "no equilbrium");
+
+                    case 1: // use single winner
+                        return objectiveFunction(cl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel),TopLevel);
+
+                    default: // will improve with simplex
+                        break;
+                }
+
+                return improve(cl,Ctop,repl,xml);
+            }
 
             xreal_t  improve(const Cluster   & cl,
                              XWritable       & Ctop,
@@ -373,11 +387,20 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Extract");
 
+                //--------------------------------------------------------------
+                //
                 // reset applicant/ortho family
+                //
+                //--------------------------------------------------------------
+
                 apl.free();
                 qfm.free();
 
+                //--------------------------------------------------------------
+                //
                 // loop over applicants
+                //
+                //--------------------------------------------------------------
                 const size_t nap = aps.size();
                 for(size_t i=1;i<=nap;++i)
                 {
@@ -390,6 +413,12 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
+                // return apl.size <= min(dof,nap)
+                //
+                //--------------------------------------------------------------
+                assert(apl.size <= Min(dof,nap) );
                 Y_XMLOG(xml, "#applicant  = " << aps.size());
                 Y_XMLOG(xml, "#primary    = " << dof);
                 Y_XMLOG(xml, "#family     = " << apl.size);
