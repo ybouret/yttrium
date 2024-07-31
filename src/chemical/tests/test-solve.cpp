@@ -174,7 +174,14 @@ namespace Yttrium
         class Normalizer : public Quantized, public Counted
         {
         public:
+            typedef LittleEndianKey     KeyType;
+            typedef LittleEndianAddress KeyType_;
+
+            typedef ArkPtr<KeyType,Normalizer> Ptr;
+
             explicit Normalizer(const Cluster &cl) :
+            rcl(cl),
+            lek(rcl),
             afm(),
             ceq(cl.size,cl.species.size),
             aps(cl.size),
@@ -194,7 +201,7 @@ namespace Yttrium
             {
             }
 
-
+            const KeyType & key() const noexcept { return lek; }
 
             void run(const Cluster   & cl,
                      XWritable       & Ctop,
@@ -239,7 +246,8 @@ namespace Yttrium
             }
 
 
-
+            const Cluster &    rcl;
+            const KeyType_     lek;
             Aftermath          afm;
             XMatrix            ceq;
             Applicant::Series  aps;
@@ -538,6 +546,9 @@ Y_UTEST(solve)
     const XReadable &K = clusters.K(0);
 
     XVector C0(lib->size(),0);
+
+    SuffixSet<LittleEndianKey,Normalizer::Ptr> NDB;
+
 
     for(size_t iter=0;iter<1;++iter)
     {
