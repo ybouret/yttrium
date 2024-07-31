@@ -131,10 +131,10 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! generic comparison, C++ style
-        static SignType Compare(const XReal &lhs, const XReal &rhs) noexcept;
-        static SignType Compare(const XReal &lhs, const T      rhs) noexcept;
-        static SignType Compare(const T      lhs, const XReal &rhs) noexcept;
+
+        static SignType Compare(const XReal &lhs, const XReal &rhs) noexcept; //!< generic comparison, C++ style
+        static SignType Compare(const XReal &lhs, const T      rhs) noexcept; //!< alias
+        static SignType Compare(const T      lhs, const XReal &rhs) noexcept; //!< alias
 
         //! helper to implement friend functions
 #define Y_XREAL_CMP(OP,RESULT) \

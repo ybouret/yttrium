@@ -127,7 +127,7 @@ namespace Yttrium
             {
             }
 
-            size_t sub() const noexcept { return eq.indx[SubLevel]; }
+            size_t isub() const noexcept { return eq.indx[SubLevel]; }
 
             real_t affinity(XMul            &X,
                             const XReadable &C,
@@ -156,10 +156,10 @@ namespace Yttrium
                 return os;
             }
 
-            const Equilibrium &eq;
-            const xreal_t      eK;
-            const XReadable   &cc;
-            const xreal_t      xi;
+            const Equilibrium &eq; //!< equilibrium
+            const xreal_t      eK; //!< eq.K
+            const XReadable   &cc; //!< winning phase space
+            const xreal_t      xi; //!< extent leading to cc
             const xreal_t      ax; //!< |xi|
 
         private:
@@ -178,22 +178,24 @@ namespace Yttrium
             typedef LittleEndianAddress KeyType_;
 
             typedef ArkPtr<KeyType,Normalizer> Ptr;
+            typedef SuffixSet<KeyType,Ptr>     Set;
 
             explicit Normalizer(const Cluster &cl) :
             rcl(cl),
             lek(rcl),
+            nsp(cl.species.size),
             afm(),
-            ceq(cl.size,cl.species.size),
+            ceq(cl.size,nsp),
             aps(cl.size),
             obj(cl.size),
-            Cin(cl.species.size,0),
-            Cex(cl.species.size,0),
-            Cws(cl.species.size,0),
+            Cin(nsp,0),
+            Cex(nsp,0),
+            Cws(nsp,0),
             dof(cl.Nu.rows),
             bnk(),
             apl(bnk),
-            qfm(cl.species.size,cl.size),
-            sim(cl.size,cl.species.size)
+            qfm(nsp,cl.size),
+            sim(cl.size,nsp)
             {
             }
 
@@ -203,18 +205,16 @@ namespace Yttrium
 
             const KeyType & key() const noexcept { return lek; }
 
-            void run(const Cluster   & cl,
-                     XWritable       & Ctop,
+            void run(XWritable       & Ctop,
                      const XReadable &Ktop,
                      XMLog           & xml)
             {
-                assert(cl.size<=ceq.rows);
-                assert(cl.species.size==ceq.cols);
-                Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << cl.size << "' species='" << cl.species.size << "'");
+                assert(rcl.size<=ceq.rows);
+                assert(rcl.species.size==ceq.cols);
+                Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
                 bool          repl = false;
-                const size_t  nmax = compile(cl, Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                const xreal_t cost = overall(cl, Ctop, repl, xml);
-
+                const size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                const xreal_t cost = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(cost));
             }
 
@@ -222,9 +222,7 @@ namespace Yttrium
             {
                 obj.free();
                 for(const ANode *an=apl.head;an;an=an->next)
-                {
-                    obj << (**an).affinity(afm.xmul, C, L);
-                }
+                    obj << (**an).affinity(afm.xmul,C,L);
                 return afm.xadd.normOf(obj);
             }
 
@@ -233,7 +231,7 @@ namespace Yttrium
                 const xreal_t one = 1;
                 const xreal_t v   = one - u;
 
-                for(size_t j=Cin.size();j>0;--j)
+                for(size_t j=nsp;j>0;--j)
                 {
                     const xreal_t c0   = Cin[j];
                     const xreal_t c1   = Cex[j];
@@ -242,12 +240,14 @@ namespace Yttrium
                     if(cmax<cmin) Swap(cmin,cmax);
                     Cws[j] = Clamp(cmin,v*c0+u*c1,cmax);
                 }
+
                 return objectiveFunction(Cws,SubLevel);
             }
 
 
             const Cluster &    rcl;
             const KeyType_     lek;
+            const size_t       nsp; //!< number of species
             Aftermath          afm;
             XMatrix            ceq;
             Applicant::Series  aps;
@@ -265,30 +265,28 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 
             //! after a successful compilation
-            xreal_t overall(const Cluster   & cl,
-                            XWritable       & Ctop,
+            xreal_t overall(XWritable       & Ctop,
                             const bool        repl,
                             XMLog           & xml)
             {
                 assert(aps.size()>0);
-                const size_t dims = extract(cl,xml);
+                const size_t dims = extract(rcl,xml);
                 switch(dims)
                 {
                     case 0:  // shouldn't happen
                         throw Specific::Exception("Normalizer", "no equilbrium");
 
                     case 1: // use single winner
-                        return objectiveFunction(cl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel),TopLevel);
+                        return objectiveFunction(rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel),TopLevel);
 
                     default: // will improve with simplex
                         break;
                 }
 
-                return improve(cl,Ctop,repl,xml);
+                return improve(Ctop,repl,xml);
             }
 
-            xreal_t  improve(const Cluster   & cl,
-                             XWritable       & Ctop,
+            xreal_t  improve(XWritable       & Ctop,
                              const bool        repl,
                              XMLog           & xml)
             {
@@ -301,7 +299,7 @@ namespace Yttrium
                     sim.free();
                     if(!repl)
                     {
-                        const xreal_t val = sim.load( objectiveFunction(Ctop, TopLevel), cl.species, Ctop, TopLevel).cost;
+                        const xreal_t val = sim.load( objectiveFunction(Ctop, TopLevel), rcl.species, Ctop, TopLevel).cost;
                         Y_XMLOG(xml, std::setw(15) << real_t(val) << " @Ctop");
                     }
                     else
@@ -312,7 +310,7 @@ namespace Yttrium
                     for(const ANode *an=apl.head;an;an=an->next)
                     {
                         const Applicant &app = **an;
-                        const xreal_t    val = sim.load( objectiveFunction(app.cc, SubLevel), cl.species, app.cc, SubLevel).cost;
+                        const xreal_t    val = sim.load( objectiveFunction(app.cc, SubLevel), rcl.species, app.cc, SubLevel).cost;
                         Y_XMLOG(xml,std::setw(15) << real_t(val) << " @" << app.eq);
                     }
 
@@ -365,14 +363,14 @@ namespace Yttrium
 
                         const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
                         const xreal_t cost  = (*this)(u_opt);
-                        sim.load(cost,cl.species,Cws,SubLevel);
+                        sim.load(cost,rcl.species,Cws,SubLevel);
                         Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
                     }
                     std::cerr << "Ctop=" << Ctop << std::endl;
                     std::cerr << "Cws= " << Cws         << std::endl;
                 }
 
-                cl.transfer(Ctop, TopLevel, Cws, SubLevel);
+                rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
                 // project ?
 
@@ -413,7 +411,7 @@ namespace Yttrium
                 for(size_t i=1;i<=nap;++i)
                 {
                     const Applicant &app = aps[i];
-                    if( qfm.wouldAccept( cl.topology[ app.sub() ] ) )
+                    if( qfm.wouldAccept( cl.topology[ app.isub() ] ) )
                     {
                         apl << app;
                         qfm.expand();
@@ -441,8 +439,7 @@ namespace Yttrium
                 return apl.size;
             }
 
-            size_t compile(const Cluster   & cl,
-                           XWritable       & Ctop,
+            size_t compile(XWritable       & Ctop,
                            const XReadable & Ktop,
                            bool            & repl,
                            XMLog           &  xml)
@@ -456,12 +453,12 @@ namespace Yttrium
                 ++iter;
                 Y_XMLOG(xml, "[Examine] [#iter=" << iter << "]");
                 aps.free();
-                for(const ENode *en=cl.head;en;en=en->next)
+                for(const ENode *en=rcl.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
                     const size_t       ii = aps.size()+1;
-                    XWritable         &cc = cl.transfer(ceq[ii], SubLevel, Ctop, TopLevel);
+                    XWritable         &cc = rcl.transfer(ceq[ii], SubLevel, Ctop, TopLevel);
                     const Situation    st = afm.seek(cc, SubLevel, eq, eK);
 
                     switch(st)
@@ -472,7 +469,7 @@ namespace Yttrium
 
                         case Crucial:
                             Y_XMLOG(xml, "[Crucial] " << eq.name);
-                            cl.transfer(Ctop, TopLevel, cc, SubLevel);
+                            rcl.transfer(Ctop, TopLevel, cc, SubLevel);
                             repl = true;
                             goto EXAMINE;
 
@@ -491,7 +488,7 @@ namespace Yttrium
                 const size_t nmax = aps.size();
                 for(size_t i=1;i<=nmax;++i)
                 {
-                    const Applicant   &lhs = aps[i]; if(xml.verbose)  lhs.display( xml() << "| ", cl.uuid, true) << std::endl;
+                    const Applicant   &lhs = aps[i]; if(xml.verbose)  lhs.display( xml() << "| ", rcl.uuid, true) << std::endl;
                     const Equilibrium &lEq = lhs.eq;
                     const char * const lid = lEq.name.c_str();
 
@@ -512,6 +509,32 @@ namespace Yttrium
 
         };
 
+
+        class Solver : public Normalizer::Set
+        {
+        public:
+            static const char * const CallSign;
+
+            explicit Solver(const Clusters &cls)
+            {
+                for(const Cluster *cl=cls->head;cl;cl=cl->next)
+                {
+                    const Normalizer::Ptr ptr = new Normalizer(*cl);
+                    if(!insert(ptr)) throw Specific::Exception(CallSign, "corrupted cluster address");
+                }
+            }
+
+            virtual ~Solver() noexcept
+            {
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Solver);
+        };
+
+
+        const char * const Solver:: CallSign = "Chemical::Solver";
     }
 }
 
@@ -547,8 +570,7 @@ Y_UTEST(solve)
 
     XVector C0(lib->size(),0);
 
-    SuffixSet<LittleEndianKey,Normalizer::Ptr> NDB;
-
+    Solver  solver(clusters);
 
     for(size_t iter=0;iter<1;++iter)
     {
@@ -561,7 +583,7 @@ Y_UTEST(solve)
         for(const Cluster *cl=clusters->head;cl;cl=cl->next)
         {
             Normalizer normalize(*cl);
-            normalize.run(*cl, C0, K, xml);
+            normalize.run(C0, K, xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
         }
 
@@ -570,6 +592,7 @@ Y_UTEST(solve)
     }
 
     Y_SIZEOF(Normalizer);
+    Y_SIZEOF(Clusters);
 
 
 }

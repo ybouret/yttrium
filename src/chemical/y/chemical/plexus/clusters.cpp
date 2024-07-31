@@ -16,6 +16,8 @@ namespace Yttrium
         }
 
         Clusters:: Clusters(Equilibria &eqs, XMLog &xml) :
+        Quantized(),
+        Counted(),
         Proxy<const Cluster::List>(),
         cls(),
         shK(),

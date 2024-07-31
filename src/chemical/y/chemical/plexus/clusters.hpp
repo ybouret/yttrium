@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Clusters : public Proxy<const Cluster::List>
+        class Clusters : public Quantized, public Counted, public Proxy<const Cluster::List>
         {
         public:
             //__________________________________________________________________
@@ -68,6 +68,15 @@ namespace Yttrium
             const size_t  maxORD;  //!< max combination order
             const SList   species; //!< all reactive species
         };
+
+        //______________________________________________________________________
+        //
+        //
+        //! alias
+        //
+        //______________________________________________________________________
+        typedef ArcPtr<Clusters> SharedClusters;
+
 
     }
 

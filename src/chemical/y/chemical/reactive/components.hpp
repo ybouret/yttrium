@@ -110,6 +110,7 @@ namespace Yttrium
                                const Level       L,
                                const xreal_t     xi) const;
 
+            //! get affinity from fully valid concentration
             real_t affinity(const xreal_t    K,
                             XMul            &xmul,
                             const XReadable &C,
