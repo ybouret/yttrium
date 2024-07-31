@@ -510,27 +510,48 @@ namespace Yttrium
         };
 
 
-        class Solver : public Normalizer::Set
+        class Solver : public Proxy<const Normalizer::Set>
         {
         public:
             static const char * const CallSign;
+            typedef Normalizer::Set::Iterator      Iterator;
+            typedef Normalizer::Set::ConstIterator ConstIterator;
 
-            explicit Solver(const Clusters &cls)
+            explicit Solver(const SharedClusters &usr) :
+            cls(usr),
+            ndb()
             {
-                for(const Cluster *cl=cls->head;cl;cl=cl->next)
+                for(const Cluster *cl=(*cls)->head;cl;cl=cl->next)
                 {
                     const Normalizer::Ptr ptr = new Normalizer(*cl);
-                    if(!insert(ptr)) throw Specific::Exception(CallSign, "corrupted cluster address");
+                    if(!ndb.insert(ptr)) throw Specific::Exception(CallSign, "corrupted cluster address");
                 }
             }
 
-            virtual ~Solver() noexcept
+            virtual ~Solver() noexcept { }
+
+            void run(XWritable       & Ctop,
+                     const XReadable & Ktop,
+                     XMLog           &  xml)
             {
+                size_t n = ndb.size();
+                for(Iterator it=ndb.begin();n>0;--n,++it)
+                {
+                    Normalizer &normalizer = **it; assert( (*cls)->owns( & normalizer.rcl ) );
+                    normalizer.run(Ctop,Ktop,xml);
+                }
             }
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
+            SharedClusters  cls;
+            Normalizer::Set ndb;
+
+            virtual ConstInterface & surrogate() const noexcept
+            {
+                return ndb;
+            }
         };
 
 
@@ -563,14 +584,14 @@ Y_UTEST(solve)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    bool     verbose = true;
-    XMLog    xml(verbose);
-    Clusters clusters(eqs,xml);
-    const XReadable &K = clusters.K(0);
+    bool           verbose = true;
+    XMLog          xml(verbose);
+    SharedClusters cls = new Clusters(eqs,xml);
+    const XReadable &K = cls->K(0);
 
     XVector C0(lib->size(),0);
 
-    Solver  solver(clusters);
+    Solver  solver(cls);
 
     for(size_t iter=0;iter<1;++iter)
     {
@@ -579,13 +600,8 @@ Y_UTEST(solve)
         //C0.ld(0);
 
         lib(std::cerr << "C0=","\t[",C0,"]");
-
-        for(const Cluster *cl=clusters->head;cl;cl=cl->next)
-        {
-            Normalizer normalize(*cl);
-            normalize.run(C0, K, xml);
-            lib(std::cerr << "C1=","\t[",C0,"]");
-        }
+        solver.run(C0,K, xml);
+        lib(std::cerr << "C1=","\t[",C0,"]");
 
 
 
