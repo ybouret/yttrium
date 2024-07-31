@@ -1,13 +1,20 @@
 
 #include "y/associative/little-endian-key.hpp"
+#include "y/associative/little-endian.hpp"
 #include "y/stream/output.hpp"
 #include <cstring>
 
 namespace Yttrium
 {
-    LittleEndianKey:: ~LittleEndianKey() noexcept
+    void LittleEndianKey:: clear() noexcept
     {
         memset(code,0,sizeof(code));
+
+    }
+
+    LittleEndianKey:: ~LittleEndianKey() noexcept
+    {
+        clear();
     }
 
     LittleEndianKey:: LittleEndianKey(const LittleEndianKey &other) noexcept :
@@ -37,7 +44,7 @@ namespace Yttrium
 
     void LittleEndianKey::setup(const uint8_t &x) noexcept
     {
-        code[0] = x;
+        LittleEndian::Make(code,x);
         assert(x==get<1>());
     }
 
@@ -52,8 +59,7 @@ namespace Yttrium
 
     void LittleEndianKey::setup(const uint16_t &x) noexcept
     {
-        code[1] = uint8_t(x);
-        code[0] = uint8_t(x>>8);
+        LittleEndian::Make(code,x);
         assert( x == get<2>() );
     }
 
@@ -70,10 +76,7 @@ namespace Yttrium
 
     void LittleEndianKey::setup(const uint32_t &x) noexcept
     {
-        code[3] = uint8_t(x);
-        code[2] = uint8_t(x>>8);
-        code[1] = uint8_t(x>>16);
-        code[0] = uint8_t(x>>24);
+        LittleEndian::Make(code,x);
         assert( x == get<4>() );
     }
 
@@ -95,17 +98,8 @@ namespace Yttrium
 
     void LittleEndianKey::setup(const uint64_t &x) noexcept
     {
-        code[7] = uint8_t(x);
-        code[6] = uint8_t(x>>8);
-        code[5] = uint8_t(x>>16);
-        code[4] = uint8_t(x>>24);
-        code[3] = uint8_t(x>>32);
-        code[2] = uint8_t(x>>40);
-        code[1] = uint8_t(x>>48);
-        code[0] = uint8_t(x>>56);
-
+        LittleEndian::Make(code,x);
         assert( x == get<8>() );
-
     }
 
 

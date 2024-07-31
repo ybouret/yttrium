@@ -4,6 +4,7 @@
 #define Y_Associative_LE_Key_Included 1
 
 #include "y/memory/buffer/ro.hpp"
+
 #include "y/type/ints.hpp"
 
 namespace Yttrium
@@ -69,6 +70,7 @@ namespace Yttrium
 
     private:
         Y_DISABLE_ASSIGN(LittleEndianKey);
+        void clear() noexcept;
         void setup(const uint8_t  &) noexcept;
         void setup(const uint16_t &) noexcept;
         void setup(const uint32_t &) noexcept;
