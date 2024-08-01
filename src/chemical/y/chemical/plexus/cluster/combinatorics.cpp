@@ -133,6 +133,17 @@ namespace Yttrium
                 // create mixed equilibrium
                 //--------------------------------------------------------------
                 AutoPtr<MixedEquilibrium> mx = new MixedEquilibrium(eqs->size()+1,*this,weight,shK);
+
+                for(const ENode *en=head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(mx->analogous(eq))
+                    {
+                        std::cerr << "[ANALOGOUS] " << eq.name << " and " << mx->name << std::endl;
+                        exit(1);
+                    }
+                }
+
                 (*this) << *mx;
                 try {
 

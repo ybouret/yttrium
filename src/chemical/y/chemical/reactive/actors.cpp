@@ -41,6 +41,18 @@ namespace Yttrium
             return false;
         }
 
+        bool Actors:: akin(const Actors &other) const noexcept
+        {
+            if(other.actors.size!=actors.size) return false;
+
+            for(const Actor *mine = actors.head;mine;mine=mine->next)
+            {
+                if(!other.hired(mine->sp)) return false;
+            }
+            
+
+            return true;
+        }
 
 
         void Actors:: operator()(const unsigned nu, const Species &sp)

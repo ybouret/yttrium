@@ -212,7 +212,14 @@ namespace Yttrium
 
             //! human readable kind
             const char *kindText() const noexcept;
-            
+
+            //! check
+            bool analogous(const Components &other) const noexcept
+            {
+                return (reac.akin(other.reac) && prod.akin(other.prod))
+                ||     (reac.akin(other.prod) && prod.akin(other.reac));
+            }
+
 
             //__________________________________________________________________
             //

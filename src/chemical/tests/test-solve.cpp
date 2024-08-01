@@ -596,9 +596,10 @@ Y_UTEST(solve)
 
     bool           verbose = true;
     XMLog          xml(verbose);
-    SharedClusters cls = new Clusters(eqs,xml);
-    const XReadable &K = cls->K(0);
+    SharedClusters   cls = new Clusters(eqs,xml);
+    const XReadable &K   = cls->K(0);
 
+    
     XVector C0(lib->size(),0);
 
     Solver  solver(cls);

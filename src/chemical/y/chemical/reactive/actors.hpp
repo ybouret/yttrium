@@ -52,6 +52,9 @@ namespace Yttrium
             //! check species
             bool hired(const Species &sp) const noexcept;
 
+            //! check same species, even with different coefficient
+            bool akin(const Actors &team) const noexcept;
+
             //! compute mass action
             void massAction(XMul &xmul, const XReadable &C, const Level L) const;
 
