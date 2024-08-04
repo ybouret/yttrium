@@ -99,31 +99,20 @@ Hence for a starting point $\vec C_0$, the concentration to decrease is:
 \begin{array}{rcl}
 	\Xi_i(\vec C_0 + \sum_j \xi_j \vec \nu_j ) & = & \Xi_i(\vec C_0 + \xi_i \vec \nu_i + \sum_{j\not=i} \xi_j \vec \nu_j )\\
 	& \simeq & \Xi_i(\vec C_0 + \xi_i \vec \nu_i) + \langle \vec \Psi_{\xi_i} \vert \sum_{j\not=i} \xi_j \vec \nu_j \rangle\\
-	& \simeq & \sigma_i (\xi_i-\xi_i^\star) + \beta_i (\xi_i - \xi_i^\star)^2 + \sum_{j\not=i} \langle \vec \Psi_{\xi_i} \vert \vec \nu_j \rangle \xi_j\\
+	& \simeq & \langle \vec \Psi_i^\star \vert \vec \nu_i \rangle  (\xi_i-\xi_i^\star)   + \sum_{j\not=i} \langle \vec \Psi_i \vert \vec \nu_j \rangle \xi_j\\
 \end{array}
 \end{equation}
 
-Let us define:
 \begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	f_i(\xi_i) & = & \sigma_i (\xi_i-\xi_i^\star) + \beta_i (\xi_i - \xi_i^\star)^2\\
-	\beta_i {\xi_i^\star}^2 & = &  \Xi_i + \sigma_i \xi_i^\star \\
-	f_i(0) & = & \Xi_i\\
-	f_i(\xi_i^\star) & = & 0\\
-\end{array}
-\right.
-\end{equation} 	
-	
-There is one unique solution to
-\begin{equation}
-	f_i(\xi_i) = \lambda \Xi_i, \; \xi_i\in[0,\xi_i^\star], \lambda \in[0:1]
+ \sigma_i = - \langle \vec \Psi_i^\star \vert \vec \nu_i \rangle > 0
 \end{equation}
 	
 \begin{equation}
-f_i(\xi_i) - \lambda \Xi_i = \beta_i \xi_i^2 
-+ \xi_i \left( \sigma_i - 2\beta_i \xi_i^\star\right) 
-+ \underbrace{\beta_i {\xi_i^\star}^2 - \sigma_i \xi_i^\star- \lambda \Xi_i}_{(1-\lambda)\Xi_i}
+	g_i(\vec C) = \dfrac{\Xi_i(\vec C) }{\sigma_i} \simeq (\xi_i^\star - \xi_i) - \sum_{j\not=i}  \dfrac{\langle \vec \Psi_i \vert \vec \nu_j \rangle}{\sigma_i} \xi_j\\
+\end{equation}
+	
+\begin{equation}
+	\xi_i + \sum_{j\not=i}  \dfrac{\langle \vec \Psi_i \vert \vec \nu_j \rangle}{\sigma_i} \xi_j \simeq \xi_i^\star - g_i(\vec{C})
 \end{equation}
 	
 \subsection{Conservation}
