@@ -254,14 +254,14 @@ namespace Yttrium
                     apn g = 0;
                     for(size_t i=1;i<=m;++i)
                     {
-                        for(size_t j=1;j<=m;++j)
+                        for(size_t j=i;j<=m;++j)
                         {
                             apz sum = 0;
                             for(size_t k=1;k<=n;++k)
                             {
                                 sum += Nu[k][i] * aNu3[k][j];
                             }
-                            P[i][j] = sum;
+                            P[i][j] = P[j][i] = sum;
                             {
                                 const apn gtmp = apn::GCD(sum.n,dNu2.n);
                                 if(g<=0) 
