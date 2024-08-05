@@ -264,7 +264,7 @@ namespace Yttrium
                             P[i][j] = P[j][i] = sum;
                             {
                                 const apn gtmp = apn::GCD(sum.n,dNu2.n);
-                                if(g<=0) 
+                                if(g<=0)
                                     g = gtmp;
                                 else
                                     g = Min(g,gtmp);
@@ -369,9 +369,7 @@ namespace Yttrium
                 xreal_t ham0 = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(ham0));
 
-                NDSolve(Ctop, Ktop, xml);
 
-                return;
 
                 for(size_t iter=0;iter<1;++iter)
                 {
@@ -379,6 +377,10 @@ namespace Yttrium
                     const xreal_t ham1= overall(Ctop, repl, xml);
                     Y_XMLOG(xml, "found " << real_t(ham1));
                 }
+
+                NDSolve(Ctop, Ktop, xml);
+
+                return;
 
             }
 
@@ -581,19 +583,25 @@ namespace Yttrium
                 return improve(Ctop,repl,xml);
             }
 
-            void NDSolve(XWritable       &Ctop,
+            bool NDSolve(XWritable       &Ctop,
                          const XReadable &Ktop,
                          XMLog           &xml)
             {
                 Y_XML_SECTION(xml, "NDSolve");
 
                 bool          repl = false;
-                const size_t  nmax = compile(Ctop, Ktop, repl, xml);  if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                for(size_t i=1;i<=nmax;++i)
+                const size_t  nmax = compile(Ctop, Ktop, repl, xml);  
+                if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
+
+                if(xml.verbose)
                 {
-                    const Equilibrium &eq = aps[i].eq;
-                    rcl.display(std::cerr, eq, Ktop) << std::endl;
+                    for(size_t i=1;i<=nmax;++i)
+                    {
+                        const Equilibrium &eq = aps[i].eq;
+                        rcl.display(std::cerr, eq, Ktop) << std::endl;
+                    }
                 }
+
                 const size_t  n = extract(xml);
                 const size_t  m = nsp;
 
@@ -604,6 +612,7 @@ namespace Yttrium
                 XMatrix &chi = Chi[n];
                 XArray  &lhs = Lhs[n];
 
+                // fill jacobian and lhs
                 {
                     size_t ii=0;
                     for(const ANode *an=apl.head;an;an=an->next)
@@ -619,7 +628,7 @@ namespace Yttrium
                 }
 
 
-
+                // compute phi*Nu'
                 XAdd &xadd = afm.xadd;
                 xadd.make(n);
                 for(size_t i=n;i>0;--i)
@@ -646,15 +655,21 @@ namespace Yttrium
 
                 if(!lu.build(chi))
                 {
-                    std::cerr << "singular" << std::endl;
-                    exit(0);
+                    Y_XMLOG(xml, "singular");
+                    return false;
                 }
 
 
+                // compute extent in lhs
                 lu.solve(chi,lhs);
                 std::cerr << "xi=" << lhs << std::endl;
+                rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
 
                 assert(xadd.isEmpty());
+                bool            cut = false;
+                xreal_t         fac = 1;
+                const   xreal_t zero;
+
                 for(size_t j=m;j>0;--j)
                 {
                     for(size_t k=n;k>0;--k)
@@ -662,12 +677,72 @@ namespace Yttrium
                         const xreal_t p = Nu[k][j] * lhs[k];
                         xadd << p;
                     }
-                    Cws[j] = xadd.sum();
+                    const xreal_t dC = Cws[j] = xadd.sum();
+                    if(dC<zero)
+                    {
+                        const xreal_t scale = Cin[j]/(-dC);
+                        if(scale<fac)
+                        {
+                            cut = true;
+                            fac = scale;
+                        }
+                    }
                 }
-                std::cerr << "dC=" << Cws << std::endl;
+
+                std::cerr << "C0  = " << Cin << std::endl;
+                std::cerr << "dC  = " << Cws << std::endl;
+                std::cerr << "cut = " << cut << std::endl;
+                std::cerr << "fac = " << fac << std::endl;
 
 
+                if(cut) {
+                    fac /= 2;
+                    for(size_t j=m;j>0;--j)
+                    {
+                        Cex[j] = Cin[j] + fac * Cws[j];
+                    }
+                }
+                else
+                {
+                    for(size_t j=m;j>0;--j)
+                    {
+                        Cex[j] = Cin[j] + Cws[j];
+                    }
+                }
 
+
+                std::cerr << "C1  = " << Cex << std::endl;
+                for(const ANode *an=apl.head;an;an=an->next)
+                {
+                    const Equilibrium &eq = (**an).eq;
+                    if(eq.reac.deficient(Cex, SubLevel)) throw Specific::Exception(eq.name.c_str(),"deficient in reactant(s)");
+                    if(eq.prod.deficient(Cex, SubLevel)) throw Specific::Exception(eq.name.c_str(),"deficient in product(s)");
+                }
+
+                Triplet<xreal_t> xx = { 0, -1, 1 };
+                Triplet<xreal_t> ff = { (*this)(xx.a), -1, (*this)(xx.c) };
+                const xreal_t    f0 = ff.a;
+
+                std::cerr << "xx=" << xx << ", ff=" << ff << std::endl;
+
+
+                {
+                    OutputFile fp("ndsolve.dat");
+                    const size_t np(1000);
+                    for(size_t j=0;j<=np;++j)
+                    {
+                        const real_t u = real_t(j)/np;
+                        fp("%.15g %.15g\n", u,  (real_t( (*this)(u) ) ) );
+                    }
+                    fp << "\n";
+                }
+
+                const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
+                const xreal_t cost  = (*this)(u_opt);
+                Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) );
+                rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
+
+                return f0 < cost;
             }
 
             //! improve by simplex lookUp
@@ -993,7 +1068,7 @@ Y_UTEST(solve)
     SharedClusters   cls = new Clusters(eqs,xml);
     const XReadable &K   = cls->K(0);
 
-    
+
     XVector C0(lib->size(),0);
 
     Solver  solver(cls);
