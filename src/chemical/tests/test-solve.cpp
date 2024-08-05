@@ -11,6 +11,8 @@
 #include "y/orthogonal/family.hpp"
 #include "y/data/list/ordered.hpp"
 
+#include "y/associative/flexible-key.hpp"
+
 #include "y/mkl/opt/minimize.hpp"
 #include "y/stream/libc/output.hpp"
 
@@ -21,6 +23,14 @@ namespace Yttrium
 
         using namespace MKL;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! vertex of a simplex
+        //
+        //
+        //______________________________________________________________________
         class Vertex : public Object, public XArray
         {
         public:
@@ -195,7 +205,8 @@ namespace Yttrium
             bnk(),
             apl(bnk),
             qfm(nsp,cl.size),
-            sim(cl.size,nsp)
+            sim(cl.size,nsp),
+            tmk(dof)
             {
             }
 
@@ -217,7 +228,8 @@ namespace Yttrium
                 xreal_t ham0 = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(ham0));
 
-                for(size_t iter=0;iter<2;++iter)
+
+                for(size_t iter=0;iter<1;++iter)
                 {
                     nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
                     const xreal_t ham1= overall(Ctop, repl, xml);
@@ -260,6 +272,7 @@ namespace Yttrium
             AList              apl; //!< applicant list
             Orthogonal::Family qfm; //!< orthogonal family
             Simplex            sim; //!< simplex
+            CxxSeries<size_t>  tmk; //!< temporary key
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
@@ -399,6 +412,11 @@ namespace Yttrium
                 return sim.head->cost;
             }
 
+            static SignType CompareBasis(const ANode * const lhs, const ANode * const rhs) noexcept
+            {
+                return Sign::Of( (**lhs).eq.indx[TopLevel], (**rhs).eq.indx[TopLevel] );
+            }
+
             size_t   extract(const Cluster &cl, XMLog &xml)
             {
                 Y_XML_SECTION(xml, "Extract");
@@ -431,21 +449,43 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // return apl.size <= min(dof,nap)
+                // found the base: order by equilibria top-level
+                // to build local topology
+                //
+                //--------------------------------------------------------------
+                MergeSort::Call(apl,CompareBasis);
+
+
+
+
+                //--------------------------------------------------------------
+                //
+                // build temporary key from ordered
                 //
                 //--------------------------------------------------------------
                 assert(apl.size <= Min(dof,nap) );
                 Y_XMLOG(xml, "#applicant  = " << aps.size());
                 Y_XMLOG(xml, "#primary    = " << dof);
                 Y_XMLOG(xml, "#family     = " << apl.size);
-                if(xml.verbose)
+                tmk.free();
+
+                for(const ANode *an=apl.head;an;an=an->next)
                 {
-                    for(const ANode *an=apl.head;an;an=an->next)
+                    const Applicant &app = **an;
+                    tmk << app.isub();
+                    if(xml.verbose)
                     {
-                        const Applicant &app = **an;
                         app.display( xml() << "| ", cl.uuid, false) << std::endl;
                     }
                 }
+
+                Y_XMLOG(xml, "Key=" << tmk);
+
+                //--------------------------------------------------------------
+                //
+                // return apl.size <= min(dof,nap)
+                //
+                //--------------------------------------------------------------
                 return apl.size;
             }
 
