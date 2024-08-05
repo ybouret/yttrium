@@ -16,6 +16,8 @@
 #include "y/mkl/opt/minimize.hpp"
 #include "y/stream/libc/output.hpp"
 
+#include "y/mkl/algebra/lu.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -181,6 +183,129 @@ namespace Yttrium
         typedef AList::ProxyType                      ABank;
 
 
+
+        class Projector  : public Object, public Counted
+        {
+        public:
+            typedef FlexibleKey<size_t> Key;
+            typedef ArkPtr<Key,Projector> Ptr;
+            typedef SuffixSet<Key,Ptr>    Set;
+
+            explicit Projector(const Key   &k,
+                               const AList &l,
+                               const size_t m) :
+            Nu(k->size(),m),
+            pk(k)
+            {
+                const size_t n = Nu.rows;
+                {
+                    size_t ii = 0;
+                    for(const ANode *an=l.head;an;an=an->next)
+                    {
+                        const Equilibrium &eq = (**an).eq;
+                        eq.topology( Coerce(Nu[++ii]), SubLevel);
+                    }
+                }
+                std::cerr << "Nu=" << Nu << std::endl;
+
+                Matrix<apq>  Nu2(n,n);
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=i;j<=n;++j)
+                    {
+                        apq sum = 0;
+                        for(size_t k=m;k>0;--k)
+                        {
+                            sum += Nu[i][k] * Nu[j][k];
+                        }
+                        Nu2[i][j] = Nu2[j][i] = sum;
+                    }
+                }
+                MKL::LU<apq> lu;
+                Matrix<apq>  aNu2(Nu2);
+                if(!lu.build(aNu2)) throw Specific::Exception("Projector","bad topology");
+                apz          dNu2 = lu.determinant(aNu2).numer;
+                lu.adjoint(aNu2,Nu2);
+                std::cerr << "Nu2=" << Nu2 << std::endl;
+                std::cerr << "aNu2=" << aNu2 << std::endl;
+                std::cerr << "dNu2=" << dNu2 << std::endl;
+
+                Matrix<apz> aNu3(n,m);
+                {
+                    for(size_t i=1;i<=n;++i)
+                    {
+                        for(size_t j=1;j<=m;++j)
+                        {
+                            apz sum  = 0;
+                            for(size_t k=1;k<=n;++k)
+                            {
+                                sum += aNu2[i][k].numer * Nu[k][j];
+                            }
+                            aNu3[i][j] = sum;
+                        }
+                    }
+                }
+                std::cerr << "aNu3=" << aNu3 << std::endl;
+
+
+
+                Matrix<apz> P(m,m);
+                {
+                    apn g = 0;
+                    for(size_t i=1;i<=m;++i)
+                    {
+                        for(size_t j=1;j<=m;++j)
+                        {
+                            apz sum = 0;
+                            for(size_t k=1;k<=n;++k)
+                            {
+                                sum += Nu[k][i] * aNu3[k][j];
+                            }
+                            P[i][j] = sum;
+                            {
+                                const apn gtmp = apn::GCD(sum.n,dNu2.n);
+                                if(g<=0) 
+                                    g = gtmp;
+                                else
+                                    g = Min(g,gtmp);
+                            }
+                        }
+                    }
+                    std::cerr << "g=" << g << std::endl;
+                    std::cerr << "P    = " << P << std::endl;
+                    std::cerr << "dNu2 = " << dNu2 << std::endl;
+                    if(g>1)
+                    {
+                        Coerce(dNu2.n) /= g;
+                        for(size_t i=1;i<=m;++i)
+                        {
+                            for(size_t j=1;j<=m;++j)
+                            {
+                                Coerce(P[i][j].n) /= g;
+                            }
+                        }
+                        std::cerr << "P    = " << P << std::endl;
+                        std::cerr << "dNu2 = " << dNu2 << std::endl;
+                    }
+                }
+
+
+
+            }
+
+            virtual ~Projector() noexcept {}
+
+            const Key &key() const noexcept { return pk; }
+
+            const Matrix<int> Nu;
+            const Key         pk;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Projector);
+        };
+
+
+
         class Normalizer : public Quantized, public Counted
         {
         public:
@@ -207,11 +332,14 @@ namespace Yttrium
             qfm(nsp,cl.size),
             sim(cl.size,nsp),
             tmk(dof),
-            Phi(dof)
+            Phi(dof),
+            Chi(dof),
+            pro()
             {
                 for(size_t i=1;i<=dof;++i)
                 {
                     Phi.grow(i,nsp);
+                    Chi.grow(i,i);
                 }
             }
 
@@ -279,8 +407,10 @@ namespace Yttrium
             Orthogonal::Family qfm; //!< orthogonal family
             Simplex            sim; //!< simplex
             CxxSeries<size_t>  tmk; //!< temporary key
-            CxxSeries<XMatrix> Phi; //!< matrices
-
+            CxxSeries<XMatrix> Phi; //!< matrices phi
+            CxxSeries<XMatrix> Chi; //!< matrices chi
+            Projector::Set     pro; //!< projectors
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 
@@ -403,8 +533,11 @@ namespace Yttrium
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
                 // project ?
+                {
+                    const Projector &proj = getPro();
 
-#if 1
+                }
+#if 0
                 Matrix<int> Nu(apl.size,rcl.species.size);
                 size_t ii = 0;
                 for(const ANode *pn=apl.head;pn;pn=pn->next)
@@ -489,12 +622,28 @@ namespace Yttrium
 
                 Y_XMLOG(xml, "Key=" << tmk);
 
+
                 //--------------------------------------------------------------
                 //
                 // return apl.size <= min(dof,nap)
                 //
                 //--------------------------------------------------------------
                 return apl.size;
+            }
+
+            //! get projector from current tmk/apl
+            Projector & getPro()
+            {
+                assert(tmk.size()==apl.size);
+                const Projector::Key key(tmk);
+                {
+                    Projector::Ptr *pp = pro.search(key);
+                    if(pp) return **pp;
+                }
+
+                Projector::Ptr  proj = new Projector(key,apl,nsp);
+                if(!pro.insert(proj)) throw Specific::Exception("todo", "corrupted projectors");
+                return *proj;
             }
 
             size_t compile(XWritable       & Ctop,
@@ -668,7 +817,7 @@ Y_UTEST(solve)
 
     Y_SIZEOF(Normalizer);
     Y_SIZEOF(Clusters);
-
+    Y_SIZEOF(Projector);
 
 }
 Y_UDONE()

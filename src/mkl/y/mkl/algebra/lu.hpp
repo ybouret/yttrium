@@ -44,7 +44,7 @@ namespace Yttrium
             void solve(const Matrix<T>  &a, Writable<T> &b);  //!< in-place solving
             void solve(const Matrix<T>  &a, Matrix<T>   &b);  //!< in-place solve all columns
             void invert(const Matrix<T> &a, Matrix<T>   &b);  //!< b=a^-1, a is decomposed
-            T    determinant(const Matrix<T> &a);             //!< determinant
+            T    determinant(const Matrix<T> &a);             //!< determinant of pre-built matrix
             void adjoint(Matrix<T> &adj, const Matrix<T> &a); //!< adjoint
 
             //! generic lhs = a^-1 * rhs, post build

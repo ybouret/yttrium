@@ -94,7 +94,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            template <typename T, typename ARRAY, typename V>
+            template <typename T, typename ARRAY, typename V> inline
             void DiagMatMul(Matrix<T> &tgt, ARRAY &lhs, const Matrix<V> &rhs)
             {
                 assert( tgt.rows == lhs.size() );
@@ -114,6 +114,19 @@ namespace Yttrium
 
             }
 
+
+            template <typename T, typename U> inline
+            void Gram(Matrix<T> &G, const Matrix<U> &M, Antelope::Caddy<T> &xma)
+            {
+                assert(G.rows==M.rows);
+                assert(G.cols==G.rows);
+
+                const size_t n = G.rows;
+                for(size_t i=1;i<=n;++i)
+                    for(size_t j=i;j<=n;++j)
+                        G[i][j] = G[j][i] = DotProduct<T>::Of(M[i], M[j], xma);
+                
+            }
 
         }
 

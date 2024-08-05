@@ -8,6 +8,8 @@
 #include "y/quantized.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/associative/little-endian.hpp"
+#include "y/type/nullify.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace Yttrium
 {
@@ -30,8 +32,9 @@ namespace Yttrium
         // Definitiosn
         //
         //______________________________________________________________________
-        Y_ARGS_DECL(T,Type);                     //!< aliases
-        typedef CxxArray<MutableType> ArrayType; //!< alias
+        Y_ARGS_DECL(T,Type);                                    //!< aliases
+        typedef CxxArray<MutableType,Memory::Dyadic> ArrayType; //!< alias
+        typedef typename IntegerFor<T>::UInt::Type   WordType;  //!< alias
 
         //______________________________________________________________________
         //
@@ -70,7 +73,7 @@ namespace Yttrium
             {
                 for(size_t i=1;i<=data.size();++i)
                 {
-                    ConstType word( arr[i] );
+                    const WordType word( arr[i] );
                     LittleEndian::Make( (uint8_t*) &data[i], word );
                 }
             }
@@ -168,6 +171,13 @@ namespace Yttrium
         {
             return code->data;
         }
+
+        //! access
+        const Readable<T> * operator->() const noexcept
+        {
+            return & (code->data);
+        }
+
 
 
     private:
