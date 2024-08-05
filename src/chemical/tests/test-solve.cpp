@@ -206,8 +206,13 @@ namespace Yttrium
             apl(bnk),
             qfm(nsp,cl.size),
             sim(cl.size,nsp),
-            tmk(dof)
+            tmk(dof),
+            Phi(dof)
             {
+                for(size_t i=1;i<=dof;++i)
+                {
+                    Phi.grow(i,nsp);
+                }
             }
 
             virtual ~Normalizer() noexcept
@@ -228,6 +233,7 @@ namespace Yttrium
                 xreal_t ham0 = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(ham0));
 
+                return;
 
                 for(size_t iter=0;iter<1;++iter)
                 {
@@ -273,6 +279,7 @@ namespace Yttrium
             Orthogonal::Family qfm; //!< orthogonal family
             Simplex            sim; //!< simplex
             CxxSeries<size_t>  tmk; //!< temporary key
+            CxxSeries<XMatrix> Phi; //!< matrices
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
@@ -389,21 +396,22 @@ namespace Yttrium
                         sim.load(cost,rcl.species,Cws,SubLevel);
                         Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
                     }
-                    //std::cerr << "Ctop=" << Ctop << std::endl;
-                    //std::cerr << "Cws= " << Cws         << std::endl;
+                    std::cerr << "Ctop=" << Ctop << std::endl;
+                    std::cerr << "Cws= " << Cws         << std::endl;
                 }
 
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
                 // project ?
 
-#if 0
-                Matrix<int> Nu(apl.size,cl.species.size);
+#if 1
+                Matrix<int> Nu(apl.size,rcl.species.size);
                 size_t ii = 0;
                 for(const ANode *pn=apl.head;pn;pn=pn->next)
                 {
                     (**pn).eq.topology(Nu[++ii],SubLevel);
                 }
+
                 std::cerr << "Nu=" << Nu << std::endl;
                 std::cerr << "dC = Nu' * inv(Nu*Nu')*Nu*(Cws-Ctop)" << std::endl;
                 std::cerr << "[Ctop Ctop+dC Cws]" << std::endl;
