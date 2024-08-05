@@ -335,7 +335,8 @@ namespace Yttrium
             psf(1),
             Phi(dof),
             XNu(dof),
-            Chi(dof)
+            Chi(dof),
+            Lhs(dof)
             {
                 // building auxiliary matrices
                 for(size_t i=1;i<=dof;++i)
@@ -343,6 +344,7 @@ namespace Yttrium
                     Phi.grow(i,nsp);
                     XNu.grow(i,nsp);
                     Chi.grow(i,i);
+                    Lhs.grow(i);
                 }
 
                 // create projection matrix
@@ -366,6 +368,8 @@ namespace Yttrium
                 size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
                 xreal_t ham0 = overall(Ctop, repl, xml);
                 Y_XMLOG(xml, "found " << real_t(ham0));
+
+                NDSolve(Ctop, Ktop, xml);
 
                 return;
 
@@ -420,6 +424,7 @@ namespace Yttrium
             CxxSeries<XMatrix> Phi; //!< matrices phi
             CxxSeries<XMatrix> XNu; //!< matrices Nu
             CxxSeries<XMatrix> Chi; //!< matrices chi
+            CxxSeries<XArray>  Lhs; //!< arrays
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
@@ -487,14 +492,10 @@ namespace Yttrium
                     }
                 }
 
-                //std::cerr << "Nu =" << Nu  << std::endl;
-                //std::cerr << "Nu2=" << Nu2 << std::endl;
                 MKL::LU<apq> lu(n);
                 Matrix<apq>  aNu2(Nu2); if(!lu.build(aNu2)) throw Specific::Exception("todo","corrupted topology");
                 apz          dNu2 = lu.determinant(aNu2).numer; assert(dNu2!=0);
                 lu.adjoint(aNu2,Nu2);
-                //std::cerr << "aNu2=" << aNu2 << std::endl;
-                //std::cerr << "dNu2=" << dNu2 << std::endl;
                 Matrix<apz> aNu3(n,m);
                 {
                     for(size_t i=1;i<=n;++i)
@@ -510,7 +511,6 @@ namespace Yttrium
                         }
                     }
                 }
-                //std::cerr << "aNu3=" << aNu3 << std::endl;
 
                 Matrix<apz> P(m,m);
                 {
@@ -534,9 +534,7 @@ namespace Yttrium
                             }
                         }
                     }
-                    //std::cerr << "g=" << g << std::endl;
-                    //std::cerr << "P    = " << P << std::endl;
-                    //std::cerr << "dNu2 = " << dNu2 << std::endl;
+
                     if(g>1)
                     {
                         Coerce(dNu2.n) /= g;
@@ -567,7 +565,7 @@ namespace Yttrium
                             XMLog           & xml)
             {
                 assert(aps.size()>0);
-                const size_t dims = extract(rcl,xml);
+                const size_t dims = extract(xml);
                 switch(dims)
                 {
                     case 0:  // shouldn't happen
@@ -583,6 +581,96 @@ namespace Yttrium
                 return improve(Ctop,repl,xml);
             }
 
+            void NDSolve(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml)
+            {
+                Y_XML_SECTION(xml, "NDSolve");
+
+                bool          repl = false;
+                const size_t  nmax = compile(Ctop, Ktop, repl, xml);  if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                for(size_t i=1;i<=nmax;++i)
+                {
+                    const Equilibrium &eq = aps[i].eq;
+                    rcl.display(std::cerr, eq, Ktop) << std::endl;
+                }
+                const size_t  n = extract(xml);
+                const size_t  m = nsp;
+
+                // act on n!
+
+                XMatrix &Nu  = XNu[n];
+                XMatrix &phi = Phi[n];
+                XMatrix &chi = Chi[n];
+                XArray  &lhs = Lhs[n];
+
+                {
+                    size_t ii=0;
+                    for(const ANode *an=apl.head;an;an=an->next)
+                    {
+                        ++ii;
+                        const Applicant   &app = **an;
+                        const Equilibrium &eq  =  app.eq;
+                        const xreal_t      eK  =  app.eK;
+                        lhs[ii] = -eq.massAction(eK, afm.xmul, Ctop, TopLevel);
+                        eq.topology(Nu[ii], SubLevel);
+                        eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
+                    }
+                }
+
+
+
+                XAdd &xadd = afm.xadd;
+                xadd.make(n);
+                for(size_t i=n;i>0;--i)
+                {
+                    for(size_t j=n;j>0;--j)
+                    {
+                        assert(xadd.isEmpty());
+                        for(size_t k=m;k>0;--k)
+                        {
+                            const xreal_t p = phi[i][k] * Nu[j][k];
+                            xadd << p;
+                        }
+                        chi[i][j] = xadd.sum();
+                    }
+                }
+
+                MKL::LU<xreal_t> lu(n);
+
+
+                std::cerr << "phi = " << phi << std::endl;
+                std::cerr << "Nu  = " << Nu << std::endl;
+                std::cerr << "lhs = " << lhs << std::endl;
+                std::cerr << "chi = " << chi << std::endl;
+
+                if(!lu.build(chi))
+                {
+                    std::cerr << "singular" << std::endl;
+                    exit(0);
+                }
+
+
+                lu.solve(chi,lhs);
+                std::cerr << "xi=" << lhs << std::endl;
+
+                assert(xadd.isEmpty());
+                for(size_t j=m;j>0;--j)
+                {
+                    for(size_t k=n;k>0;--k)
+                    {
+                        const xreal_t p = Nu[k][j] * lhs[k];
+                        xadd << p;
+                    }
+                    Cws[j] = xadd.sum();
+                }
+                std::cerr << "dC=" << Cws << std::endl;
+
+
+
+            }
+
+            //! improve by simplex lookUp
             xreal_t  improve(XWritable       & Ctop,
                              const bool        repl,
                              XMLog           & xml)
@@ -660,9 +748,6 @@ namespace Yttrium
 
                         const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
                         const xreal_t cost  = (*this)(u_opt);
-                        //std::cerr << "Copt=" << Cws << std::endl;
-                        //project(Cws, SubLevel, Ctop, TopLevel);
-                        //std::cerr << "Cpro=" << Cws << std::endl;
                         sim.load(cost,rcl.species,Cws,SubLevel);
                         Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
                     }
@@ -681,7 +766,7 @@ namespace Yttrium
                 return Sign::Of( (**lhs).eq.indx[TopLevel], (**rhs).eq.indx[TopLevel] );
             }
 
-            size_t   extract(const Cluster &cl, XMLog &xml)
+            size_t   extract(XMLog &xml)
             {
                 Y_XML_SECTION(xml, "Extract");
 
@@ -702,7 +787,7 @@ namespace Yttrium
                 for(size_t i=1;i<=nap;++i)
                 {
                     const Applicant &app = aps[i];
-                    if( qfm.wouldAccept( cl.topology[ app.isub() ] ) )
+                    if( qfm.wouldAccept( rcl.topology[ app.isub() ] ) )
                     {
                         apl << app;
                         qfm.expand();
@@ -731,6 +816,7 @@ namespace Yttrium
                 Y_XMLOG(xml, "#primary    = " << dof);
                 Y_XMLOG(xml, "#family     = " << apl.size);
 
+#if 0
                 {
                     XMatrix &Nu = XNu[apl.size];
                     size_t   ii = 0;
@@ -745,7 +831,7 @@ namespace Yttrium
                     }
                     Y_XMLOG(xml, "Nu=" << Nu);
                 }
-
+#endif
 
                 //--------------------------------------------------------------
                 //

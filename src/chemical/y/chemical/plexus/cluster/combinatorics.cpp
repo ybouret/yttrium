@@ -104,7 +104,6 @@ namespace Yttrium
                     original.record(nu);
                     for(size_t j=m;j>0;--j) 
                         stoich[j] += w * nu[j];
-
                     ++nc;
                 }
 
@@ -117,7 +116,7 @@ namespace Yttrium
                 {
                     const size_t idx = combined[k];
                     if( !original.search(idx) )
-                        throw Specific::Exception("Cluster::Combinatoris","corrupted weights!!");
+                        throw Specific::Exception("Cluster::Combinatorics","corrupted weights!!");
                 }
 
                 //--------------------------------------------------------------
@@ -248,7 +247,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml, "Detached");
+                Y_XML_SECTION(xml, "Attached");
                 Matrix<bool> &flag = Coerce(attached);
                 flag.make(size,size);
                 flag.ld(false);

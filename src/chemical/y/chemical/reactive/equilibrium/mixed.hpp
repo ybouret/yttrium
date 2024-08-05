@@ -56,8 +56,7 @@ namespace Yttrium
             //__________________________________________________________________
             XMul          xmul;   //!< compute mixed constant
             XWritable &   topK;   //!< top level K
-            //const EList   sire; //!< source equilibria
-            const MixList coef; //!< source coefficients
+            const MixList coef;   //!< source coefficients
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
