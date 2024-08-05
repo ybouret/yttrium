@@ -331,16 +331,22 @@ namespace Yttrium
             apl(bnk),
             qfm(nsp,cl.size),
             sim(cl.size,nsp),
-            tmk(dof),
+            pro(nsp,nsp),
+            psf(1),
             Phi(dof),
-            Chi(dof),
-            pro()
+            XNu(dof),
+            Chi(dof)
             {
+                // building auxiliary matrices
                 for(size_t i=1;i<=dof;++i)
                 {
                     Phi.grow(i,nsp);
+                    XNu.grow(i,nsp);
                     Chi.grow(i,i);
                 }
+
+                // create projection matrix
+                setProj();
             }
 
             virtual ~Normalizer() noexcept
@@ -350,7 +356,7 @@ namespace Yttrium
             const KeyType & key() const noexcept { return lek; }
 
             void run(XWritable       & Ctop,
-                     const XReadable &Ktop,
+                     const XReadable & Ktop,
                      XMLog           & xml)
             {
                 assert(rcl.size        == ceq.rows);
@@ -391,6 +397,9 @@ namespace Yttrium
                 return objectiveFunction(Cws,SubLevel);
             }
 
+
+
+
             const Cluster &    rcl; //!< reference to cluster
             const KeyType_     lek; //!< key
             const size_t       nsp; //!< number of species
@@ -406,11 +415,12 @@ namespace Yttrium
             AList              apl; //!< applicant list
             Orthogonal::Family qfm; //!< orthogonal family
             Simplex            sim; //!< simplex
-            CxxSeries<size_t>  tmk; //!< temporary key
+            const XMatrix      pro; //!< projection matrix
+            const xreal_t      psf; //!< projection scaling factor
             CxxSeries<XMatrix> Phi; //!< matrices phi
+            CxxSeries<XMatrix> XNu; //!< matrices Nu
             CxxSeries<XMatrix> Chi; //!< matrices chi
-            Projector::Set     pro; //!< projectors
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 
@@ -422,7 +432,134 @@ namespace Yttrium
                 return afm.xadd.normOf(obj);
             }
 
+            //! assuming C0 is ok, fine tune C1
+            void project(XWritable        &C1,
+                         const Level       L1,
+                         const XReadable  &C0,
+                         const Level       L0)
+            {
+                for(const SNode *sn = rcl.species.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    Cin[ indx[SubLevel] ] = C1[ indx[L1] ] - C0[ indx[L0] ];
+                }
 
+                XAdd &       xadd = afm.xadd;
+                const size_t m    = nsp;
+
+                xadd.make(m);
+                for(size_t j=m;j>0;--j)
+                {
+                    assert(xadd.isEmpty());
+                    for(size_t k=m;k>0;--k)
+                    {
+                        const xreal_t p = pro[j][k] * Cin[k];
+                        xadd << p;
+                    }
+                    Cex[j] = xadd.sum()/psf;
+                }
+
+
+                for(const SNode *sn = rcl.species.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    C1[ indx[L1] ] = Cex[indx[SubLevel]] + C0[ indx[L0] ];
+                }
+
+            }
+
+            void setProj( )
+            {
+                const size_t n = rcl.Nu.rows;
+                const size_t m = nsp;
+                const Matrix<int> &Nu = rcl.Nu;
+                Matrix<apq> Nu2(n,n);
+                for(size_t i=1;i<=n;++i)
+                {
+                    for(size_t j=i;j<=n;++j)
+                    {
+                        apq sum = 0;
+                        for(size_t k=1;k<=m;++k)
+                        {
+                            sum += Nu[i][k] * Nu[j][k];
+                        }
+                        Nu2[i][j] = Nu2[j][i] = sum;
+                    }
+                }
+
+                //std::cerr << "Nu =" << Nu  << std::endl;
+                //std::cerr << "Nu2=" << Nu2 << std::endl;
+                MKL::LU<apq> lu(n);
+                Matrix<apq>  aNu2(Nu2); if(!lu.build(aNu2)) throw Specific::Exception("todo","corrupted topology");
+                apz          dNu2 = lu.determinant(aNu2).numer; assert(dNu2!=0);
+                lu.adjoint(aNu2,Nu2);
+                //std::cerr << "aNu2=" << aNu2 << std::endl;
+                //std::cerr << "dNu2=" << dNu2 << std::endl;
+                Matrix<apz> aNu3(n,m);
+                {
+                    for(size_t i=1;i<=n;++i)
+                    {
+                        for(size_t j=1;j<=m;++j)
+                        {
+                            apz sum  = 0;
+                            for(size_t k=1;k<=n;++k)
+                            {
+                                sum += aNu2[i][k].numer * Nu[k][j];
+                            }
+                            aNu3[i][j] = sum;
+                        }
+                    }
+                }
+                //std::cerr << "aNu3=" << aNu3 << std::endl;
+
+                Matrix<apz> P(m,m);
+                {
+                    apn g = 0;
+                    for(size_t i=1;i<=m;++i)
+                    {
+                        for(size_t j=i;j<=m;++j)
+                        {
+                            apz sum = 0;
+                            for(size_t k=1;k<=n;++k)
+                            {
+                                sum += Nu[k][i] * aNu3[k][j];
+                            }
+                            P[i][j] = P[j][i] = sum;
+                            {
+                                const apn gtmp = apn::GCD(sum.n,dNu2.n);
+                                if(g<=0)
+                                    g = gtmp;
+                                else
+                                    g = Min(g,gtmp);
+                            }
+                        }
+                    }
+                    //std::cerr << "g=" << g << std::endl;
+                    //std::cerr << "P    = " << P << std::endl;
+                    //std::cerr << "dNu2 = " << dNu2 << std::endl;
+                    if(g>1)
+                    {
+                        Coerce(dNu2.n) /= g;
+                        for(size_t i=1;i<=m;++i)
+                        {
+                            for(size_t j=1;j<=m;++j)
+                            {
+                                Coerce(P[i][j].n) /= g;
+                            }
+                        }
+                        std::cerr << "P    = " << P << std::endl;
+                        std::cerr << "dNu2 = " << dNu2 << std::endl;
+                    }
+                }
+
+                for(size_t i=1;i<=m;++i)
+                    for(size_t j=1;j<=m;++j)
+                        Coerce(pro[i][j]) = P[i][j].cast<long>("projection matrix");
+                Coerce(psf) = dNu2.cast<long>("scaling factor");
+                std::cerr << "psf=" << psf << std::endl;
+                std::cerr << "pro=" << pro << std::endl;
+
+            }
 
             //! after a successful compilation
             xreal_t overall(XWritable       & Ctop,
@@ -479,7 +616,7 @@ namespace Yttrium
                 {
                     Y_XML_SECTION(xml, "Search");
                     unsigned long cycle = 0;
-                    const size_t  m     = Cin.size();
+                    const size_t  m     = nsp;
                     OutputFile fp("objective.dat");
 
                     while(sim.size>1)
@@ -523,32 +660,18 @@ namespace Yttrium
 
                         const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
                         const xreal_t cost  = (*this)(u_opt);
+                        //std::cerr << "Copt=" << Cws << std::endl;
+                        //project(Cws, SubLevel, Ctop, TopLevel);
+                        //std::cerr << "Cpro=" << Cws << std::endl;
                         sim.load(cost,rcl.species,Cws,SubLevel);
                         Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
                     }
-                    std::cerr << "Ctop=" << Ctop << std::endl;
-                    std::cerr << "Cws= " << Cws         << std::endl;
+
                 }
+
+
 
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
-
-                // project ?
-                {
-                    const Projector &proj = getPro();
-
-                }
-#if 0
-                Matrix<int> Nu(apl.size,rcl.species.size);
-                size_t ii = 0;
-                for(const ANode *pn=apl.head;pn;pn=pn->next)
-                {
-                    (**pn).eq.topology(Nu[++ii],SubLevel);
-                }
-
-                std::cerr << "Nu=" << Nu << std::endl;
-                std::cerr << "dC = Nu' * inv(Nu*Nu')*Nu*(Cws-Ctop)" << std::endl;
-                std::cerr << "[Ctop Ctop+dC Cws]" << std::endl;
-#endif
 
                 return sim.head->cost;
             }
@@ -567,7 +690,6 @@ namespace Yttrium
                 // reset applicant/ortho family
                 //
                 //--------------------------------------------------------------
-
                 apl.free();
                 qfm.free();
 
@@ -601,26 +723,28 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // build temporary key from ordered
+                // summary
                 //
                 //--------------------------------------------------------------
                 assert(apl.size <= Min(dof,nap) );
                 Y_XMLOG(xml, "#applicant  = " << aps.size());
                 Y_XMLOG(xml, "#primary    = " << dof);
                 Y_XMLOG(xml, "#family     = " << apl.size);
-                tmk.free();
 
-                for(const ANode *an=apl.head;an;an=an->next)
                 {
-                    const Applicant &app = **an;
-                    tmk << app.isub();
-                    if(xml.verbose)
+                    XMatrix &Nu = XNu[apl.size];
+                    size_t   ii = 0;
+                    for(const ANode *an=apl.head;an;an=an->next)
                     {
-                        app.display( xml() << "| ", cl.uuid, false) << std::endl;
+                        const Applicant &app = **an;
+                        app.eq.topology(Nu[++ii],SubLevel);
+                        if(xml.verbose)
+                        {
+                            app.display( xml() << "| ", cl.uuid, false) << std::endl;
+                        }
                     }
+                    Y_XMLOG(xml, "Nu=" << Nu);
                 }
-
-                Y_XMLOG(xml, "Key=" << tmk);
 
 
                 //--------------------------------------------------------------
@@ -631,20 +755,7 @@ namespace Yttrium
                 return apl.size;
             }
 
-            //! get projector from current tmk/apl
-            Projector & getPro()
-            {
-                assert(tmk.size()==apl.size);
-                const Projector::Key key(tmk);
-                {
-                    Projector::Ptr *pp = pro.search(key);
-                    if(pp) return **pp;
-                }
 
-                Projector::Ptr  proj = new Projector(key,apl,nsp);
-                if(!pro.insert(proj)) throw Specific::Exception("todo", "corrupted projectors");
-                return *proj;
-            }
 
             size_t compile(XWritable       & Ctop,
                            const XReadable & Ktop,
@@ -800,6 +911,7 @@ Y_UTEST(solve)
     XVector C0(lib->size(),0);
 
     Solver  solver(cls);
+
 
     for(size_t iter=0;iter<1;++iter)
     {
