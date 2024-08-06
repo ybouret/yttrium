@@ -13,27 +13,61 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Normalizer for a persistent Cluster
+        //
+        //
+        //______________________________________________________________________
         class Normalizer : public Quantized, public Counted
         {
         public:
-            static const char * const   CallSign;
-            typedef LittleEndianKey     KeyType;
-            typedef LittleEndianAddress KeyType_;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const          CallSign; //!< uuid
+            typedef LittleEndianKey            KeyType;  //!< alias
+            typedef LittleEndianAddress        KeyType_; //!< alias
+            typedef ArkPtr<KeyType,Normalizer> Ptr;      //!< alias
+            typedef SuffixSet<KeyType,Ptr>     Set;      //!< alias
 
-            typedef ArkPtr<KeyType,Normalizer> Ptr;
-            typedef SuffixSet<KeyType,Ptr>     Set;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Normalizer(const Cluster &cl); //!< setup for cluster
+            virtual ~Normalizer() noexcept;         //!< cleanup
 
-            explicit Normalizer(const Cluster &cl);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            virtual ~Normalizer() noexcept;
+            const KeyType & key() const noexcept; //!< internal key
 
-            const KeyType & key() const noexcept;
-
+            //! algo...
             void run(XWritable       & Ctop,
                      const XReadable & Ktop,
                      XMLog           & xml);
 
+            //! objective function of (1-u)*Cin + u * Cex
             xreal_t  operator()(const xreal_t u);
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
             const Cluster &    rcl; //!< reference to cluster
             const KeyType_     lek; //!< key
