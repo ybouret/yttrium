@@ -10,6 +10,7 @@ chemical/plexus
 chemical/plexus/cluster
 chemical/plexus/cluster/conservation
 chemical/plexus/solver
+chemical/plexus/solver/norm
 )
 
 add_subdirectory(tests)
