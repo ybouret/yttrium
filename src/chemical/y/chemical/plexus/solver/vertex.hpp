@@ -20,30 +20,47 @@ namespace Yttrium
         class Vertex : public Object, public XArray
         {
         public:
-            typedef CxxPoolOf<Vertex> Pool;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxPoolOf<Vertex> Pool; //!< alias
 
+            //! comparator
             struct Comparator
             {
-                inline SignType operator()(const Vertex * const lhs, const Vertex * const rhs) const noexcept
-                {
-                    return Comparison::CxxDecreasing(lhs->cost, rhs->cost);
-                }
+                //! by decreasing cost
+                SignType operator()(const Vertex * const lhs, const Vertex * const rhs) const noexcept;
             };
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Vertex(const size_t species); //!< setup for speices
+            virtual ~Vertex() noexcept;
 
-            explicit Vertex(const size_t species) :
-            XArray(species), cost(0), next(0), prev(0)
-            {
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void clear() noexcept; //!< reset
 
-            }
-
-            virtual ~Vertex() noexcept {}
-
-            void clear() noexcept { ld(cost=0); }
-
-            xreal_t cost;
-            Vertex *next;
-            Vertex *prev;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            xreal_t cost; //!< cost for this vertex
+            Vertex *next; //!< for list
+            Vertex *prev; //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Vertex);

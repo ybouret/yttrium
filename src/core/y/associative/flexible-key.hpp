@@ -120,6 +120,7 @@ namespace Yttrium
         {
         }
 
+        //! setup from any compatible readable
         template <typename U>
         inline explicit FlexibleKey(const Readable<U> &arr) :
         Memory::ReadOnlyBuffer(),

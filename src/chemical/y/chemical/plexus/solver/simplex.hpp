@@ -11,51 +11,56 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! ordered list of vertices
         typedef OrderedList<Vertex,Vertex::Comparator,OrderedListQueryHead> Vertices;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Simplex of vertices
+        //
+        //
+        //______________________________________________________________________
         class Simplex : public Vertices
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup for max eqs and max species
             explicit Simplex(size_t       maxEqs,
-                             const size_t maxSpecies) :
-            Vertices(),
-            pool(),
-            dims(maxSpecies)
-            {
-                ++maxEqs;
-                while(maxEqs-- > 0) pool.store( new Vertex(dims) );
-            }
+                             const size_t maxSpecies);
 
-            void free( Vertex * const vtx) noexcept
-            {
-                assert(0!=vtx);
-                pool.store( vtx )->clear();
-            }
+            //! cleanup
+            virtual ~Simplex() noexcept;
 
-            void free() noexcept {
-                while(size>0) free( popTail() );
-            }
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void free(Vertex * const) noexcept; //!< store and clean vertex
+            void free()               noexcept; //!< free all vertices
 
+            //! load a new vertex with cost and given concentration
             const Vertex & load(const xreal_t    cost,
                                 const SList     &spec,
                                 const XReadable &C,
-                                const Level      L)
-            {
-                AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
-                Vertex         &vtx = *ptr; assert(Memory::OutOfReach::Are0(&vtx[1],vtx.size()*sizeof(xreal_t)));
-                vtx.cost = cost;
-                for(const SNode *sn=spec.head;sn;sn=sn->next)
-                {
-                    const size_t * const indx = (**sn).indx;
-                    vtx[ indx[SubLevel] ] = C[ indx[L] ];
-                }
-                this->store( ptr.yield() );
-                return vtx;
-            }
-
-
-            Vertex::Pool pool;
-            const size_t dims;
+                                const Level      L);
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Vertex::Pool pool; //!< pool of clean vertices
+            const size_t dims; //!< common dimensions=initial speceis
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Simplex);
         };

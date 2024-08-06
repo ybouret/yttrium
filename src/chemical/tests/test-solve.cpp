@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/solver/simplex.hpp"
+#include "y/chemical/plexus/solver/applicant.hpp"
 
 #include "y/chemical/plexus/clusters.hpp"
 
@@ -7,7 +8,6 @@
 #include "y/random/park-miller.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/container/cxx/series.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
@@ -26,200 +26,8 @@ namespace Yttrium
     {
 
         using namespace MKL;
-
-
         
-        class Applicant
-        {
-        public:
-            typedef CxxSeries<Applicant> Series;
-
-            Applicant(const Equilibrium &  _eq,
-                      const xreal_t        _eK,
-                      const XReadable    & _cc,
-                      const xreal_t        _xi) noexcept :
-            eq(_eq),
-            eK(_eK),
-            cc(_cc),
-            xi(_xi),
-            ax( xi.abs() )
-            {
-            }
-
-            Applicant(const Applicant &_) noexcept :
-            eq(_.eq),
-            eK(_.eK),
-            cc(_.cc),
-            xi(_.xi),
-            ax(_.ax)
-            {
-            }
-
-            size_t isub() const noexcept { return eq.indx[SubLevel]; }
-
-            real_t affinity(XMul            &X,
-                            const XReadable &C,
-                            const Level      L) const
-            {
-                return eq.affinity(eK, X, C, L);
-            }
-
-
-            static int Compare(const Applicant &lhs, const Applicant &rhs) noexcept
-            {
-                return Comparison::Increasing<xreal_t>(lhs.ax,rhs.ax);
-            }
-
-
-            std::ostream & display(std::ostream   &os,
-                                   const Assembly &uuid,
-                                   const bool      full) const
-            {
-                uuid.pad(os<< eq, eq);
-                os << " | ax =" << std::setw(15) << real_t(ax);
-                if(full)
-                {
-                    eq.displayCompact(os << " @",cc, SubLevel);
-                }
-                return os;
-            }
-
-            const Equilibrium &eq; //!< equilibrium
-            const xreal_t      eK; //!< eq.K
-            const XReadable   &cc; //!< winning phase space
-            const xreal_t      xi; //!< extent leading to cc
-            const xreal_t      ax; //!< |xi|
-
-        private:
-            Y_DISABLE_ASSIGN(Applicant);
-        };
-
-        typedef Small::CoopLightList<const Applicant> AList;
-        typedef AList::NodeType                       ANode;
-        typedef AList::ProxyType                      ABank;
-
-
-#if 0
-        class Projector  : public Object, public Counted
-        {
-        public:
-            typedef FlexibleKey<size_t> Key;
-            typedef ArkPtr<Key,Projector> Ptr;
-            typedef SuffixSet<Key,Ptr>    Set;
-
-            explicit Projector(const Key   &k,
-                               const AList &l,
-                               const size_t m) :
-            Nu(k->size(),m),
-            pk(k)
-            {
-                const size_t n = Nu.rows;
-                {
-                    size_t ii = 0;
-                    for(const ANode *an=l.head;an;an=an->next)
-                    {
-                        const Equilibrium &eq = (**an).eq;
-                        eq.topology( Coerce(Nu[++ii]), SubLevel);
-                    }
-                }
-                std::cerr << "Nu=" << Nu << std::endl;
-
-                Matrix<apq>  Nu2(n,n);
-                for(size_t i=1;i<=n;++i)
-                {
-                    for(size_t j=i;j<=n;++j)
-                    {
-                        apq sum = 0;
-                        for(size_t k=m;k>0;--k)
-                        {
-                            sum += Nu[i][k] * Nu[j][k];
-                        }
-                        Nu2[i][j] = Nu2[j][i] = sum;
-                    }
-                }
-                MKL::LU<apq> lu;
-                Matrix<apq>  aNu2(Nu2);
-                if(!lu.build(aNu2)) throw Specific::Exception("Projector","bad topology");
-                apz          dNu2 = lu.determinant(aNu2).numer;
-                lu.adjoint(aNu2,Nu2);
-                std::cerr << "Nu2=" << Nu2 << std::endl;
-                std::cerr << "aNu2=" << aNu2 << std::endl;
-                std::cerr << "dNu2=" << dNu2 << std::endl;
-
-                Matrix<apz> aNu3(n,m);
-                {
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        for(size_t j=1;j<=m;++j)
-                        {
-                            apz sum  = 0;
-                            for(size_t k=1;k<=n;++k)
-                            {
-                                sum += aNu2[i][k].numer * Nu[k][j];
-                            }
-                            aNu3[i][j] = sum;
-                        }
-                    }
-                }
-                std::cerr << "aNu3=" << aNu3 << std::endl;
-
-
-
-                Matrix<apz> P(m,m);
-                {
-                    apn g = 0;
-                    for(size_t i=1;i<=m;++i)
-                    {
-                        for(size_t j=i;j<=m;++j)
-                        {
-                            apz sum = 0;
-                            for(size_t k=1;k<=n;++k)
-                            {
-                                sum += Nu[k][i] * aNu3[k][j];
-                            }
-                            P[i][j] = P[j][i] = sum;
-                            {
-                                const apn gtmp = apn::GCD(sum.n,dNu2.n);
-                                if(g<=0)
-                                    g = gtmp;
-                                else
-                                    g = Min(g,gtmp);
-                            }
-                        }
-                    }
-                    std::cerr << "g=" << g << std::endl;
-                    std::cerr << "P    = " << P << std::endl;
-                    std::cerr << "dNu2 = " << dNu2 << std::endl;
-                    if(g>1)
-                    {
-                        Coerce(dNu2.n) /= g;
-                        for(size_t i=1;i<=m;++i)
-                        {
-                            for(size_t j=1;j<=m;++j)
-                            {
-                                Coerce(P[i][j].n) /= g;
-                            }
-                        }
-                        std::cerr << "P    = " << P << std::endl;
-                        std::cerr << "dNu2 = " << dNu2 << std::endl;
-                    }
-                }
-
-
-
-            }
-
-            virtual ~Projector() noexcept {}
-
-            const Key &key() const noexcept { return pk; }
-
-            const Matrix<int> Nu;
-            const Key         pk;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Projector);
-        };
-#endif
+       
 
 
         class Normalizer : public Quantized, public Counted

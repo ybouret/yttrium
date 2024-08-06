@@ -114,7 +114,14 @@ namespace Yttrium
 
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Gram Matrix of M
+            //
+            //
+            //__________________________________________________________________
             template <typename T, typename U> inline
             void Gram(Matrix<T> &G, const Matrix<U> &M, Antelope::Caddy<T> &xma)
             {
