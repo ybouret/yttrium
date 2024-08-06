@@ -41,7 +41,13 @@ namespace Yttrium
 
             {
                 Y_XML_SECTION(xml, "Simplex");
+                //--------------------------------------------------------------
+                //
+                //
                 // load simplex
+                //
+                //
+                //--------------------------------------------------------------
                 sim.free();
                 if(!repl)
                 {
@@ -75,7 +81,13 @@ namespace Yttrium
                     Triplet<xreal_t> xx = {  0, -1,  1 };
                     Triplet<xreal_t> ff = { -1, -1, -1 };
 
+                    //----------------------------------------------------------
+                    //
+                    //
                     // extract upper/lower and load Cin/Cex
+                    //
+                    //
+                    //----------------------------------------------------------
                     {
                         AutoPtr<Vertex> upper = sim.query();
                         AutoPtr<Vertex> lower = sim.query();
@@ -92,10 +104,10 @@ namespace Yttrium
                         sim.free( lower.yield() );
                     }
 
-                    //Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
-                    //Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
-
-
+                    Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
+                    Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
+                    assert(ff.a>=ff.c);
+                    
                     {
                         const real_t offset = cycle-1;
                         const size_t np(1000);

@@ -46,7 +46,7 @@ namespace Yttrium
             // to build local topology
             //
             //--------------------------------------------------------------
-            MergeSort::Call(apl,CompareBasis);
+            //MergeSort::Call(apl,CompareBasis);
 
 
 

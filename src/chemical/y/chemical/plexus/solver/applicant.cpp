@@ -41,7 +41,8 @@ namespace Yttrium
 
         int Applicant:: Compare(const Applicant &lhs, const Applicant &rhs) noexcept
         {
-            return Comparison::Increasing<xreal_t>(lhs.ax,rhs.ax);
+            //return Comparison::Increasing<xreal_t>(lhs.ax,rhs.ax);
+            return Comparison::Decreasing<xreal_t>(lhs.ax,rhs.ax);
         }
 
         std::ostream & Applicant:: display(std::ostream   &os,

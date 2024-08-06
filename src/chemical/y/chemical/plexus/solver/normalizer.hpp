@@ -119,7 +119,6 @@ namespace Yttrium
                              const bool        repl,
                              XMLog           & xml);
 
-            static SignType CompareBasis(const ANode * const lhs, const ANode * const rhs) noexcept;
             
             //! extract a basis of equilibria
             size_t   extract(XMLog &xml);

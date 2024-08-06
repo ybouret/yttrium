@@ -124,7 +124,8 @@ namespace Yttrium
 
 
             if(cut) {
-                fac /= 2;
+                // fac /= 2;
+                --Coerce(fac.exponent);
                 for(size_t j=m;j>0;--j)
                 {
                     Cex[j] = Cin[j] + fac * Cws[j];

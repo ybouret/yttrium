@@ -54,11 +54,13 @@ namespace Yttrium
         {
         }
 
+#if 0
         SignType Normalizer:: CompareBasis(const ANode * const lhs, const ANode * const rhs) noexcept
         {
             return Sign::Of( (**lhs).eq.indx[TopLevel], (**rhs).eq.indx[TopLevel] );
         }
-
+#endif
+        
         const Normalizer:: KeyType & Normalizer:: key() const noexcept { return lek; }
 
 
@@ -75,7 +77,6 @@ namespace Yttrium
             Y_XMLOG(xml, "found " << real_t(ham0));
 
 
-
             for(size_t iter=0;iter<1;++iter)
             {
                 nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
@@ -83,10 +84,10 @@ namespace Yttrium
                 Y_XMLOG(xml, "found " << real_t(ham1));
             }
 
+            
             NDSolve(Ctop, Ktop, xml);
 
-            return;
-
+            
         }
 
         xreal_t  Normalizer:: operator()(const xreal_t u)
