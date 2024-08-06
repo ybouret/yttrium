@@ -15,7 +15,7 @@ namespace Yttrium
         eK(_eK),
         cc(_cc),
         xi(_xi),
-        ax( xi.abs() )
+        ax( xi.abs() ) //,         ma( eq.massAction(eK, xmul, cc, SubLevel) )
         {
         }
 

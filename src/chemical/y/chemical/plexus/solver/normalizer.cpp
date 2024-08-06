@@ -68,9 +68,22 @@ namespace Yttrium
                               const XReadable & Ktop,
                               XMLog           & xml)
         {
-            assert(rcl.size        == ceq.rows);
-            assert(rcl.species.size== ceq.cols);
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
+
+            xreal_t xaff = -1;
+            while(true)
+            {
+                bool         repl = false;
+                const size_t napp = compile(Ctop,Ktop,repl,xml);
+                if(napp<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+                xaff = overall(Ctop,repl,xml);
+                if(repl) continue;
+                break;
+            }
+
+
+
+#if 0
             bool    repl = false;
             size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
             xreal_t ham0 = overall(Ctop, repl, xml);
@@ -86,8 +99,8 @@ namespace Yttrium
 
             
             NDSolve(Ctop, Ktop, xml);
+#endif
 
-            
         }
 
         xreal_t  Normalizer:: operator()(const xreal_t u)

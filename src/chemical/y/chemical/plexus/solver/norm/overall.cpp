@@ -77,7 +77,7 @@ namespace Yttrium
                 while(sim.size>1)
                 {
                     ++cycle;
-                    Y_XMLOG(xml, "#cycle = " << cycle);
+                    //Y_XMLOG(xml, "#cycle = " << cycle);
                     Triplet<xreal_t> xx = {  0, -1,  1 };
                     Triplet<xreal_t> ff = { -1, -1, -1 };
 
@@ -88,12 +88,13 @@ namespace Yttrium
                     //
                     //
                     //----------------------------------------------------------
+                    xreal_t up,lo;
                     {
                         AutoPtr<Vertex> upper = sim.query();
                         AutoPtr<Vertex> lower = sim.query();
 
-                        ff.a = upper->cost;
-                        ff.c = lower->cost;
+                        up = ff.a = upper->cost;
+                        lo = ff.c = lower->cost;
 
                         for(size_t j=m;j>0;--j)
                         {
@@ -104,8 +105,8 @@ namespace Yttrium
                         sim.free( lower.yield() );
                     }
 
-                    Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
-                    Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
+                    //Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
+                    //Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
                     assert(ff.a>=ff.c);
                     
                     {
@@ -119,10 +120,17 @@ namespace Yttrium
                         fp << "\n";
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // Minimize between upper and lower
+                    //
+                    //
+                    //----------------------------------------------------------
                     const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
                     const xreal_t cost  = (*this)(u_opt);
                     sim.load(cost,rcl.species,Cws,SubLevel);
-                    Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << real_t(u_opt) );
+                    Y_XMLOG(xml, "optim = " << std::setw(15) << real_t(cost)  <<  " @" << std::setw(15) << real_t(u_opt) << " | " << real_t(up) << "->" << real_t(lo) );
                 }
 
             }
