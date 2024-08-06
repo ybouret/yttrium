@@ -79,12 +79,6 @@ Y_UTEST(norm)
 
     Sum sum(n,ran);
 
-    MKL::Triplet<double> xx = { sum.z.head()-1, sum.z[1+sum.z.size()/2], sum.z.tail()+1 };
-    MKL::Triplet<double> ff = { sum(xx.a), sum(xx.b), sum(xx.c) };
-
-    const double xopt = MKL::Minimize<double>::Locate(MKL::Minimizing::Direct, sum, xx, ff);
-    std::cerr << "xopt=" << xopt << std::endl;
-
     {
         OutputFile fp("norm.dat");
         for(double x=-10;x<=10;x+=0.01)
@@ -92,6 +86,14 @@ Y_UTEST(norm)
             fp("%g %g\n",x,sum(x));
         }
     }
+
+    MKL::Triplet<double> xx = { sum.z.head()-10, sum.z[1+sum.z.size()/2], sum.z.tail()+10 };
+    MKL::Triplet<double> ff = { sum(xx.a), sum(xx.b), sum(xx.c) };
+
+    const double xopt = MKL::Minimize<double>::Locate(MKL::Minimizing::Direct, sum, xx, ff);
+    std::cerr << "xopt=" << xopt << std::endl;
+
+
 
 
 
