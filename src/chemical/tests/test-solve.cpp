@@ -1,5 +1,8 @@
 
+#include "y/chemical/plexus/solver/simplex.hpp"
+
 #include "y/chemical/plexus/clusters.hpp"
+
 #include "y/chemical/weasel/compiler.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/utest/run.hpp"
@@ -9,14 +12,13 @@
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 #include "y/orthogonal/family.hpp"
-#include "y/data/list/ordered.hpp"
 
-#include "y/associative/flexible-key.hpp"
 
 #include "y/mkl/opt/minimize.hpp"
 #include "y/stream/libc/output.hpp"
 
 #include "y/mkl/algebra/lu.hpp"
+
 
 namespace Yttrium
 {
@@ -25,94 +27,8 @@ namespace Yttrium
 
         using namespace MKL;
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! vertex of a simplex
-        //
-        //
-        //______________________________________________________________________
-        class Vertex : public Object, public XArray
-        {
-        public:
-            typedef CxxPoolOf<Vertex> Pool;
-            struct Comparator
-            {
-                inline SignType operator()(const Vertex * const lhs, const Vertex * const rhs) const noexcept
-                {
-                    return Comparison::CxxDecreasing(lhs->cost, rhs->cost);
-                }
-            };
 
-
-            explicit Vertex(const size_t species) :
-            XArray(species), cost(0), next(0), prev(0)
-            {
-
-            }
-
-            virtual ~Vertex() noexcept {}
-
-            void clear() noexcept { ld(cost=0); }
-
-            xreal_t cost;
-            Vertex *next;
-            Vertex *prev;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Vertex);
-        };
-
-        typedef OrderedList<Vertex,Vertex::Comparator,OrderedListQueryHead> Vertices;
-
-        class Simplex : public Vertices
-        {
-        public:
-            explicit Simplex(size_t       maxEqs,
-                             const size_t maxSpecies) :
-            Vertices(),
-            pool(),
-            dims(maxSpecies)
-            {
-                ++maxEqs;
-                while(maxEqs-- > 0) pool.store( new Vertex(dims) );
-            }
-
-            void free( Vertex * const vtx) noexcept
-            {
-                assert(0!=vtx);
-                pool.store( vtx )->clear();
-            }
-
-            void free() noexcept {
-                while(size>0) free( popTail() );
-            }
-
-            const Vertex & load(const xreal_t    cost,
-                                const SList     &spec,
-                                const XReadable &C,
-                                const Level      L)
-            {
-                AutoPtr<Vertex> ptr = pool.size ? pool.query() : new Vertex(dims);
-                Vertex         &vtx = *ptr; assert(Memory::OutOfReach::Are0(&vtx[1],vtx.size()*sizeof(xreal_t)));
-                vtx.cost = cost;
-                for(const SNode *sn=spec.head;sn;sn=sn->next)
-                {
-                    const size_t * const indx = (**sn).indx;
-                    vtx[ indx[SubLevel] ] = C[ indx[L] ];
-                }
-                this->store( ptr.yield() );
-                return vtx;
-            }
-
-
-            Vertex::Pool pool;
-            const size_t dims;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Simplex);
-        };
-
+        
         class Applicant
         {
         public:
@@ -183,7 +99,7 @@ namespace Yttrium
         typedef AList::ProxyType                      ABank;
 
 
-
+#if 0
         class Projector  : public Object, public Counted
         {
         public:
@@ -303,7 +219,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Projector);
         };
-
+#endif
 
 
         class Normalizer : public Quantized, public Counted
@@ -1090,7 +1006,6 @@ Y_UTEST(solve)
 
     Y_SIZEOF(Normalizer);
     Y_SIZEOF(Clusters);
-    Y_SIZEOF(Projector);
-
+    
 }
 Y_UDONE()
