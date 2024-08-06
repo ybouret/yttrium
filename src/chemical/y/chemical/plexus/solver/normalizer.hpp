@@ -123,6 +123,7 @@ namespace Yttrium
             Result NDSolve(XWritable       &Ctop,
                            const XReadable &Ktop,
                            XMLog           &xml);
+            
 
             //! improve by simplex lookup
             xreal_t  improve(XWritable       & Ctop,

@@ -5,6 +5,8 @@
 #include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
 
+#include "y/mkl/tao/seq/level1.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -17,32 +19,60 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "NDSolve");
 
+            //------------------------------------------------------------------
+            //
+            //
+            // compile status from top-level and extract basis
+            //
+            //
+            //------------------------------------------------------------------
             bool          repl = false;
             const size_t  nmax = compile(Ctop, Ktop, repl, xml);
             if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
-
-#if 0
-            if(xml.verbose)
-            {
-                for(size_t i=1;i<=nmax;++i)
-                {
-                    const Equilibrium &eq = aps[i].eq;
-                    rcl.display(xml(), eq, Ktop) << std::endl;
-                }
-            }
-#endif
-
             const size_t  n = extract(xml);
-            const size_t  m = nsp;
 
-            // act on n!
+            //------------------------------------------------------------------
+            //
+            //
+            // switch on base size
+            //
+            //
+            //------------------------------------------------------------------
+            switch(n)
+            {
+                case 0:
+                    return Success; // shouldn't happen, jammed
 
-            XMatrix &Nu  = XNu[n];
-            XMatrix &phi = Phi[n];
-            XMatrix &chi = Chi[n];
-            XArray  &lhs = Lhs[n];
+                case 1:
+                    rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
+                    return Success;
 
+                default:
+                    break;
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // get metrics
+            //
+            //
+            //------------------------------------------------------------------
+            XMatrix &     Nu  = XNu[n];
+            XMatrix &     phi = Phi[n];
+            XMatrix &     chi = Chi[n];
+            XArray  &     xi  = Lhs[n];
+            const size_t  m   = nsp;
+
+            //------------------------------------------------------------------
+            //
+            //
             // fill jacobian and lhs
+            //
+            //
+            //------------------------------------------------------------------
             {
                 size_t ii=0;
                 for(const ANode *an=apl.head;an;an=an->next)
@@ -51,25 +81,33 @@ namespace Yttrium
                     const Applicant   &app = **an;
                     const Equilibrium &eq  =  app.eq;
                     const xreal_t      eK  =  app.eK;
-                    const xreal_t      ma  = -(lhs[ii] = -eq.massAction(eK, afm.xmul, Ctop, TopLevel));
+                    const xreal_t      ma  = eq.massAction(eK, afm.xmul, Ctop, TopLevel);
+                    xi[ii] = -ma;
                     eq.topology(Nu[ii], SubLevel);
                     eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
                     Y_XMLOG(xml, "ma = " << std::setw(15) << real_t(ma) << " | xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
                 }
             }
 
-
+            //------------------------------------------------------------------
+            //
+            //
             // compute phi*Nu'
+            //
+            //
+            //------------------------------------------------------------------
             XAdd &xadd = afm.xadd;
             xadd.make(n);
             for(size_t i=n;i>0;--i)
             {
+                const XReadable &phi_i=phi[i];
                 for(size_t j=n;j>0;--j)
                 {
+                    const XReadable &Nu_j = Nu[j];
                     assert(xadd.isEmpty());
                     for(size_t k=m;k>0;--k)
                     {
-                        const xreal_t p = phi[i][k] * Nu[j][k];
+                        const xreal_t p = phi_i[k] * Nu_j[k];
                         xadd << p;
                     }
                     chi[i][j] = xadd.sum();
@@ -80,20 +118,32 @@ namespace Yttrium
 
 
             std::cerr << "phi = " << phi << std::endl;
-            std::cerr << "Nu  = " << Nu << std::endl;
-            std::cerr << "lhs = " << lhs << std::endl;
+            std::cerr << "Nu  = " << Nu  << std::endl;
+            std::cerr << "lhs = " << xi  << std::endl;
             std::cerr << "chi = " << chi << std::endl;
 
+            //------------------------------------------------------------------
+            //
+            //
+            // compute inv(phi*Nu')
+            //
+            //
+            //------------------------------------------------------------------
             if(!lu.build(chi))
             {
                 Y_XMLOG(xml, "singular");
                 return Failure;
             }
 
-
+            //------------------------------------------------------------------
+            //
+            //
             // compute extent in lhs
-            lu.solve(chi,lhs);
-            std::cerr << "xi  = " << lhs << std::endl;
+            //
+            //
+            //------------------------------------------------------------------
+            lu.solve(chi,xi);
+            std::cerr << "xi  = " << xi << std::endl;
             rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
 
             assert(xadd.isEmpty());
@@ -105,7 +155,7 @@ namespace Yttrium
             {
                 for(size_t k=n;k>0;--k)
                 {
-                    const xreal_t p = Nu[k][j] * lhs[k];
+                    const xreal_t p = Nu[k][j] * xi[k];
                     xadd << p;
                 }
                 const xreal_t dC = Cws[j] = xadd.sum();
@@ -184,7 +234,84 @@ namespace Yttrium
             }
         }
 
-    }
 
+#if 0
+        void Normalizer::LookUp(XWritable &Ctop, const XReadable &Ktop, XMLog &xml)
+        {
+
+            Y_XML_SECTION(xml, "LookUp");
+
+            bool          repl = false;
+            const size_t  nmax = compile(Ctop, Ktop, repl, xml);
+            if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
+
+
+            const size_t  n = extract(xml);
+            const size_t  m = nsp;
+
+            // act on n!
+
+            XMatrix &Nu  = XNu[n];
+            XMatrix &phi = Phi[n];
+            XMatrix &ups = Chi[n];
+            XArray  &lhs = Lhs[n];
+
+            // Nu, phi and lhs=xi
+            {
+                size_t ii=0;
+                for(const ANode *an=apl.head;an;an=an->next)
+                {
+                    ++ii;
+                    const Applicant   &app = **an;
+                    const Equilibrium &eq  =  app.eq;
+                    const xreal_t      eK  =  app.eK;
+                    eq.topology(Nu[ii], SubLevel);
+                    eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
+                    lhs[ii] = app.xi;
+
+                    Y_XMLOG(xml, "xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
+                }
+            }
+
+            std::cerr << "lhs=" << lhs << std::endl;
+            XAdd &xadd = afm.xadd;
+            for(size_t i=1;i<=n;++i)
+            {
+                xadd.make(m);
+                const xreal_t den = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[i], xadd);
+                //std::cerr << "den=" << den << std::endl;
+                ups[i][i] = 1;
+                for(size_t j=1;j<i;++j)    ups[i][j] = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[j], xadd)/den;
+                for(size_t j=i+1;j<=n;++j) ups[i][j] = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[j], xadd)/den;
+
+            }
+            std::cerr << "ups=" << ups << std::endl;
+            CxxArray<xreal_t> xi(n,0);
+            for(size_t i=1;i<=n;++i)
+            {
+                xadd.make(n);
+                for(size_t j=1;j<=n;++j)
+                {
+                    xadd << ups[j][i] * lhs[j];
+                }
+                xi[i] = xadd.sum();
+            }
+            std::cerr << "xi=" << xi << std::endl;
+            std::cerr << "Nu=" << Nu << std::endl;
+            for(size_t j=1;j<=m;++j)
+            {
+                xadd.make(n);
+                for(size_t i=1;i<=n;++i)
+                {
+                    xadd << Nu[i][j] * xi[i];
+                }
+                Cws[j] = xadd.sum();
+            }
+            std::cerr << "dC=" << Cws << std::endl;
+        }
+
+#endif
+        
+    }
 }
 

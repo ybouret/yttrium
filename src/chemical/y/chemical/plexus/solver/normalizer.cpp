@@ -88,11 +88,12 @@ namespace Yttrium
                 break;
             }
             
-            const bool res = NDSolve(Ctop, Ktop, xml);
-            std::cerr << "res=" << res << std::endl;
+            NDSolve(Ctop, Ktop, xml);
 
-
+            //const bool res = NDSolve(Ctop, Ktop, xml);
+            //std::cerr << "res=" << res << std::endl;
         }
+        
 
         xreal_t  Normalizer:: operator()(const xreal_t u)
         {
