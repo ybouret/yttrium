@@ -13,6 +13,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+
         //______________________________________________________________________
         //
         //
@@ -35,6 +37,13 @@ namespace Yttrium
             typedef LittleEndianAddress        KeyType_; //!< alias
             typedef ArkPtr<KeyType,Normalizer> Ptr;      //!< alias
             typedef SuffixSet<KeyType,Ptr>     Set;      //!< alias
+
+            enum Result
+            {
+                Success,
+                Failure,
+                Trimmed
+            };
 
             //__________________________________________________________________
             //
@@ -62,6 +71,7 @@ namespace Yttrium
             //! objective function of (1-u)*Cin + u * Cex
             xreal_t  operator()(const xreal_t u);
 
+            
             //__________________________________________________________________
             //
             //
@@ -110,9 +120,9 @@ namespace Yttrium
                             const bool        repl,
                             XMLog           & xml);
 
-            bool NDSolve(XWritable       &Ctop,
-                         const XReadable &Ktop,
-                         XMLog           &xml);
+            Result NDSolve(XWritable       &Ctop,
+                           const XReadable &Ktop,
+                           XMLog           &xml);
 
             //! improve by simplex lookup
             xreal_t  improve(XWritable       & Ctop,

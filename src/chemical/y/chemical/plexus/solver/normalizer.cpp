@@ -70,49 +70,27 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-            // take a first global step
+            //------------------------------------------------------------------
+            //
+            //
+            // take a first global step to get a fully accounted Ctop
+            //
+            //
+            //------------------------------------------------------------------
             xreal_t xaff = -1;
-            size_t  napp =  0;
             while(true)
             {
-                bool repl = false;
-                napp      = compile(Ctop,Ktop,repl,xml);
+                bool         repl = false;
+                const size_t napp = compile(Ctop,Ktop,repl,xml);
                 if(napp<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
                 xaff = overall(Ctop,repl,xml);
                 if(repl) continue;
                 break;
             }
-
-            // current Ctop is the reference
-            if(false)
-            {
-                bool         repl = false;
-                const size_t ntmp = compile(Ctop,Ktop,repl,xml);
-                assert(!repl);
-                assert(ntmp==napp);
-                const xreal_t xtmp = overall(Ctop,repl,xml);
-            }
-
-            NDSolve(Ctop, Ktop, xml);
-
-
-#if 0
-            bool    repl = false;
-            size_t  nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-            xreal_t ham0 = overall(Ctop, repl, xml);
-            Y_XMLOG(xml, "found " << real_t(ham0));
-
-
-            for(size_t iter=0;iter<1;++iter)
-            {
-                nmax = compile(Ctop, Ktop, repl, xml); if(nmax<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                const xreal_t ham1= overall(Ctop, repl, xml);
-                Y_XMLOG(xml, "found " << real_t(ham1));
-            }
-
             
-            NDSolve(Ctop, Ktop, xml);
-#endif
+            const bool res = NDSolve(Ctop, Ktop, xml);
+            std::cerr << "res=" << res << std::endl;
+
 
         }
 

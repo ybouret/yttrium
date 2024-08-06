@@ -11,24 +11,26 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        bool Normalizer:: NDSolve(XWritable       &Ctop,
-                                  const XReadable &Ktop,
-                                  XMLog           &xml)
+        Normalizer::Result Normalizer:: NDSolve(XWritable       &Ctop,
+                                                const XReadable &Ktop,
+                                                XMLog           &xml)
         {
             Y_XML_SECTION(xml, "NDSolve");
 
             bool          repl = false;
             const size_t  nmax = compile(Ctop, Ktop, repl, xml);
-            if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
+            if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
 
+#if 0
             if(xml.verbose)
             {
                 for(size_t i=1;i<=nmax;++i)
                 {
                     const Equilibrium &eq = aps[i].eq;
-                    rcl.display(std::cerr, eq, Ktop) << std::endl;
+                    rcl.display(xml(), eq, Ktop) << std::endl;
                 }
             }
+#endif
 
             const size_t  n = extract(xml);
             const size_t  m = nsp;
@@ -49,9 +51,10 @@ namespace Yttrium
                     const Applicant   &app = **an;
                     const Equilibrium &eq  =  app.eq;
                     const xreal_t      eK  =  app.eK;
-                    lhs[ii] = -eq.massAction(eK, afm.xmul, Ctop, TopLevel);
+                    const xreal_t      ma  = -(lhs[ii] = -eq.massAction(eK, afm.xmul, Ctop, TopLevel));
                     eq.topology(Nu[ii], SubLevel);
                     eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
+                    Y_XMLOG(xml, "ma = " << std::setw(15) << real_t(ma) << " | xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
                 }
             }
 
@@ -84,13 +87,13 @@ namespace Yttrium
             if(!lu.build(chi))
             {
                 Y_XMLOG(xml, "singular");
-                return false;
+                return Failure;
             }
 
 
             // compute extent in lhs
             lu.solve(chi,lhs);
-            std::cerr << "xi=" << lhs << std::endl;
+            std::cerr << "xi  = " << lhs << std::endl;
             rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
 
             assert(xadd.isEmpty());
@@ -120,7 +123,7 @@ namespace Yttrium
             std::cerr << "C0  = " << Cin << std::endl;
             std::cerr << "dC  = " << Cws << std::endl;
             std::cerr << "cut = " << cut << std::endl;
-            std::cerr << "fac = " << fac << std::endl;
+            std::cerr << "fac = " << real_t(fac) << std::endl;
 
 
             if(cut) {
@@ -166,12 +169,19 @@ namespace Yttrium
                 fp << "\n";
             }
 
-            const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
-            const xreal_t cost  = (*this)(u_opt);
+            const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
+            const xreal_t cost  = (*this)(uopt);
             Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) );
             rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
-            return f0 < cost;
+            if(cost < f0)
+            {
+                return cut ? Trimmed : Success;
+            }
+            else
+            {
+                return Failure;
+            }
         }
 
     }
