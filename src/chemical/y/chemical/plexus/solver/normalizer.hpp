@@ -100,7 +100,8 @@ namespace Yttrium
             CxxSeries<XMatrix> XNu; //!< matrices Nu
             CxxSeries<XMatrix> Chi; //!< matrices chi
             CxxSeries<XArray>  Lhs; //!< arrays
-
+            MKL::LU<xreal_t>   xlu; //!< linear algebra
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 

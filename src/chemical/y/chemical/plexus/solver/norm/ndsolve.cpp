@@ -22,6 +22,198 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
+            // compile from top-level until no replacement
+            //
+            //
+            //------------------------------------------------------------------
+            while( true )
+            {
+                bool         repl = false;
+                const size_t napp = compile(Ctop, Ktop, repl, xml);
+                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
+                if(repl) continue;
+                break;
+            }
+
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            // extract basis and check dimension
+            //
+            //
+            //------------------------------------------------------------------
+            const size_t  n = extract(xml);
+            switch(n)
+            {
+                case 0:
+                    return Success; // shouldn't happen, jammed
+
+                case 1:
+                    rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
+                    return Success;
+
+                default:
+                    break;
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // get metrics
+            //
+            //
+            //------------------------------------------------------------------
+            XMatrix &     Nu  = XNu[n];
+            XMatrix &     phi = Phi[n];
+            XMatrix &     chi = Chi[n];
+            XArray  &     xi  = Lhs[n];
+            const size_t  m   = nsp;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // fill jacobian and lhs
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                size_t ii=0;
+                for(const ANode *an=apl.head;an;an=an->next)
+                {
+                    ++ii;
+                    const Applicant   &app = **an;
+                    const Equilibrium &eq  =  app.eq;
+                    const xreal_t      eK  =  app.eK;
+                    const xreal_t      ma  = eq.massAction(eK, afm.xmul, Ctop, TopLevel);
+                    xi[ii] = -ma;
+                    eq.topology(Nu[ii], SubLevel);
+                    eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
+                    Y_XMLOG(xml, "ma = " << std::setw(15) << real_t(ma) << " | xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
+                }
+            }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // compute phi*Nu'
+            //
+            //
+            //------------------------------------------------------------------
+            XAdd &xadd = afm.xadd;
+            xadd.make(n);
+            for(size_t i=n;i>0;--i)
+            {
+                const XReadable &phi_i=phi[i];
+                for(size_t j=n;j>0;--j)
+                {
+                    const XReadable &Nu_j = Nu[j];
+                    assert(xadd.isEmpty());
+                    for(size_t k=m;k>0;--k)
+                    {
+                        const xreal_t p = phi_i[k] * Nu_j[k];
+                        xadd << p;
+                    }
+                    chi[i][j] = xadd.sum();
+                }
+            }
+
+
+
+            std::cerr << "phi = " << phi << std::endl;
+            std::cerr << "Nu  = " << Nu  << std::endl;
+            std::cerr << "lhs = " << xi  << std::endl;
+            std::cerr << "chi = " << chi << std::endl;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // compute inv(phi*Nu')
+            //
+            //
+            //------------------------------------------------------------------
+            if(!xlu.build(chi))
+            {
+                Y_XMLOG(xml, "singular");
+                return Failure;
+            }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // compute extent
+            //
+            //
+            //------------------------------------------------------------------
+            xlu.solve(chi,xi);
+            std::cerr << "xi  = " << xi << std::endl;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // compute dC and scaling
+            //
+            //
+            //------------------------------------------------------------------
+            rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
+            const   xreal_t zero  = 0;
+            const   xreal_t one   = 1;
+            xreal_t         scale = one;
+            bool            first = true;
+
+            for(size_t j=m;j>0;--j)
+            {
+                for(size_t k=n;k>0;--k)
+                {
+                    const xreal_t p = Nu[k][j] * xi[k];
+                    xadd << p;
+                }
+                const xreal_t dC = Cws[j] = xadd.sum();
+                if(dC<zero)
+                {
+                    const xreal_t factor = Cin[j]/(-dC);
+                    std::cerr << "factor=" << real_t(factor) << std::endl;
+                    if(first)
+                    {
+                        first = false;
+                        scale = factor;
+                    }
+                    else
+                    {
+                        if(factor<scale) scale = factor;
+                    }
+                }
+            }
+
+            const bool abate = scale < one;
+
+            std::cerr << "C0    = " << Cin << std::endl;
+            std::cerr << "dC    = " << Cws << std::endl;
+            std::cerr << "scale = " << real_t(scale) << std::endl;
+            std::cerr << "abate = " << abate         << std::endl;
+
+            if( abate )
+            {
+                // scale /= 2
+                --Coerce(scale.exponent);
+            }
+            else
+            {
+                
+            }
+
+
+
+            return Failure;
+
+
+#if 0
+            //------------------------------------------------------------------
+            //
+            //
             // compile status from top-level and extract basis
             //
             //
@@ -232,6 +424,7 @@ namespace Yttrium
             {
                 return Failure;
             }
+#endif
         }
 
 

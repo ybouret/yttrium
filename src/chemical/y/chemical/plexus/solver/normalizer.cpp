@@ -34,7 +34,8 @@ namespace Yttrium
         Phi(dof),
         XNu(dof),
         Chi(dof),
-        Lhs(dof)
+        Lhs(dof),
+        xlu(dof)
         {
             // building auxiliary matrices
             for(size_t i=1;i<=dof;++i)
@@ -75,7 +76,7 @@ namespace Yttrium
                 return;
             }
 
-            //NDSolve(Ctop, Ktop, xml);
+            NDSolve(Ctop, Ktop, xml);
 
             //const bool res = NDSolve(Ctop, Ktop, xml);
             //std::cerr << "res=" << res << std::endl;
