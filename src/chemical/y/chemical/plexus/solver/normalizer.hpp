@@ -38,12 +38,6 @@ namespace Yttrium
             typedef ArkPtr<KeyType,Normalizer> Ptr;      //!< alias
             typedef SuffixSet<KeyType,Ptr>     Set;      //!< alias
 
-            enum Result
-            {
-                Success,
-                Failure,
-                Trimmed
-            };
 
             //__________________________________________________________________
             //
@@ -71,7 +65,8 @@ namespace Yttrium
             //! objective function of (1-u)*Cin + u * Cex
             xreal_t  operator()(const xreal_t u);
 
-            
+            xreal_t  totalExtent();
+
             //__________________________________________________________________
             //
             //
@@ -86,9 +81,10 @@ namespace Yttrium
             XMatrix            ceq; //!< storage of phase space
             Applicant::Series  aps; //!< applicant store
             CxxSeries<xreal_t> obj; //!< for objective function
-            CxxArray<xreal_t>  Cin; //!< input  phase space
-            CxxArray<xreal_t>  Cex; //!< output  phase space
-            CxxArray<xreal_t>  Cws; //!< working phase space
+            XArray             Cin; //!< input  phase space
+            XArray             Cex; //!< output  phase space
+            XArray             Cws; //!< working phase space
+            XArray             Cst; //!< starting phase space
             const size_t       dof; //!< primary eqs
             ABank              bnk; //!< pool of applicants
             AList              apl; //!< applicant list
@@ -118,14 +114,14 @@ namespace Yttrium
 
 
             //! compile and try improve
-            bool    fortify(XWritable       & Ctop,
+            bool fortify(XWritable       & Ctop,
                             const XReadable & Ktop,
                             XMLog           & xml);
 
 
-            Result NDSolve(XWritable       &Ctop,
-                           const XReadable &Ktop,
-                           XMLog           &xml);
+            bool NDSolve(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml);
             
 
             //! improve by simplex lookup

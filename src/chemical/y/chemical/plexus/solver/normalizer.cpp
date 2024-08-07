@@ -24,6 +24,7 @@ namespace Yttrium
         Cin(nsp,0),
         Cex(nsp,0),
         Cws(nsp,0),
+        Cst(nsp,0),
         dof(cl.Nu.rows),
         bnk(),
         apl(bnk),
@@ -71,12 +72,19 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
+            rcl.transfer(Cst,SubLevel,Ctop,TopLevel);
             if(!fortify(Ctop, Ktop, xml))
             {
                 return;
             }
 
-            NDSolve(Ctop, Ktop, xml);
+            
+
+            if( NDSolve(Ctop, Ktop, xml) )
+            {
+
+            }
+
 
             //const bool res = NDSolve(Ctop, Ktop, xml);
             //std::cerr << "res=" << res << std::endl;
@@ -99,6 +107,15 @@ namespace Yttrium
             }
 
             return objectiveFunction(Cws,SubLevel);
+        }
+
+
+        xreal_t  Normalizer:: totalExtent()
+        {
+            XAdd &xadd = afm.xadd;
+            xadd.free();
+            for(size_t i=aps.size();i>0;--i) xadd << aps[i].ax;
+            return xadd.sum();
         }
 
         xreal_t Normalizer:: objectiveFunction(const XReadable &C, const Level L)

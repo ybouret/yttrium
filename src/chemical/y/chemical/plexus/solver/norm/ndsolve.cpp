@@ -13,7 +13,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        Normalizer::Result Normalizer:: NDSolve(XWritable       &Ctop,
+        bool Normalizer:: NDSolve(XWritable       &Ctop,
                                                 const XReadable &Ktop,
                                                 XMLog           &xml)
         {
@@ -30,7 +30,7 @@ namespace Yttrium
             {
                 bool         repl = false;
                 const size_t napp = compile(Ctop, Ktop, repl, xml);
-                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
+                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
                 if(repl) continue;
                 break;
             }
@@ -48,11 +48,11 @@ namespace Yttrium
             switch(n)
             {
                 case 0:
-                    return Success; // shouldn't happen, jammed
+                    return true; // shouldn't happen, jammed
 
                 case 1:
                     rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
-                    return Success;
+                    return true;
 
                 default:
                     break;
@@ -138,7 +138,7 @@ namespace Yttrium
             if(!xlu.build(chi))
             {
                 Y_XMLOG(xml, "singular");
-                return Failure;
+                return false;
             }
 
             //------------------------------------------------------------------
@@ -223,7 +223,6 @@ namespace Yttrium
                 (**an).eq.mustSupport(Cex,SubLevel);
 
 
-
             Triplet<xreal_t> xx = { zero, -1, one };
             Triplet<xreal_t> ff = { (*this)(xx.a), xx.b, (*this)(xx.c) };
             const xreal_t    f0 = ff.a;
@@ -243,12 +242,12 @@ namespace Yttrium
             }
 
             const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
-            const xreal_t cost  = (*this)(uopt);
+            const xreal_t cost = (*this)(uopt);
             Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) << " @" << real_t(uopt));
             rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
 
-            return Failure;
+            return cost<=f0;
 
 
         }
