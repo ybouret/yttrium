@@ -85,11 +85,9 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         //______________________________________________________________________
         //
         //
-        // Multiplication
+        // operations
         //
         //______________________________________________________________________
-
-
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
         Y_XREAL_BINARY(*,Mul)
@@ -98,11 +96,8 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         Y_XREAL_BINARY(-,Sub)
 #endif
 
-
-
         XReal operator+() const noexcept; //!< unary +
         XReal operator-() const noexcept; //!< unary -
-
 
 
         //______________________________________________________________________
@@ -111,8 +106,6 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         // comparisons
         //
         //______________________________________________________________________
-
-
         static SignType Compare(const XReal &lhs, const XReal &rhs) noexcept; //!< generic comparison, C++ style
         static SignType Compare(const XReal &lhs, const T      rhs) noexcept; //!< alias
         static SignType Compare(const T      lhs, const XReal &rhs) noexcept; //!< alias
