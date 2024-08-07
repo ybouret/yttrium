@@ -13,6 +13,22 @@ namespace Yttrium
 
     Y_SHALLOW_DECL(Raised); //!< helper to make arbitrary high/low XReal
 
+    //! helper to implement operators
+#define Y_XREAL_BINARY(OP,CALL) \
+inline friend XReal   operator OP (const XReal &lhs, const XReal &rhs) noexcept { return CALL(lhs,rhs); }                            \
+inline friend XReal   operator OP (const T      lhs, const XReal &rhs) noexcept { const XReal _(lhs); return CALL(_,rhs); }          \
+inline friend XReal   operator OP (const XReal &lhs, const T      rhs) noexcept { const XReal _(rhs); return CALL(lhs,_); }          \
+inline        XReal & operator OP##=(const XReal &rhs)                 noexcept { return (*this=CALL(*this,rhs)); }                  \
+inline        XReal & operator OP##=(const T      rhs)                 noexcept { const XReal _(rhs); return (*this=CALL(*this,_)); }
+
+
+
+    //! helper to implement friend comparisons
+#define Y_XREAL_CMP(OP,RESULT) \
+inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
+inline friend bool operator OP (const XReal &lhs, const T      rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
+inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; }
+
     //__________________________________________________________________________
     //
     //
@@ -73,56 +89,21 @@ namespace Yttrium
         //
         //______________________________________________________________________
 
-        //! binary multiplication
-        inline friend XReal operator*(const XReal &lhs, const XReal &rhs) noexcept { return Mul(lhs,rhs); }
 
-        //! in-place multiplication
-        inline XReal & operator*=(const XReal &rhs) noexcept { return (*this=Mul(*this,rhs)); }
 
-        //______________________________________________________________________
-        //
-        //
-        // Division
-        //
-        //______________________________________________________________________
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+        Y_XREAL_BINARY(*,Mul)
+        Y_XREAL_BINARY(/,Div)
+        Y_XREAL_BINARY(+,Add)
+        Y_XREAL_BINARY(-,Sub)
+#endif
 
-        //! binary division
-        inline friend XReal operator/(const XReal &lhs, const XReal &rhs) noexcept { return Div(lhs,rhs); }
 
-        //! in-place division
-        inline XReal & operator/=(const XReal &rhs) noexcept { return (*this=Div(*this,rhs)); }
 
-        //______________________________________________________________________
-        //
-        //
-        // Addition
-        //
-        //______________________________________________________________________
+        XReal operator+() const noexcept; //!< unary +
+        XReal operator-() const noexcept; //!< unary -
 
-        //! unary +
-        XReal operator+() const noexcept;
 
-        //! binary addition
-        inline friend XReal operator+(const XReal &lhs, const XReal &rhs) noexcept { return Add(lhs,rhs); }
-
-        //! in-place addition
-        inline XReal & operator+=(const XReal &rhs) noexcept { return (*this=Add(*this,rhs)); }
-
-        //______________________________________________________________________
-        //
-        //
-        // Subtraction
-        //
-        //______________________________________________________________________
-
-        //! unary -
-        XReal operator-() const noexcept;
-
-        //! binary subtraction
-        inline friend XReal operator-(const XReal &lhs, const XReal &rhs) noexcept { return Sub(lhs,rhs); }
-
-        //! in-place subtraction
-        inline XReal & operator-=(const XReal &rhs) noexcept { return (*this=Sub(*this,rhs)); }
 
         //______________________________________________________________________
         //
@@ -136,11 +117,6 @@ namespace Yttrium
         static SignType Compare(const XReal &lhs, const T      rhs) noexcept; //!< alias
         static SignType Compare(const T      lhs, const XReal &rhs) noexcept; //!< alias
 
-        //! helper to implement friend functions
-#define Y_XREAL_CMP(OP,RESULT) \
-inline friend bool operator OP (const XReal &lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
-inline friend bool operator OP (const XReal &lhs, const T      rhs) noexcept { return Compare(lhs,rhs) RESULT; } \
-inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { return Compare(lhs,rhs) RESULT; }
 
         Y_XREAL_CMP(==,  == __Zero__ )
         Y_XREAL_CMP(!=,  != __Zero__ )
