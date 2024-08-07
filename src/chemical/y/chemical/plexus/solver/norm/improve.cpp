@@ -1,7 +1,6 @@
 #include "y/chemical/plexus/solver/normalizer.hpp"
 
 #include "y/mkl/opt/minimize.hpp"
-//#include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
 
 namespace Yttrium
