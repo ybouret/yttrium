@@ -40,16 +40,6 @@ namespace Yttrium
                 }
             }
 
-            //--------------------------------------------------------------
-            //
-            // found the base: order by equilibria top-level
-            // to build local topology
-            //
-            //--------------------------------------------------------------
-            //MergeSort::Call(apl,CompareBasis);
-
-
-
 
             //--------------------------------------------------------------
             //
@@ -61,22 +51,7 @@ namespace Yttrium
             Y_XMLOG(xml, "#primary    = " << dof);
             Y_XMLOG(xml, "#family     = " << apl.size);
 
-#if 0
-            {
-                XMatrix &Nu = XNu[apl.size];
-                size_t   ii = 0;
-                for(const ANode *an=apl.head;an;an=an->next)
-                {
-                    const Applicant &app = **an;
-                    app.eq.topology(Nu[++ii],SubLevel);
-                    if(xml.verbose)
-                    {
-                        app.display( xml() << "| ", cl.uuid, false) << std::endl;
-                    }
-                }
-                Y_XMLOG(xml, "Nu=" << Nu);
-            }
-#endif
+
 
             //--------------------------------------------------------------
             //

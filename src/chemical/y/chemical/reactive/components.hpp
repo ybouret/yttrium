@@ -220,6 +220,8 @@ namespace Yttrium
                 ||     (reac.akin(other.prod) && prod.akin(other.reac));
             }
 
+            //! check all accounted, throw exception otherwise
+            void mustSupport(const XReadable &C, const Level L) const;
 
             //__________________________________________________________________
             //

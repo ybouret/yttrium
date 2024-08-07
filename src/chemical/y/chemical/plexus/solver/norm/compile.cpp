@@ -69,22 +69,13 @@ namespace Yttrium
             //------------------------------------------------------------------
             HeapSort::Call(aps, Applicant::Compare);
             const size_t nmax = aps.size();
-            for(size_t i=1;i<=nmax;++i)
+            for(size_t i=nmax;i>0;--i)
             {
-                const Applicant   &lhs = aps[i]; if(xml.verbose)  lhs.display( xml() << "| ", rcl.uuid, true) << std::endl;
-                const Equilibrium &lEq = lhs.eq;
-                const char * const lid = lEq.name.c_str();
-
-                if( !lEq.reac.accounted(Ctop, TopLevel) ) throw Specific::Exception(lid, "missing reactant(s) on top-level");
-                if( !lEq.prod.accounted(Ctop, TopLevel) ) throw Specific::Exception(lid, "missing product(s) on top-level");
-
-                for(size_t j=1;j<=nmax;++j)
-                {
-                    const Applicant   &rhs = aps[j];
-                    const char * const rid = rhs.eq.name.c_str();
-                    if(!lEq.reac.accounted(rhs.cc,SubLevel)) throw Specific::Exception(lid, "missing reactant(s) in '%s'", rid);
-                    if(!lEq.prod.accounted(rhs.cc,SubLevel)) throw Specific::Exception(lid, "missing reactant(s) in '%s'", rid);
-                }
+                const Applicant   &app = aps[i]; if(xml.verbose)  app.display( xml() << "| ", rcl.uuid, true) << std::endl;
+                const Equilibrium &eq  = app.eq;
+                eq.mustSupport(Ctop,TopLevel);
+                for(size_t j=nmax;j>0;--j)
+                    eq.mustSupport(aps[j].cc,SubLevel);
             }
 
             return nmax;

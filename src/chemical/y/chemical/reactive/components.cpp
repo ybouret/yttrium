@@ -2,6 +2,7 @@
 
 #include "y/chemical/reactive/components.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
@@ -289,7 +290,12 @@ namespace Yttrium
             return CategoryText(kind);
         }
 
-        
+        void Components:: mustSupport(const XReadable &C, const Level L) const
+        {
+            if( reac.deficient(C,L) ) throw Specific::Exception( name.c_str(), "deficient in reactant%s", Plural::s(reac->size) );
+            if( prod.deficient(C,L) ) throw Specific::Exception( name.c_str(), "deficient in product%s", Plural::s(prod->size) );
+        }
+
 
     }
 
