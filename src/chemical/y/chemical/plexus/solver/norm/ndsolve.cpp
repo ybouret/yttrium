@@ -251,6 +251,34 @@ namespace Yttrium
             return success;
         }
 
+        bool Normalizer:: NDDrive(XWritable       &Ctop,
+                                  const XReadable &Ktop,
+                                  XMLog           &xml)
+        {
+
+            Y_XML_SECTION(xml, "NDDrive");
+
+            // keep Cstart
+            rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
+            if(!NDSolve(Ctop, Ktop, xml))
+            {
+                Y_XMLOG(xml, "[Singular@Init]");
+                return false;
+            }
+
+            // first delta
+            for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+            {
+                const size_t * const indx = (**sn).indx;
+                const size_t         isub = indx[SubLevel];
+                dCs[isub] = Ctop[ indx[TopLevel] ] - Cst[isub];
+            }
+
+            std::cerr << "dCs=" << dCs << std::endl;
+
+
+            return false;
+        }
 
 #if 0
         void Normalizer::LookUp(XWritable &Ctop, const XReadable &Ktop, XMLog &xml)

@@ -25,6 +25,7 @@ namespace Yttrium
         Cex(nsp,0),
         Cws(nsp,0),
         Cst(nsp,0),
+        dCs(nsp,0),
         dof(cl.Nu.rows),
         bnk(),
         apl(bnk),
@@ -81,7 +82,7 @@ namespace Yttrium
                 {
                     return;
                 }
-
+                
                 if( !NDSolve(Ctop, Ktop, xml) )
                 {
                     return;

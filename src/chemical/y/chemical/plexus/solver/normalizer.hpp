@@ -85,6 +85,7 @@ namespace Yttrium
             XArray             Cex; //!< output  phase space
             XArray             Cws; //!< working phase space
             XArray             Cst; //!< starting phase space
+            XArray             dCs; //!< delta C
             const size_t       dof; //!< primary eqs
             ABank              bnk; //!< pool of applicants
             AList              apl; //!< applicant list
@@ -118,11 +119,15 @@ namespace Yttrium
                          const XReadable & Ktop,
                          XMLog           & xml);
 
-            
+            //! one ND step
             bool NDSolve(XWritable       &Ctop,
                          const XReadable &Ktop,
                          XMLog           &xml);
-            
+
+            bool NDDrive(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml);
+
 
             //! improve by simplex lookup
             xreal_t  improve(XWritable       & Ctop,
