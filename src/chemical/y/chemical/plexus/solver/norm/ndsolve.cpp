@@ -289,10 +289,23 @@ namespace Yttrium
 
             std::cerr << "dCs=" << dCs << std::endl;
 
+            //------------------------------------------------------------------
+            //
+            //
+            // extra steps
+            //
+            //
+            //------------------------------------------------------------------
             for(size_t cycle=1;;++cycle)
             {
                 rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-                
+
+                switch( NDSolve(Ctop,Ktop,xml) )
+                {
+                    case Success: break;
+                    case Trimmed: Y_XMLOG(xml, "[Trimmed@Step] " << cycle); return Trimmed;
+                    case Failure: Y_XMLOG(xml, "[Failure@Step] " << cycle); return Failure;
+                }
 
                 break;
             }

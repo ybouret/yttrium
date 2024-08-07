@@ -83,8 +83,7 @@ namespace Yttrium
                 case Trimmed:
                 case Failure:
                     // fortify solution for new starting point
-                    if( !fortify(Ctop, Ktop, xml) )
-                    {
+                    if( !fortify(Ctop, Ktop, xml) ) {
                         Y_XMLOG(xml, "spurous phase space");
                         return false;
                     }
