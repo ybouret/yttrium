@@ -73,35 +73,27 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-
-        RUN:
-            switch( NDDrive(Ctop, Ktop, xml) )
+        FORTIFY:
+            if(!fortify(Ctop, Ktop,xml))
+            {
+                Y_XMLOG(xml, "done?");
+                return true;
+            }
+        NDSOLVE:
+            switch(NDSolve(Ctop,Ktop, xml))
             {
                 case Success:
-                    break;
-
+                    goto FORTIFY;
                 case Trimmed:
                 case Failure:
-                    // fortify solution for new starting point
-                    if( !fortify(Ctop, Ktop, xml) ) {
-                        Y_XMLOG(xml, "spurous phase space");
+                    if(!fortify(Ctop,Ktop,xml)) {
+                        Y_XMLOG(xml, "spurious");
                         return false;
                     }
-                    goto RUN;
+                    goto NDSOLVE;
             }
 
-            std::cerr << "Drive Success!" << std::endl;
-            if(fortify(Ctop, Ktop, xml))
-            {
-                std::cerr << "But can still decrease" << std::endl;
-            }
-
-
-
-            return false;
-
-            //const bool res = NDSolve(Ctop, Ktop, xml);
-            //std::cerr << "res=" << res << std::endl;
+            
         }
 
 

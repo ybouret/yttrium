@@ -87,7 +87,8 @@ namespace Yttrium
                     //Y_XMLOG(xml, "upper = " << std::setw(15) << real_t(ff.a) );
                     //Y_XMLOG(xml, "lower = " << std::setw(15) << real_t(ff.c) );
                     assert(ff.a>=ff.c);
-                    
+
+                    if(false)
                     {
                         const real_t offset = cycle-1;
                         const size_t np(1000);

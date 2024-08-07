@@ -127,8 +127,8 @@ namespace Yttrium
 
             //! one ND step
             Result NDSolve(XWritable       &Ctop,
-                         const XReadable &Ktop,
-                         XMLog           &xml);
+                           const XReadable &Ktop,
+                           XMLog           &xml);
 
             Result NDDrive(XWritable       &Ctop,
                            const XReadable &Ktop,

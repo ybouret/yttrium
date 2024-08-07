@@ -227,7 +227,7 @@ namespace Yttrium
             const xreal_t    f0 = ff.a;
 
             
-
+            if(false)
             {
                 OutputFile fp("ndsolve.dat");
                 const size_t np(1000);
@@ -254,7 +254,43 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml, "NDDrive");
+            rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
 
+            for(size_t cycle=1;cycle<=100;++cycle)
+            {
+                switch( NDSolve(Ctop,Ktop,xml) )
+                {
+                    case Success: break;
+                    case Trimmed: Y_XMLOG(xml, "[Trimmed@Step] " << cycle); return Trimmed;
+                    case Failure: Y_XMLOG(xml, "[Failure@Step] " << cycle); return Failure;
+                }
+
+                bool converged = false;
+                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    const size_t         isub = indx[SubLevel];
+                    const xreal_t        Cnew = Ctop[ indx[TopLevel] ];
+                    const xreal_t        Cold = Cst[isub];
+                    Cst[isub] = Cnew;
+                    const xreal_t         dd = Cnew-Cold;
+                    std::cerr << (**sn) << " dd=" << real_t(dd) << "/" << real_t(Cnew) << std::endl;
+                    if( dd.abs() > 0.0 )
+                    {
+                        converged = false;
+                    }
+
+                }
+
+                std::cerr << "converged=" << converged << std::endl;
+
+
+                break;
+            }
+
+            return Success;
+
+#if 0
             //------------------------------------------------------------------
             //
             //
@@ -307,12 +343,31 @@ namespace Yttrium
                     case Failure: Y_XMLOG(xml, "[Failure@Step] " << cycle); return Failure;
                 }
 
+                bool converged = true;
+                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+                {
+                    const size_t * const indx = (**sn).indx;
+                    const size_t         isub = indx[SubLevel];
+                    const xreal_t dOld = dCs[isub];
+                    const xreal_t dNew = (Ctop[ indx[TopLevel] ] - Cst[isub]).abs();
+                    if(dNew<dOld)
+                        converged = false;
+                    dCs[isub] = dNew;
+                }
+
+                std::cerr << "dCs=" << dCs << std::endl;
+                Y_XMLOG(xml, "converged@" << cycle << " = " << converged);
+
+
+
                 break;
             }
 
 
 
             return Success;
+#endif
+
         }
 
 #if 0

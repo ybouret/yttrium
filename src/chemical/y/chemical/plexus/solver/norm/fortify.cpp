@@ -16,7 +16,7 @@ namespace Yttrium
             if(napp<=0)
             {
                 Y_XMLOG(xml, "[Jammed!]");
-                return true;
+                return false;
             }
 
             const size_t dims = extract(xml);
