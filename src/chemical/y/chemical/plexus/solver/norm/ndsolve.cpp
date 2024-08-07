@@ -244,12 +244,11 @@ namespace Yttrium
             const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
             const xreal_t cost = (*this)(uopt);
             Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) << " @" << real_t(uopt));
+
             rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
-
-
-            return cost<=f0;
-
-
+            const bool success = (cost<=f0);
+            Y_XMLOG(xml,"success = " << success);
+            return success;
         }
 
 
