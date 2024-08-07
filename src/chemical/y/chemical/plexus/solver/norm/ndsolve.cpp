@@ -162,7 +162,7 @@ namespace Yttrium
             const   xreal_t zero  = 0;
             const   xreal_t one   = 1;
             xreal_t         scale = one;
-            bool            first = true;
+            bool            abate = false;
 
             for(size_t j=m;j>0;--j)
             {
@@ -176,9 +176,9 @@ namespace Yttrium
                 {
                     const xreal_t factor = Cin[j]/(-dC);
                     std::cerr << "factor=" << real_t(factor) << std::endl;
-                    if(first)
+                    if(!abate)
                     {
-                        first = false;
+                        abate = true;
                         scale = factor;
                     }
                     else
@@ -188,22 +188,12 @@ namespace Yttrium
                 }
             }
 
-            const bool abate = scale < one;
 
             std::cerr << "C0    = " << Cin << std::endl;
             std::cerr << "dC    = " << Cws << std::endl;
             std::cerr << "scale = " << real_t(scale) << std::endl;
-            std::cerr << "abate = " << abate         << std::endl;
+            std::cerr << "abate = " << abate << std::endl;
 
-            if( abate )
-            {
-                // scale /= 2
-                --Coerce(scale.exponent);
-            }
-            else
-            {
-                
-            }
 
 
 
