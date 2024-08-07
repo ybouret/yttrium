@@ -161,6 +161,7 @@ namespace Yttrium
             rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
             const   xreal_t zero  = 0;
             const   xreal_t one   = 1;
+            const   xreal_t smax  = 2;
             xreal_t         scale = one;
             bool            abate = false;
 
@@ -194,7 +195,24 @@ namespace Yttrium
             std::cerr << "scale = " << real_t(scale) << std::endl;
             std::cerr << "abate = " << abate << std::endl;
 
+            if(abate)
+            {
+                // scale /=2
+                --Coerce(scale.exponent);
+            }
 
+            if(scale>smax) 
+                scale=smax;
+
+            for(size_t j=m;j>0;--j)
+            {
+                Cex[j] = Cws[j] + scale * Cin[j];
+            }
+
+            std::cerr << "scale = " << real_t(scale) << std::endl;
+            std::cerr << "C1    = " << Cex << std::endl;
+
+            
 
 
             return Failure;
