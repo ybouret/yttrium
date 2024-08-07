@@ -70,25 +70,12 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-            //------------------------------------------------------------------
-            //
-            //
-            // take a first global step to get a fully accounted Ctop
-            //
-            //
-            //------------------------------------------------------------------
-            xreal_t xaff = -1;
-            while(true)
+            if(!fortify(Ctop, Ktop, xml))
             {
-                bool         repl = false;
-                const size_t napp = compile(Ctop,Ktop,repl,xml);
-                if(napp<=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-                xaff = overall(Ctop,repl,xml);
-                if(repl) continue;
-                break;
+                return;
             }
-            
-            NDSolve(Ctop, Ktop, xml);
+
+            //NDSolve(Ctop, Ktop, xml);
 
             //const bool res = NDSolve(Ctop, Ktop, xml);
             //std::cerr << "res=" << res << std::endl;

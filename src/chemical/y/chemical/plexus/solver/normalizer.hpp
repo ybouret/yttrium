@@ -115,6 +115,12 @@ namespace Yttrium
             //! build projection matrix: Nu'*inv(Nu*Nu')*Nu as pro/psf
             void setProj();
 
+
+
+            bool    fortify(XWritable       & Ctop,
+                            const XReadable & Ktop,
+                            XMLog           & xml);
+
             //! after a successful compilation
             xreal_t overall(XWritable       & Ctop,
                             const bool        repl,

@@ -18,10 +18,10 @@ namespace Yttrium
             const size_t dims = extract(xml);
             switch(dims)
             {
-                case 0:  // shouldn't happen
-                    throw Specific::Exception("Normalizer", "no equilbrium");
+                case 0:   // shouldn't happen
+                    throw Specific::Exception(CallSign, "no equilbrium");
 
-                case 1: // use single winner
+                case 1:  // use single winner
                     return objectiveFunction(rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel),TopLevel);
 
                 default: // will improve with simplex
@@ -44,7 +44,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 //
                 //
-                // load simplex
+                // load simplex with optional Ctop + basis
                 //
                 //
                 //--------------------------------------------------------------
