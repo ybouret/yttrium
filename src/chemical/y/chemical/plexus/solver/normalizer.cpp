@@ -74,7 +74,7 @@ namespace Yttrium
 
             rcl.transfer(Cst,SubLevel,Ctop,TopLevel);
 
-            for(size_t iter=1;iter<=2;++iter)
+            for(size_t iter=1;iter<=8;++iter)
             {
                 std::cerr << "-------- ENTER: ITER " << iter << " ---------" << std::endl;
                 if(!fortify(Ctop, Ktop, xml))
