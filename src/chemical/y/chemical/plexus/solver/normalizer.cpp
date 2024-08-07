@@ -63,38 +63,48 @@ namespace Yttrium
             return Sign::Of( (**lhs).eq.indx[TopLevel], (**rhs).eq.indx[TopLevel] );
         }
 #endif
-        
+
         const Normalizer:: KeyType & Normalizer:: key() const noexcept { return lek; }
 
 
-        void Normalizer:: run(XWritable       & Ctop,
+        bool Normalizer:: run(XWritable       & Ctop,
                               const XReadable & Ktop,
                               XMLog           & xml)
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-            rcl.transfer(Cst,SubLevel,Ctop,TopLevel);
 
-            for(size_t iter=1;iter<=8;++iter)
+        RUN:
+            switch( NDDrive(Ctop, Ktop, xml) )
             {
-                std::cerr << "-------- ENTER: ITER " << iter << " ---------" << std::endl;
-                if(!fortify(Ctop, Ktop, xml))
-                {
-                    return;
-                }
-                
-                if( !NDSolve(Ctop, Ktop, xml) )
-                {
-                    return;
-                }
-                std::cerr << "-------- LEAVE: ITER " << iter << " ---------" << std::endl;
+                case Success:
+                    break;
 
+                case Trimmed:
+                case Failure:
+                    // fortify solution for new starting point
+                    if( !fortify(Ctop, Ktop, xml) )
+                    {
+                        Y_XMLOG(xml, "spurous phase space");
+                        return false;
+                    }
+                    goto RUN;
             }
+
+            std::cerr << "Drive Success!" << std::endl;
+            if(fortify(Ctop, Ktop, xml))
+            {
+                std::cerr << "But can still decrease" << std::endl;
+            }
+
+
+
+            return false;
 
             //const bool res = NDSolve(Ctop, Ktop, xml);
             //std::cerr << "res=" << res << std::endl;
         }
-        
+
 
         xreal_t  Normalizer:: operator()(const xreal_t u)
         {
@@ -253,8 +263,8 @@ namespace Yttrium
         }
 
 
-        
-      
+
+
     }
 
 }

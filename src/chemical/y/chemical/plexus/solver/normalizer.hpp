@@ -38,6 +38,12 @@ namespace Yttrium
             typedef ArkPtr<KeyType,Normalizer> Ptr;      //!< alias
             typedef SuffixSet<KeyType,Ptr>     Set;      //!< alias
 
+            enum Result
+            {
+                Success,
+                Failure,
+                Trimmed
+            };
 
             //__________________________________________________________________
             //
@@ -58,7 +64,7 @@ namespace Yttrium
             const KeyType & key() const noexcept; //!< internal key
 
             //! algo...
-            void run(XWritable       & Ctop,
+            bool run(XWritable       & Ctop,
                      const XReadable & Ktop,
                      XMLog           & xml);
 
@@ -120,13 +126,13 @@ namespace Yttrium
                          XMLog           & xml);
 
             //! one ND step
-            bool NDSolve(XWritable       &Ctop,
+            Result NDSolve(XWritable       &Ctop,
                          const XReadable &Ktop,
                          XMLog           &xml);
 
-            bool NDDrive(XWritable       &Ctop,
-                         const XReadable &Ktop,
-                         XMLog           &xml);
+            Result NDDrive(XWritable       &Ctop,
+                           const XReadable &Ktop,
+                           XMLog           &xml);
 
 
             //! improve by simplex lookup

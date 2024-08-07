@@ -31,7 +31,7 @@ namespace Yttrium
                     const xreal_t    aff0 = objectiveFunction(Ctop,TopLevel);
                     const xreal_t    aff1 = objectiveFunction(rcl.transfer(Ctop,TopLevel,app.cc,SubLevel),TopLevel);
                     Y_XMLOG(xml, "affinity: " << real_t(aff0) << " -> " << real_t(aff1) << " @" << app.eq.name);
-                    return aff1 <= aff0;
+                    return aff1 < aff0;
                 }
 
                 default: // will improve with simplex
@@ -41,7 +41,7 @@ namespace Yttrium
             const xreal_t aff0 = objectiveFunction(Ctop,TopLevel);
             const xreal_t aff1 = improve(Ctop,repl,xml);
             Y_XMLOG(xml, "affinity: " << real_t(aff0) << " -> " << real_t(aff1) << " @simplex");
-            return aff1 <= aff0;
+            return aff1 < aff0;
         }
 
     }

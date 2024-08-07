@@ -13,7 +13,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        bool Normalizer:: NDSolve(XWritable       &Ctop,
+        Normalizer::Result Normalizer:: NDSolve(XWritable       &Ctop,
                                                 const XReadable &Ktop,
                                                 XMLog           &xml)
         {
@@ -30,7 +30,7 @@ namespace Yttrium
             {
                 bool         repl = false;
                 const size_t napp = compile(Ctop, Ktop, repl, xml);
-                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
+                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
                 if(repl) continue;
                 break;
             }
@@ -48,11 +48,11 @@ namespace Yttrium
             switch(n)
             {
                 case 0:
-                    return true; // shouldn't happen, jammed
+                    return Success; // shouldn't happen, jammed
 
                 case 1:
                     rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
-                    return true;
+                    return Success;
 
                 default:
                     break;
@@ -123,10 +123,10 @@ namespace Yttrium
 
 
 
-            std::cerr << "phi = " << phi << std::endl;
-            std::cerr << "Nu  = " << Nu  << std::endl;
-            std::cerr << "lhs = " << xi  << std::endl;
-            std::cerr << "chi = " << chi << std::endl;
+            //std::cerr << "phi = " << phi << std::endl;
+            //std::cerr << "Nu  = " << Nu  << std::endl;
+            //std::cerr << "lhs = " << xi  << std::endl;
+            //std::cerr << "chi = " << chi << std::endl;
 
             //------------------------------------------------------------------
             //
@@ -138,7 +138,7 @@ namespace Yttrium
             if(!xlu.build(chi))
             {
                 Y_XMLOG(xml, "singular");
-                return false;
+                return Failure;
             }
 
             //------------------------------------------------------------------
@@ -149,7 +149,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             xlu.solve(chi,xi);
-            std::cerr << "xi  = " << xi << std::endl;
+            //std::cerr << "xi  = " << xi << std::endl;
 
             //------------------------------------------------------------------
             //
@@ -189,10 +189,10 @@ namespace Yttrium
             }
 
 
-            std::cerr << "C0    = " << Cin << std::endl;
-            std::cerr << "dC    = " << Cws << std::endl;
-            std::cerr << "scale = " << real_t(scale) << std::endl;
-            std::cerr << "abate = " << abate << std::endl;
+           // std::cerr << "C0    = " << Cin << std::endl;
+            //std::cerr << "dC    = " << Cws << std::endl;
+            Y_XMLOG(xml,"scale = " << real_t(scale));
+            Y_XMLOG(xml,"abate = " << abate        );
 
             if(abate)
             {
@@ -216,8 +216,7 @@ namespace Yttrium
                 Cex[j] = Cin[j] + scale * Cws[j];
             }
 
-            std::cerr << "scale = " << real_t(scale) << std::endl;
-            std::cerr << "C1    = " << Cex << std::endl;
+            Y_XMLOG(xml,"scale = " << real_t(scale));
 
             for(const ANode *an=apl.head;an;an=an->next)
                 (**an).eq.mustSupport(Cex,SubLevel);
@@ -227,8 +226,7 @@ namespace Yttrium
             Triplet<xreal_t> ff = { (*this)(xx.a), xx.b, (*this)(xx.c) };
             const xreal_t    f0 = ff.a;
 
-            std::cerr << "xx=" << xx << ", ff=" << ff << std::endl;
-
+            
 
             {
                 OutputFile fp("ndsolve.dat");
@@ -244,40 +242,64 @@ namespace Yttrium
             const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
             const xreal_t cost = (*this)(uopt);
             Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) << " @" << real_t(uopt));
-
             rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
-            const bool success = (cost<=f0);
-            Y_XMLOG(xml,"success = " << success);
-            return success;
+
+            const xreal_t smin = 0.2;
+            return scale <= smin ? Trimmed : Success;
         }
 
-        bool Normalizer:: NDDrive(XWritable       &Ctop,
-                                  const XReadable &Ktop,
-                                  XMLog           &xml)
+        Normalizer::Result Normalizer:: NDDrive(XWritable       &Ctop,
+                                                const XReadable &Ktop,
+                                                XMLog           &xml)
         {
 
             Y_XML_SECTION(xml, "NDDrive");
 
-            // keep Cstart
+            //------------------------------------------------------------------
+            //
+            //
+            // initial step
+            //
+            //
+            //------------------------------------------------------------------
             rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-            if(!NDSolve(Ctop, Ktop, xml))
+
+            switch( NDSolve(Ctop,Ktop,xml) )
             {
-                Y_XMLOG(xml, "[Singular@Init]");
-                return false;
+                case Success: break;
+                case Trimmed: Y_XMLOG(xml, "[Trimmed@Init]"); return Trimmed;
+                case Failure: Y_XMLOG(xml, "[Failure@Init]"); return Failure;
             }
 
+
+
+            //------------------------------------------------------------------
+            //
+            //
             // first delta
+            //
+            //
+            //------------------------------------------------------------------
             for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
             {
                 const size_t * const indx = (**sn).indx;
                 const size_t         isub = indx[SubLevel];
-                dCs[isub] = Ctop[ indx[TopLevel] ] - Cst[isub];
+                dCs[isub] = (Ctop[ indx[TopLevel] ] - Cst[isub]).abs();
             }
 
             std::cerr << "dCs=" << dCs << std::endl;
 
+            for(size_t cycle=1;;++cycle)
+            {
+                rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
+                
 
-            return false;
+                break;
+            }
+
+
+
+            return Success;
         }
 
 #if 0
