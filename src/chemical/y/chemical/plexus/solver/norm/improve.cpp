@@ -1,7 +1,7 @@
 #include "y/chemical/plexus/solver/normalizer.hpp"
 
 #include "y/mkl/opt/minimize.hpp"
-#include "y/system/exception.hpp"
+//#include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
 
 namespace Yttrium
@@ -10,26 +10,6 @@ namespace Yttrium
     {
         using namespace MKL;
         
-        xreal_t Normalizer:: overall(XWritable       & Ctop,
-                                     const bool        repl,
-                                     XMLog           & xml)
-        {
-            assert(aps.size()>0);
-            const size_t dims = extract(xml);
-            switch(dims)
-            {
-                case 0:   // shouldn't happen
-                    throw Specific::Exception(CallSign, "no equilbrium");
-
-                case 1:  // use single winner
-                    return objectiveFunction(rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel),TopLevel);
-
-                default: // will improve with simplex
-                    break;
-            }
-
-            return improve(Ctop,repl,xml);
-        }
 
 
         xreal_t  Normalizer:: improve(XWritable       & Ctop,

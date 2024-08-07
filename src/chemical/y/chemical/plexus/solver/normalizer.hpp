@@ -116,15 +116,11 @@ namespace Yttrium
             void setProj();
 
 
-
+            //! compile and try improve
             bool    fortify(XWritable       & Ctop,
                             const XReadable & Ktop,
                             XMLog           & xml);
 
-            //! after a successful compilation
-            xreal_t overall(XWritable       & Ctop,
-                            const bool        repl,
-                            XMLog           & xml);
 
             Result NDSolve(XWritable       &Ctop,
                            const XReadable &Ktop,
