@@ -197,7 +197,8 @@ namespace Yttrium
             if(abate)
             {
                 // scale /=2
-                --Coerce(scale.exponent);
+                //--Coerce(scale.exponent);
+                scale *= 0.99;
             }
 
             if(scale>smax) 
