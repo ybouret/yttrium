@@ -176,7 +176,6 @@ namespace Yttrium
                 if(dC<zero)
                 {
                     const xreal_t factor = Cin[j]/(-dC);
-                    std::cerr << "factor=" << real_t(factor) << std::endl;
                     if(!abate)
                     {
                         abate = true;
