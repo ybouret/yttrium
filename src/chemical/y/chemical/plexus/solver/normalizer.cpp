@@ -74,27 +74,11 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
             fortify(Ctop, Ktop, xml);
+            fortify(Ctop, Ktop, xml);
+
             return false;
 
-        FORTIFY:
-            if(!fortify(Ctop, Ktop,xml))
-            {
-                Y_XMLOG(xml, "done?");
-                return true;
-            }
-        NDSOLVE:
-            switch(NDSolve(Ctop,Ktop, xml))
-            {
-                case Success:
-                    goto FORTIFY;
-                case Trimmed:
-                case Failure:
-                    if(!fortify(Ctop,Ktop,xml)) {
-                        Y_XMLOG(xml, "spurious");
-                        return false;
-                    }
-                    goto NDSOLVE;
-            }
+
 
             
         }
