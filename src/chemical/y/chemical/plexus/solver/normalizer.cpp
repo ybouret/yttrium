@@ -74,7 +74,8 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
             fortify(Ctop, Ktop, xml);
-            
+            fortify(Ctop, Ktop, xml);
+
             return false;
 
 
@@ -115,8 +116,6 @@ namespace Yttrium
             obj.free();
 
             //for(const ANode *an=apl.head;an;an=an->next) obj << (**an).affinity(afm.xmul,C,L);
-
-
             {
                 for(size_t i=aps.size();i>0;--i)
                     obj << aps[i].affinity(afm.xmul,C,L);

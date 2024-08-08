@@ -63,23 +63,45 @@ namespace Yttrium
             }
             assert(napp>=2);
 
-            for(size_t i=napp;i>0;--i)
+
+            //------------------------------------------------------------------
+            //
+            //
+            // update applicant values
+            //
+            //
+            //------------------------------------------------------------------
+
+
             {
-                const Applicant &app = aps[i];
-                app.ff = objectiveFunction(app.cc, SubLevel);
+                Y_XML_SECTION(xml, "Update");
+                for(size_t i=napp;i>0;--i)
+                {
+                    const Applicant &app = aps[i];
+                    app.ff = objectiveFunction(app.cc, SubLevel);
+                }
+                HeapSort::Call(aps,Applicant::CompareFF);
+                for(size_t i=1;i<=napp;++i)
+                {
+                    const Applicant &app  = aps[i];
+                    Y_XMLOG(xml, "[ff= " << std::setw(15)  << real_t(app.ff)
+                            <<   "|ax= " << std::setw(15)  << real_t(app.ax)
+                            <<   "] @" << app.eq.name);
+                }
             }
 
-            HeapSort::Call(aps,Applicant::CompareFF);
 
-            for(size_t i=1;i<=napp;++i)
-            {
-                const Applicant &app  = aps[i];
-                Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(app.ff)
-                        <<   "|ax= " << std::setw(15)  << real_t(app.ax)
-                        <<   "] @" << app.eq.name);
-            }
-
+            //------------------------------------------------------------------
+            //
+            //
+            // extract basis from most promising
+            //
+            //
+            //------------------------------------------------------------------
             const size_t dims = extract(xml);
+            if(dims<=2) throw Specific::Exception(CallSign, "invalid fortified basis");
+
+#if 0
             for(const ANode *an=apl.head;an;an=an->next)
             {
                 const Applicant &app = **an;
@@ -87,10 +109,11 @@ namespace Yttrium
                         <<   "|ax= " << std::setw(15)  << real_t(app.ax)
                         <<   "] @" << app.eq.name);
             }
-
+#endif
 
 
             const SList &species = rcl.species;
+
             {
                 Y_XML_SECTION(xml, "Simplex");
                 //--------------------------------------------------------------
@@ -111,7 +134,13 @@ namespace Yttrium
                     Y_XMLOG(xml, "[replaced top-level]");
                 }
 
-
+                //--------------------------------------------------------------
+                //
+                //
+                // then load extracted basis
+                //
+                //
+                //--------------------------------------------------------------
                 for(const ANode *an=apl.tail;an;an=an->prev)
                 {
                     const Applicant &app = **an;
@@ -127,7 +156,7 @@ namespace Yttrium
             const size_t  m     = nsp;
 
             {
-                Y_XML_SECTION(xml, "Improve");
+                Y_XML_SECTION_OPT(xml, "Improve"," iter='" << sim.size-1 << "'");
                 Normalizer & F     = *this;
                 unsigned     cycle = 0;
                 OutputFile   fp("simplex.dat");
@@ -174,9 +203,19 @@ namespace Yttrium
 
             }
 
-
-
-            return false;
+            const xreal_t issue = sim.head->cost;
+            Y_XMLOG(xml, "affinity: " << real_t(worst) << " -> " << real_t(issue));
+            if(issue<worst)
+            {
+                Y_XMLOG(xml,Core::Success);
+                rcl.transfer(Ctop,TopLevel, *sim.head, SubLevel);
+                return true;
+            }
+            else
+            {
+                Y_XMLOG(xml,Core::Failure);
+                return false;
+            }
         }
 
     }
