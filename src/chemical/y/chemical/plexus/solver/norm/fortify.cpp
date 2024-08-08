@@ -79,10 +79,17 @@ namespace Yttrium
                         <<   "] @" << app.eq.name);
             }
 
+            const size_t dims = extract(xml);
+            for(const ANode *an=apl.head;an;an=an->next)
+            {
+                const Applicant &app = **an;
+                Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(app.ff)
+                        <<   "|ax= " << std::setw(15)  << real_t(app.ax)
+                        <<   "] @" << app.eq.name);
+            }
 
 
 
-#if 0
             const SList &species = rcl.species;
             {
                 Y_XML_SECTION(xml, "Simplex");
@@ -97,7 +104,7 @@ namespace Yttrium
                 if(!repl)
                 {
                     const xreal_t val = sim.load( objectiveFunction(Ctop, TopLevel), species, Ctop, TopLevel).cost;
-                    Y_XMLOG(xml, "[aff= " << std::setw(15) << real_t(val) << "] @top-level");
+                    Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(val) << "] @top-level");
                 }
                 else
                 {
@@ -105,11 +112,11 @@ namespace Yttrium
                 }
 
 
-                for(size_t i=1;i<=napp;++i)
+                for(const ANode *an=apl.tail;an;an=an->prev)
                 {
-                    const Applicant &app = aps[i];
+                    const Applicant &app = **an;
                     const xreal_t    val = sim.load( objectiveFunction(app.cc, SubLevel), species, app.cc, SubLevel).cost;
-                    Y_XMLOG(xml, "[aff= " << std::setw(15) << real_t(val)
+                    Y_XMLOG(xml, "[ff= " << std::setw(15)  << real_t(val)
                             <<   "|ax= " << std::setw(15)  << real_t(app.ax)
                             <<   "] @" << app.eq.name);
                 }
@@ -157,16 +164,15 @@ namespace Yttrium
                     const xreal_t fmin = ff.c;
                     const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
                     const xreal_t cost = F(uopt);
-                    Y_XMLOG(xml, "[aff= " << std::setw(15) << real_t(cost)
-                            <<   " @"       << std::setw(15) << real_t(uopt)
-                            << " ] "        << std::setw(15) << real_t(fmax) << " -> " << std::setw(15) << real_t(fmin) << " / #" << cycle );
+                    Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(cost)
+                            <<   " @"    << std::setw(15) << real_t(uopt)
+                            <<   "] "    << std::setw(15) << real_t(fmax) << " -> " << std::setw(15) << real_t(fmin) << " / #" << cycle );
 
                     // replace with new value
                     sim.load(cost, species, Cws, SubLevel);
                 }
 
             }
-#endif
 
 
 
