@@ -99,7 +99,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const size_t dims = extract(xml);
-            if(dims<=2) throw Specific::Exception(CallSign, "invalid fortified basis");
+            if(dims<2) throw Specific::Exception(CallSign, "invalid fortified basis");
 
 #if 0
             for(const ANode *an=apl.head;an;an=an->next)
