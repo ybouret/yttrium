@@ -79,7 +79,7 @@ namespace Yttrium
             const XReadable   &cc; //!< winning phase space
             const xreal_t      xi; //!< extent leading to cc
             const xreal_t      ax; //!< |xi|
-            //const xreal_t      ma; //!< mass action at cc => shift
+            
         private:
             Y_DISABLE_ASSIGN(Applicant);
         };

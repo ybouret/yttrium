@@ -53,6 +53,13 @@ namespace Yttrium
                                 const SList     &spec,
                                 const XReadable &C,
                                 const Level      L);
+
+            Simplex & pop() noexcept
+            {
+                assert(size>0);
+                free( popHead() );
+                return *this;
+            }
             //__________________________________________________________________
             //
             //
