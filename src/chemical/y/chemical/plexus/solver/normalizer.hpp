@@ -133,12 +133,7 @@ namespace Yttrium
             Result NDDrive(XWritable       &Ctop,
                            const XReadable &Ktop,
                            XMLog           &xml);
-
-
-            //! improve by simplex lookup
-            xreal_t  improve(XWritable       & Ctop,
-                             const bool        repl,
-                             XMLog           & xml);
+            
 
             
             //! extract a basis of equilibria
