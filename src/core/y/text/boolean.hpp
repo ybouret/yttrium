@@ -9,6 +9,7 @@
 namespace Yttrium
 {
 
+    //! human readable boolean
     struct BooleanTo
     {
         static const char *Text(const bool flag) noexcept; //!< True|False

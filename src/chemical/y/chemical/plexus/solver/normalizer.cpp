@@ -106,23 +106,15 @@ namespace Yttrium
         }
 
 
-        xreal_t  Normalizer:: totalExtent()
-        {
-            XAdd &xadd = afm.xadd;
-            xadd.free();
-            for(size_t i=aps.size();i>0;--i) xadd << aps[i].ax;
-            return xadd.sum();
-        }
+
 
         xreal_t Normalizer:: objectiveFunction(const XReadable &C, const Level L)
         {
             obj.free();
 
             //for(const ANode *an=apl.head;an;an=an->next) obj << (**an).affinity(afm.xmul,C,L);
-            {
-                for(size_t i=aps.size();i>0;--i)
-                    obj << aps[i].affinity(afm.xmul,C,L);
-            }
+            for(size_t i=aps.size();i>0;--i) obj << aps[i].affinity(afm.xmul,C,L);
+
 
             return afm.xadd.normOf(obj);
         }

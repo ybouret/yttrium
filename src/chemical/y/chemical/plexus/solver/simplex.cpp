@@ -46,6 +46,13 @@ namespace Yttrium
             this->store( ptr.yield() );
             return vtx;
         }
+
+        Simplex & Simplex:: pop() noexcept
+        {
+            assert(size>0);
+            free( popHead() );
+            return *this;
+        }
     }
 
 }

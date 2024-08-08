@@ -54,12 +54,9 @@ namespace Yttrium
                                 const XReadable &C,
                                 const Level      L);
 
-            Simplex & pop() noexcept
-            {
-                assert(size>0);
-                free( popHead() );
-                return *this;
-            }
+            //! remove/fee top vertex
+            Simplex & pop() noexcept;
+
             //__________________________________________________________________
             //
             //

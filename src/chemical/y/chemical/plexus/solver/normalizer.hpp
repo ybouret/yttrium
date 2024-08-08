@@ -71,8 +71,7 @@ namespace Yttrium
             //! objective function of (1-u)*Cin + u * Cex
             xreal_t  operator()(const xreal_t u);
 
-            xreal_t  totalExtent();
-
+            
             //__________________________________________________________________
             //
             //
