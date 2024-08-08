@@ -56,7 +56,8 @@ namespace Yttrium
                                            const bool      full) const
         {
             uuid.pad(os<< eq, eq);
-            os << " | ax =" << std::setw(15) << real_t(ax);
+            os << "|ax =" << std::setw(15) << real_t(ax);
+            os << "|ff =" << std::setw(15) << real_t(ff);
             if(full)
             {
                 eq.displayCompact(os << " @",cc, SubLevel);

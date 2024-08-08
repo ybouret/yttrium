@@ -82,8 +82,8 @@ namespace Yttrium
             const XReadable   &cc; //!< winning phase space
             const xreal_t      xi; //!< extent leading to cc
             const xreal_t      ax; //!< |xi|
-            mutable xreal_t    ff; //!< post-computed objective function
-            
+            const xreal_t      ff; //!< post-computed objective function
+
         private:
             Y_DISABLE_ASSIGN(Applicant);
         };

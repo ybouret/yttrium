@@ -36,7 +36,6 @@ namespace Yttrium
             }
 
 
-            return Failure;
 
 
             //------------------------------------------------------------------
@@ -59,6 +58,7 @@ namespace Yttrium
                 default:
                     break;
             }
+
 
 
             //------------------------------------------------------------------
@@ -97,6 +97,7 @@ namespace Yttrium
                     Y_XMLOG(xml, "ma = " << std::setw(15) << real_t(ma) << " | xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
                 }
             }
+
 
             //------------------------------------------------------------------
             //
@@ -220,8 +221,7 @@ namespace Yttrium
 
             Y_XMLOG(xml,"scale = " << real_t(scale));
 
-            for(const ANode *an=apl.head;an;an=an->next)
-                (**an).eq.mustSupport(Cex,SubLevel);
+            //for(const ANode *an=apl.head;an;an=an->next) (**an).eq.mustSupport(Cex,SubLevel);
 
 
             Triplet<xreal_t> xx = { zero, -1, one };
@@ -229,7 +229,7 @@ namespace Yttrium
             const xreal_t    f0 = ff.a;
 
             
-            if(false)
+            if(true)
             {
                 OutputFile fp("ndsolve.dat");
                 const size_t np(1000);

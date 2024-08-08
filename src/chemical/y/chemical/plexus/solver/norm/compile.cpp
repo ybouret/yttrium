@@ -63,18 +63,12 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // sorting and cross-checking
+            // cross checking
             //
             //
             //------------------------------------------------------------------
-            //HeapSort::Call(aps, Applicant::CompareAX);
             const size_t napp = aps.size();
 
-            if(xml.verbose)
-            {
-                for(size_t i=1;i<=napp;++i)
-                    aps[i].display( xml() << "| ", rcl.uuid, true) << std::endl;
-            }
 
             for(size_t i=napp;i>0;--i)
             {
@@ -82,6 +76,21 @@ namespace Yttrium
                 const Equilibrium &eq  = app.eq; eq.mustSupport(Ctop,TopLevel);
                 for(size_t j=napp;j>0;--j)       eq.mustSupport(aps[j].cc,SubLevel);
             }
+
+            for(size_t i=napp;i>0;--i)
+            {
+                const Applicant   &app = aps[i];
+                Coerce(app.ff) = objectiveFunction(app.cc, SubLevel);
+            }
+
+            HeapSort::Call(aps, Applicant::CompareFF);
+            if(xml.verbose)
+            {
+                for(size_t i=1;i<=napp;++i)
+                    aps[i].display( xml() << "|", rcl.uuid, true) << std::endl;
+            }
+
+
 
 
 

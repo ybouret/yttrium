@@ -67,49 +67,12 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // update applicant values
-            //
-            //
-            //------------------------------------------------------------------
-
-
-            {
-                Y_XML_SECTION(xml, "Update");
-                for(size_t i=napp;i>0;--i)
-                {
-                    const Applicant &app = aps[i];
-                    app.ff = objectiveFunction(app.cc, SubLevel);
-                }
-                HeapSort::Call(aps,Applicant::CompareFF);
-                for(size_t i=1;i<=napp;++i)
-                {
-                    const Applicant &app  = aps[i];
-                    Y_XMLOG(xml, "[ff= " << std::setw(15)  << real_t(app.ff)
-                            <<   "|ax= " << std::setw(15)  << real_t(app.ax)
-                            <<   "] @" << app.eq.name);
-                }
-            }
-
-
-            //------------------------------------------------------------------
-            //
-            //
             // extract basis from most promising
             //
             //
             //------------------------------------------------------------------
             const size_t dims = extract(xml);
             if(dims<2) throw Specific::Exception(CallSign, "invalid fortified basis");
-
-#if 0
-            for(const ANode *an=apl.head;an;an=an->next)
-            {
-                const Applicant &app = **an;
-                Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(app.ff)
-                        <<   "|ax= " << std::setw(15)  << real_t(app.ax)
-                        <<   "] @" << app.eq.name);
-            }
-#endif
 
 
             const SList &species = rcl.species;
@@ -127,11 +90,11 @@ namespace Yttrium
                 if(!repl)
                 {
                     const xreal_t val = sim.load( objectiveFunction(Ctop, TopLevel), species, Ctop, TopLevel).cost;
-                    Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(val) << "] @top-level");
+                    Y_XMLOG(xml, "(+) [ff= " << std::setw(15) << real_t(val) << "] @top-level");
                 }
                 else
                 {
-                    Y_XMLOG(xml, "[replaced top-level]");
+                    Y_XMLOG(xml, "(-) [replaced top-level]");
                 }
 
                 //--------------------------------------------------------------
@@ -145,20 +108,26 @@ namespace Yttrium
                 {
                     const Applicant &app = **an;
                     const xreal_t    val = sim.load( objectiveFunction(app.cc, SubLevel), species, app.cc, SubLevel).cost;
-                    Y_XMLOG(xml, "[ff= " << std::setw(15)  << real_t(val)
-                            <<   "|ax= " << std::setw(15)  << real_t(app.ax)
-                            <<   "] @" << app.eq.name);
+                    //Y_XMLOG(xml, "[ff= " << std::setw(15)  << real_t(val)
+                    //       <<   "|ax= " << std::setw(15)  << real_t(app.ax)
+                    //     <<   "] @" << app.eq.name);
+                    if(xml.verbose)
+                    {
+                        app.display( xml() << "(+) ", rcl.uuid, false) << std::endl;
+                    }
                 }
 
             }
 
+
             const xreal_t worst = sim.head->cost;
-            const size_t  m     = nsp;
 
             {
                 Y_XML_SECTION_OPT(xml, "Improve"," iter='" << sim.size-1 << "'");
                 Normalizer & F     = *this;
+                const size_t m     = nsp;
                 unsigned     cycle = 0;
+                
                 OutputFile   fp("simplex.dat");
                 while(sim.size>1)
                 {
