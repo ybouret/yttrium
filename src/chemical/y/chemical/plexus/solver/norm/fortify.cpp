@@ -19,6 +19,14 @@ namespace Yttrium
                 return false;
             }
 
+            for(size_t i=1;i<=napp;++i)
+            {
+                const Applicant &app = aps[i];
+                app.display( std::cerr << " | ", rcl.uuid, false) << " | aff=" << real_t(objectiveFunction(app.cc, SubLevel)) << std::endl;
+            }
+
+            return false;
+
             const size_t dims = extract(xml);
             switch(dims)
             {

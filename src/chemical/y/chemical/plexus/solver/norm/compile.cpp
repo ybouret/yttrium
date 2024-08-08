@@ -32,9 +32,9 @@ namespace Yttrium
             aps.free();
             for(const ENode *en=rcl.head;en;en=en->next)
             {
-                const Equilibrium &eq = **en;
-                const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
-                const size_t       ii = aps.size()+1;
+                const Equilibrium &eq = **en;                      // current equilibrium
+                const xreal_t      eK = Ktop[ eq.indx[TopLevel] ]; // its constant
+                const size_t       ii = aps.size()+1;              // next applicant index
                 XWritable         &cc = rcl.transfer(ceq[ii], SubLevel, Ctop, TopLevel);
                 const Situation    st = afm.seek(cc, SubLevel, eq, eK);
 
@@ -68,17 +68,22 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             HeapSort::Call(aps, Applicant::Compare);
-            const size_t nmax = aps.size();
-            for(size_t i=nmax;i>0;--i)
+            const size_t napp = aps.size();
+            if(xml.verbose)
             {
-                const Applicant   &app = aps[i]; if(xml.verbose)  app.display( xml() << "| ", rcl.uuid, true) << std::endl;
-                const Equilibrium &eq  = app.eq;
-                eq.mustSupport(Ctop,TopLevel);
-                for(size_t j=nmax;j>0;--j)
-                    eq.mustSupport(aps[j].cc,SubLevel);
+                for(size_t i=1;i<=napp;++i)
+                {
+                    aps[i].display( xml() << "| ", rcl.uuid, true) << std::endl;
+                }
+            }
+            for(size_t i=napp;i>0;--i)
+            {
+                const Applicant   &app = aps[i];
+                const Equilibrium &eq  = app.eq; eq.mustSupport(Ctop,TopLevel);
+                for(size_t j=napp;j>0;--j)       eq.mustSupport(aps[j].cc,SubLevel);
             }
 
-            return nmax;
+            return napp;
         }
 
 

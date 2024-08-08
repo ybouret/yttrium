@@ -73,6 +73,9 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
+            fortify(Ctop, Ktop, xml);
+            return false;
+
         FORTIFY:
             if(!fortify(Ctop, Ktop,xml))
             {
@@ -127,8 +130,15 @@ namespace Yttrium
         xreal_t Normalizer:: objectiveFunction(const XReadable &C, const Level L)
         {
             obj.free();
-            for(const ANode *an=apl.head;an;an=an->next)
-                obj << (**an).affinity(afm.xmul,C,L);
+
+            //for(const ANode *an=apl.head;an;an=an->next) obj << (**an).affinity(afm.xmul,C,L);
+
+
+            {
+                for(size_t i=aps.size();i>0;--i)
+                    obj << aps[i].affinity(afm.xmul,C,L);
+            }
+
             return afm.xadd.normOf(obj);
         }
 
