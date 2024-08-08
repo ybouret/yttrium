@@ -3,6 +3,7 @@
 #include "y/text/boolean.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/sort/heap.hpp"
 
 namespace Yttrium
 {
@@ -62,6 +63,26 @@ namespace Yttrium
             }
             assert(napp>=2);
 
+            for(size_t i=napp;i>0;--i)
+            {
+                const Applicant &app = aps[i];
+                app.ff = objectiveFunction(app.cc, SubLevel);
+            }
+
+            HeapSort::Call(aps,Applicant::CompareFF);
+
+            for(size_t i=1;i<=napp;++i)
+            {
+                const Applicant &app  = aps[i];
+                Y_XMLOG(xml, "[ff= " << std::setw(15) << real_t(app.ff)
+                        <<   "|ax= " << std::setw(15)  << real_t(app.ax)
+                        <<   "] @" << app.eq.name);
+            }
+
+
+
+
+#if 0
             const SList &species = rcl.species;
             {
                 Y_XML_SECTION(xml, "Simplex");
@@ -145,7 +166,7 @@ namespace Yttrium
                 }
 
             }
-
+#endif
 
 
 

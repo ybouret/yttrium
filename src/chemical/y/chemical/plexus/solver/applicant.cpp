@@ -15,7 +15,8 @@ namespace Yttrium
         eK(_eK),
         cc(_cc),
         xi(_xi),
-        ax( xi.abs() ) //,         ma( eq.massAction(eK, xmul, cc, SubLevel) )
+        ax( xi.abs() ),
+        ff(0)
         {
         }
 
@@ -25,7 +26,8 @@ namespace Yttrium
         eK(_.eK),
         cc(_.cc),
         xi(_.xi),
-        ax(_.ax)
+        ax(_.ax),
+        ff(_.ff)
         {
         }
 
@@ -39,10 +41,14 @@ namespace Yttrium
         }
 
 
-        int Applicant:: Compare(const Applicant &lhs, const Applicant &rhs) noexcept
+        int Applicant:: CompareAX(const Applicant &lhs, const Applicant &rhs) noexcept
         {
-            //return Comparison::Increasing<xreal_t>(lhs.ax,rhs.ax);
             return Comparison::Decreasing<xreal_t>(lhs.ax,rhs.ax);
+        }
+
+        int Applicant:: CompareFF(const Applicant &lhs, const Applicant &rhs) noexcept
+        {
+            return Comparison::Increasing<xreal_t>(lhs.ff,rhs.ff);
         }
 
         std::ostream & Applicant:: display(std::ostream   &os,

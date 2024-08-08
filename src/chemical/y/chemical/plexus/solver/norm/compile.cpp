@@ -67,7 +67,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            HeapSort::Call(aps, Applicant::Compare);
+            HeapSort::Call(aps, Applicant::CompareAX);
             const size_t napp = aps.size();
 
             if(xml.verbose)

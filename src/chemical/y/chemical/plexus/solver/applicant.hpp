@@ -58,10 +58,13 @@ namespace Yttrium
                             const Level      L) const;
 
 
-            //! comparison for HeapSort
-            static int Compare(const Applicant &lhs,
-                               const Applicant &rhs) noexcept;
+            //! comparison by decreasing AX for HeapSort
+            static int CompareAX(const Applicant &lhs,
+                                 const Applicant &rhs) noexcept;
 
+            //! comparison by decreasing FF for HeapSort
+            static int CompareFF(const Applicant &lhs,
+                                 const Applicant &rhs) noexcept;
 
             //! display with optional list
             std::ostream & display(std::ostream   &os,
@@ -79,6 +82,7 @@ namespace Yttrium
             const XReadable   &cc; //!< winning phase space
             const xreal_t      xi; //!< extent leading to cc
             const xreal_t      ax; //!< |xi|
+            mutable xreal_t    ff; //!< post-computed objective function
             
         private:
             Y_DISABLE_ASSIGN(Applicant);
