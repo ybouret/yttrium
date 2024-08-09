@@ -126,14 +126,17 @@ namespace Yttrium
                          XMLog &     xml);
 
             //! compile and improve
+            /**
+             return true iff strict gain
+             */
             bool fortify(XWritable       & Ctop,
                          const XReadable & Ktop,
                          XMLog           & xml);
 
             //! one ND step
-            Result NDSolve(XWritable       &Ctop,
-                           const XReadable &Ktop,
-                           XMLog           &xml);
+            bool NDSolve(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml);
 
 
 

@@ -23,7 +23,7 @@ namespace Yttrium
 
             switch(napp)
             {
-                case 0: Y_XMLOG(xml, "[Inactive] => true"); return true;
+                case 0: Y_XMLOG(xml, "[Inactive] => true"); return false;
                 case 1:
                     if(repl)
                     {
@@ -47,7 +47,7 @@ namespace Yttrium
                         const xreal_t    aff0 = objectiveFunction(Ctop,TopLevel);
                         const xreal_t    aff1 = objectiveFunction(Csub,SubLevel);
                         const bool       flag = aff1<aff0;
-                        Y_XMLOG(xml, "[" << aps[1].eq.name << "] => " << BooleanTo::text(flag) );
+                        Y_XMLOG(xml, "[" << app.eq.name << "] => " << BooleanTo::text(flag) );
                         if(flag)
                             rcl.transfer(Ctop,TopLevel,Csub,SubLevel);
 

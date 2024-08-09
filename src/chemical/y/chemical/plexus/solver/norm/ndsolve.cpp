@@ -13,9 +13,9 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        Normalizer::Result Normalizer:: NDSolve(XWritable       &Ctop,
-                                                const XReadable &Ktop,
-                                                XMLog           &xml)
+        bool Normalizer:: NDSolve(XWritable       &Ctop,
+                                  const XReadable &Ktop,
+                                  XMLog           &xml)
         {
             Y_XML_SECTION(xml, "NDSolve");
 
@@ -30,7 +30,7 @@ namespace Yttrium
             {
                 bool         repl = false;
                 const size_t napp = compile(Ctop, Ktop, repl, xml);
-                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return Success; }
+                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
                 if(repl) continue;
                 break;
             }
@@ -224,7 +224,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(size_t j=m;j>0;--j)
                 Cex[j] = Cin[j] + scale * Cws[j];
-            
+
 
             Y_XMLOG(xml,"scale = " << real_t(scale));
 
@@ -350,7 +350,7 @@ namespace Yttrium
         }
 
 #endif
-        
+
     }
 }
 
