@@ -1,11 +1,10 @@
 
 #include "y/chemical/plexus/solver/normalizer.hpp"
-
+#include "y/text/boolean.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
 
-#include "y/mkl/tao/seq/level1.hpp"
 
 namespace Yttrium
 {
@@ -26,11 +25,12 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+        COMPILE:
             while( true )
             {
                 bool         repl = false;
                 const size_t napp = compile(Ctop, Ktop, repl, xml);
-                if( napp <=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
+                if(napp<=0) { Y_XMLOG(xml, "[Jammed!]"); return true; }
                 if(repl) continue;
                 break;
             }
@@ -47,12 +47,12 @@ namespace Yttrium
             switch(n)
             {
                 case 0:
-                    return Success; // shouldn't happen, jammed
+                    return true; // shouldn't happen, jammed
 
                 case 1:
                     assert(0!=apl.head);
                     rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
-                    return Success;
+                    return true;
 
                 default:
                     break;
@@ -141,8 +141,13 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(!xlu.build(chi))
             {
-                Y_XMLOG(xml, "[Singular]");
-                return Failure;
+                Y_XMLOG(xml, "[Singular] => try to fortify");
+                if(!fortify(Ctop,Ktop,xml))
+                {
+                    Y_XMLOG(xml, "[Singular] spurious!!!");
+                    return false;
+                }
+                goto COMPILE;
             }
 
             //------------------------------------------------------------------
@@ -195,8 +200,8 @@ namespace Yttrium
 
             // std::cerr << "C0    = " << Cin << std::endl;
             //std::cerr << "dC    = " << Cws << std::endl;
-            Y_XMLOG(xml,"scale = " << real_t(scale));
-            Y_XMLOG(xml,"abate = " << abate        );
+            Y_XMLOG(xml,"scale = " << std::setw(15) << real_t(scale));
+            Y_XMLOG(xml,"abate = " << std::setw(15) << BooleanTo::Text(abate) );
 
             if(abate)
             {
@@ -226,7 +231,7 @@ namespace Yttrium
                 Cex[j] = Cin[j] + scale * Cws[j];
 
 
-            Y_XMLOG(xml,"scale = " << real_t(scale));
+            Y_XMLOG(xml,"scale = " << std::setw(15) << real_t(scale));
 
 
             //------------------------------------------------------------------
@@ -262,12 +267,12 @@ namespace Yttrium
             {
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
                 Y_XMLOG(xml, "[Success]");
-                return Success;
+                return true;
             }
             else
             {
                 Y_XMLOG(xml, "[Partial]");
-                return  Partial;
+                return  improve(Ctop, false, xml);
             }
 
         }

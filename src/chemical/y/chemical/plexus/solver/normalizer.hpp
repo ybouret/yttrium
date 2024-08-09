@@ -37,14 +37,7 @@ namespace Yttrium
             typedef LittleEndianAddress        KeyType_; //!< alias
             typedef ArkPtr<KeyType,Normalizer> Ptr;      //!< alias
             typedef SuffixSet<KeyType,Ptr>     Set;      //!< alias
-
-            //! NDSolve result
-            enum Result
-            {
-                Success, //!< better than fortified
-                Failure, //!< singular concentrations
-                Partial  //!< worst than fortified
-            };
+            
 
             //__________________________________________________________________
             //
