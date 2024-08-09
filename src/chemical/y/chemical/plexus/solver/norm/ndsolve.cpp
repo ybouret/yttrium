@@ -58,6 +58,15 @@ namespace Yttrium
                     break;
             }
 
+            if(xml.verbose)
+            {
+                Y_XML_SECTION(xml, "Basis");
+                for(const ANode *an=apl.head;an;an=an->next)
+                {
+                    const Applicant &app = **an;
+                    app.display(xml() << "|", rcl.uuid, false) << std::endl;
+                }
+            }
 
 
             //------------------------------------------------------------------
@@ -209,14 +218,13 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // compute Cex as the (truncate) Newton's step
+            // compute Cex as the (truncated or expanded) Newton's step
             //
             //
             //------------------------------------------------------------------
             for(size_t j=m;j>0;--j)
-            {
                 Cex[j] = Cin[j] + scale * Cws[j];
-            }
+            
 
             Y_XMLOG(xml,"scale = " << real_t(scale));
 
@@ -231,7 +239,7 @@ namespace Yttrium
             Triplet<xreal_t> xx = { zero, -1, one };
             Triplet<xreal_t> ff = { (*this)(xx.a), xx.b, (*this)(xx.c) };
             const xreal_t    f0 = ff.a;
-            
+
             if(true)
             {
                 OutputFile fp("ndsolve.dat");
@@ -244,12 +252,23 @@ namespace Yttrium
                 fp << "\n";
             }
 
-            const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
-            const xreal_t cost = (*this)(uopt);
-            Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) << " @" << real_t(uopt));
-            rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
+            const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
+            const xreal_t score = (*this)(u_opt);
+            const xreal_t limit = (**apl.head).ff;
+            Y_XMLOG(xml, "score = " << std::setw(15) << real_t(score) << " (<-" << real_t(f0) << ")");
+            Y_XMLOG(xml, "limit = " << std::setw(15) << real_t(limit));
 
-            return Success;
+            if(score<=limit)
+            {
+                rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
+                Y_XMLOG(xml, "[Success]");
+                return Success;
+            }
+            else
+            {
+                Y_XMLOG(xml, "[Partial]");
+                return  Partial;
+            }
 
         }
 
