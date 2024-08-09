@@ -73,20 +73,9 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-            for(size_t iter=0;iter<20;++iter)
+            for(size_t iter=0;iter<10;++iter)
             {
-                rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-                if(!NDSolve(Ctop, Ktop, xml))
-                {
-                    // bad
-                    return false;
-                }
-
-                if(aps.size()<=0)
-                {
-                    return true;
-                }
-
+                NDSolve(Ctop, Ktop, xml);
             }
 
             return false;

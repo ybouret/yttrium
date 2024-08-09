@@ -19,19 +19,6 @@ namespace Yttrium
             Y_XML_SECTION(xml, "NDSolve");
 
 
-            bool repl = false;
-            const size_t napp = compile(Ctop, Ktop, repl, xml);
-            if(napp<=0) { Y_XMLOG(xml, "[Inactive]"); return true; }
-
-            HeapSort::Call(aps, Applicant::CompareAX);
-            if(xml.verbose)
-            {
-                for(size_t i=1;i<=napp;++i)
-                    aps[i].display( xml() << "|", rcl.uuid, true) << std::endl;
-            }
-
-            return false;
-
             //------------------------------------------------------------------
             //
             //
@@ -50,8 +37,7 @@ namespace Yttrium
             }
 
 
-            return false;
-
+            
             //------------------------------------------------------------------
             //
             //
@@ -273,9 +259,18 @@ namespace Yttrium
 
             const xreal_t u_opt = Minimize<xreal_t>::Locate(Minimizing::Inside, *this, xx, ff);
             const xreal_t score = (*this)(u_opt);
-            const xreal_t limit = (**apl.head).ff;
-            Y_XMLOG(xml, "score = " << std::setw(15) << real_t(score) << " (<-" << real_t(f0) << ")");
+            xreal_t       limit = 0;
+            {
+                const ANode *an = apl.head;
+                limit = (**an).ff;
+                for(an=an->next;an;an=an->next)
+                    limit = Min(limit,(**an).ff);
+            }
+
+            Y_XMLOG(xml, "score = " << std::setw(15) << real_t(score) << " (<= " << real_t(f0) << ")");
             Y_XMLOG(xml, "limit = " << std::setw(15) << real_t(limit));
+
+
 
             if(score<limit)
             {

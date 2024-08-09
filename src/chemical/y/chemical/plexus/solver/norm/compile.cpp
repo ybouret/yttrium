@@ -83,7 +83,7 @@ namespace Yttrium
                 Coerce(app.ff) = objectiveFunction(app.cc, SubLevel);
             }
 
-            HeapSort::Call(aps, Applicant::CompareFF);
+            HeapSort::Call(aps, Applicant::CompareAX);
             if(xml.verbose)
             {
                 for(size_t i=1;i<=napp;++i)
