@@ -36,22 +36,21 @@ namespace Yttrium
             }
 
 
-
-
             //------------------------------------------------------------------
             //
             //
-            // extract basis and check dimension
+            // extract most promising basis and check dimension
             //
             //
             //------------------------------------------------------------------
-            const size_t  n = extract(xml);
+            const size_t n = extract(xml);
             switch(n)
             {
                 case 0:
                     return Success; // shouldn't happen, jammed
 
                 case 1:
+                    assert(0!=apl.head);
                     rcl.transfer(Ctop,TopLevel,(**apl.head).cc,SubLevel);
                     return Success;
 
@@ -64,21 +63,22 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            //
-            // get metrics
+            // setup metrics
             //
             //
             //------------------------------------------------------------------
-            XMatrix &     Nu  = XNu[n];
-            XMatrix &     phi = Phi[n];
-            XMatrix &     chi = Chi[n];
-            XArray  &     xi  = Lhs[n];
-            const size_t  m   = nsp;
+            XAdd    &     xadd = afm.xadd;
+            XMul    &     xmul = afm.xmul;
+            XMatrix &     phi  = Phi[n];
+            XMatrix &     Nu   = XNu[n];
+            XMatrix &     chi  = Chi[n];
+            XArray  &     xi   = Lhs[n];
+            const size_t  m    = nsp;
 
             //------------------------------------------------------------------
             //
             //
-            // fill jacobian and lhs
+            // fill jacobian in phi and mass action in xi
             //
             //
             //------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace Yttrium
                     const xreal_t      ma  = eq.massAction(eK, afm.xmul, Ctop, TopLevel);
                     xi[ii] = -ma;
                     eq.topology(Nu[ii], SubLevel);
-                    eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
+                    eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, xmul);
                     Y_XMLOG(xml, "ma = " << std::setw(15) << real_t(ma) << " | xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
                 }
             }
@@ -106,8 +106,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            XAdd &xadd = afm.xadd;
-            xadd.make(n);
+            xadd.make(m);
             for(size_t i=n;i>0;--i)
             {
                 const XReadable &phi_i=phi[i];
@@ -124,13 +123,6 @@ namespace Yttrium
                 }
             }
 
-
-
-            //std::cerr << "phi = " << phi << std::endl;
-            //std::cerr << "Nu  = " << Nu  << std::endl;
-            //std::cerr << "lhs = " << xi  << std::endl;
-            //std::cerr << "chi = " << chi << std::endl;
-
             //------------------------------------------------------------------
             //
             //
@@ -140,28 +132,27 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(!xlu.build(chi))
             {
-                Y_XMLOG(xml, "singular");
+                Y_XMLOG(xml, "[Singular]");
                 return Failure;
             }
 
             //------------------------------------------------------------------
             //
             //
-            // compute extent
+            // compute numeric extent and starting position
             //
             //
             //------------------------------------------------------------------
             xlu.solve(chi,xi);
-            //std::cerr << "xi  = " << xi << std::endl;
+            rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
 
             //------------------------------------------------------------------
             //
             //
-            // compute dC and scaling
+            // compute dC and deduce scaling
             //
             //
             //------------------------------------------------------------------
-            rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
             const   xreal_t zero  = 0;
             const   xreal_t one   = 1;
             const   xreal_t smax  = 2;
@@ -170,6 +161,7 @@ namespace Yttrium
 
             for(size_t j=m;j>0;--j)
             {
+                assert(xadd.isEmpty());
                 for(size_t k=n;k>0;--k)
                 {
                     const xreal_t p = Nu[k][j] * xi[k];
@@ -192,25 +184,32 @@ namespace Yttrium
             }
 
 
-           // std::cerr << "C0    = " << Cin << std::endl;
+            // std::cerr << "C0    = " << Cin << std::endl;
             //std::cerr << "dC    = " << Cws << std::endl;
             Y_XMLOG(xml,"scale = " << real_t(scale));
             Y_XMLOG(xml,"abate = " << abate        );
 
             if(abate)
             {
-                // scale /=2
-                //--Coerce(scale.exponent);
+                // decrease scale
                 scale *= 0.99;
+
+                // doesn't go that far if scale is big
+                if(scale>smax)
+                    scale=smax;
+            }
+            else
+            {
+                // unlikely, no negative dC
+                scale = smax;
             }
 
-            if(scale>smax) 
-                scale=smax;
+
 
             //------------------------------------------------------------------
             //
             //
-            // compute Cex
+            // compute Cex as the (truncate) Newton's step
             //
             //
             //------------------------------------------------------------------
@@ -221,13 +220,17 @@ namespace Yttrium
 
             Y_XMLOG(xml,"scale = " << real_t(scale));
 
-            //for(const ANode *an=apl.head;an;an=an->next) (**an).eq.mustSupport(Cex,SubLevel);
 
-
+            //------------------------------------------------------------------
+            //
+            //
+            // prepare minimization step
+            //
+            //
+            //------------------------------------------------------------------
             Triplet<xreal_t> xx = { zero, -1, one };
             Triplet<xreal_t> ff = { (*this)(xx.a), xx.b, (*this)(xx.c) };
             const xreal_t    f0 = ff.a;
-
             
             if(true)
             {
@@ -246,131 +249,11 @@ namespace Yttrium
             Y_XMLOG(xml, "affinity= " << real_t(f0) << " -> " << real_t(cost) << " @" << real_t(uopt));
             rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
 
-            const xreal_t smin = 0.2;
-            return scale <= smin ? Trimmed : Success;
-        }
-
-        Normalizer::Result Normalizer:: NDDrive(XWritable       &Ctop,
-                                                const XReadable &Ktop,
-                                                XMLog           &xml)
-        {
-
-            Y_XML_SECTION(xml, "NDDrive");
-            rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-
-            for(size_t cycle=1;cycle<=100;++cycle)
-            {
-                switch( NDSolve(Ctop,Ktop,xml) )
-                {
-                    case Success: break;
-                    case Trimmed: Y_XMLOG(xml, "[Trimmed@Step] " << cycle); return Trimmed;
-                    case Failure: Y_XMLOG(xml, "[Failure@Step] " << cycle); return Failure;
-                }
-
-                bool converged = false;
-                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
-                {
-                    const size_t * const indx = (**sn).indx;
-                    const size_t         isub = indx[SubLevel];
-                    const xreal_t        Cnew = Ctop[ indx[TopLevel] ];
-                    const xreal_t        Cold = Cst[isub];
-                    Cst[isub] = Cnew;
-                    const xreal_t         dd = Cnew-Cold;
-                    std::cerr << (**sn) << " dd=" << real_t(dd) << "/" << real_t(Cnew) << std::endl;
-                    if( dd.abs() > 0.0 )
-                    {
-                        converged = false;
-                    }
-
-                }
-
-                std::cerr << "converged=" << converged << std::endl;
-
-
-                break;
-            }
-
             return Success;
 
-#if 0
-            //------------------------------------------------------------------
-            //
-            //
-            // initial step
-            //
-            //
-            //------------------------------------------------------------------
-            rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-
-            switch( NDSolve(Ctop,Ktop,xml) )
-            {
-                case Success: break;
-                case Trimmed: Y_XMLOG(xml, "[Trimmed@Init]"); return Trimmed;
-                case Failure: Y_XMLOG(xml, "[Failure@Init]"); return Failure;
-            }
-
-
-
-            //------------------------------------------------------------------
-            //
-            //
-            // first delta
-            //
-            //
-            //------------------------------------------------------------------
-            for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
-            {
-                const size_t * const indx = (**sn).indx;
-                const size_t         isub = indx[SubLevel];
-                dCs[isub] = (Ctop[ indx[TopLevel] ] - Cst[isub]).abs();
-            }
-
-            std::cerr << "dCs=" << dCs << std::endl;
-
-            //------------------------------------------------------------------
-            //
-            //
-            // extra steps
-            //
-            //
-            //------------------------------------------------------------------
-            for(size_t cycle=1;;++cycle)
-            {
-                rcl.transfer(Cst, SubLevel, Ctop, TopLevel);
-
-                switch( NDSolve(Ctop,Ktop,xml) )
-                {
-                    case Success: break;
-                    case Trimmed: Y_XMLOG(xml, "[Trimmed@Step] " << cycle); return Trimmed;
-                    case Failure: Y_XMLOG(xml, "[Failure@Step] " << cycle); return Failure;
-                }
-
-                bool converged = true;
-                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
-                {
-                    const size_t * const indx = (**sn).indx;
-                    const size_t         isub = indx[SubLevel];
-                    const xreal_t dOld = dCs[isub];
-                    const xreal_t dNew = (Ctop[ indx[TopLevel] ] - Cst[isub]).abs();
-                    if(dNew<dOld)
-                        converged = false;
-                    dCs[isub] = dNew;
-                }
-
-                std::cerr << "dCs=" << dCs << std::endl;
-                Y_XMLOG(xml, "converged@" << cycle << " = " << converged);
-
-
-
-                break;
-            }
-
-
-
-            return Success;
-#endif
-
         }
+
+
 
 #if 0
         void Normalizer::LookUp(XWritable &Ctop, const XReadable &Ktop, XMLog &xml)

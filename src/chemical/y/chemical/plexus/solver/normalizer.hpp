@@ -42,7 +42,7 @@ namespace Yttrium
             {
                 Success,
                 Failure,
-                Trimmed
+                Partial
             };
 
             //__________________________________________________________________
@@ -71,7 +71,7 @@ namespace Yttrium
             //! objective function of (1-u)*Cin + u * Cex
             xreal_t  operator()(const xreal_t u);
 
-            
+
             //__________________________________________________________________
             //
             //
@@ -103,7 +103,7 @@ namespace Yttrium
             CxxSeries<XMatrix> Chi; //!< matrices chi
             CxxSeries<XArray>  Lhs; //!< arrays
             MKL::LU<xreal_t>   xlu; //!< linear algebra
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Normalizer);
 
@@ -129,12 +129,9 @@ namespace Yttrium
                            const XReadable &Ktop,
                            XMLog           &xml);
 
-            Result NDDrive(XWritable       &Ctop,
-                           const XReadable &Ktop,
-                           XMLog           &xml);
-            
 
-            
+
+
             //! extract a basis of equilibria
             size_t   extract(XMLog &xml);
 
