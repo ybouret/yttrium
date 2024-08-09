@@ -4,7 +4,7 @@
 #include "y/mkl/opt/minimize.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
-
+#include "y/sort/heap.hpp"
 
 namespace Yttrium
 {
@@ -17,6 +17,20 @@ namespace Yttrium
                                   XMLog           &xml)
         {
             Y_XML_SECTION(xml, "NDSolve");
+
+
+            bool repl = false;
+            const size_t napp = compile(Ctop, Ktop, repl, xml);
+            if(napp<=0) { Y_XMLOG(xml, "[Inactive]"); return true; }
+
+            HeapSort::Call(aps, Applicant::CompareAX);
+            if(xml.verbose)
+            {
+                for(size_t i=1;i<=napp;++i)
+                    aps[i].display( xml() << "|", rcl.uuid, true) << std::endl;
+            }
+
+            return false;
 
             //------------------------------------------------------------------
             //
@@ -35,6 +49,8 @@ namespace Yttrium
                 break;
             }
 
+
+            return false;
 
             //------------------------------------------------------------------
             //
