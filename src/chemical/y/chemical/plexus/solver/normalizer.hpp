@@ -120,6 +120,11 @@ namespace Yttrium
             void setProj();
 
 
+            //! simplex over current basis
+            bool improve(XWritable & Ctop,
+                         const bool  repl,
+                         XMLog &     xml);
+
             //! compile and improve
             bool fortify(XWritable       & Ctop,
                          const XReadable & Ktop,
