@@ -198,8 +198,6 @@ namespace Yttrium
             }
 
 
-            // std::cerr << "C0    = " << Cin << std::endl;
-            //std::cerr << "dC    = " << Cws << std::endl;
             Y_XMLOG(xml,"scale = " << std::setw(15) << real_t(scale));
             Y_XMLOG(xml,"abate = " << std::setw(15) << BooleanTo::Text(abate) );
 
@@ -241,7 +239,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Triplet<xreal_t> xx = { zero, -1, one };
+            Triplet<xreal_t> xx = {         zero,    -1,          one  };
             Triplet<xreal_t> ff = { (*this)(xx.a), xx.b, (*this)(xx.c) };
             const xreal_t    f0 = ff.a;
 
@@ -263,14 +261,16 @@ namespace Yttrium
             Y_XMLOG(xml, "score = " << std::setw(15) << real_t(score) << " (<-" << real_t(f0) << ")");
             Y_XMLOG(xml, "limit = " << std::setw(15) << real_t(limit));
 
-            if(score<=limit)
+            if(score<limit)
             {
+                // take the step
                 rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
                 Y_XMLOG(xml, "[Success]");
                 return true;
             }
             else
             {
+                // fallback to simplex
                 Y_XMLOG(xml, "[Partial]");
                 return  improve(Ctop, false, xml);
             }
@@ -278,84 +278,8 @@ namespace Yttrium
         }
 
 
-
-#if 0
-        void Normalizer::LookUp(XWritable &Ctop, const XReadable &Ktop, XMLog &xml)
-        {
-
-            Y_XML_SECTION(xml, "LookUp");
-
-            bool          repl = false;
-            const size_t  nmax = compile(Ctop, Ktop, repl, xml);
-            if( nmax <=0) { Y_XMLOG(xml, "[Jammed!]"); return; }
-
-
-            const size_t  n = extract(xml);
-            const size_t  m = nsp;
-
-            // act on n!
-
-            XMatrix &Nu  = XNu[n];
-            XMatrix &phi = Phi[n];
-            XMatrix &ups = Chi[n];
-            XArray  &lhs = Lhs[n];
-
-            // Nu, phi and lhs=xi
-            {
-                size_t ii=0;
-                for(const ANode *an=apl.head;an;an=an->next)
-                {
-                    ++ii;
-                    const Applicant   &app = **an;
-                    const Equilibrium &eq  =  app.eq;
-                    const xreal_t      eK  =  app.eK;
-                    eq.topology(Nu[ii], SubLevel);
-                    eq.drvsMassAction(eK, phi[ii], SubLevel, Ctop, TopLevel, afm.xmul);
-                    lhs[ii] = app.xi;
-
-                    Y_XMLOG(xml, "xi = " << std::setw(15) << real_t(app.xi) << " @" << eq.name);
-                }
-            }
-
-            std::cerr << "lhs=" << lhs << std::endl;
-            XAdd &xadd = afm.xadd;
-            for(size_t i=1;i<=n;++i)
-            {
-                xadd.make(m);
-                const xreal_t den = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[i], xadd);
-                //std::cerr << "den=" << den << std::endl;
-                ups[i][i] = 1;
-                for(size_t j=1;j<i;++j)    ups[i][j] = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[j], xadd)/den;
-                for(size_t j=i+1;j<=n;++j) ups[i][j] = Tao::DotProduct<xreal_t>::Of_(phi[i], Nu[j], xadd)/den;
-
-            }
-            std::cerr << "ups=" << ups << std::endl;
-            CxxArray<xreal_t> xi(n,0);
-            for(size_t i=1;i<=n;++i)
-            {
-                xadd.make(n);
-                for(size_t j=1;j<=n;++j)
-                {
-                    xadd << ups[j][i] * lhs[j];
-                }
-                xi[i] = xadd.sum();
-            }
-            std::cerr << "xi=" << xi << std::endl;
-            std::cerr << "Nu=" << Nu << std::endl;
-            for(size_t j=1;j<=m;++j)
-            {
-                xadd.make(n);
-                for(size_t i=1;i<=n;++i)
-                {
-                    xadd << Nu[i][j] * xi[i];
-                }
-                Cws[j] = xadd.sum();
-            }
-            std::cerr << "dC=" << Cws << std::endl;
-        }
-
-#endif
-
     }
+
 }
+
 
