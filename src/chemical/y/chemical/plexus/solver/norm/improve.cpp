@@ -89,7 +89,7 @@ namespace Yttrium
                         for(size_t j=0;j<=np;++j)
                         {
                             const double u = double(j)/np;
-                            fp("%.15g %.15g\n", u+double(cycle), real_t(F(u)));
+                            fp("%.15g %.15g\n", u+double(cycle-1), real_t(F(u)));
                         }
                     }
 

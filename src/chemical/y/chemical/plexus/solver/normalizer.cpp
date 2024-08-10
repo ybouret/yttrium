@@ -3,6 +3,8 @@
 #include "y/mkl/opt/minimize.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/string/env.hpp"
+#include "y/text/ascii/convert.hpp"
 
 namespace Yttrium
 {
@@ -73,9 +75,18 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml, "Normalizer ", " size='" << rcl.size << "' species='" << rcl.species.size << "'");
 
-            for(size_t iter=0;iter<10;++iter)
+
+            size_t imax = 1;
+            String istr;
+            if( Environment::Get(istr, "ITER"))
             {
-                NDSolve(Ctop, Ktop, xml);
+                imax = ASCII::Convert::To<size_t>(istr,"ITER");
+            }
+
+            for(size_t iter=0;iter<imax;++iter)
+            {
+                fortify(Ctop, Ktop, xml);
+                //NDSolve(Ctop, Ktop, xml);
             }
 
             return false;
