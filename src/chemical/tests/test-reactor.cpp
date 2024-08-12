@@ -117,8 +117,8 @@ namespace Yttrium
             {
                 const xreal_t zero = 0;
                 const xreal_t one  = 1;
-                u = Clamp(zero,u,one);
-                const xreal_t v = Clamp(zero,one-u,one);
+                u               = Clamp(zero,u,one);      assert(u>=zero); assert(u<=one);
+                const xreal_t v = Clamp(zero,one-u,one);  assert(v>=zero); assert(v<=one);
 
                 for(size_t j=rcl.species.size;j>0;--j)
                 {
@@ -127,6 +127,7 @@ namespace Yttrium
                     const xreal_t c0   = cmin;
                     const xreal_t c1   = cmax;
                     if(cmax<cmin) Swap(cmin,cmax);
+                    assert(cmin<=cmax);
                     Cws[j] = Clamp(cmin,c0*v+c1*u,cmax);
                 }
 
