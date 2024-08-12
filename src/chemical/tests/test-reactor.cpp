@@ -278,12 +278,12 @@ namespace Yttrium
                     }
                 }
 
-                std::cerr << "dC=" << Cws << std::endl;
-                Y_XMLOG(xml, "abate=" << BooleanTo::text(abate) );
-                Y_XMLOG(xml, "scale=" << real_t(scale));
+                std::cerr << "dC    = " << Cws << std::endl;
+                Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
+                Y_XMLOG(xml, "scale = " << real_t(scale));
 
                 if(abate) {
-                    scale *= 0.9;
+                    scale *= 0.99;
                 }
 
                 for(size_t j=m;j>0;--j)
