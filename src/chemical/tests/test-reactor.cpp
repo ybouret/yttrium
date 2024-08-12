@@ -91,10 +91,12 @@ namespace Yttrium
 
             explicit Reactor(const Cluster &cl) :
             rcl(cl),
+            afm(),
             ceq(rcl.size,rcl.species.size),
             ddc(rcl.size,rcl.species.size),
             pps(rcl.size),
-            obj(rcl.size)
+            obj(rcl.size),
+            xdc(rcl.species.size)
             {
             }
 
@@ -108,10 +110,10 @@ namespace Yttrium
                 return afm.xadd.normOf(obj);
             }
 
-            void compile(XWritable       &Ctop,
-                         const XReadable &Ktop,
-                         bool            &repl,
-                         XMLog           &xml)
+            size_t compile(XWritable       &Ctop,
+                           const XReadable &Ktop,
+                           bool            &repl,
+                           XMLog           &xml)
             {
                 Y_XML_SECTION(xml, "Compile");
                 size_t cycle = 0;
@@ -170,16 +172,18 @@ namespace Yttrium
                     Y_XMLOG(xml,"ftop=" << std::setw(15) << real_t( objectiveFunction(Ctop, TopLevel)) );
                 }
 
+
+                return pps.size();
             }
 
 
-            const Cluster &  rcl;
-            Aftermath        afm;
-            XMatrix          ceq;
-            XMatrix          ddc;
-            Prospect::Series pps;
-            XSeries          obj; //!< store objective function
-
+            const Cluster &        rcl;
+            Aftermath              afm;
+            XMatrix                ceq;
+            XMatrix                ddc;
+            Prospect::Series       pps;
+            XSeries                obj; //!< store objective function
+            CxxArray<XAdd,XMemory> xdc;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
         };
@@ -225,6 +229,8 @@ Y_UTEST(reactor)
 
     }
 
+    Y_SIZEOF(Prospect);
+    Y_SIZEOF(Reactor);
 
 }
 Y_UDONE()
