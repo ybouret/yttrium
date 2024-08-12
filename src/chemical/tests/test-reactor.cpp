@@ -247,16 +247,11 @@ namespace Yttrium
                         xdc[j] << dc[j];
                 }
 
+                // compute dC into Cws
                 const xreal_t zero  = 0;
                 const xreal_t one   = 1;
                 bool          abate = false;
                 xreal_t       scale = one;
-
-                for(const SNode *sn = rcl.species.head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    std::cerr << "d[" << sp.name << "]=" << xdc[ sp.indx[SubLevel] ] << std::endl;
-                }
 
 
                 for(size_t j=m;j>0;--j)
@@ -283,7 +278,7 @@ namespace Yttrium
                 Y_XMLOG(xml, "scale = " << real_t(scale));
 
                 if(abate) {
-                    scale *= 0.99;
+                    scale *= 0.999;
                 }
 
                 for(size_t j=m;j>0;--j)
