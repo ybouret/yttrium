@@ -9,6 +9,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(inject);
     Y_UTEST(solve);
     Y_UTEST(reactor);
+    Y_UTEST(crack);
 }
 Y_UTEST_EXEC()
 

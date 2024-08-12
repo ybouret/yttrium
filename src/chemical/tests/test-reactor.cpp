@@ -19,6 +19,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+#if 0
         class Prospect
         {
         public:
@@ -414,6 +415,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
         };
+#endif
+
     }
 
 }
@@ -439,20 +442,19 @@ Y_UTEST(reactor)
     bool           verbose = true;
     XMLog          xml(verbose);
     SharedClusters   cls = new Clusters(eqs,xml);
-    const XReadable &K   = cls->K(0);
+    //const XReadable &K   = cls->K(0);
 
 
     XVector C0(lib->size(),0);
 
     for(const Cluster *cl=(*cls)->head;cl;cl=cl->next)
     {
-        Reactor rxn(*cl);
+        //Reactor rxn(*cl);
         Species::Conc(C0,ran,0.3);
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        for(size_t iter=1;iter<=3;++iter)
-            rxn.forward(C0,K,xml);
+        //for(size_t iter=1;iter<=3;++iter) rxn.forward(C0,K,xml);
 
 
 
@@ -460,8 +462,7 @@ Y_UTEST(reactor)
 
     }
 
-    Y_SIZEOF(Prospect);
-    Y_SIZEOF(Reactor);
+    
 
 }
 Y_UDONE()
