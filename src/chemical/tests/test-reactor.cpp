@@ -12,6 +12,7 @@
 #include "y/text/boolean.hpp"
 
 #include "y/stream/libc/output.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 namespace Yttrium
 {
@@ -83,7 +84,7 @@ namespace Yttrium
         };
 
 
-
+        using namespace MKL;
 
         class Reactor : public Quantized, public Counted
         {
@@ -251,6 +252,7 @@ namespace Yttrium
                 // compute dC into Cws
                 const xreal_t zero  = 0;
                 const xreal_t one   = 1;
+                const xreal_t smax  = 2;
                 bool          abate = false;
                 xreal_t       scale = one;
 
@@ -278,20 +280,21 @@ namespace Yttrium
                 Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
                 Y_XMLOG(xml, "scale = " << real_t(scale));
 
+                Reactor         &F  = *this;
+                const xreal_t    f0 = objectiveFunction(Cin,SubLevel);
+                Triplet<xreal_t> x  = { zero, zero, one };
+                Triplet<xreal_t> f  = { f0,   zero, zero };
+
                 if(abate) {
-                    scale *= 0.999;
+                    scale *= 0.9;
+                    if(scale>smax) scale = smax;
                 }
 
-                for(size_t j=m;j>0;--j)
-                {
-                    Cex[j] = Cin[j] + scale * Cws[j];
-                }
-
+                f.c = buildCex(scale);
 
                 {
-                    Reactor &F = *this;
                     OutputFile   fp("promote.dat");
-                    const size_t np = 1000;
+                    const size_t np = 100;
                     for(size_t j=0;j<=np;++j)
                     {
                         const real_t u = double(j)/np;
@@ -299,6 +302,28 @@ namespace Yttrium
                     }
                 }
 
+                const xreal_t x_opt = Minimize<xreal_t>:: Locate(Minimizing::Inside, F, x, f);
+                const xreal_t f_opt = F(x_opt);
+
+                Y_XMLOG(xml, "f(" << real_t(x_opt) << ")=" << real_t(f_opt) << " / " << real_t(f0) );
+
+                if(f_opt<=f0)
+                {
+                    rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
+                }
+                else
+                {
+
+                }
+
+                //return f_opt <= f0;
+            }
+
+            xreal_t buildCex(const xreal_t scale) noexcept
+            {
+                for(size_t j=rcl.species.size;j>0;--j)
+                    Cex[j] = Cin[j] + scale * Cws[j];
+                return objectiveFunction(Cex,SubLevel);
             }
 
 
@@ -352,8 +377,12 @@ Y_UTEST(reactor)
         Species::Conc(C0,ran,0.3);
 
         lib(std::cerr << "C0=","\t[",C0,"]");
-        //rxn.compile(C0,K,repl,xml);
-        rxn.promote(C0,K,xml);
+
+        for(size_t iter=1;iter<=4;++iter)
+        {
+            rxn.promote(C0,K,xml);
+        }
+
         lib(std::cerr << "C1=","\t[",C0,"]");
 
     }
