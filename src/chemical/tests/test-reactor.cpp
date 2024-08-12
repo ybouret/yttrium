@@ -9,9 +9,9 @@
 
 #include "y/system/exception.hpp"
 #include "y/sort/heap.hpp"
+#include "y/text/boolean.hpp"
 
-
-
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -95,8 +95,11 @@ namespace Yttrium
             ceq(rcl.size,rcl.species.size),
             ddc(rcl.size,rcl.species.size),
             pps(rcl.size),
+            Cin(rcl.species.size),
+            Cex(rcl.species.size),
+            Cws(rcl.species.size),
             obj(rcl.size),
-            xdc(rcl.species.size)
+            xdc(rcl.species.size,CopyOf,rcl.size)
             {
             }
 
@@ -108,6 +111,26 @@ namespace Yttrium
                 obj.free();
                 for(size_t i=pps.size();i>0;--i) obj << pps[i].objectiveFunction(afm.xmul,C,L);
                 return afm.xadd.normOf(obj);
+            }
+
+            xreal_t operator()(xreal_t u)
+            {
+                const xreal_t zero = 0;
+                const xreal_t one  = 1;
+                u = Clamp(zero,u,one);
+                const xreal_t v = Clamp(zero,one-u,one);
+
+                for(size_t j=rcl.species.size;j>0;--j)
+                {
+                    xreal_t       cmin = Cin[j];
+                    xreal_t       cmax = Cex[j];
+                    const xreal_t c0   = cmin;
+                    const xreal_t c1   = cmax;
+                    if(cmax<cmin) Swap(cmin,cmax);
+                    Cws[j] = Clamp(cmin,c0*v+c1*u,cmax);
+                }
+
+                return objectiveFunction(Cws,SubLevel);
             }
 
             size_t compile(XWritable       &Ctop,
@@ -177,11 +200,121 @@ namespace Yttrium
             }
 
 
+            void promote(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml)
+            {
+                Y_XML_SECTION(xml, "Promote");
+
+                // compile
+                while(true)
+                {
+                    bool         repl = false;
+                    const size_t npro = compile(Ctop, Ktop, repl, xml);
+                    switch(npro)
+                    {
+                        case 0: Y_XMLOG(xml, "[Inactive]"); return;
+                        case 1:
+                            if(!repl)
+                            {
+                                rcl.transfer(Ctop, TopLevel, pps[1].cc, SubLevel);
+                            }
+                            return;
+                        default:
+                            break;
+                    }
+                    assert(npro>1);
+                    if(repl) continue;
+                    break;
+                }
+
+                // initialize input
+                rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
+
+                // compute xdc
+                const size_t m = rcl.species.size;
+                const size_t n = pps.size();
+                for(size_t j=m;j>0;--j)
+                {
+                    xdc[j].free();
+                }
+
+                for(size_t i=n;i>0;--i)
+                {
+                    const Prospect  &pro = pps[i];
+                    const XReadable &dc  = pro.dc;
+                    for(size_t j=m;j>0;--j)
+                        xdc[j] << dc[j];
+                }
+
+                const xreal_t zero  = 0;
+                const xreal_t one   = 1;
+                bool          abate = false;
+                xreal_t       scale = one;
+
+                for(const SNode *sn = rcl.species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    std::cerr << "d[" << sp.name << "]=" << xdc[ sp.indx[SubLevel] ] << std::endl;
+                }
+
+
+                for(size_t j=m;j>0;--j)
+                {
+                    const real_t dc = Cws[j] = xdc[j].sum();
+                    if(dc<zero)
+                    {
+                        const xreal_t cc = Cin[j]; assert(cc>zero);
+                        const xreal_t sc = cc / (-dc);
+                        if(!abate)
+                        {
+                            abate = true;
+                            scale = sc;
+                        }
+                        else
+                        {
+                            scale = Min(scale,sc);
+                        }
+                    }
+                }
+
+                std::cerr << "dC=" << Cws << std::endl;
+                Y_XMLOG(xml, "abate=" << BooleanTo::text(abate) );
+                Y_XMLOG(xml, "scale=" << real_t(scale));
+
+                if(abate) {
+                    scale *= 0.9;
+                }
+
+                for(size_t j=m;j>0;--j)
+                {
+                    Cex[j] = Cin[j] + scale * Cws[j];
+                }
+
+
+                {
+                    Reactor &F = *this;
+                    OutputFile   fp("promote.dat");
+                    const size_t np = 1000;
+                    for(size_t j=0;j<=np;++j)
+                    {
+                        const real_t u = double(j)/np;
+                        fp("%.15g %.15g\n", u, real_t(F(u)));
+                    }
+                }
+
+            }
+
+
+
             const Cluster &        rcl;
             Aftermath              afm;
             XMatrix                ceq;
             XMatrix                ddc;
             Prospect::Series       pps;
+            XArray                 Cin;
+            XArray                 Cex;
+            XArray                 Cws;
             XSeries                obj; //!< store objective function
             CxxArray<XAdd,XMemory> xdc;
         private:
@@ -220,11 +353,11 @@ Y_UTEST(reactor)
     for(const Cluster *cl=(*cls)->head;cl;cl=cl->next)
     {
         Reactor rxn(*cl);
-        bool    repl = false;
         Species::Conc(C0,ran,0.3);
 
         lib(std::cerr << "C0=","\t[",C0,"]");
-        rxn.compile(C0,K,repl,xml);
+        //rxn.compile(C0,K,repl,xml);
+        rxn.promote(C0,K,xml);
         lib(std::cerr << "C1=","\t[",C0,"]");
 
     }
