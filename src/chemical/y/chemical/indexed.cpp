@@ -9,6 +9,18 @@ namespace Yttrium
     namespace Chemical
     {
 
+        const char * LevelText(const Level l) noexcept
+        {
+
+            switch(l)
+            {
+                case TopLevel: return "TopLevel";
+                case SubLevel: return "SubLevel";
+                case AuxLevel: return "AuxLevel";
+            }
+            return Core::Unknown;
+        }
+
         Indexed:: ~Indexed() noexcept
         {
         }

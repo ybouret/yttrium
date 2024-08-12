@@ -8,6 +8,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(weasel);
     Y_UTEST(inject);
     Y_UTEST(solve);
+    Y_UTEST(reactor);
 }
 Y_UTEST_EXEC()
 

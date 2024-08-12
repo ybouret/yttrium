@@ -10,6 +10,7 @@
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/container/cxx/series.hpp"
 
 namespace Yttrium
 {
@@ -20,9 +21,12 @@ namespace Yttrium
 
         typedef Readable<xreal_t>           XReadable; //!< alias
         typedef Writable<xreal_t>           XWritable; //!< alias
-        typedef Matrix<xreal_t>             XMatrix;   //!< alias
-        typedef Vector<xreal_t>             XVector;   //!< alias
-        typedef CxxArray<xreal_t>           XArray;    //!< alias
+        typedef Memory::Dyadic              XMemory;   //!< alias
+        typedef Matrix<xreal_t,XMemory>     XMatrix;   //!< alias
+        typedef Vector<xreal_t,XMemory>     XVector;   //!< alias
+        typedef CxxArray<xreal_t,XMemory>   XArray;    //!< alias
+        typedef CxxSeries<xreal_t,XMemory>  XSeries;   //!< alias
+
 
         typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
