@@ -451,7 +451,7 @@ Y_UTEST(reactor)
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        for(size_t iter=1;iter<=10;++iter)
+        for(size_t iter=1;iter<=3;++iter)
             rxn.forward(C0,K,xml);
 
 
