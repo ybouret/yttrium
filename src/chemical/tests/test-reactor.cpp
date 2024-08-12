@@ -99,6 +99,7 @@ namespace Yttrium
             Cin(rcl.species.size),
             Cex(rcl.species.size),
             Cws(rcl.species.size),
+            Cst(rcl.species.size),
             obj(rcl.size),
             xdc(rcl.species.size,CopyOf,rcl.size)
             {
@@ -202,26 +203,63 @@ namespace Yttrium
             }
 
 
-            void promote(XWritable       &Ctop,
+
+            bool forward(XWritable       &Ctop,
+                         const XReadable &Ktop,
+                         XMLog           &xml)
+            {
+
+                rcl.transfer(Cst,SubLevel, Ctop, TopLevel);
+                if(!promote(Ctop,Ktop,xml))
+                {
+                    return false;
+                }
+
+                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    const size_t   jj = sp.indx[SubLevel];
+                    const xreal_t dc = (Cws[jj]-Cst[jj]).abs();
+                    std::cerr << "dc=" << std::setw(15) << real_t(dc) << " / " << std::setw(15) << real_t(Cst[jj]) << " @" << sp << std::endl;
+                }
+
+
+
+
+                return true;
+
+            }
+
+            bool promote(XWritable       &Ctop,
                          const XReadable &Ktop,
                          XMLog           &xml)
             {
                 Y_XML_SECTION(xml, "Promote");
 
-                // compile
+                //--------------------------------------------------------------
+                //
+                //
+                // compile up to no replacement
+                //
+                //
+                //--------------------------------------------------------------
                 while(true)
                 {
                     bool         repl = false;
                     const size_t npro = compile(Ctop, Ktop, repl, xml);
                     switch(npro)
                     {
-                        case 0: Y_XMLOG(xml, "[Inactive]"); return;
+                        case 0: 
+                            Y_XMLOG(xml, "[Inactive]");
+                            return true;
+
                         case 1:
                             if(!repl)
                             {
                                 rcl.transfer(Ctop, TopLevel, pps[1].cc, SubLevel);
                             }
-                            return;
+                            return true;
+
                         default:
                             break;
                     }
@@ -230,10 +268,23 @@ namespace Yttrium
                     break;
                 }
 
-                // initialize input
+                //--------------------------------------------------------------
+                //
+                //
+                // initialize compiled input
+                //
+                //
+                //--------------------------------------------------------------
                 rcl.transfer(Cin, SubLevel, Ctop, TopLevel);
 
+
+                //--------------------------------------------------------------
+                //
+                //
                 // compute xdc
+                //
+                //
+                //--------------------------------------------------------------
                 const size_t m = rcl.species.size;
                 const size_t n = pps.size();
                 for(size_t j=m;j>0;--j)
@@ -249,7 +300,13 @@ namespace Yttrium
                         xdc[j] << dc[j];
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
                 // compute dC into Cws
+                //
+                //
+                //--------------------------------------------------------------
                 const xreal_t zero  = 0;
                 const xreal_t one   = 1;
                 const xreal_t smax  = 2;
@@ -280,13 +337,20 @@ namespace Yttrium
                 Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
                 Y_XMLOG(xml, "scale = " << real_t(scale));
 
+                //--------------------------------------------------------------
+                //
+                //
+                // prepare look up
+                //
+                //
+                //--------------------------------------------------------------
                 Reactor         &F  = *this;
                 const xreal_t    f0 = objectiveFunction(Cin,SubLevel);
                 Triplet<xreal_t> x  = { zero, zero, one };
                 Triplet<xreal_t> f  = { f0,   zero, zero };
 
                 if(abate) {
-                    scale *= 0.9;
+                    scale *= 0.99;
                     if(scale>smax) scale = smax;
                 }
 
@@ -302,6 +366,14 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // look up
+                //
+                //
+                //--------------------------------------------------------------
+
                 const xreal_t x_opt = Minimize<xreal_t>:: Locate(Minimizing::Inside, F, x, f);
                 const xreal_t f_opt = F(x_opt);
 
@@ -310,13 +382,13 @@ namespace Yttrium
                 if(f_opt<=f0)
                 {
                     rcl.transfer(Ctop, TopLevel, Cws, SubLevel);
+                    return true;
                 }
                 else
                 {
-
+                    return false;
                 }
 
-                //return f_opt <= f0;
             }
 
             xreal_t buildCex(const xreal_t scale) noexcept
@@ -336,6 +408,7 @@ namespace Yttrium
             XArray                 Cin;
             XArray                 Cex;
             XArray                 Cws;
+            XArray                 Cst;
             XSeries                obj; //!< store objective function
             CxxArray<XAdd,XMemory> xdc;
         private:
@@ -378,10 +451,10 @@ Y_UTEST(reactor)
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        for(size_t iter=1;iter<=4;++iter)
-        {
-            rxn.promote(C0,K,xml);
-        }
+        for(size_t iter=1;iter<=10;++iter)
+            rxn.forward(C0,K,xml);
+
+
 
         lib(std::cerr << "C1=","\t[",C0,"]");
 
