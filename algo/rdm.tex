@@ -64,6 +64,7 @@ which conserves the charge for valid equilibrium(a).
  
  	
 \subsection{Solving}
+\subsubsection{1D}
 We know that:
 \begin{equation}
 	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
@@ -82,6 +83,68 @@ By definition:
 	\forall i, \;\; \langle \vec\Phi_i^\star \vert \vec\nu_i\rangle < 0
 \end{equation}	
 	
+\subsubsection{Virtual Rates}	
+
+Each equilibrium produces a molar rate proportional to $\Xi_i$. More precisely, the rate is proportional to a time constant
+and the concentration:
+\begin{equation}
+	\dfrac{\Xi_i(\vec C)}{ - \langle \vec\Phi_i^\star \vert \vec\nu_i\rangle }
+\end{equation}
+where $\vec\Phi_i^\star$ depends on $\vec C$.\\
+As we look for the stationary point this is equivalent to assume that:
+\begin{equation}
+	\dfrac{\Xi_i(\vec C)}{ - \langle \vec\Phi_i^\star \vert \vec\nu_i\rangle } \simeq \xi_i^\star(\vec C)
+\end{equation}
+This expression is an intrinsic scaling in concentration, so that we assume that the time constant is  the same for
+all the equilibria, and we use the reduced (unit) time over ALL the equilibria:
+
+\begin{equation}
+\partial_\tau \vec C = \bm{\nu}^T \vec \xi^\star(\vec C) = \vec F(\vec C)
+\end{equation}
+
+\subsubsection{Evolving}
+
+\begin{equation}
+	\vec C^{n+1}  \simeq  \vec C^{n} + \tau \vec F(\vec C^{n+1})
+\end{equation}
+
+\begin{equation}
+[\vec C^{n+1}  -  \vec C^{n}] \simeq \tau \vec F(\vec C^n + ([ \vec C^{n+1}-\vec C^{n} ]) 
+\simeq \tau \left( \vec F(\vec C^n) +   \partial_{\vec C} \vec F_n \vert [ \vec C^{n+1}-\vec C^{n} ] \rangle \right)
+\end{equation}
+
+\begin{equation}
+	\left[\bm{I} - \tau \cdot \partial_{\vec C} \vec F_n \right] [\vec C^{n+1}  -  \vec C^{n}] \simeq \tau \vec F(\vec C^n)
+\end{equation}
+
+\begin{equation}
+	\vec C^{n+1} \simeq \vec C^n + \tau \left[\bm{I}_M - \tau \cdot \partial_{\vec C} \vec F_n \right]^{-1} \vec F(\vec C^n)
+\end{equation}
+
+\subsubsection{Jacobian}
+
+\begin{equation}
+	\Xi_i(\vec C_0 +  \delta \vec C + (\delta\xi_i^\star +\xi_i^\star) \vec \nu _i) = 0
+	\iff
+	\langle \vec \Phi_i^\star \vert \delta \vec C\rangle + \langle \vec \Phi_i^\star \vert \vec\nu_i \rangle \delta \xi_i^\star = 0
+\end{equation}
+
+\begin{equation}
+	\delta \xi_i^\star = - \dfrac{\langle \vec \Phi_i^\star \vert \delta \vec C\rangle}{\langle \vec \Phi_i^\star \vert \vec\nu_i \rangle}
+\end{equation}
+
+\begin{equation}
+ \bm{\Delta}^\star = \mathrm{diag}\left(\ldots,\dfrac{-1}{\langle \vec \Phi_i^\star \vert \vec\nu_i \rangle},\ldots\right)
+\end{equation}
+
+\begin{equation}
+	\partial_{\vec C} \vec \xi^\star = \bm{\Delta}^\star \bm{\Phi}^\star 
+\end{equation}
+
+\begin{equation}
+	\partial_{\vec C} \vec F = \bm{\nu}^T \bm{\Delta}^\star \bm{\Phi}^\star 
+\end{equation}
+
 \subsection{Conservation}
 
 A conservation law is a vector of {\bf positive} coefficients $\vec \alpha$ such that:
