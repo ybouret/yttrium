@@ -62,73 +62,25 @@ so that, starting from $\vec \Xi ( \vec C ) = \vec 0$, the system evolves locall
 which conserves the charge for valid equilibrium(a).
 
  
-\subsection{Solving...}
-
-\subsection{Comparing Indicators}
+ 	
+\subsection{Solving}
 We know that:
 \begin{equation}
 	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu _i) = \Xi_i(\vec C_0 + \delta \vec C_i^\star) = \Xi_i(\vec C_i^\star) = 0
 \end{equation}
-
+and the expansion is:
 \begin{equation}
 \begin{array}{rl}
- &	\Xi_i(\vec C_0 + \sum_j \xi_j \vec \nu_j) \\
-= &	\Xi_i\left(\vec C_0 + \xi_i^\star \vec \nu_i + (\xi_i-\xi_i^\star) \vec \nu_i + \sum_{j\not=i} \xi_j \vec \nu_j\right)  \\
-\simeq & (\xi_i-\xi_i^\star) \underbrace{\langle \vec \Psi_i^\star \vert \vec \nu_i \rangle}_{<0} + \sum_{j\not=i} \xi_j \langle \vec \Psi_i^\star \vert \vec \nu_j \rangle \\
+	& \Xi_i(\vec C_0 + \sum_j \xi_j \vec \nu_j)\\
+=  &\Xi_i(\vec C_0 +  \xi_i^\star \vec \nu _i +  (\xi_i-\xi_i^\star) \vec \nu_i + \sum_{j\not=i} \xi_j \vec \nu_j)\\
+\simeq & \langle \vec\Phi_i^\star \vert \vec\nu_i\rangle (\xi_i-\xi_i^\star) +  \langle \vec\Phi_i^\star \vert \sum_{j\not=i} \xi_j \vec \nu_j \rangle \\
 \end{array}
 \end{equation}
-
-For $\vec C_0$, $\xi_i^\star$ is the zero value of $\vert \Xi_i(\vec C_0 + \xi_i \vec \nu _i) \vert$
-and 
+  	
+By definition:
 \begin{equation}
-\kappa_i = \dfrac{-1}{ \langle \vec \Psi_i^\star \vert \vec \nu_i \rangle }
-\end{equation}
-is the stiffness of the associated quadratic form.
-Hence for a starting point $\vec C_0$, the concentration to decrease is:
-\begin{equation}
-	\mathcal C(\vec C_0 + \delta \vec C) =
-	\sqrt{ 
-	\sum_i \left(\dfrac{\Xi_i(\vec C_0 + \delta \vec C) }{\langle \vec \Psi_i^\star \vert \vec \nu_i \rangle}\right)^2 
-	}
-\end{equation}
-
-
-\subsection{Algo}
-
-We know that:
-\begin{equation}
-	\Xi_i(\vec C_0 + \xi_i^\star \vec \nu_i) = 0
-\end{equation}
-For a perturbation $\delta \vec C$:
-\begin{equation}
-	\Xi_i(\vec C_0 + \delta \vec C + (\xi_i^\star + \delta \xi_i) \vec \nu_i) = 0 \iff 
-	0 \simeq  \langle \vec \Phi_i^\star \vert \delta \vec C \rangle + \langle \vec \Phi_i^\star \vert \vec \nu_i \rangle \delta \xi_i 
-\end{equation}
-	
-The new solving point is
-\begin{equation}
-	\xi_i^\circ = \xi_i^\star - \dfrac{\langle \vec \Phi_i^\star \vert \delta \vec C \rangle}{\langle \vec \Phi_i^\star \vert \vec \nu_i \rangle}
+	\forall i, \;\; \langle \vec\Phi_i^\star \vert \vec\nu_i\rangle < 0
 \end{equation}	
-
-For $\delta \vec C = \bm{\nu}^T \vec \xi$:
-\begin{equation}
-	\vec \xi_\circ = \vec \xi_\star - \bm{\Upsilon} \vec \xi
-\end{equation}	
-
-We want to decrease:
-\begin{equation}
-	\mathfrak X(\vec \xi) = \dfrac{1}{2} {\vec \xi_\circ}^2 
-	 = \dfrac{1}{2} \left[ {\vec \xi_\star}^2 
-	 	- 2 \langle \vec \xi_\star \vert \bm{\Upsilon} \vert \vec \xi \rangle
-		+ \langle \vec \xi \vert \bm{\Upsilon}^T \vert \bm{\Upsilon} \vert \vec \xi \rangle
-	 \right]
-\end{equation}
-
-The descent direction is:
-\begin{equation}
-	\vec{\xi} \propto \bm{\Upsilon}^T  \vec \xi_\star
-\end{equation}
- 	
 	
 \subsection{Conservation}
 
