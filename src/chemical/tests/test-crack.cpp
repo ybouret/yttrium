@@ -97,6 +97,7 @@ namespace Yttrium
             ceq(neq,nsp),
             ddc(neq,nsp),
             Phi(neq,nsp),
+            Jac(nsp,nsp),
             pps(neq),
             xdc(nsp,CopyOf,neq)
             {
@@ -214,6 +215,30 @@ namespace Yttrium
                 }
             }
 
+            void makeJac()
+            {
+                XAdd &              xadd = afm.xadd;
+                const size_t        m    = nsp;
+                const size_t        n    = neq;
+                const Matrix<int> & Nu   = rcl.topology;
+
+                for(size_t i=m;i>0;--i)
+                {
+                    for(size_t j=m;j>0;--j)
+                    {
+                        xadd.free();
+                        for(size_t k=n;k>0;--k)
+                        {
+                            const xreal_t lhs = Nu[k][i];
+                            const xreal_t rhs = Phi[k][j];
+                            const xreal_t tmp = lhs * rhs;
+                            xadd << tmp;
+                        }
+                        Jac[i][j] = xadd.sum();
+                    }
+                }
+            }
+
 
             void compute(XWritable &dC)
             {
@@ -242,6 +267,7 @@ namespace Yttrium
             XMatrix                ceq;
             XMatrix                ddc;
             XMatrix                Phi;
+            XMatrix                Jac;
             Prospect::Series       pps;
             CxxArray<XAdd,XMemory> xdc;
         private:
@@ -290,7 +316,8 @@ Y_UTEST(crack)
         std::cerr << "Phi0=" << crack.Phi << std::endl;
         crack.makePhi(true);
         std::cerr << "Phi1=" << crack.Phi << std::endl;
-
+        crack.makeJac();
+        std::cerr << "Jac =" << crack.Jac << std::endl;
 
     }
 
