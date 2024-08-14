@@ -230,12 +230,12 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Topology");
-                Matrix<int> &topo = Coerce(topology);
+                XMatrix &topo = Coerce(topology);
                 topo.make(size, species.size);
                 for(const ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    Writable<int>     &nu = topo[eq.indx[SubLevel]];
+                    XWritable         &nu = topo[eq.indx[SubLevel]];
                     eq.topology(nu,SubLevel);
                     Y_XMLOG(xml,nu);
                 }

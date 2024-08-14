@@ -220,7 +220,7 @@ namespace Yttrium
                 XAdd &              xadd = afm.xadd;
                 const size_t        m    = nsp;
                 const size_t        n    = neq;
-                const Matrix<int> & Nu   = rcl.topology;
+                const XMatrix     & Nu   = rcl.topology;
 
                 for(size_t i=m;i>0;--i)
                 {
