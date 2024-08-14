@@ -54,7 +54,6 @@ namespace Yttrium
                            const Components &E,
                            const xreal_t     K);
 
-#if 1
             //! eval extent post solve
             xreal_t eval(XWritable       &  dOut,
                          const XReadable &  Cout,
@@ -62,7 +61,6 @@ namespace Yttrium
                          const XReadable &  Cinp,
                          const Level        Linp,
                          const Components & E);
-#endif
             
             //! eval extent post solve
             xreal_t eval(const XReadable &  Cout,

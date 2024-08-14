@@ -238,6 +238,11 @@ namespace Yttrium
             return 0 == reac.charge() - prod.charge();
         }
 
+        bool Components:: crucial(const XReadable &C, const Level L)    const noexcept
+        {
+            return (reac.deficient(C,L) && prod.accounted(C,L)) || (reac.accounted(C,L) && prod.deficient(C,L));
+        }
+
 
         void Components:: viz(OutputStream &fp,
                               const String &color) const
