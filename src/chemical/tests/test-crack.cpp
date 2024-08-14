@@ -105,12 +105,12 @@ namespace Yttrium
             {
             }
 
-
-            void noCrucial(XWritable &       Ctop,
-                           const XReadable & Ktop,
-                           XMLog &           xml)
+            //! remove all crucial
+            void slacken(XWritable &       Ctop,
+                         const XReadable & Ktop,
+                         XMLog &           xml)
             {
-                Y_XML_SECTION(xml, "Crucial");
+                Y_XML_SECTION(xml, "Slacken");
 
                 size_t cycle = 0;
             DETECT_CRUCIAL:
@@ -144,9 +144,48 @@ namespace Yttrium
 
                     goto DETECT_CRUCIAL;
                 }
-
-
             }
+
+
+            //! compile running prospect(s)
+            size_t compile(XWritable &       Ctop,
+                         const XReadable & Ktop,
+                         XMLog &           xml)
+            {
+                Y_XML_SECTION(xml, "Compile");
+                pps.free();
+                for(const ENode *en = rcl.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
+                    const size_t       ii = pps.size()+1;
+                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,Ctop,TopLevel);
+                    XWritable         &dc = ddc[ii];
+                    const Situation    st = afm.seek(cc, SubLevel, eq, eK);
+
+                    switch(st)
+                    {
+                        case Blocked: continue;
+                        case Crucial: throw Specific::Exception(eq.name.c_str(), "unexpected crucial state!");
+                        case Running:
+                            break;
+                    }
+
+                    const Prospect pro(eq, eK, cc, afm.eval(dc, cc, SubLevel, Ctop, TopLevel, eq), dc);
+                    pps << pro;
+
+                }
+                HeapSort::Call(pps,Prospect::CompareAX);
+                const size_t n = pps.size();
+                if(xml.verbose)
+                {
+                    for(size_t i=1;i<=n;++i)
+                        pps[i].show(xml() << "(+) ", rcl, true) << std::endl;
+                }
+                return n;
+            }
+
+
 
 
             const Cluster &  rcl;
@@ -195,8 +234,8 @@ Y_UTEST(crack)
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        crack.noCrucial(C0,K,plexus.xml);
-
+        crack.slacken(C0,K,plexus.xml);
+        crack.compile(C0,K,plexus.xml);
         lib(std::cerr << "C1=","\t[",C0,"]");
 
     }
