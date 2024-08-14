@@ -96,7 +96,8 @@ namespace Yttrium
             nsp(cl.species.size),
             ceq(neq,nsp),
             ddc(neq,nsp),
-            pps(neq)
+            pps(neq),
+            xdc(nsp,CopyOf,neq)
             {
             }
 
@@ -148,7 +149,7 @@ namespace Yttrium
 
 
             //! compile running prospect(s)
-            size_t compile(XWritable &       Ctop,
+            size_t compile(XWritable &     Ctop,
                          const XReadable & Ktop,
                          XMLog &           xml)
             {
@@ -186,16 +187,34 @@ namespace Yttrium
             }
 
 
+            void compute(XWritable &dC)
+            {
+                const size_t m = nsp;
+                for(size_t j=m;j>0;--j) xdc[j].free();
+            
+                for(size_t i=pps.size();i>0;--i)
+                {
+                    const Prospect  &pro = pps[i];
+                    const XReadable &dc  = pro.dc;
+                    for(size_t j=m;j>0;--j)
+                        xdc[j] << dc[j];
+                }
+
+                for(size_t j=m;j>0;--j) dC[j] = xdc[j].sum();
+
+            }
 
 
-            const Cluster &  rcl;
-            Aftermath        afm;
-            const size_t     neq;
-            const size_t     nsp;
-            XMatrix          ceq;
-            XMatrix          ddc;
-            Prospect::Series pps;
 
+
+            const Cluster &        rcl;
+            Aftermath              afm;
+            const size_t           neq;
+            const size_t           nsp;
+            XMatrix                ceq;
+            XMatrix                ddc;
+            Prospect::Series       pps;
+            CxxArray<XAdd,XMemory> xdc;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cracker);
         };
