@@ -103,24 +103,23 @@ all the equilibria, and we use the reduced (unit) time over ALL the equilibria:
 \end{equation}
 
 \subsubsection{Evolving}
-
+Stiff problem
 \begin{equation}
-	\vec C^{n+1}  \simeq  \vec C^{n} + \tau \vec F(\vec C^{n+1})
+	\vec C_{n+1}  \simeq  \vec C_{n} + \tau \vec F(\vec C_{n+1})
+\end{equation}
+So the next set of concentration is given by the solution of:
+\begin{equation}
+	\vec Y = \vec C_{n} + \tau \vec F(\vec Y)
+\end{equation}
+\begin{equation}
+	\vec Y_k + \delta \vec Y = \vec C_{n} + \tau \vec F(\vec Y_k + \delta \vec Y) = \vec C_{n} + \tau \vec F(\vec C_n + \vec Y_k + \delta \vec Y - \vec C_n)
 \end{equation}
 
 \begin{equation}
-[\vec C^{n+1}  -  \vec C^{n}] \simeq \tau \vec F(\vec C^n + ([ \vec C^{n+1}-\vec C^{n} ]) 
-\simeq \tau \left( \vec F(\vec C^n) +   \partial_{\vec C} \vec F_n \vert [ \vec C^{n+1}-\vec C^{n} ] \rangle \right)
+	\left[\vec Y_k + \delta \vec Y - \vec C_{n}\right] \simeq \tau \left( \vec F(\vec C_n) + \partial_{\vec C} \vec{F}_n \left[\vec Y_k + \delta \vec Y - \vec C_{n}\right] \right)
 \end{equation}
 
-\begin{equation}
-	\left[\bm{I} - \tau \cdot \partial_{\vec C} \vec F_n \right] [\vec C^{n+1}  -  \vec C^{n}] \simeq \tau \vec F(\vec C^n)
-\end{equation}
-
-\begin{equation}
-	\vec C^{n+1} \simeq \vec C^n + \tau \left[\bm{I}_M - \tau \cdot \partial_{\vec C} \vec F_n \right]^{-1} \vec F(\vec C^n)
-\end{equation}
-
+ 
 \subsubsection{Jacobian}
 
 \begin{equation}
@@ -144,6 +143,27 @@ all the equilibria, and we use the reduced (unit) time over ALL the equilibria:
 \begin{equation}
 	\partial_{\vec C} \vec F = \bm{\nu}^T \bm{\Delta}^\star \bm{\Phi}^\star 
 \end{equation}
+
+\subsubsection{Diagonally Dominant Matrix}
+
+Let's say we have a matrix $\bm{J}$. On which condition on $\tau\geq0$ the matrix $\bm{I}-\tau\bm{J}$ is diagonally dominant ?
+
+\begin{equation}
+ \iff \forall i, \;\; \vert 1 - \tau J_{ii} \vert > \tau \left( \sum_{j\not=i} \vert J_{ij} \vert \right)
+\end{equation}
+
+\begin{itemize}
+\item $J_{ii}\leq 0$ so that
+\begin{equation}
+	\vert 1 - \tau J_{ii} \vert = 1+(-J_{ii}) \tau = 1 + \vert J_{ii} \vert \tau
+\end{equation}
+\begin{equation}
+	\vert 1 - \tau J_{ii} \vert > \tau \left( \sum_{j\not=i} \vert J_{ij} \vert \right) 
+	\iff  1 > \tau \left[ \left( \sum_{j\not=i} \vert J_{ij} \vert \right) - \vert J_{ii} \vert \right]
+\end{equation}
+\end{itemize}
+
+
 
 \subsection{Conservation}
 

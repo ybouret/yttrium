@@ -237,6 +237,14 @@ namespace Yttrium
                         Jac[i][j] = xadd.sum();
                     }
                 }
+
+                std::cerr << "Jdiag=[";
+                for(size_t i=1;i<=m;++i)
+                {
+                    std::cerr << ' ' << real_t(Jac[i][i]);
+                }
+                std::cerr << "]" << std::endl;
+
             }
 
 
@@ -314,6 +322,7 @@ Y_UTEST(crack)
 
         crack.makePhi(false);
         std::cerr << "Phi0=" << crack.Phi << std::endl;
+        
         crack.makePhi(true);
         std::cerr << "Phi1=" << crack.Phi << std::endl;
         crack.makeJac();
