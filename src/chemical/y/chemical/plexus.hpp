@@ -13,22 +13,47 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! ready chemical system
+        //
+        //
+        //______________________________________________________________________
         class Plexus
         {
         public:
-            explicit Plexus(const bool verbosity=false);
-            virtual ~Plexus() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Plexus(const bool verbosity=false); //!< initialize
+            virtual ~Plexus() noexcept;                  //!< cleanup
 
-            Clusters & assemble();
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Clusters & assemble();           //!< create clusters
+            void operator()(Jive::Module *); //!< compile data
 
-            void operator()(Jive::Module  *input);
-
-            Library            lib; //!< library
-            LuaEquilibria      eqs; //!< equilibria
-            Weasel::Compiler  &wpc; //!< Weasel Plexus Compiler
-            bool               verbose;
-            XMLog              xml;
-            Random::ParkMiller ran;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Library            lib;      //!< library
+            LuaEquilibria      eqs;      //!< equilibria
+            Weasel::Compiler  &wpc;      //!< Weasel Plexus Compiler
+            bool               verbose; //!< verbosity
+            XMLog              xml;     //!< verbose helper
+            Random::ParkMiller ran;     //!< built-in random
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Plexus);

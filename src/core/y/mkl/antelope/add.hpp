@@ -504,6 +504,22 @@ namespace Yttrium
                     }
                 }
 
+                //! dot product (TODO: use transmogrify...)
+                template <typename LHS, typename RHS> inline
+                T dot(LHS &lhs, RHS &rhs)
+                {
+                    assert( lhs.size() == rhs.size() );
+                    const size_t n = lhs.size();
+                    this->make(n);
+                    for(size_t i=n;i>0;--i)
+                    {
+                        const T l = lhs[i];
+                        const T r = rhs[i];
+                        const T p = l*r;
+                        this->insert(p);
+                    }
+                    return this->sum();
+                }
 
 
 

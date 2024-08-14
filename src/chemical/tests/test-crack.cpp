@@ -96,6 +96,7 @@ namespace Yttrium
             nsp(cl.species.size),
             ceq(neq,nsp),
             ddc(neq,nsp),
+            Phi(neq,nsp),
             pps(neq),
             xdc(nsp,CopyOf,neq)
             {
@@ -192,6 +193,28 @@ namespace Yttrium
             }
 
 
+            
+
+            void makePhi(const bool divided)
+            {
+                Phi.ld(0);
+                const size_t m = nsp;
+                for(size_t i=pps.size();i>0;--i)
+                {
+                    const Prospect    &pro = pps[i];
+                    const Equilibrium &eq  = pro.eq;
+                    const size_t       ii  = eq.indx[SubLevel];
+                    XWritable         &phi = Phi[ii];
+                    eq.drvsMassAction(pro.eK, phi, SubLevel, pro.cc, SubLevel, afm.xmul);
+                    if(divided)
+                    {
+                        const xreal_t den = afm.xadd.dot(rcl.topology[ii],phi);
+                        for(size_t j=m;j>0;--j) phi[j]/=den;
+                    }
+                }
+            }
+
+
             void compute(XWritable &dC)
             {
                 const size_t m = nsp;
@@ -218,6 +241,7 @@ namespace Yttrium
             const size_t           nsp;
             XMatrix                ceq;
             XMatrix                ddc;
+            XMatrix                Phi;
             Prospect::Series       pps;
             CxxArray<XAdd,XMemory> xdc;
         private:
@@ -261,6 +285,12 @@ Y_UTEST(crack)
         crack.slacken(C0,K,plexus.xml);
         crack.compile(C0,K,plexus.xml);
         lib(std::cerr << "C1=","\t[",C0,"]");
+
+        crack.makePhi(false);
+        std::cerr << "Phi0=" << crack.Phi << std::endl;
+        crack.makePhi(true);
+        std::cerr << "Phi1=" << crack.Phi << std::endl;
+
 
     }
 

@@ -25,6 +25,7 @@ namespace Yttrium
             AuxLevel  //!< sub-sub index
         };
 
+        //! convert level to text
         const char * LevelText(const Level) noexcept;
 
 
