@@ -85,6 +85,81 @@ namespace Yttrium
 
         using namespace MKL;
 
+        class Cracker : public Quantized, public Counted
+        {
+        public:
+
+            explicit Cracker(const Cluster &cl) :
+            rcl(cl),
+            afm(),
+            neq(cl.size),
+            nsp(cl.species.size),
+            ceq(neq,nsp),
+            ddc(neq,nsp),
+            pps(neq)
+            {
+            }
+
+
+            virtual ~Cracker() noexcept
+            {
+            }
+
+
+            void noCrucial(XWritable &       Ctop,
+                           const XReadable & Ktop,
+                           XMLog &           xml)
+            {
+                Y_XML_SECTION(xml, "Crucial");
+
+                size_t cycle = 0;
+            DETECT_CRUCIAL:
+                ++cycle;
+                pps.free();
+                for(const ENode *en = rcl.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en; if( !eq.crucial(Ctop,TopLevel) ) continue;
+                    const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
+                    const size_t       ii = pps.size()+1;
+                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,Ctop,TopLevel);
+                    XWritable         &dc = ddc[ii];
+                    const Situation    st = afm.seek(cc, SubLevel, eq, eK);
+                    if(Crucial!=st) throw Specific::Exception(eq.name.c_str(), "corrupted crucial state");
+
+                    pps << Prospect(eq, eK, cc, afm.eval(dc, cc, SubLevel, Ctop, TopLevel, eq), dc);
+
+                }
+
+                if( pps.size() )
+                {
+                    Y_XMLOG(xml, "(@) cycle #" << cycle);
+                    HeapSort::Call(pps,Prospect::CompareAX);
+                    const size_t n = pps.size();
+                    if(xml.verbose)
+                        for(size_t i=1;i<=n;++i)
+                            pps[i].show(xml() << "(!) ", rcl, false) << std::endl;
+
+                    const Prospect &pro = pps[n];
+                    rcl.transfer(Ctop, TopLevel, pro.cc, SubLevel);
+
+                    goto DETECT_CRUCIAL;
+                }
+
+
+            }
+
+
+            const Cluster &  rcl;
+            Aftermath        afm;
+            const size_t     neq;
+            const size_t     nsp;
+            XMatrix          ceq;
+            XMatrix          ddc;
+            Prospect::Series pps;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Cracker);
+        };
 
     }
 
@@ -95,7 +170,7 @@ using namespace Chemical;
 
 Y_UTEST(crack)
 {
-    Plexus plexus;
+    Plexus plexus(true);
 
     for(int i=1;i<argc;++i)
     {
@@ -116,10 +191,11 @@ Y_UTEST(crack)
     {
         Species::Conc(C0,plexus.ran,0.3);
 
-
+        Cracker crack(*cl);
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
+        crack.noCrucial(C0,K,plexus.xml);
 
         lib(std::cerr << "C1=","\t[",C0,"]");
 
