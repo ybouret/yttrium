@@ -11,12 +11,14 @@
 
 #include "y/stream/libc/output.hpp"
 #include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/algebra/lu.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
+        using namespace MKL;
 
         class Prospect
         {
@@ -98,8 +100,16 @@ namespace Yttrium
             ddc(neq,nsp),
             Phi(neq,nsp),
             Jac(nsp,nsp),
+            Den(nsp,nsp),
+            Jdg(nsp),
+            Jxv(nsp),
+            Cin(nsp),
+            Cws(nsp),
+            Cex(nsp),
+            rho(nsp),
             pps(neq),
-            xdc(nsp,CopyOf,neq)
+            xdc(nsp,CopyOf,neq),
+            xlu(nsp)
             {
             }
 
@@ -109,7 +119,8 @@ namespace Yttrium
             }
 
             //! remove all crucial
-            void slacken(XWritable &       Ctop,
+            void slacken(XWritable       & C,
+                         const Level       L,
                          const XReadable & Ktop,
                          XMLog &           xml)
             {
@@ -121,15 +132,15 @@ namespace Yttrium
                 pps.free();
                 for(const ENode *en = rcl.head;en;en=en->next)
                 {
-                    const Equilibrium &eq = **en; if( !eq.crucial(Ctop,TopLevel) ) continue;
+                    const Equilibrium &eq = **en; if( !eq.crucial(C,L) ) continue;
                     const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
                     const size_t       ii = pps.size()+1;
-                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,Ctop,TopLevel);
+                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,C,L);
                     XWritable         &dc = ddc[ii];
                     const Situation    st = afm.seek(cc, SubLevel, eq, eK);
                     if(Crucial!=st) throw Specific::Exception(eq.name.c_str(), "corrupted crucial state");
 
-                    pps << Prospect(eq, eK, cc, afm.eval(dc, cc, SubLevel, Ctop, TopLevel, eq), dc);
+                    pps << Prospect(eq, eK, cc, afm.eval(dc, cc, SubLevel, C, L, eq), dc);
 
                 }
 
@@ -143,7 +154,7 @@ namespace Yttrium
                             pps[i].show(xml() << "(!) ", rcl, false) << std::endl;
 
                     const Prospect &pro = pps[n];
-                    rcl.transfer(Ctop, TopLevel, pro.cc, SubLevel);
+                    rcl.transfer(C, L, pro.cc, SubLevel);
 
                     goto DETECT_CRUCIAL;
                 }
@@ -151,7 +162,8 @@ namespace Yttrium
 
 
             //! compile running prospect(s)
-            size_t compile(XWritable &     Ctop,
+            size_t compile(const XReadable & C,
+                           const Level       L,
                            const XReadable & Ktop,
                            XMLog &           xml)
             {
@@ -162,7 +174,7 @@ namespace Yttrium
                     const Equilibrium &eq = **en;
                     const xreal_t      eK = Ktop[ eq.indx[TopLevel] ];
                     const size_t       ii = pps.size()+1;
-                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,Ctop,TopLevel);
+                    XWritable         &cc = rcl.transfer(ceq[ii],SubLevel,C,L);
                     XWritable         &dc = ddc[ii];
                     const Situation    st = afm.seek(cc, SubLevel, eq, eK);
 
@@ -174,10 +186,11 @@ namespace Yttrium
                             break;
                     }
 
-                    const Prospect pro(eq, eK, cc, afm.eval(dc, cc, SubLevel, Ctop, TopLevel, eq), dc);
+                    const Prospect pro(eq, eK, cc, afm.eval(dc, cc, SubLevel, C, L, eq), dc);
                     pps << pro;
 
                 }
+
                 HeapSort::Call(pps,Prospect::CompareAX);
                 const size_t n = pps.size();
                 for(size_t i=1;i<=n;++i)
@@ -194,9 +207,21 @@ namespace Yttrium
             }
 
 
-            
+            void makePhiRaw( )
+            {
+                Phi.ld(0);
+                for(size_t i=pps.size();i>0;--i)
+                {
+                    const Prospect    &pro = pps[i];
+                    const Equilibrium &eq  = pro.eq;
+                    const size_t       ii  = eq.indx[SubLevel];
+                    XWritable         &phi = Phi[ii];
+                    eq.drvsMassAction(pro.eK, phi, SubLevel, pro.cc, SubLevel, afm.xmul);
 
-            void makePhi(const bool divided)
+                }
+            }
+
+            void makePhiJac()
             {
                 Phi.ld(0);
                 const size_t m = nsp;
@@ -207,16 +232,17 @@ namespace Yttrium
                     const size_t       ii  = eq.indx[SubLevel];
                     XWritable         &phi = Phi[ii];
                     eq.drvsMassAction(pro.eK, phi, SubLevel, pro.cc, SubLevel, afm.xmul);
-                    if(divided)
-                    {
-                        const xreal_t den = afm.xadd.dot(rcl.topology[ii],phi);
-                        for(size_t j=m;j>0;--j) phi[j]/=den;
-                    }
+
+                    const xreal_t den = -afm.xadd.dot(rcl.topology[ii],phi); assert(den>0.0);
+                    for(size_t j=m;j>0;--j) phi[j]/= den;
+
                 }
             }
 
+
             void makeJac()
             {
+                makePhiJac();
                 XAdd &              xadd = afm.xadd;
                 const size_t        m    = nsp;
                 const size_t        n    = neq;
@@ -238,12 +264,15 @@ namespace Yttrium
                     }
                 }
 
-                std::cerr << "Jdiag=[";
-                for(size_t i=1;i<=m;++i)
+                for(size_t i=m;i>0;--i)
                 {
-                    std::cerr << ' ' << real_t(Jac[i][i]);
+                    Jdg[i] = Jac[i][i];
+                    xadd.free();
+                    for(size_t j=m;j>i;--j)   xadd << Jac[i][j].abs();
+                    for(size_t j=i-1;j>0;--j) xadd << Jac[i][j].abs();
+                    Jxv[i] = xadd.sum();
                 }
-                std::cerr << "]" << std::endl;
+
 
             }
 
@@ -262,6 +291,127 @@ namespace Yttrium
                 }
 
                 for(size_t j=m;j>0;--j) dC[j] = xdc[j].sum();
+            }
+
+            void run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
+            {
+                // first time check
+                slacken(C, L, Ktop, xml);
+
+                // initialize
+                const size_t n = compile(C,L,Ktop,xml);
+                switch(n)
+                {
+                    case 0: Y_XMLOG(xml, "[inactive]"); return;
+                    case 1: Y_XMLOG(xml, "[singulet]");
+                    {
+                        const Prospect &pro = pps[1];
+                        rcl.transfer(C, L, pro.cc, SubLevel);
+                    } return;
+
+                    default:
+                        break;
+                }
+
+                // full step ?
+                const xreal_t zero = 0;
+                const xreal_t one  = 1;
+                const size_t  m    = nsp;
+                rcl.transfer(Cin, SubLevel, C, L); // Cin@SubLevel
+                compute(rho);                      // rho@SubLevel
+                xreal_t tau = 1;
+
+                // initial scaling
+                {
+                    bool    abate = false;
+                    xreal_t scale = 1;
+                    for(size_t j=m;j>0;--j)
+                    {
+                        const xreal_t d = rho[j];
+                        if(d<zero)
+                        {
+                            const xreal_t c = Cin[j]; assert(Cin[j]>zero);
+                            const xreal_t s = c/(-d);
+                            if(s<scale)
+                            {
+                                abate = true;
+                                scale = s;
+                            }
+                        }
+                    }
+
+                    Y_XMLOG(xml, "abate = " << BooleanTo::text(abate));
+                    Y_XMLOG(xml, "scale = " << real_t(scale));
+                    if(abate)
+                    {
+                        scale *= 0.9;
+                        tau *= scale;
+                        Y_XMLOG(xml, "scale = " << real_t(scale));
+                        Y_XMLOG(xml, "tau   = " << real_t(tau));
+                    }
+                }
+
+                // compute jacobian and rescale initil tau
+                makeJac();
+                {
+                JSCALE:
+                    for(size_t j=m;j>0;--j)
+                    {
+                        const xreal_t dg = (one-tau*Jdg[j]).abs();
+                        const xreal_t xv = tau*Jxv[j];
+                        if(dg<=xv) {
+                            --Coerce(tau.exponent);
+                            Y_XMLOG(xml, "tau   = " << real_t(tau));
+                            goto JSCALE;
+                        }
+                    }
+                }
+
+            DEN:
+                for(size_t i=m;i>0;--i)
+                {
+                    for(size_t j=m;j>0;--j)
+                    {
+                        Den[i][j] = - tau * Jac[i][j];
+                    }
+                    Den[i][i] += one;
+                    Cws[i]     = tau * rho[i];
+                }
+
+                if(!xlu.build(Den))
+                {
+                    throw Specific::Exception("here","unexpected singular Den");
+                }
+
+                xlu.solve(Den,Cws);
+                Y_XMLOG(xml, "Cws=" << Cws);
+                for(size_t j=m;j>0;--j)
+                {
+                    const xreal_t d = Cws[j];
+                    if(d<zero)
+                    {
+                        if( -d >= Cin[j] )
+                        {
+                            Y_XMLOG(xml, "[shrink!]");
+                            --Coerce(tau.exponent);
+                            goto DEN;
+                        }
+                    }
+                }
+
+                for(size_t j=m;j>0;--j)
+                {
+                    Cex[j] = Cin[j] + Cws[j];
+                }
+                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    const size_t j = sp.indx[SubLevel];
+                    Y_XMLOG(xml, std::setw(15) << real_t(Cin[j]) << " -> " << std::setw(15) << real_t(Cex[j]) << " @" << sp);
+                }
+
+
+
 
             }
 
@@ -276,8 +426,17 @@ namespace Yttrium
             XMatrix                ddc;
             XMatrix                Phi;
             XMatrix                Jac;
+            XMatrix                Den;
+            XArray                 Jdg;
+            XArray                 Jxv;
+            XArray                 Cin;
+            XArray                 Cws;
+            XArray                 Cex;
+            XArray                 rho;
             Prospect::Series       pps;
             CxxArray<XAdd,XMemory> xdc;
+            LU<xreal_t>            xlu;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cracker);
         };
@@ -316,17 +475,14 @@ Y_UTEST(crack)
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        crack.slacken(C0,K,plexus.xml);
-        crack.compile(C0,K,plexus.xml);
+        crack.run(C0,TopLevel,K,plexus.xml);
+
         lib(std::cerr << "C1=","\t[",C0,"]");
 
-        crack.makePhi(false);
-        std::cerr << "Phi0=" << crack.Phi << std::endl;
-        
-        crack.makePhi(true);
-        std::cerr << "Phi1=" << crack.Phi << std::endl;
-        crack.makeJac();
-        std::cerr << "Jac =" << crack.Jac << std::endl;
+
+
+
+
 
     }
 
