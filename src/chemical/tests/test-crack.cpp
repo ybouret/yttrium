@@ -150,8 +150,8 @@ namespace Yttrium
 
             //! compile running prospect(s)
             size_t compile(XWritable &     Ctop,
-                         const XReadable & Ktop,
-                         XMLog &           xml)
+                           const XReadable & Ktop,
+                           XMLog &           xml)
             {
                 Y_XML_SECTION(xml, "Compile");
                 pps.free();
@@ -178,11 +178,16 @@ namespace Yttrium
                 }
                 HeapSort::Call(pps,Prospect::CompareAX);
                 const size_t n = pps.size();
-                if(xml.verbose)
+                for(size_t i=1;i<=n;++i)
                 {
-                    for(size_t i=1;i<=n;++i)
-                        pps[i].show(xml() << "(+) ", rcl, true) << std::endl;
+                    const Prospect &pro = pps[i];
+                    if(xml.verbose) pro.show(xml() << "(+) ", rcl, true) << std::endl;
+                    for(size_t j=n;j>0;--j)
+                    {
+                        pro.eq.mustSupport(pps[j].cc,SubLevel);
+                    }
                 }
+
                 return n;
             }
 
@@ -191,7 +196,7 @@ namespace Yttrium
             {
                 const size_t m = nsp;
                 for(size_t j=m;j>0;--j) xdc[j].free();
-            
+
                 for(size_t i=pps.size();i>0;--i)
                 {
                     const Prospect  &pro = pps[i];
