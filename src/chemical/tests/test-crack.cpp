@@ -239,6 +239,7 @@ namespace Yttrium
                 }
             }
 
+            // need a pre-compilation
             void makePhiJac()
             {
                 Phi.ld(0);
@@ -258,6 +259,7 @@ namespace Yttrium
             }
 
 
+            //! compute jacobian from pre-compiled state
             void makeJac()
             {
                 makePhiJac();
@@ -290,10 +292,9 @@ namespace Yttrium
                     for(size_t j=i-1;j>0;--j) xadd << Jac[i][j].abs();
                     Jxv[i] = xadd.sum();
                 }
-
-
             }
 
+            //! compute dC from pre-compiled state
             void makeXdC(XWritable &dC)
             {
                 const size_t m = nsp;
@@ -323,10 +324,12 @@ namespace Yttrium
 
 
 
+            //! rescale to largest step
             bool rescale(xreal_t         &step,
                          const XReadable &dC,
                          const XReadable &C) const
             {
+
                 const xreal_t zero; assert(step>zero);
                 bool          wasCut = false;
 
@@ -346,6 +349,47 @@ namespace Yttrium
                 }
 
                 return wasCut;
+            }
+
+            //! rescale for jacobian
+            bool rescale(xreal_t &step)
+            {
+                const xreal_t one = 1;
+                bool          cut = false;
+            SCAN:
+                for(size_t j=nsp;j>0;--j)
+                {
+                    const xreal_t dg = (one - step * Jdg[j]).abs();
+                    const xreal_t xv = step * Jxv[j];
+                    if(dg<=xv)
+                    {
+                        cut = true;
+                        --Coerce(step.exponent);
+                        goto SCAN;
+                    }
+                }
+                return cut;
+            }
+
+            //! build (I-tau*Jac)^(-1)
+            void getDen(const xreal_t tau)
+            {
+                const xreal_t one = 1;
+                const size_t  m   = nsp;
+                for(size_t i=m;i>0;--i)
+                {
+                    for(size_t j=m;j>0;--j)
+                    {
+                        Den[i][j] = - tau * Jac[i][j];
+                    }
+                    Den[i][i] += one;
+                }
+
+
+                if( !xlu.build(Den) )
+                {
+                    throw Specific::Exception("here", "singular denominator");
+                }
             }
 
 
@@ -387,21 +431,66 @@ namespace Yttrium
                 const xreal_t SAFE = 0.9;
                 const xreal_t one  = 1;
                 xreal_t       tau  = 1;
-                XArray dC(nsp);
+                XArray        dC(nsp);
 
                 rcl.transfer(Cin, SubLevel, C, L);
 
-                makeXdC(rho);
-                makeJac();
+                makeXdC(rho); // from first compilation
+                makeJac();    // from first compilation
 
                 Y_XMLOG(xml, "Cin = " << Cin);
                 Y_XMLOG(xml, "rho = " << rho);
-                
+
                 // rescale tau so that Cin+ tau*rho is OK
-                if( rescale(tau, rho, Cin) )
-                {
+                if( rescale(tau, rho, Cin) ) {
                     tau *= SAFE;
+                    Y_XMLOG(xml, "tau = " << real_t(tau) << " // from initial rates");
                 }
+
+                // rescale tau so that (I-tau*Jac) is invertible
+                if( rescale(tau) )
+                {
+                    Y_XMLOG(xml, "tau = " << real_t(tau) << " // from initial jacobian");
+                }
+
+
+                //--------------------------------------------------------------
+                //
+                //
+                // solve Euler's scheme for given tau
+                //
+                //
+                //--------------------------------------------------------------
+
+                {
+                    // get denominator
+                    getDen(tau);
+
+                    // compute Newton's step
+                    for(size_t j=m;j>0;--j)
+                    {
+                        dC[j] = tau * rho[j];
+                    }
+                    std::cerr << "lhs = " << dC << std::endl;
+                    xlu.solve(Den, dC);
+                    std::cerr << "dC  = " << dC << std::endl;
+                    std::cerr << "Cin = " << Cin << std::endl;
+                    {
+                        xreal_t fac = one;
+                        if( rescale(fac, dC, Cin) )
+                        {
+                            std::cerr << "fac=" << fac << std::endl;
+                            tau *= (fac*SAFE);
+                        }
+                        else
+                        {
+                            std::cerr << "ok=1" << std::endl;
+                        }
+                    }
+                }
+
+
+#if 0
 
                 // rescale tau so that I-tau * Jac is invertible
                 {
@@ -475,7 +564,7 @@ namespace Yttrium
                 }
                 std::cerr << "Cnew = " << Cin << std::endl;
 
-
+#endif
 
 
 
