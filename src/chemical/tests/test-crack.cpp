@@ -126,6 +126,13 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Slacken");
 
+                //--------------------------------------------------------------
+                //
+                //
+                // collect series of crucial equilibri(um|a)
+                //
+                //
+                //--------------------------------------------------------------
                 size_t cycle = 0;
             DETECT_CRUCIAL:
                 ++cycle;
@@ -141,9 +148,15 @@ namespace Yttrium
                     if(Crucial!=st) throw Specific::Exception(eq.name.c_str(), "corrupted crucial state");
 
                     pps << Prospect(eq, eK, cc, afm.eval(dc, cc, SubLevel, C, L, eq), dc);
-
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // move the smallest correction if any
+                //
+                //
+                //--------------------------------------------------------------
                 if( pps.size() )
                 {
                     Y_XMLOG(xml, "(@) cycle #" << cycle);
@@ -155,19 +168,24 @@ namespace Yttrium
 
                     const Prospect &pro = pps[n];
                     rcl.transfer(C, L, pro.cc, SubLevel);
-
-                    goto DETECT_CRUCIAL;
+                    goto DETECT_CRUCIAL; // then check again
                 }
             }
 
 
-            //! compile running prospect(s)
+            //! compile running prospect(s), none must be crucial
             size_t compile(const XReadable & C,
                            const Level       L,
                            const XReadable & Ktop,
                            XMLog &           xml)
             {
                 Y_XML_SECTION(xml, "Compile");
+                //--------------------------------------------------------------
+                //
+                //
+                // collect all running equilbri(um|a)
+                //
+                //--------------------------------------------------------------
                 pps.free();
                 for(const ENode *en = rcl.head;en;en=en->next)
                 {
@@ -276,7 +294,6 @@ namespace Yttrium
 
             }
 
-
             void compute(XWritable &dC)
             {
                 const size_t m = nsp;
@@ -293,12 +310,82 @@ namespace Yttrium
                 for(size_t j=m;j>0;--j) dC[j] = xdc[j].sum();
             }
 
-            void run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
+
+            real_t maxStep(const XReadable &dC,
+                           const XReadable &C) const
             {
+                const xreal_t zero(0);
+                bool          cut = false;
+                xreal_t       ans = -1;
+
+                for(size_t j=nsp;j>0;--j)
+                {
+                    const xreal_t d = dC[j];
+                    if(d<zero)
+                    {
+                        const xreal_t c = C[j]; assert(c>zero);
+                        const xreal_t s = c/(-d);
+                        if(!cut)
+                        {
+                            cut = true;
+                            ans = s;
+                        }
+                        else
+                        {
+                            ans = Min(ans,s);
+                        }
+                    }
+                }
+                return ans;
+            }
+
+            bool rescale(xreal_t         &step,
+                         const XReadable &dC,
+                         const XReadable &C) const
+            {
+                const xreal_t zero; assert(step>zero);
+                bool          wasCut = false;
+
+                for(size_t j=nsp;j>0;--j)
+                {
+                    const xreal_t d = dC[j];
+                    if(d<zero)
+                    {
+                        const xreal_t c = C[j];   assert(c>zero);
+                        const xreal_t s = c/(-d); // max step
+                        if(s<=step)
+                        {
+                            wasCut = true;
+                            step   = s;
+                        }
+                    }
+                }
+
+                return wasCut;
+            }
+
+
+            void run(XWritable       &C,
+                     const Level      L,
+                     const XReadable &Ktop,
+                     XMLog           &xml)
+            {
+                //--------------------------------------------------------------
+                //
+                //
                 // first time check
+                //
+                //
+                //--------------------------------------------------------------
                 slacken(C, L, Ktop, xml);
 
+                //--------------------------------------------------------------
+                //
+                //
                 // initialize
+                //
+                //
+                //--------------------------------------------------------------
                 const size_t n = compile(C,L,Ktop,xml);
                 switch(n)
                 {
@@ -313,102 +400,57 @@ namespace Yttrium
                         break;
                 }
 
-                // full step ?
+                //--------------------------------------------------------------
+                //
+                //
+                //
+                //
+                //
+                //--------------------------------------------------------------
                 const xreal_t zero = 0;
+                const xreal_t half = 0.5;
+                const xreal_t safe = 0.9;
                 const xreal_t one  = 1;
                 const size_t  m    = nsp;
-                rcl.transfer(Cin, SubLevel, C, L); // Cin@SubLevel
-                compute(rho);                      // rho@SubLevel
-                xreal_t tau = 1;
+                XArray        dC1(m),  dC2(m);
+                rcl.transfer(Cin, SubLevel, C, L); // Cin @SubLevel
+                compute(dC1);                      // dC1 @SubLevel
 
-                // initial scaling
+                // initialize
+                xreal_t       tau  = 1;
+                std::cerr << "Cin=" << Cin << std::endl;
+                std::cerr << "dC1=" << dC1 << std::endl;
+            COMPUTE1:
                 {
-                    bool    abate = false;
-                    xreal_t scale = 1;
+                    xreal_t step = tau * 0.5;
+                    if( rescale(step,dC1,Cin) )
+                    {
+                        tau = (step*2.0) * safe;
+                        Y_XMLOG(xml, "must rescale tau=" << real_t(tau));
+                        goto COMPUTE1;
+                    }
                     for(size_t j=m;j>0;--j)
                     {
-                        const xreal_t d = rho[j];
-                        if(d<zero)
-                        {
-                            const xreal_t c = Cin[j]; assert(Cin[j]>zero);
-                            const xreal_t s = c/(-d);
-                            if(s<scale)
-                            {
-                                abate = true;
-                                scale = s;
-                            }
-                        }
-                    }
-
-                    Y_XMLOG(xml, "abate = " << BooleanTo::text(abate));
-                    Y_XMLOG(xml, "scale = " << real_t(scale));
-                    if(abate)
-                    {
-                        scale *= 0.9;
-                        tau *= scale;
-                        Y_XMLOG(xml, "scale = " << real_t(scale));
-                        Y_XMLOG(xml, "tau   = " << real_t(tau));
+                        Cws[j] = Cin[j] + step * dC1[j];
                     }
                 }
-
-                // compute jacobian and rescale initil tau
-                makeJac();
+                std::cerr << "C2=" << Cws << std::endl;
+                const size_t n2 = compile(Cws, SubLevel, Ktop, xml);
+                if(n!=n2) throw Specific::Exception("here","bad compilation");
                 {
-                JSCALE:
+                    xreal_t step = tau;
+                    if( rescale(step,dC2,Cin) )
+                    {
+                        tau = step * safe;
+                        Y_XMLOG(xml, "must rescale tau=" << real_t(tau));
+                        goto COMPUTE1;
+                    }
                     for(size_t j=m;j>0;--j)
                     {
-                        const xreal_t dg = (one-tau*Jdg[j]).abs();
-                        const xreal_t xv = tau*Jxv[j];
-                        if(dg<=xv) {
-                            --Coerce(tau.exponent);
-                            Y_XMLOG(xml, "tau   = " << real_t(tau));
-                            goto JSCALE;
-                        }
+                        Cex[j] = Cin[j] + step * dC2[j];
                     }
                 }
-
-            DEN:
-                for(size_t i=m;i>0;--i)
-                {
-                    for(size_t j=m;j>0;--j)
-                    {
-                        Den[i][j] = - tau * Jac[i][j];
-                    }
-                    Den[i][i] += one;
-                    Cws[i]     = tau * rho[i];
-                }
-
-                if(!xlu.build(Den))
-                {
-                    throw Specific::Exception("here","unexpected singular Den");
-                }
-
-                xlu.solve(Den,Cws);
-                Y_XMLOG(xml, "Cws=" << Cws);
-                for(size_t j=m;j>0;--j)
-                {
-                    const xreal_t d = Cws[j];
-                    if(d<zero)
-                    {
-                        if( -d >= Cin[j] )
-                        {
-                            Y_XMLOG(xml, "[shrink!]");
-                            --Coerce(tau.exponent);
-                            goto DEN;
-                        }
-                    }
-                }
-
-                for(size_t j=m;j>0;--j)
-                {
-                    Cex[j] = Cin[j] + Cws[j];
-                }
-                for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    const size_t j = sp.indx[SubLevel];
-                    Y_XMLOG(xml, std::setw(15) << real_t(Cin[j]) << " -> " << std::setw(15) << real_t(Cex[j]) << " @" << sp);
-                }
+                std::cerr << "Cex=" << Cex << std::endl;
 
 
 
@@ -418,24 +460,24 @@ namespace Yttrium
 
 
 
-            const Cluster &        rcl;
-            Aftermath              afm;
-            const size_t           neq;
-            const size_t           nsp;
-            XMatrix                ceq;
-            XMatrix                ddc;
-            XMatrix                Phi;
+            const Cluster &        rcl; //!< persistent reference to cluster
+            Aftermath              afm; //!< aftermath
+            const size_t           neq; //!< rcl.size
+            const size_t           nsp; //!< rcl.species.size
+            XMatrix                ceq; //!< store all Ceq
+            XMatrix                ddc; //!< store all delta Ceq
+            XMatrix                Phi; //!< store derivatives
             XMatrix                Jac;
             XMatrix                Den;
             XArray                 Jdg;
             XArray                 Jxv;
-            XArray                 Cin;
-            XArray                 Cws;
-            XArray                 Cex;
-            XArray                 rho;
-            Prospect::Series       pps;
-            CxxArray<XAdd,XMemory> xdc;
-            LU<xreal_t>            xlu;
+            XArray                 Cin; //!< C input
+            XArray                 Cws; //!< C workspace
+            XArray                 Cex; //!< C exit
+            XArray                 rho; //!< rates
+            Prospect::Series       pps; //!< running series
+            CxxArray<XAdd,XMemory> xdc; //!< helper to compute delta C
+            LU<xreal_t>            xlu; //!< linear algebra
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cracker);
@@ -475,10 +517,11 @@ Y_UTEST(crack)
 
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        crack.run(C0,TopLevel,K,plexus.xml);
-
-        lib(std::cerr << "C1=","\t[",C0,"]");
-
+        for(size_t iter=1;iter<=10;++iter)
+        {
+            crack.run(C0,TopLevel,K,plexus.xml);
+            lib(std::cerr << "C1=","\t[",C0,"]");
+        }
 
 
 
