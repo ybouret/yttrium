@@ -294,7 +294,7 @@ namespace Yttrium
 
             }
 
-            void compute(XWritable &dC)
+            void makeXdC(XWritable &dC)
             {
                 const size_t m = nsp;
                 for(size_t j=m;j>0;--j) xdc[j].free();
@@ -309,6 +309,18 @@ namespace Yttrium
 
                 for(size_t j=m;j>0;--j) dC[j] = xdc[j].sum();
             }
+
+            void compute(XWritable       &dC,
+                         const XReadable &C,
+                         const XReadable &Ktop,
+                         XMLog           &xml)
+            {
+                const size_t dof = pps.size();
+                const size_t n   = compile(C, SubLevel, Ktop, xml);
+                if(n!=dof) throw Specific::Exception("here", "bad compilation");
+                makeXdC(dC);
+            }
+
 
 
             real_t maxStep(const XReadable &dC,
@@ -399,59 +411,53 @@ namespace Yttrium
                     default:
                         break;
                 }
-
-                //--------------------------------------------------------------
-                //
-                //
-                //
-                //
-                //
-                //--------------------------------------------------------------
-                const xreal_t zero = 0;
-                const xreal_t half = 0.5;
-                const xreal_t safe = 0.9;
-                const xreal_t one  = 1;
                 const size_t  m    = nsp;
-                XArray        dC1(m),  dC2(m);
-                rcl.transfer(Cin, SubLevel, C, L); // Cin @SubLevel
-                compute(dC1);                      // dC1 @SubLevel
-
-                // initialize
+                const xreal_t SAFE = 0.9;
+                const xreal_t one  = 1;
                 xreal_t       tau  = 1;
-                std::cerr << "Cin=" << Cin << std::endl;
-                std::cerr << "dC1=" << dC1 << std::endl;
-            COMPUTE1:
-                {
-                    xreal_t step = tau * 0.5;
-                    if( rescale(step,dC1,Cin) )
-                    {
-                        tau = (step*2.0) * safe;
-                        Y_XMLOG(xml, "must rescale tau=" << real_t(tau));
-                        goto COMPUTE1;
-                    }
-                    for(size_t j=m;j>0;--j)
-                    {
-                        Cws[j] = Cin[j] + step * dC1[j];
-                    }
-                }
-                std::cerr << "C2=" << Cws << std::endl;
-                const size_t n2 = compile(Cws, SubLevel, Ktop, xml);
-                if(n!=n2) throw Specific::Exception("here","bad compilation");
-                {
-                    xreal_t step = tau;
-                    if( rescale(step,dC2,Cin) )
-                    {
-                        tau = step * safe;
-                        Y_XMLOG(xml, "must rescale tau=" << real_t(tau));
-                        goto COMPUTE1;
-                    }
-                    for(size_t j=m;j>0;--j)
-                    {
-                        Cex[j] = Cin[j] + step * dC2[j];
-                    }
-                }
-                std::cerr << "Cex=" << Cex << std::endl;
 
+                rcl.transfer(Cin, SubLevel, C, L);
+                XArray F(m);
+                makeXdC(F);
+                makeJac();
+
+                // rescale w.r.t F
+                if( rescale(tau, F, Cin) )
+                {
+                    tau *= SAFE;
+                }
+
+                {
+                JSCAL:
+                    for(size_t j=m;j>0;--j)
+                    {
+                        const xreal_t dg = (one - tau * Jdg[j]).abs();
+                        const xreal_t xv = tau * Jxv[j];
+                        std::cerr << "dg=" << real_t(dg) << " / " << real_t(xv) << std::endl;
+                        if(dg<=xv)
+                        {
+                            tau *= 0.5;
+                            std::cerr << "Must Cut" << std::endl;
+                            goto JSCAL;
+                        }
+                    }
+                }
+
+                Y_XMLOG(xml, "Cin = " << Cin);
+                Y_XMLOG(xml, "F   = " << F);
+                Y_XMLOG(xml, "tau = " << real_t(tau) );
+
+                for(size_t i=m;i>0;--i)
+                {
+                    for(size_t j=m;j>0;--j)
+                    {
+                        Den[i][j] = - tau * Jac[i][j];
+                    }
+                    Den[i][i] += one;
+                }
+
+                std::cerr << "Den=" << Den << std::endl;
+                
 
 
 
