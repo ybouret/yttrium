@@ -42,6 +42,7 @@ namespace Yttrium
         {
             xml() << LANGLE << sub;
             if(full) *xml <<  RANGLE << std::endl;
+            (*xml).flush();
         }
         Coerce(xml.depth)++;
     }
@@ -51,7 +52,7 @@ namespace Yttrium
         Coerce(xml.depth)--;
         try
         {
-            if(xml.verbose) xml() << LANGLE << sub << SLASH << RANGLE << std::endl;
+            if(xml.verbose) (xml() << LANGLE << sub << SLASH << RANGLE << std::endl).flush();
         }
         catch(...)
         {

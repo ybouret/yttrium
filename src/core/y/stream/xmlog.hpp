@@ -11,7 +11,7 @@ namespace Yttrium
 
 
     //! output some optional message
-#define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { (XML)() << MSG << std::endl; } while(false); } while(false)
+#define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { ((XML)() << MSG << std::endl).flush(); } while(false); } while(false)
 
     //! create the xml sub name
 #define Y_XML_SUB__(X,Y) X##Y
@@ -26,7 +26,7 @@ namespace Yttrium
     //! make a xml sub-section with options
 #define Y_XML_SECTION_OPT(HOST,NAME,OPTIONS)   \
 Y_XML_SUB_(HOST,__LINE__,NAME,false);          \
-do if( (HOST).verbose)  { (*HOST << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
+do if( (HOST).verbose)  { (*HOST << ' ' << OPTIONS) <<  Yttrium::XMLog::RANGLE << std::endl; } while(false)
 
     //! display a named list
 #define Y_XML_LIST(HOST,NAME) do { HOST.display( #NAME, NAME); } while(false)

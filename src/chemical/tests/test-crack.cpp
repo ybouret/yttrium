@@ -323,34 +323,6 @@ namespace Yttrium
 
 
 
-            real_t maxStep(const XReadable &dC,
-                           const XReadable &C) const
-            {
-                const xreal_t zero(0);
-                bool          cut = false;
-                xreal_t       ans = -1;
-
-                for(size_t j=nsp;j>0;--j)
-                {
-                    const xreal_t d = dC[j];
-                    if(d<zero)
-                    {
-                        const xreal_t c = C[j]; assert(c>zero);
-                        const xreal_t s = c/(-d);
-                        if(!cut)
-                        {
-                            cut = true;
-                            ans = s;
-                        }
-                        else
-                        {
-                            ans = Min(ans,s);
-                        }
-                    }
-                }
-                return ans;
-            }
-
             bool rescale(xreal_t         &step,
                          const XReadable &dC,
                          const XReadable &C) const
@@ -415,38 +387,45 @@ namespace Yttrium
                 const xreal_t SAFE = 0.9;
                 const xreal_t one  = 1;
                 xreal_t       tau  = 1;
+                XArray dC(nsp);
 
                 rcl.transfer(Cin, SubLevel, C, L);
-                XArray F(m);
-                makeXdC(F);
+
+                makeXdC(rho);
                 makeJac();
 
-                // rescale w.r.t F
-                if( rescale(tau, F, Cin) )
+                Y_XMLOG(xml, "Cin = " << Cin);
+                Y_XMLOG(xml, "rho = " << rho);
+                
+                // rescale tau so that Cin+ tau*rho is OK
+                if( rescale(tau, rho, Cin) )
                 {
                     tau *= SAFE;
                 }
 
+                // rescale tau so that I-tau * Jac is invertible
                 {
                 JSCAL:
                     for(size_t j=m;j>0;--j)
                     {
                         const xreal_t dg = (one - tau * Jdg[j]).abs();
                         const xreal_t xv = tau * Jxv[j];
-                        std::cerr << "dg=" << real_t(dg) << " / " << real_t(xv) << std::endl;
+                        //std::cerr << "dg=" << real_t(dg) << " / " << real_t(xv) << std::endl;
                         if(dg<=xv)
                         {
                             tau *= 0.5;
-                            std::cerr << "Must Cut" << std::endl;
+                            //std::cerr << "Must Cut" << std::endl;
                             goto JSCAL;
                         }
                     }
                 }
 
-                Y_XMLOG(xml, "Cin = " << Cin);
-                Y_XMLOG(xml, "F   = " << F);
+                // at this point, we have a guess tau
+
                 Y_XMLOG(xml, "tau = " << real_t(tau) );
 
+
+            IDEN:
                 for(size_t i=m;i>0;--i)
                 {
                     for(size_t j=m;j>0;--j)
@@ -456,8 +435,48 @@ namespace Yttrium
                     Den[i][i] += one;
                 }
 
-                std::cerr << "Den=" << Den << std::endl;
-                
+                //std::cerr << "Den=" << Den << std::endl;
+
+                if( !xlu.build(Den) )
+                {
+                    tau *= 0.5;
+                    goto IDEN;
+                }
+
+
+
+                for(size_t j=m;j>0;--j)
+                {
+                    dC[j] = tau * rho[j];
+                }
+                std::cerr << "lhs = " << dC << std::endl;
+                xlu.solve(Den, dC);
+                std::cerr << "dC  = " << dC << std::endl;
+                std::cerr << "Cin = " << Cin << std::endl;
+                {
+                    xreal_t fac = one;
+                    if( rescale(fac, dC, Cin) )
+                    {
+                        std::cerr << "fac=" << fac << std::endl;
+                        tau *= (fac*SAFE);
+                        goto IDEN;
+                    }
+                    else
+                    {
+                        std::cerr << "ok=1" << std::endl;
+                    }
+                }
+
+                std::cerr << "tau=" << real_t(tau) << std::endl;
+
+                for(size_t j=m;j>0;--j)
+                {
+                    Cin[j] += tau * dC[j];
+                }
+                std::cerr << "Cnew = " << Cin << std::endl;
+
+
+
 
 
 
@@ -480,7 +499,7 @@ namespace Yttrium
             XArray                 Cin; //!< C input
             XArray                 Cws; //!< C workspace
             XArray                 Cex; //!< C exit
-            XArray                 rho; //!< rates
+            XArray                 rho;
             Prospect::Series       pps; //!< running series
             CxxArray<XAdd,XMemory> xdc; //!< helper to compute delta C
             LU<xreal_t>            xlu; //!< linear algebra
