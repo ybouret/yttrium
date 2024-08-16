@@ -320,6 +320,7 @@ namespace Yttrium
                 const size_t n   = compile(C, SubLevel, Ktop, xml);
                 if(n!=dof) throw Specific::Exception("here", "bad compilation");
                 makeXdC(dC);
+                makeJac();
             }
 
 
@@ -490,81 +491,7 @@ namespace Yttrium
                 }
 
 
-#if 0
 
-                // rescale tau so that I-tau * Jac is invertible
-                {
-                JSCAL:
-                    for(size_t j=m;j>0;--j)
-                    {
-                        const xreal_t dg = (one - tau * Jdg[j]).abs();
-                        const xreal_t xv = tau * Jxv[j];
-                        //std::cerr << "dg=" << real_t(dg) << " / " << real_t(xv) << std::endl;
-                        if(dg<=xv)
-                        {
-                            tau *= 0.5;
-                            //std::cerr << "Must Cut" << std::endl;
-                            goto JSCAL;
-                        }
-                    }
-                }
-
-                // at this point, we have a guess tau
-
-                Y_XMLOG(xml, "tau = " << real_t(tau) );
-
-
-            IDEN:
-                for(size_t i=m;i>0;--i)
-                {
-                    for(size_t j=m;j>0;--j)
-                    {
-                        Den[i][j] = - tau * Jac[i][j];
-                    }
-                    Den[i][i] += one;
-                }
-
-                //std::cerr << "Den=" << Den << std::endl;
-
-                if( !xlu.build(Den) )
-                {
-                    tau *= 0.5;
-                    goto IDEN;
-                }
-
-
-
-                for(size_t j=m;j>0;--j)
-                {
-                    dC[j] = tau * rho[j];
-                }
-                std::cerr << "lhs = " << dC << std::endl;
-                xlu.solve(Den, dC);
-                std::cerr << "dC  = " << dC << std::endl;
-                std::cerr << "Cin = " << Cin << std::endl;
-                {
-                    xreal_t fac = one;
-                    if( rescale(fac, dC, Cin) )
-                    {
-                        std::cerr << "fac=" << fac << std::endl;
-                        tau *= (fac*SAFE);
-                        goto IDEN;
-                    }
-                    else
-                    {
-                        std::cerr << "ok=1" << std::endl;
-                    }
-                }
-
-                std::cerr << "tau=" << real_t(tau) << std::endl;
-
-                for(size_t j=m;j>0;--j)
-                {
-                    Cin[j] += tau * dC[j];
-                }
-                std::cerr << "Cnew = " << Cin << std::endl;
-
-#endif
 
 
 
