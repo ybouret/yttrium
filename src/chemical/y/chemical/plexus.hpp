@@ -42,6 +42,15 @@ namespace Yttrium
             Clusters & assemble();           //!< create clusters
             void operator()(Jive::Module *); //!< compile data
 
+
+            template <typename ARRAY> inline
+            void conc(ARRAY       &arr,
+                      const double probaZero = 0,
+                      const double probaNeg  = 0)
+            {
+                Species::Conc(arr,ran,probaZero,probaNeg);
+            }
+
             //__________________________________________________________________
             //
             //

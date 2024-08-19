@@ -717,7 +717,7 @@ Y_UTEST(crack)
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        Species::Conc(C0,plexus.ran,0.3);
+        plexus.conc(C0,0.3);
 
         Cracker crack(*cl);
 
