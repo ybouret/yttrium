@@ -14,8 +14,6 @@ namespace Yttrium
         class Boundary : public SRepo
         {
         public:
-
-
             explicit Boundary(const SBank   & b,
                               const xreal_t   x,
                               const Species & s)   :
@@ -213,6 +211,9 @@ namespace Yttrium
                         limiting(cc/a->xn,sp);
                     }
                 }
+                while(limiting.size>1)
+                    limiting.cutTail();
+                
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Fader &f)
