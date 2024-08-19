@@ -180,15 +180,17 @@ namespace Yttrium
                 required.free();
             }
 
-            void operator()(const XReadable  &C,
-                            const Level       L,
-                            const Actors     &A)
+            //! build without unbounded species
+            void operator()(const XReadable   &C,
+                            const Level        L,
+                            const Actors      &A,
+                            const AddressBook &unbounded)
             {
                 assert(0==limiting.size);
                 assert(0==required.size);
                 for(const Actor *a = A->head;a;a=a->next)
                 {
-                    const Species &s = a->sp;
+                    const Species &s = a->sp; if( unbounded.has(s) ) continue;
                     const xreal_t  c = C[ s.indx[L] ];
                     const xreal_t  x = c/a->xn;
                     if(x.mantissa<0)
@@ -234,12 +236,20 @@ namespace Yttrium
         };
 
 
+        enum Depiction
+        {
+            Balanced, //!< all positive
+            Hindered //!< at least one negative at one side
+
+        };
 
         //! for both reac and prod
         class Faders : public Recyclable
         {
         public:
             typedef CxxArray<Faders> Array;
+
+            //! grouping banks to build single parameters array
             class Banks
             {
             public:
@@ -250,7 +260,7 @@ namespace Yttrium
 
             };
 
-            
+
             Faders(const Banks &banks) noexcept :
             reac(banks.b,banks.s),
             prod(banks.b,banks.s)
@@ -269,13 +279,16 @@ namespace Yttrium
                 prod.free();
             }
 
-            void operator()(const XReadable &C, const Level L, const Components &E)
+            void operator()(const XReadable  &C,
+                            const Level       L,
+                            const Components  &E,
+                            const AddressBook &unbounded)
             {
                 free();
                 try
                 {
-                    reac(C,L,E.reac);
-                    prod(C,L,E.prod);
+                    reac(C,L,E.reac,unbounded);
+                    prod(C,L,E.prod,unbounded);
                 }
                 catch(...)
                 {
@@ -290,6 +303,65 @@ namespace Yttrium
                 os << "|prod:" << F.prod;
                 os << "}";
                 return os;
+            }
+
+            Depiction ask()
+            {
+                if(reac.required.size<=0)
+                {
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // valid reactant(s)
+                    //
+                    //
+                    //----------------------------------------------------------
+                    if(prod.required.size<=0)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // valid reactant(s), valid product(s)
+                        //
+                        //------------------------------------------------------
+                        return Balanced;
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        //
+                        // valid reactant(s), negative product(s),
+                        //
+                        //------------------------------------------------------
+
+                    }
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // negative reactant(s)
+                    //
+                    //
+                    //----------------------------------------------------------
+                    if(prod.required.size<=0)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // negative reactant(s), valid product(s)
+                        //
+                        //------------------------------------------------------
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        //
+                        // negative reactant(s), negative product(s)
+                        //
+                        //------------------------------------------------------
+                        return Hindered;
+                    }
+                }
             }
 
 
@@ -320,12 +392,13 @@ namespace Yttrium
 
             void run(XWritable &C, const Level L, XMLog &)
             {
-                for(const ENode *en=rcl.head;en;en=en->next)
+
+                for(const ENode *en=rcl.limited.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     const size_t       ei = eq.indx[SubLevel];
                     Faders            &fd = faders[ei];
-                    fd(C,L,eq);
+                    fd(C,L,eq,rcl.unbounded.book);
 
                     rcl.uuid.pad(std::cerr << eq, eq) << ":";
                     std::cerr << fd;
