@@ -32,6 +32,13 @@ namespace Yttrium
 
             virtual ~Boundary() noexcept {}
 
+            friend std::ostream & operator<<(std::ostream &os, const Boundary &B)
+            {
+                const SRepo &repo = B;
+                os << repo << "@" << real_t(B.xi);
+                return os;
+            }
+
             const xreal_t xi;
 
         private:
@@ -54,8 +61,8 @@ namespace Yttrium
 
             virtual ~Boundaries() noexcept {}
 
-            void add(const xreal_t  xi,
-                     const Species &sp)
+            void operator()(const xreal_t  xi,
+                            const Species &sp)
             {
                 switch(size)
                 {
@@ -92,7 +99,8 @@ namespace Yttrium
             }
         };
 
-        class Fader
+        //! for reac/prod
+        class Fader : public Recyclable
         {
         public:
             Fader(const BBank &bbank, const SBank &sbank) noexcept :
@@ -101,9 +109,59 @@ namespace Yttrium
             {
             }
 
-            ~Fader() noexcept
+            virtual ~Fader() noexcept
             {
             }
+
+            virtual void free() noexcept
+            {
+                limiting.free();
+                required.free();
+            }
+
+            void operator()(const XReadable  &C,
+                            const Level       L,
+                            const Actors     &A)
+            {
+                assert(0==limiting.size);
+                assert(0==required.size);
+                for(const Actor *a = A->head;a;a=a->next)
+                {
+                    const Species &s = a->sp;
+                    const xreal_t  c = C[ s.indx[L] ];
+                    const xreal_t  x = c/a->xn;
+                    if(x.mantissa<0)
+                    {
+                        required(x,s);
+                    }
+                    else
+                    {
+                        limiting(x,s);
+                    }
+                }
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Fader &F)
+            {
+                if(F.limiting.size)
+                {
+                    os << "lim=" << F.limiting;
+                }
+                else
+                {
+                    os << "[no limiting]";
+                }
+                if(F.required.size)
+                {
+                    os << "req=" << F.required;
+                }
+                else
+                {
+                    os << "[no required]";
+                }
+                return os;
+            }
+
 
             Boundaries limiting; //!< positive extents
             Boundaries required; //!< negative extents
@@ -112,7 +170,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Fader);
         };
 
-        class Faders
+        //! for both reac and prod
+        class Faders : public Recyclable
         {
         public:
             Faders(const BBank &bbank, const SBank &sbank) noexcept :
@@ -126,6 +185,35 @@ namespace Yttrium
             {
             }
 
+            virtual void free() noexcept
+            {
+
+                reac.free();
+                prod.free();
+            }
+
+            void operator()(const XReadable &C, const Level L, const Components &E)
+            {
+                free();
+                try
+                {
+                    reac(C,L,E.reac);
+                    prod(C,L,E.prod);
+                }
+                catch(...) 
+                {
+                    free();
+                    throw;
+                }
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Faders &F)
+            {
+                os << "{reac:" << F.reac;
+                os << "|prod:" << F.prod;
+                os << "}";
+                return os;
+            }
 
 
             Fader reac;
@@ -158,9 +246,26 @@ Y_UTEST(eqz)
     //const XReadable &K   = cls.K(0);
     XVector C0(lib->size(),0);
 
+    BBank  bbank;
+    SBank  sbank;
+    Faders faders(bbank,sbank);
+
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         plexus.conc(C0,0.3,0.5);
+
+        lib(std::cerr << "C0=","\t[",C0,"]");
+
+        for(const ENode *en=cl->head;en;en=en->next)
+        {
+            const Equilibrium &eq = **en;
+
+            faders(C0,TopLevel,eq);
+            cl->uuid.pad(std::cerr << eq, eq) << ":";
+            std::cerr << faders;
+            std::cerr << std::endl;
+        }
+
     }
     
 
