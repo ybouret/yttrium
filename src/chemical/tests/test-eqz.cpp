@@ -281,7 +281,7 @@ namespace Yttrium
                     }
                 }
 
-
+                // return if bad
                 return required.size>0;
             }
 
