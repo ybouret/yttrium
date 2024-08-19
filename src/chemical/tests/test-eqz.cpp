@@ -233,13 +233,27 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Fader);
         };
 
+
+
         //! for both reac and prod
         class Faders : public Recyclable
         {
         public:
-            Faders(const BBank &bbank, const SBank &sbank) noexcept :
-            reac(bbank,sbank),
-            prod(bbank,sbank)
+            typedef CxxArray<Faders> Array;
+            class Banks
+            {
+            public:
+                Banks() : b(), s() {}
+                ~Banks() noexcept {}
+                BBank b;
+                SBank s;
+
+            };
+
+            
+            Faders(const Banks &banks) noexcept :
+            reac(banks.b,banks.s),
+            prod(banks.b,banks.s)
             {
 
             }
@@ -287,6 +301,49 @@ namespace Yttrium
         };
 
 
+        class Equalizer
+        {
+        public:
+
+            explicit Equalizer(const Cluster &cl) :
+            rcl(cl),
+            neq(rcl.size),
+            nsp(rcl.species.size),
+            fbanks(),
+            faders(neq,CopyOf,fbanks)
+            {
+            }
+
+            virtual ~Equalizer() noexcept
+            {
+            }
+
+            void run(XWritable &C, const Level L, XMLog &)
+            {
+                for(const ENode *en=rcl.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const size_t       ei = eq.indx[SubLevel];
+                    Faders            &fd = faders[ei];
+                    fd(C,L,eq);
+
+                    rcl.uuid.pad(std::cerr << eq, eq) << ":";
+                    std::cerr << fd;
+                    std::cerr << std::endl;
+                }
+
+            }
+
+
+            const Cluster &rcl;
+            const size_t   neq;
+            const size_t   nsp;
+            Faders::Banks  fbanks;
+            Faders::Array  faders;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
+        };
 
     }
 
@@ -309,29 +366,22 @@ Y_UTEST(eqz)
     //const XReadable &K   = cls.K(0);
     XVector C0(lib->size(),0);
 
-    BBank  bbank;
-    SBank  sbank;
-    Faders faders(bbank,sbank);
+    Faders::Banks banks;
+    Faders faders(banks);
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        //plexus.conc(C0,0.3,0.5);
+        Equalizer eqz(*cl);
+
+        plexus.conc(C0,0.3,0.5);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+
+        eqz.run(C0, TopLevel, plexus.xml);
+
+        lib(std::cerr << "C1=","\t[",C0,"]");
 
 
-        for(const ENode *en=cl->head;en;en=en->next)
-        {
-            const Equilibrium &eq = **en;
-            for(size_t iter=0;iter<100;++iter)
-            {
 
-                plexus.conc(C0);
-                lib(std::cerr << "C0=","\t[",C0,"]");
-                faders(C0,TopLevel,eq);
-                cl->uuid.pad(std::cerr << eq, eq) << ":";
-                std::cerr << faders;
-                std::cerr << std::endl;
-            }
-        }
     }
 
 
