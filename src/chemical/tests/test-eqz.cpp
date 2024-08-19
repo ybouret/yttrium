@@ -14,6 +14,8 @@ namespace Yttrium
         class Boundary : public SRepo
         {
         public:
+
+
             explicit Boundary(const SBank   & b,
                               const xreal_t   x,
                               const Species & s)   :
@@ -53,16 +55,30 @@ namespace Yttrium
         class Boundaries : public BList
         {
         public:
-            explicit Boundaries(const BBank &bb, const SBank &sb) noexcept :
-            BList(bb),
-            sbank(sb)
+
+            class Banks
+            {
+            public:
+                Banks() : b(), s() {}
+                ~Banks() noexcept {}
+                BBank b;
+                SBank s;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Banks);
+            };
+
+
+            explicit Boundaries(const Banks &banks) noexcept :
+            BList(banks.b),
+            sbank(banks.s)
             {
             }
 
             virtual ~Boundaries() noexcept {}
 
-            void operator()(const xreal_t  xi,
-                            const Species &sp)
+            //! insert vanishing extent and its species
+            void operator()(const xreal_t         xi,
+                            const Species &       sp)
             {
 
                 switch(size)
@@ -120,7 +136,7 @@ namespace Yttrium
                 insertAfter(lower,proxy->produce(b));
             }
 
-            bool isSorted() const noexcept
+            bool sorted() const noexcept
             {
                 if(size>1)
                 {
@@ -145,9 +161,11 @@ namespace Yttrium
                 return true;
             }
 
-            SBank sbank;
+
+
 
         private:
+            const SBank sbank;
             Y_DISABLE_COPY_AND_ASSIGN(Boundaries);
             void atTail(const xreal_t xi, const Species &sp) {
                 const Boundary b(sbank,xi,sp);
@@ -160,135 +178,86 @@ namespace Yttrium
             }
         };
 
-        //! for reac/prod
+
+        //! fader for actors
         class Fader : public Recyclable
         {
         public:
-            Fader(const BBank &bbank, const SBank &sbank) noexcept :
-            limiting(bbank,sbank),
-            required(bbank,sbank)
+            explicit Fader(const Boundaries::Banks &banks) noexcept:
+            limiting(banks),
+            required(banks)
             {
             }
 
-            virtual ~Fader() noexcept
-            {
-            }
+            virtual ~Fader() noexcept {}
 
-            virtual void free() noexcept
-            {
-                limiting.free();
-                required.free();
-            }
+            virtual void free() noexcept { limiting.free(); required.free(); }
 
-            //! build without unbounded species
-            void operator()(const XReadable   &C,
-                            const Level        L,
-                            const Actors      &A,
-                            const AddressBook &unbounded)
+            void operator()(const XReadable  &C,
+                            const Level      &L,
+                            const Actors     &A,
+                            const AddressBook &conserved)
             {
                 assert(0==limiting.size);
                 assert(0==required.size);
-                for(const Actor *a = A->head;a;a=a->next)
+                for(const Actor *a=A->head;a;a=a->next)
                 {
-                    const Species &s = a->sp; if( unbounded.has(s) ) continue;
-                    const xreal_t  c = C[ s.indx[L] ];
-                    const xreal_t  x = c/a->xn;
-                    if(x.mantissa<0)
+                    const Species &sp = a->sp; if( !conserved.has(sp) ) continue;
+                    const xreal_t  cc = C[ sp.indx[L] ];
+                    if(cc.mantissa<0)
                     {
-                        required(x,s);
-                        assert(required.isSorted());
+                        required((-cc)/a->xn,sp);
                     }
                     else
                     {
-                        limiting(x,s);
-                        assert(limiting.isSorted());
+                        limiting(cc/a->xn,sp);
                     }
                 }
             }
 
-            friend std::ostream & operator<<(std::ostream &os, const Fader &F)
+            friend std::ostream & operator<<(std::ostream &os, const Fader &f)
             {
-                if(F.limiting.size)
-                {
-                    os << "lim=" << F.limiting;
-                }
-                else
-                {
-                    os << "[no limiting]";
-                }
-                if(F.required.size)
-                {
-                    os << "req=" << F.required;
-                }
-                else
-                {
-                    os << "[no required]";
-                }
+                os << "lim=" << f.limiting;
+                os << "/req=" << f.required;
                 return os;
             }
 
-
-            Boundaries limiting; //!< positive extents
-            Boundaries required; //!< negative extents
+            Boundaries limiting;
+            Boundaries required;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fader);
         };
 
-
-        enum Depiction
-        {
-            Balanced, //!< all positive
-            Hindered //!< at least one negative at one side
-
-        };
-
-        //! for both reac and prod
         class Faders : public Recyclable
         {
         public:
-            typedef CxxArray<Faders> Array;
-
-            //! grouping banks to build single parameters array
-            class Banks
-            {
-            public:
-                Banks() : b(), s() {}
-                ~Banks() noexcept {}
-                BBank b;
-                SBank s;
-
-            };
-
-
-            Faders(const Banks &banks) noexcept :
-            reac(banks.b,banks.s),
-            prod(banks.b,banks.s)
-            {
-
-            }
-
-            ~Faders() noexcept
+            explicit Faders(const Boundaries::Banks &banks) noexcept :
+            reac(banks),
+            prod(banks)
             {
             }
 
-            virtual void free() noexcept
-            {
+            virtual ~Faders() noexcept {}
 
-                reac.free();
-                prod.free();
+            virtual void free() noexcept { reac.free(); prod.free(); }
+
+            friend std::ostream & operator<<(std::ostream &os, const Faders &F)
+            {
+                os << "{reac:" << F.reac << "|prod:" << F.prod << "}";
+                return os;
             }
 
-            void operator()(const XReadable  &C,
-                            const Level       L,
+            void operator()(const XReadable   &C,
+                            const Level       &L,
                             const Components  &E,
-                            const AddressBook &unbounded)
+                            const AddressBook &conserved)
             {
                 free();
-                try
+                try 
                 {
-                    reac(C,L,E.reac,unbounded);
-                    prod(C,L,E.prod,unbounded);
+                    reac(C,L,E.reac,conserved);
+                    prod(C,L,E.prod,conserved);
                 }
                 catch(...)
                 {
@@ -297,125 +266,10 @@ namespace Yttrium
                 }
             }
 
-            friend std::ostream & operator<<(std::ostream &os, const Faders &F)
-            {
-                os << "{reac:" << F.reac;
-                os << "|prod:" << F.prod;
-                os << "}";
-                return os;
-            }
-
-            Depiction ask()
-            {
-                if(reac.required.size<=0)
-                {
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // valid reactant(s)
-                    //
-                    //
-                    //----------------------------------------------------------
-                    if(prod.required.size<=0)
-                    {
-                        //------------------------------------------------------
-                        //
-                        // valid reactant(s), valid product(s)
-                        //
-                        //------------------------------------------------------
-                        return Balanced;
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        //
-                        // valid reactant(s), negative product(s),
-                        //
-                        //------------------------------------------------------
-
-                    }
-                }
-                else
-                {
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // negative reactant(s)
-                    //
-                    //
-                    //----------------------------------------------------------
-                    if(prod.required.size<=0)
-                    {
-                        //------------------------------------------------------
-                        //
-                        // negative reactant(s), valid product(s)
-                        //
-                        //------------------------------------------------------
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        //
-                        // negative reactant(s), negative product(s)
-                        //
-                        //------------------------------------------------------
-                        return Hindered;
-                    }
-                }
-            }
-
-
             Fader reac;
             Fader prod;
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Faders);
-        };
-
-
-        class Equalizer
-        {
-        public:
-
-            explicit Equalizer(const Cluster &cl) :
-            rcl(cl),
-            neq(rcl.size),
-            nsp(rcl.species.size),
-            fbanks(),
-            faders(neq,CopyOf,fbanks)
-            {
-            }
-
-            virtual ~Equalizer() noexcept
-            {
-            }
-
-            void run(XWritable &C, const Level L, XMLog &)
-            {
-
-                for(const ENode *en=rcl.limited.head;en;en=en->next)
-                {
-                    const Equilibrium &eq = **en;
-                    const size_t       ei = eq.indx[SubLevel];
-                    Faders            &fd = faders[ei];
-                    fd(C,L,eq,rcl.unbounded.book);
-
-                    rcl.uuid.pad(std::cerr << eq, eq) << ":";
-                    std::cerr << fd;
-                    std::cerr << std::endl;
-                }
-
-            }
-
-
-            const Cluster &rcl;
-            const size_t   neq;
-            const size_t   nsp;
-            Faders::Banks  fbanks;
-            Faders::Array  faders;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
         };
 
     }
@@ -439,19 +293,23 @@ Y_UTEST(eqz)
     //const XReadable &K   = cls.K(0);
     XVector C0(lib->size(),0);
 
-    Faders::Banks banks;
-    Faders faders(banks);
-
+    Boundaries::Banks banks;
+    Faders            F(banks);
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        Equalizer eqz(*cl);
+        //Equalizer eqz(*cl);
 
         plexus.conc(C0,0.3,0.5);
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        eqz.run(C0, TopLevel, plexus.xml);
+        for(const ENode *en=cl->head;en;en=en->next)
+        {
+            const Equilibrium &eq = **en;
+            F(C0,TopLevel,eq,cl->conserved.book);
+            cl->uuid.pad(std::cerr << eq.name, eq) << ":" << F << std::endl;
+        }
 
-        lib(std::cerr << "C1=","\t[",C0,"]");
+        //lib(std::cerr << "C1=","\t[",C0,"]");
 
 
 
@@ -462,7 +320,5 @@ Y_UTEST(eqz)
 
     Y_SIZEOF(Boundary);
     Y_SIZEOF(Boundaries);
-    Y_SIZEOF(Fader);
-    Y_SIZEOF(Faders);
 }
 Y_UDONE()

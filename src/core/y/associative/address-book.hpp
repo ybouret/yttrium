@@ -80,6 +80,7 @@ namespace Yttrium
         template <typename T> inline
         bool has(const T &obj) const noexcept { return search_( &obj ); }
 
+
         //! display as a set of T
         template <typename T> inline
         std::ostream & display(std::ostream &os) const
