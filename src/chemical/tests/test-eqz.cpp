@@ -14,6 +14,15 @@ namespace Yttrium
         class Boundary : public SRepo
         {
         public:
+
+            //! setup empty
+            explicit Boundary(const SBank &_) noexcept :
+            SRepo(_),
+            xi(0)
+            {
+            }
+
+            //! setup with initial value/speice
             explicit Boundary(const SBank   & b,
                               const xreal_t   x,
                               const Species & s)   :
@@ -23,6 +32,7 @@ namespace Yttrium
                 (*this) << s;
             }
 
+            //! duplicate
             explicit Boundary(const Boundary &other) :
             SRepo(other),
             xi(other.xi)
@@ -30,12 +40,56 @@ namespace Yttrium
 
             }
 
+
+            //! first/update x>=0
+            void operator()(const xreal_t x,
+                            const Species &s)
+            {
+                try
+                {
+                    if(size<=0)
+                    {
+                        first(x,s);
+                    }
+                    else
+                    {
+                        assert(x>=0.0);
+                        switch( Sign::Of(x,xi) )
+                        {
+                            case Negative: // new winner
+                                free();
+                                first(x,s);
+                                break;
+
+                            case __Zero__: // same
+                                (*this) << s;
+                                break;
+
+                            case Positive: // discard
+                                break;
+                        }
+                    }
+                }
+                catch(...)
+                {
+                    empty();
+                    throw;
+                }
+            }
+
             virtual ~Boundary() noexcept {}
 
             friend std::ostream & operator<<(std::ostream &os, const Boundary &B)
             {
                 const SRepo &repo = B;
-                os << repo << "@" << real_t(B.xi);
+                if(repo.size>0)
+                {
+                    os << repo << "@" << real_t(B.xi);
+                }
+                else
+                {
+                    os << "none";
+                }
                 return os;
             }
 
@@ -43,6 +97,19 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Boundary);
+          
+            void empty() noexcept
+            {
+                free();
+                Coerce(xi) = 0;
+            }
+
+            void first(const xreal_t x, const Species &s)
+            {
+                assert(0==size);
+                (*this) << s;
+                Coerce(xi) = x;
+            }
         };
 
         typedef Small::CoopHeavyList<Boundary> BList;
@@ -182,7 +249,7 @@ namespace Yttrium
         {
         public:
             explicit Fader(const Boundaries::Banks &banks) noexcept:
-            limiting(banks),
+            limiting(banks.s),
             required(banks)
             {
             }
@@ -199,7 +266,7 @@ namespace Yttrium
                 assert(0==limiting.size);
                 assert(0==required.size);
 
-                // dispatch all extents
+                // dispatch required, build limiting
                 for(const Actor *a=A->head;a;a=a->next)
                 {
                     const Species &sp = a->sp; if( !conserved.has(sp) ) continue;
@@ -214,21 +281,18 @@ namespace Yttrium
                     }
                 }
 
-                // keep limiting extent if any
-                while(limiting.size>1)
-                    limiting.cutTail();
 
                 return required.size>0;
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Fader &f)
             {
-                os << "lim=" << f.limiting;
+                os << "lim="  << f.limiting;
                 os << "/req=" << f.required;
                 return os;
             }
 
-            Boundaries limiting;
+            Boundary   limiting;
             Boundaries required;
 
         private:
@@ -262,10 +326,10 @@ namespace Yttrium
                 free();
                 try
                 {
-                    static unsigned BALANCED = 0x00;
-                    static unsigned BAD_REAC = 0x01;
-                    static unsigned BAD_PROD = 0x02;
-                    static unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
+                    static const unsigned BALANCED = 0x00;
+                    static const unsigned BAD_REAC = 0x01;
+                    static const unsigned BAD_PROD = 0x02;
+                    static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
                     unsigned flag = BALANCED;
                     if(reac(C,L,E.reac,conserved)) flag |= BAD_REAC;
                     if(prod(C,L,E.prod,conserved)) flag |= BAD_PROD;
