@@ -191,13 +191,15 @@ namespace Yttrium
 
             virtual void free() noexcept { limiting.free(); required.free(); }
 
-            void operator()(const XReadable  &C,
+            bool operator()(const XReadable  &C,
                             const Level      &L,
                             const Actors     &A,
                             const AddressBook &conserved)
             {
                 assert(0==limiting.size);
                 assert(0==required.size);
+
+                // dispatch all extents
                 for(const Actor *a=A->head;a;a=a->next)
                 {
                     const Species &sp = a->sp; if( !conserved.has(sp) ) continue;
@@ -211,9 +213,12 @@ namespace Yttrium
                         limiting(cc/a->xn,sp);
                     }
                 }
+
+                // keep limiting extent if any
                 while(limiting.size>1)
                     limiting.cutTail();
-                
+
+                return required.size>0;
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Fader &f)
@@ -255,10 +260,27 @@ namespace Yttrium
                             const AddressBook &conserved)
             {
                 free();
-                try 
+                try
                 {
-                    reac(C,L,E.reac,conserved);
-                    prod(C,L,E.prod,conserved);
+                    static unsigned BALANCED = 0x00;
+                    static unsigned BAD_REAC = 0x01;
+                    static unsigned BAD_PROD = 0x02;
+                    static unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
+                    unsigned flag = BALANCED;
+                    if(reac(C,L,E.reac,conserved)) flag |= BAD_REAC;
+                    if(prod(C,L,E.prod,conserved)) flag |= BAD_PROD;
+                    switch(flag)
+                    {
+                        case BALANCED:
+                            break;
+                        case BAD_REAC:
+                            break;
+                        case BAD_PROD:
+                            break;
+
+                        case BAD_BOTH:
+                            break;
+                    }
                 }
                 catch(...)
                 {
