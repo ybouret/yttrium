@@ -64,6 +64,7 @@ namespace Yttrium
             void operator()(const xreal_t  xi,
                             const Species &sp)
             {
+
                 switch(size)
                 {
                     case 0: atTail(xi,sp); return;
@@ -80,9 +81,69 @@ namespace Yttrium
                     default:
                         break;
                 }
-                throw Exception("not implemented");
+
+                // check against head
+                BNode *lower = head;
+                switch( Sign::Of(xi, (**lower).xi) )
+                {
+                    case Negative: atHead(xi,sp);   return;
+                    case __Zero__: (**lower) << sp; return;
+                    case Positive:                  break;
+                }
+
+                // check againt tail
+                BNode * const upper = tail; assert(upper!=lower);
+                switch( Sign::Of(xi, (**upper).xi) )
+                {
+                    case Negative: break;
+                    case __Zero__: (**upper) << sp; return;
+                    case Positive: atTail(xi,sp);   return;
+
+                }
+
+            PROBE:
+                BNode * const probe = lower->next;
+                if(upper!=probe)
+                {
+                    switch( Sign::Of(xi, (**probe).xi) )
+                    {
+                        case Negative: goto FOUND;
+                        case __Zero__: (**probe) << sp; return;
+                        case Positive: break;
+                    }
+                    lower = probe;
+                    goto PROBE;
+                }
+
+            FOUND:
+                const Boundary b(sbank,xi,sp);
+                insertAfter(lower,proxy->produce(b));
             }
 
+            bool isSorted() const noexcept
+            {
+                if(size>1)
+                {
+                    size_t       num = size-1;
+                    const BNode *lhs = head;      assert(0!=lhs);
+                    const BNode *rhs = lhs->next; assert(0!=rhs);
+                    while(num-- > 0)
+                    {
+                        assert(0!=lhs);
+                        assert(0!=rhs);
+                        switch(Sign::Of( (**lhs).xi, (**rhs).xi ) )
+                        {
+                            case Negative: break;
+                            case __Zero__:
+                            case Positive:
+                                return false;
+                        }
+                        lhs = rhs;
+                        rhs = lhs->next;
+                    }
+                }
+                return true;
+            }
 
             SBank sbank;
 
@@ -133,10 +194,12 @@ namespace Yttrium
                     if(x.mantissa<0)
                     {
                         required(x,s);
+                        assert(required.isSorted());
                     }
                     else
                     {
                         limiting(x,s);
+                        assert(limiting.isSorted());
                     }
                 }
             }
@@ -200,7 +263,7 @@ namespace Yttrium
                     reac(C,L,E.reac);
                     prod(C,L,E.prod);
                 }
-                catch(...) 
+                catch(...)
                 {
                     free();
                     throw;
@@ -252,22 +315,27 @@ Y_UTEST(eqz)
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        plexus.conc(C0,0.3,0.5);
+        //plexus.conc(C0,0.3,0.5);
 
-        lib(std::cerr << "C0=","\t[",C0,"]");
 
         for(const ENode *en=cl->head;en;en=en->next)
         {
             const Equilibrium &eq = **en;
+            for(size_t iter=0;iter<100;++iter)
+            {
 
-            faders(C0,TopLevel,eq);
-            cl->uuid.pad(std::cerr << eq, eq) << ":";
-            std::cerr << faders;
-            std::cerr << std::endl;
+                plexus.conc(C0);
+                lib(std::cerr << "C0=","\t[",C0,"]");
+                faders(C0,TopLevel,eq);
+                cl->uuid.pad(std::cerr << eq, eq) << ":";
+                std::cerr << faders;
+                std::cerr << std::endl;
+            }
         }
-
     }
-    
+
+
+
 
     Y_SIZEOF(Boundary);
     Y_SIZEOF(Boundaries);
