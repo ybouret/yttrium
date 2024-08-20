@@ -11,10 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-       
-
-
+        
         class Altered
         {
         public:
