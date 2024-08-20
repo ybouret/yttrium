@@ -1,5 +1,5 @@
 #include "y/chemical/plexus.hpp"
-#include "y/chemical/plexus/equalizer/boundaries.hpp"
+#include "y/chemical/plexus/equalizer/fader.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -11,61 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        //! fader for actors
-        class Fader : public Recyclable
-        {
-        public:
-            explicit Fader(const Banks &banks) noexcept:
-            limiting(banks.s),
-            required(banks)
-            {
-            }
-
-            virtual ~Fader() noexcept {}
-
-            virtual void free() noexcept { limiting.free(); required.free(); }
-
-            bool operator()(const XReadable  &C,
-                            const Level      &L,
-                            const Actors     &A,
-                            const AddressBook &conserved)
-            {
-                assert(0==limiting.size);
-                assert(0==required.size);
-
-                // dispatch required, build limiting
-                for(const Actor *a=A->head;a;a=a->next)
-                {
-                    const Species &sp = a->sp; if( !conserved.has(sp) ) continue;
-                    const xreal_t  cc = C[ sp.indx[L] ];
-                    if(cc.mantissa<0)
-                    {
-                        required((-cc)/a->xn,sp);
-                        assert(required.sorted());
-                    }
-                    else
-                    {
-                        limiting(cc/a->xn,sp);
-                    }
-                }
-
-                // return if bad
-                return required.size>0;
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Fader &f)
-            {
-                os << "lim="  << f.limiting;
-                os << "/req=" << f.required;
-                return os;
-            }
-
-            Boundary   limiting;
-            Boundaries required;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fader);
-        };
+        
 
         class Faders : public Recyclable
         {
