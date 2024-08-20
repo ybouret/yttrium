@@ -451,9 +451,11 @@ namespace Yttrium
                             assert(fd.reac.limiting.size>0);
                             if(bestEffort(fd.reac.limiting,fd.prod.required))
                             {
+
                             }
                             else
                             {
+                                Y_XMLOG(xml, "no best effort");
                             }
                         } continue;
 
@@ -463,7 +465,11 @@ namespace Yttrium
                             assert(fd.prod.limiting.size>0);
                             if(bestEffort(fd.prod.limiting,fd.reac.required))
                             {
-                                
+
+                            }
+                            else
+                            {
+                                Y_XMLOG(xml, "no best effort");
                             }
                         }  continue;
 
