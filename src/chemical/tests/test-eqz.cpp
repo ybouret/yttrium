@@ -166,7 +166,8 @@ namespace Yttrium
                         {
                             const Altered &alt = altered[i];
                             rcl.uuid.pad( xml() << alt.eq, alt.eq);
-                            *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
+                           // *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
+                            *xml << ": gain=" << alt.gg;
                             alt.eq.displayCompact(*xml << " @", alt.cc, SubLevel);
                             *xml << std::endl;
                         }
@@ -183,6 +184,7 @@ namespace Yttrium
                 Equilibrium::ConstIterator it = eq->begin();
 
                 xadd.free();
+
                 for(size_t j=eq->size();j>0;--j,++it)
                 {
                     const Component &cm = **it;
@@ -199,9 +201,9 @@ namespace Yttrium
                     {
                         xadd << cNew;
                     }
-
                 }
 
+                // ensure vanishing species
                 for(const SNode *node=best.head;node;node=node->next)
                 {
                     const Species &sp = **node;
@@ -209,8 +211,13 @@ namespace Yttrium
                 }
                 const xreal_t gg = xadd.sum();
                 eq.displayCompact(std::cerr << "\t\t", cc, SubLevel) << std::endl;
-                std::cerr << "\t\tgain=" << real_t(gg) << std::endl;
-                altered << Altered(eq,cc,gg);
+                std::cerr << "\t\tgain=" <<  (gg) << std::endl;
+
+                if(gg>zero)
+                {
+                    altered << Altered(eq,cc,gg);
+                }
+
             }
 
 
