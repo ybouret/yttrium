@@ -431,8 +431,21 @@ namespace Yttrium
                         case Faders::BAD_BOTH:
                             altered << Altered( rcl.transfer(cc,SubLevel,C,L) );
                             continue;
-                    }
 
+                        case Faders::BAD_PROD: {
+                            // need a forward alteration
+                            assert(fd.prod.required.size>0);
+                            assert(fd.reac.limiting.size>0);
+                        } continue;
+
+                        case Faders::BAD_REAC:
+                            // need a reverse alteration
+                            assert(fd.reac.required.size>0);
+                            assert(fd.prod.limiting.size>0);
+                            continue;
+
+                    }
+                    throw Exception("bad id");
                 }
             }
 
