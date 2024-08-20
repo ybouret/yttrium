@@ -291,7 +291,7 @@ namespace Yttrium
                     {
                         const Equilibrium &rEq = **rhs;
                         const size_t       rid = rEq.indx[SubLevel];
-                        bit[rid] = flag[rid][lid] = false; //lEq.linkedTo(rEq);
+                        bit[rid] = flag[rid][lid] = !lEq.linkedToConserved(rEq,conserved.book);
                     }
                     if(xml.verbose)
                     {

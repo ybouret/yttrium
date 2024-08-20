@@ -42,7 +42,7 @@ namespace Yttrium
             Clusters & assemble();           //!< create clusters
             void operator()(Jive::Module *); //!< compile data
 
-
+            //! helper to use built-in ran
             template <typename ARRAY> inline
             void conc(ARRAY       &arr,
                       const double probaZero = 0,

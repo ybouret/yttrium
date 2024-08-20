@@ -11,23 +11,54 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        //! fader for actors
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Fader for actors: smallest limiting and all required
+        //
+        //
+        //______________________________________________________________________
         class Fader : public Recyclable
         {
         public:
-            explicit Fader(const Banks &banks) noexcept;
-            virtual ~Fader() noexcept;
-            Y_OSTREAM_PROTO(Fader);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Fader(const Banks &banks) noexcept; //!< setup
+            virtual ~Fader()                   noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Fader);                      //!< display
 
-            virtual void free() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // [Recyclable]
+            //
+            //__________________________________________________________________
+            virtual void free() noexcept; //!< clear all
 
-            //! build required/limiting for limited equilibria
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! build required/limiting for limited equilibria, return required.size>0
             bool operator()(const XReadable   &C,
                             const Level       &L,
                             const Actors      &A,
                             const AddressBook &conserved);
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             Boundary   limiting; //!< limiting extent/species from C>=0
             Boundaries required; //!< required extent/species from C<0
 

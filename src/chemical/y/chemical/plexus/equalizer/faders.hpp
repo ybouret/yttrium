@@ -11,31 +11,71 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Faders for Components
+        //
+        //
+        //______________________________________________________________________
         class Faders : public Recyclable
         {
         public:
-            static const unsigned BALANCED = 0x00;
-            static const unsigned BAD_REAC = 0x01;
-            static const unsigned BAD_PROD = 0x02;
-            static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
-            typedef CxxArray<Faders,XMemory> Array;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned BALANCED = 0x00;                      //!< alias
+            static const unsigned BAD_REAC = 0x01;                      //!< alias
+            static const unsigned BAD_PROD = 0x02;                      //!< alias
+            static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;       //!< alias
+            typedef CxxArray<Faders,XMemory> Array;                     //!< alias
+            static const char * TextFlag(const unsigned flag) noexcept; //!< helper
 
-            static const char * TextFlag(const unsigned flag) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Faders(const Banks &) noexcept; //!< setup
+            virtual ~Faders()              noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Faders);                 //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // [Recyclable]
+            //
+            //__________________________________________________________________
+            virtual void free() noexcept; //!< free reac and prod
 
 
-            explicit Faders(const Banks &) noexcept;
-            virtual ~Faders() noexcept;
-            Y_OSTREAM_PROTO(Faders);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            virtual void free() noexcept;
-
+            //! evaluate and return status
             unsigned operator()(const XReadable   &C,
                                 const Level       &L,
                                 const Components  &E,
                                 const AddressBook &conserved);
             
-            Fader reac;
-            Fader prod;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Fader reac; //!< limiting/required on reac size
+            Fader prod; //!< limiting/required on prod size
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Faders);
         };

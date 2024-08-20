@@ -15,7 +15,7 @@ namespace Yttrium
 
         void Fader:: free() noexcept
         {
-            limiting.free();
+            limiting.empty();
             required.free();
         }
 

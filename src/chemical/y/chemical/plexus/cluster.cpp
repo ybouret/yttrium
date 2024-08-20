@@ -28,6 +28,7 @@ namespace Yttrium
         order(0),
         topology(),
         attached(),
+        detached(),
         next(0),
         prev(0)
         {

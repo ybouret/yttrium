@@ -10,18 +10,38 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Small::CoopHeavyList<Boundary> BList;
-        typedef BList::NodeType                BNode;
-        typedef BList::ProxyType               BBank;
         
+        typedef Small::CoopHeavyList<Boundary> BList; //!< alias
+        typedef BList::NodeType                BNode; //!< alias
+        typedef BList::ProxyType               BBank; //!< alias
+
+        //______________________________________________________________________
+        //
+        //
+        //! banks of BNode/SNode for Boundaries, Faders...
+        //
+        //______________________________________________________________________
         class Banks
         {
         public:
-            Banks();
-            ~Banks() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Banks();           //!< setup
+            ~Banks() noexcept; //!< cleanup
 
-            BBank b;
-            SBank s;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            BBank b; //!< nodes for BList
+            SBank s; //!< nodes for SRepo
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Banks);
         };
@@ -37,16 +57,29 @@ namespace Yttrium
         class Boundaries : public BList
         {
         public:
-            explicit Boundaries(const Banks &) noexcept;
-            virtual ~Boundaries() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Boundaries(const Banks &) noexcept; //!< setup
+            virtual ~Boundaries() noexcept;              //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+          
             //! insert vanishing extent and its species
             void operator()(const xreal_t   xi,
                             const Species & sp);
 
             //! check sorted
             bool sorted() const noexcept;
-            
+
 
         private:
             const SBank sbank;

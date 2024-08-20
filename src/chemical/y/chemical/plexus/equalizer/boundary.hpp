@@ -22,35 +22,46 @@ namespace Yttrium
         class Boundary : public SRepo
         {
         public:
-
-            //! setup empty
-            explicit Boundary(const SBank &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! setup with initial value/speice
             explicit Boundary(const SBank   & b,
                               const xreal_t   x,
                               const Species & s);
 
-            //! duplicate
-            explicit Boundary(const Boundary &);
-            
-            //! cleanup
-            virtual ~Boundary() noexcept {}
+            explicit Boundary(const SBank &) noexcept; //!< setup empty
+            explicit Boundary(const Boundary &);       //!< duplicate
+            virtual ~Boundary() noexcept;               //!< cleanup
+            Y_OSTREAM_PROTO(Boundary);                 //!< display
 
-
-            Y_OSTREAM_PROTO(Boundary);
-
-            //! first/update x>=0
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+           
+            //! set first or update x>=0
             void operator()(const xreal_t x,
                             const Species &s);
 
-            //! free/xi=0
+            //! helper: free/xi=0
             void empty() noexcept;
 
-            //! set first (must be empty)
+            //! helper: set first (must be empty)
             void first(const xreal_t x, const Species &s);
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             xreal_t xi; //!< extent to which species are vanishing
 
         private:

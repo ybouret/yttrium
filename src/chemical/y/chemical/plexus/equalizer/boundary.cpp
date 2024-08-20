@@ -26,6 +26,7 @@ namespace Yttrium
         {
         }
 
+        Boundary:: ~Boundary() noexcept {}
 
         void Boundary:: empty() noexcept
         {

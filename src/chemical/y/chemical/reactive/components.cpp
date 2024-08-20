@@ -226,16 +226,23 @@ namespace Yttrium
             return false;
         }
 
-        bool Components:: detachedFrom(const Components  &other,
-                                       const AddressBook &conserved) const noexcept
+        bool Components:: linkedToConserved(const Species     &sp,
+                                            const AddressBook &conserved) const noexcept
+        {
+            return conserved.has(sp) && 0 != db.search(sp.name);
+        }
+
+        bool Components:: linkedToConserved(const Components  &other,
+                                            const AddressBook &conserved) const noexcept
         {
             size_t            n  = db.size();
             for(ConstIterator it = db.begin();n>0;--n,++it)
             {
-                const Species &mine = (**it).sp;
+                if( other.linkedToConserved( (**it).sp, conserved ) ) return true;
             }
-            return true;
+            return false;
         }
+
 
         void Components:: record(AddressBook &book) const
         {
