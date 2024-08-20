@@ -375,12 +375,15 @@ namespace Yttrium
         public:
             typedef CxxSeries<Altered,XMemory> Series;
 
-            explicit Altered(const XReadable & _cc) noexcept :
+            explicit Altered(const Equilibrium & _eq,
+                             const XReadable   & _cc) noexcept :
+            eq(_eq),
             cc(_cc)
             {
             }
 
             Altered(const Altered &_) noexcept :
+            eq(_.eq),
             cc(_.cc)
             {
             }
@@ -388,7 +391,8 @@ namespace Yttrium
 
             ~Altered() noexcept {}
 
-            const XReadable &cc;
+            const Equilibrium & eq;
+            const XReadable   & cc;
 
 
         private:
@@ -426,6 +430,8 @@ namespace Yttrium
                     const unsigned     id = fd(C,L,eq,conserved);
                     const size_t       ii = altered.size() + 1;
                     XWritable         &cc = ceq[ii];
+                    rcl.transfer(cc,SubLevel,C,L);
+
                     if(xml.verbose)
                     {
                         rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << std::endl;
@@ -442,7 +448,7 @@ namespace Yttrium
                             continue;
 
                         case Faders::BAD_BOTH:
-                            altered << Altered( rcl.transfer(cc,SubLevel,C,L) );
+                            altered << Altered(eq,cc);
                             continue;
 
                         case Faders::BAD_PROD: {
@@ -452,6 +458,7 @@ namespace Yttrium
                             if(bestEffort(fd.reac.limiting,fd.prod.required))
                             {
                                 Y_XMLOG(xml, "\tbest: " << best);
+                                bestAlter(eq,cc);
                             }
                             else
                             {
@@ -467,6 +474,7 @@ namespace Yttrium
                             {
                                 best.xi = -best.xi;
                                 Y_XMLOG(xml, "\tbest: " << best);
+                                bestAlter(eq,cc);
                             }
                             else
                             {
@@ -478,6 +486,32 @@ namespace Yttrium
                     throw Exception("bad id");
                 }
             }
+
+            void bestAlter(const Equilibrium &eq, 
+                           XWritable         &cc)
+            {
+                const xreal_t              zero;
+                const xreal_t              xi = best.xi; assert( xi.abs() > zero );
+                Equilibrium::ConstIterator it = eq->begin();
+                for(size_t j=eq->size();j>0;--j,++it)
+                {
+                    const Component &cm = **it;
+                    const Species   &sp = cm.sp;
+                    const xreal_t    dc = xi * cm.xn;
+                    const size_t     jj = sp.indx[SubLevel];
+                    cc[jj] += dc;
+                }
+
+                for(const SNode *node=best.head;node;node=node->next)
+                {
+                    const Species &sp = **node;
+                    cc[ sp.indx[SubLevel] ] = zero;
+                }
+                eq.displayCompact(std::cerr << "\t\t", cc, SubLevel) << std::endl;
+
+                altered << Altered(eq,cc);
+            }
+
 
             bool bestEffort(const Boundary   &limiting,
                             const Boundaries &required)
