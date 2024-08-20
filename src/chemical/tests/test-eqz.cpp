@@ -1,6 +1,7 @@
 #include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/equalizer/faders.hpp"
 #include "y/sort/heap.hpp"
+#include "y/chemical/plexus/injector.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -348,8 +349,14 @@ Y_UTEST(eqz)
 
     const Library   &lib = plexus.lib;
     Clusters        &cls = plexus.assemble();
+    XMLog           &xml = plexus.xml;
     //const XReadable &K   = cls.K(0);
+
+    Injector injector(cls);
+
     XVector C0(lib->size(),0);
+    XVector dC(C0);
+
 
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
@@ -358,8 +365,11 @@ Y_UTEST(eqz)
 
         plexus.conc(C0,0.3,0.5);
         lib(std::cerr << "C0=","\t[",C0,"]");
+        injector(cls,C0,dC,xml);
+        lib(std::cerr << "C0=","\t[",C0,"]");
 
-        eqz.run(C0, TopLevel, plexus.xml);
+        
+        eqz.run(C0, TopLevel,xml);
 
 #if 0
         for(const ENode *en=cl->head;en;en=en->next)
