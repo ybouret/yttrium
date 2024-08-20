@@ -451,11 +451,11 @@ namespace Yttrium
                             assert(fd.reac.limiting.size>0);
                             if(bestEffort(fd.reac.limiting,fd.prod.required))
                             {
-
+                                Y_XMLOG(xml, "\tbest: " << best);
                             }
                             else
                             {
-                                Y_XMLOG(xml, "no best effort");
+                                Y_XMLOG(xml, "\tno best effort");
                             }
                         } continue;
 
@@ -465,11 +465,12 @@ namespace Yttrium
                             assert(fd.prod.limiting.size>0);
                             if(bestEffort(fd.prod.limiting,fd.reac.required))
                             {
-
+                                best.xi = -best.xi;
+                                Y_XMLOG(xml, "\tbest: " << best);
                             }
                             else
                             {
-                                Y_XMLOG(xml, "no best effort");
+                                Y_XMLOG(xml, "\tno best effort");
                             }
                         }  continue;
 
@@ -510,7 +511,7 @@ namespace Yttrium
                 }
 
             DONE:
-                if( 0 != lower )
+                if(0 != lower)
                 {
                     const Boundary &here = *lower;
                     best.xi = here.xi;
@@ -519,7 +520,14 @@ namespace Yttrium
                 }
                 else
                 {
-                    return false;
+                    if(ximax>0.0)
+                    {
+                        best.xi = ximax;
+                        best << limiting;
+                        return true;
+                    }
+                    else
+                        return false;
                 }
             }
 
