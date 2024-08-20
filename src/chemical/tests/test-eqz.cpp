@@ -79,6 +79,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
+                size_t invalid = 0;
                 {
                     const AddressBook &book = rcl.conserved.book;
                     altered.free();
@@ -107,10 +108,11 @@ namespace Yttrium
                                 continue;
 
                             case Faders::BAD_BOTH:
-                                altered << Altered(eq,cc,zero);
+                                //altered << Altered(eq,cc,zero);
+                                ++invalid;
                                 continue;
 
-                            case Faders::BAD_PROD: {
+                            case Faders::BAD_PROD: ++invalid; {
                                 // need a forward alteration
                                 assert(fd.prod.required.size>0);
                                 assert(fd.reac.limiting.size>0);
@@ -125,7 +127,7 @@ namespace Yttrium
                                 }
                             } continue;
 
-                            case Faders::BAD_REAC: {
+                            case Faders::BAD_REAC: ++invalid; {
                                 // need a reverse alteration
                                 assert(fd.reac.required.size>0);
                                 assert(fd.prod.limiting.size>0);
@@ -145,7 +147,8 @@ namespace Yttrium
                     }
                 }
 
-                Y_XMLOG(xml, "#altered=" << altered.size());
+                Y_XMLOG(xml, "#invalid = " << invalid);
+                Y_XMLOG(xml, "#altered = " << altered.size());
 
                 if(altered.size()<=0) return;
 
@@ -166,8 +169,8 @@ namespace Yttrium
                         {
                             const Altered &alt = altered[i];
                             rcl.uuid.pad( xml() << alt.eq, alt.eq);
-                           // *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
-                            *xml << ": gain=" << alt.gg;
+                            *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
+                            //*xml << ": gain=" << alt.gg;
                             alt.eq.displayCompact(*xml << " @", alt.cc, SubLevel);
                             *xml << std::endl;
                         }
