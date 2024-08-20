@@ -79,6 +79,19 @@ namespace Yttrium
 
             virtual ~Boundary() noexcept {}
 
+            void empty() noexcept
+            {
+                free();
+                Coerce(xi) = 0;
+            }
+
+            void first(const xreal_t x, const Species &s)
+            {
+                assert(0==size);
+                (*this) << s;
+                Coerce(xi) = x;
+            }
+
             friend std::ostream & operator<<(std::ostream &os, const Boundary &B)
             {
                 const SRepo &repo = B;
@@ -98,18 +111,9 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Boundary);
 
-            void empty() noexcept
-            {
-                free();
-                Coerce(xi) = 0;
-            }
 
-            void first(const xreal_t x, const Species &s)
-            {
-                assert(0==size);
-                (*this) << s;
-                Coerce(xi) = x;
-            }
+
+
         };
 
         typedef Small::CoopHeavyList<Boundary> BList;
@@ -398,6 +402,7 @@ namespace Yttrium
             neq(cl.size),
             nsp(cl.species.size),
             banks(),
+            best(banks.s),
             faders(neq,CopyOf,banks),
             ceq(neq,nsp),
             altered(neq)
@@ -436,23 +441,36 @@ namespace Yttrium
                             // need a forward alteration
                             assert(fd.prod.required.size>0);
                             assert(fd.reac.limiting.size>0);
+                            bestEffort(fd.reac.limiting,fd.prod.required);
                         } continue;
 
-                        case Faders::BAD_REAC:
+                        case Faders::BAD_REAC: {
                             // need a reverse alteration
                             assert(fd.reac.required.size>0);
                             assert(fd.prod.limiting.size>0);
-                            continue;
+                            bestEffort(fd.prod.limiting,fd.reac.required);
+                        }  continue;
 
                     }
                     throw Exception("bad id");
                 }
             }
 
+            bool bestEffort(const Boundary   &limiting,
+                            const Boundaries &required)
+            {
+                best.empty();
+                assert(limiting.size>0); assert(limiting.xi>=0.0);
+                assert(required.size>0);
+
+                return false;
+            }
+
             const Cluster &   rcl;
             const size_t      neq;
             const size_t      nsp;
             Boundaries::Banks banks;
+            Boundary          best;
             Faders::Array     faders;
             XMatrix           ceq;
             Altered::Series   altered;
