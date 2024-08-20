@@ -77,6 +77,7 @@ namespace Yttrium
                 //
                 // collect all altered states
                 //
+                //
                 //--------------------------------------------------------------
                 {
                     const AddressBook &book = rcl.conserved.book;
@@ -148,6 +149,13 @@ namespace Yttrium
 
                 if(altered.size()<=0) return;
 
+                //--------------------------------------------------------------
+                //
+                //
+                // process altered states
+                //
+                //
+                //--------------------------------------------------------------
                 {
                     const size_t nalt = altered.size();
                     HeapSort::Call(altered, Altered::Compare);
