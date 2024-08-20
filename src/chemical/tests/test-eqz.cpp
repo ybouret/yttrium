@@ -82,14 +82,14 @@ namespace Yttrium
             void empty() noexcept
             {
                 free();
-                Coerce(xi) = 0;
+                xi = 0;
             }
 
             void first(const xreal_t x, const Species &s)
             {
                 assert(0==size);
                 (*this) << s;
-                Coerce(xi) = x;
+                xi = x;
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Boundary &B)
@@ -106,7 +106,7 @@ namespace Yttrium
                 return os;
             }
 
-            const xreal_t xi;
+            xreal_t xi;
 
         private:
             Y_DISABLE_ASSIGN(Boundary);
@@ -278,6 +278,7 @@ namespace Yttrium
                     if(cc.mantissa<0)
                     {
                         required((-cc)/a->xn,sp);
+                        assert(required.sorted());
                     }
                     else
                     {
@@ -426,7 +427,14 @@ namespace Yttrium
                     const size_t       ii = altered.size() + 1;
                     XWritable         &cc = ceq[ii];
                     if(xml.verbose)
-                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << ":" << fd << std::endl;
+                    {
+                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << std::endl;
+                        if(id!=Faders::BALANCED)
+                        {
+                            xml() << "\treac: " << fd.reac << std::endl;
+                            xml() << "\tprod: " << fd.prod << std::endl;
+                        }
+                    }
 
                     switch(id)
                     {
@@ -441,14 +449,22 @@ namespace Yttrium
                             // need a forward alteration
                             assert(fd.prod.required.size>0);
                             assert(fd.reac.limiting.size>0);
-                            bestEffort(fd.reac.limiting,fd.prod.required);
+                            if(bestEffort(fd.reac.limiting,fd.prod.required))
+                            {
+                            }
+                            else
+                            {
+                            }
                         } continue;
 
                         case Faders::BAD_REAC: {
                             // need a reverse alteration
                             assert(fd.reac.required.size>0);
                             assert(fd.prod.limiting.size>0);
-                            bestEffort(fd.prod.limiting,fd.reac.required);
+                            if(bestEffort(fd.prod.limiting,fd.reac.required))
+                            {
+                                
+                            }
                         }  continue;
 
                     }
@@ -463,7 +479,42 @@ namespace Yttrium
                 assert(limiting.size>0); assert(limiting.xi>=0.0);
                 assert(required.size>0);
 
-                return false;
+                const xreal_t    ximax = limiting.xi;
+                const Boundary  *lower = 0;
+
+                for(const BNode *node  = required.head;node;node=node->next)
+                {
+                    const Boundary &here = **node;
+                    switch(Sign::Of(here.xi,ximax))
+                    {
+                        case Negative:
+                            lower = &here; // record for later
+                            continue;
+
+                        case __Zero__:
+                            best.xi = ximax;   // numerical match
+                            best << here;      // load vanishing in here
+                            best << limiting;  // load vanishing in limiting
+                            return true;
+
+                        case Positive:
+                            goto DONE; // no more possibility
+
+                    }
+                }
+
+            DONE:
+                if( 0 != lower )
+                {
+                    const Boundary &here = *lower;
+                    best.xi = here.xi;
+                    best << here;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             const Cluster &   rcl;
