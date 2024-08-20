@@ -243,7 +243,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // Make global linked
+            // Make global attached
             //
             //------------------------------------------------------------------
             {
@@ -269,6 +269,38 @@ namespace Yttrium
                     }
                 }
             }
+
+
+            //------------------------------------------------------------------
+            //
+            // Make global detached
+            //
+            //------------------------------------------------------------------
+            {
+                Y_XML_SECTION(xml, "Detached");
+                Matrix<bool> &flag = Coerce(detached);
+                flag.make(size,size);
+                flag.ld(false);
+                for(const ENode *lhs=head;lhs;lhs=lhs->next)
+                {
+                    const Equilibrium &lEq = **lhs;
+                    const size_t       lid = lEq.indx[SubLevel];
+                    Writable<bool>    &bit = flag[lid];
+                    bit[lid] = true;
+                    for(const ENode *rhs=lhs->next;rhs;rhs=rhs->next)
+                    {
+                        const Equilibrium &rEq = **rhs;
+                        const size_t       rid = rEq.indx[SubLevel];
+                        bit[rid] = flag[rid][lid] = false; //lEq.linkedTo(rEq);
+                    }
+                    if(xml.verbose)
+                    {
+                        uuid.pad( xml() << lEq.name, lEq) << " : " << bit << std::endl;
+                    }
+                }
+            }
+
+
 
 
 

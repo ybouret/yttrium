@@ -193,6 +193,9 @@ namespace Yttrium
             bool neutral()                               const noexcept; //!< return neutrality check
             bool crucial(const XReadable &, const Level) const noexcept; //!< check if crucial
 
+            bool detachedFrom(const Components  &other,
+                              const AddressBook &conserved) const noexcept;
+            
             //! assuming species are already in fp
             void viz(OutputStream &fp, const String &color) const;
 

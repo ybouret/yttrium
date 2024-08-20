@@ -120,6 +120,7 @@ namespace Yttrium
             const Lists            order;     //!< eqs per order
             const XMatrix          topology;  //!< full topology
             const Matrix<bool>     attached;  //!< boolean attached
+            const Matrix<bool>     detached;  //!< boolean detached of limited equilibria
             Cluster *              next;      //!< for list
             Cluster *              prev;      //!< for list
 

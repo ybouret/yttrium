@@ -226,6 +226,17 @@ namespace Yttrium
             return false;
         }
 
+        bool Components:: detachedFrom(const Components  &other,
+                                       const AddressBook &conserved) const noexcept
+        {
+            size_t            n  = db.size();
+            for(ConstIterator it = db.begin();n>0;--n,++it)
+            {
+                const Species &mine = (**it).sp;
+            }
+            return true;
+        }
+
         void Components:: record(AddressBook &book) const
         {
             reac.record(book);
