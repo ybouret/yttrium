@@ -1,5 +1,6 @@
 #include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/equalizer/faders.hpp"
+#include "y/sort/heap.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -35,6 +36,10 @@ namespace Yttrium
             {
             }
 
+            static int Compare(const Altered &lhs, const Altered &rhs) noexcept
+            {
+                return Comparison:: Decreasing(lhs.gg, rhs.gg);
+            }
 
             ~Altered() noexcept {}
 
@@ -69,70 +74,100 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Eqz");
                 const xreal_t      zero;
-                const AddressBook &book = rcl.conserved.book;
 
-                altered.free();
-                for(const ENode *en=rcl.limited.head;en;en=en->next)
+                //--------------------------------------------------------------
+                //
+                //
+                // collect all altered states
+                //
+                //--------------------------------------------------------------
                 {
-                    const Equilibrium &eq = **en;
-                    Faders            &fd = faders[ eq.indx[SubLevel] ];
-                    const unsigned     id = fd(C,L,eq,book);
-                    const size_t       ii = altered.size() + 1;
-                    XWritable         &cc = ceq[ii];
-                    rcl.transfer(cc,SubLevel,C,L);
+                    const AddressBook &book = rcl.conserved.book;
+                    altered.free();
+                    for(const ENode *en=rcl.limited.head;en;en=en->next)
+                    {
+                        const Equilibrium &eq = **en;
+                        Faders            &fd = faders[ eq.indx[SubLevel] ];
+                        const unsigned     id = fd(C,L,eq,book);
+                        const size_t       ii = altered.size() + 1;
+                        XWritable         &cc = ceq[ii];
+                        rcl.transfer(cc,SubLevel,C,L);
+
+                        if(xml.verbose)
+                        {
+                            rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << std::endl;
+                            if(id!=Faders::BALANCED)
+                            {
+                                xml() << "\treac: " << fd.reac << std::endl;
+                                xml() << "\tprod: " << fd.prod << std::endl;
+                            }
+                        }
+
+                        switch(id)
+                        {
+                            case Faders::BALANCED:
+                                continue;
+
+                            case Faders::BAD_BOTH:
+                                altered << Altered(eq,cc,zero);
+                                continue;
+
+                            case Faders::BAD_PROD: {
+                                // need a forward alteration
+                                assert(fd.prod.required.size>0);
+                                assert(fd.reac.limiting.size>0);
+                                if(bestEffort(fd.reac.limiting,fd.prod.required))
+                                {
+                                    Y_XMLOG(xml, "\tbest: " << best);
+                                    bestAlter(eq,cc);
+                                }
+                                else
+                                {
+                                    Y_XMLOG(xml, "\tno best effort");
+                                }
+                            } continue;
+
+                            case Faders::BAD_REAC: {
+                                // need a reverse alteration
+                                assert(fd.reac.required.size>0);
+                                assert(fd.prod.limiting.size>0);
+                                if(bestEffort(fd.prod.limiting,fd.reac.required))
+                                {
+                                    best.xi = -best.xi;
+                                    Y_XMLOG(xml, "\tbest: " << best);
+                                    bestAlter(eq,cc);
+                                }
+                                else
+                                {
+                                    Y_XMLOG(xml, "\tno best effort");
+                                }
+                            }  continue;
+                        }
+                        throw Exception("bad id");
+                    }
+                }
+
+                Y_XMLOG(xml, "#altered=" << altered.size());
+
+                if(altered.size()<=0) return;
+
+                {
+                    const size_t nalt = altered.size();
+                    HeapSort::Call(altered, Altered::Compare);
 
                     if(xml.verbose)
                     {
-                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << std::endl;
-                        if(id!=Faders::BALANCED)
+                        for(size_t i=1;i<=nalt;++i)
                         {
-                            xml() << "\treac: " << fd.reac << std::endl;
-                            xml() << "\tprod: " << fd.prod << std::endl;
+                            const Altered &alt = altered[i];
+                            rcl.uuid.pad( xml() << alt.eq, alt.eq);
+                            *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
+                            alt.eq.displayCompact(*xml << " @", alt.cc, SubLevel);
+                            *xml << std::endl;
                         }
                     }
-
-                    switch(id)
-                    {
-                        case Faders::BALANCED:
-                            continue;
-
-                        case Faders::BAD_BOTH:
-                            altered << Altered(eq,cc,zero);
-                            continue;
-
-                        case Faders::BAD_PROD: {
-                            // need a forward alteration
-                            assert(fd.prod.required.size>0);
-                            assert(fd.reac.limiting.size>0);
-                            if(bestEffort(fd.reac.limiting,fd.prod.required))
-                            {
-                                Y_XMLOG(xml, "\tbest: " << best);
-                                bestAlter(eq,cc);
-                            }
-                            else
-                            {
-                                Y_XMLOG(xml, "\tno best effort");
-                            }
-                        } continue;
-
-                        case Faders::BAD_REAC: {
-                            // need a reverse alteration
-                            assert(fd.reac.required.size>0);
-                            assert(fd.prod.limiting.size>0);
-                            if(bestEffort(fd.prod.limiting,fd.reac.required))
-                            {
-                                best.xi = -best.xi;
-                                Y_XMLOG(xml, "\tbest: " << best);
-                                bestAlter(eq,cc);
-                            }
-                            else
-                            {
-                                Y_XMLOG(xml, "\tno best effort");
-                            }
-                        }  continue;
-                    }
-                    throw Exception("bad id");
                 }
+
             }
 
             void bestAlter(const Equilibrium &eq, 
@@ -195,8 +230,8 @@ namespace Yttrium
 
                         case __Zero__:
                             best.xi = ximax;   // numerical match
-                            best << here;      // load vanishing in here
-                            best << limiting;  // load vanishing in limiting
+                            best   << here;      // load vanishing in here
+                            best   << limiting;  // load vanishing in limiting
                             return true;
 
                         case Positive:
@@ -208,9 +243,10 @@ namespace Yttrium
             DONE:
                 if(0 != lower)
                 {
+                    // found a lower boundary
                     const Boundary &here = *lower;
                     best.xi = here.xi;
-                    best << here;
+                    best   << here;
                     return true;
                 }
                 else
