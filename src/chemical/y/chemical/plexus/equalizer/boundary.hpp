@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Boundary_Included
@@ -11,7 +10,15 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //! boundary extent and vanishing species
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! boundary extent and corresponding vanishing species
+        //
+        //
+        //______________________________________________________________________
         class Boundary : public SRepo
         {
         public:
@@ -43,8 +50,8 @@ namespace Yttrium
             //! set first (must be empty)
             void first(const xreal_t x, const Species &s);
 
-            
-            xreal_t xi;
+
+            xreal_t xi; //!< extent to which species are vanishing
 
         private:
             Y_DISABLE_ASSIGN(Boundary);
