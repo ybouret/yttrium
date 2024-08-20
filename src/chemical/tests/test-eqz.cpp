@@ -368,7 +368,7 @@ Y_UTEST(eqz)
         injector(cls,C0,dC,xml);
         lib(std::cerr << "C0=","\t[",C0,"]");
 
-        
+
         eqz.run(C0, TopLevel,xml);
 
 #if 0
