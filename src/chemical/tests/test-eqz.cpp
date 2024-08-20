@@ -160,26 +160,65 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 {
-                    const size_t nalt = altered.size();
                     HeapSort::Call(altered, Altered::Compare);
-
-                    if(xml.verbose)
-                    {
-                        for(size_t i=1;i<=nalt;++i)
-                        {
-                            const Altered &alt = altered[i];
-                            rcl.uuid.pad( xml() << alt.eq, alt.eq);
-                            *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
-                            //*xml << ": gain=" << alt.gg;
-                            alt.eq.displayCompact(*xml << " @", alt.cc, SubLevel);
-                            *xml << std::endl;
-                        }
-                    }
+                    displayAltered(xml,"Initial");
+                    prune();
+                    displayAltered(xml,"Pruned");
                 }
 
             }
 
-            void bestAlter(const Equilibrium &eq, 
+            void prune()
+            {
+                for(size_t i=2;i<=altered.size();)
+                {
+                    const Equilibrium    &lhs  = altered[i].eq;
+                    const size_t          lid  = lhs.indx[ SubLevel ];
+                    const Readable<bool> &bit  = rcl.detached[lid];
+                    bool                  keep = true;
+                    for(size_t j=1;j<i;++j)
+                    {
+                        const Equilibrium &rhs  = altered[j].eq;
+                        const size_t       rid  = rhs.indx[ SubLevel ];
+                        const bool         flag = bit[rid];
+                        if(flag)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            keep = false;
+                            break;
+                        }
+                    }
+
+                    if(!keep)
+                    {
+                        altered.remove(i);
+                    }
+                    else
+                    {
+                        ++i;
+                    }
+                }
+            }
+
+            void displayAltered(XMLog &xml, const char * const title) const
+            {
+                if(!xml.verbose) return;
+                Y_XML_SECTION(xml, title);
+                const size_t nalt = altered.size();
+                for(size_t i=1;i<=nalt;++i)
+                {
+                    const Altered &alt = altered[i];
+                    rcl.uuid.pad( xml() << alt.eq, alt.eq);
+                    *xml << ": gain=" << std::setw(15) << real_t(alt.gg);
+                    alt.eq.displayCompact(*xml << " @", alt.cc, SubLevel);
+                    *xml << std::endl;
+                }
+            }
+
+            void bestAlter(const Equilibrium &eq,
                            XWritable         &cc)
             {
                 const xreal_t              zero;
@@ -216,7 +255,7 @@ namespace Yttrium
                 eq.displayCompact(std::cerr << "\t\t", cc, SubLevel) << std::endl;
                 std::cerr << "\t\tgain=" <<  (gg) << std::endl;
 
-                if(gg>zero)
+                //if(gg>zero)
                 {
                     altered << Altered(eq,cc,gg);
                 }
