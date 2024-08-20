@@ -409,7 +409,7 @@ namespace Yttrium
             rcl(cl),
             neq(cl.size),
             nsp(cl.species.size),
-            xadd(nsp),
+            xadd(nsp*2),
             banks(),
             best(banks.s),
             faders(neq,CopyOf,banks),
@@ -506,14 +506,17 @@ namespace Yttrium
                     const Species   &sp = cm.sp;
                     const xreal_t    dc = xi * cm.xn;
                     const size_t     jj = sp.indx[SubLevel];
-                    const xreal_t    cj = cc[jj];
-                    cc[jj] = cj + dc;
-                    if( cj < zero )
+                    const xreal_t    cOld = cc[jj];
+                    if(cOld<zero)
                     {
-                        // sum over ALL negative gains to
-                        // discriminate among multiple alteration (eq: acetic vs. water-acetic)
-                        xadd << dc;
+                        xadd << -cOld;
                     }
+                    const xreal_t cNew = (cc[jj] = cOld + dc);
+                    if(cNew<zero)
+                    {
+                        xadd << cNew;
+                    }
+
                 }
 
                 for(const SNode *node=best.head;node;node=node->next)
