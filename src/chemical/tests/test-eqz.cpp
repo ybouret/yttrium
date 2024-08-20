@@ -1,5 +1,5 @@
 #include "y/chemical/plexus.hpp"
-#include "y/chemical/plexus/equalizer/fader.hpp"
+#include "y/chemical/plexus/equalizer/faders.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -11,72 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
-
-        class Faders : public Recyclable
-        {
-        public:
-            static const unsigned BALANCED = 0x00;
-            static const unsigned BAD_REAC = 0x01;
-            static const unsigned BAD_PROD = 0x02;
-            static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
-
-            typedef CxxArray<Faders,XMemory> Array;
-            static const char * TextFlag(const unsigned flag) noexcept
-            {
-                switch(flag)
-                {
-                    case BALANCED: return "BALANCED";
-                    case BAD_REAC: return "BAD REAC";
-                    case BAD_PROD: return "BAD PROD";
-                    case BAD_BOTH: return "BAD BOTH";
-                    default:
-                        break;
-                }
-                return Core::Unknown;
-            }
-
-            explicit Faders(const Banks &banks) noexcept :
-            reac(banks),
-            prod(banks)
-            {
-            }
-
-            virtual ~Faders() noexcept {}
-
-            virtual void free() noexcept { reac.free(); prod.free(); }
-
-            friend std::ostream & operator<<(std::ostream &os, const Faders &F)
-            {
-                os << "{reac:" << F.reac << "|prod:" << F.prod << "}";
-                return os;
-            }
-
-            unsigned operator()(const XReadable   &C,
-                                const Level       &L,
-                                const Components  &E,
-                                const AddressBook &conserved)
-            {
-                free();
-                try
-                {
-                    unsigned flag = BALANCED;
-                    if(reac(C,L,E.reac,conserved)) flag |= BAD_REAC;
-                    if(prod(C,L,E.prod,conserved)) flag |= BAD_PROD;
-                    return flag;
-                }
-                catch(...)
-                {
-                    free();
-                    throw;
-                }
-            }
-
-            Fader reac;
-            Fader prod;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Faders);
-        };
+       
 
 
         class Altered
