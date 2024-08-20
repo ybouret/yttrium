@@ -61,7 +61,7 @@ namespace Yttrium
                                 first(x,s);
                                 break;
 
-                            case __Zero__: // same
+                            case __Zero__: // same value
                                 (*this) << s;
                                 break;
 
@@ -97,7 +97,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Boundary);
-          
+
             void empty() noexcept
             {
                 free();
@@ -302,6 +302,26 @@ namespace Yttrium
         class Faders : public Recyclable
         {
         public:
+            static const unsigned BALANCED = 0x00;
+            static const unsigned BAD_REAC = 0x01;
+            static const unsigned BAD_PROD = 0x02;
+            static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
+
+            typedef CxxArray<Faders,XMemory> Array;
+            static const char * TextFlag(const unsigned flag) noexcept
+            {
+                switch(flag)
+                {
+                    case BALANCED: return "BALANCED";
+                    case BAD_REAC: return "BAD REAC";
+                    case BAD_PROD: return "BAD PROD";
+                    case BAD_BOTH: return "BAD BOTH";
+                    default:
+                        break;
+                }
+                return Core::Unknown;
+            }
+
             explicit Faders(const Boundaries::Banks &banks) noexcept :
             reac(banks),
             prod(banks)
@@ -318,33 +338,18 @@ namespace Yttrium
                 return os;
             }
 
-            void operator()(const XReadable   &C,
-                            const Level       &L,
-                            const Components  &E,
-                            const AddressBook &conserved)
+            unsigned operator()(const XReadable   &C,
+                                const Level       &L,
+                                const Components  &E,
+                                const AddressBook &conserved)
             {
                 free();
                 try
                 {
-                    static const unsigned BALANCED = 0x00;
-                    static const unsigned BAD_REAC = 0x01;
-                    static const unsigned BAD_PROD = 0x02;
-                    static const unsigned BAD_BOTH = BAD_REAC | BAD_PROD;
                     unsigned flag = BALANCED;
                     if(reac(C,L,E.reac,conserved)) flag |= BAD_REAC;
                     if(prod(C,L,E.prod,conserved)) flag |= BAD_PROD;
-                    switch(flag)
-                    {
-                        case BALANCED:
-                            break;
-                        case BAD_REAC:
-                            break;
-                        case BAD_PROD:
-                            break;
-
-                        case BAD_BOTH:
-                            break;
-                    }
+                    return flag;
                 }
                 catch(...)
                 {
@@ -357,6 +362,90 @@ namespace Yttrium
             Fader prod;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Faders);
+        };
+
+
+        class Altered
+        {
+        public:
+            typedef CxxSeries<Altered,XMemory> Series;
+
+            explicit Altered(const XReadable & _cc) noexcept :
+            cc(_cc)
+            {
+            }
+
+            Altered(const Altered &_) noexcept :
+            cc(_.cc)
+            {
+            }
+
+
+            ~Altered() noexcept {}
+
+            const XReadable &cc;
+
+
+        private:
+            Y_DISABLE_ASSIGN(Altered);
+        };
+
+        class Equalizer
+        {
+        public:
+            explicit Equalizer(const Cluster &cl) :
+            rcl(cl),
+            neq(cl.size),
+            nsp(cl.species.size),
+            banks(),
+            faders(neq,CopyOf,banks),
+            ceq(neq,nsp),
+            altered(neq)
+            {
+            }
+
+            virtual ~Equalizer() noexcept {}
+
+
+            void run(XWritable &C, const Level L, XMLog &xml)
+            {
+                Y_XML_SECTION(xml, "Eqz");
+                const AddressBook &conserved = rcl.conserved.book;
+
+                altered.free();
+                for(const ENode *en=rcl.limited.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    Faders            &fd = faders[ eq.indx[SubLevel] ];
+                    const unsigned     id = fd(C,L,eq,conserved);
+                    const size_t       ii = altered.size() + 1;
+                    XWritable         &cc = ceq[ii];
+                    if(xml.verbose)
+                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << ":" << fd << std::endl;
+
+                    switch(id)
+                    {
+                        case Faders::BALANCED:
+                            continue;
+
+                        case Faders::BAD_BOTH:
+                            altered << Altered( rcl.transfer(cc,SubLevel,C,L) );
+                            continue;
+                    }
+
+                }
+            }
+
+            const Cluster &   rcl;
+            const size_t      neq;
+            const size_t      nsp;
+            Boundaries::Banks banks;
+            Faders::Array     faders;
+            XMatrix           ceq;
+            Altered::Series   altered;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
         };
 
     }
@@ -384,17 +473,21 @@ Y_UTEST(eqz)
     Faders            F(banks);
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        //Equalizer eqz(*cl);
+        Equalizer eqz(*cl);
 
         plexus.conc(C0,0.3,0.5);
         lib(std::cerr << "C0=","\t[",C0,"]");
 
+        eqz.run(C0, TopLevel, plexus.xml);
+
+#if 0
         for(const ENode *en=cl->head;en;en=en->next)
         {
             const Equilibrium &eq = **en;
             F(C0,TopLevel,eq,cl->conserved.book);
             cl->uuid.pad(std::cerr << eq.name, eq) << ":" << F << std::endl;
         }
+#endif
 
         //lib(std::cerr << "C1=","\t[",C0,"]");
 
