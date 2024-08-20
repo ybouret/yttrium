@@ -1,4 +1,6 @@
 #include "y/chemical/plexus.hpp"
+#include "y/chemical/plexus/equalizer/boundary.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 
@@ -10,112 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        //! boundary extent and vanishing species
-        class Boundary : public SRepo
-        {
-        public:
-
-            //! setup empty
-            explicit Boundary(const SBank &_) noexcept :
-            SRepo(_),
-            xi(0)
-            {
-            }
-
-            //! setup with initial value/speice
-            explicit Boundary(const SBank   & b,
-                              const xreal_t   x,
-                              const Species & s)   :
-            SRepo(b),
-            xi(x)
-            {
-                (*this) << s;
-            }
-
-            //! duplicate
-            explicit Boundary(const Boundary &other) :
-            SRepo(other),
-            xi(other.xi)
-            {
-
-            }
-
-
-            //! first/update x>=0
-            void operator()(const xreal_t x,
-                            const Species &s)
-            {
-                try
-                {
-                    if(size<=0)
-                    {
-                        first(x,s);
-                    }
-                    else
-                    {
-                        assert(x>=0.0);
-                        switch( Sign::Of(x,xi) )
-                        {
-                            case Negative: // new winner
-                                free();
-                                first(x,s);
-                                break;
-
-                            case __Zero__: // same value
-                                (*this) << s;
-                                break;
-
-                            case Positive: // discard
-                                break;
-                        }
-                    }
-                }
-                catch(...)
-                {
-                    empty();
-                    throw;
-                }
-            }
-
-            virtual ~Boundary() noexcept {}
-
-            void empty() noexcept
-            {
-                free();
-                xi = 0;
-            }
-
-            void first(const xreal_t x, const Species &s)
-            {
-                assert(0==size);
-                (*this) << s;
-                xi = x;
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Boundary &B)
-            {
-                const SRepo &repo = B;
-                if(repo.size>0)
-                {
-                    os << repo << "@" << real_t(B.xi);
-                }
-                else
-                {
-                    os << "none";
-                }
-                return os;
-            }
-
-            xreal_t xi;
-
-        private:
-            Y_DISABLE_ASSIGN(Boundary);
-
-
-
-
-        };
-
+        
         typedef Small::CoopHeavyList<Boundary> BList;
         typedef BList::NodeType                BNode;
         typedef BList::ProxyType               BBank;
@@ -486,7 +383,6 @@ namespace Yttrium
                                 Y_XMLOG(xml, "\tno best effort");
                             }
                         }  continue;
-
                     }
                     throw Exception("bad id");
                 }
