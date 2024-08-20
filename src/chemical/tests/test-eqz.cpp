@@ -376,15 +376,18 @@ namespace Yttrium
             typedef CxxSeries<Altered,XMemory> Series;
 
             explicit Altered(const Equilibrium & _eq,
-                             const XReadable   & _cc) noexcept :
+                             const XReadable   & _cc,
+                             const xreal_t       _gg) noexcept :
             eq(_eq),
-            cc(_cc)
+            cc(_cc),
+            gg(_gg)
             {
             }
 
             Altered(const Altered &_) noexcept :
             eq(_.eq),
-            cc(_.cc)
+            cc(_.cc),
+            gg(_.gg)
             {
             }
 
@@ -393,7 +396,7 @@ namespace Yttrium
 
             const Equilibrium & eq;
             const XReadable   & cc;
-
+            const xreal_t       gg;
 
         private:
             Y_DISABLE_ASSIGN(Altered);
@@ -406,6 +409,7 @@ namespace Yttrium
             rcl(cl),
             neq(cl.size),
             nsp(cl.species.size),
+            xadd(nsp),
             banks(),
             best(banks.s),
             faders(neq,CopyOf,banks),
@@ -420,14 +424,15 @@ namespace Yttrium
             void run(XWritable &C, const Level L, XMLog &xml)
             {
                 Y_XML_SECTION(xml, "Eqz");
-                const AddressBook &conserved = rcl.conserved.book;
+                const xreal_t      zero;
+                const AddressBook &book = rcl.conserved.book;
 
                 altered.free();
                 for(const ENode *en=rcl.limited.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     Faders            &fd = faders[ eq.indx[SubLevel] ];
-                    const unsigned     id = fd(C,L,eq,conserved);
+                    const unsigned     id = fd(C,L,eq,book);
                     const size_t       ii = altered.size() + 1;
                     XWritable         &cc = ceq[ii];
                     rcl.transfer(cc,SubLevel,C,L);
@@ -448,7 +453,7 @@ namespace Yttrium
                             continue;
 
                         case Faders::BAD_BOTH:
-                            altered << Altered(eq,cc);
+                            altered << Altered(eq,cc,zero);
                             continue;
 
                         case Faders::BAD_PROD: {
@@ -493,13 +498,22 @@ namespace Yttrium
                 const xreal_t              zero;
                 const xreal_t              xi = best.xi; assert( xi.abs() > zero );
                 Equilibrium::ConstIterator it = eq->begin();
+
+                xadd.free();
                 for(size_t j=eq->size();j>0;--j,++it)
                 {
                     const Component &cm = **it;
                     const Species   &sp = cm.sp;
                     const xreal_t    dc = xi * cm.xn;
                     const size_t     jj = sp.indx[SubLevel];
-                    cc[jj] += dc;
+                    const xreal_t    cj = cc[jj];
+                    cc[jj] = cj + dc;
+                    if( cj < zero )
+                    {
+                        // sum over ALL negative gains to
+                        // discriminate among multiple alteration (eq: acetic vs. water-acetic)
+                        xadd << dc;
+                    }
                 }
 
                 for(const SNode *node=best.head;node;node=node->next)
@@ -507,9 +521,10 @@ namespace Yttrium
                     const Species &sp = **node;
                     cc[ sp.indx[SubLevel] ] = zero;
                 }
+                const xreal_t gg = xadd.sum();
                 eq.displayCompact(std::cerr << "\t\t", cc, SubLevel) << std::endl;
-
-                altered << Altered(eq,cc);
+                std::cerr << "\t\tgain=" << real_t(gg) << std::endl;
+                altered << Altered(eq,cc,gg);
             }
 
 
@@ -568,6 +583,7 @@ namespace Yttrium
             const Cluster &   rcl;
             const size_t      neq;
             const size_t      nsp;
+            XAdd              xadd;
             Boundaries::Banks banks;
             Boundary          best;
             Faders::Array     faders;
