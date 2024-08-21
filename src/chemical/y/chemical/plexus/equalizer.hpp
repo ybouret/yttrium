@@ -16,6 +16,8 @@ namespace Yttrium
         class Equalizer
         {
         public:
+            static const char * const CallSign;
+            
             explicit Equalizer(const Cluster &);
             virtual ~Equalizer() noexcept;
 
@@ -35,7 +37,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
 
-            size_t probeInvalid(const XReadable &C, const Level L, XMLog &xml);
+            size_t unbalanced(const XReadable &C, const Level L, XMLog &xml);
 
             //! check is best effort is possible from probed boundaries
             bool hasBestEffort(const Boundary   &limiting, const Boundaries &required);

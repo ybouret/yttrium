@@ -8,6 +8,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+        const char * const Equalizer:: CallSign = "Chemical::Equalizer";
+
         Equalizer:: Equalizer(const Cluster &cl) :
         rcl(cl),
         neq(cl.size),
@@ -23,9 +25,9 @@ namespace Yttrium
 
         Equalizer::  ~Equalizer() noexcept {}
 
-        size_t Equalizer:: probeInvalid(const XReadable &C,
-                                        const Level      L,
-                                        XMLog           &xml)
+        size_t Equalizer:: unbalanced(const XReadable &C,
+                                      const Level      L,
+                                      XMLog           &xml)
         {
             size_t invalid = 0;
             {
@@ -109,7 +111,7 @@ namespace Yttrium
                         }  continue;
                     }
 
-                    throw Specific:: Exception(eq.name.c_str(),"corrupted concentrations to equalize");
+                    throw Specific:: Exception(CallSign,"corrupted unbalanced '%s'", eq.name.c_str());
                 }
             }
             return invalid;
@@ -120,32 +122,46 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Eqz");
             const xreal_t      zero;
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             //
             // collect all altered states
             //
             //
-            //--------------------------------------------------------------
-            size_t invalid = probeInvalid(C, L, xml);
-
-            Y_XMLOG(xml, "#invalid = " << invalid);
+            //------------------------------------------------------------------
+            const size_t nbad = unbalanced(C, L, xml);
+            Y_XMLOG(xml, "#invalid = " << nbad);
             Y_XMLOG(xml, "#altered = " << altered.size());
 
             if(altered.size()<=0) return;
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             //
             // process altered states
             //
             //
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             {
+                assert(altered.size()>=1);
                 HeapSort::Call(altered, Altered::Compare);
                 displayAltered(xml,"Initial");
                 prune();
                 displayAltered(xml,"Pruned");
+                assert(altered.size()>=1);
+            }
+
+            switch(altered.size())
+            {
+                case 0: throw Specific:: Exception(CallSign,"corrupted #altered");
+                case 1:
+                    rcl.transfer(C, L, altered[1].cc, SubLevel);
+                    break;
+
+                default: {
+                    const size_t nalt = altered.size(); assert(nalt>=2);
+                    throw Specific::Exception(CallSign, "Not Implemented!");
+                }
             }
 
 
@@ -278,12 +294,7 @@ namespace Yttrium
             // add new state with computed gain
             //
             //------------------------------------------------------------------
-            const xreal_t gg = xadd.sum();
-            //eq.displayCompact(std::cerr << "\t\t", cc, SubLevel) << std::endl;
-            //std::cerr << "\t\tgain=" <<  (gg) << std::endl;
-
-
-            altered << Altered(eq,cc,gg);
+            altered << Altered(eq,cc,xadd.sum());
         }
 
 
