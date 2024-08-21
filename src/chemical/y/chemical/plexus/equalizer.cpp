@@ -47,12 +47,26 @@ namespace Yttrium
 
                     if(xml.verbose)
                     {
-                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " | " << eq.name, eq) << std::endl;
-                        if(id!=Faders::BALANCED)
+                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " |" << eq.name, eq) << "|";
+                        switch (id)
                         {
-                            xml() << "\treac: " << fd.reac << std::endl;
-                            xml() << "\tprod: " << fd.prod << std::endl;
+                            case Faders::BALANCED:
+                                break;
+
+                            case Faders::BAD_BOTH:
+                                *xml << "reac:" << fd.reac.required << "//prod:" << fd.prod.required;
+                                break;
+
+                            case Faders::BAD_REAC:
+                                *xml << "reac:" << fd.reac.required << "<=prod:" << fd.prod.limiting;
+                                break;
+
+                            case Faders::BAD_PROD:
+                                *xml << "prod:" << fd.prod.required << "<=reac:" << fd.reac.limiting;
+                                break;
                         }
+
+                        *xml << std::endl;
                     }
 
                     switch(id)
@@ -84,12 +98,12 @@ namespace Yttrium
                             assert(fd.reac.limiting.size>0);
                             if(hasBestEffort(fd.reac.limiting,fd.prod.required))
                             {
-                                Y_XMLOG(xml, "\tbest: " << best);
+                                //Y_XMLOG(xml, "\tbest: " << best);
                                 addBestAlter(eq,cc,dc);
                             }
                             else
                             {
-                                Y_XMLOG(xml, "\tno best effort");
+                                //Y_XMLOG(xml, "\tno best effort");
                             }
                         } continue;
 
@@ -104,12 +118,12 @@ namespace Yttrium
                             if(hasBestEffort(fd.prod.limiting,fd.reac.required))
                             {
                                 best.xi = -best.xi;
-                                Y_XMLOG(xml, "\tbest: " << best);
+                                //Y_XMLOG(xml, "\tbest: " << best);
                                 addBestAlter(eq,cc,dc);
                             }
                             else
                             {
-                                Y_XMLOG(xml, "\tno best effort");
+                                //Y_XMLOG(xml, "\tno best effort");
                             }
                         }  continue;
                     }
