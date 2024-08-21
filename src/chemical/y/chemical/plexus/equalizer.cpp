@@ -23,18 +23,10 @@ namespace Yttrium
 
         Equalizer::  ~Equalizer() noexcept {}
 
-        void Equalizer:: run(XWritable &C, const Level L, XMLog &xml)
+        size_t Equalizer:: probeInvalid(const XReadable &C,
+                                        const Level      L,
+                                        XMLog           &xml)
         {
-            Y_XML_SECTION(xml, "Eqz");
-            const xreal_t      zero;
-
-            //--------------------------------------------------------------
-            //
-            //
-            // collect all altered states
-            //
-            //
-            //--------------------------------------------------------------
             size_t invalid = 0;
             {
                 const AddressBook &book = rcl.conserved.book;
@@ -61,15 +53,28 @@ namespace Yttrium
                     switch(id)
                     {
                         case Faders::BALANCED:
+                            //--------------------------------------------------
+                            //
                             // skip
+                            //
+                            //--------------------------------------------------
                             continue;
 
                         case Faders::BAD_BOTH:
+                            //--------------------------------------------------
+                            //
+                            // stuck
+                            //
+                            //--------------------------------------------------
                             ++invalid;
                             continue;
 
                         case Faders::BAD_PROD: ++invalid; {
-                            // need a FOWARD alteration
+                            //--------------------------------------------------
+                            //
+                            // need a FORWARD alteration
+                            //
+                            //--------------------------------------------------
                             assert(fd.prod.required.size>0);
                             assert(fd.reac.limiting.size>0);
                             if(hasBestEffort(fd.reac.limiting,fd.prod.required))
@@ -84,7 +89,11 @@ namespace Yttrium
                         } continue;
 
                         case Faders::BAD_REAC: ++invalid; {
-                            // need a reverse alteration
+                            //--------------------------------------------------
+                            //
+                            // need a REVERSE alteration
+                            //
+                            //--------------------------------------------------
                             assert(fd.reac.required.size>0);
                             assert(fd.prod.limiting.size>0);
                             if(hasBestEffort(fd.prod.limiting,fd.reac.required))
@@ -103,6 +112,22 @@ namespace Yttrium
                     throw Specific:: Exception(eq.name.c_str(),"corrupted concentrations to equalize");
                 }
             }
+            return invalid;
+        }
+
+        void Equalizer:: run(XWritable &C, const Level L, XMLog &xml)
+        {
+            Y_XML_SECTION(xml, "Eqz");
+            const xreal_t      zero;
+
+            //--------------------------------------------------------------
+            //
+            //
+            // collect all altered states
+            //
+            //
+            //--------------------------------------------------------------
+            size_t invalid = probeInvalid(C, L, xml);
 
             Y_XMLOG(xml, "#invalid = " << invalid);
             Y_XMLOG(xml, "#altered = " << altered.size());
@@ -122,6 +147,8 @@ namespace Yttrium
                 prune();
                 displayAltered(xml,"Pruned");
             }
+
+
 
         }
 

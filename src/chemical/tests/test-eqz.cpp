@@ -9,18 +9,6 @@
 using namespace Yttrium;
 using namespace Chemical;
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
-        
-       
-
-     
-    }
-
-}
-
 Y_UTEST(eqz)
 {
     Plexus plexus(true);
