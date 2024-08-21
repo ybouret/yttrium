@@ -91,6 +91,8 @@ namespace Yttrium
         class Janitor
         {
         public:
+            typedef Conservation::Laws::Group Group;
+
             explicit Janitor(const Cluster &cl);
             virtual ~Janitor() noexcept;
 
@@ -99,24 +101,16 @@ namespace Yttrium
             void process(XWritable  &Ctop,
                          XMLog      &xml)
             {
-                if(used)
-                {
-                    Y_XML_SECTION(xml, "Janitor");
-                    assert(mine.laws.isValid());
-                    for(const Conservation::Laws::Group *g=mine.laws->groups.head;g;g=g->next)
-                        process(*g,Ctop,xml);
-                }
-                else
-                {
-                    xml.empty("Janitor");
-                }
+                Y_XML_SECTION(xml, "Janitor");
+                for(const Group *g=init;g;g=g->next)
+                    process(*g,Ctop,xml);
             }
 
 
 
 
             const Cluster    &     mine; //!< persistent cluster
-            const bool             used; //!< if mine.laws.isValid()
+            const Group * const    init; //!< if mine.laws.isValid()
             const size_t           rows; //!< laws max group size
             const size_t           cols; //!< max species in sub-level
             Broken::Series         jail; //!< local array of broken laws
@@ -133,9 +127,9 @@ namespace Yttrium
 
         Janitor:: Janitor(const Cluster &cl) :
         mine(cl),
-        used(mine.laws.isValid()),
-        rows(used ? mine.laws->maxGroupSize : 0),
-        cols(used ? mine.species.size       : 0),
+        init(mine.laws.isValid() ? mine.laws->groups.head : 0),
+        rows(init ? mine.laws->maxGroupSize : 0),
+        cols(init ? mine.species.size       : 0),
         jail(rows),
         Cnew(rows,cols),
         Cinj(cols),
