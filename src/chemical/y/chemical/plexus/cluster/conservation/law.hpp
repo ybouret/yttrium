@@ -79,11 +79,11 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const  xreal_t         xden; //!< |nu|^2
-                const Matrix<xreal_t > proj; //!< in group
-                const SList            keep; //!< species in group, not in law
-                Law *                  next; //!< for list
-                Law *                  prev; //!< for list
+                const xreal_t  xden; //!< |nu|^2
+                const XMatrix  proj; //!< in group projection
+                const SList    keep; //!< species in group, not in law
+                Law *          next; //!< for list
+                Law *          prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);

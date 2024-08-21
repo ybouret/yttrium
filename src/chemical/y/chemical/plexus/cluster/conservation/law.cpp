@@ -25,8 +25,8 @@ namespace Yttrium
             prev(0)
             {
                 assert( species.size == coef.size() );
-
-                apn sq;
+                Law &law = *this;
+                apn  sq;
                 for(const SNode *sn=species.head;sn;sn=sn->next)
                 {
                     const Species  &s = **sn;
@@ -34,13 +34,12 @@ namespace Yttrium
                     const unsigned  n = coef[j];
                     if(n>0)
                     {
-                        (*this)(n,s);
+                        law(n,s);
                         sq += n*n;
                     }
                 }
-                if((*this)->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
+                if(law->size<=1) throw Specific::Exception("Conservation::Law", "not enough species!!");
                 Coerce(xden) = sq.cast<unsigned>("|law|^2");
-
             }
 
 
@@ -115,19 +114,20 @@ namespace Yttrium
                 Cout.ld(zero);
                 for(const Actor *i=head;i;i=i->next)
                 {
-                    const XReadable &p = proj[i->sp.indx[AuxLevel]];
+                    const size_t * const  idx = i->sp.indx;
+                    const XReadable     & p   = proj[idx[AuxLevel]];
                     xadd.free();
                     for(const Actor *j=head;j;j=j->next)
                     {
-                        xadd << p[j->sp.indx[AuxLevel]] * Cinp[j->sp.indx[Linp]];
+                        const size_t * const jdx = j->sp.indx;
+                        xadd << p[ jdx[AuxLevel] ] * Cinp[ jdx[Linp] ];
                     }
-                    Cout[i->sp.indx[Lout]] = xadd.sum() / xden;
+                    Cout[idx[Lout]] = xadd.sum() / xden;
                 }
 
                 //--------------------------------------------------------------
                 //
-                // transfer species to keep unchanged
-                // \TODO: needed ?
+                // transfer species to keep consistent state
                 //
                 //--------------------------------------------------------------
                 for(const SNode *sn=keep.head;sn;sn=sn->next)

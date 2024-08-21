@@ -120,7 +120,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const bool        used; //!< if clusters have som group
+            const bool        used; //!< if clusters have some group
             const size_t      rows; //!< max group size
             const size_t      cols; //!< max species in sub-level
             CxxSeries<Broken> jail; //!< local array of broken laws
