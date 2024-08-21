@@ -53,7 +53,7 @@ Y_UTEST(janitor)
         Janitor janitor(*cl);
         lib(std::cerr << "C0=","\t[",C0,"]");
         janitor.prolog();
-        janitor.process(C0,xml);
+        janitor.process(C0,TopLevel,xml);
         lib(std::cerr << "C1=","\t[",C0,"]");
         janitor.display(std::cerr, lib);
 

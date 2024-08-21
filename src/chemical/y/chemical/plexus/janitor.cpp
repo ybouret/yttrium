@@ -51,12 +51,13 @@ namespace Yttrium
         }
 
 
-        void Janitor:: process(XWritable  &Ctop,
+        void Janitor:: process(XWritable  &C,
+                               const Level L,
                                XMLog      &xml)
         {
             Y_XML_SECTION(xml, "Janitor");
             for(const Group *g=init;g;g=g->next)
-                process(*g,Ctop,TopLevel,xml);
+                process(*g,C,L,xml);
         }
 
         void  Janitor:: process(const Group &grp,
