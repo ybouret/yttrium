@@ -10,11 +10,33 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! altered balanced state for equalizer
+        //
+        //
+        //______________________________________________________________________
         class Altered
         {
         public:
-            typedef CxxSeries<Altered,XMemory> Series;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxSeries<Altered,XMemory> Series; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+           
+            //! setup with persistent data
             explicit Altered(const Equilibrium & _eq,
                              const xreal_t       _xi,
                              const XReadable   & _cc,
@@ -28,6 +50,7 @@ namespace Yttrium
             {
             }
 
+            //! duplicate
             Altered(const Altered &_) noexcept :
             eq(_.eq),
             xi(_.xi),
@@ -37,18 +60,27 @@ namespace Yttrium
             {
             }
 
+            //! comparison by decreasing gain
             static int Compare(const Altered &lhs, const Altered &rhs) noexcept
             {
                 return Comparison:: Decreasing(lhs.gg, rhs.gg);
             }
 
+            //! cleanup
             ~Altered() noexcept {}
 
-            const Equilibrium & eq;
-            const xreal_t       xi;
-            const XReadable   & cc;
-            const xreal_t       gg;
-            const XReadable   & dc;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Equilibrium & eq; //!< source equilibrium
+            const xreal_t       xi; //!< extent to get cc for original
+            const XReadable   & cc; //!< current state
+            const xreal_t       gg; //!< current gain
+            const XReadable   & dc; //!< dc from original concentration
+
         private:
             Y_DISABLE_ASSIGN(Altered);
         };
