@@ -35,13 +35,15 @@ Y_UTEST(eqz)
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         Equalizer eqz(*cl);
+        Janitor   jan(*cl);
 
         for(size_t iter=0;iter<1;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             lib(std::cerr << "C0=","\t[",C0,"]");
-
-
+            jan.run(C0, TopLevel, xml);
+            lib(std::cerr << "C1=","\t[",C0,"]");
+            jan.prolog();
             eqz.run(C0, TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
         }

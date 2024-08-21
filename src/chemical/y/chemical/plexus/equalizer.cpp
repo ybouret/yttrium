@@ -47,26 +47,29 @@ namespace Yttrium
 
                     if(xml.verbose)
                     {
-                        rcl.uuid.pad( xml() << Faders::TextFlag(id) << " |" << eq.name, eq) << "|";
-                        switch (id)
+                        if(id!=Faders::BALANCED)
                         {
-                            case Faders::BALANCED:
-                                break;
-
-                            case Faders::BAD_BOTH:
-                                *xml << "reac:" << fd.reac.required << "//prod:" << fd.prod.required;
-                                break;
-
-                            case Faders::BAD_REAC:
-                                *xml << "reac:" << fd.reac.required << "<=prod:" << fd.prod.limiting;
-                                break;
-
-                            case Faders::BAD_PROD:
-                                *xml << "prod:" << fd.prod.required << "<=reac:" << fd.reac.limiting;
-                                break;
+                            rcl.uuid.pad( xml() << Faders::TextFlag(id) << " |" << eq.name, eq) << "|";
+                            switch (id)
+                            {
+                                case Faders::BALANCED:
+                                    break;
+                                    
+                                case Faders::BAD_BOTH:
+                                    *xml << "reac:" << fd.reac.required << "//prod:" << fd.prod.required;
+                                    break;
+                                    
+                                case Faders::BAD_REAC:
+                                    *xml << "reac:" << fd.reac.required << "<=prod:" << fd.prod.limiting;
+                                    break;
+                                    
+                                case Faders::BAD_PROD:
+                                    *xml << "prod:" << fd.prod.required << "<=reac:" << fd.reac.limiting;
+                                    break;
+                            }
+                            
+                            *xml << std::endl;
                         }
-
-                        *xml << std::endl;
                     }
 
                     switch(id)

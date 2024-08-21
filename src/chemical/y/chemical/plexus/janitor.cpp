@@ -51,7 +51,7 @@ namespace Yttrium
         }
 
 
-        void Janitor:: process(XWritable  &C,
+        void Janitor:: run(XWritable  &C,
                                const Level L,
                                XMLog      &xml)
         {
