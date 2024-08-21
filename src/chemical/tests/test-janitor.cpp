@@ -1,7 +1,7 @@
 
 #include "y/chemical/plexus.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/sort/heap.hpp"
 
 namespace Yttrium
 {
@@ -13,17 +13,18 @@ namespace Yttrium
         //! Broken law with context
         //
         //__________________________________________________________________
-        class BrokenLaw
+        class Broken
         {
         public:
+            typedef CxxSeries<Broken,XMemory> Series;
             //______________________________________________________________
             //
             // C++
             //______________________________________________________________
-            BrokenLaw(const Conservation::Law &, XWritable &) noexcept; //!< init
-            BrokenLaw(const BrokenLaw &broken)                noexcept; //!< copy
-            ~BrokenLaw()                                      noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(BrokenLaw);                                 //!< display
+            Broken(const Conservation::Law &, XWritable &) noexcept; //!< init
+            Broken(const Broken &broken)                noexcept; //!< copy
+            ~Broken()                                      noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Broken);                                 //!< display
 
             //______________________________________________________________
             //
@@ -31,7 +32,7 @@ namespace Yttrium
             //______________________________________________________________
 
             //! compare by gain
-            static int Compare(const BrokenLaw &, const BrokenLaw &) noexcept;
+            static int Compare(const Broken &, const Broken &) noexcept;
 
             //! compute for law
             bool       still(const XReadable &Ctop, XAdd &xadd);
@@ -45,10 +46,10 @@ namespace Yttrium
             XWritable               &Csub; //!< persistent local fixed
 
         private:
-            Y_DISABLE_ASSIGN(BrokenLaw);
+            Y_DISABLE_ASSIGN(Broken);
         };
 
-        BrokenLaw:: BrokenLaw(const Conservation::Law &l,
+        Broken:: Broken(const Conservation::Law &l,
                               XWritable               &c) noexcept :
         gain(0),
         claw(l),
@@ -56,7 +57,7 @@ namespace Yttrium
         {
         }
 
-        BrokenLaw::  BrokenLaw(const BrokenLaw &b) noexcept :
+        Broken::  Broken(const Broken &b) noexcept :
         gain(b.gain),
         claw(b.claw),
         Csub(b.Csub)
@@ -64,15 +65,15 @@ namespace Yttrium
 
         }
 
-        BrokenLaw:: ~BrokenLaw() noexcept {}
+        Broken:: ~Broken() noexcept {}
 
-        int  BrokenLaw:: Compare(const BrokenLaw &lhs, const BrokenLaw &rhs) noexcept
+        int  Broken:: Compare(const Broken &lhs, const Broken &rhs) noexcept
         {
             return Comparison::Decreasing(lhs.gain, rhs.gain);
             //return Comparison::Increasing(lhs.gain, rhs.gain);
         }
 
-        std::ostream & operator<<(std::ostream &os, const  BrokenLaw &self)
+        std::ostream & operator<<(std::ostream &os, const  Broken &self)
         {
             const xreal_t zero;
             os << real_t(self.gain) << " @" << (self.claw);
@@ -81,11 +82,180 @@ namespace Yttrium
         }
 
 
-        bool  BrokenLaw:: still(const XReadable &Ctop, XAdd &xadd)
+        bool  Broken:: still(const XReadable &Ctop, XAdd &xadd)
         {
             return claw.broken(gain, Csub, SubLevel, Ctop, TopLevel, xadd);
         }
+
+
+        class Janitor
+        {
+        public:
+            explicit Janitor(const Cluster &cl);
+            virtual ~Janitor() noexcept;
+
+            void prolog() noexcept;
+
+            void process(XWritable  &Ctop,
+                         XMLog      &xml)
+            {
+                if(used)
+                {
+                    Y_XML_SECTION(xml, "Janitor");
+                    assert(mine.laws.isValid());
+                    for(const Conservation::Laws::Group *g=mine.laws->groups.head;g;g=g->next)
+                        process(*g,Ctop,xml);
+                }
+                else
+                {
+                    xml.empty("Janitor");
+                }
+            }
+
+
+
+
+            const Cluster    &     mine; //!< persistent cluster
+            const bool             used; //!< if mine.laws.isValid()
+            const size_t           rows; //!< laws max group size
+            const size_t           cols; //!< max species in sub-level
+            Broken::Series         jail; //!< local array of broken laws
+            XMatrix                Cnew; //!< workspace(rows,cols) to store Csub
+            CxxArray<XAdd,XMemory> Cinj; //!< workspace, store incremental increases
+            XAdd                   xadd; //!< for internal additions
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Janitor);
+            void  process(const Conservation::Laws::Group &grp,
+                          XWritable                       &Ctop,
+                          XMLog                           &xml);
+        };
+
+        Janitor:: Janitor(const Cluster &cl) :
+        mine(cl),
+        used(mine.laws.isValid()),
+        rows(used ? mine.laws->maxGroupSize : 0),
+        cols(used ? mine.species.size       : 0),
+        jail(rows),
+        Cnew(rows,cols),
+        Cinj(cols),
+        xadd(cols)
+        {
+        }
+
+
+        Janitor:: ~Janitor() noexcept
+        {
+        }
+
+
+        void Janitor:: prolog() noexcept
+        {
+            for(size_t i=cols;i>0;--i) Cinj[i].free();
+        }
+
+
+        void  Janitor:: process(const Conservation::Laws::Group &grp,
+                                XWritable                       &Ctop,
+                                XMLog                           &xml)
+        {
+            Y_XML_SECTION_OPT(xml, "Group", "size='" << grp.size << "'");
+
+            //__________________________________________________________________
+            //
+            //
+            // initialize with all broken laws
+            //
+            //__________________________________________________________________
+            jail.free();
+            {
+                Y_XML_SECTION(xml, "Initialize");
+                for(Conservation::LNode *ln=grp.head;ln;ln=ln->next)
+                {
+                    const Conservation::Law &claw = **ln;
+                    Broken                   broken(claw,Cnew[jail.size()+1]);
+                    if(broken.still(Ctop,xadd))
+                    {
+                        Y_XMLOG(xml," (+) " << broken);
+                        jail << broken;
+                    }
+                }
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // iterative reduction
+            //
+            //__________________________________________________________________
+            while(jail.size()>0)
+            {
+                {
+                    Y_XML_SECTION_OPT(xml,"Reduction"," broken='" << jail.size() << "'");
+
+                    //__________________________________________________________
+                    //
+                    // order by increasing gain
+                    //__________________________________________________________
+                    HeapSort::Call(jail,Broken::Compare);
+                    for(size_t i=1;i<jail.size();++i) { Y_XMLOG(xml," (+) " << jail[i]); }
+
+                    //__________________________________________________________
+                    //
+                    // fixed most broken
+                    //__________________________________________________________
+                    {
+                        const Broken & best = jail.tail();
+                        Y_XMLOG(xml," (*) " << best);
+                        const Conservation::Law &claw = best.claw;
+                        const XReadable         &Csub = best.Csub;
+                        for(const Actor *a=claw->head;a;a=a->next)
+                        {
+                            const size_t   isub = a->sp.indx[SubLevel];
+                            const size_t   itop = a->sp.indx[TopLevel];
+                            const xreal_t  Cnew = Csub[ isub ];
+                            xreal_t       &Cold = Ctop[ itop ];
+                            assert(Cnew>=Cold);
+                            Cinj[isub] << (Cnew-Cold); // store  difference
+                            Cold = Cnew;               // update concentration
+                        }
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // remove it
+                    //__________________________________________________________
+                    jail.popTail();
+                    if(jail.size()<=0) break;
+                }
+
+
+                //__________________________________________________________________
+                //
+                //
+                // then update and keep/drop remaining broken
+                //
+                //__________________________________________________________________
+                {
+                    Y_XML_SECTION_OPT(xml,"Upgrading"," broken='" << jail.size() << "'");
+                    for(size_t i=jail.size();i>0;--i)
+                    {
+                        if( jail[i].still(Ctop,xadd) )
+                        {
+                            Y_XMLOG(xml, " (+) " << jail[i]);
+                        }
+                        else
+                        {
+                            Y_XMLOG(xml, " (-) " << jail[i]);
+                            jail.remove(i);
+                        }
+                    }
+                }
+            }
+
+        }
     }
+
 
 }
 
@@ -120,8 +290,11 @@ Y_UTEST(janitor)
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         plexus.conc(C0,0.3,0.5);
+        Janitor janitor(*cl);
         lib(std::cerr << "C0=","\t[",C0,"]");
-
+        janitor.prolog();
+        janitor.process(C0,xml);
+        lib(std::cerr << "C1=","\t[",C0,"]");
 
 
     }
