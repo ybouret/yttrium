@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             void prolog() noexcept;                              //!< clean all injectect
             void process(XWritable  &Ctop, XMLog &xml);          //!< process all groups
-            void epilog(XWritable &dTop);                        //!< load all injected
+            void epilog(XWritable &dC, const Level L);           //!< load all injected
             void display(std::ostream &, const Library &) const; //!< display injected
 
             //__________________________________________________________________

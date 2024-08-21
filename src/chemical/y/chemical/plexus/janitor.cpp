@@ -30,22 +30,22 @@ namespace Yttrium
             for(size_t i=cols;i>0;--i) Cinj[i].free();
         }
 
-        void Janitor:: epilog(XWritable &dTop)
+        void Janitor:: epilog(XWritable &dC, const Level L)
         {
             if(0!=init)
             {
                 for(const SNode *sn=mine.species.head;sn;sn=sn->next)
                 {
-                    const Species       &sp = **sn;
+                    const Species       &sp   = **sn;
                     const size_t * const indx = sp.indx;
-                    dTop[ indx[TopLevel] ] = Cinj[ indx[SubLevel] ].sum();
+                    dC[ indx[L] ] = Cinj[ indx[SubLevel] ].sum();
                 }
             }
             else
             {
                 for(const SNode *sn=mine.species.head;sn;sn=sn->next)
                 {
-                    dTop[ (**sn).indx[TopLevel] ] = zero;
+                    dC[ (**sn).indx[L] ] = zero;
                 }
             }
         }
