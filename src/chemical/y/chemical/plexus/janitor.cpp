@@ -108,7 +108,7 @@ namespace Yttrium
 
                     //__________________________________________________________
                     //
-                    // fixed most broken
+                    // fixed least broken
                     //__________________________________________________________
                     {
                         const Broken & best = jail.tail();
@@ -169,7 +169,7 @@ namespace Yttrium
                 for(const SNode *sn = mine.species.head; sn; sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    lib.pad(os << "d" << sp,sp) << '=' << Cinj[ sp.indx[SubLevel] ] << std::endl;
+                    lib.pad(os << "d[" << sp << "]",sp) << '=' << Cinj[ sp.indx[SubLevel] ] << std::endl;
                 }
             }
             os << "}" << std::endl;
