@@ -135,6 +135,7 @@ namespace Yttrium
             size_t probe = 0;
         PROBE:
             ++probe;
+            Y_XMLOG(xml, "[[ #probe = " << probe << " ]]");
             const size_t nbad = unbalanced(C, L, xml);
             Y_XMLOG(xml, "#invalid = " << nbad);
             Y_XMLOG(xml, "#altered = " << altered.size());
@@ -168,6 +169,13 @@ namespace Yttrium
                     break;
             }
 
+            updateWithSwell(C, L, xml);
+            goto PROBE;
+
+        }
+
+        void Equalizer:: updateWithSwell(XWritable &C, const Level L, XMLog & )
+        {
             const size_t       nalt       = altered.size(); assert(nalt>=2);
 
             //------------------------------------------------------------------
@@ -239,8 +247,6 @@ namespace Yttrium
                 //std::cerr << "d[" << sp << "] = " << sw << std::endl;
                 C[ indx[L]  ] = sw.sum();
             }
-            goto PROBE;
-
         }
 
         void Equalizer:: displayAltered(XMLog &xml, const char * const title) const

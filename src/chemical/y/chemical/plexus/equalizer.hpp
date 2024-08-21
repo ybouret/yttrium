@@ -56,7 +56,8 @@ namespace Yttrium
             //! keep top level and subsequent all detached states
             void prune() noexcept;
 
-            
+            //! update with multiple detached altered
+            void updateWithSwell(XWritable &C, const Level L, XMLog &xml);
 
 
         };
