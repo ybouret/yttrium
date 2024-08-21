@@ -106,6 +106,8 @@ namespace Yttrium
                     process(*g,Ctop,xml);
             }
 
+            void epilog(XWritable &dTop);
+
             void display(std::ostream &os, const Library &lib) const
             {
                 os << "{" << std::endl;
@@ -126,6 +128,7 @@ namespace Yttrium
             XMatrix                Cnew; //!< workspace(rows,cols) to store Csub
             CxxArray<XAdd,XMemory> Cinj; //!< workspace, store incremental increases
             XAdd                   xadd; //!< for internal additions
+            const xreal_t          zero;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Janitor);
@@ -142,7 +145,8 @@ namespace Yttrium
         jail(rows),
         Cnew(rows,cols),
         Cinj(cols),
-        xadd(cols)
+        xadd(cols),
+        zero(0)
         {
         }
 
@@ -155,6 +159,26 @@ namespace Yttrium
         void Janitor:: prolog() noexcept
         {
             for(size_t i=cols;i>0;--i) Cinj[i].free();
+        }
+
+        void Janitor:: epilog(XWritable &dTop)
+        {
+            if(0!=init)
+            {
+                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+                {
+                    const Species       &sp = **sn;
+                    const size_t * const indx = sp.indx;
+                    dTop[ indx[TopLevel] ] = Cinj[ indx[SubLevel] ].sum();
+                }
+            }
+            else
+            {
+                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+                {
+                    dTop[ (**sn).indx[TopLevel] ] = zero;
+                }
+            }
         }
 
 
