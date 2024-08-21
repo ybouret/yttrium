@@ -1,5 +1,6 @@
 #include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/equalizer.hpp"
+#include "y/chemical/plexus/janitor.hpp"
 
 #include "y/sort/heap.hpp"
 
@@ -37,7 +38,6 @@ Y_UTEST(eqz)
     XMLog           &xml = plexus.xml;
     //const XReadable &K   = cls.K(0);
 
-    //Injector injector(cls);
 
     XVector C0(lib->size(),0);
     XVector dC(C0);
@@ -50,7 +50,6 @@ Y_UTEST(eqz)
 
         plexus.conc(C0,0.3,0.5);
         lib(std::cerr << "C0=","\t[",C0,"]");
-        //injector(cls,C0,dC,xml);
         lib(std::cerr << "C0=","\t[",C0,"]");
 
 
