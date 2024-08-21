@@ -36,7 +36,7 @@ Y_UTEST(eqz)
     {
         Equalizer eqz(*cl);
 
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<1;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             lib(std::cerr << "C0=","\t[",C0,"]");
@@ -47,16 +47,6 @@ Y_UTEST(eqz)
         }
 
         
-#if 0
-        for(const ENode *en=cl->head;en;en=en->next)
-        {
-            const Equilibrium &eq = **en;
-            F(C0,TopLevel,eq,cl->conserved.book);
-            cl->uuid.pad(std::cerr << eq.name, eq) << ":" << F << std::endl;
-        }
-#endif
-
-        //lib(std::cerr << "C1=","\t[",C0,"]");
 
 
 

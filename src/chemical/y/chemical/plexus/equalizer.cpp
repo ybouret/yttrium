@@ -19,7 +19,9 @@ namespace Yttrium
         best(banks.s),
         faders(neq,CopyOf,banks),
         ceq(neq,nsp),
-        altered(neq)
+        ddc(neq,nsp),
+        altered(neq),
+        swell(nsp,CopyOf,neq)
         {
         }
 
@@ -40,6 +42,7 @@ namespace Yttrium
                     const unsigned     id = fd(C,L,eq,book);
                     const size_t       ii = altered.size() + 1;
                     XWritable         &cc = ceq[ii];
+                    XWritable         &dc = ddc[ii];
                     rcl.transfer(cc,SubLevel,C,L);
 
                     if(xml.verbose)
@@ -82,7 +85,7 @@ namespace Yttrium
                             if(hasBestEffort(fd.reac.limiting,fd.prod.required))
                             {
                                 Y_XMLOG(xml, "\tbest: " << best);
-                                addBestAlter(eq,cc);
+                                addBestAlter(eq,cc,dc);
                             }
                             else
                             {
@@ -102,7 +105,7 @@ namespace Yttrium
                             {
                                 best.xi = -best.xi;
                                 Y_XMLOG(xml, "\tbest: " << best);
-                                addBestAlter(eq,cc);
+                                addBestAlter(eq,cc,dc);
                             }
                             else
                             {
@@ -117,7 +120,7 @@ namespace Yttrium
             return invalid;
         }
 
-        void Equalizer:: run(XWritable &C, const Level L, XMLog &xml)
+        size_t Equalizer:: run(XWritable &C, const Level L, XMLog &xml)
         {
             Y_XML_SECTION(xml, "Eqz");
             const xreal_t      zero;
@@ -129,11 +132,14 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            size_t probe = 0;
+        PROBE:
+            ++probe;
             const size_t nbad = unbalanced(C, L, xml);
             Y_XMLOG(xml, "#invalid = " << nbad);
             Y_XMLOG(xml, "#altered = " << altered.size());
 
-            if(altered.size()<=0) return;
+            if(altered.size()<=0) return nbad;
 
             //------------------------------------------------------------------
             //
@@ -156,15 +162,84 @@ namespace Yttrium
                 case 0: throw Specific:: Exception(CallSign,"corrupted #altered");
                 case 1:
                     rcl.transfer(C, L, altered[1].cc, SubLevel);
-                    break;
+                    goto PROBE;
 
-                default: {
-                    const size_t nalt = altered.size(); assert(nalt>=2);
-                    throw Specific::Exception(CallSign, "Not Implemented!");
+                default:
+                    break;
+            }
+
+            const size_t       nalt       = altered.size(); assert(nalt>=2);
+
+            //------------------------------------------------------------------
+            //
+            //
+            // initialize swell
+            //
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=rcl.unbounded.list.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                XAdd          &sw = swell[ sp.indx[SubLevel] ];
+                sw.free();
+                sw << C[ sp.indx[L] ];
+            }
+
+            for(const SNode *sn=rcl.conserved.list.head;sn;sn=sn->next)
+                swell[ (**sn).indx[ SubLevel] ].free();
+
+            //------------------------------------------------------------------
+            //
+            //
+            // build swell
+            //
+            //
+            //------------------------------------------------------------------
+            const AddressBook &unbounded = rcl.unbounded.book;
+            for(size_t i=nalt;i>0;--i)
+            {
+                const Altered     &alt = altered[i];
+                const Equilibrium &eq  = alt.eq;
+                const XReadable   &cc  = alt.cc;
+                const XReadable   &dc  = alt.dc;
+
+                std::cerr << "using " << eq << std::endl;
+                {
+                    size_t             nc = eq->size();
+                    for(Components::ConstIterator it=eq->begin();nc>0;--nc,++it)
+                    {
+                        const Component &cm = **it;
+                        const Species   &sp = cm.sp;
+                        const size_t     jj = sp.indx[SubLevel];
+                        XAdd            &sw = swell[jj];
+                        if( unbounded.has(sp) )
+                        {
+                            sw << dc[jj]; // increase with extent
+                        }
+                        else
+                        {
+                            assert(sw.isEmpty());
+                            sw <<  cc[jj]; // directly set
+                        }
+                    }
                 }
             }
 
-
+            //------------------------------------------------------------------
+            //
+            //
+            // compute new state
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=rcl.species.head;sn;sn=sn->next)
+            {
+                const Species &      sp   = **sn;
+                const size_t * const indx = sp.indx;
+                XAdd         &       sw   = swell[ indx[SubLevel] ];
+                //std::cerr << "d[" << sp << "] = " << sw << std::endl;
+                C[ indx[L]  ] = sw.sum();
+            }
+            goto PROBE;
 
         }
 
@@ -254,7 +329,8 @@ namespace Yttrium
         }
 
         void Equalizer:: addBestAlter(const Equilibrium &eq,
-                                      XWritable         &cc)
+                                      XWritable         &cc,
+                                      XWritable         &dc)
         {
             const xreal_t              zero;
             const xreal_t              xi = best.xi; assert( xi.abs() > zero );
@@ -270,12 +346,13 @@ namespace Yttrium
             {
                 const Component &cm   = **it;
                 const Species   &sp   = cm.sp;
-                const xreal_t    dc   = xi * cm.xn;
+                const xreal_t    dd   = xi * cm.xn;
                 const size_t     jj   = sp.indx[SubLevel];
                 const xreal_t    cOld = cc[jj];
-                const xreal_t    cNew = (cc[jj] = cOld + dc);
+                const xreal_t    cNew = (cc[jj] = cOld + dd);
                 if(cOld<zero) xadd << -cOld;
                 if(cNew<zero) xadd <<  cNew;
+                dc[jj] = dd;
             }
 
             //------------------------------------------------------------------
@@ -294,7 +371,7 @@ namespace Yttrium
             // add new state with computed gain
             //
             //------------------------------------------------------------------
-            altered << Altered(eq,cc,xadd.sum());
+            altered << Altered(eq,xi,cc,xadd.sum(),dc);
         }
 
 
@@ -329,6 +406,10 @@ namespace Yttrium
 
             }
         }
+
+
+
+
     }
 
 }

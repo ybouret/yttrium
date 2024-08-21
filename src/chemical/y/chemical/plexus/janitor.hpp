@@ -63,7 +63,7 @@ namespace Yttrium
             const size_t           cols; //!< max species in sub-level
             Broken::Series         jail; //!< local array of broken laws
             XMatrix                Cnew; //!< workspace(rows,cols) to store Csub
-            CxxArray<XAdd,XMemory> Cinj; //!< workspace, store incremental increases
+            XSwell                 Cinj; //!< workspace, store incremental increases
             XAdd                   xadd; //!< for internal additions
             const xreal_t          zero; //!< alias
 

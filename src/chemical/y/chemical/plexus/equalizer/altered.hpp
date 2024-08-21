@@ -16,18 +16,24 @@ namespace Yttrium
             typedef CxxSeries<Altered,XMemory> Series;
 
             explicit Altered(const Equilibrium & _eq,
+                             const xreal_t       _xi,
                              const XReadable   & _cc,
-                             const xreal_t       _gg) noexcept :
+                             const xreal_t       _gg,
+                             const XReadable   & _dc) noexcept :
             eq(_eq),
+            xi(_xi),
             cc(_cc),
-            gg(_gg)
+            gg(_gg),
+            dc(_dc)
             {
             }
 
             Altered(const Altered &_) noexcept :
             eq(_.eq),
+            xi(_.xi),
             cc(_.cc),
-            gg(_.gg)
+            gg(_.gg),
+            dc(_.dc)
             {
             }
 
@@ -39,9 +45,10 @@ namespace Yttrium
             ~Altered() noexcept {}
 
             const Equilibrium & eq;
+            const xreal_t       xi;
             const XReadable   & cc;
             const xreal_t       gg;
-
+            const XReadable   & dc;
         private:
             Y_DISABLE_ASSIGN(Altered);
         };

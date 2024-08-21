@@ -30,6 +30,8 @@ namespace Yttrium
 
         typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
+
+        typedef CxxArray<XAdd,XMemory>      XSwell; //!< alias
     }
 }
 
