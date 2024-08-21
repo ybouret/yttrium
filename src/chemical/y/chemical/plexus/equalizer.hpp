@@ -1,0 +1,56 @@
+
+
+//! \file
+
+#ifndef Y_Chemical_Equalizer_Included
+#define Y_Chemical_Equalizer_Included 1
+
+#include "y/chemical/plexus/equalizer/altered.hpp"
+#include "y/chemical/plexus/equalizer/faders.hpp"
+#include "y/chemical/plexus/cluster.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        class Equalizer
+        {
+        public:
+            explicit Equalizer(const Cluster &);
+            virtual ~Equalizer() noexcept;
+
+
+            void run(XWritable &C, const Level L, XMLog &xml);
+
+            const Cluster &   rcl;
+            const size_t      neq;
+            const size_t      nsp;
+            XAdd              xadd;
+            Banks             banks;
+            Boundary          best;
+            Faders::Array     faders;
+            XMatrix           ceq;
+            Altered::Series   altered;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
+
+            //! check is best effort is possible from probed boundaries
+            bool hasBestEffort(const Boundary   &limiting, const Boundaries &required);
+
+            //! produce best altered state if best effort was possible
+            void addBestAlter(const Equilibrium &eq, XWritable         &cc);
+
+            //! helper to display states
+            void displayAltered(XMLog &xml, const char * const title) const;
+
+            //! keep top level and subsequent all detached states
+            void prune() noexcept;
+        };
+
+    }
+
+}
+
+#endif
+
