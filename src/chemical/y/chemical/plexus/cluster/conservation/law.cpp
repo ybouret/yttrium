@@ -140,20 +140,7 @@ namespace Yttrium
                 return true;
             }
 
-
-#if 0
-            xreal_t Law:: inject(const xreal_t factor, XWritable &deltaC, const Level level, XAdd &xadd) const
-            {
-                xadd.free();
-                for(const Actor *a=(*this)->head;a;a=a->next)
-                {
-                    const xreal_t p = (factor * a->xn)/xden;
-                    xadd << p.abs();
-                    deltaC[a->sp.indx[level]] = p;
-                }
-                return xadd.sum();
-            }
-#endif
+            
 
         }
 
