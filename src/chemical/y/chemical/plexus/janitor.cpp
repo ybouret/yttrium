@@ -56,12 +56,13 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Janitor");
             for(const Group *g=init;g;g=g->next)
-                process(*g,Ctop,xml);
+                process(*g,Ctop,TopLevel,xml);
         }
 
-        void  Janitor:: process(const Conservation::Laws::Group &grp,
-                                XWritable                       &Ctop,
-                                XMLog                           &xml)
+        void  Janitor:: process(const Group &grp,
+                                XWritable   &C,
+                                const Level  L,
+                                XMLog       &xml)
         {
             Y_XML_SECTION_OPT(xml, "Group", "size='" << grp.size << "'");
 
@@ -78,7 +79,7 @@ namespace Yttrium
                 {
                     const Conservation::Law &claw = **ln;
                     Broken                   broken(claw,Cnew[jail.size()+1]);
-                    if(broken.still(Ctop,TopLevel,xadd))
+                    if(broken.still(C,L,xadd))
                     {
                         Y_XMLOG(xml," (+) " << broken);
                         jail << broken;
@@ -116,9 +117,9 @@ namespace Yttrium
                         for(const Actor *a=claw->head;a;a=a->next)
                         {
                             const size_t   isub = a->sp.indx[SubLevel];
-                            const size_t   itop = a->sp.indx[TopLevel];
+                            const size_t   iusr = a->sp.indx[L];
                             const xreal_t  Cnew = cfix[ isub ];
-                            xreal_t       &Cold = Ctop[ itop ];
+                            xreal_t       &Cold = C[ iusr ];
                             assert(Cnew>=Cold);
                             Cinj[isub] << (Cnew-Cold); // store  difference
                             Cold = Cnew;               // update concentration
@@ -144,7 +145,7 @@ namespace Yttrium
                     Y_XML_SECTION_OPT(xml,"Upgrading"," broken='" << jail.size() << "'");
                     for(size_t i=jail.size();i>0;--i)
                     {
-                        if( jail[i].still(Ctop,TopLevel,xadd) )
+                        if( jail[i].still(C,L,xadd) )
                         {
                             Y_XMLOG(xml, " (+) " << jail[i]);
                         }
@@ -162,10 +163,13 @@ namespace Yttrium
         void Janitor:: display(std::ostream &os, const Library &lib) const
         {
             os << "{" << std::endl;
-            for(const SNode *sn = mine.species.head; sn; sn=sn->next)
+            if(0!=init)
             {
-                const Species &sp = **sn;
-                lib.pad(os << "d" << sp,sp) << '=' << Cinj[ sp.indx[SubLevel] ] << std::endl;
+                for(const SNode *sn = mine.species.head; sn; sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    lib.pad(os << "d" << sp,sp) << '=' << Cinj[ sp.indx[SubLevel] ] << std::endl;
+                }
             }
             os << "}" << std::endl;
         }

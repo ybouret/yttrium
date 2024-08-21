@@ -69,9 +69,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Janitor);
-            void  process(const Conservation::Laws::Group &grp,
-                          XWritable                       &Ctop,
-                          XMLog                           &xml);
+            void  process(const Group &grp,
+                          XWritable   &C,
+                          const Level  L,
+                          XMLog       &xml);
         };
     }
 
