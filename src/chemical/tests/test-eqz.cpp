@@ -36,13 +36,17 @@ Y_UTEST(eqz)
     {
         Equalizer eqz(*cl);
 
-        plexus.conc(C0,0.3,0.5);
-        lib(std::cerr << "C0=","\t[",C0,"]");
+        for(size_t iter=0;iter<100;++iter)
+        {
+            plexus.conc(C0,0.3,0.5);
+            lib(std::cerr << "C0=","\t[",C0,"]");
 
 
-        eqz.run(C0, TopLevel,xml);
-        lib(std::cerr << "C0=","\t[",C0,"]");
+            eqz.run(C0, TopLevel,xml);
+            lib(std::cerr << "C0=","\t[",C0,"]");
+        }
 
+        
 #if 0
         for(const ENode *en=cl->head;en;en=en->next)
         {
