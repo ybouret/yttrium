@@ -22,7 +22,7 @@ namespace Yttrium
             // C++
             //______________________________________________________________
             Broken(const Conservation::Law &, XWritable &) noexcept; //!< init
-            Broken(const Broken &broken)                noexcept; //!< copy
+            Broken(const Broken &broken)                   noexcept; //!< copy
             ~Broken()                                      noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Broken);                                 //!< display
 
@@ -43,24 +43,24 @@ namespace Yttrium
             //______________________________________________________________
             xreal_t                  gain; //!< current gain
             const Conservation::Law &claw; //!< studied conservation
-            XWritable               &Csub; //!< persistent local fixed
+            XWritable               &cfix; //!< persistent local fixed
 
         private:
             Y_DISABLE_ASSIGN(Broken);
         };
 
         Broken:: Broken(const Conservation::Law &l,
-                              XWritable               &c) noexcept :
+                        XWritable               &c) noexcept :
         gain(0),
         claw(l),
-        Csub(c)
+        cfix(c)
         {
         }
 
         Broken::  Broken(const Broken &b) noexcept :
         gain(b.gain),
         claw(b.claw),
-        Csub(b.Csub)
+        cfix(b.cfix)
         {
 
         }
@@ -77,14 +77,14 @@ namespace Yttrium
         {
             const xreal_t zero;
             os << real_t(self.gain) << " @" << (self.claw);
-            if(self.gain>zero) { os << "->"; self.claw.displayCompact(os,self.Csub,SubLevel); }
+            if(self.gain>zero) { os << "->"; self.claw.displayCompact(os,self.cfix,SubLevel); }
             return os;
         }
 
 
         bool  Broken:: still(const XReadable &Ctop, XAdd &xadd)
         {
-            return claw.broken(gain, Csub, SubLevel, Ctop, TopLevel, xadd);
+            return claw.broken(gain, cfix, SubLevel, Ctop, TopLevel, xadd);
         }
 
 
@@ -106,7 +106,16 @@ namespace Yttrium
                     process(*g,Ctop,xml);
             }
 
-
+            void display(std::ostream &os, const Library &lib) const
+            {
+                os << "{" << std::endl;
+                for(const SNode *sn = mine.species.head; sn; sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    lib.pad(os << "d" << sp,sp) << '=' << Cinj[ sp.indx[SubLevel] ] << std::endl;
+                }
+                os << "}" << std::endl;
+            }
 
 
             const Cluster    &     mine; //!< persistent cluster
@@ -202,12 +211,12 @@ namespace Yttrium
                         const Broken & best = jail.tail();
                         Y_XMLOG(xml," (*) " << best);
                         const Conservation::Law &claw = best.claw;
-                        const XReadable         &Csub = best.Csub;
+                        const XReadable         &cfix = best.cfix;
                         for(const Actor *a=claw->head;a;a=a->next)
                         {
                             const size_t   isub = a->sp.indx[SubLevel];
                             const size_t   itop = a->sp.indx[TopLevel];
-                            const xreal_t  Cnew = Csub[ isub ];
+                            const xreal_t  Cnew = cfix[ isub ];
                             xreal_t       &Cold = Ctop[ itop ];
                             assert(Cnew>=Cold);
                             Cinj[isub] << (Cnew-Cold); // store  difference
@@ -289,7 +298,7 @@ Y_UTEST(janitor)
         janitor.prolog();
         janitor.process(C0,xml);
         lib(std::cerr << "C1=","\t[",C0,"]");
-
+        janitor.display(std::cerr, lib);
 
     }
 
