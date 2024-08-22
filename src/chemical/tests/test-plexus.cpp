@@ -14,13 +14,13 @@ namespace Yttrium
     {
 
 
-        class Faulty
+        class Fixed
         {
         public:
-            typedef CxxSeries<Faulty,XMemory> Series;
+            typedef CxxSeries<Fixed,XMemory> Series;
 
             //! initialize with no gain
-            Faulty(XWritable & _cc, const Conservation::Law &_cl) noexcept :
+            Fixed(XWritable & _cc, const Conservation::Law &_cl) noexcept :
             gg(),
             cc(_cc),
             cl(_cl)
@@ -28,7 +28,7 @@ namespace Yttrium
             }
 
             //! duplicate
-            Faulty(const Faulty &_) noexcept :
+            Fixed(const Fixed &_) noexcept :
             gg(_.gg),
             cc(_.cc),
             cl(_.cl)
@@ -37,22 +37,22 @@ namespace Yttrium
 
 
             //! cleanup
-            ~Faulty() noexcept {}
+            ~Fixed() noexcept {}
 
 
-            bool still(const XReadable &C, 
+            bool still(const XReadable &C,
                        const Level      L,
                        XAdd            &xadd)
             {
                 return cl.broken(gg,cc,SubLevel,C,L,xadd);
             }
 
-            static int Compare(const Faulty &lhs, const Faulty &rhs) noexcept
+            static int Compare(const Fixed &lhs, const Fixed &rhs) noexcept
             {
                 return Comparison::Decreasing(lhs.gg, rhs.gg);
             }
 
-            friend std::ostream & operator<<( std::ostream &os, const Faulty &self)
+            friend std::ostream & operator<<( std::ostream &os, const Fixed &self)
             {
                 os << std::setw(15) << real_t(self.gg) << " @" << self.cl << " -> ";
                 self.cl.displayCompact(os,self.cc, SubLevel);
@@ -64,7 +64,7 @@ namespace Yttrium
             const Conservation::Law &cl;
 
         private:
-            Y_DISABLE_ASSIGN(Faulty);
+            Y_DISABLE_ASSIGN(Fixed);
         };
 
         class Warden
@@ -108,7 +108,7 @@ namespace Yttrium
             const size_t        cols;  //!< max species in sub-level
             XAdd                xadd;  //!< for internal computations
             XMatrix             conc;  //!< workspace for concentrations
-            Faulty::Series      jail;  //!< fixed
+            Fixed::Series       jail;  //!< fixed
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -124,7 +124,7 @@ namespace Yttrium
                 while(jail.size()>0)
                 {
                     Y_XML_SECTION_OPT(xml,"Reducing","size='"<<jail.size()<<"'");
-                    HeapSort::Call(jail,Faulty::Compare);
+                    HeapSort::Call(jail,Fixed::Compare);
                     if(xml.verbose)
                     {
                         for(size_t i=1;i<jail.size();++i)
@@ -151,11 +151,11 @@ namespace Yttrium
                     const Conservation::Law &cl = **ln;
                     const size_t             ii = jail.size()+1;
                     XWritable               &cc = conc[ii];
-                    Faulty                   fy(cc,cl);
-                    if( fy.still(C,L,xadd) )
+                    Fixed                    fx(cc,cl);
+                    if( fx.still(C,L,xadd) )
                     {
-                        jail << fy;
-                        Y_XMLOG(xml, "(+) " << fy);
+                        jail << fx;
+                        Y_XMLOG(xml, "(+) " << fx);
                     }
                 }
             }
