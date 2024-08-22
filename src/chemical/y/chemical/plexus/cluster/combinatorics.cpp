@@ -237,7 +237,12 @@ namespace Yttrium
                     const Equilibrium &eq = **en;
                     XWritable         &nu = topo[eq.indx[SubLevel]];
                     eq.topology(nu,SubLevel);
-                    Y_XMLOG(xml,nu);
+                    if(xml.verbose)
+                    {
+                        CxxArray<int> tmp(species.size);
+                        eq.topology(tmp,SubLevel);
+                        uuid.pad( xml() << eq.name, eq) << " : " << tmp << std::endl;
+                    }
                 }
             }
 
@@ -293,10 +298,7 @@ namespace Yttrium
                         const size_t       rid = rEq.indx[SubLevel];
                         bit[rid] = flag[rid][lid] = !lEq.linkedToConserved(rEq,conserved.book);
                     }
-                    if(xml.verbose)
-                    {
-                        uuid.pad( xml() << lEq.name, lEq) << " : " << bit << std::endl;
-                    }
+                    if(xml.verbose) uuid.pad( xml() << lEq.name, lEq) << " : " << bit << std::endl;
                 }
             }
 
