@@ -24,7 +24,7 @@ namespace Yttrium
             {
                 const Equilibrium &eq = **it;
                 eqs.display(os,eq);
-                os << Coerce(eq).K(0);
+                os << ' ' << Coerce(eq).K(0);
                 os << std::endl;
             }
             os << '}';
