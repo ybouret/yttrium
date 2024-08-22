@@ -1,11 +1,168 @@
 
 #include "y/chemical/plexus.hpp"
 
-
+#include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        class Faulty
+        {
+        public:
+            typedef CxxSeries<Faulty,XMemory> Series;
+
+            //! initialize with no gain
+            Faulty(XWritable & _cc, const Conservation::Law &_cl) noexcept :
+            gg(),
+            cc(_cc),
+            cl(_cl)
+            {
+            }
+
+            //! duplicate
+            Faulty(const Faulty &_) noexcept :
+            gg(_.gg),
+            cc(_.cc),
+            cl(_.cl)
+            {
+            }
+
+
+            //! cleanup
+            ~Faulty() noexcept {}
+
+
+            bool still(const XReadable &C, 
+                       const Level      L,
+                       XAdd            &xadd)
+            {
+                return cl.broken(gg,cc,SubLevel,C,L,xadd);
+            }
+
+            static int Compare(const Faulty &lhs, const Faulty &rhs) noexcept
+            {
+                return Comparison::Decreasing(lhs.gg, rhs.gg);
+            }
+
+            friend std::ostream & operator<<( std::ostream &os, const Faulty &self)
+            {
+                os << std::setw(15) << real_t(self.gg) << " @" << self.cl << " -> ";
+                self.cl.displayCompact(os,self.cc, SubLevel);
+                return os;
+            }
+
+            xreal_t                 gg; //!< gain
+            XWritable &             cc; //!< persistent fixed concentration
+            const Conservation::Law &cl;
+
+        private:
+            Y_DISABLE_ASSIGN(Faulty);
+        };
+
+        class Warden
+        {
+        public:
+
+            typedef Conservation::Laws::Group Group;
+            typedef Conservation::LNode       LNode;
+
+            explicit Warden(const Cluster &cluster) :
+            mine(cluster),
+            head( mine.laws.isValid() ? mine.laws->groups.head : 0),
+            rows( 0!=head ? mine.laws->maxGroupSize : 0 ),
+            cols( 0!=head ? mine.species.size       : 0 ),
+            xadd( cols ),
+            conc( rows, cols),
+            jail( rows )
+            {
+
+            }
+
+            void run(XWritable &C, const Level L, XMLog &xml)
+            {
+                Y_XML_SECTION(xml, "Warden");
+
+                for(const Group *g=head;g;g=g->next)
+                    run(*g,C,L,xml);
+
+            }
+
+
+            virtual ~Warden() noexcept
+            {
+
+            }
+
+
+            const Cluster      &mine;  //!< my cluster
+            const Group * const head;  //!< first group
+            const size_t        rows;  //!< laws max group size
+            const size_t        cols;  //!< max species in sub-level
+            XAdd                xadd;  //!< for internal computations
+            XMatrix             conc;  //!< workspace for concentrations
+            Faulty::Series      jail;  //!< fixed
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Warden);
+
+            void run(const Group &group,
+                     XWritable   &C,
+                     const Level  L,
+                     XMLog       &xml)
+            {
+                initialize(group,C,L,xml);
+
+
+                while(jail.size()>0)
+                {
+                    Y_XML_SECTION_OPT(xml,"Reducing","size='"<<jail.size()<<"'");
+                    HeapSort::Call(jail,Faulty::Compare);
+                    if(xml.verbose)
+                    {
+                        for(size_t i=1;i<jail.size();++i)
+                        {
+                            Y_XMLOG(xml, "(+) " << jail[i]);
+                        }
+                        Y_XMLOG(xml, "(*) " << jail.tail());
+                    }
+                    break;
+                }
+
+            }
+
+
+            void initialize(const Group &group,
+                            XWritable   &C,
+                            const Level  L,
+                            XMLog       &xml)
+            {
+                Y_XML_SECTION_OPT(xml, "Initialize", "groupSize='" << group.size << "'");
+                jail.free();
+                for(const LNode *ln=group.head;ln;ln=ln->next)
+                {
+                    const Conservation::Law &cl = **ln;
+                    const size_t             ii = jail.size()+1;
+                    XWritable               &cc = conc[ii];
+                    Faulty                   fy(cc,cl);
+                    if( fy.still(C,L,xadd) )
+                    {
+                        jail << fy;
+                        Y_XMLOG(xml, "(+) " << fy);
+                    }
+                }
+            }
+        };
+
+    }
+}
 
 Y_UTEST(plexus)
 {
@@ -31,6 +188,13 @@ Y_UTEST(plexus)
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
+        Warden warden(*cl);
+        plexus.conc(C0,0.3,0.5);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        warden.run(C0,TopLevel,xml);
+        lib(std::cerr << "C1=","\t[",C0,"]");
+
+
     }
 
 }

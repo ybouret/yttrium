@@ -80,8 +80,8 @@ namespace Yttrium
             AddressBook cdb;
             for(CLaw *law = laws->head;law;law=law->next)
             {
-                law->record(cdb);
-                law->extract(*this);
+                law->record(cdb);    // record conserved species
+                law->extract(*this); // here, will use only primary
             }
 
             for(const CLaws::Group *g=laws->groups.head;g;g=g->next)
@@ -103,7 +103,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // qualify species
+            // qualify species according to cdb content
             //
             //------------------------------------------------------------------
             for(const SNode *sn=species.head;sn;sn=sn->next)
