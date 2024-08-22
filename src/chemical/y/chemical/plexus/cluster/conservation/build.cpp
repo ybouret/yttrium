@@ -78,9 +78,10 @@ namespace Yttrium
             //------------------------------------------------------------------
             Coerce(laws) = new Conservation::Laws(species,Qm);
             AddressBook cdb;
-            for(const CLaw *law = laws->head;law;law=law->next)
+            for(CLaw *law = laws->head;law;law=law->next)
             {
                 law->record(cdb);
+                law->extract(*this);
             }
 
             for(const CLaws::Group *g=laws->groups.head;g;g=g->next)
@@ -94,6 +95,7 @@ namespace Yttrium
                     Y_XMLOG(xml, "\t|_nrm2=" << real_t(law.xden) );
                     const Matrix<real_t> proj(CopyOf,law.proj);
                     Y_XMLOG(xml, "\t|_proj=" << proj);
+                    Y_XMLOG(xml, "\t|_team=" << law.team);
 
                 }
             }

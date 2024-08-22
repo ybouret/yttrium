@@ -21,6 +21,7 @@ namespace Yttrium
             xden(0),
             proj(),
             keep(),
+            team(),
             next(0),
             prev(0)
             {
@@ -78,7 +79,28 @@ namespace Yttrium
                 return false;
             }
 
-            
+            bool Law:: involves(const Components &eq) const noexcept
+            {
+                size_t n = eq->size();
+                for(Components::ConstIterator it=eq->begin();n>0;--n,++it)
+                {
+                    if( hired( (**it).sp) ) return true;
+                }
+                return false;
+            }
+
+            void Law:: extract(const EList &eqs)
+            {
+                EList &target = Coerce(team);
+                target.release();
+                for(const ENode *en=eqs.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(involves(eq)) target << eq;
+                }
+            }
+
+
 
             bool Law :: broken(xreal_t &         gain,
                                XWritable &       Cout,

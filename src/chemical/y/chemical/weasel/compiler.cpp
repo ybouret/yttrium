@@ -122,14 +122,13 @@ namespace Yttrium
 
 
                 // second pass: compile rx
-                //std::cerr << "rx=" <<  rx << std::endl;
 
 
                 while(rx.size()>0)
                 {
                     const String  regexp = rx.pullHead();
                     Jive::Matcher match  = regexp;
-                    std::cerr << "Looking for '" << regexp << "'" << std::endl;
+                    //std::cerr << "Looking for '" << regexp << "'" << std::endl;
                     size_t count = 0;
                     for(Iterator it=code->db.begin();it!=code->db.end();++it)
                     {

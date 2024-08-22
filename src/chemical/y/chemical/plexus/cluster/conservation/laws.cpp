@@ -176,7 +176,7 @@ namespace Yttrium
                 Vector<xreal_t > alpha(m,0);
                 for(LNode *ln=head;ln;ln=ln->next)
                 {
-                    Law     &law = Coerce(**ln); std::cerr << law << std::endl;
+                    Law     &law = Coerce(**ln);// std::cerr << law << std::endl;
 
                     //----------------------------------------------------------
                     //

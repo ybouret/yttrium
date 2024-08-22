@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Conservation_Law_Included
 #define Y_Chemical_Conservation_Law_Included 1
 
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/equilibrium.hpp"
 
 namespace Yttrium
 {
@@ -53,8 +53,10 @@ namespace Yttrium
 
                 void viz(OutputStream &fp, const String &color) const;//!< assume species are in fp
 
-                bool linkedTo(const Species &) const noexcept; //!< this->hired(species)
-                bool linkedTo(const Law     &) const noexcept; //!< this hired one of other's species
+                bool linkedTo(const Species &)    const noexcept; //!< this->hired(species)
+                bool linkedTo(const Law     &)    const noexcept; //!< this hired one of other's species
+                bool involves(const Components &) const noexcept; //!< this hiread one of components
+                void extract(const EList &);
 
                 //! check is and how much broken is the law
                 /**
@@ -82,6 +84,7 @@ namespace Yttrium
                 const xreal_t  xden; //!< |nu|^2
                 const XMatrix  proj; //!< in group projection
                 const SList    keep; //!< species in group, not in law
+                const EList    team; //!< primary involved equilibri[um|a]
                 Law *          next; //!< for list
                 Law *          prev; //!< for list
 

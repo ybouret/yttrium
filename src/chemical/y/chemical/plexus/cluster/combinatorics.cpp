@@ -286,8 +286,8 @@ namespace Yttrium
                     const Equilibrium &lEq = **lhs;
                     const size_t       lid = lEq.indx[SubLevel];
                     Writable<bool>    &bit = flag[lid];
-                    bit[lid] = true;
-                    for(const ENode *rhs=lhs->next;rhs;rhs=rhs->next)
+                    //bit[lid] = false;
+                    for(const ENode *rhs=lhs;rhs;rhs=rhs->next)
                     {
                         const Equilibrium &rEq = **rhs;
                         const size_t       rid = rEq.indx[SubLevel];
