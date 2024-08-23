@@ -100,6 +100,12 @@ namespace Yttrium
                 for(const Group *g=head;g;g=g->next)
                     run(*g,C,L,xml);
 
+                for(const SNode *sn = mine.species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
+                }
+
             }
 
 
@@ -161,7 +167,18 @@ namespace Yttrium
                         //------------------------------------------------------
                         {
                             const Fixed &fx = jail.tail();
-                            mine.transfer(C,L,fx.cc,SubLevel);
+                            for(const Actor *a=fx.cl->head;a;a=a->next)
+                            {
+                                const Species &      sp = a->sp;
+                                const size_t * const id = sp.indx;
+                                const size_t         ii = id[SubLevel];
+                                const size_t         II = id[L];
+                                const xreal_t        c0 = C[ II ];
+                                const xreal_t        c1 = fx.cc[ ii ]; assert(c1>=c0);
+                                cinj[ii] << (c1-c0);
+                                C[II] = c1;
+                            }
+
                         }
                         jail.popTail();
                     }
@@ -189,6 +206,8 @@ namespace Yttrium
                         }
                     }
                 }
+
+
 
                 return true;
             }
