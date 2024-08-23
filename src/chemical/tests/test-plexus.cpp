@@ -81,9 +81,16 @@ namespace Yttrium
             cols( 0!=head ? mine.species.size       : 0 ),
             xadd( cols ),
             conc( rows, cols),
-            jail( rows )
+            jail( rows ),
+            cinj( rows )
             {
 
+            }
+
+
+            void prolog() noexcept
+            {
+                for(size_t j=rows;j>0;--j) cinj[j].free();
             }
 
             void run(XWritable &C, const Level L, XMLog &xml)
@@ -109,6 +116,7 @@ namespace Yttrium
             XAdd                xadd;  //!< for internal computations
             XMatrix             conc;  //!< workspace for concentrations
             Fixed::Series       jail;  //!< fixed
+            XSwell              cinj;  //!< injected
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -123,30 +131,52 @@ namespace Yttrium
 
                 while(jail.size()>0)
                 {
-                    Y_XML_SECTION_OPT(xml,"Reducing","size='"<<jail.size()<<"'");
-
-                    // sort by decreasing excess
-                    HeapSort::Call(jail,Fixed::Compare);
-                    if(xml.verbose)
                     {
-                        for(size_t i=1;i<jail.size();++i)
+                        Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
+
+                        // sort by decreasing excess
+                        HeapSort::Call(jail,Fixed::Compare);
+                        if(xml.verbose)
                         {
-                            Y_XMLOG(xml, "(+) " << jail[i]);
+                            for(size_t i=1;i<jail.size();++i)
+                            {
+                                Y_XMLOG(xml, "(+) " << jail[i]);
+                            }
+                            Y_XMLOG(xml, "(*) " << jail.tail());
                         }
-                        Y_XMLOG(xml, "(*) " << jail.tail());
+
+                        // optimize (and remove) smallest excess
+                        {
+                            const Fixed &fx = jail.tail();
+                            mine.transfer(C,L,fx.cc,SubLevel);
+                        }
+                        jail.popTail();
                     }
 
-                    // optimize (and remove) smallest excess
-                    optimize(C,L,jail.tail(),xml);
-                    jail.popTail();
+                    {
+                        Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
 
-                    // check remaining
-
+                        // check remaining
+                        for(size_t i=jail.size();i>0;--i)
+                        {
+                            Fixed &fx = jail[i];
+                            if( fx.still(C,L,xadd) )
+                            {
+                                Y_XMLOG(xml, "(+) " << fx);
+                            }
+                            else
+                            {
+                                Y_XMLOG(xml, "(-) " << fx);
+                                jail.remove(i);
+                            }
+                        }
+                    }
                     break;
                 }
 
             }
 
+#if 0
             void optimize(XWritable   &C,
                           const Level  L,
                           const Fixed &F,
@@ -166,6 +196,7 @@ namespace Yttrium
 
 
             }
+#endif
 
             //! initialize with modified concentrations
             void initialize(const Group &group,
