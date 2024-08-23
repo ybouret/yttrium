@@ -186,10 +186,13 @@ namespace Yttrium
                         renormalize(*g,C,L,xml);
                 }
 
-                for(const SNode *sn = mine.species.head;sn;sn=sn->next)
+                if(0!=head)
                 {
-                    const Species &sp = **sn;
-                    Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
+                    for(const SNode *sn = mine.species.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
+                    }
                 }
 
             }
