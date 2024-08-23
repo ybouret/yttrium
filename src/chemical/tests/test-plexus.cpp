@@ -154,8 +154,20 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml,"Optimize","fixed='" << F.cl.name << "'");
 
+                std::cerr << "C=" << C    << std::endl;
+                std::cerr << "F=" << F.cc << std::endl;
+
+                const Conservation::Law &law = F.cl;
+                for(const Actor *a=law->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    std::cerr << "[" << sp << "]=" << std::setw(15) << real_t(C[sp.indx[L]]) << " -> " << std::setw(15) <<  real_t(F.cc[sp.indx[SubLevel]]) << std::endl;
+                }
+
+
             }
 
+            //! initialize with modified concentrations
             void initialize(const Group &group,
                             XWritable   &C,
                             const Level  L,
@@ -167,7 +179,7 @@ namespace Yttrium
                 {
                     const Conservation::Law &cl = **ln;
                     const size_t             ii = jail.size()+1;
-                    XWritable               &cc = conc[ii];
+                    XWritable               &cc = mine.transfer(conc[ii],SubLevel,C,L);
                     Fixed                    fx(cc,cl);
                     if( fx.still(C,L,xadd) )
                     {

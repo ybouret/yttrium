@@ -124,7 +124,7 @@ namespace Yttrium
             Laws:: Group:: Group(const Law &first) :
             Object(),
             LList(),
-            species(),
+            band(),
             next(0),
             prev(0)
             {
@@ -162,7 +162,7 @@ namespace Yttrium
                 {
                     AddressBook book;
                     for(const LNode *ln=head;ln;ln=ln->next) (**ln).record(book);
-                    Indexed::AuxOrganize( book.sendTo( Coerce(species) ) );
+                    Indexed::AuxOrganize( book.sendTo( Coerce(band) ) );
                 }
 
                 //--------------------------------------------------------------
@@ -172,7 +172,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                const size_t     m = species.size;
+                const size_t     m = band.size;
                 Vector<xreal_t > alpha(m,0);
                 for(LNode *ln=head;ln;ln=ln->next)
                 {
@@ -201,14 +201,13 @@ namespace Yttrium
                             mat[i][i] += law.xden;
                         }
                     }
-                    //std::cerr << "proj=" << law.proj << std::endl;
-
+                    
                     //----------------------------------------------------------
                     //
                     // update species to keep
                     //
                     //----------------------------------------------------------
-                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    for(const SNode *sn=band.head;sn;sn=sn->next)
                     {
                         const Species &sp = **sn;
                         if(law.hired(sp)) continue;

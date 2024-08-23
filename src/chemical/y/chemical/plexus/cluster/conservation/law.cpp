@@ -137,12 +137,12 @@ namespace Yttrium
                 for(const Actor *i=head;i;i=i->next)
                 {
                     const size_t * const  idx = i->sp.indx;
-                    const XReadable     & p   = proj[idx[AuxLevel]];
+                    const XReadable     & row = proj[idx[AuxLevel]];
                     xadd.free();
                     for(const Actor *j=head;j;j=j->next)
                     {
                         const size_t * const jdx = j->sp.indx;
-                        xadd << p[ jdx[AuxLevel] ] * Cinp[ jdx[Linp] ];
+                        xadd << row[ jdx[AuxLevel] ] * Cinp[ jdx[Linp] ];
                     }
                     Cout[idx[Lout]] = xadd.sum() / xden;
                 }
