@@ -20,7 +20,7 @@ namespace Yttrium
             Actors(),
             xden(0),
             proj(),
-            keep(),
+            //keep(),
             base(),
             next(0),
             prev(0)
@@ -147,6 +147,7 @@ namespace Yttrium
                     Cout[idx[Lout]] = xadd.sum() / xden;
                 }
 
+#if 0
                 //--------------------------------------------------------------
                 //
                 // transfer species to keep consistent state
@@ -157,7 +158,7 @@ namespace Yttrium
                     const Species &sp = **sn;
                     Cout[ sp.indx[Lout] ] = Cinp[ sp.indx[Linp] ];
                 }
-
+#endif
 
                 return true;
             }

@@ -198,7 +198,6 @@ namespace Yttrium
                         {
                             alpha[ a->sp.indx[AuxLevel] ] = a->nu;
                         }
-                        //std::cerr << "alpha=" << alpha << std::endl;
                         for(size_t i=m;i>0;--i)
                         {
                             for(size_t j=m;j>0;--j)
@@ -209,6 +208,7 @@ namespace Yttrium
                         }
                     }
                     
+#if 0
                     //----------------------------------------------------------
                     //
                     // update species to keep
@@ -220,6 +220,7 @@ namespace Yttrium
                         if(law.hired(sp)) continue;
                         Coerce(law.keep) << sp;
                     }
+#endif
                 }
 
             }

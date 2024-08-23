@@ -97,7 +97,7 @@ namespace Yttrium
                 {
                     const CLaw &law = **ln;
                     Y_XMLOG(xml,law);
-                    Y_XMLOG(xml, "\t|_keep=" << law.keep);
+                    //Y_XMLOG(xml, "\t|_keep=" << law.keep);
                     Y_XMLOG(xml, "\t|_nrm2=" << real_t(law.xden) );
                     const Matrix<real_t> proj(CopyOf,law.proj);
                     Y_XMLOG(xml, "\t|_proj=" << proj);

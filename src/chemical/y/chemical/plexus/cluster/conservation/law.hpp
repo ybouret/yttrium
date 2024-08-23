@@ -61,7 +61,7 @@ namespace Yttrium
                 //! check is and how much broken is the law
                 /**
                  \param  gain positive if broken
-                 \param  Cout output corrected concentration
+                 \param  Cout output corrected concentration MUST be Cinp
                  \param  Lout output level
                  \param  Cinp input broken (or not) concentration
                  \param  Linp input level
@@ -83,7 +83,6 @@ namespace Yttrium
                 //______________________________________________________________
                 const xreal_t  xden; //!< |nu|^2
                 const XMatrix  proj; //!< in group projection
-                const SList    keep; //!< species in group, not in law
                 const EList    base; //!< primary involved equilibri[um|a]
                 Law *          next; //!< for list
                 Law *          prev; //!< for list
