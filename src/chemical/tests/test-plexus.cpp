@@ -124,6 +124,8 @@ namespace Yttrium
                 while(jail.size()>0)
                 {
                     Y_XML_SECTION_OPT(xml,"Reducing","size='"<<jail.size()<<"'");
+
+                    // sort by decreasing excess
                     HeapSort::Call(jail,Fixed::Compare);
                     if(xml.verbose)
                     {
@@ -133,11 +135,26 @@ namespace Yttrium
                         }
                         Y_XMLOG(xml, "(*) " << jail.tail());
                     }
+
+                    // optimize (and remove) smallest excess
+                    optimize(C,L,jail.tail(),xml);
+                    jail.popTail();
+
+                    // check remaining
+
                     break;
                 }
 
             }
 
+            void optimize(XWritable   &C,
+                          const Level  L,
+                          const Fixed &F,
+                          XMLog       &xml)
+            {
+                Y_XML_SECTION_OPT(xml,"Optimize","fixed='" << F.cl.name << "'");
+
+            }
 
             void initialize(const Group &group,
                             XWritable   &C,
@@ -159,6 +176,8 @@ namespace Yttrium
                     }
                 }
             }
+
+
         };
 
     }
