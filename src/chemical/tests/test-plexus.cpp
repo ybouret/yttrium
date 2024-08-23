@@ -121,31 +121,44 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
-            void run(const Group &group,
+            bool run(const Group &group,
                      XWritable   &C,
                      const Level  L,
                      XMLog       &xml)
             {
-                initialize(group,C,L,xml);
 
+                //--------------------------------------------------------------
+                //
+                // initialize all possible fixed in group
+                //
+                //--------------------------------------------------------------
+                if(!initialize(group,C,L,xml)) return false;
+                assert( jail.size() > 0);
 
+                //--------------------------------------------------------------
+                //
+                // iterative reduction
+                //
+                //--------------------------------------------------------------
                 while(jail.size()>0)
                 {
                     {
                         Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
 
+                        //------------------------------------------------------
                         // sort by decreasing excess
+                        //------------------------------------------------------
                         HeapSort::Call(jail,Fixed::Compare);
                         if(xml.verbose)
                         {
                             for(size_t i=1;i<jail.size();++i)
-                            {
-                                Y_XMLOG(xml, "(+) " << jail[i]);
-                            }
-                            Y_XMLOG(xml, "(*) " << jail.tail());
+                            { Y_XMLOG(xml, "(+) " << jail[i]);     }
+                            { Y_XMLOG(xml, "(*) " << jail.tail()); }
                         }
 
+                        //------------------------------------------------------
                         // optimize (and remove) smallest excess
+                        //------------------------------------------------------
                         {
                             const Fixed &fx = jail.tail();
                             mine.transfer(C,L,fx.cc,SubLevel);
@@ -153,10 +166,14 @@ namespace Yttrium
                         jail.popTail();
                     }
 
+                    if(jail.size()<=0) return true; // early return, needed fixed
+
                     {
                         Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
 
+                        //------------------------------------------------------
                         // check remaining
+                        //------------------------------------------------------
                         for(size_t i=jail.size();i>0;--i)
                         {
                             Fixed &fx = jail[i];
@@ -171,41 +188,24 @@ namespace Yttrium
                             }
                         }
                     }
-                    break;
                 }
 
+                return true;
             }
 
-#if 0
-            void optimize(XWritable   &C,
-                          const Level  L,
-                          const Fixed &F,
-                          XMLog       &xml)
-            {
-                Y_XML_SECTION_OPT(xml,"Optimize","fixed='" << F.cl.name << "'");
 
-                std::cerr << "C=" << C    << std::endl;
-                std::cerr << "F=" << F.cc << std::endl;
-
-                const Conservation::Law &law = F.cl;
-                for(const Actor *a=law->head;a;a=a->next)
-                {
-                    const Species &sp = a->sp;
-                    std::cerr << "[" << sp << "]=" << std::setw(15) << real_t(C[sp.indx[L]]) << " -> " << std::setw(15) <<  real_t(F.cc[sp.indx[SubLevel]]) << std::endl;
-                }
-
-
-            }
-#endif
-
-            //! initialize with modified concentrations
-            void initialize(const Group &group,
+            //__________________________________________________________________
+            //
+            //! load C and compute all modified concentrations
+            //__________________________________________________________________
+            bool initialize(const Group &group,
                             XWritable   &C,
                             const Level  L,
                             XMLog       &xml)
             {
                 Y_XML_SECTION_OPT(xml, "Initialize", "groupSize='" << group.size << "'");
                 jail.free();
+                bool ans = false;
                 for(const LNode *ln=group.head;ln;ln=ln->next)
                 {
                     const Conservation::Law &cl = **ln;
@@ -216,8 +216,10 @@ namespace Yttrium
                     {
                         jail << fx;
                         Y_XMLOG(xml, "(+) " << fx);
+                        ans = true;
                     }
                 }
+                return ans;
             }
 
 
