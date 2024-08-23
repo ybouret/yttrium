@@ -193,6 +193,7 @@ namespace Yttrium
             bool neutral()                               const noexcept; //!< return neutrality check
             bool crucial(const XReadable &, const Level) const noexcept; //!< check if crucial
 
+            
             //! linked to a conserved species
             bool linkedToConserved(const Species     &sp,
                                    const AddressBook &conserved) const noexcept;
@@ -232,6 +233,9 @@ namespace Yttrium
 
             //! check all accounted, throw exception otherwise
             void mustSupport(const XReadable &C, const Level L) const;
+
+            //! check if species is a component
+            const Component * query(const Species &sp) const noexcept;
 
             //__________________________________________________________________
             //

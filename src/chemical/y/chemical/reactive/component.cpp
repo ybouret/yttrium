@@ -25,6 +25,22 @@ namespace Yttrium
             return sp.key();;
         }
 
+        std::ostream & operator<<(std::ostream &os, const Component &cm)
+        {
+            switch(cm.nu)
+            {
+                case 1:
+                    break;
+                case -1:
+                    os << '-';
+                    break;
+                default:
+                    os << cm.nu << '*';
+                    break;
+            }
+            os << '[' << cm.sp << ']';
+            return os;
+        }
     }
 
 }

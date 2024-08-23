@@ -216,6 +216,13 @@ namespace Yttrium
             return 0 != db.search(sp.name);
         }
 
+        const Component * Components:: query(const Species &sp) const noexcept
+        {
+            const Component::Ptr *pcm = db.search(sp.name);
+            if(0!=pcm) return & **pcm;
+            return 0;
+        }
+
         bool Components:: linkedTo(const Components &other) const noexcept
         {
             size_t            n  = db.size();

@@ -275,6 +275,19 @@ namespace Yttrium
                 gate.neg();
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate) ;
 
+                // finding a way
+                for(const ENode *en=G.base.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    for(const SNode *sn=gate.head;sn;sn=sn->next)
+                    {
+                        const Species &         sp = **sn;
+                        const Component * const cm = eq.query(sp);
+                        if(!cm) continue;
+                        Y_XMLOG(xml, eq << " with " << *cm);
+                    }
+                }
+
 
             }
 
