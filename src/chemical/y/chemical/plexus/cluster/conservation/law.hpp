@@ -84,7 +84,7 @@ namespace Yttrium
                 const xreal_t  xden; //!< |nu|^2
                 const XMatrix  proj; //!< in group projection
                 const SList    keep; //!< species in group, not in law
-                const EList    team; //!< primary involved equilibri[um|a]
+                const EList    base; //!< primary involved equilibri[um|a]
                 Law *          next; //!< for list
                 Law *          prev; //!< for list
 

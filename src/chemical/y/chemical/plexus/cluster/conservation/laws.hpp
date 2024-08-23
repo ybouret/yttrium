@@ -57,7 +57,8 @@ namespace Yttrium
                     bool accept(const Group &) const noexcept; //!< has common species with group
                     void compile();                            //!< gather and make AuxLevel
 
-                    const SList   band; //!< shared species in group
+                    const SList   crew; //!< shared species in group
+                    const EList   base; //!< shared equilibria in group
                     Group *       next; //!< for list
                     Group *       prev; //!< for list
 

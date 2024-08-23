@@ -21,7 +21,7 @@ namespace Yttrium
             xden(0),
             proj(),
             keep(),
-            team(),
+            base(),
             next(0),
             prev(0)
             {
@@ -91,7 +91,7 @@ namespace Yttrium
 
             void Law:: extract(const EList &eqs)
             {
-                EList &target = Coerce(team);
+                EList &target = Coerce(base);
                 target.release();
                 for(const ENode *en=eqs.head;en;en=en->next)
                 {
