@@ -169,6 +169,9 @@ namespace Yttrium
                              XMLog       &xml)
             {
                 Y_XML_SECTION_OPT(xml, "renormalize", G);
+                Y_XMLOG(xml, "base:" << G.base);
+                Y_XMLOG(xml, "crew:" << G.crew);
+
             }
 
             //__________________________________________________________________
