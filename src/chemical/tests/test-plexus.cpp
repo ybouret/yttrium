@@ -57,30 +57,30 @@ namespace Yttrium
                 SRepo &       self = *this;
                 try {
 
-                 if(size<=0)
-                 {
-                     // initialize
-                     Coerce(xi) =  x;
-                     self       << s;
-                 }
-                 else
-                 {
-                     switch( Sign::Of(x,xi) )
-                     {
-                         case Negative: // new winner
-                             free();
-                             Coerce(xi) =  x;
-                             self       << s;
-                             break;
+                    if(size<=0)
+                    {
+                        // initialize
+                        Coerce(xi) =  x;
+                        self       << s;
+                    }
+                    else
+                    {
+                        switch( Sign::Of(x,xi) )
+                        {
+                            case Negative: // new winner
+                                free();
+                                Coerce(xi) =  x;
+                                self       << s;
+                                break;
 
-                         case __Zero__: // same value
-                             self << s;
-                             break;
+                            case __Zero__: // same value
+                                self << s;
+                                break;
 
-                         case Positive: // discard
-                             break;
-                     }
-                 }
+                            case Positive: // discard
+                                break;
+                        }
+                    }
                 }
                 catch(...)
                 {
@@ -182,8 +182,12 @@ namespace Yttrium
 
                 for(const Group *g=head;g;g=g->next)
                 {
-                    if(wasInjected(*g,C,L,xml))
-                        renormalize(*g,C,L,xml);
+                    const Group                    &G   = *g;
+                    const Conservation::Law * const law = wasInjected(G,C,L,xml);
+                    if(0!=law)
+                    {
+                        renormalize(G,C,L,*law,xml);
+                    }
                 }
 
                 if(0!=head)
@@ -216,10 +220,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
-            bool wasInjected(const Group &G,
-                             XWritable   &C,
-                             const Level  L,
-                             XMLog       &xml)
+            const Conservation::Law * wasInjected(const Group &G,
+                                                  XWritable   &C,
+                                                  const Level  L,
+                                                  XMLog       &xml)
             {
 
                 //--------------------------------------------------------------
@@ -227,18 +231,19 @@ namespace Yttrium
                 // initialize all possible fixed in group
                 //
                 //--------------------------------------------------------------
-                if(!initialize(G,C,L,xml)) return false;
-                assert( jail.size() > 0);
+                if(!initialize(G,C,L,xml)) return 0;
 
                 //--------------------------------------------------------------
                 //
                 // iterative reduction
                 //
                 //--------------------------------------------------------------
+                assert( jail.size() > 0);
+                const Conservation::Law *law = 0;
                 while(jail.size()>0)
                 {
-                    reduce(C,L,xml);
-                    if(jail.size()<=0) return true; // early return, needed fixed
+                    law = reduce(C,L,xml); assert(0!=law);
+                    if(jail.size()<=0) return law; // early return, needed fixed
                     update(C,L,xml);
                 }
 
@@ -247,15 +252,18 @@ namespace Yttrium
                 // something was modified
                 //
                 //--------------------------------------------------------------
-                return true;
+                assert(0!=law);
+                return law;
             }
 
-            void renormalize(const Group &G,
-                             XWritable   &C,
-                             const Level  L,
-                             XMLog       &xml)
+            void renormalize(const Group             &G,
+                             XWritable               &C,
+                             const Level              L,
+                             const Conservation::Law &law,
+                             XMLog                   &xml)
             {
-                Y_XML_SECTION_OPT(xml, "Renormalize", G);
+                Y_XML_SECTION_OPT(xml, "Renormalize", law);
+                Y_XMLOG(xml, "from:" << G);
                 Y_XMLOG(xml, "base:" << G.base);
                 Y_XMLOG(xml, "crew:" << G.crew);
 
@@ -339,9 +347,9 @@ namespace Yttrium
             //
             //! find lowest fix and apply it
             //__________________________________________________________________
-            void reduce(XWritable   &C,
-                        const Level  L,
-                        XMLog       &xml)
+            const Conservation::Law * reduce(XWritable   &C,
+                                             const Level  L,
+                                             XMLog       &xml)
             {
                 Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
 
@@ -359,21 +367,21 @@ namespace Yttrium
                 //------------------------------------------------------
                 // optimize (and remove) smallest excess
                 //------------------------------------------------------
+                const Fixed             &fx = jail.tail();
+                const Conservation::Law *cl = &fx.cl;
+                for(const Actor *a=(*cl)->head;a;a=a->next)
                 {
-                    const Fixed &fx = jail.tail();
-                    for(const Actor *a=fx.cl->head;a;a=a->next)
-                    {
-                        const Species &      sp = a->sp;
-                        const size_t * const id = sp.indx;
-                        const size_t         ii = id[SubLevel];
-                        const size_t         II = id[L];
-                        const xreal_t        c0 = C[ II ];
-                        const xreal_t        c1 = fx.cc[ ii ]; assert(c1>=c0);
-                        cinj[ii] << (c1-c0);
-                        C[II] = c1;
-                    }
+                    const Species &      sp = a->sp;
+                    const size_t * const id = sp.indx;
+                    const size_t         ii = id[SubLevel];
+                    const size_t         II = id[L];
+                    const xreal_t        c0 = C[ II ];
+                    const xreal_t        c1 = fx.cc[ ii ]; assert(c1>=c0);
+                    cinj[ii] << (c1-c0);
+                    C[II] = c1;
                 }
                 jail.popTail();
+                return cl;
             }
 
             //__________________________________________________________________
