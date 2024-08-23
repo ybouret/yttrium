@@ -77,14 +77,13 @@ namespace Yttrium
             explicit Warden(const Cluster &cluster) :
             mine(cluster),
             head( mine.laws.isValid() ? mine.laws->groups.head : 0),
-            rows( 0!=head ? mine.laws->maxGroupSize : 0 ),
-            cols( 0!=head ? mine.species.size       : 0 ),
+            rows( (0!=head) ? mine.laws->maxGroupSize : 0 ),
+            cols( (0!=head) ? mine.species.size       : 0 ),
             xadd( cols ),
             conc( rows, cols),
             jail( rows ),
-            cinj( rows )
+            cinj( cols )
             {
-
             }
 
 
@@ -148,67 +147,16 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 while(jail.size()>0)
                 {
-                    {
-                        Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
-
-                        //------------------------------------------------------
-                        // sort by decreasing excess
-                        //------------------------------------------------------
-                        HeapSort::Call(jail,Fixed::Compare);
-                        if(xml.verbose)
-                        {
-                            for(size_t i=1;i<jail.size();++i)
-                            { Y_XMLOG(xml, "(+) " << jail[i]);     }
-                            { Y_XMLOG(xml, "(*) " << jail.tail()); }
-                        }
-
-                        //------------------------------------------------------
-                        // optimize (and remove) smallest excess
-                        //------------------------------------------------------
-                        {
-                            const Fixed &fx = jail.tail();
-                            for(const Actor *a=fx.cl->head;a;a=a->next)
-                            {
-                                const Species &      sp = a->sp;
-                                const size_t * const id = sp.indx;
-                                const size_t         ii = id[SubLevel];
-                                const size_t         II = id[L];
-                                const xreal_t        c0 = C[ II ];
-                                const xreal_t        c1 = fx.cc[ ii ]; assert(c1>=c0);
-                                cinj[ii] << (c1-c0);
-                                C[II] = c1;
-                            }
-
-                        }
-                        jail.popTail();
-                    }
-
+                    reduce(C,L,xml);
                     if(jail.size()<=0) return true; // early return, needed fixed
-
-                    {
-                        Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
-
-                        //------------------------------------------------------
-                        // check remaining
-                        //------------------------------------------------------
-                        for(size_t i=jail.size();i>0;--i)
-                        {
-                            Fixed &fx = jail[i];
-                            if( fx.still(C,L,xadd) )
-                            {
-                                Y_XMLOG(xml, "(+) " << fx);
-                            }
-                            else
-                            {
-                                Y_XMLOG(xml, "(-) " << fx);
-                                jail.remove(i);
-                            }
-                        }
-                    }
+                    update(C,L,xml);
                 }
 
-
-
+                //--------------------------------------------------------------
+                //
+                // something was modified
+                //
+                //--------------------------------------------------------------
                 return true;
             }
 
@@ -241,6 +189,66 @@ namespace Yttrium
                 return ans;
             }
 
+            void reduce(XWritable   &C,
+                        const Level  L,
+                        XMLog       &xml)
+            {
+                Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
+
+                //------------------------------------------------------
+                // sort by decreasing excess
+                //------------------------------------------------------
+                HeapSort::Call(jail,Fixed::Compare);
+                if(xml.verbose)
+                {
+                    for(size_t i=1;i<jail.size();++i)
+                    { Y_XMLOG(xml, "(+) " << jail[i]);     }
+                    { Y_XMLOG(xml, "(*) " << jail.tail()); }
+                }
+
+                //------------------------------------------------------
+                // optimize (and remove) smallest excess
+                //------------------------------------------------------
+                {
+                    const Fixed &fx = jail.tail();
+                    for(const Actor *a=fx.cl->head;a;a=a->next)
+                    {
+                        const Species &      sp = a->sp;
+                        const size_t * const id = sp.indx;
+                        const size_t         ii = id[SubLevel];
+                        const size_t         II = id[L];
+                        const xreal_t        c0 = C[ II ];
+                        const xreal_t        c1 = fx.cc[ ii ]; assert(c1>=c0);
+                        cinj[ii] << (c1-c0);
+                        C[II] = c1;
+                    }
+                }
+                jail.popTail();
+            }
+
+            void update(XWritable   &C,
+                        const Level  L,
+                        XMLog       &xml)
+            {
+                Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
+
+                //------------------------------------------------------
+                // check remaining with new concentration
+                //------------------------------------------------------
+                for(size_t i=jail.size();i>0;--i)
+                {
+                    Fixed &fx = jail[i];
+                    if( fx.still(C,L,xadd) )
+                    {
+                        Y_XMLOG(xml, "(>) " << fx);
+                    }
+                    else
+                    {
+                        Y_XMLOG(xml, "(<) " << fx);
+                        jail.remove(i);
+                    }
+                }
+            }
 
         };
 
