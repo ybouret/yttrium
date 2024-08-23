@@ -57,7 +57,7 @@ namespace Yttrium
                 SRepo &       self = *this;
                 try {
 
-                 if(size<0)
+                 if(size<=0)
                  {
                      // initialize
                      Coerce(xi) =  x;
@@ -252,42 +252,55 @@ namespace Yttrium
                              const Level  L,
                              XMLog       &xml)
             {
-                Y_XML_SECTION_OPT(xml, "renormalize", G);
+                Y_XML_SECTION_OPT(xml, "Renormalize", G);
                 Y_XMLOG(xml, "base:" << G.base);
                 Y_XMLOG(xml, "crew:" << G.crew);
 
                 // collect most negative species
                 SBank sb;
                 Gate  gate(sb);
-                for(const SNode *sn=G.crew.head;sn;sn=sn->next)
                 {
-                    const Species &sp = **sn;
-                    const xreal_t  cc = C[ sp.indx[L] ];
-                    const bool     ok = cc.mantissa >= 0;
-                    Y_XMLOG(xml, (ok ? "(+)" : "(-)") << ' ' << std::setw(15) << real_t(cc) << " =[" << sp << "]");
-                    if(!ok)
+                    Y_XML_SECTION(xml, "findGate");
+                    for(const SNode *sn=G.crew.head;sn;sn=sn->next)
                     {
-                        gate(cc,sp);
+                        // check species
+                        const Species &sp = **sn; assert(mine.conserved.book.has(sp));
+                        const xreal_t  cc = C[ sp.indx[L] ];
+                        if(cc.mantissa>=0)
+                        {
+                            Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " =[" << sp << "]");
+                            continue;
+                        }
+                        else
+                        {
+                            Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " =[" << sp << "]");
+                            gate(cc,sp);
+                        }
                     }
+
+                    assert(gate.size>0);
+
+                    gate.neg();
+                    Y_XMLOG(xml, "(*) " << std::setw(15) << gate << " to find...") ;
+
                 }
-
-                assert(gate.size>0);
-                gate.neg();
-                Y_XMLOG(xml, "(*) " << std::setw(15) << gate) ;
-
-                // finding a way
-                for(const ENode *en=G.base.head;en;en=en->next)
                 {
-                    const Equilibrium &eq = **en;
-                    for(const SNode *sn=gate.head;sn;sn=sn->next)
-                    {
-                        const Species &         sp = **sn;
-                        const Component * const cm = eq.query(sp);
-                        if(!cm) continue;
-                        Y_XMLOG(xml, eq << " with " << *cm);
-                    }
-                }
+                    Y_XML_SECTION(xml, "findPlan");
 
+                    // finding a way
+                    for(const ENode *en=G.base.head;en;en=en->next)
+                    {
+                        const Equilibrium &eq = **en;
+                        for(const SNode *sn=gate.head;sn;sn=sn->next)
+                        {
+                            const Species &         sp = **sn;
+                            const Component * const cm = eq.query(sp);
+                            if(!cm) continue;
+                            Y_XMLOG(xml, "(+) " << eq << " with component '" << *cm << "'");
+                        }
+                    }
+
+                }
 
             }
 
