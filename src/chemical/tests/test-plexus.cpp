@@ -13,6 +13,90 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Gate : public SRepo
+        {
+        public:
+
+            //! initialize @empty
+            explicit Gate(const SBank &sb) noexcept :
+            SRepo(sb)
+            {
+            }
+
+            //! cleanup
+            virtual ~Gate() noexcept
+            {
+
+            }
+
+            void neg() noexcept
+            {
+                if( __Zero__ != Sign::Of(xi.mantissa) ) Coerce(xi.mantissa) = -xi.mantissa;
+            }
+
+
+            friend std::ostream & operator<<(std::ostream &os, const Gate &self)
+            {
+                if(self.size<=0)
+                {
+                    os << "[none]";
+                }
+                else
+                {
+                    const SRepo &repo = self;
+                    os << real_t(self.xi) << " @" << repo;
+                }
+                return os;
+            }
+
+            //! try to set/update x>=0
+            void operator()(const xreal_t x,
+                            const Species &s)
+            {
+                const xreal_t zero;
+                SRepo &       self = *this;
+                try {
+
+                 if(size<0)
+                 {
+                     // initialize
+                     Coerce(xi) =  x;
+                     self       << s;
+                 }
+                 else
+                 {
+                     switch( Sign::Of(x,xi) )
+                     {
+                         case Negative: // new winner
+                             free();
+                             Coerce(xi) =  x;
+                             self       << s;
+                             break;
+
+                         case __Zero__: // same value
+                             self << s;
+                             break;
+
+                         case Positive: // discard
+                             break;
+                     }
+                 }
+                }
+                catch(...)
+                {
+                    free();
+                    Coerce(xi) = zero;
+                    throw;
+                }
+            }
+
+            const xreal_t xi;
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Gate);
+        };
+
 
         class Fixed
         {
@@ -171,6 +255,26 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "renormalize", G);
                 Y_XMLOG(xml, "base:" << G.base);
                 Y_XMLOG(xml, "crew:" << G.crew);
+
+                // collect most negative species
+                SBank sb;
+                Gate  gate(sb);
+                for(const SNode *sn=G.crew.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    const xreal_t  cc = C[ sp.indx[L] ];
+                    const bool     ok = cc.mantissa >= 0;
+                    Y_XMLOG(xml, (ok ? "(+)" : "(-)") << ' ' << std::setw(15) << real_t(cc) << " =[" << sp << "]");
+                    if(!ok)
+                    {
+                        gate(cc,sp);
+                    }
+                }
+
+                assert(gate.size>0);
+                gate.neg();
+                Y_XMLOG(xml, "(*) " << std::setw(15) << gate) ;
+
 
             }
 
