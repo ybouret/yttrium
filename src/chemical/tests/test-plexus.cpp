@@ -97,7 +97,10 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "Warden");
 
                 for(const Group *g=head;g;g=g->next)
-                    run(*g,C,L,xml);
+                {
+                    if(wasInjected(*g,C,L,xml))
+                        renormalize(*g,C,L,xml);
+                }
 
                 for(const SNode *sn = mine.species.head;sn;sn=sn->next)
                 {
@@ -126,10 +129,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
-            bool run(const Group &group,
-                     XWritable   &C,
-                     const Level  L,
-                     XMLog       &xml)
+            bool wasInjected(const Group &G,
+                             XWritable   &C,
+                             const Level  L,
+                             XMLog       &xml)
             {
 
                 //--------------------------------------------------------------
@@ -137,7 +140,7 @@ namespace Yttrium
                 // initialize all possible fixed in group
                 //
                 //--------------------------------------------------------------
-                if(!initialize(group,C,L,xml)) return false;
+                if(!initialize(G,C,L,xml)) return false;
                 assert( jail.size() > 0);
 
                 //--------------------------------------------------------------
@@ -160,6 +163,13 @@ namespace Yttrium
                 return true;
             }
 
+            void renormalize(const Group &G,
+                             XWritable   &C,
+                             const Level  L,
+                             XMLog       &xml)
+            {
+                Y_XML_SECTION_OPT(xml, "renormalize", G);
+            }
 
             //__________________________________________________________________
             //
@@ -189,6 +199,10 @@ namespace Yttrium
                 return ans;
             }
 
+            //__________________________________________________________________
+            //
+            //! find lowest fix and apply it
+            //__________________________________________________________________
             void reduce(XWritable   &C,
                         const Level  L,
                         XMLog       &xml)
@@ -226,9 +240,13 @@ namespace Yttrium
                 jail.popTail();
             }
 
-            void update(XWritable   &C,
-                        const Level  L,
-                        XMLog       &xml)
+            //__________________________________________________________________
+            //
+            //! check who still needs to be fixed
+            //__________________________________________________________________
+            void update(const XReadable   &C,
+                        const Level        L,
+                        XMLog             &xml)
             {
                 Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
 
