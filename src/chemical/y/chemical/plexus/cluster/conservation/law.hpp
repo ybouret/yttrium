@@ -83,7 +83,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const xreal_t  xden; //!< |nu|^2
                 const XMatrix  proj; //!< in group projection
-                const EList    base; //!< primary involved equilibri[um|a]
+                const EList    base; //!< equilibri[um|a]
                 Law *          next; //!< for list
                 Law *          prev; //!< for list
 

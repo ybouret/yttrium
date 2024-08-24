@@ -223,6 +223,15 @@ namespace Yttrium
             return 0;
         }
 
+        bool Components:: found(const Actors  &ac) const noexcept
+        {
+            for(const Actor *a=ac->head;a;a=a->next)
+            {
+                if( db.search(a->sp.name) ) return true;
+            }
+            return false;
+        }
+
         bool Components:: linkedTo(const Components &other) const noexcept
         {
             size_t            n  = db.size();

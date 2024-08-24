@@ -125,7 +125,6 @@ namespace Yttrium
             Object(),
             LList(),
             crew(),
-            base(),
             next(0),
             prev(0)
             {

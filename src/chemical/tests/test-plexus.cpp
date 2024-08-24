@@ -264,9 +264,10 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, "Renormalize", law);
                 Y_XMLOG(xml, "from:" << G);
-                Y_XMLOG(xml, "base:" << G.base);
+                //Y_XMLOG(xml, "base:" << G.base);
                 Y_XMLOG(xml, "crew:" << G.crew);
 
+#if 0
                 // collect most negative species
                 SBank sb;
                 Gate  gate(sb);
@@ -312,6 +313,7 @@ namespace Yttrium
                     }
 
                 }
+#endif
 
             }
 

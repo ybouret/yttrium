@@ -303,7 +303,30 @@ namespace Yttrium
             }
 
 
+            //------------------------------------------------------------------
+            //
+            // Linking limited equilibria to laws
+            //
+            //------------------------------------------------------------------
+            if( laws.isValid() )
+            {
+                Y_XML_SECTION(xml, "Linking Law");
+                for(const Conservation::Law *l = laws->head;l;l=l->next)
+                {
+                    const CLaw &law = *l;
+                    EList      &base = Coerce(law.base);
+                    for(const ENode *en  = limited.head;en;en=en->next)
+                    {
+                        const Equilibrium &eq = **en;
+                        if(eq.found(law))
+                        {
+                            base <<eq;
+                        }
+                    }
+                    Y_XMLOG(xml,law << " <= " << base);
 
+                }
+            }
 
 
 

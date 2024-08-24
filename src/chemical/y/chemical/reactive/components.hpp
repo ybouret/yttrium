@@ -236,6 +236,7 @@ namespace Yttrium
 
             //! check if species is a component
             const Component * query(const Species &sp) const noexcept;
+            bool              found(const Actors  &ac) const noexcept;
 
             //__________________________________________________________________
             //

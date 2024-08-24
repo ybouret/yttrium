@@ -58,7 +58,6 @@ namespace Yttrium
                     void compile();                            //!< gather and make AuxLevel
 
                     const SList   crew; //!< shared species in group
-                    const EList   base; //!< shared equilibria in group
                     Group *       next; //!< for list
                     Group *       prev; //!< for list
 

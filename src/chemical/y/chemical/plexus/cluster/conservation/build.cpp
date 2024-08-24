@@ -81,7 +81,7 @@ namespace Yttrium
             for(CLaw *law = laws->head;law;law=law->next)
             {
                 law->record(cdb);    // record conserved species
-                law->extract(*this); // here, will use only primary
+                //law->extract(*this); // here, will use only primary
             }
 
             //------------------------------------------------------------------
@@ -92,7 +92,7 @@ namespace Yttrium
             for(CLaws::Group *g=laws->groups.head;g;g=g->next)
             {
                 Y_XML_SECTION_OPT(xml, "Conservation::Group", " size='" << g->size << "'");
-                AddressBook book;
+                //AddressBook book;
                 for(const Conservation::LNode *ln=g->head;ln;ln=ln->next)
                 {
                     const CLaw &law = **ln;
@@ -101,13 +101,12 @@ namespace Yttrium
                     Y_XMLOG(xml, "\t|_nrm2=" << real_t(law.xden) );
                     const Matrix<real_t> proj(CopyOf,law.proj);
                     Y_XMLOG(xml, "\t|_proj=" << proj);
-                    Y_XMLOG(xml, "\t|_base=" << law.base);
-                    for(const ENode *en = law.base.head;en;en=en->next)
-                        book |= **en;
+                    //Y_XMLOG(xml, "\t|_base=" << law.base);
+                    //for(const ENode *en = law.base.head;en;en=en->next)                         book |= **en;
                 }
 
-                Indexed::SortBy<TopLevel>::Using( book.sendTo(Coerce(g->base)) );
-                Y_XMLOG(xml, "group.base=" << g->base);
+                //Indexed::SortBy<TopLevel>::Using( book.sendTo(Coerce(g->base)) );
+                //Y_XMLOG(xml, "group.base=" << g->base);
             }
 
 
