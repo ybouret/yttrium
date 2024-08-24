@@ -311,20 +311,31 @@ namespace Yttrium
             if( laws.isValid() )
             {
                 Y_XML_SECTION(xml, "Linking Law");
-                for(const Conservation::Law *l = laws->head;l;l=l->next)
+                const AddressBook &auth = unbounded.book; // authorized extra species
+                for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
                 {
-                    const CLaw &law = *l;
-                    EList      &base = Coerce(law.base);
-                    for(const ENode *en  = limited.head;en;en=en->next)
+                    const SList &crew = G->crew; // authorized first species
+                    for(const Conservation::LNode *ln=G->head;ln;ln=ln->next)
                     {
-                        const Equilibrium &eq = **en;
-                        if(eq.found(law))
+                        const CLaw &law = **ln;
+                        for(const ENode *en=limited.head;en;en=en->next)
                         {
-                            base <<eq;
+                            const Equilibrium &eq = **en;
+                            bool               ok = true;
+                            for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
+                            {
+                                const Species &sp = (**it).sp;
+                                if(auth.has(sp))   continue; // unbounded, that's ok
+                                if(crew.has(sp))   continue; // in crew, that's ok
+                                ok = false; break;           // limited but not in crew => drop
+                            }
+                            if(ok)
+                            {
+                                Coerce(law.base) << eq;
+                            }
                         }
+                        Y_XMLOG(xml,law << " <= " << law.base);
                     }
-                    Y_XMLOG(xml,law << " <= " << base);
-
                 }
             }
 
