@@ -310,7 +310,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             if( laws.isValid() )
             {
-                Y_XML_SECTION(xml, "Linking Law");
+                Y_XML_SECTION(xml, "ConservationPostBuild");
                 const AddressBook &auth = unbounded.book; // authorized extra species
                 for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
                 {
@@ -318,6 +318,7 @@ namespace Yttrium
                     for(const Conservation::LNode *ln=G->head;ln;ln=ln->next)
                     {
                         const CLaw &law = **ln;
+                        Y_XML_SECTION(xml,law.name);
                         for(const ENode *en=limited.head;en;en=en->next)
                         {
                             const Equilibrium &eq = **en;
@@ -329,12 +330,10 @@ namespace Yttrium
                                 if(crew.has(sp))   continue; // in crew, that's ok
                                 ok = false; break;           // limited but not in crew => drop
                             }
-                            if(ok)
-                            {
-                                Coerce(law.base) << eq;
-                            }
+                            if(!ok) continue;;
+                            Coerce(law.base) << eq;
+                            Y_XMLOG(xml, "(+) " << eq);
                         }
-                        Y_XMLOG(xml,law << " <= " << law.base);
                     }
                 }
             }
