@@ -314,7 +314,7 @@ namespace Yttrium
                 const AddressBook &auth = unbounded.book; // authorized extra species
                 for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
                 {
-                    const SList &crew = G->crew; // authorized first species
+                    const SList &crew = G->crew; // authorized primary species
                     for(const Conservation::LNode *ln=G->head;ln;ln=ln->next)
                     {
                         const CLaw &law = **ln;
