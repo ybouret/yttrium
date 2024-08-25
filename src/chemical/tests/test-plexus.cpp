@@ -340,8 +340,8 @@ namespace Yttrium
                 // optimize (and remove) smallest excess
                 //------------------------------------------------------
                 const Fixed             &fx = jail.tail();
-                const Conservation::Law *cl = &fx.cl;
-                for(const Actor *a=(*cl)->head;a;a=a->next)
+                const Conservation::Law &cl = fx.cl;
+                for(const Actor *a=cl->head;a;a=a->next)
                 {
                     const Species &      sp = a->sp;
                     const size_t * const id = sp.indx;
@@ -353,7 +353,7 @@ namespace Yttrium
                     C[II] = c1;
                 }
                 jail.popTail();
-                return cl;
+                return &cl;
             }
 
             //__________________________________________________________________
