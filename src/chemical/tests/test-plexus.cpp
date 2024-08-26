@@ -298,15 +298,12 @@ namespace Yttrium
                 // select favorable equilibria
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
-                    const Equilibrium &eq = **en;
-                    if(isAdequate(eq,gate))
+                    const Equilibrium &eq = **en; if(!isAdequate(eq,gate)) continue;
+                    if(xml.verbose)
                     {
-                        Y_XMLOG(xml, "(++) " << eq);
+                        mine.display(xml() << "(++) ", eq) << std::endl;
                     }
-                    else
-                    {
-                        Y_XMLOG(xml, "(--) " << eq);
-                    }
+                    
                 }
 
                 if(gate.size>1)
