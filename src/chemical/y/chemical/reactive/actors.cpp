@@ -42,18 +42,18 @@ namespace Yttrium
         }
 
 
-        bool Actors:: hiredSome(const SList &sp) const noexcept
+        bool Actors:: hiredSome(const SNode *sn) const noexcept
         {
-            for(const SNode *sn=sp.head;sn;sn=sn->next)
+            for(;sn;sn=sn->next)
             {
                 if(hired(**sn)) return true;
             }
             return false;
         }
 
-        bool Actors:: hiredFull(const SList &sp) const noexcept
+        bool Actors:: hiredFull(const SNode *sn) const noexcept
         {
-            for(const SNode *sn=sp.head;sn;sn=sn->next)
+            for(;sn;sn=sn->next)
             {
                 if( !hired(**sn)) return false;
             }

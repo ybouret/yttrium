@@ -50,9 +50,9 @@ namespace Yttrium
             void operator()(const unsigned nu, const Species &sp);
 
             //! check species is hired
-            bool hired(const Species &sp)   const noexcept; //!< species at play
-            bool hiredSome(const SList &sp) const noexcept; //!< at least one species is hired
-            bool hiredFull(const SList &sp) const noexcept; //!< all the species are hired
+            bool hired(const Species &sp)     const noexcept; //!< species at play
+            bool hiredSome(const SNode *node) const noexcept; //!< at least one species is hired
+            bool hiredFull(const SNode *node) const noexcept; //!< all the species are hired
 
             //! check same species, even with different coefficient
             bool akin(const Actors &team) const noexcept;

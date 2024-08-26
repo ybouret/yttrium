@@ -260,7 +260,9 @@ namespace Yttrium
             static bool isAdequate(const Equilibrium &eq,
                                    const Gate        &gate)
             {
-
+                const SNode * const node = gate.head;
+                if(eq.reac.hiredSome(node) && !eq.prod.hiredSome(node)) return true;
+                if(eq.prod.hiredSome(node) && !eq.reac.hiredSome(node)) return true;
                 return false;
             }
             void renormalize(const Group             &G,
@@ -270,8 +272,6 @@ namespace Yttrium
                              XMLog                   &xml)
             {
                 Y_XML_SECTION_OPT(xml, "Renormalize", law);
-                //Y_XMLOG(xml, "from:" << G);
-                //Y_XMLOG(xml, "crew:" << G.crew);
                 Y_XMLOG(xml, "base:" << law.base);
 
                 // select most negative remaining
