@@ -242,14 +242,14 @@ namespace Yttrium
                 const Conservation::Law *law = 0;
                 while(jail.size()>0)
                 {
-                    law = reduce(C,L,xml); assert(0!=law);
-                    if(jail.size()<=0) return law; // early return, needed fixed
+                    law = reduce(C,L,xml); assert(0!=law); // record last reduced
+                    if(jail.size()<=0) return law;         // early return
                     update(C,L,xml);
                 }
 
                 //--------------------------------------------------------------
                 //
-                // something was modified
+                // something was modified, return last reduced
                 //
                 //--------------------------------------------------------------
                 assert(0!=law);
@@ -265,7 +265,8 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, "Renormalize", law);
                 //Y_XMLOG(xml, "from:" << G);
-                Y_XMLOG(xml, "crew:" << G.crew);
+                //Y_XMLOG(xml, "crew:" << G.crew);
+                Y_XMLOG(xml, "base:" << law.base);
 
                 SBank sb;
                 Gate  gate(sb);
@@ -283,7 +284,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @" << sp);
                     }
                 }
-                Y_XMLOG(xml, "(-) " << std::setw(15) << real_t(gate.xi) << " @" << gate);
+                Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
 
             }
 
