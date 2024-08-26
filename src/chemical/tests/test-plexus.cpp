@@ -173,7 +173,7 @@ namespace Yttrium
 
             void prolog() noexcept
             {
-                for(size_t j=rows;j>0;--j) cinj[j].free();
+                for(size_t j=cols;j>0;--j) cinj[j].free();
             }
 
             void run(XWritable &C, const Level L, XMLog &xml)
@@ -268,6 +268,7 @@ namespace Yttrium
                 //Y_XMLOG(xml, "crew:" << G.crew);
                 Y_XMLOG(xml, "base:" << law.base);
 
+                // select most negative remaining
                 SBank sb;
                 Gate  gate(sb);
                 for(const Actor *a=law->head;a;a=a->next)
@@ -276,15 +277,27 @@ namespace Yttrium
                     const xreal_t  cc = C[ sp.indx[L] ];
                     if(cc.mantissa<0) 
                     {
-                        Y_XMLOG(xml, "(-) " << std::setw(15) << real_t(cc) << " @" << sp);
+                        Y_XMLOG(xml, "(-) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
                         gate(cc,sp);
                     }
                     else
                     {
-                        Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @" << sp);
+                        Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
                     }
                 }
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
+
+                if(gate.size>1)
+                {
+                    std::cerr << "gates!" << std::endl;
+                    exit(1);
+                }
+
+                // select equilibria
+                for(const ENode *en=law.base.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                }
 
             }
 
@@ -414,11 +427,16 @@ Y_UTEST(plexus)
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
+
         Warden warden(*cl);
-        plexus.conc(C0,0.3,0.5);
-        lib(std::cerr << "C0=","\t[",C0,"]");
-        warden.run(C0,TopLevel,xml);
-        lib(std::cerr << "C1=","\t[",C0,"]");
+        for(size_t iter=0;iter<100;++iter)
+        {
+            plexus.conc(C0,0.3,0.5);
+            warden.prolog();
+            lib(std::cerr << "C0=","\t[",C0,"]");
+            warden.run(C0,TopLevel,xml);
+            lib(std::cerr << "C1=","\t[",C0,"]");
+        }
 
 
     }
