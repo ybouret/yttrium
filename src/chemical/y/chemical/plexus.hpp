@@ -39,8 +39,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Clusters & assemble();           //!< create clusters
-            void operator()(Jive::Module *); //!< compile data
+            Clusters & assemble();               //!< create clusters
+            void operator()(Jive::Module *);     //!< compile data
+            void operator()(const char * const); //!< compile data
+            void operator()(const String &);     //!< compile data
 
             //! helper to use built-in ran
             template <typename ARRAY> inline

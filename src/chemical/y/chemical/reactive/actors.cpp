@@ -41,6 +41,27 @@ namespace Yttrium
             return false;
         }
 
+
+        bool Actors:: hiredSome(const SList &sp) const noexcept
+        {
+            for(const SNode *sn=sp.head;sn;sn=sn->next)
+            {
+                if(hired(**sn)) return true;
+            }
+            return false;
+        }
+
+        bool Actors:: hiredFull(const SList &sp) const noexcept
+        {
+            for(const SNode *sn=sp.head;sn;sn=sn->next)
+            {
+                if( !hired(**sn)) return false;
+            }
+            return true;
+        }
+
+
+
         bool Actors:: akin(const Actors &other) const noexcept
         {
             if(other.actors.size!=actors.size) return false;

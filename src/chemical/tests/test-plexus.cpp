@@ -257,6 +257,12 @@ namespace Yttrium
             }
 
 
+            static bool isAdequate(const Equilibrium &eq,
+                                   const Gate        &gate)
+            {
+
+                return false;
+            }
             void renormalize(const Group             &G,
                              XWritable               &C,
                              const Level              L,
@@ -287,18 +293,27 @@ namespace Yttrium
                 }
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
 
+
+
+                // select favorable equilibria
+                for(const ENode *en=law.base.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(isAdequate(eq,gate))
+                    {
+                        Y_XMLOG(xml, "(++) " << eq);
+                    }
+                    else
+                    {
+                        Y_XMLOG(xml, "(--) " << eq);
+                    }
+                }
+
                 if(gate.size>1)
                 {
                     std::cerr << "gates!" << std::endl;
                     exit(1);
                 }
-
-                // select equilibria
-                for(const ENode *en=law.base.head;en;en=en->next)
-                {
-                    const Equilibrium &eq = **en;
-                }
-
             }
 
             //__________________________________________________________________
@@ -405,19 +420,48 @@ namespace Yttrium
 
 Y_UTEST(plexus)
 {
-    Plexus plexus(true);
 
+    Plexus plexus(true);
+    const Library    &lib = plexus.lib;
+    const Equilibria &eqs = plexus.eqs;
+    XMLog            &xml = plexus.xml;
+
+#if 1
+    plexus("@water @oxalic.*");
+
+    std::cerr << "lib=" <<  lib << std::endl;
+    std::cerr << "eqs=" <<  eqs << std::endl;
+    Clusters &cls = plexus.assemble();
+
+
+    XVector C0(lib->size(),0);
+    const Species &ah2 = lib["OxH2"];
+    const Species &ahm = lib["OxH-"];
+    const Species &amm = lib["Ox--"];
+
+    C0[ ah2.indx[TopLevel] ] =  1.0;
+    C0[ ahm.indx[TopLevel] ] = -0.7;
+    C0[ amm.indx[TopLevel] ] = -0.7;
+
+    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    {
+
+        Warden warden(*cl);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        warden.run(C0,TopLevel,xml);
+        lib(std::cerr << "C1=","\t[",C0,"]");
+    }
+
+#else
     for(int i=1;i<argc;++i)
     {
         plexus(Jive::Module::OpenData(argv[i],argv[i]));
     }
 
-    std::cerr << "lib=" << plexus.lib << std::endl;
-    std::cerr << "eqs=" << plexus.eqs << std::endl;
+    std::cerr << "lib=" << lib << std::endl;
+    std::cerr << "eqs=" << eqs << std::endl;
 
-    const Library   &lib = plexus.lib;
     Clusters        &cls = plexus.assemble();
-    XMLog           &xml = plexus.xml;
     //const XReadable &K   = cls.K(0);
 
 
@@ -429,7 +473,7 @@ Y_UTEST(plexus)
     {
 
         Warden warden(*cl);
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<1;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
@@ -440,6 +484,7 @@ Y_UTEST(plexus)
 
 
     }
+#endif
 
 }
 Y_UDONE()

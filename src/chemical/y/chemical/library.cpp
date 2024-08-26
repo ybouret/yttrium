@@ -21,6 +21,12 @@ namespace Yttrium
             return db;
         }
 
+
+        void Library:: NoSpecies(const char * const id)
+        {
+            assert(0!=id);
+            throw Specific:: Exception(CallSign, "no species '%s'", id);
+        }
         const Species & Library:: tryInsert(const Species::Ptr &sp)
         {
             const Species::Ptr *ppS = db.search(sp->name);
@@ -62,11 +68,24 @@ namespace Yttrium
             return & **ppS;
         }
 
-        const Species * Library:: query(const char * const id) const {
+        const Species * Library:: query(const char * const id ) const {
             const String _(id); return query(_);
         }
 
-        
+        const Species & Library:: operator[](const String &     id) const
+        {
+            const Species * const p = query(id);
+            if(!p) NoSpecies(id.c_str());
+            return *p;
+        }
+
+        const Species & Library:: operator[](const char * const id) const
+        {
+            const String _(id);
+            const Species * const p = query(_);
+            if(!p) NoSpecies(_.c_str());
+            return *p;
+        }
 
     }
 }

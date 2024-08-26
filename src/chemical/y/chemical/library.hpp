@@ -64,7 +64,10 @@ namespace Yttrium
             const Species *query(const String &     id) const noexcept; //!< query species by name
             const Species *query(const char * const id) const;          //!< query species by name
 
-            
+            const Species & operator[](const String &     id) const; //!< get existing species or exception
+            const Species & operator[](const char * const id) const; //!< get existing species or exception
+
+
 
             //! display
             template <typename ARRAY> inline
@@ -105,6 +108,7 @@ namespace Yttrium
 
             virtual ConstInterface & surrogate() const noexcept;
             const Species &          tryInsert(const Species::Ptr &sp);
+            static void              NoSpecies(const char * const);
         };
     }
 

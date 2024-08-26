@@ -32,6 +32,20 @@ namespace Yttrium
         }
 
 
+        static const char * const UserData = "User Data";
+
+        void Plexus:: operator()(const char * const input)
+        {
+            Plexus &self = *this;
+            self( Jive::Module::OpenData(UserData,input) );
+        }
+
+        void Plexus:: operator()(const String &input)
+        {
+            Plexus &self = *this;
+            self( Jive::Module::OpenData(UserData,input) );
+        }
+
 
     }
 
