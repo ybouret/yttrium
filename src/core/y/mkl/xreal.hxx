@@ -21,6 +21,20 @@ namespace Yttrium
         return *this;
     }
 
+    template <>
+    void XReal<real_t> :: neg() noexcept
+    {
+        switch( Sign::Of(mantissa) )
+        {
+            case Negative:
+            case Positive:
+                Coerce(mantissa) = -mantissa;
+                break;
+            case __Zero__:
+                assert(0==exponent);
+                break;
+        }
+    }
 
 
     template <> XReal<real_t>:: XReal(const real_t x)  :

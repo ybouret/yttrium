@@ -15,13 +15,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Gate : public SSolo
+        class Gate : public SRepo
         {
         public:
 
             //! initialize @empty
-            explicit Gate(const size_t capa) :
-            SSolo(capa),
+            explicit Gate(const SBank &sb) :
+            SRepo(sb),
             cc()
             {
             }
@@ -41,7 +41,7 @@ namespace Yttrium
 
             void neg() noexcept
             {
-                if( __Zero__ != Sign::Of(cc.mantissa) ) Coerce(cc.mantissa) = -cc.mantissa;
+                Coerce(cc).neg();
             }
 
 
@@ -53,7 +53,7 @@ namespace Yttrium
                 }
                 else
                 {
-                    const SSolo &repo = self;
+                    const SRepo &repo = self;
                     os << real_t(self.cc) << " @" << repo;
                 }
                 return os;
@@ -64,7 +64,7 @@ namespace Yttrium
                             const Species &s)
             {
                 const xreal_t zero;
-                SSolo &       self = *this;
+                SRepo &       self = *this;
                 try {
 
                     if(size<=0)
@@ -104,6 +104,96 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Gate);
+        };
+
+        class Fence : public SRepo
+        {
+        public:
+
+            explicit Fence(const SBank &_) noexcept : SRepo(_), xi() {}
+            virtual ~Fence() noexcept {}
+
+
+            void ldz() noexcept
+            {
+                xi=0;
+                free();
+            }
+
+            // initialize/update
+            void operator()(const xreal_t  x,
+                            const Species &s)
+            {
+                assert(x>=0.0);
+                try {
+                    if(size<=0)
+                    {
+                        first(x,s);
+                    }
+                    else
+                    {
+                        switch( Sign::Of(x,xi) )
+                        {
+                            case Negative: // new smallest
+                                free();
+                                first(x,s);
+                                break;
+
+                            case __Zero__: // same value
+                                (*this) << s;
+                                break;
+
+
+                            case Positive: // discard
+                                break;
+
+                        }
+
+                    }
+                }
+                catch(...)
+                {
+                    ldz();
+                    throw;
+                }
+            }
+
+            void operator()(const XReadable  &C,
+                            const Level       L,
+                            const Actors     &A,
+                            const AddressBook &conserved)
+            {
+                ldz();
+                for(const Actor *a=A->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp; if( !conserved.has(sp) ) continue;;
+                    const xreal_t  cc = C[sp.indx[L]]; assert(cc>=0.0);
+                    (*this)(cc/a->xn,sp);
+                }
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Fence &f)
+            {
+                const SRepo &self = f;
+                os << real_t(f.xi) << " @" << self;
+                return os;
+            }
+
+
+
+
+            xreal_t xi;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Fence);
+
+            void first(const xreal_t x, const Species &s)
+            {
+                assert(0==size);
+                (*this) << s;
+                xi = x;
+            }
+
         };
 
 
@@ -160,6 +250,19 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Fixed);
         };
 
+        class Fund
+        {
+        public:
+            explicit Fund() : sbank()
+            {
+            }
+
+            SBank sbank;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Fund);
+        };
+
         class Warden
         {
         public:
@@ -176,7 +279,8 @@ namespace Yttrium
             conc( rows, cols),
             jail( rows ),
             cinj( cols ),
-            gate( cols )
+            fund(),
+            gate(fund.sbank)
             {
             }
 
@@ -227,6 +331,7 @@ namespace Yttrium
             XMatrix             conc;  //!< workspace for concentrations
             Fixed::Series       jail;  //!< fixed
             XSwell              cinj;  //!< injected
+            Fund                fund;
             Gate                gate;
 
         private:
@@ -298,7 +403,7 @@ namespace Yttrium
                 {
                     const Species &sp = a->sp;
                     const xreal_t  cc = C[ sp.indx[L] ];
-                    if(cc.mantissa<0) 
+                    if(cc.mantissa<0)
                     {
                         Y_XMLOG(xml, "(-) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
                         gate(cc,sp);
@@ -308,14 +413,20 @@ namespace Yttrium
                         Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
                     }
                 }
+                gate.neg();
                 Y_XMLOG(xml, " |");
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
                 Y_XMLOG(xml, " |");
 
 
-
+                //--------------------------------------------------------------
+                //
                 // select favorable equilibria
-                EList eqs;
+                //
+                //--------------------------------------------------------------
+                const SNode * const bad = gate.head;
+                const xreal_t       pos = gate.cc;
+                EList               eqs;
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -325,6 +436,20 @@ namespace Yttrium
                         mine.display(xml() << "(++) ", eq) << std::endl;
                     }
                     eqs << eq;
+
+                    for(const SNode *sn=bad;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        const Actor   *pa = eq.prod.hired(sp);
+                        Fence          fn(fund.sbank);
+                        if(pa)
+                        {
+                            fn(C,L,eq.reac,mine.conserved.book);
+                            Y_XMLOG(xml,"(@@) fwd = " << fn);
+                        }
+                    }
+
+
                 }
 
 
@@ -471,7 +596,7 @@ Y_UTEST(plexus)
     const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
-#if 0
+#if 1
     plexus("@water @oxalic.*");
 
     std::cerr << "lib=" <<  lib << std::endl;

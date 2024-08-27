@@ -32,13 +32,13 @@ namespace Yttrium
             Coerce(name).swapWith(_);
         }
 
-        bool Actors:: hired(const Species &sp) const noexcept
+        const Actor *Actors:: hired(const Species &sp) const noexcept
         {
             for(const Actor *mine=actors.head;mine;mine=mine->next)
             {
-                if( &sp == & mine->sp) return true;
+                if( &sp == & mine->sp) return mine;
             }
-            return false;
+            return 0;
         }
 
 

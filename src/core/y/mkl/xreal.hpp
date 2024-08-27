@@ -76,6 +76,7 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         operator T() const;
 
 
+        void  neg()         noexcept;   //!< in place mantissa sign change
         XReal abs()   const noexcept;   //!< absolute value
         XReal sqrt()  const;            //!< square root
         T     log()   const;            //!< log
