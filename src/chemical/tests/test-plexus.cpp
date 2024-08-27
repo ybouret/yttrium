@@ -24,6 +24,12 @@ namespace Yttrium
             virtual ~SProxy() noexcept {}
             explicit SProxy(const SProxy &_) : Proxy<const SRepo>(), sr(_.sr) {}
 
+            SProxy & operator<<(const SProxy &other)
+            {
+                sr << other.sr;
+                return *this;
+            }
+
         protected:
             SRepo sr;
 
@@ -432,8 +438,8 @@ namespace Yttrium
             }
 
 
-            Trim reac;
-            Trim prod;
+            Trim           reac;
+            Trim           prod;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Trims);
@@ -497,6 +503,7 @@ namespace Yttrium
 
 
 
+
         class Warden
         {
         public:
@@ -516,7 +523,9 @@ namespace Yttrium
             cinj( cols ),
             fund(),
             lawz(fund.lbank),
-            trims(fund)
+            trms(fund),
+            best(fund.sbank),
+            ctra(mine.size,mine.species.size)
             {
             }
 
@@ -571,44 +580,54 @@ namespace Yttrium
                 for(const ENode *en=mine.limited.head;en;en=en->next)
                 {
                     const Equilibrium &eq    = **en;
-                    const Trims::Kind  kind  = trims(C,L,eq,conserved);
+                    const Trims::Kind  kind  = trms(C,L,eq,conserved);
+                    best.free();
                     switch(kind)
                     {
-                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); continue;
+                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); 
+                            continue; // next
+
                         case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
-                            Y_XMLOG(xml, " |_reac: " << trims.reac.required);
-                            Y_XMLOG(xml, " |_prod: " << trims.prod.required);
-                            break;
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
+                            continue; // next
 
                         case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
-                            Y_XMLOG(xml, " |_prod: " << trims.prod.required);
-                            Y_XMLOG(xml, " |_reac: " << trims.reac.limiting);
-                            if(trims.reac.limiting.blocking())
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.limiting);
+                            if(trms.reac.limiting.blocking())
                             {
                                 Y_XMLOG(xml, " |_blocked...");
+                                continue; // next
                             }
                             else
                             {
-
+                                bestEffort(trms.reac.limiting, trms.prod.required);
+                                break; // will move
                             }
 
-                            break;
 
                         case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
-                            Y_XMLOG(xml, " |_reac: " << trims.reac.required);
-                            Y_XMLOG(xml, " |_prod: " << trims.prod.limiting);
-                            if(trims.prod.limiting.blocking())
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.limiting);
+                            if(trms.prod.limiting.blocking())
                             {
                                 Y_XMLOG(xml, " |_blocked...");
+                                continue; // next
                             }
                             else
                             {
-
+                                bestEffort(trms.prod.limiting, trms.reac.required);
+                                best.xi.neg();
+                                break; // will move
                             }
-
-                            break;
                     }
+
+                    assert( best->size > 0 );
+                    Y_XMLOG(xml, " |_best@" << best);
                 }
+
+
             }
 
 
@@ -629,10 +648,64 @@ namespace Yttrium
             XSwell              cinj;  //!< injected
             Fund                fund;
             LRepo               lawz;  //!< laws with zero values
-            Trims               trims;
-
+            Trims               trms;
+            SingleFrontier      best;  //!< best effort to equalize
+            XMatrix             ctra;  //!< traded concentrations
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
+
+            void bestEffort(const SingleFrontier &limiting,
+                            const Frontiers      &required)
+            {
+                assert(required.size>0);        // number of frontiers
+                assert(limiting->size>0);       // number of limiting species
+                assert(limiting.xi.mantissa>0); // positive limiting extent
+
+                best.free();
+                const  Frontier *prev = 0;
+                for(const FNode *node=required.head;node;node=node->next)
+                {
+                    const Frontier &F = **node;
+                    switch( Sign::Of(F.xi,limiting.xi) )
+                    {
+                        case Negative: prev = &F; continue;
+                        case __Zero__:
+                            best.xi = limiting.xi;
+                            best << limiting;
+                            best << F;
+                            return;
+                        case Positive:
+                            break;
+                    }
+                    break;
+                }
+
+                if(0!=prev)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // will solve up to prev
+                    //
+                    //----------------------------------------------------------
+                    //std::cerr << "Found prev=" << *prev << std::endl;
+                    best.xi = prev->xi;
+                    best << *prev;
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // best partial effort
+                    //
+                    //----------------------------------------------------------
+                    //std::cerr << "No Prev!" << std::endl;
+                    best.xi = limiting.xi;
+                    best   << limiting;
+                }
+
+
+            }
 
             const Conservation::Law * wasInjected(const Group &G,
                                                   XWritable   &C,
