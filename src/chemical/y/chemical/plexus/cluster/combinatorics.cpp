@@ -231,7 +231,7 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Topology");
                 XMatrix &topo = Coerce(topology);
-                topo.make(size, species.size);
+                topo.make(size,species.size);
                 for(const ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -310,7 +310,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             if( laws.isValid() )
             {
-                Y_XML_SECTION(xml, "ConservationPostBuild");
+                Y_XML_SECTION(xml, "ConservationLink");
                 const AddressBook &auth = unbounded.book; // authorized extra species
                 for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
                 {
@@ -330,7 +330,7 @@ namespace Yttrium
                                 if(crew.has(sp))   continue; // in crew, that's ok
                                 ok = false; break;           // limited but not in crew => drop
                             }
-                            if(!ok) continue;;
+                            if(!ok) continue;
                             Coerce(law.base) << eq;
                             Y_XMLOG(xml, "(+) " << eq);
                         }

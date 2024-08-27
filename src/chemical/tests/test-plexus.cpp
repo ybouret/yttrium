@@ -4,6 +4,8 @@
 #include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
 
+#include "y/mkl/algebra/rank.hpp"
+
 using namespace Yttrium;
 using namespace Chemical;
 
@@ -13,13 +15,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Gate : public SRepo
+        class Gate : public SSolo
         {
         public:
 
             //! initialize @empty
-            explicit Gate(const SBank &sb) noexcept :
-            SRepo(sb)
+            explicit Gate(const size_t capa) :
+            SSolo(capa)
             {
             }
 
@@ -43,7 +45,7 @@ namespace Yttrium
                 }
                 else
                 {
-                    const SRepo &repo = self;
+                    const SSolo &repo = self;
                     os << real_t(self.xi) << " @" << repo;
                 }
                 return os;
@@ -54,7 +56,7 @@ namespace Yttrium
                             const Species &s)
             {
                 const xreal_t zero;
-                SRepo &       self = *this;
+                SSolo &       self = *this;
                 try {
 
                     if(size<=0)
@@ -166,7 +168,8 @@ namespace Yttrium
             xadd( cols ),
             conc( rows, cols),
             jail( rows ),
-            cinj( cols )
+            cinj( cols ),
+            gate( cols )
             {
             }
 
@@ -216,6 +219,7 @@ namespace Yttrium
             XMatrix             conc;  //!< workspace for concentrations
             Fixed::Series       jail;  //!< fixed
             XSwell              cinj;  //!< injected
+            Gate                gate;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -265,6 +269,8 @@ namespace Yttrium
                 if(eq.prod.hiredSome(node) && !eq.reac.hiredSome(node)) return true;
                 return false;
             }
+
+
             void renormalize(const Group             &G,
                              XWritable               &C,
                              const Level              L,
@@ -274,9 +280,12 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Renormalize", law);
                 Y_XMLOG(xml, "base:" << law.base);
 
-                // select most negative remaining
-                SBank sb;
-                Gate  gate(sb);
+                //--------------------------------------------------------------
+                //
+                // select most negative remaining species
+                //
+                //--------------------------------------------------------------
+                gate.free();
                 for(const Actor *a=law->head;a;a=a->next)
                 {
                     const Species &sp = a->sp;
@@ -296,6 +305,7 @@ namespace Yttrium
 
 
                 // select favorable equilibria
+                EList eqs;
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en; if(!isAdequate(eq,gate)) continue;
@@ -303,8 +313,34 @@ namespace Yttrium
                     {
                         mine.display(xml() << "(++) ", eq) << std::endl;
                     }
-                    
+                    eqs << eq;
                 }
+
+                {
+                    const size_t m = cols;
+                    XArray dC(m);
+                    for(const SNode *sn=gate.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        dC[ sp.indx[SubLevel] ] = -C[ sp.indx[L] ];
+                    }
+                    std::cerr << "dC=" << dC << std::endl;
+
+                    const size_t n = eqs.size;
+                    Matrix<int> Nu(n,m);
+                    {
+                        size_t ii = 0;
+                        for(const ENode *en=eqs.head;en;en=en->next)
+                        {
+                            const Equilibrium &eq = **en;
+                            eq.topology(Nu[++ii],SubLevel);
+                        }
+                    }
+                    std::cerr << "Nu=" << Nu << std::endl;
+                    std::cerr << "rank=" << MKL::Rank::Of(Nu) << std::endl;
+                }
+
+
 
                 if(gate.size>1)
                 {
@@ -324,7 +360,7 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, "Initialize", "groupSize='" << group.size << "'");
                 jail.free();
-                bool ans = false;
+                bool mustFix = false;
                 for(const LNode *ln=group.head;ln;ln=ln->next)
                 {
                     const Conservation::Law &cl = **ln;
@@ -335,10 +371,10 @@ namespace Yttrium
                     {
                         jail << fx;
                         Y_XMLOG(xml, "(+) " << fx);
-                        ans = true;
+                        mustFix = true;
                     }
                 }
-                return ans;
+                return mustFix;
             }
 
             //__________________________________________________________________
