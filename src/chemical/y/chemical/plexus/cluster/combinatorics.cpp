@@ -326,17 +326,33 @@ namespace Yttrium
             class SLists
             {
             public:
-                explicit SLists() noexcept : reac(), prod() {}
                 virtual ~SLists() noexcept {}
 
 
-                void operator()(const Components  &components,
-                                const AddressBook &conserved)
+                explicit SLists(const Components  &components,
+                                const AddressBook &conserved) :
+                reac(), prod()
                 {
                     reac.free();
                     prod.free();
                     components.separate(reac, prod, conserved);
                 }
+
+                bool alikeForward(const SLists &rhs) const noexcept
+                {
+                    return reac.alike(rhs.reac) && prod.alike(rhs.prod);
+                }
+
+                bool alikeReverse(const SLists &rhs) const noexcept
+                {
+                    return reac.alike(rhs.prod) && prod.alike(rhs.reac);
+                }
+
+                bool areEquivalentTo(const SLists &rhs) const noexcept
+                {
+                    return alikeForward(rhs) || alikeReverse(rhs);
+                }
+
 
                 SList reac;
                 SList prod;
@@ -379,19 +395,23 @@ namespace Yttrium
                             }
                             if(!ok) continue;
 
-                            display(std::cerr,lhs) << std::endl;
-
-                            SLists lc; lc(lhs,cons);
-                            std::cerr << "\tconserved Reac: " << lc.reac << std::endl;
-                            std::cerr << "\tconserved Prod: " << lc.prod << std::endl;
-
                             // post-selecting equilibria
+                            ok = true;
+                            const SLists lc(lhs,cons);
+
                             for(const ENode *tmp=law.base.head;tmp;tmp=tmp->next)
                             {
                                 const Equilibrium &rhs = **tmp;
-                                SLists rc; rc(rhs,cons);
+                                const SLists rc(rhs,cons);
 
+                                if( rc.areEquivalentTo(lc) )
+                                {
+                                    ok = false;
+                                    break;
+                                }
                             }
+
+                            if(!ok) continue;
 
                             Coerce(law.base) << lhs;
                             Y_XMLOG(xml, "(+) " << lhs);

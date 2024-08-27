@@ -115,6 +115,26 @@ namespace Yttrium
                 return false;
             }
 
+            //! sequential look up of all nodes
+            inline bool contains(const LightList &other) const noexcept
+            {
+                for(const NodeType *node=other.head;node;node=node->next)
+                {
+                    if( !has(**node) ) return false;
+                }
+                return true;
+            }
+
+            //! same content
+            inline bool alike(const LightList &rhs) const noexcept
+            {
+                const LightList &lhs = *this;
+                return (lhs.size == rhs.size) && lhs.contains(rhs) && rhs.contains(lhs);
+            }
+
+
+
+
             //! remove multiple references
             inline void noMultiple() noexcept
             {

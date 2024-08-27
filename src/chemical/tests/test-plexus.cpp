@@ -271,7 +271,7 @@ namespace Yttrium
             }
 
 
-            void renormalize(const Group             &G,
+            void renormalize(const Group             &,
                              XWritable               &C,
                              const Level              L,
                              const Conservation::Law &law,
