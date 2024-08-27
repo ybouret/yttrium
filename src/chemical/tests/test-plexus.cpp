@@ -264,13 +264,13 @@ namespace Yttrium
                 required.free();
             }
 
-            void operator()(const XReadable   &C,
+            bool operator()(const XReadable   &C,
                             const Level        L,
                             const Actors      &A,
                             const AddressBook &conserved)
             {
                 free();
-                try 
+                try
                 {
                     for(const Actor *a=A->head;a;a=a->next)
                     {
@@ -285,6 +285,7 @@ namespace Yttrium
                             required(-cc/a->xn,sp);
                         }
                     }
+                    return required.size>0;
                 }
                 catch(...)
                 {
@@ -306,11 +307,22 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Trim);
         };
 
+
+
+
+
         //! Trims for reactants and products
         class Trims : public Recyclable
         {
         public:
             typedef CxxArray<Trims,XMemory> Array;
+            enum Kind
+            {
+                BadNone,
+                BadReac,
+                BadProd,
+                BadBoth
+            };
 
             explicit Trims(const Fund &fund) noexcept :
             reac(fund),
@@ -328,15 +340,46 @@ namespace Yttrium
                 prod.free();
             }
 
-            void operator()(const XReadable   &C,
+            Kind operator()(const XReadable   &C,
                             const Level        L,
                             const Components  &E,
                             const AddressBook &conserved)
             {
                 free();
                 try {
-                    reac(C,L,E.reac,conserved);
-                    prod(C,L,E.prod,conserved);
+                    if(reac(C,L,E.reac,conserved))
+                    {
+                        assert(reac.required.size>0);
+                        if(prod(C,L,E.prod,conserved))
+                        {
+                            assert(reac.required.size>0);
+                            assert(prod.required.size>0);
+                            return BadBoth;
+                        }
+                        else
+                        {
+                            assert(reac.required.size>0);
+                            assert(prod.required.size<=0);
+                            return BadReac;
+                        }
+
+                    }
+                    else
+                    {
+                        assert(reac.required.size<=0);
+                        if(prod(C,L,E.prod,conserved))
+                        {
+                            assert(reac.required.size<=0);
+                            assert(prod.required.size>0);
+                            return BadProd;
+                        }
+                        else
+                        {
+                            assert(reac.required.size<=0);
+                            assert(prod.required.size<=0);
+                            return BadNone;
+                        }
+                    }
                 } catch(...) {
                     free(); throw;
                 }
@@ -427,7 +470,7 @@ namespace Yttrium
             cinj( cols ),
             fund(),
             lawz(fund.lbank),
-            trms(mine.size,CopyOf,fund)
+            trims(fund)
             {
             }
 
@@ -485,7 +528,7 @@ namespace Yttrium
             XSwell              cinj;  //!< injected
             Fund                fund;
             LRepo               lawz;  //!< laws with zero values
-            Trims::Array        trms;  //!< all mandatory trims
+            Trims               trims;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -533,14 +576,31 @@ namespace Yttrium
 
                 // conserved with the zero constraints laws in lawz
                 const AddressBook &conserved = mine.conserved.book;
-                for(const ENode *en=mine.head;en;en=en->next)
+                for(const ENode *en=mine.limited.head;en;en=en->next)
                 {
                     const Equilibrium &eq    = **en;
-                    Trims             &trims = trms[ eq.indx[SubLevel] ];
-                    trims(C,L,eq,conserved);
+                    const Trims::Kind  kind  = trims(C,L,eq,conserved);
                     std::cerr << eq << std::endl;
-                    std::cerr << "\treac: " << trims.reac << std::endl;
-                    std::cerr << "\tprod: " << trims.prod << std::endl;
+                    switch(kind)
+                    {
+                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); continue;
+                        case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod);
+                            break;
+
+                        case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac.limiting);
+                            break;
+
+                        case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod.limiting);
+                            break;
+                    }
+
+
 
                 }
 
