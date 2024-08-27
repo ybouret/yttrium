@@ -193,6 +193,7 @@ namespace Yttrium
                     }
                 }
 
+                // display if not empty
                 if(0!=head)
                 {
                     for(const SNode *sn = mine.species.head;sn;sn=sn->next)
@@ -308,13 +309,15 @@ namespace Yttrium
                 EList eqs;
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
-                    const Equilibrium &eq = **en; if(!isAdequate(eq,gate)) continue;
+                    const Equilibrium &eq = **en;
+                    //if(!isAdequate(eq,gate)) continue;
                     if(xml.verbose)
                     {
                         mine.display(xml() << "(++) ", eq) << std::endl;
                     }
                     eqs << eq;
                 }
+
 
                 {
                     const size_t m = cols;

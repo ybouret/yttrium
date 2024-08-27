@@ -81,7 +81,7 @@ namespace Yttrium
             for(CLaw *law = laws->head;law;law=law->next)
             {
                 law->record(cdb);    // record conserved species
-                //law->extract(*this); // here, will use only primary
+                law->extract(*this); // here, will use only primary
             }
 
             //------------------------------------------------------------------
