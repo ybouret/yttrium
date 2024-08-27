@@ -463,7 +463,7 @@ Y_UTEST(plexus)
     const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
-#if 0
+#if 1
     plexus("@water @oxalic.*");
 
     std::cerr << "lib=" <<  lib << std::endl;
