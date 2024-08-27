@@ -100,6 +100,11 @@ namespace Yttrium
                 }
             }
 
+            bool blocking() const noexcept
+            {
+                assert(xi.mantissa>=0);
+                return sr.size > 0 && xi.mantissa <= 0;
+            }
 
 
             xreal_t xi;
@@ -576,29 +581,31 @@ namespace Yttrium
                             break;
 
                         case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
-                            Y_XMLOG(xml, " |_prod: " << trims.prod);
+                            Y_XMLOG(xml, " |_prod: " << trims.prod.required);
                             Y_XMLOG(xml, " |_reac: " << trims.reac.limiting);
-                            if(trims.reac.limiting.xi.mantissa<=0)
+                            if(trims.reac.limiting.blocking())
                             {
-                                Y_XMLOG(xml, " |_blocked by reac");
+                                Y_XMLOG(xml, " |_blocked...");
                             }
                             else
                             {
 
                             }
+
                             break;
 
                         case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
-                            Y_XMLOG(xml, " |_reac: " << trims.reac);
+                            Y_XMLOG(xml, " |_reac: " << trims.reac.required);
                             Y_XMLOG(xml, " |_prod: " << trims.prod.limiting);
-                            if(trims.reac.limiting.xi.mantissa<=0)
+                            if(trims.prod.limiting.blocking())
                             {
-                                Y_XMLOG(xml, " |_blocked by prod");
+                                Y_XMLOG(xml, " |_blocked...");
                             }
                             else
                             {
 
                             }
+
                             break;
                     }
                 }
@@ -828,7 +835,7 @@ Y_UTEST(plexus)
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.run(C0,TopLevel,xml);
+            warden.equalize(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
         }
 
