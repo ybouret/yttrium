@@ -6,6 +6,8 @@
 
 #include "y/mkl/algebra/rank.hpp"
 
+#include "y/data/small/heavy/list/coop.hpp"
+
 using namespace Yttrium;
 using namespace Chemical;
 
@@ -15,30 +17,68 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
 
-#if 0
-        class Fence : public SRepo
+
+
+
+
+
+
+
+
+        class SProxy : public Proxy<const SRepo>
         {
         public:
+            explicit SProxy(const SBank &sbank) noexcept : Proxy<const SRepo>(), sr(sbank) {}
+            virtual ~SProxy() noexcept {}
+            explicit SProxy(const SProxy &_) : Proxy<const SRepo>(), sr(_.sr) {}
 
-            explicit Fence(const SBank &_) noexcept : SRepo(_), xi() {}
-            virtual ~Fence() noexcept {}
+        protected:
+            SRepo sr;
+
+        private:
+            Y_DISABLE_ASSIGN(SProxy);
+            virtual ConstInterface & surrogate() const noexcept { return sr; }
+        };
 
 
-            void ldz() noexcept
+        class SingleFrontier : public SProxy, public Recyclable
+        {
+        public:
+            explicit SingleFrontier(const SBank &sbank) noexcept :
+            SProxy(sbank),
+            xi()
             {
-                xi=0;
-                free();
             }
 
-            // initialize/update
+            virtual ~SingleFrontier() noexcept { }
+
+
+            // Methods
+            virtual void  free() noexcept
+            {
+                const xreal_t _0;
+                sr.free();
+                xi = _0;
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const SingleFrontier &self)
+            {
+                os << "lim=";
+                if(self->size<=0)
+                    os << "none";
+                else
+                    os << real_t(self.xi) << "@" << self.sr;
+                return os;
+            }
+
+            // initialize/update with x>=0
             void operator()(const xreal_t  x,
                             const Species &s)
             {
                 assert(x>=0.0);
                 try {
-                    if(size<=0)
+                    if(sr.size<=0)
                     {
                         first(x,s);
                     }
@@ -52,7 +92,7 @@ namespace Yttrium
                                 break;
 
                             case __Zero__: // same value
-                                (*this) << s;
+                                sr << s;
                                 break;
 
 
@@ -60,56 +100,259 @@ namespace Yttrium
                                 break;
 
                         }
-
                     }
                 }
                 catch(...)
                 {
-                    ldz();
+                    free();
                     throw;
                 }
             }
-
-            void operator()(const XReadable  &C,
-                            const Level       L,
-                            const Actors     &A,
-                            const AddressBook &conserved)
-            {
-                ldz();
-                for(const Actor *a=A->head;a;a=a->next)
-                {
-                    const Species &sp = a->sp; if( !conserved.has(sp) ) continue;;
-                    const xreal_t  cc = C[sp.indx[L]]; assert(cc>=0.0);
-                    (*this)(cc/a->xn,sp);
-                }
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Fence &f)
-            {
-                const SRepo &self = f;
-                os << real_t(f.xi) << " @" << self;
-                return os;
-            }
-
 
 
 
             xreal_t xi;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fence);
-
+            Y_DISABLE_COPY_AND_ASSIGN(SingleFrontier);
             void first(const xreal_t x, const Species &s)
             {
-                assert(0==size);
-                (*this) << s;
+                assert(0==sr.size);
+                sr << s;
                 xi = x;
+            }
+        };
+
+        //! fixed value frontier, with one or more species
+        class Frontier : public SProxy
+        {
+        public:
+
+            explicit Frontier(const SBank &sbank,
+                              const xreal_t  x,
+                              const Species &s) :
+            SProxy(sbank),
+            xi(x)
+            {
+                sr << s;
+            }
+
+            virtual ~Frontier() noexcept
+            {
+            }
+
+            explicit Frontier(const Frontier &F) :
+            SProxy(F),
+            xi(F.xi)
+            {
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Frontier &self)
+            {
+                assert(self.sr.size>0);
+                os << real_t(self.xi) << "@" << self.sr;
+                return os;
+            }
+
+            //! wrapper
+            Frontier & operator<<(const Species &s)
+            {
+                sr << s;
+                return *this;
+            }
+
+            const xreal_t xi;
+        private:
+            Y_DISABLE_ASSIGN(Frontier);
+        };
+
+        typedef Small::CoopHeavyList<Frontier> FList;
+        typedef FList::ProxyType               FBank;
+        typedef FList::NodeType                FNode;
+
+        class Fund
+        {
+        public:
+            explicit Fund() : sbank(), lbank(), fbank()
+            {
+            }
+
+            SBank               sbank;
+            Conservation::LBank lbank;
+            FBank               fbank;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Fund);
+        };
+
+        class Frontiers : public FList
+        {
+        public:
+            explicit Frontiers(const Fund &fund) noexcept :
+            FList(fund.fbank),
+            sbank(fund.sbank)
+            {
+            }
+
+            virtual ~Frontiers() noexcept
+            {
+            }
+
+            void operator()(const xreal_t  xi,
+                            const Species &sp)
+            {
+                switch(size)
+                {
+                    case 0: pushTail( make(xi,sp) ); return;
+                    case 1: {
+                        Frontier &f = **head;
+                        switch( Sign::Of(xi, f.xi) )
+                        {
+                            case Negative: pushHead( make(xi,sp) ); break;
+                            case __Zero__: f << sp;                 break;
+                            case Positive: pushTail( make(xi,sp) ); break;
+                        }
+                    } return;
+
+                    default:
+                        break;
+                }
+                assert(size>=2);
+                throw Exception("Not implemented");
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Frontiers &self)
+            {
+                const FList &F = self;
+                os << "req=";
+                if(F.size<=0)
+                    os << "none";
+                else
+                    os << F;
+                return os;
+            }
+
+        private:
+            const SBank sbank;
+            Y_DISABLE_COPY_AND_ASSIGN(Frontiers);
+
+            FNode *make(const xreal_t  xi,
+                        const Species &sp)
+            {
+                const Frontier  f(sbank,xi,sp);
+                return proxy->produce(f);
             }
 
         };
-#endif
-        
 
+        class Trim : public Recyclable
+        {
+        public:
+            explicit Trim(const Fund &fund) noexcept :
+            limiting(fund.sbank),
+            required(fund)
+            {
+            }
+
+            virtual ~Trim() noexcept
+            {
+            }
+
+            virtual void free() noexcept
+            {
+                limiting.free();
+                required.free();
+            }
+
+            void operator()(const XReadable   &C,
+                            const Level        L,
+                            const Actors      &A,
+                            const AddressBook &conserved)
+            {
+                free();
+                try 
+                {
+                    for(const Actor *a=A->head;a;a=a->next)
+                    {
+                        const Species &sp = a->sp; if(!conserved.has(sp)) continue;
+                        const xreal_t  cc = C[ sp.indx[L] ];
+                        if(cc.mantissa>=0)
+                        {
+                            limiting(cc/a->xn,sp);
+                        }
+                        else
+                        {
+                            required(-cc/a->xn,sp);
+                        }
+                    }
+                }
+                catch(...)
+                {
+                    free();
+                    throw;
+                }
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Trim &self)
+            {
+                os << self.limiting << "/" << self.required;
+                return os;
+            }
+
+            SingleFrontier  limiting; //!< from positive of zero concentrations
+            Frontiers       required; //!< from negative concentrations
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Trim);
+        };
+
+        //! Trims for reactants and products
+        class Trims : public Recyclable
+        {
+        public:
+            typedef CxxArray<Trims,XMemory> Array;
+
+            explicit Trims(const Fund &fund) noexcept :
+            reac(fund),
+            prod(fund)
+            {
+            }
+
+            virtual ~Trims() noexcept
+            {
+            }
+
+            virtual void free() noexcept
+            {
+                reac.free();
+                prod.free();
+            }
+
+            void operator()(const XReadable   &C,
+                            const Level        L,
+                            const Components  &E,
+                            const AddressBook &conserved)
+            {
+                free();
+                try {
+                    reac(C,L,E.reac,conserved);
+                    prod(C,L,E.prod,conserved);
+                } catch(...) {
+                    free(); throw;
+                }
+            }
+
+
+            Trim reac;
+            Trim prod;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Trims);
+        };
+
+
+
+        //! Fixed concentrations
         class Fixed
         {
         public:
@@ -163,19 +406,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Fixed);
         };
 
-        class Fund
-        {
-        public:
-            explicit Fund() : sbank(), lbank()
-            {
-            }
 
-            SBank               sbank;
-            Conservation::LBank lbank;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fund);
-        };
 
         class Warden
         {
@@ -195,7 +426,8 @@ namespace Yttrium
             jail( rows ),
             cinj( cols ),
             fund(),
-            lawz(fund.lbank)
+            lawz(fund.lbank),
+            trms(mine.size,CopyOf,fund)
             {
             }
 
@@ -232,6 +464,8 @@ namespace Yttrium
                     }
                 }
 
+                equalize(C, L, xml);
+
             }
 
 
@@ -251,7 +485,8 @@ namespace Yttrium
             XSwell              cinj;  //!< injected
             Fund                fund;
             LRepo               lawz;  //!< laws with zero values
-            
+            Trims::Array        trms;  //!< all mandatory trims
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
@@ -291,6 +526,25 @@ namespace Yttrium
                 return law;
             }
 
+
+            void equalize(XWritable &C, const Level L, XMLog &xml)
+            {
+                Y_XML_SECTION(xml, "equalizing" );
+
+                // conserved with the zero constraints laws in lawz
+                const AddressBook &conserved = mine.conserved.book;
+                for(const ENode *en=mine.head;en;en=en->next)
+                {
+                    const Equilibrium &eq    = **en;
+                    Trims             &trims = trms[ eq.indx[SubLevel] ];
+                    trims(C,L,eq,conserved);
+                    std::cerr << eq << std::endl;
+                    std::cerr << "\treac: " << trims.reac << std::endl;
+                    std::cerr << "\tprod: " << trims.prod << std::endl;
+
+                }
+
+            }
 
 #if 0
             static bool isAdequate(const Equilibrium &eq,
