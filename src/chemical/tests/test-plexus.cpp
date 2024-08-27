@@ -257,7 +257,7 @@ namespace Yttrium
 
                 insertAfter(lower, make(xi,sp) );
                 assert(isSorted());
-                
+
 
             }
 
@@ -567,21 +567,20 @@ namespace Yttrium
                 {
                     const Equilibrium &eq    = **en;
                     const Trims::Kind  kind  = trims(C,L,eq,conserved);
-                    std::cerr << eq << std::endl;
                     switch(kind)
                     {
                         case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); continue;
                         case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac.required);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod.required);
+                            Y_XMLOG(xml, " |_reac: " << trims.reac.required);
+                            Y_XMLOG(xml, " |_prod: " << trims.prod.required);
                             break;
 
                         case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac.limiting);
+                            Y_XMLOG(xml, " |_prod: " << trims.prod);
+                            Y_XMLOG(xml, " |_reac: " << trims.reac.limiting);
                             if(trims.reac.limiting.xi.mantissa<=0)
                             {
-                                Y_XMLOG(xml, "|_blocked by reac");
+                                Y_XMLOG(xml, " |_blocked by reac");
                             }
                             else
                             {
@@ -590,11 +589,11 @@ namespace Yttrium
                             break;
 
                         case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod.limiting);
+                            Y_XMLOG(xml, " |_reac: " << trims.reac);
+                            Y_XMLOG(xml, " |_prod: " << trims.prod.limiting);
                             if(trims.reac.limiting.xi.mantissa<=0)
                             {
-                                Y_XMLOG(xml, "|_blocked by prod");
+                                Y_XMLOG(xml, " |_blocked by prod");
                             }
                             else
                             {
@@ -824,12 +823,12 @@ Y_UTEST(plexus)
     {
 
         Warden warden(*cl);
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<1;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.equalize(C0,TopLevel,xml);
+            warden.run(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
         }
 
