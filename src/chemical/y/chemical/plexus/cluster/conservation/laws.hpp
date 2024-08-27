@@ -19,7 +19,9 @@ namespace Yttrium
 
             typedef Small::BareLightList<const Law> LList; //!< alias
             typedef LList::NodeType                 LNode; //!< alias
-
+            typedef Small::CoopLightList<const Law> LRepo;
+            typedef LRepo::ProxyType                LBank;
+            
             //__________________________________________________________________
             //
             //

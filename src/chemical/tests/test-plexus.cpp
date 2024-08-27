@@ -15,97 +15,9 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Gate : public SRepo
-        {
-        public:
+        
 
-            //! initialize @empty
-            explicit Gate(const SBank &sb) :
-            SRepo(sb),
-            cc()
-            {
-            }
-
-            //! cleanup
-            virtual ~Gate() noexcept
-            {
-
-            }
-
-            void ldz() noexcept
-            {
-                const xreal_t _0;
-                free();
-                Coerce(cc) = _0;
-            }
-
-            void neg() noexcept
-            {
-                Coerce(cc).neg();
-            }
-
-
-            friend std::ostream & operator<<(std::ostream &os, const Gate &self)
-            {
-                if(self.size<=0)
-                {
-                    os << "[none]";
-                }
-                else
-                {
-                    const SRepo &repo = self;
-                    os << real_t(self.cc) << " @" << repo;
-                }
-                return os;
-            }
-
-            //! try to set/update x>=0
-            void operator()(const xreal_t  x,
-                            const Species &s)
-            {
-                const xreal_t zero;
-                SRepo &       self = *this;
-                try {
-
-                    if(size<=0)
-                    {
-                        // initialize
-                        Coerce(cc) =  x;
-                        self       << s;
-                    }
-                    else
-                    {
-                        switch( Sign::Of(x,cc) )
-                        {
-                            case Negative: // new winner
-                                free();
-                                Coerce(cc) =  x;
-                                self       << s;
-                                break;
-
-                            case __Zero__: // same value
-                                self << s;
-                                break;
-
-                            case Positive: // discard
-                                break;
-                        }
-                    }
-                }
-                catch(...)
-                {
-                    ldz();
-                    throw;
-                }
-            }
-
-            const xreal_t cc;
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Gate);
-        };
-
+#if 0
         class Fence : public SRepo
         {
         public:
@@ -195,7 +107,8 @@ namespace Yttrium
             }
 
         };
-
+#endif
+        
 
         class Fixed
         {
@@ -253,11 +166,12 @@ namespace Yttrium
         class Fund
         {
         public:
-            explicit Fund() : sbank()
+            explicit Fund() : sbank(), lbank()
             {
             }
 
-            SBank sbank;
+            SBank               sbank;
+            Conservation::LBank lbank;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fund);
@@ -269,6 +183,7 @@ namespace Yttrium
 
             typedef Conservation::Laws::Group Group;
             typedef Conservation::LNode       LNode;
+            typedef Conservation::LRepo       LRepo;
 
             explicit Warden(const Cluster &cluster) :
             mine(cluster),
@@ -280,7 +195,7 @@ namespace Yttrium
             jail( rows ),
             cinj( cols ),
             fund(),
-            gate(fund.sbank)
+            lawz(fund.lbank)
             {
             }
 
@@ -294,15 +209,18 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Warden");
 
+                lawz.free();
                 for(const Group *g=head;g;g=g->next)
                 {
                     const Group                    &G   = *g;
                     const Conservation::Law * const law = wasInjected(G,C,L,xml);
                     if(0!=law)
                     {
-                        renormalize(G,C,L,*law,xml);
+                        lawz << *law;
                     }
                 }
+
+                Y_XMLOG(xml, "lawz=" << lawz);
 
                 // display if not empty
                 if(0!=head)
@@ -332,8 +250,8 @@ namespace Yttrium
             Fixed::Series       jail;  //!< fixed
             XSwell              cinj;  //!< injected
             Fund                fund;
-            Gate                gate;
-
+            LRepo               lawz;  //!< laws with zero values
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
@@ -374,6 +292,7 @@ namespace Yttrium
             }
 
 
+#if 0
             static bool isAdequate(const Equilibrium &eq,
                                    const Gate        &gate)
             {
@@ -480,6 +399,7 @@ namespace Yttrium
                     exit(1);
                 }
             }
+#endif
 
             //__________________________________________________________________
             //
