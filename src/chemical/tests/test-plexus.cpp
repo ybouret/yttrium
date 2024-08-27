@@ -301,6 +301,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
                     }
                 }
+                Y_XMLOG(xml, " |");
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
 
 
@@ -462,7 +463,7 @@ Y_UTEST(plexus)
     const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
-#if 1
+#if 0
     plexus("@water @oxalic.*");
 
     std::cerr << "lib=" <<  lib << std::endl;
