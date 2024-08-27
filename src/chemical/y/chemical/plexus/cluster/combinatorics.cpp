@@ -304,7 +304,7 @@ namespace Yttrium
 
 
 
-            //postBuildConservations(xml);
+            postBuildConservations(xml);
 
 
 
@@ -321,7 +321,7 @@ namespace Yttrium
             }
         }
 
-#if 0
+#if 1
         namespace
         {
             class SLists

@@ -21,7 +21,8 @@ namespace Yttrium
 
             //! initialize @empty
             explicit Gate(const size_t capa) :
-            SSolo(capa)
+            SSolo(capa),
+            cc()
             {
             }
 
@@ -31,9 +32,16 @@ namespace Yttrium
 
             }
 
+            void ldz() noexcept
+            {
+                const xreal_t _0;
+                free();
+                Coerce(cc) = _0;
+            }
+
             void neg() noexcept
             {
-                if( __Zero__ != Sign::Of(xi.mantissa) ) Coerce(xi.mantissa) = -xi.mantissa;
+                if( __Zero__ != Sign::Of(cc.mantissa) ) Coerce(cc.mantissa) = -cc.mantissa;
             }
 
 
@@ -46,13 +54,13 @@ namespace Yttrium
                 else
                 {
                     const SSolo &repo = self;
-                    os << real_t(self.xi) << " @" << repo;
+                    os << real_t(self.cc) << " @" << repo;
                 }
                 return os;
             }
 
             //! try to set/update x>=0
-            void operator()(const xreal_t x,
+            void operator()(const xreal_t  x,
                             const Species &s)
             {
                 const xreal_t zero;
@@ -62,16 +70,16 @@ namespace Yttrium
                     if(size<=0)
                     {
                         // initialize
-                        Coerce(xi) =  x;
+                        Coerce(cc) =  x;
                         self       << s;
                     }
                     else
                     {
-                        switch( Sign::Of(x,xi) )
+                        switch( Sign::Of(x,cc) )
                         {
                             case Negative: // new winner
                                 free();
-                                Coerce(xi) =  x;
+                                Coerce(cc) =  x;
                                 self       << s;
                                 break;
 
@@ -86,13 +94,12 @@ namespace Yttrium
                 }
                 catch(...)
                 {
-                    free();
-                    Coerce(xi) = zero;
+                    ldz();
                     throw;
                 }
             }
 
-            const xreal_t xi;
+            const xreal_t cc;
 
 
         private:
@@ -286,7 +293,7 @@ namespace Yttrium
                 // select most negative remaining species
                 //
                 //--------------------------------------------------------------
-                gate.free();
+                gate.ldz();
                 for(const Actor *a=law->head;a;a=a->next)
                 {
                     const Species &sp = a->sp;
@@ -303,6 +310,7 @@ namespace Yttrium
                 }
                 Y_XMLOG(xml, " |");
                 Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
+                Y_XMLOG(xml, " |");
 
 
 
@@ -311,7 +319,7 @@ namespace Yttrium
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    //if(!isAdequate(eq,gate)) continue;
+                    if(!isAdequate(eq,gate)) continue;
                     if(xml.verbose)
                     {
                         mine.display(xml() << "(++) ", eq) << std::endl;
@@ -463,7 +471,7 @@ Y_UTEST(plexus)
     const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
-#if 1
+#if 0
     plexus("@water @oxalic.*");
 
     std::cerr << "lib=" <<  lib << std::endl;
