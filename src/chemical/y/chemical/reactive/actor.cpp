@@ -22,7 +22,7 @@ namespace Yttrium
             {
                 case 0: throw Specific::Exception("Chemical::Actor","zero stoichiometry for '%s'", s.name.c_str());
                 case 1:  {  String _ = Formatted::Get("[%s]",id);       Coerce(name).swapWith(_); } break;
-                default: {  String _ = Formatted::Get("%u*[%s]",nu,id); Coerce(name).swapWith(_); } break;
+                default: {  String _ = Formatted::Get("%u[%s]",nu,id); Coerce(name).swapWith(_); } break;
             }
 
         }
