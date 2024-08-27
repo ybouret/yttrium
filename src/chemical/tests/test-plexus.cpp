@@ -430,7 +430,7 @@ namespace Yttrium
                 for(const ENode *en=law.base.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    if(!isAdequate(eq,gate)) continue;
+                    //if(!isAdequate(eq,gate)) continue;
                     if(xml.verbose)
                     {
                         mine.display(xml() << "(++) ", eq) << std::endl;
@@ -439,14 +439,9 @@ namespace Yttrium
 
                     for(const SNode *sn=bad;sn;sn=sn->next)
                     {
-                        const Species &sp = **sn;
-                        const Actor   *pa = eq.prod.hired(sp);
-                        Fence          fn(fund.sbank);
-                        if(pa)
-                        {
-                            fn(C,L,eq.reac,mine.conserved.book);
-                            Y_XMLOG(xml,"(@@) fwd = " << fn);
-                        }
+                        const Species &     sp = **sn;
+                        //const Actor * const pa = eq.prod.hired(sp);
+
                     }
 
 
@@ -596,7 +591,7 @@ Y_UTEST(plexus)
     const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
-#if 1
+#if 0
     plexus("@water @oxalic.*");
 
     std::cerr << "lib=" <<  lib << std::endl;
