@@ -238,6 +238,26 @@ namespace Yttrium
             const Component * query(const Species &sp) const noexcept;
             bool              found(const Actors  &ac) const noexcept;
 
+            template <typename SLIST> inline
+            void separate(SLIST &theReac, 
+                          SLIST &theProd,
+                          const AddressBook &registered) const
+            {
+                for(const Actor *a=reac->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    if(registered.has(sp)) theReac << sp;
+                }
+
+                for(const Actor *a=prod->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    if(registered.has(sp)) theProd << sp;
+                }
+            }
+
+
+
             //__________________________________________________________________
             //
             //

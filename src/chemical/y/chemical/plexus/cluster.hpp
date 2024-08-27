@@ -133,6 +133,9 @@ namespace Yttrium
             void vizEqsList(OutputStream &fp, const EList &el)    const;
             void vizProlog(OutputStream &fp,  const size_t cid)    const;
             void vizEpilog(OutputStream &fp)                      const;
+
+            
+            void postBuildConservations(XMLog &);
         };
     }
 

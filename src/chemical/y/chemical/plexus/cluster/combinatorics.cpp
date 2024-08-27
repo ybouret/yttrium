@@ -303,41 +303,8 @@ namespace Yttrium
             }
 
 
-            //------------------------------------------------------------------
-            //
-            // Linking limited equilibria to laws
-            //
-            //------------------------------------------------------------------
-            if( laws.isValid() )
-            {
-                Y_XML_SECTION(xml, "ConservationLink");
-                const AddressBook &auth = unbounded.book; // authorized extra species
-                for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
-                {
-                    const SList &crew = G->crew; // authorized primary species
-                    for(const Conservation::LNode *ln=G->head;ln;ln=ln->next)
-                    {
-                        const CLaw &law = **ln;
-                        Y_XML_SECTION(xml,law.name);
-                        for(const ENode *en=limited.head;en;en=en->next)
-                        {
-                            const Equilibrium &eq = **en;
-                            bool               ok = true;
-                            for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
-                            {
-                                const Species &sp = (**it).sp;
-                                if(auth.has(sp))   continue; // unbounded, that's ok
-                                if(crew.has(sp))   continue; // in crew, that's ok
-                                ok = false; break;           // limited but not in crew => drop
-                            }
-                            if(!ok) continue;
-                            Coerce(law.base) << eq;
-                            Y_XMLOG(xml, "(+) " << eq);
-                        }
-                    }
-                }
-            }
 
+            postBuildConservations(xml);
 
 
 
@@ -351,6 +318,86 @@ namespace Yttrium
                 Y_XMLOG(xml, "#primary equilibria: " << Nu.rows);
                 Y_XMLOG(xml, "#derived equilibria: " << size-Nu.rows);
                 Y_XMLOG(xml, "#total   equilibria: " << size << " (*)");
+            }
+        }
+
+        namespace
+        {
+            class SLists
+            {
+            public:
+                explicit SLists() noexcept : reac(), prod() {}
+                virtual ~SLists() noexcept {}
+
+
+                void operator()(const Components  &components,
+                                const AddressBook &conserved)
+                {
+                    reac.free();
+                    prod.free();
+                    components.separate(reac, prod, conserved);
+                }
+
+                SList reac;
+                SList prod;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(SLists);
+            };
+        }
+
+        void Cluster:: postBuildConservations(XMLog &xml)
+        {
+            //------------------------------------------------------------------
+            //
+            // Linking limited equilibria to laws
+            //
+            //------------------------------------------------------------------
+            if( laws.isValid() )
+            {
+                Y_XML_SECTION(xml, "ConservationLink");
+                const AddressBook &auth = unbounded.book; // authorized extra species
+                const AddressBook &cons = conserved.book; // conserved species database
+                for(const Conservation::Laws::Group *G=laws->groups.head;G;G=G->next)
+                {
+                    const SList &crew = G->crew; // authorized primary species
+                    for(const Conservation::LNode *ln=G->head;ln;ln=ln->next)
+                    {
+                        const CLaw &law = **ln;
+                        Y_XML_SECTION(xml,law.name);
+                        for(const ENode *en=limited.head;en;en=en->next)
+                        {
+                            // pre-selecting equilibria
+                            const Equilibrium &lhs = **en;
+                            bool               ok  = true;
+                            for(Components::ConstIterator it=lhs->begin();it!=lhs->end();++it)
+                            {
+                                const Species &sp = (**it).sp;
+                                if(auth.has(sp))   continue; // unbounded, that's ok
+                                if(crew.has(sp))   continue; // in crew, that's ok
+                                ok = false; break;           // limited but not in crew => drop
+                            }
+                            if(!ok) continue;
+
+                            display(std::cerr,lhs) << std::endl;
+
+                            SLists lc; lc(lhs,cons);
+                            std::cerr << "\tconserved Reac: " << lc.reac << std::endl;
+                            std::cerr << "\tconserved Prod: " << lc.prod << std::endl;
+
+                            // post-selecting equilibria
+                            for(const ENode *tmp=law.base.head;tmp;tmp=tmp->next)
+                            {
+                                const Equilibrium &rhs = **tmp;
+                                SLists rc; rc(rhs,cons);
+
+                            }
+
+                            Coerce(law.base) << lhs;
+                            Y_XMLOG(xml, "(+) " << lhs);
+                        }
+                    }
+                }
             }
         }
 
