@@ -17,15 +17,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-
-
-
-
-
-
-
-
-
         class SProxy : public Proxy<const SRepo>
         {
         public:
@@ -198,6 +189,18 @@ namespace Yttrium
             {
             }
 
+            bool isSorted() const noexcept
+            {
+                if(size<=1) return true;
+
+                for(const FNode *node=head,*next=head->next;0!=next;node=next,next=node->next)
+                {
+                    if( (**node).xi >= (**next).xi ) return false;
+                }
+
+                return true;
+            }
+
             void operator()(const xreal_t  xi,
                             const Species &sp)
             {
@@ -212,13 +215,50 @@ namespace Yttrium
                             case __Zero__: f << sp;                 break;
                             case Positive: pushTail( make(xi,sp) ); break;
                         }
+                        assert(isSorted());
                     } return;
 
                     default:
                         break;
                 }
                 assert(size>=2);
-                throw Exception("Not implemented");
+
+                FNode * lower = head;
+                switch( Sign::Of(xi, (**lower).xi) )
+                {
+                    case Negative: pushHead( make(xi,sp) ); assert(isSorted()); return;
+                    case __Zero__: **lower << sp;           assert(isSorted()); return;
+                    case Positive: break;
+                }
+
+                FNode * const upper = tail;
+                switch( Sign::Of(xi, (**upper).xi) )
+                {
+                    case Negative: break;
+                    case __Zero__: **upper << sp;            assert(isSorted()); return;
+                    case Positive: pushTail( make(xi,sp) );  assert(isSorted()); return;
+                }
+
+            CYCLE:
+                FNode *probe = lower->next;
+
+                if(upper!=probe)
+                {
+                    switch( Sign::Of(xi,(**probe).xi) )
+                    {
+                        case Negative:
+                            break; // after lower
+                        case __Zero__: (**probe) << sp;  assert(isSorted()); return;
+                        case Positive:
+                            lower = probe;
+                            goto CYCLE;
+                    }
+                }
+
+                insertAfter(lower, make(xi,sp) );
+                assert(isSorted());
+                
+
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Frontiers &self)
@@ -283,6 +323,7 @@ namespace Yttrium
                         else
                         {
                             required(-cc/a->xn,sp);
+                            assert(required.isSorted());
                         }
                     }
                     return required.size>0;
@@ -508,8 +549,62 @@ namespace Yttrium
                 }
 
                 equalize(C, L, xml);
-
             }
+
+
+
+            void equalize(XWritable &C, const Level L, XMLog &xml)
+            {
+                Y_XML_SECTION(xml, "equalizing" );
+
+                //--------------------------------------------------------------
+                //
+                // conserved with the zero constraints laws in lawz
+                //
+                //--------------------------------------------------------------
+                const AddressBook &conserved = mine.conserved.book;
+                for(const ENode *en=mine.limited.head;en;en=en->next)
+                {
+                    const Equilibrium &eq    = **en;
+                    const Trims::Kind  kind  = trims(C,L,eq,conserved);
+                    std::cerr << eq << std::endl;
+                    switch(kind)
+                    {
+                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); continue;
+                        case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac.required);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod.required);
+                            break;
+
+                        case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac.limiting);
+                            if(trims.reac.limiting.xi.mantissa<=0)
+                            {
+                                Y_XMLOG(xml, "|_blocked by reac");
+                            }
+                            else
+                            {
+
+                            }
+                            break;
+
+                        case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
+                            Y_XMLOG(xml, "|_reac: " << trims.reac);
+                            Y_XMLOG(xml, "|_prod: " << trims.prod.limiting);
+                            if(trims.reac.limiting.xi.mantissa<=0)
+                            {
+                                Y_XMLOG(xml, "|_blocked by prod");
+                            }
+                            else
+                            {
+
+                            }
+                            break;
+                    }
+                }
+            }
+
 
 
             virtual ~Warden() noexcept
@@ -570,150 +665,7 @@ namespace Yttrium
             }
 
 
-            void equalize(XWritable &C, const Level L, XMLog &xml)
-            {
-                Y_XML_SECTION(xml, "equalizing" );
 
-                // conserved with the zero constraints laws in lawz
-                const AddressBook &conserved = mine.conserved.book;
-                for(const ENode *en=mine.limited.head;en;en=en->next)
-                {
-                    const Equilibrium &eq    = **en;
-                    const Trims::Kind  kind  = trims(C,L,eq,conserved);
-                    std::cerr << eq << std::endl;
-                    switch(kind)
-                    {
-                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); continue;
-                        case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod);
-                            break;
-
-                        case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac.limiting);
-                            break;
-
-                        case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
-                            Y_XMLOG(xml, "|_reac: " << trims.reac);
-                            Y_XMLOG(xml, "|_prod: " << trims.prod.limiting);
-                            break;
-                    }
-
-
-
-                }
-
-            }
-
-#if 0
-            static bool isAdequate(const Equilibrium &eq,
-                                   const Gate        &gate)
-            {
-                const SNode * const node = gate.head;
-                if(eq.reac.hiredSome(node) && !eq.prod.hiredSome(node)) return true;
-                if(eq.prod.hiredSome(node) && !eq.reac.hiredSome(node)) return true;
-                return false;
-            }
-
-
-            void renormalize(const Group             &,
-                             XWritable               &C,
-                             const Level              L,
-                             const Conservation::Law &law,
-                             XMLog                   &xml)
-            {
-                Y_XML_SECTION_OPT(xml, "Renormalize", law);
-                Y_XMLOG(xml, "base:" << law.base);
-
-                //--------------------------------------------------------------
-                //
-                // select most negative remaining species
-                //
-                //--------------------------------------------------------------
-                gate.ldz();
-                for(const Actor *a=law->head;a;a=a->next)
-                {
-                    const Species &sp = a->sp;
-                    const xreal_t  cc = C[ sp.indx[L] ];
-                    if(cc.mantissa<0)
-                    {
-                        Y_XMLOG(xml, "(-) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
-                        gate(cc,sp);
-                    }
-                    else
-                    {
-                        Y_XMLOG(xml, "(+) " << std::setw(15) << real_t(cc) << " @[" << sp << "]");
-                    }
-                }
-                gate.neg();
-                Y_XMLOG(xml, " |");
-                Y_XMLOG(xml, "(*) " << std::setw(15) << gate);
-                Y_XMLOG(xml, " |");
-
-
-                //--------------------------------------------------------------
-                //
-                // select favorable equilibria
-                //
-                //--------------------------------------------------------------
-                const SNode * const bad = gate.head;
-                const xreal_t       pos = gate.cc;
-                EList               eqs;
-                for(const ENode *en=law.base.head;en;en=en->next)
-                {
-                    const Equilibrium &eq = **en;
-                    //if(!isAdequate(eq,gate)) continue;
-                    if(xml.verbose)
-                    {
-                        mine.display(xml() << "(++) ", eq) << std::endl;
-                    }
-                    eqs << eq;
-
-                    for(const SNode *sn=bad;sn;sn=sn->next)
-                    {
-                        const Species &     sp = **sn;
-                        //const Actor * const pa = eq.prod.hired(sp);
-
-                    }
-
-
-                }
-
-
-                {
-                    const size_t m = cols;
-                    XArray dC(m);
-                    for(const SNode *sn=gate.head;sn;sn=sn->next)
-                    {
-                        const Species &sp = **sn;
-                        dC[ sp.indx[SubLevel] ] = -C[ sp.indx[L] ];
-                    }
-                    std::cerr << "dC=" << dC << std::endl;
-
-                    const size_t n = eqs.size;
-                    Matrix<int> Nu(n,m);
-                    {
-                        size_t ii = 0;
-                        for(const ENode *en=eqs.head;en;en=en->next)
-                        {
-                            const Equilibrium &eq = **en;
-                            eq.topology(Nu[++ii],SubLevel);
-                        }
-                    }
-                    std::cerr << "Nu=" << Nu << std::endl;
-                    std::cerr << "rank=" << MKL::Rank::Of(Nu) << std::endl;
-                }
-
-
-
-                if(gate.size>1)
-                {
-                    std::cerr << "gates!" << std::endl;
-                    exit(1);
-                }
-            }
-#endif
 
             //__________________________________________________________________
             //
@@ -872,12 +824,12 @@ Y_UTEST(plexus)
     {
 
         Warden warden(*cl);
-        for(size_t iter=0;iter<1;++iter)
+        for(size_t iter=0;iter<100;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.run(C0,TopLevel,xml);
+            warden.equalize(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
         }
 
