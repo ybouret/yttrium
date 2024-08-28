@@ -599,44 +599,45 @@ namespace Yttrium
 
             void prolog() noexcept
             {
-                //for(size_t j=cols;j>0;--j) cinj[j].free();
                 cinj.forEach( & XAdd::free );
             }
 
-            void run(XWritable &C, const Level L, XMLog &xml)
-            {
-                Y_XML_SECTION(xml, "Warden");
 
-                // inject corrections and detect zero laws
-                lawz.free();
-                for(const Group *g=head;g;g=g->next)
+            void sanitize(XWritable &C, const Level L, XMLog &xml)
+            {
                 {
-                    const Group                    &G   = *g;
-                    const Conservation::Law * const law = wasInjected(G,C,L,xml);
-                    if(0!=law)
+                    Y_XML_SECTION(xml, "sanitizing" );
+
+                    // inject corrections and detect zero laws
+                    lawz.free();
+                    for(const Group *g=head;g;g=g->next)
                     {
-                        lawz << *law;
+                        const Group                    &G   = *g;
+                        const Conservation::Law * const law = wasInjected(G,C,L,xml);
+                        if(0!=law)
+                        {
+                            lawz << *law;
+                        }
                     }
                 }
 
-                Y_XMLOG(xml, "lawz=" << lawz);
-
                 if(0!=head)
                 {
+                    Y_XMLOG(xml, "lawz=" << lawz);
+
                     for(const SNode *sn = mine.species.head;sn;sn=sn->next)
                     {
                         const Species &sp = **sn;
                         Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
                     }
-                    
-                    equalize(C, L, xml);
                 }
             }
 
 
-
             void equalize(XWritable &C, const Level L, XMLog &xml)
             {
+                if(0==head) return;
+
                 Y_XML_SECTION(xml, "equalizing" );
 
                 //--------------------------------------------------------------
@@ -1262,6 +1263,7 @@ Y_UTEST(plexus)
         Warden warden(*cl);
         for(size_t iter=0;iter<100;++iter)
         {
+            std::cerr << std::endl << "--" << std::endl;
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
