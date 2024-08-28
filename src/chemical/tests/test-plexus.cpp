@@ -702,6 +702,34 @@ namespace Yttrium
                     }
                 }
 
+                // keep first trade, look for detached
+                for(size_t i=2;i<=trades.size();)
+                {
+                    const Equilibrium    &lhs      = trades[i].eq;
+                    const Readable<bool> &detached = mine.detached[lhs.indx[SubLevel]];
+                    bool                  keep     = true;
+                    for(size_t j=1;j<i;++j)
+                    {
+                        const Equilibrium &rhs = trades[j].eq;
+                        if(!detached[rhs.indx[SubLevel]])
+                        {
+                            keep = false;
+                            break;
+                        }
+                    }
+                    if(keep)
+                    {
+                        ++i;
+                    }
+                    else
+                    {
+                        trades.remove(i);
+                    }
+
+                }
+
+
+
                 mine.transfer(C, L, tr.cc, SubLevel);
 
             }
