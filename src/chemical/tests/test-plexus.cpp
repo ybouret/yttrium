@@ -200,7 +200,7 @@ namespace Yttrium
             {
             }
 
-            bool isSorted() const noexcept
+            bool sorted() const noexcept
             {
                 if(size<=1) return true;
 
@@ -226,7 +226,7 @@ namespace Yttrium
                             case __Zero__: f << sp;                 break;
                             case Positive: pushTail( make(xi,sp) ); break;
                         }
-                        assert(isSorted());
+                        assert(sorted());
                     } return;
 
                     default:
@@ -237,8 +237,8 @@ namespace Yttrium
                 FNode * lower = head;
                 switch( Sign::Of(xi, (**lower).xi) )
                 {
-                    case Negative: pushHead( make(xi,sp) ); assert(isSorted()); return;
-                    case __Zero__: **lower << sp;           assert(isSorted()); return;
+                    case Negative: pushHead( make(xi,sp) ); assert(sorted()); return;
+                    case __Zero__: **lower << sp;           assert(sorted()); return;
                     case Positive: break;
                 }
 
@@ -246,8 +246,8 @@ namespace Yttrium
                 switch( Sign::Of(xi, (**upper).xi) )
                 {
                     case Negative: break;
-                    case __Zero__: **upper << sp;            assert(isSorted()); return;
-                    case Positive: pushTail( make(xi,sp) );  assert(isSorted()); return;
+                    case __Zero__: **upper << sp;            assert(sorted()); return;
+                    case Positive: pushTail( make(xi,sp) );  assert(sorted()); return;
                 }
 
             CYCLE:
@@ -259,7 +259,7 @@ namespace Yttrium
                     {
                         case Negative:
                             break; // after lower
-                        case __Zero__: (**probe) << sp;  assert(isSorted()); return;
+                        case __Zero__: (**probe) << sp;  assert(sorted()); return;
                         case Positive:
                             lower = probe;
                             goto CYCLE;
@@ -267,7 +267,7 @@ namespace Yttrium
                 }
 
                 insertAfter(lower, make(xi,sp) );
-                assert(isSorted());
+                assert(sorted());
 
 
             }
@@ -334,7 +334,7 @@ namespace Yttrium
                         else
                         {
                             required(-cc/a->xn,sp);
-                            assert(required.isSorted());
+                            assert(required.sorted());
                         }
                     }
                     return required.size>0;
@@ -502,6 +502,51 @@ namespace Yttrium
         };
 
 
+        class Trade
+        {
+        public:
+            typedef CxxSeries<Trade,XMemory> Series;
+
+            Trade(const Equilibrium & _eq,
+                  const XReadable &   _cc,
+                  const xreal_t       _gg) noexcept :
+            eq(_eq),
+            cc(_cc),
+            gg(_gg)
+            {}
+
+            ~Trade() noexcept
+            {
+            }
+
+            Trade(const Trade &_) noexcept :
+            eq(_.eq),
+            cc(_.cc),
+            gg(_.gg)
+            {
+            }
+
+            static int Compare(const Trade &lhs, const Trade &rhs) noexcept
+            {
+                return Comparison::Decreasing(lhs.gg,rhs.gg);
+            }
+
+            friend std::ostream & operator<<( std::ostream &os, const Trade &tr)
+            {
+                os << std::setw(15) << real_t(tr.gg) << " @" << tr.eq;
+                tr.eq.displayCompact(os << ' ', tr.cc, SubLevel);
+                return os;
+            }
+
+
+            const Equilibrium & eq;
+            const XReadable   & cc;
+            const xreal_t       gg;
+
+
+        private:
+            Y_DISABLE_ASSIGN(Trade);
+        };
 
 
         class Warden
@@ -525,7 +570,8 @@ namespace Yttrium
             lawz(fund.lbank),
             trms(fund),
             best(fund.sbank),
-            ctra(mine.size,mine.species.size)
+            ctrade(mine.size,mine.species.size),
+            trades(mine.size)
             {
             }
 
@@ -539,6 +585,7 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Warden");
 
+                // inject corrections and detect zero laws
                 lawz.free();
                 for(const Group *g=head;g;g=g->next)
                 {
@@ -562,7 +609,10 @@ namespace Yttrium
                     }
                 }
 
-                equalize(C, L, xml);
+                if(0!=head)
+                {
+                    equalize(C, L, xml);
+                }
             }
 
 
@@ -573,59 +623,21 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // conserved with the zero constraints laws in lawz
+                // process limited equilibria
                 //
                 //--------------------------------------------------------------
-                const AddressBook &conserved = mine.conserved.book;
-                for(const ENode *en=mine.limited.head;en;en=en->next)
+
+                const size_t unbalanced = getUnbalanced(C, L, xml);
+                const size_t tradeCount = trades.size();
+                Y_XMLOG(xml, "unbalanced = " << unbalanced);
+                Y_XMLOG(xml, "tradeCount = " << tradeCount);
+
+                if(tradeCount<=0)
                 {
-                    const Equilibrium &eq    = **en;
-                    const Trims::Kind  kind  = trms(C,L,eq,conserved);
-                    best.free();
-                    switch(kind)
-                    {
-                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq); 
-                            continue; // next
-
-                        case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
-                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
-                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
-                            continue; // next
-
-                        case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
-                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
-                            Y_XMLOG(xml, " |_reac: " << trms.reac.limiting);
-                            if(trms.reac.limiting.blocking())
-                            {
-                                Y_XMLOG(xml, " |_blocked...");
-                                continue; // next
-                            }
-                            else
-                            {
-                                bestEffort(trms.reac.limiting, trms.prod.required);
-                                break; // will move
-                            }
-
-
-                        case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
-                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
-                            Y_XMLOG(xml, " |_prod: " << trms.prod.limiting);
-                            if(trms.prod.limiting.blocking())
-                            {
-                                Y_XMLOG(xml, " |_blocked...");
-                                continue; // next
-                            }
-                            else
-                            {
-                                bestEffort(trms.prod.limiting, trms.reac.required);
-                                best.xi.neg();
-                                break; // will move
-                            }
-                    }
-
-                    assert( best->size > 0 );
-                    Y_XMLOG(xml, " |_best@" << best);
+                    return;
                 }
+                optimizeTrade(C, L, xml);
+
 
 
             }
@@ -650,10 +662,156 @@ namespace Yttrium
             LRepo               lawz;  //!< laws with zero values
             Trims               trms;
             SingleFrontier      best;  //!< best effort to equalize
-            XMatrix             ctra;  //!< traded concentrations
-            
+            XMatrix             ctrade;  //!< traded concentrations
+            Trade::Series       trades;  //!< trades
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
+
+            void   optimizeTrade(XWritable &C, const Level L, XMLog &xml)
+            {
+
+                Y_XML_SECTION(xml,"optimizeTrade");
+                HeapSort::Call(trades,Trade::Compare);
+                const Trade &tr = trades.head();
+                if(xml.verbose)
+                {
+                    xml() << "(*) " << tr << std::endl;
+                    for(size_t i=2;i<=trades.size();++i)
+                    {
+                        xml() << "(+) " << trades[i] << std::endl;
+                    }
+                }
+
+                mine.transfer(C, L, tr.cc, SubLevel);
+
+            }
+
+            size_t getUnbalanced(const XReadable &C, const Level L, XMLog &xml)
+            {
+                Y_XML_SECTION(xml, "getUnbalanced");
+                size_t             unbalanced = 0;
+                const AddressBook &conserved  = mine.conserved.book;
+                trades.free();
+                for(const ENode *en=mine.limited.head;en;en=en->next)
+                {
+                    const Equilibrium &eq    = **en;
+                    const Trims::Kind  kind  = trms(C,L,eq,conserved);
+                    best.free();
+                    switch(kind)
+                    {
+                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq);
+                            continue; // next
+
+                        case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
+                            ++unbalanced;
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
+                            continue; // next
+
+                        case Trims::BadProd:Y_XMLOG(xml, "(>) " << eq);
+                            ++unbalanced;
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.required);
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.limiting);
+                            if(trms.reac.limiting.blocking())
+                            {
+                                Y_XMLOG(xml, " |_blocked...");
+                                continue; // next
+                            }
+                            else
+                            {
+                                bestEffort(trms.reac.limiting, trms.prod.required);
+                                break; // will move
+                            }
+
+
+                        case Trims::BadReac:Y_XMLOG(xml, "(<) " << eq);
+                            ++unbalanced;
+                            Y_XMLOG(xml, " |_reac: " << trms.reac.required);
+                            Y_XMLOG(xml, " |_prod: " << trms.prod.limiting);
+                            if(trms.prod.limiting.blocking())
+                            {
+                                Y_XMLOG(xml, " |_blocked...");
+                                continue; // next
+                            }
+                            else
+                            {
+                                bestEffort(trms.prod.limiting, trms.reac.required);
+                                best.xi.neg();
+                                break; // will move
+                            }
+                    }
+
+                    assert( best->size > 0 );
+                    Y_XMLOG(xml, " |_best@" << best);
+
+                    // create a new trade
+                    const size_t ii = trades.size()+1;
+                    XWritable   &cc = mine.transfer(ctrade[ii],SubLevel,C,L);
+
+
+                    xadd.free();
+                    const xreal_t _0;
+
+                    // update cc
+                    {
+                        const xreal_t xi = best.xi;
+                        size_t        n  = eq->size();
+                        for(Components::ConstIterator it=eq->begin();n>0;++it,--n)
+                        {
+                            const Component &cm = **it;
+                            const Species   &sp = cm.sp;
+                            const size_t     jj = sp.indx[SubLevel];
+                            const xreal_t    c0 = cc[jj];
+                            const xreal_t    c1 = c0 + xi * cm.xn;
+
+                            // careful update
+                            if(c0.mantissa<0)
+                            {
+                                xadd << -c0;
+                                cc[jj] = c1;
+                            }
+                            else
+                            {
+                                if(conserved.has(sp))
+                                {
+                                    cc[jj] = c1.mantissa>=0 ? c1 : _0;
+                                }
+                                else
+                                {
+                                    cc[jj] = c1;
+                                }
+
+                            }
+                        }
+                    }
+
+                    // force vanishing
+                    for(const SNode *sn=best->head;sn;sn=sn->next)
+                    {
+                        cc[ (**sn).indx[SubLevel] ] = _0;
+                    }
+
+                    // update negative score
+                    {
+                        size_t        n  = eq->size();
+                        for(Components::ConstIterator it=eq->begin();n>0;++it,--n)
+                        {
+                            const Species &sp = (**it).sp;
+                            const xreal_t  c1 = cc[ sp.indx[SubLevel] ];
+                            if(c1.mantissa<0) xadd << c1;
+                        }
+                    }
+
+                    {
+                        const Trade trade(eq,cc,xadd.sum());
+                        trades << trade;
+                    }
+
+                    Y_XMLOG(xml," |_gain: " << trades.tail());
+                }
+                return unbalanced;
+            }
 
             void bestEffort(const SingleFrontier &limiting,
                             const Frontiers      &required)
