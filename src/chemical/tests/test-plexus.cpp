@@ -603,7 +603,7 @@ namespace Yttrium
             }
 
 
-            void sanitize(XWritable &C, const Level L, XMLog &xml)
+            bool sanitize(XWritable &C, const Level L, XMLog &xml)
             {
 
                 Y_XML_SECTION(xml, "sanitizing" );
@@ -620,6 +620,7 @@ namespace Yttrium
                     }
                 }
 
+
                 // optional output
                 if(0!=head)
                 {
@@ -631,6 +632,13 @@ namespace Yttrium
                         Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
                     }
                 }
+
+                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+                {
+                    if( C[ (**sn).indx[L]].mantissa < 0 ) return true;
+                }
+
+                return false;
             }
 
 
@@ -665,10 +673,16 @@ namespace Yttrium
 
                 const size_t tradeCount = trades.size();
                 Y_XMLOG(xml, "(#) tradeCount = " << tradeCount << " / " << wobbly);
+                for(const SNode *sn=wobbly.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    Y_XMLOG(xml, std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]");
+                }
 
                 if(tradeCount<=0)
                 {
                     std::cerr << "Not Trade!!" << std::endl;
+
                     std::cerr << "Lawz = " << lawz << std::endl;
                     exit(9);
                     return;
@@ -1285,8 +1299,10 @@ Y_UTEST(plexus)
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.sanitize(C0,TopLevel,xml);
-            warden.equalize(C0,TopLevel,xml);
+            if( warden.sanitize(C0,TopLevel,xml) )
+            {
+                warden.equalize(C0,TopLevel,xml);
+            }
             lib(std::cerr << "C1=","\t[",C0,"]");
 
         }
