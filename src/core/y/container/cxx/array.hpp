@@ -172,6 +172,17 @@ count( COUNT )
             CoerceSwap(count,array.count);
         }
 
+        template <typename METHOD_POINTER> inline
+        void forEach(METHOD_POINTER meth)
+        {
+            MutableType *p = cdata;
+            for(size_t i=count;i>0;--i,++p)
+            {
+                ((*p).*(meth))();
+            }
+        }
+
+
     protected:
         MutableType * const cdata; //!< memory or [0..count-1]
         MutableType * const entry; //!< memory for [1..count]

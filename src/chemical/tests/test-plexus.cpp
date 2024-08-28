@@ -4,9 +4,9 @@
 #include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/mkl/algebra/rank.hpp"
 
 #include "y/data/small/heavy/list/coop.hpp"
+#include "y/system/exception.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -591,14 +591,16 @@ namespace Yttrium
             wobbly(fund.sbank),
             ctrade(mine.size,mine.species.size),
             dtrade(mine.size,mine.species.size),
-            trades(mine.size)
+            trades(mine.size),
+            xaccum(mine.species.size)
             {
             }
 
 
             void prolog() noexcept
             {
-                for(size_t j=cols;j>0;--j) cinj[j].free();
+                //for(size_t j=cols;j>0;--j) cinj[j].free();
+                cinj.forEach( & XAdd::free );
             }
 
             void run(XWritable &C, const Level L, XMLog &xml)
@@ -688,6 +690,7 @@ namespace Yttrium
             XMatrix             ctrade;  //!< traded concentrations
             XMatrix             dtrade;  //!< traded changes
             Trade::Series       trades;  //!< trades
+            XSwell              xaccum;  //!< accumulators for multiple trades
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -697,11 +700,17 @@ namespace Yttrium
 
                 Y_XML_SECTION(xml,"optimizeTrade");
                 HeapSort::Call(trades,Trade::Compare);
-                const Trade &tr = trades.head();
+                const Trade &top = trades.head();
+
+                //--------------------------------------------------------------
+                //
+                // look for successive fully detached trades
+                //
+                //--------------------------------------------------------------
                 {
                     Y_XML_SECTION_OPT(xml, "content", "size='" << trades.size() << "'");
 
-                    Y_XMLOG(xml, "(*) " << tr);
+                    Y_XMLOG(xml, "(*) " << top);
 
                     // keep first trade, look for detached
                     for(size_t i=2;i<=trades.size();)
@@ -730,14 +739,17 @@ namespace Yttrium
                             trades.remove(i);
                         }
                     }
-
-
-
                 }
 
+
+                //--------------------------------------------------------------
+                //
+                // apply found trades
+                //
+                //--------------------------------------------------------------
                 {
                     Y_XML_SECTION_OPT(xml, "applied", "size='" << trades.size() << "'");
-                    const size_t nt = trades.size();
+                    const size_t nt = trades.size(); assert(nt>=1);
                     if(xml.verbose)
                     {
                         for(size_t i=1;i<=nt;++i)
@@ -746,15 +758,81 @@ namespace Yttrium
                         }
                     }
 
+                    if(nt<=1)
+                    {
+                        //------------------------------------------------------
+                        // default
+                        //------------------------------------------------------
+                        mine.transfer(C, L, top.cc, SubLevel);
+                    }
+                    else
+                    {
+                        const AddressBook &cdb = mine.conserved.book;
 
-                    mine.transfer(C, L, tr.cc, SubLevel);
+                        //------------------------------------------------------
+                        // initialize accumulator
+                        //------------------------------------------------------
+                        xaccum.forEach( &XAdd::free );
+                        for(const SNode *sn=mine.unbounded.list.head;sn;sn=sn->next)
+                        {
+                            const Species &      sp = **sn;
+                            const size_t * const id = sp.indx;
+                            xaccum[ id[SubLevel] ] << C[ id[L] ];
+                        }
+
+                        //------------------------------------------------------
+                        // dispatch species
+                        //------------------------------------------------------
+                        for(size_t i=1;i<=nt;++i)
+                        {
+                            const Trade       &tr = trades[i];
+                            const Equilibrium &eq = tr.eq;
+                            const XReadable   &cc = tr.cc;
+                            const XReadable   &dc = tr.dc;
+                            size_t n = eq->size();
+                            for(Equilibrium::ConstIterator it=eq->begin();n>0;--n,++it)
+                            {
+                                const Species &      sp = (**it).sp;
+                                const size_t * const id = sp.indx;
+                                const size_t         jj = id[SubLevel];
+                                if(cdb.has(sp))
+                                {
+                                    // conserved species => direct transfer
+                                    C[ id[L] ] = cc[jj];
+                                }
+                                else
+                                {
+                                    // unbounded species => collect
+                                    xaccum[jj] << dc[jj];
+                                }
+                            }
+                        }
+
+                        //------------------------------------------------------
+                        // collect unbounded
+                        //------------------------------------------------------
+                        for(const SNode *sn=mine.unbounded.list.head;sn;sn=sn->next)
+                        {
+                            const Species &      sp = **sn;
+                            const size_t * const id = sp.indx;
+                            C[ id[L] ] = xaccum[ id[SubLevel] ].sum();
+                        }
+
+                        if(false)
+                        {
+
+                            for(const SNode *sn = mine.species.head; sn; sn=sn->next)
+                            {
+                                const Species &sp = **sn;
+                                std::cerr << std::setw(15) << real_t( C[ sp.indx[L]]) << " = [" << sp << "]" <<  std::endl;
+                            }
+                            exit(7);
+                        }
+                    }
                 }
 
-                if( trades.size() > 1)
-                {
-                    std::cerr << "Multiple Trades!!" << std::endl;
-                    exit(7);
-                }
+
+
 
             }
 
@@ -914,12 +992,18 @@ namespace Yttrium
                     Y_XMLOG(xml," |_gain: " << trades.tail());
                 }
 
+                //--------------------------------------------------------------
+                //
+                // finalize
+                //
+                //--------------------------------------------------------------
                 assert(0==wobbly.size);
                 if(unbalanced>0)
                 {
                     for(const SNode *sn=mine.conserved.list.head;sn;sn=sn->next)
                     {
                         const Species &sp = **sn;
+                        assert( cdb.has(sp) );
                         if( C[ sp.indx[L] ].mantissa >= 0 ) continue;
                         wobbly << sp;
                     }
@@ -1183,6 +1267,7 @@ Y_UTEST(plexus)
             lib(std::cerr << "C0=","\t[",C0,"]");
             warden.equalize(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
+
         }
 
 
