@@ -524,10 +524,12 @@ namespace Yttrium
 
             Trade(const Equilibrium & _eq,
                   const XReadable &   _cc,
-                  const xreal_t       _gg) noexcept :
+                  const xreal_t       _gg,
+                  const XReadable &   _dc) noexcept :
             eq(_eq),
             cc(_cc),
-            gg(_gg)
+            gg(_gg),
+            dc(_dc)
             {}
 
             ~Trade() noexcept
@@ -537,7 +539,8 @@ namespace Yttrium
             Trade(const Trade &_) noexcept :
             eq(_.eq),
             cc(_.cc),
-            gg(_.gg)
+            gg(_.gg),
+            dc(_.dc)
             {
             }
 
@@ -557,7 +560,7 @@ namespace Yttrium
             const Equilibrium & eq;
             const XReadable   & cc;
             const xreal_t       gg;
-
+            const XReadable   & dc;
 
         private:
             Y_DISABLE_ASSIGN(Trade);
@@ -587,6 +590,7 @@ namespace Yttrium
             best(fund.sbank),
             wobbly(fund.sbank),
             ctrade(mine.size,mine.species.size),
+            dtrade(mine.size,mine.species.size),
             trades(mine.size)
             {
             }
@@ -682,6 +686,7 @@ namespace Yttrium
             SingleFrontier      best;    //!< best effort to equalize
             SRepo               wobbly;  //!< negative species list
             XMatrix             ctrade;  //!< traded concentrations
+            XMatrix             dtrade;  //!< traded changes
             Trade::Series       trades;  //!< trades
 
         private:
@@ -756,15 +761,31 @@ namespace Yttrium
             size_t getUnbalanced(const XReadable &C, const Level L, XMLog &xml)
             {
                 Y_XML_SECTION(xml, "getUnbalanced");
+
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 size_t             unbalanced = 0;
                 const AddressBook &cdb  = mine.conserved.book;
                 trades.free();
                 wobbly.free();
+
+                //--------------------------------------------------------------
+                //
+                // loop over limited equilibria
+                //
+                //--------------------------------------------------------------
                 for(const ENode *en=mine.limited.head;en;en=en->next)
                 {
+                    //----------------------------------------------------------
+                    // study equilibrium
+                    //----------------------------------------------------------
                     const Equilibrium &eq    = **en;
                     const Trims::Kind  kind  = trms(C,L,eq,cdb);
                     best.free();
+
                     switch(kind)
                     {
                         case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq);
@@ -812,15 +833,18 @@ namespace Yttrium
                     assert( best->size > 0 );
                     Y_XMLOG(xml, " |_best@" << best);
 
-                    // create a new trade
-                    const size_t ii = trades.size()+1;
-                    XWritable   &cc = mine.transfer(ctrade[ii],SubLevel,C,L);
-
-
-                    xadd.free();
+                    //----------------------------------------------------------
+                    // setup a new trade
+                    //----------------------------------------------------------
                     const xreal_t _0;
+                    const size_t  ii = trades.size()+1;
+                    XWritable   & cc = mine.transfer(ctrade[ii],SubLevel,C,L);
+                    XWritable   & dc = ctrade[ii].ld(_0);
 
+                    //----------------------------------------------------------
                     // update cc
+                    //----------------------------------------------------------
+                    xadd.free();
                     {
                         const xreal_t xi = best.xi;
                         size_t        n  = eq->size();
@@ -856,25 +880,34 @@ namespace Yttrium
                         }
                     }
 
+                    //----------------------------------------------------------
                     // force vanishing
+                    //----------------------------------------------------------
                     for(const SNode *sn=best->head;sn;sn=sn->next)
                     {
                         cc[ (**sn).indx[SubLevel] ] = _0;
                     }
 
-                    // update negative score
+                    //----------------------------------------------------------
+                    // update negative score and dc
+                    //----------------------------------------------------------
                     {
                         size_t        n  = eq->size();
                         for(Components::ConstIterator it=eq->begin();n>0;++it,--n)
                         {
                             const Species &sp = (**it).sp;
-                            const xreal_t  c1 = cc[ sp.indx[SubLevel] ];
+                            const size_t   jj = sp.indx[SubLevel];
+                            const xreal_t  c1 = cc[ jj ];
                             if(c1.mantissa<0) xadd << c1;
+                            dc[jj] = c1 - C[ sp.indx[L] ];
                         }
                     }
 
+                    //----------------------------------------------------------
+                    // append trade
+                    //----------------------------------------------------------
                     {
-                        const Trade trade(eq,cc,xadd.sum());
+                        const Trade trade(eq,cc,xadd.sum(),dc);
                         trades << trade;
                     }
 
