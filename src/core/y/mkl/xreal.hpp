@@ -75,7 +75,7 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         //! retrieveing floating point value
         operator T() const;
 
-
+        void  ldz()         noexcept;   //!< in place set to zero
         void  neg()         noexcept;   //!< in place mantissa sign change
         XReal abs()   const noexcept;   //!< absolute value
         XReal sqrt()  const;            //!< square root

@@ -36,6 +36,13 @@ namespace Yttrium
         }
     }
 
+    template <>
+    void XReal<real_t> :: ldz() noexcept
+    {
+        Coerce(exponent) = 0;
+        Coerce(mantissa) = 0;
+    }
+
 
     template <> XReal<real_t>:: XReal(const real_t x)  :
     exponent(0), mantissa( std::frexp(x,&Coerce(exponent)) )

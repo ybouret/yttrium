@@ -17,6 +17,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+        //! proxy to an internal dynamic repository of species
         class SProxy : public Proxy<const SRepo>
         {
         public:
@@ -38,7 +40,18 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept { return sr; }
         };
 
+    }
+}
 
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        //! single frontier to find limiting extent to a transformation
         class SingleFrontier : public SProxy, public Recyclable
         {
         public:
@@ -54,9 +67,8 @@ namespace Yttrium
             // Methods
             virtual void  free() noexcept
             {
-                const xreal_t _0;
                 sr.free();
-                xi = _0;
+                Coerce(xi).ldz();
             }
 
             friend std::ostream & operator<<(std::ostream &os, const SingleFrontier &self)
@@ -113,7 +125,7 @@ namespace Yttrium
             }
 
 
-            xreal_t xi;
+            const xreal_t xi;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SingleFrontier);
@@ -121,7 +133,7 @@ namespace Yttrium
             {
                 assert(0==sr.size);
                 sr << s;
-                xi = x;
+                Coerce(xi) = x;
             }
         };
 
@@ -187,6 +199,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Fund);
         };
 
+
+        //! frontiers to sort multiple requirements
         class Frontiers : public FList
         {
         public:
@@ -454,7 +468,8 @@ namespace Yttrium
             typedef CxxSeries<Fixed,XMemory> Series;
 
             //! initialize with no gain
-            Fixed(XWritable & _cc, const Conservation::Law &_cl) noexcept :
+            Fixed(XWritable &              _cc,
+                  const Conservation::Law &_cl) noexcept :
             gg(),
             cc(_cc),
             cl(_cl)
@@ -742,7 +757,7 @@ namespace Yttrium
                             else
                             {
                                 bestEffort(trms.prod.limiting, trms.reac.required);
-                                best.xi.neg();
+                                Coerce(best.xi).neg();
                                 break; // will move
                             }
                     }
@@ -852,7 +867,7 @@ namespace Yttrium
                     {
                         case Negative: prev = &F; continue;
                         case __Zero__:
-                            best.xi = limiting.xi;
+                            Coerce(best.xi) = limiting.xi;
                             best << limiting;
                             best << F;
                             return;
@@ -869,8 +884,7 @@ namespace Yttrium
                     // will solve up to prev
                     //
                     //----------------------------------------------------------
-                    //std::cerr << "Found prev=" << *prev << std::endl;
-                    best.xi = prev->xi;
+                    Coerce(best.xi) = prev->xi;
                     best << *prev;
                 }
                 else
@@ -880,8 +894,7 @@ namespace Yttrium
                     // best partial effort
                     //
                     //----------------------------------------------------------
-                    //std::cerr << "No Prev!" << std::endl;
-                    best.xi = limiting.xi;
+                    Coerce(best.xi) = limiting.xi;
                     best   << limiting;
                 }
 
@@ -906,8 +919,7 @@ namespace Yttrium
                 // iterative reduction
                 //
                 //--------------------------------------------------------------
-                assert( jail.size() > 0);
-                const Conservation::Law *law = 0;
+                const Conservation::Law *law = 0; assert( jail.size() > 0);
                 while(jail.size()>0)
                 {
                     law = reduce(C,L,xml); assert(0!=law); // record last reduced
