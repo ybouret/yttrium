@@ -676,7 +676,7 @@ namespace Yttrium
                 for(const SNode *sn=wobbly.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    Y_XMLOG(xml, std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]");
+                    Y_XMLOG(xml, "(!) " << std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]");
                 }
 
                 if(tradeCount<=0)
@@ -895,7 +895,7 @@ namespace Yttrium
 
                     switch(kind)
                     {
-                        case Trims::BadNone: Y_XMLOG(xml, "(+) " << eq);
+                        case Trims::BadNone: //Y_XMLOG(xml, "(+) " << eq);
                             continue; // next
 
                         case Trims::BadBoth: Y_XMLOG(xml, "(-) " << eq);
