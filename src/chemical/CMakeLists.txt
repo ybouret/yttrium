@@ -11,8 +11,6 @@ chemical/plexus/cluster
 chemical/plexus/cluster/conservation
 chemical/plexus/solver
 chemical/plexus/solver/norm
-chemical/plexus/equalizer
-chemical/plexus/janitor
 )
 
 add_subdirectory(tests)
