@@ -650,13 +650,21 @@ namespace Yttrium
                 ++cycle;
                 Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
                 const size_t unbalanced = getUnbalanced(C, L, xml);
+                Y_XMLOG(xml, "\t(#) unbalanced = " << unbalanced);
+                if(unbalanced<=0)
+                {
+                    assert(0==trades.size());
+                    return;
+                }
+
                 const size_t tradeCount = trades.size();
-                Y_XMLOG(xml, "unbalanced = " << unbalanced);
-                Y_XMLOG(xml, "tradeCount = " << tradeCount);
-                Y_XMLOG(xml, "negative   = " << wobbly);
+                Y_XMLOG(xml, "\t(#) tradeCount = " << tradeCount << " / " << wobbly);
 
                 if(tradeCount<=0)
                 {
+                    std::cerr << "Not Trade!!" << std::endl;
+                    std::cerr << "Lawz = " << lawz << std::endl;
+                    exit(9);
                     return;
                 }
 
