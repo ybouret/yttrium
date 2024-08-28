@@ -57,6 +57,19 @@ namespace Yttrium
             return self;
         }
 
+        //! apply the same method to all data
+        template <typename METHOD_POINTER> inline
+        Writable &forEach(METHOD_POINTER meth)
+        {
+            Writable<T> &self = *this;
+            for(size_t i=self.size();i>0;--i)
+            {
+                (self[i].*(meth))();
+            }
+            return self;
+        }
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Writable);
     };

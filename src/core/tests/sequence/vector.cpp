@@ -29,6 +29,11 @@ namespace
             return os;
         }
 
+        void show() const
+        {
+            std::cerr << "dum=" << *this << std::endl;
+        }
+
     private:
         Y_DISABLE_ASSIGN(Dummy);
     };
@@ -42,33 +47,7 @@ Y_UTEST(sequence_vector)
 {
     Random::Rand ran;
 
-    {
-        Vector<Dummy> v;
-        {
-            const Dummy   d;
-            for(size_t n=64;n>0;--n)
-            {
-                if(ran.choice())
-                {
-                    v.pushHead( d );
-                }
-                else
-                {
-                    v.pushTail( d );
-                }
-                std::cerr << v << std::endl;
-            }
-        }
-        std::cerr << "done growth" << std::endl;
-        {
-            const Vector<Dummy> tmp(v);
-            Y_CHECK(tmp.size()==v.size());
-        }
 
-        Iterating::DisplayAll::Of(v);
-        v.release();
-    }
-    Y_CHECK(Dummy::Count==0);
 
 
     {
@@ -134,6 +113,36 @@ Y_UTEST(sequence_vector)
         }
     }
 
+    {
+        Vector<Dummy> v;
+        {
+            const Dummy   d;
+            for(size_t n=64;n>0;--n)
+            {
+                if(ran.choice())
+                {
+                    v.pushHead( d );
+                }
+                else
+                {
+                    v.pushTail( d );
+                }
+                std::cerr << v << std::endl;
+            }
+        }
+        std::cerr << "done growth" << std::endl;
+        {
+            const Vector<Dummy> tmp(v);
+            Y_CHECK(tmp.size()==v.size());
+        }
+
+        Iterating::DisplayAll::Of(v);
+
+        v.forEach( & Dummy::show );
+
+        v.release();
+    }
+    Y_CHECK(Dummy::Count==0);
 
 
 }
