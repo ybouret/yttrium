@@ -693,44 +693,63 @@ namespace Yttrium
                 Y_XML_SECTION(xml,"optimizeTrade");
                 HeapSort::Call(trades,Trade::Compare);
                 const Trade &tr = trades.head();
-                if(xml.verbose)
                 {
-                    xml() << "(*) " << tr << std::endl;
-                    for(size_t i=2;i<=trades.size();++i)
-                    {
-                        xml() << "(+) " << trades[i] << std::endl;
-                    }
-                }
+                    Y_XML_SECTION_OPT(xml, "content", "size='" << trades.size() << "'");
 
-                // keep first trade, look for detached
-                for(size_t i=2;i<=trades.size();)
-                {
-                    const Equilibrium    &lhs      = trades[i].eq;
-                    const Readable<bool> &detached = mine.detached[lhs.indx[SubLevel]];
-                    bool                  keep     = true;
-                    for(size_t j=1;j<i;++j)
+                    Y_XMLOG(xml, "(*) " << tr);
+
+                    // keep first trade, look for detached
+                    for(size_t i=2;i<=trades.size();)
                     {
-                        const Equilibrium &rhs = trades[j].eq;
-                        if(!detached[rhs.indx[SubLevel]])
+                        const Trade          &tri      = trades[i];
+                        const Equilibrium    &lhs      = tri.eq;
+                        const Readable<bool> &detached = mine.detached[lhs.indx[SubLevel]];
+                        bool                  keep     = true;
+                        for(size_t j=1;j<i;++j)
                         {
-                            keep = false;
-                            break;
+                            const Equilibrium &rhs = trades[j].eq;
+                            if(!detached[rhs.indx[SubLevel]])
+                            {
+                                keep = false;
+                                break;
+                            }
+                        }
+                        if(keep)
+                        {
+                            Y_XMLOG(xml,"(+) " << tri);
+                            ++i;
+                        }
+                        else
+                        {
+                            Y_XMLOG(xml,"(-) " << tri);
+                            trades.remove(i);
                         }
                     }
-                    if(keep)
-                    {
-                        ++i;
-                    }
-                    else
-                    {
-                        trades.remove(i);
-                    }
+
+
 
                 }
 
+                {
+                    Y_XML_SECTION_OPT(xml, "applied", "size='" << trades.size() << "'");
+                    const size_t nt = trades.size();
+                    if(xml.verbose)
+                    {
+                        for(size_t i=1;i<=nt;++i)
+                        {
+                            xml() << "($) " << trades[i] << std::endl;
+                        }
+                    }
 
 
-                mine.transfer(C, L, tr.cc, SubLevel);
+                    mine.transfer(C, L, tr.cc, SubLevel);
+                }
+
+                if( trades.size() > 1)
+                {
+                    std::cerr << "Multiple Trades!!" << std::endl;
+                    exit(7);
+                }
 
             }
 
@@ -1124,7 +1143,7 @@ Y_UTEST(plexus)
     {
 
         Warden warden(*cl);
-        for(size_t iter=0;iter<1;++iter)
+        for(size_t iter=0;iter<100;++iter)
         {
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
