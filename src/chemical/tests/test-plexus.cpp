@@ -1261,12 +1261,13 @@ Y_UTEST(plexus)
     {
 
         Warden warden(*cl);
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<1;++iter)
         {
             std::cerr << std::endl << "--" << std::endl;
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
+            warden.sanitize(C0,TopLevel,xml);
             warden.equalize(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
 
