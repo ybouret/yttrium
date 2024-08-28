@@ -839,7 +839,7 @@ namespace Yttrium
                     const xreal_t _0;
                     const size_t  ii = trades.size()+1;
                     XWritable   & cc = mine.transfer(ctrade[ii],SubLevel,C,L);
-                    XWritable   & dc = ctrade[ii].ld(_0);
+                    XWritable   & dc = dtrade[ii].ld(_0);
 
                     //----------------------------------------------------------
                     // update cc
@@ -914,12 +914,12 @@ namespace Yttrium
                     Y_XMLOG(xml," |_gain: " << trades.tail());
                 }
 
+                assert(0==wobbly.size);
                 if(unbalanced>0)
                 {
                     for(const SNode *sn=mine.conserved.list.head;sn;sn=sn->next)
                     {
                         const Species &sp = **sn;
-                        if(!cdb.has(sp))                    continue;
                         if( C[ sp.indx[L] ].mantissa >= 0 ) continue;
                         wobbly << sp;
                     }
