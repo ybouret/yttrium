@@ -549,7 +549,7 @@ namespace Yttrium
         };
 
 
-        class Warden
+        class Warden : public Quantized
         {
         public:
 
@@ -570,6 +570,7 @@ namespace Yttrium
             lawz(fund.lbank),
             trms(fund),
             best(fund.sbank),
+            wobbly(fund.sbank),
             ctrade(mine.size,mine.species.size),
             trades(mine.size)
             {
@@ -599,7 +600,6 @@ namespace Yttrium
 
                 Y_XMLOG(xml, "lawz=" << lawz);
 
-                // display if not empty
                 if(0!=head)
                 {
                     for(const SNode *sn = mine.species.head;sn;sn=sn->next)
@@ -607,10 +607,7 @@ namespace Yttrium
                         const Species &sp = **sn;
                         Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
                     }
-                }
-
-                if(0!=head)
-                {
+                    
                     equalize(C, L, xml);
                 }
             }
@@ -634,11 +631,14 @@ namespace Yttrium
                 const size_t tradeCount = trades.size();
                 Y_XMLOG(xml, "unbalanced = " << unbalanced);
                 Y_XMLOG(xml, "tradeCount = " << tradeCount);
+                Y_XMLOG(xml, "negative   = " << wobbly);
 
                 if(tradeCount<=0)
                 {
                     return;
                 }
+
+
                 optimizeTrade(C, L, xml);
                 goto CYCLE;
 
@@ -664,7 +664,8 @@ namespace Yttrium
             Fund                fund;
             LRepo               lawz;  //!< laws with zero values
             Trims               trms;
-            SingleFrontier      best;  //!< best effort to equalize
+            SingleFrontier      best;    //!< best effort to equalize
+            SRepo               wobbly;  //!< negative species list
             XMatrix             ctrade;  //!< traded concentrations
             Trade::Series       trades;  //!< trades
 
@@ -694,12 +695,13 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "getUnbalanced");
                 size_t             unbalanced = 0;
-                const AddressBook &conserved  = mine.conserved.book;
+                const AddressBook &cdb  = mine.conserved.book;
                 trades.free();
+                wobbly.free();
                 for(const ENode *en=mine.limited.head;en;en=en->next)
                 {
                     const Equilibrium &eq    = **en;
-                    const Trims::Kind  kind  = trms(C,L,eq,conserved);
+                    const Trims::Kind  kind  = trms(C,L,eq,cdb);
                     best.free();
                     switch(kind)
                     {
@@ -767,6 +769,7 @@ namespace Yttrium
                             const size_t     jj = sp.indx[SubLevel];
                             const xreal_t    c0 = cc[jj];
                             const xreal_t    c1 = c0 + xi * cm.xn;
+                            const bool       conserved = cdb.has(sp);
 
                             // careful update
                             if(c0.mantissa<0)
@@ -776,12 +779,14 @@ namespace Yttrium
                             }
                             else
                             {
-                                if(conserved.has(sp))
+                                if(conserved)
                                 {
+                                    // tailored to keep correct
                                     cc[jj] = c1.mantissa>=0 ? c1 : _0;
                                 }
                                 else
                                 {
+                                    // whatever
                                     cc[jj] = c1;
                                 }
 
@@ -813,7 +818,22 @@ namespace Yttrium
 
                     Y_XMLOG(xml," |_gain: " << trades.tail());
                 }
-                return unbalanced;
+
+                if(unbalanced>0)
+                {
+                    for(const SNode *sn=mine.conserved.list.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        if(!cdb.has(sp))                    continue;
+                        if( C[ sp.indx[L] ].mantissa >= 0 ) continue;
+                        wobbly << sp;
+                    }
+                    return unbalanced;
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             void bestEffort(const SingleFrontier &limiting,
@@ -1077,6 +1097,8 @@ Y_UTEST(plexus)
     }
 #endif
 
+
+    Y_SIZEOF(Warden);
 }
 Y_UDONE()
 
