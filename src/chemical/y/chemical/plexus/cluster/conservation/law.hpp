@@ -56,7 +56,7 @@ namespace Yttrium
                 bool linkedTo(const Species &)    const noexcept; //!< this->hired(species)
                 bool linkedTo(const Law     &)    const noexcept; //!< this hired one of other's species
                 bool involves(const Components &) const noexcept; //!< this hiread one of components
-                void extract(const EList &);
+                void extract(const EList &);                      //!< extract equilibria involving species (DEPRECATED)
 
                 //! check is and how much broken is the law
                 /**

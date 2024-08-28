@@ -8,7 +8,6 @@
 #include "y/random/bits.hpp"
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/coop.hpp"
-#include "y/data/small/light/list/solo.hpp"
 
 namespace Yttrium
 {
@@ -101,7 +100,6 @@ namespace Yttrium
         typedef SList::NodeType                     SNode; //!< alias
         typedef Small::CoopLightList<const Species> SRepo; //!< alias
         typedef SRepo::ProxyType                    SBank; //!< alias
-        typedef Small::SoloLightList<const Species> SSolo;
     }
 }
 

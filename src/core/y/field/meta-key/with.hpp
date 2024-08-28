@@ -134,7 +134,7 @@ namespace Yttrium
             inline virtual unsigned maxi() const noexcept { return this->Maxi; }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(MetaKeyWith<0>);
+            Y_DISABLE_COPY_AND_ASSIGN(MetaKeyWith);
         };
     }
 

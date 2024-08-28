@@ -39,7 +39,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Component(const int n, const Species &s); //!< setup
             virtual ~Component() noexcept;                     //!< cleanup
-            Y_OSTREAM_PROTO(Component);
+            Y_OSTREAM_PROTO(Component);                        //!< display
             
             //__________________________________________________________________
             //

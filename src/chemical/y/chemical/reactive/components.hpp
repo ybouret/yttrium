@@ -236,10 +236,10 @@ namespace Yttrium
 
             //! check if species is a component
             const Component * query(const Species &sp) const noexcept;
-            bool              found(const Actors  &ac) const noexcept;
 
+            //! separate registers reac/prod
             template <typename SLIST> inline
-            void separate(SLIST &theReac, 
+            void separate(SLIST &theReac,
                           SLIST &theProd,
                           const AddressBook &registered) const
             {
@@ -255,7 +255,6 @@ namespace Yttrium
                     if(registered.has(sp)) theProd << sp;
                 }
             }
-
 
 
             //__________________________________________________________________
