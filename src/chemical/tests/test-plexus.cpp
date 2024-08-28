@@ -605,22 +605,22 @@ namespace Yttrium
 
             void sanitize(XWritable &C, const Level L, XMLog &xml)
             {
-                {
-                    Y_XML_SECTION(xml, "sanitizing" );
 
-                    // inject corrections and detect zero laws
-                    lawz.free();
-                    for(const Group *g=head;g;g=g->next)
+                Y_XML_SECTION(xml, "sanitizing" );
+
+                // inject corrections and detect zero laws
+                lawz.free();
+                for(const Group *g=head;g;g=g->next)
+                {
+                    const Group                    &G   = *g;
+                    const Conservation::Law * const law = wasInjected(G,C,L,xml);
+                    if(0!=law)
                     {
-                        const Group                    &G   = *g;
-                        const Conservation::Law * const law = wasInjected(G,C,L,xml);
-                        if(0!=law)
-                        {
-                            lawz << *law;
-                        }
+                        lawz << *law;
                     }
                 }
 
+                // optional output
                 if(0!=head)
                 {
                     Y_XMLOG(xml, "lawz=" << lawz);
@@ -650,15 +650,21 @@ namespace Yttrium
                 ++cycle;
                 Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
                 const size_t unbalanced = getUnbalanced(C, L, xml);
-                Y_XMLOG(xml, "\t(#) unbalanced = " << unbalanced);
+                Y_XMLOG(xml, "(#) unbalanced = " << unbalanced);
                 if(unbalanced<=0)
                 {
                     assert(0==trades.size());
+                    assert(0==wobbly.size);
+                    for(const LNode *ln=lawz.head;ln;ln=ln->next)
+                    {
+                        const Conservation::Law &law = **ln;
+                        Y_XMLOG(xml, "check " << law);
+                    }
                     return;
                 }
 
                 const size_t tradeCount = trades.size();
-                Y_XMLOG(xml, "\t(#) tradeCount = " << tradeCount << " / " << wobbly);
+                Y_XMLOG(xml, "(#) tradeCount = " << tradeCount << " / " << wobbly);
 
                 if(tradeCount<=0)
                 {
@@ -1038,16 +1044,20 @@ namespace Yttrium
                     const Frontier &F = **node;
                     switch( Sign::Of(F.xi,limiting.xi) )
                     {
-                        case Negative: prev = &F; continue;
+                        case Negative:
+                            prev = &F; // almost to this oe
+                            continue;
+
                         case __Zero__:
                             Coerce(best.xi) = limiting.xi;
                             best << limiting;
                             best << F;
                             return;
+
                         case Positive:
-                            break;
+                            break; // will stop
                     }
-                    break;
+                    break; // stop
                 }
 
                 if(0!=prev)
