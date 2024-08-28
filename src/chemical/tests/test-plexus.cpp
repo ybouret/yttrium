@@ -626,7 +626,10 @@ namespace Yttrium
                 // process limited equilibria
                 //
                 //--------------------------------------------------------------
-
+                size_t cycle = 0;
+            CYCLE:
+                ++cycle;
+                Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
                 const size_t unbalanced = getUnbalanced(C, L, xml);
                 const size_t tradeCount = trades.size();
                 Y_XMLOG(xml, "unbalanced = " << unbalanced);
@@ -637,7 +640,7 @@ namespace Yttrium
                     return;
                 }
                 optimizeTrade(C, L, xml);
-
+                goto CYCLE;
 
 
             }
