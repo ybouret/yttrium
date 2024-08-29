@@ -995,6 +995,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
 
+                // TODO
 
 
             }
@@ -1065,11 +1066,8 @@ namespace Yttrium
                     //----------------------------------------------------------
                     assert(0==trades.size());
                     assert(0==wobbly.size);
-                    for(const LNode *ln=lawz.head;ln;ln=ln->next)
-                    {
-                        const Conservation::Law &law = **ln;
-                        Y_XMLOG(xml, "check " << law);
-                    }
+                    if(lawz.size>0)
+                        enforceZeroLaws(C,L,xml); //!< will set positive concentrations to zero
                     return;
                 }
 
@@ -1083,9 +1081,14 @@ namespace Yttrium
 
                 if(tradeCount<=0)
                 {
-                    std::cerr << "Not Trade!!" << std::endl;
-
-                    std::cerr << "Lawz = " << lawz << std::endl;
+                    std::cerr << "No Trade!!" << std::endl;
+                    if(!lawz.size)
+                    {
+                        // bad!
+                        throw Specific::Exception("here", "no lawz");
+                    }
+                    enforceZeroLaws(C,L,xml);
+                    std::cerr << "Emergency Exit!!" << std::endl << std::endl;
                     exit(9);
                     return;
                 }
@@ -1093,6 +1096,21 @@ namespace Yttrium
 
                 optimizeTrade(C, L, xml);
                 goto CYCLE;
+            }
+
+
+            //! enforce law and store delta in injected
+            void enforceZeroLaws(XWritable  &C,
+                                 const Level L,
+                                 XMLog      &xml)
+            {
+                assert(lawz.size>0);
+                Y_XML_SECTION_OPT(xml, "enforce", "size='" << lawz.size << "'");
+                for(const LNode *ln=lawz.head;ln;ln=ln->next)
+                {
+                    const Conservation::Law &law = **ln;
+                    Y_XMLOG(xml, "check " << law);
+                }
             }
 
             void   optimizeTrade(XWritable &C, const Level L, XMLog &xml)
