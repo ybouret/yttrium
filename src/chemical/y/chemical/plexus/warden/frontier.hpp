@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Warden_Frontier_Included

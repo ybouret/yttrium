@@ -1,6 +1,6 @@
 
 #include "y/chemical/plexus/warden/single-frontier.hpp"
-#include "y/chemical/plexus/warden/fund.hpp"
+#include "y/chemical/plexus/warden/frontiers.hpp"
 
 #include "y/chemical/plexus.hpp"
 
@@ -22,143 +22,8 @@ namespace Yttrium
     {
        
 
-       
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! frontiers to sort multiple requirements
-        //
-        //
-        //______________________________________________________________________
-        class Frontiers : public FList
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-
-            explicit Frontiers(const Fund &fund) noexcept :
-            FList(fund.fbank),
-            sbank(fund.sbank)
-            {
-            }
-
-            virtual ~Frontiers() noexcept
-            {
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Frontiers &self)
-            {
-                const FList &F = self;
-                os << "req=";
-                if(F.size<=0)
-                    os << "none";
-                else
-                    os << F;
-                return os;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-            //! check sorted, mostly to debug
-            bool sorted() const noexcept
-            {
-                if(size<=1) return true;
-                for(const FNode *node=head,*next=head->next;0!=next;node=next,next=node->next)
-                {
-                    if( (**node).xi >= (**next).xi ) return false;
-                }
-                return true;
-            }
-
-            //! append a new requirement
-            void operator()(const xreal_t  xi,
-                            const Species &sp)
-            {
-
-                // get rid of trivial cases
-                switch(size)
-                {
-                    case 0: // initialize
-                        pushTail( make(xi,sp) );
-                        return;
-
-                    case 1: { // three possible cases
-                        Frontier &f = **head;
-                        switch( Sign::Of(xi, f.xi) )
-                        {
-                            case Negative: pushHead( make(xi,sp) ); break;
-                            case __Zero__: f << sp;                 break;
-                            case Positive: pushTail( make(xi,sp) ); break;
-                        }
-                        assert(sorted());
-                    } return;
-
-                    default: // generic case
-                        break;
-                }
-                assert(size>=2);
-
-                // generic case
-                FNode * lower = head;
-                switch( Sign::Of(xi, (**lower).xi) )
-                {
-                    case Negative: pushHead( make(xi,sp) ); assert(sorted()); return;
-                    case __Zero__: **lower << sp;           assert(sorted()); return;
-                    case Positive: break;
-                }
-
-                FNode * const upper = tail;
-                switch( Sign::Of(xi, (**upper).xi) )
-                {
-                    case Negative: break;
-                    case __Zero__: **upper << sp;            assert(sorted()); return;
-                    case Positive: pushTail( make(xi,sp) );  assert(sorted()); return;
-                }
-
-            PROBE:
-                FNode *probe = lower->next;
-                if(upper!=probe)
-                {
-                    switch( Sign::Of(xi,(**probe).xi) )
-                    {
-                        case Negative:
-                            break; // after lower
-                        case __Zero__: (**probe) << sp;  assert(sorted()); return;
-                        case Positive:
-                            lower = probe;
-                            goto PROBE;
-                    }
-                }
-
-                insertAfter(lower, make(xi,sp) );
-                assert(sorted());
-            }
-
-
-
-        private:
-            const SBank sbank;
-            Y_DISABLE_COPY_AND_ASSIGN(Frontiers);
-
-            FNode *make(const xreal_t  xi,
-                        const Species &sp)
-            {
-                const Frontier  f(sbank,xi,sp);
-                return proxy->produce(f);
-            }
-
-        };
+    
+        
 
         //______________________________________________________________________
         //
