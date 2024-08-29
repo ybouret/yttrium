@@ -55,73 +55,8 @@ namespace Yttrium
             //__________________________________________________________________
             void prolog() noexcept; //! free all injected
 
-            //! sanitize   equilibria
-            void sanitize(XWritable &C, const Level L, XMLog &xml)
-            {
-
-                Y_XML_SECTION(xml, "sanitize" );
-
-                //--------------------------------------------------------------
-                //
-                // inject corrections and detect zero laws
-                //
-                //--------------------------------------------------------------
-                lawz.free();
-                for(const Group *g=head;g;g=g->next)
-                {
-                    const Group                    &G   = *g;
-                    const Conservation::Law * const law = wasInjected(G,C,L,xml);
-                    if(0!=law)
-                        lawz << *law;
-                }
-
-                //--------------------------------------------------------------
-                //
-                // check CONSERVED with LIMITED
-                //
-                //--------------------------------------------------------------
-                if(0!=head)
-                {
-                    if(lawz.size && xml.verbose)
-                    {
-                        Y_XML_SECTION(xml, "z-laws");
-                        for(const LNode *ln=lawz.head;ln;ln=ln->next)
-                        {
-                            xml() << **ln << std::endl;
-                        }
-                    }
-                    const SNode * const node = mine.conserved.list.head;
-
-                    if(xml.verbose)
-                    {
-                        for(const SNode *sn = node;sn;sn=sn->next)
-                        {
-                            const Species &sp = **sn;
-                            xml() << "d[" << sp << "]=" << cinj[sp.indx[SubLevel]] << std::endl;
-                        }
-                    }
-
-                    // check is any conserved is negative
-                    for(const SNode *sn=node;sn;sn=sn->next)
-                    {
-                        if( C[ (**sn).indx[L]].mantissa < 0 ) goto EQUALIZE;
-                    }
-                    return;
-
-                EQUALIZE:
-                    equalize(C, L, xml);
-                }
-
-                //--------------------------------------------------------------
-                //
-                // and finally adjust UNBOUNDED with ROAMING
-                //
-                //--------------------------------------------------------------
-
-                // TODO
-
-
-            }
+            //! sanitize  equilibria
+            void sanitize(XWritable &C, const Level L, XMLog &xml);
 
 
 
@@ -154,105 +89,13 @@ namespace Yttrium
 
             //! equalize CONSERVED with LIMITED equilibria
             /**
-             enter with sanitized and possibly lawz
+             enter when sanitized and possibly lawz
              */
-            void equalize(XWritable &C, const Level L, XMLog &xml)
-            {
-                if(0==head) return;
-
-                Y_XML_SECTION(xml, "equalize" );
-
-
-                size_t cycle = 0;
-            CYCLE:
-                ++cycle;
-                Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
-
-                //--------------------------------------------------------------
-                //
-                // process limited equilibria
-                //
-                //--------------------------------------------------------------
-                const size_t unbalanced = getUnbalanced(C, L, xml);
-                Y_XMLOG(xml, "(#) unbalanced = " << unbalanced);
-                if(unbalanced<=0)
-                {
-                    //----------------------------------------------------------
-                    //
-                    // numerical succes, check lawz
-                    //
-                    //----------------------------------------------------------
-                    assert(0==trades.size());
-                    assert(0==wobbly.size);
-                    if(lawz.size>0)
-                        enforceZeroLaws(C,L,xml); // will set positive concentrations to zero
-                    else
-                    {
-                        Y_XMLOG(xml, "(#) no z-law to enforce");
-                    }
-                    return;
-                }
-
-                const size_t tradeCount = trades.size();
-                Y_XMLOG(xml, "(#) tradeCount = " << tradeCount << " / " << wobbly);
-                for(const SNode *sn=wobbly.head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    Y_XMLOG(xml, "(!) " << std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]");
-                }
-
-                if(tradeCount<=0)
-                {
-                    std::cerr << "No Trade!!" << std::endl;
-                    if(!lawz.size)
-                    {
-                        // bad!
-                        throw Specific::Exception("here", "no lawz");
-                    }
-                    enforceZeroLaws(C,L,xml);
-                    std::cerr << "Emergency Exit!!" << std::endl << std::endl;
-                    exit(9);
-                    return;
-                }
-
-
-                optimizeTrade(C, L, xml);
-                goto CYCLE;
-            }
-
+            void equalize(XWritable &C, const Level L, XMLog &xml);
 
             //! enforce law and store delta in injected
-            void enforceZeroLaws(XWritable  &C,
-                                 const Level L,
-                                 XMLog      &xml)
-            {
-                assert(lawz.size>0);
-                Y_XML_SECTION_OPT(xml, "enforce", "size='" << lawz.size << "'");
-                for(const LNode *ln=lawz.head;ln;ln=ln->next)
-                {
-                    const Conservation::Law &law = **ln;
-                    Y_XML_SECTION(xml,law.name);
-                    for(const Actor *a = law->head;a;a=a->next)
-                    {
-                        const Species &      sp = a->sp;
-                        const size_t * const id = sp.indx;
-                        const size_t         J  = id[L];
-                        const xreal_t        cc = C[J];
-                        Y_XMLOG(xml, std::setw(15) << real_t(cc) << " = [" << sp << "]");
-                        switch( Sign::Of(cc.mantissa) )
-                        {
-                            case __Zero__:
-                                break;
-                            case Negative:
-                            case Positive:
-                                cinj[ id[SubLevel] ] << -cc;
-                                C[J].ldz();
-                                break;
-                        }
-                    }
-                }
-            }
-
+            void zeroLaws(XWritable  &C, const Level L, XMLog      &xml);
+            
             void   optimizeTrade(XWritable &C, const Level L, XMLog &xml)
             {
 
