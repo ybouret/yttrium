@@ -1061,13 +1061,13 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     //
-                    // numerical succes, checkz lawz
+                    // numerical succes, check lawz
                     //
                     //----------------------------------------------------------
                     assert(0==trades.size());
                     assert(0==wobbly.size);
                     if(lawz.size>0)
-                        enforceZeroLaws(C,L,xml); //!< will set positive concentrations to zero
+                        enforceZeroLaws(C,L,xml); // will set positive concentrations to zero
                     else
                     {
                         Y_XMLOG(xml, "(#) no z-law to enforce");
