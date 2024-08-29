@@ -50,8 +50,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
             void operator()(const xreal_t  x, const Species &s);//!< initialize/update with x>=0
             bool blocking() const noexcept;                     //!< blocking if has species with zero xi
 

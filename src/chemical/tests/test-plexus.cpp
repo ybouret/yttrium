@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/warden/single-frontier.hpp"
+#include "y/chemical/plexus/warden/fund.hpp"
 
 #include "y/chemical/plexus.hpp"
 
@@ -19,122 +20,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-
        
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! fixed value frontier, with one or more species
-        //
-        //
-        //______________________________________________________________________
-        class Frontier : public SProxy
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-
-            explicit Frontier(const SBank &sbank,
-                              const xreal_t  x,
-                              const Species &s) :
-            SProxy(sbank),
-            xi(x)
-            {
-                sr << s;
-            }
-
-            explicit Frontier(const Frontier &F) :
-            SProxy(F),
-            xi(F.xi)
-            {
-            }
-
-            virtual ~Frontier() noexcept
-            {
-            }
-
-
-
-            friend std::ostream & operator<<(std::ostream &os, const Frontier &self)
-            {
-                assert(self.sr.size>0);
-                os << real_t(self.xi) << "@" << self.sr;
-                return os;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-            //! wrapper to append a species
-            Frontier & operator<<(const Species &s)
-            {
-                sr << s;
-                return *this;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const xreal_t xi; //!< required xi to reset species to 0
-        private:
-            Y_DISABLE_ASSIGN(Frontier);
-        };
-
-        typedef Small::CoopHeavyList<Frontier> FList; //!< alias
-        typedef FList::ProxyType               FBank; //!< alias
-        typedef FList::NodeType                FNode; //!< alias
-
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! multible banks for single argument constructors
-        //
-        //
-        //______________________________________________________________________
-        class Fund
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit Fund() : sbank(), lbank(), fbank()
-            {
-            }
-
-            virtual ~Fund() noexcept {}
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            SBank               sbank; //!< for species
-            Conservation::LBank lbank; //!< for laws
-            FBank               fbank; //!< for frontiers
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fund);
-        };
+       
 
         //______________________________________________________________________
         //
