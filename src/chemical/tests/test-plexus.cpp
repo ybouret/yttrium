@@ -1,6 +1,7 @@
 
 #include "y/chemical/plexus/warden/trims.hpp"
 #include "y/chemical/plexus/warden/fixed.hpp"
+#include "y/chemical/plexus/warden/trade.hpp"
 
 #include "y/chemical/plexus.hpp"
 
@@ -20,100 +21,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-       
-
-       
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Concentrations that improve a negative value
-        //
-        //
-        //______________________________________________________________________
-        class Trade
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definitions
-            //
-            //__________________________________________________________________
-            typedef CxxSeries<Trade,XMemory> Series; //!< alias
-
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-
-            //! initialize
-            Trade(const Equilibrium & _eq,
-                  const XReadable &   _cc,
-                  const xreal_t       _gg,
-                  const XReadable &   _dc) noexcept :
-            eq(_eq),
-            cc(_cc),
-            gg(_gg),
-            dc(_dc)
-            {}
-
-            //! cleanup
-            ~Trade() noexcept
-            {
-            }
-
-            //! duplicate
-            Trade(const Trade &_) noexcept :
-            eq(_.eq),
-            cc(_.cc),
-            gg(_.gg),
-            dc(_.dc)
-            {
-            }
-
-
-            friend std::ostream & operator<<( std::ostream &os, const Trade &tr)
-            {
-                os << std::setw(15) << real_t(tr.gg) << " @" << tr.eq;
-                tr.eq.displayCompact(os << ' ', tr.cc, SubLevel);
-                return os;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-            //! comparison by decreasing gain
-            static int Compare(const Trade &lhs, const Trade &rhs) noexcept
-            {
-                return Comparison::Decreasing(lhs.gg,rhs.gg);
-            }
-
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const Equilibrium & eq; //!< persistent equilibria
-            const XReadable   & cc; //!< improved concentrations
-            const xreal_t       gg; //!< total gain
-            const XReadable   & dc; //!< delta to compute multiple trades
-
-        private:
-            Y_DISABLE_ASSIGN(Trade);
-        };
-
-
         //______________________________________________________________________
         //
         //
