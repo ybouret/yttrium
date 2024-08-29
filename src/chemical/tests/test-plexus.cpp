@@ -144,12 +144,7 @@ namespace Yttrium
 
             }
 
-
-
-
-
-
-
+            
 
             //__________________________________________________________________
             //
@@ -157,17 +152,17 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Cluster      &mine;  //!< my cluster
-            const Group * const head;  //!< first group
-            const size_t        rows;  //!< laws max group size
-            const size_t        cols;  //!< max species in sub-level
-            XAdd                xadd;  //!< for internal computations
-            XMatrix             conc;  //!< workspace for concentrations
-            Fixed::Series       jail;  //!< fixed
-            XSwell              cinj;  //!< injected
-            Fund                fund;
-            LRepo               lawz;  //!< laws with zero values
-            Trims               trms;
+            const Cluster      &mine;    //!< my cluster
+            const Group * const head;    //!< first group
+            const size_t        rows;    //!< laws max group size
+            const size_t        cols;    //!< max species in sub-level
+            XAdd                xadd;    //!< for internal computations
+            XMatrix             conc;    //!< workspace for fixed concentrations
+            Fixed::Series       jail;    //!< fixed
+            XSwell              cinj;    //!< injected accumulator
+            Fund                fund;    //!< shared memories
+            LRepo               lawz;    //!< laws with zero values
+            Trims               trms;    //!< trims
             SingleFrontier      best;    //!< best effort to equalize
             SRepo               wobbly;  //!< negative species list
             XMatrix             ctrade;  //!< traded concentrations
