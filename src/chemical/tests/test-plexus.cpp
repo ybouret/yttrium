@@ -1155,7 +1155,7 @@ namespace Yttrium
                     if(nt<=1)
                     {
                         //------------------------------------------------------
-                        // default
+                        // default, transfer
                         //------------------------------------------------------
                         mine.transfer(C, L, top.cc, SubLevel);
                     }
@@ -1164,7 +1164,7 @@ namespace Yttrium
                         const AddressBook &cdb = mine.conserved.book;
 
                         //------------------------------------------------------
-                        // initialize accumulator
+                        // initialize accumulator with unbounded species
                         //------------------------------------------------------
                         xaccum.forEach( &XAdd::free );
                         for(const SNode *sn=mine.unbounded.list.head;sn;sn=sn->next)
@@ -1196,7 +1196,7 @@ namespace Yttrium
                                 }
                                 else
                                 {
-                                    // unbounded species => collect
+                                    // unbounded species => accumulate
                                     xaccum[jj] << dc[jj];
                                 }
                             }
