@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus.hpp"
+#include "y/chemical/plexus/warden/sproxy.hpp"
 
 #include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
@@ -10,58 +11,6 @@
 
 using namespace Yttrium;
 using namespace Chemical;
-
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! proxy to an internal dynamic repository of species
-        //
-        //
-        //______________________________________________________________________
-        class SProxy : public Proxy<const SRepo>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit SProxy(const SBank &sbank) noexcept : Proxy<const SRepo>(), sr(sbank) {}
-            virtual ~SProxy() noexcept {}
-            explicit SProxy(const SProxy &_) : Proxy<const SRepo>(), sr(_.sr) {}
-
-            //__________________________________________________________________
-            //
-            //
-            // append content of another repository
-            //
-            //__________________________________________________________________
-            SProxy & operator<<(const SProxy &other)
-            {
-                sr << other.sr;
-                return *this;
-            }
-
-        protected:
-            SRepo sr; //!< internal repo
-
-        private:
-            Y_DISABLE_ASSIGN(SProxy);
-            virtual ConstInterface & surrogate() const noexcept { return sr; }
-        };
-
-
-
-    }
-}
 
 
 
