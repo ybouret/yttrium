@@ -1121,6 +1121,16 @@ namespace Yttrium
                         const size_t         J  = id[L];
                         const xreal_t        cc = C[J];
                         Y_XMLOG(xml, std::setw(15) << real_t(cc) << " = [" << sp << "]");
+                        switch( Sign::Of(cc.mantissa) )
+                        {
+                            case __Zero__:
+                                break;
+                            case Negative:
+                            case Positive:
+                                cinj[ id[SubLevel] ] << -cc;
+                                C[J].ldz();
+                                break;
+                        }
                     }
                 }
             }
@@ -1483,7 +1493,7 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     //
-                    // found a required before limiting, will solve up to prev
+                    // found a required before limiting, will solve up to it
                     //
                     //----------------------------------------------------------
                     Coerce(best.xi) = prev->xi;
