@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/warden/trims.hpp"
+#include "y/chemical/plexus/warden/fixed.hpp"
 
 #include "y/chemical/plexus.hpp"
 
@@ -21,99 +22,7 @@ namespace Yttrium
     {
        
 
-        
        
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Concentrations that fix a broken law
-        //
-        //
-        //______________________________________________________________________
-        class Fixed
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // Definitions
-            //
-            //__________________________________________________________________
-            typedef CxxSeries<Fixed,XMemory> Series; //!< alias
-
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-
-            //! initialize with no gain
-            Fixed(XWritable &              _cc,
-                  const Conservation::Law &_cl) noexcept :
-            gg(),
-            cc(_cc),
-            cl(_cl)
-            {
-            }
-
-            //! duplicate
-            Fixed(const Fixed &_) noexcept :
-            gg(_.gg),
-            cc(_.cc),
-            cl(_.cl)
-            {
-            }
-
-            //! cleanup
-            ~Fixed() noexcept {}
-
-            friend std::ostream & operator<<( std::ostream &os, const Fixed &self)
-            {
-                os << std::setw(15) << real_t(self.gg) << " @" << self.cl << " -> ";
-                self.cl.displayCompact(os,self.cc, SubLevel);
-                return os;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-            //! compute if law is still broken
-            bool still(const XReadable &C,
-                       const Level      L,
-                       XAdd            &xadd)
-            {
-                return cl.broken(gg,cc,SubLevel,C,L,xadd);
-            }
-
-            //! comparison by decreasing gain
-            static int Compare(const Fixed &lhs, const Fixed &rhs) noexcept
-            {
-                return Comparison::Decreasing(lhs.gg, rhs.gg);
-            }
-
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            xreal_t                 gg;  //!< gain
-            XWritable &             cc;  //!< persistent fixed concentration
-            const Conservation::Law &cl; //!< persistent conservation law
-
-        private:
-            Y_DISABLE_ASSIGN(Fixed);
-        };
-
 
         //______________________________________________________________________
         //

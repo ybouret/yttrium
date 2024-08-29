@@ -46,8 +46,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Trims(const Fund &) noexcept;
-            virtual ~Trims()             noexcept;
+            explicit Trims(const Fund &) noexcept; //!< setup
+            virtual ~Trims()             noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

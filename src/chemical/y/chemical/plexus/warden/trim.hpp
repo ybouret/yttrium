@@ -30,9 +30,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Trim(const Fund &) noexcept;
-            virtual ~Trim()             noexcept;
-            Y_OSTREAM_PROTO(Trim);
+            explicit Trim(const Fund &) noexcept; //!< setup
+            virtual ~Trim()             noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Trim);                //!< display
 
            
 
