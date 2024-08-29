@@ -959,8 +959,14 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 if(0!=head)
                 {
-                    Y_XMLOG(xml, "lawz=" << lawz);
-
+                    if(lawz.size && xml.verbose)
+                    {
+                        Y_XML_SECTION(xml, "z-laws");
+                        for(const LNode *ln=lawz.head;ln;ln=ln->next)
+                        {
+                            xml() << **ln << std::endl;
+                        }
+                    }
                     const SNode * const node = mine.conserved.list.head;
 
                     if(xml.verbose)
