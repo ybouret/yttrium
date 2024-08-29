@@ -1,6 +1,7 @@
 
+#include "y/chemical/plexus/warden/single-frontier.hpp"
+
 #include "y/chemical/plexus.hpp"
-#include "y/chemical/plexus/warden/sproxy.hpp"
 
 #include "y/sort/heap.hpp"
 #include "y/utest/run.hpp"
@@ -20,126 +21,7 @@ namespace Yttrium
     {
 
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! single frontier to find limiting extent to a transformation
-        //
-        //
-        //______________________________________________________________________
-        class SingleFrontier : public SProxy, public Recyclable
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit SingleFrontier(const SBank &sbank) noexcept :
-            SProxy(sbank),
-            xi()
-            {
-            }
-
-            virtual ~SingleFrontier() noexcept { }
-
-            friend std::ostream & operator<<(std::ostream &os, const SingleFrontier &self)
-            {
-                os << "lim=";
-                if(self->size<=0)
-                    os << "none";
-                else
-                    os << real_t(self.xi) << "@" << self.sr;
-                return os;
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-
-            //! [Recyclable] clean list and xi=0
-            virtual void  free() noexcept
-            {
-                sr.free();
-                Coerce(xi).ldz();
-            }
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-
-            //! initialize/update with x>=0
-            void operator()(const xreal_t  x,
-                            const Species &s)
-            {
-                assert(x>=0.0);
-                try {
-                    if(sr.size<=0)
-                    {
-                        first(x,s);
-                    }
-                    else
-                    {
-                        switch( Sign::Of(x,xi) )
-                        {
-                            case Negative: // new smallest
-                                free();
-                                first(x,s);
-                                break;
-
-                            case __Zero__: // same value
-                                sr << s;
-                                break;
-
-
-                            case Positive: // discard
-                                break;
-
-                        }
-                    }
-                }
-                catch(...)
-                {
-                    free();
-                    throw;
-                }
-            }
-
-            //! blocking is has species with zero xi
-            bool blocking() const noexcept
-            {
-                assert(xi.mantissa>=0);
-                return sr.size > 0 && xi.mantissa <= 0;
-            }
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const xreal_t xi; //!< limiting extent for vanishing species
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(SingleFrontier);
-            void first(const xreal_t x, const Species &s)
-            {
-                assert(0==sr.size);
-                sr << s;
-                Coerce(xi) = x;
-            }
-        };
-
+       
 
         //______________________________________________________________________
         //
