@@ -28,9 +28,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit SingleFrontier(const SBank &) noexcept;
-            virtual ~SingleFrontier()              noexcept;
-            Y_OSTREAM_PROTO(SingleFrontier);
+            explicit SingleFrontier(const SBank &) noexcept; //!< setup
+            virtual ~SingleFrontier()              noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(SingleFrontier);                 //!< display
 
            
 
@@ -52,7 +52,7 @@ namespace Yttrium
             //__________________________________________________________________
 
 
-            void operator()(const xreal_t  x, const Species &s);//! initialize/update with x>=0
+            void operator()(const xreal_t  x, const Species &s);//!< initialize/update with x>=0
             bool blocking() const noexcept;                     //!< blocking if has species with zero xi
 
 
