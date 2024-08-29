@@ -17,15 +17,33 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
         //! proxy to an internal dynamic repository of species
+        //
+        //
+        //______________________________________________________________________
         class SProxy : public Proxy<const SRepo>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit SProxy(const SBank &sbank) noexcept : Proxy<const SRepo>(), sr(sbank) {}
             virtual ~SProxy() noexcept {}
             explicit SProxy(const SProxy &_) : Proxy<const SRepo>(), sr(_.sr) {}
 
+            //__________________________________________________________________
+            //
+            //
+            // append content of another repository
+            //
+            //__________________________________________________________________
             SProxy & operator<<(const SProxy &other)
             {
                 sr << other.sr;
@@ -33,12 +51,14 @@ namespace Yttrium
             }
 
         protected:
-            SRepo sr;
+            SRepo sr; //!< internal repo
 
         private:
             Y_DISABLE_ASSIGN(SProxy);
             virtual ConstInterface & surrogate() const noexcept { return sr; }
         };
+
+
 
     }
 }
@@ -51,10 +71,23 @@ namespace Yttrium
     {
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
         //! single frontier to find limiting extent to a transformation
+        //
+        //
+        //______________________________________________________________________
         class SingleFrontier : public SProxy, public Recyclable
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit SingleFrontier(const SBank &sbank) noexcept :
             SProxy(sbank),
             xi()
@@ -62,14 +95,6 @@ namespace Yttrium
             }
 
             virtual ~SingleFrontier() noexcept { }
-
-
-            // Methods
-            virtual void  free() noexcept
-            {
-                sr.free();
-                Coerce(xi).ldz();
-            }
 
             friend std::ostream & operator<<(std::ostream &os, const SingleFrontier &self)
             {
@@ -81,7 +106,29 @@ namespace Yttrium
                 return os;
             }
 
-            // initialize/update with x>=0
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! [Recyclable] clean list and xi=0
+            virtual void  free() noexcept
+            {
+                sr.free();
+                Coerce(xi).ldz();
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+
+            //! initialize/update with x>=0
             void operator()(const xreal_t  x,
                             const Species &s)
             {
@@ -118,6 +165,7 @@ namespace Yttrium
                 }
             }
 
+            //! blocking is has species with zero xi
             bool blocking() const noexcept
             {
                 assert(xi.mantissa>=0);
@@ -125,7 +173,13 @@ namespace Yttrium
             }
 
 
-            const xreal_t xi;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const xreal_t xi; //!< limiting extent for vanishing species
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SingleFrontier);
@@ -137,10 +191,24 @@ namespace Yttrium
             }
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
         //! fixed value frontier, with one or more species
+        //
+        //
+        //______________________________________________________________________
         class Frontier : public SProxy
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             explicit Frontier(const SBank &sbank,
                               const xreal_t  x,
@@ -151,15 +219,17 @@ namespace Yttrium
                 sr << s;
             }
 
-            virtual ~Frontier() noexcept
-            {
-            }
-
             explicit Frontier(const Frontier &F) :
             SProxy(F),
             xi(F.xi)
             {
             }
+
+            virtual ~Frontier() noexcept
+            {
+            }
+
+
 
             friend std::ostream & operator<<(std::ostream &os, const Frontier &self)
             {
@@ -168,42 +238,91 @@ namespace Yttrium
                 return os;
             }
 
-            //! wrapper
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! wrapper to append a species
             Frontier & operator<<(const Species &s)
             {
                 sr << s;
                 return *this;
             }
 
-            const xreal_t xi;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const xreal_t xi; //!< required xi to reset species to 0
         private:
             Y_DISABLE_ASSIGN(Frontier);
         };
 
-        typedef Small::CoopHeavyList<Frontier> FList;
-        typedef FList::ProxyType               FBank;
-        typedef FList::NodeType                FNode;
+        typedef Small::CoopHeavyList<Frontier> FList; //!< alias
+        typedef FList::ProxyType               FBank; //!< alias
+        typedef FList::NodeType                FNode; //!< alias
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! multible banks for single argument constructors
+        //
+        //
+        //______________________________________________________________________
         class Fund
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Fund() : sbank(), lbank(), fbank()
             {
             }
 
-            SBank               sbank;
-            Conservation::LBank lbank;
-            FBank               fbank;
+            virtual ~Fund() noexcept {}
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SBank               sbank; //!< for species
+            Conservation::LBank lbank; //!< for laws
+            FBank               fbank; //!< for frontiers
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fund);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
         //! frontiers to sort multiple requirements
+        //
+        //
+        //______________________________________________________________________
         class Frontiers : public FList
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
             explicit Frontiers(const Fund &fund) noexcept :
             FList(fund.fbank),
             sbank(fund.sbank)
@@ -214,25 +333,48 @@ namespace Yttrium
             {
             }
 
+            friend std::ostream & operator<<(std::ostream &os, const Frontiers &self)
+            {
+                const FList &F = self;
+                os << "req=";
+                if(F.size<=0)
+                    os << "none";
+                else
+                    os << F;
+                return os;
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! check sorted, mostly to debug
             bool sorted() const noexcept
             {
                 if(size<=1) return true;
-
                 for(const FNode *node=head,*next=head->next;0!=next;node=next,next=node->next)
                 {
                     if( (**node).xi >= (**next).xi ) return false;
                 }
-
                 return true;
             }
 
+            //! append a new requirement
             void operator()(const xreal_t  xi,
                             const Species &sp)
             {
+
+                // get rid of trivial cases
                 switch(size)
                 {
-                    case 0: pushTail( make(xi,sp) ); return;
-                    case 1: {
+                    case 0: // initialize
+                        pushTail( make(xi,sp) );
+                        return;
+
+                    case 1: { // three possible cases
                         Frontier &f = **head;
                         switch( Sign::Of(xi, f.xi) )
                         {
@@ -243,11 +385,12 @@ namespace Yttrium
                         assert(sorted());
                     } return;
 
-                    default:
+                    default: // generic case
                         break;
                 }
                 assert(size>=2);
 
+                // generic case
                 FNode * lower = head;
                 switch( Sign::Of(xi, (**lower).xi) )
                 {
@@ -264,9 +407,8 @@ namespace Yttrium
                     case Positive: pushTail( make(xi,sp) );  assert(sorted()); return;
                 }
 
-            CYCLE:
+            PROBE:
                 FNode *probe = lower->next;
-
                 if(upper!=probe)
                 {
                     switch( Sign::Of(xi,(**probe).xi) )
@@ -276,26 +418,15 @@ namespace Yttrium
                         case __Zero__: (**probe) << sp;  assert(sorted()); return;
                         case Positive:
                             lower = probe;
-                            goto CYCLE;
+                            goto PROBE;
                     }
                 }
 
                 insertAfter(lower, make(xi,sp) );
                 assert(sorted());
-
-
             }
 
-            friend std::ostream & operator<<(std::ostream &os, const Frontiers &self)
-            {
-                const FList &F = self;
-                os << "req=";
-                if(F.size<=0)
-                    os << "none";
-                else
-                    os << F;
-                return os;
-            }
+
 
         private:
             const SBank sbank;
@@ -310,9 +441,24 @@ namespace Yttrium
 
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! limiting and required for ONE side of an equilibrium
+        //
+        //
+        //______________________________________________________________________
         class Trim : public Recyclable
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+         
             explicit Trim(const Fund &fund) noexcept :
             limiting(fund.sbank),
             required(fund)
@@ -323,12 +469,40 @@ namespace Yttrium
             {
             }
 
+            friend std::ostream & operator<<(std::ostream &os, const Trim &self)
+            {
+                os << self.limiting << "/" << self.required;
+                return os;
+            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! [Recyclable] free all
             virtual void free() noexcept
             {
                 limiting.free();
                 required.free();
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+           
+            //! compute from concentrations
+            /**
+             \param C concentrations
+             \param L level
+             \param A actors: reac or prod of an Equilibrium
+             \param conserved database of conserved species
+             */
             bool operator()(const XReadable   &C,
                             const Level        L,
                             const Actors      &A,
@@ -343,10 +517,12 @@ namespace Yttrium
                         const xreal_t  cc = C[ sp.indx[L] ];
                         if(cc.mantissa>=0)
                         {
+                            // update limiting
                             limiting(cc/a->xn,sp);
                         }
                         else
                         {
+                            // insert in required
                             required(-cc/a->xn,sp);
                             assert(required.sorted());
                         }
@@ -360,13 +536,13 @@ namespace Yttrium
                 }
             }
 
-            friend std::ostream & operator<<(std::ostream &os, const Trim &self)
-            {
-                os << self.limiting << "/" << self.required;
-                return os;
-            }
-
-            SingleFrontier  limiting; //!< from positive of zero concentrations
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SingleFrontier  limiting; //!< from positive or zero concentrations
             Frontiers       required; //!< from negative concentrations
 
         private:
@@ -375,21 +551,40 @@ namespace Yttrium
 
 
 
-
-
-        //! Trims for reactants and products
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Pair of Trims for reactants and products
+        //
+        //
+        //______________________________________________________________________
         class Trims : public Recyclable
         {
         public:
-            typedef CxxArray<Trims,XMemory> Array;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxArray<Trims,XMemory> Array; //!< alias
+
+            //! possible status
             enum Kind
             {
-                BadNone,
-                BadReac,
-                BadProd,
-                BadBoth
+                BadNone, //!< no required
+                BadReac, //!< reactants are required, products are ok
+                BadProd, //!< products are required, reactants are ok
+                BadBoth  //!< reactants and products are required
             };
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Trims(const Fund &fund) noexcept :
             reac(fund),
             prod(fund)
@@ -400,12 +595,34 @@ namespace Yttrium
             {
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! [Recyclable] free all
             virtual void free() noexcept
             {
                 reac.free();
                 prod.free();
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compute trims and return status
+            /**
+             \param C concentrations
+             \param L level
+             \param E equilibrium
+             \param conserved database of conserved species
+             */
             Kind operator()(const XReadable   &C,
                             const Level        L,
                             const Components  &E,
@@ -413,36 +630,49 @@ namespace Yttrium
             {
                 free();
                 try {
+
                     if(reac(C,L,E.reac,conserved))
                     {
+                        //------------------------------------------------------
                         assert(reac.required.size>0);
+                        //------------------------------------------------------
                         if(prod(C,L,E.prod,conserved))
                         {
+                            //--------------------------------------------------
                             assert(reac.required.size>0);
                             assert(prod.required.size>0);
+                            //--------------------------------------------------
                             return BadBoth;
                         }
                         else
                         {
+                            //--------------------------------------------------
                             assert(reac.required.size>0);
                             assert(prod.required.size<=0);
+                            //--------------------------------------------------
                             return BadReac;
                         }
 
                     }
                     else
                     {
+                        //------------------------------------------------------
                         assert(reac.required.size<=0);
+                        //------------------------------------------------------
                         if(prod(C,L,E.prod,conserved))
                         {
+                            //--------------------------------------------------
                             assert(reac.required.size<=0);
                             assert(prod.required.size>0);
+                            //--------------------------------------------------
                             return BadProd;
                         }
                         else
                         {
+                            //--------------------------------------------------
                             assert(reac.required.size<=0);
                             assert(prod.required.size<=0);
+                            //--------------------------------------------------
                             return BadNone;
                         }
                     }
@@ -452,20 +682,45 @@ namespace Yttrium
             }
 
 
-            Trim           reac;
-            Trim           prod;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Trim           reac; //!< limiting/required reactants
+            Trim           prod; //!< liimitin/required products
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Trims);
         };
 
 
-
-        //! Fixed concentrations
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Concentrations that fix a broken law
+        //
+        //
+        //______________________________________________________________________
         class Fixed
         {
         public:
-            typedef CxxSeries<Fixed,XMemory> Series;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxSeries<Fixed,XMemory> Series; //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! initialize with no gain
             Fixed(XWritable &              _cc,
@@ -484,22 +739,8 @@ namespace Yttrium
             {
             }
 
-
             //! cleanup
             ~Fixed() noexcept {}
-
-
-            bool still(const XReadable &C,
-                       const Level      L,
-                       XAdd            &xadd)
-            {
-                return cl.broken(gg,cc,SubLevel,C,L,xadd);
-            }
-
-            static int Compare(const Fixed &lhs, const Fixed &rhs) noexcept
-            {
-                return Comparison::Decreasing(lhs.gg, rhs.gg);
-            }
 
             friend std::ostream & operator<<( std::ostream &os, const Fixed &self)
             {
@@ -508,20 +749,71 @@ namespace Yttrium
                 return os;
             }
 
-            xreal_t                 gg; //!< gain
-            XWritable &             cc; //!< persistent fixed concentration
-            const Conservation::Law &cl;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compute if law is still broken
+            bool still(const XReadable &C,
+                       const Level      L,
+                       XAdd            &xadd)
+            {
+                return cl.broken(gg,cc,SubLevel,C,L,xadd);
+            }
+
+            //! comparison by decreasing gain
+            static int Compare(const Fixed &lhs, const Fixed &rhs) noexcept
+            {
+                return Comparison::Decreasing(lhs.gg, rhs.gg);
+            }
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            xreal_t                 gg;  //!< gain
+            XWritable &             cc;  //!< persistent fixed concentration
+            const Conservation::Law &cl; //!< persistent conservation law
 
         private:
             Y_DISABLE_ASSIGN(Fixed);
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Concentrations that improve a negative value
+        //
+        //
+        //______________________________________________________________________
         class Trade
         {
         public:
-            typedef CxxSeries<Trade,XMemory> Series;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxSeries<Trade,XMemory> Series; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! initialize
             Trade(const Equilibrium & _eq,
                   const XReadable &   _cc,
                   const xreal_t       _gg,
@@ -532,10 +824,12 @@ namespace Yttrium
             dc(_dc)
             {}
 
+            //! cleanup
             ~Trade() noexcept
             {
             }
 
+            //! duplicate
             Trade(const Trade &_) noexcept :
             eq(_.eq),
             cc(_.cc),
@@ -544,10 +838,6 @@ namespace Yttrium
             {
             }
 
-            static int Compare(const Trade &lhs, const Trade &rhs) noexcept
-            {
-                return Comparison::Decreasing(lhs.gg,rhs.gg);
-            }
 
             friend std::ostream & operator<<( std::ostream &os, const Trade &tr)
             {
@@ -556,25 +846,59 @@ namespace Yttrium
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            const Equilibrium & eq;
-            const XReadable   & cc;
-            const xreal_t       gg;
-            const XReadable   & dc;
+            //! comparison by decreasing gain
+            static int Compare(const Trade &lhs, const Trade &rhs) noexcept
+            {
+                return Comparison::Decreasing(lhs.gg,rhs.gg);
+            }
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Equilibrium & eq; //!< persistent equilibria
+            const XReadable   & cc; //!< improved concentrations
+            const xreal_t       gg; //!< total gain
+            const XReadable   & dc; //!< delta to compute multiple trades
 
         private:
             Y_DISABLE_ASSIGN(Trade);
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Warden: fix laws and equalize
+        //
+        //
+        //______________________________________________________________________
         class Warden : public Quantized
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Conservation::Laws::Group Group; //!< alias
+            typedef Conservation::LNode       LNode; //!< alias
+            typedef Conservation::LRepo       LRepo; //!< alias
 
-            typedef Conservation::Laws::Group Group;
-            typedef Conservation::LNode       LNode;
-            typedef Conservation::LRepo       LRepo;
-
+            //! setup from cluster
             explicit Warden(const Cluster &cluster) :
             mine(cluster),
             head( mine.laws.isValid() ? mine.laws->groups.head : 0),
@@ -596,6 +920,11 @@ namespace Yttrium
             {
             }
 
+            virtual ~Warden() noexcept
+            {
+
+            }
+
 
             void prolog() noexcept
             {
@@ -603,64 +932,131 @@ namespace Yttrium
             }
 
 
-            bool sanitize(XWritable &C, const Level L, XMLog &xml)
+            //! sanitize   equilibria
+            void sanitize(XWritable &C, const Level L, XMLog &xml)
             {
 
-                Y_XML_SECTION(xml, "sanitizing" );
+                Y_XML_SECTION(xml, "sanitize" );
 
+                //--------------------------------------------------------------
+                //
                 // inject corrections and detect zero laws
+                //
+                //--------------------------------------------------------------
                 lawz.free();
                 for(const Group *g=head;g;g=g->next)
                 {
                     const Group                    &G   = *g;
                     const Conservation::Law * const law = wasInjected(G,C,L,xml);
                     if(0!=law)
-                    {
                         lawz << *law;
-                    }
                 }
 
-
-                // optional output
+                //--------------------------------------------------------------
+                //
+                // check CONSERVED with LIMITED
+                //
+                //--------------------------------------------------------------
                 if(0!=head)
                 {
                     Y_XMLOG(xml, "lawz=" << lawz);
 
-                    for(const SNode *sn = mine.species.head;sn;sn=sn->next)
+                    const SNode * const node = mine.conserved.list.head;
+
+                    if(xml.verbose)
                     {
-                        const Species &sp = **sn;
-                        Y_XMLOG(xml, "d[" << sp << "]=" << cinj[sp.indx[SubLevel]]);
+                        for(const SNode *sn = node;sn;sn=sn->next)
+                        {
+                            const Species &sp = **sn;
+                            xml() << "d[" << sp << "]=" << cinj[sp.indx[SubLevel]] << std::endl;
+                        }
                     }
+
+                    // check is any conserved is negative
+                    for(const SNode *sn=node;sn;sn=sn->next)
+                    {
+                        if( C[ (**sn).indx[L]].mantissa < 0 ) goto EQUALIZE;
+                    }
+                    return;
+
+                EQUALIZE:
+                    equalize(C, L, xml);
                 }
 
-                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
-                {
-                    if( C[ (**sn).indx[L]].mantissa < 0 ) return true;
-                }
+                //--------------------------------------------------------------
+                //
+                // and finally adjust UNBOUNDED with ROAMING
+                //
+                //--------------------------------------------------------------
 
-                return false;
+
+
             }
 
 
+
+
+
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Cluster      &mine;  //!< my cluster
+            const Group * const head;  //!< first group
+            const size_t        rows;  //!< laws max group size
+            const size_t        cols;  //!< max species in sub-level
+            XAdd                xadd;  //!< for internal computations
+            XMatrix             conc;  //!< workspace for concentrations
+            Fixed::Series       jail;  //!< fixed
+            XSwell              cinj;  //!< injected
+            Fund                fund;
+            LRepo               lawz;  //!< laws with zero values
+            Trims               trms;
+            SingleFrontier      best;    //!< best effort to equalize
+            SRepo               wobbly;  //!< negative species list
+            XMatrix             ctrade;  //!< traded concentrations
+            XMatrix             dtrade;  //!< traded changes
+            Trade::Series       trades;  //!< trades
+            XSwell              xaccum;  //!< accumulators for multiple trades
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Warden);
+
+            //! equalize CONSERVED with LIMITED equilibria
+            /**
+             enter with sanitized and possibly lawz
+             */
             void equalize(XWritable &C, const Level L, XMLog &xml)
             {
                 if(0==head) return;
 
-                Y_XML_SECTION(xml, "equalizing" );
+                Y_XML_SECTION(xml, "equalize" );
+
+
+                size_t cycle = 0;
+            CYCLE:
+                ++cycle;
+                Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
 
                 //--------------------------------------------------------------
                 //
                 // process limited equilibria
                 //
                 //--------------------------------------------------------------
-                size_t cycle = 0;
-            CYCLE:
-                ++cycle;
-                Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
                 const size_t unbalanced = getUnbalanced(C, L, xml);
                 Y_XMLOG(xml, "(#) unbalanced = " << unbalanced);
                 if(unbalanced<=0)
                 {
+                    //----------------------------------------------------------
+                    //
+                    // numerical succes, checkz lawz
+                    //
+                    //----------------------------------------------------------
                     assert(0==trades.size());
                     assert(0==wobbly.size);
                     for(const LNode *ln=lawz.head;ln;ln=ln->next)
@@ -691,38 +1087,7 @@ namespace Yttrium
 
                 optimizeTrade(C, L, xml);
                 goto CYCLE;
-
-
             }
-
-
-
-            virtual ~Warden() noexcept
-            {
-
-            }
-
-
-            const Cluster      &mine;  //!< my cluster
-            const Group * const head;  //!< first group
-            const size_t        rows;  //!< laws max group size
-            const size_t        cols;  //!< max species in sub-level
-            XAdd                xadd;  //!< for internal computations
-            XMatrix             conc;  //!< workspace for concentrations
-            Fixed::Series       jail;  //!< fixed
-            XSwell              cinj;  //!< injected
-            Fund                fund;
-            LRepo               lawz;  //!< laws with zero values
-            Trims               trms;
-            SingleFrontier      best;    //!< best effort to equalize
-            SRepo               wobbly;  //!< negative species list
-            XMatrix             ctrade;  //!< traded concentrations
-            XMatrix             dtrade;  //!< traded changes
-            Trade::Series       trades;  //!< trades
-            XSwell              xaccum;  //!< accumulators for multiple trades
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
             void   optimizeTrade(XWritable &C, const Level L, XMLog &xml)
             {
@@ -865,6 +1230,8 @@ namespace Yttrium
 
             }
 
+
+            //! fill concentrations trades and wobbly species
             size_t getUnbalanced(const XReadable &C, const Level L, XMLog &xml)
             {
                 Y_XML_SECTION(xml, "getUnbalanced");
@@ -881,7 +1248,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // loop over limited equilibria
+                // loop over LIMITED equilibria
                 //
                 //--------------------------------------------------------------
                 for(const ENode *en=mine.limited.head;en;en=en->next)
@@ -988,7 +1355,7 @@ namespace Yttrium
                     }
 
                     //----------------------------------------------------------
-                    // force vanishing
+                    // force vanishing species from best
                     //----------------------------------------------------------
                     for(const SNode *sn=best->head;sn;sn=sn->next)
                     {
@@ -1011,7 +1378,7 @@ namespace Yttrium
                     }
 
                     //----------------------------------------------------------
-                    // append trade
+                    // build trade and append it
                     //----------------------------------------------------------
                     {
                         const Trade trade(eq,cc,xadd.sum(),dc);
@@ -1044,6 +1411,8 @@ namespace Yttrium
                 }
             }
 
+
+            //! construct best effort single frontier
             void bestEffort(const SingleFrontier &limiting,
                             const Frontiers      &required)
             {
@@ -1059,10 +1428,10 @@ namespace Yttrium
                     switch( Sign::Of(F.xi,limiting.xi) )
                     {
                         case Negative:
-                            prev = &F; // almost to this oe
+                            prev = &F; // almost to this one
                             continue;
 
-                        case __Zero__:
+                        case __Zero__: // numerical match
                             Coerce(best.xi) = limiting.xi;
                             best << limiting;
                             best << F;
@@ -1078,7 +1447,7 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     //
-                    // will solve up to prev
+                    // found a required before limiting, will solve up to prev
                     //
                     //----------------------------------------------------------
                     Coerce(best.xi) = prev->xi;
@@ -1088,7 +1457,7 @@ namespace Yttrium
                 {
                     //----------------------------------------------------------
                     //
-                    // best partial effort
+                    // no requirement, best partial effort
                     //
                     //----------------------------------------------------------
                     Coerce(best.xi) = limiting.xi;
@@ -1098,6 +1467,14 @@ namespace Yttrium
 
             }
 
+
+            //! check if concentrations need to be injected to obey laws
+            /**
+             \param G   group to scan
+             \param C   concentrations
+             \param L   level
+             \param xml display
+             */
             const Conservation::Law * wasInjected(const Group &G,
                                                   XWritable   &C,
                                                   const Level  L,
@@ -1136,16 +1513,16 @@ namespace Yttrium
 
 
 
-            //__________________________________________________________________
-            //
-            //! load C and compute all modified concentrations
-            //__________________________________________________________________
+            //! load C and compute all necessary modified concentrations
+            /**
+             \return true if must fix some law
+             */
             bool initialize(const Group &group,
                             XWritable   &C,
                             const Level  L,
                             XMLog       &xml)
             {
-                Y_XML_SECTION_OPT(xml, "Initialize", "groupSize='" << group.size << "'");
+                Y_XML_SECTION_OPT(xml, "initialize", "group='" << group.size << "'");
                 jail.free();
                 bool mustFix = false;
                 for(const LNode *ln=group.head;ln;ln=ln->next)
@@ -1164,15 +1541,18 @@ namespace Yttrium
                 return mustFix;
             }
 
-            //__________________________________________________________________
-            //
             //! find lowest fix and apply it
-            //__________________________________________________________________
+            /**
+             \param C   concentrations to fix
+             \param L   level
+             \param xml display
+             \return last fixed law, to be zeroed!
+             */
             const Conservation::Law * reduce(XWritable   &C,
                                              const Level  L,
                                              XMLog       &xml)
             {
-                Y_XML_SECTION_OPT(xml,"Reduce","size='"<<jail.size()<<"'");
+                Y_XML_SECTION_OPT(xml,"reduce","size='"<<jail.size()<<"'");
 
                 //------------------------------------------------------
                 // sort by decreasing excess
@@ -1205,15 +1585,13 @@ namespace Yttrium
                 return &cl;
             }
 
-            //__________________________________________________________________
-            //
+
             //! check who still needs to be fixed
-            //__________________________________________________________________
             void update(const XReadable   &C,
                         const Level        L,
                         XMLog             &xml)
             {
-                Y_XML_SECTION_OPT(xml,"Update","size='"<<jail.size()<<"'");
+                Y_XML_SECTION_OPT(xml,"update","size='"<<jail.size()<<"'");
 
                 //------------------------------------------------------
                 // check remaining with new concentration
@@ -1299,10 +1677,7 @@ Y_UTEST(plexus)
             plexus.conc(C0,0.3,0.5);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            if( warden.sanitize(C0,TopLevel,xml) )
-            {
-                warden.equalize(C0,TopLevel,xml);
-            }
+            warden.sanitize(C0,TopLevel,xml);
             lib(std::cerr << "C1=","\t[",C0,"]");
 
         }
