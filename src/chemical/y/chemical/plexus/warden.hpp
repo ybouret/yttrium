@@ -87,8 +87,11 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
-            void collectRoaming(ERepo       &target,
-                                const EList &source) const;
+            //! finalize using ROAMING equilibria for remaining negative C
+            void   finalize(XWritable &C, const Level L, XMLog &xml);
+
+            size_t collectRoaming(ERepo       &target,
+                                  const EList &source) const;
 
             //! equalize CONSERVED with LIMITED equilibria
             /**
