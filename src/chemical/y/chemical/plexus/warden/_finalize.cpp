@@ -34,13 +34,25 @@ namespace Yttrium
                         const Actors   &ac,
                         const Frontier &ff) noexcept
         {
-            const xreal_t xi = ff.xi;
-            assert(xi.mantissa>0);
-            for(const Actor *a=ac->head;a;a=a->next)
+            assert(ff.xi.mantissa>0);
+            assert(ff->size>0);
+
+            // increase
             {
-                const Species &sp = a->sp;
-                cc[ sp.indx[SubLevel] ] += xi * a->xn;
+                const xreal_t xi = ff.xi;
+                for(const Actor *a=ac->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    cc[ sp.indx[SubLevel] ] += xi * a->xn;
+                }
             }
+
+            // vanish
+            for(const SNode *sn=ff->head;sn;sn=sn->next)
+            {
+                cc[ (**sn).indx[SubLevel] ].ldz();
+            }
+
         }
 
         void   Warden:: roamingTrades(const ENode *       en,
@@ -110,10 +122,10 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                const Frontier &ff = **F.tail;
-                const size_t    ii = trades.size() + 1;
-                XWritable      &cc = mine.transfer(ctrade[ii],SubLevel,C,L);
-                XWritable      &dc = dtrade[ii].ld(0);
+                const Frontier &ff = **F.tail;                               // highest correction
+                const size_t    ii = trades.size() + 1;                      // index of next trade
+                XWritable      &cc = mine.transfer(ctrade[ii],SubLevel,C,L); // copy of C
+                XWritable      &dc = dtrade[ii].ld(0);                       // zeroed dc
                 const xreal_t   xi = ff.xi;
 
                 //--------------------------------------------------------------
@@ -123,24 +135,26 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                if(ro)
-                {
-                    assert(eq.reac->size>0);
-                    Regularize(cc,eq.reac,ff);
-                }
-                else
-                {
-                    assert(eq.prod->size>0);
-                    Regularize(cc,eq.prod,ff);
-                }
-
-
+                Regularize(cc, *ac, ff);
 
 
                 // generate dc and gain
                 xadd.free();
+                for(const Actor *a = (*ac)->head; a; a=a->next)
+                {
+                    const Species &      sp = a->sp;
+                    const size_t * const id = sp.indx;
+                    const size_t         ii = id[SubLevel];
+                    const size_t         II = id[L];
+                    const xreal_t        cOld = C[II];
+                    const xreal_t        cNew = cc[ii];
+                    if(cOld.mantissa<0) xadd << -cOld;
+                    if(cNew.mantissa<0) xadd <<  cNew;
+                    dc[ii] = cNew - cOld;
+                }
+                const xreal_t gg = xadd.sum();
 
-                Y_XMLOG(xml, (ro ? "(<)" : "(>)") << ' '  << eq << " @" << F << " ( <-- " << ff << " )");
+                Y_XMLOG(xml, (ro ? "(<)" : "(>)") << ' '  << eq << " @" << ff << " => gain = " << real_t(gg) << " / #=" << F.size);
 
 
             }
