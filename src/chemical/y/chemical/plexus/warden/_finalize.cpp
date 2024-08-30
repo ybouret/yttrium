@@ -29,6 +29,20 @@ namespace Yttrium
 
 
 
+        static inline
+        void Regularize(XWritable      &cc,
+                        const Actors   &ac,
+                        const Frontier &ff) noexcept
+        {
+            const xreal_t xi = ff.xi;
+            assert(xi.mantissa>0);
+            for(const Actor *a=ac->head;a;a=a->next)
+            {
+                const Species &sp = a->sp;
+                cc[ sp.indx[SubLevel] ] += xi * a->xn;
+            }
+        }
+
         void   Warden:: roamingTrades(const ENode *       en,
                                       const XReadable &   C,
                                       const Level         L,
@@ -36,28 +50,44 @@ namespace Yttrium
         {
             for(;0!=en;en=en->next)
             {
-                const Equilibrium &eq     = **en;
-                const Actors  *    actors = 0;
-                bool               direct = true;
+                //--------------------------------------------------------------
+                //
+                //
+                // get equilibrium and select way
+                //
+                //
+                //--------------------------------------------------------------
+
+                const Equilibrium &eq = **en;
+                const Actors  *    ac  = 0;
+                bool               ro  = false;
 
                 switch(eq.kind)
                 {
                     case Nebulous:
                     case Standard:
                         throw Specific::Exception(CallSign, "no possible roaming trade for '%s", eq.name.c_str());
+                   
                     case ReacOnly:
-                        actors = &eq.reac;
-                        direct = true;
+                        ac = &eq.reac;
+                        ro = true;
                         break;
 
                     case ProdOnly:
-                        actors = &eq.prod;
-                        direct = false;
+                        ac = &eq.prod;
+                        ro = false;
                         break;
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // build sorted frontiers
+                //
+                //
+                //--------------------------------------------------------------
                 Frontiers      F(fund);
-                for(const Actor *a=(*actors)->head;a;a=a->next)
+                for(const Actor *a=(*ac)->head;a;a=a->next)
                 {
                     const Species &sp = a->sp;
                     const xreal_t  cc = C[ sp.indx[L] ];
@@ -67,31 +97,50 @@ namespace Yttrium
                     }
                 }
 
-                if(F.size<=0) continue;
+                if(F.size<=0) 
+                {
+                    Y_XMLOG(xml, "(-) " << eq);
+                    continue;
+                }
 
+                //--------------------------------------------------------------
+                //
+                //
                 // select highest frontier
+                //
+                //
+                //--------------------------------------------------------------
                 const Frontier &ff = **F.tail;
                 const size_t    ii = trades.size() + 1;
                 XWritable      &cc = mine.transfer(ctrade[ii],SubLevel,C,L);
                 XWritable      &dc = dtrade[ii].ld(0);
+                const xreal_t   xi = ff.xi;
 
-
-                // generate cc
-                if(direct)
+                //--------------------------------------------------------------
+                //
+                //
+                // generate cc with vanishing species as well
+                //
+                //
+                //--------------------------------------------------------------
+                if(ro)
                 {
-
+                    assert(eq.reac->size>0);
+                    Regularize(cc,eq.reac,ff);
                 }
                 else
                 {
-
+                    assert(eq.prod->size>0);
+                    Regularize(cc,eq.prod,ff);
                 }
 
-                // ensure vanishing
+
+
 
                 // generate dc and gain
                 xadd.free();
 
-                Y_XMLOG(xml, (direct ? "(>)" : "(<)") << ' '  << eq << " @" << F << " ( <-- " << ff << " )");
+                Y_XMLOG(xml, (ro ? "(<)" : "(>)") << ' '  << eq << " @" << F << " ( <-- " << ff << " )");
 
 
             }
