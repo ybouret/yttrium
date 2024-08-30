@@ -62,15 +62,15 @@ namespace Yttrium
                 equalize(C, L, xml);
             }
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             // and finally adjust UNBOUNDED with ROAMING
             //
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
         ROAMING:
-            {
+            if(mine.unbounded.list.size<=0) return;
 
-            }
+            Y_XML_SECTION_OPT(xml, "unbounded", "size='" << mine.unbounded.list.size << "'");
 
 
         }
