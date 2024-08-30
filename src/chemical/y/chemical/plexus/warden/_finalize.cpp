@@ -56,7 +56,6 @@ namespace Yttrium
                         break;
                 }
 
-                //SingleFrontier F(fund.sbank);
                 Frontiers      F(fund);
                 for(const Actor *a=(*actors)->head;a;a=a->next)
                 {
@@ -68,8 +67,32 @@ namespace Yttrium
                     }
                 }
 
-                if(F.size<=0) continue;;
-                Y_XMLOG(xml, (direct ? "(>)" : "(<)") << ' '  << eq << " @" << F);
+                if(F.size<=0) continue;
+
+                // select highest frontier
+                const Frontier &ff = **F.tail;
+                const size_t    ii = trades.size() + 1;
+                XWritable      &cc = mine.transfer(ctrade[ii],SubLevel,C,L);
+                XWritable      &dc = dtrade[ii].ld(0);
+
+
+                // generate cc
+                if(direct)
+                {
+
+                }
+                else
+                {
+
+                }
+
+                // ensure vanishing
+
+                // generate dc and gain
+                xadd.free();
+
+                Y_XMLOG(xml, (direct ? "(>)" : "(<)") << ' '  << eq << " @" << F << " ( <-- " << ff << " )");
+
 
             }
 
