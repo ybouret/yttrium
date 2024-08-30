@@ -70,22 +70,52 @@ namespace Yttrium
         ROAMING:
 
             // collect wobbly unbounded species
+
+
+
             wobbly.free();
             for(const SNode *sn = mine.unbounded.list.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
                 if( C[ sp.indx[L]].mantissa < 0 )
+                {
                     wobbly << sp;
+                }
 
             }
 
             if(wobbly.size<=0) return;
-
+            
             Y_XML_SECTION_OPT(xml, "unbounded", wobbly);
+            ERepo reacOnly(fund.ebank);
+            ERepo prodOnly(fund.ebank);
+            collectRoaming(reacOnly, mine.roaming.reacOnly);
+            collectRoaming(prodOnly, mine.roaming.prodOnly);
 
+            Y_XMLOG(xml, "reacOnly : " << reacOnly);
+            Y_XMLOG(xml, "prodOnly : " << prodOnly);
 
         }
 
+
+        void Warden:: collectRoaming(ERepo       &target,
+                                     const EList &source) const
+        {
+            target.free();
+            for(const ENode *en=source.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                for(const SNode *sn=wobbly.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    if( eq.query(sp) )
+                    {
+                        target << eq;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Fund:: Fund() : sbank(), lbank(), fbank()
+        Fund:: Fund() : sbank(), lbank(), fbank(), ebank()
         {
         }
 

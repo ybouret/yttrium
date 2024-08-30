@@ -41,7 +41,8 @@ namespace Yttrium
             SBank               sbank; //!< for species
             Conservation::LBank lbank; //!< for laws
             FBank               fbank; //!< for frontiers
-
+            EBank               ebank; //!< for eqs
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Fund);
         };

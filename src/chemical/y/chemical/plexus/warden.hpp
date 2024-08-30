@@ -87,6 +87,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Warden);
 
+            void collectRoaming(ERepo       &target,
+                                const EList &source) const;
+
             //! equalize CONSERVED with LIMITED equilibria
             /**
              enter when sanitized and possibly lawz
