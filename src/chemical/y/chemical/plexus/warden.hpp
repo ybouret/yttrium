@@ -16,6 +16,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+        
+
         //______________________________________________________________________
         //
         //
@@ -90,8 +92,14 @@ namespace Yttrium
             //! finalize using ROAMING equilibria for remaining negative C
             void   finalize(XWritable &C, const Level L, XMLog &xml);
 
-            size_t collectRoaming(ERepo       &target,
-                                  const EList &source) const;
+
+            //! build roaming trades from one sided actors
+            void   roamingTrades(const ENode        *en,
+                                 const XReadable &   C,
+                                 const Level         L,
+                                 XMLog            &  xml);
+
+            size_t roamingGather(ERepo &target, const EList &source) const;
 
             //! equalize CONSERVED with LIMITED equilibria
             /**

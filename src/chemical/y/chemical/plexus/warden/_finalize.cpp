@@ -7,10 +7,10 @@ namespace Yttrium
     namespace Chemical
     {
 
-        size_t Warden:: collectRoaming(ERepo       &target,
+        size_t Warden:: roamingGather(ERepo       &target,
                                        const EList &source) const
         {
-            target.free();
+            assert(0==target.size);
             for(const ENode *en=source.head;en;en=en->next)
             {
                 const Equilibrium &eq = **en;
@@ -25,6 +25,56 @@ namespace Yttrium
                 }
             }
             return target.size;
+        }
+
+
+
+        void   Warden:: roamingTrades(const ENode *       en,
+                                      const XReadable &   C,
+                                      const Level         L,
+                                      XMLog               &xml)
+        {
+            for(;0!=en;en=en->next)
+            {
+                const Equilibrium &eq     = **en;
+                const Actors  *    actors = 0;
+                bool               direct = true;
+
+                switch(eq.kind)
+                {
+                    case Nebulous:
+                    case Standard:
+                        throw Specific::Exception(CallSign, "no possible roaming trade for '%s", eq.name.c_str());
+                    case ReacOnly:
+                        actors = &eq.reac;
+                        direct = true;
+                        break;
+
+                    case ProdOnly:
+                        actors = &eq.prod;
+                        direct = false;
+                        break;
+                }
+
+                //SingleFrontier F(fund.sbank);
+                Frontiers      F(fund);
+                for(const Actor *a=(*actors)->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    const xreal_t  cc = C[ sp.indx[L] ];
+                    if(cc.mantissa<0)
+                    {
+                        F(-cc/a->xn,sp);
+                    }
+                }
+
+                if(F.size>0)
+                {
+                    Y_XMLOG(xml, "(+) " << eq << " @" << F);
+                }
+
+            }
+
         }
 
 
@@ -49,22 +99,22 @@ namespace Yttrium
             // collect concerned eqs
             ERepo  reacOnly(fund.ebank);
             ERepo  prodOnly(fund.ebank);
-            size_t reachable = collectRoaming(reacOnly, mine.roaming.reacOnly);
-            reachable       += collectRoaming(prodOnly, mine.roaming.prodOnly);
+            size_t reachable = roamingGather(reacOnly, mine.roaming.reacOnly);
+            reachable       += roamingGather(prodOnly, mine.roaming.prodOnly);
 
             Y_XMLOG(xml, "reacOnly : " << reacOnly);
             Y_XMLOG(xml, "prodOnly : " << prodOnly);
 
             if(!reachable) throw Specific::Exception(CallSign, "no reachable roaming equilbrium!");
 
-            CxxSeries<Frontier> ff(mine.roaming.reacOnly.size+mine.roaming.prodOnly.size);
 
-            for(const ENode *en=reacOnly.head;en;en=en->next)
-            {
-                const Equilibrium &eq = **en;
-            }
+            trades.free();
+            roamingTrades(reacOnly.head,C,L,xml);
+            roamingTrades(prodOnly.head,C,L,xml);
+
 
         }
+
 
     }
 }
