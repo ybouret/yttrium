@@ -50,12 +50,13 @@ namespace Yttrium
                     }
                 }
 
-                // check is any conserved is negative
+
+                // check is any conserved is negative => equalize
                 for(const SNode *sn=node;sn;sn=sn->next)
                 {
                     if( C[ (**sn).indx[L]].mantissa < 0 ) goto EQUALIZE;
                 }
-                return;
+                goto ROAMING;
 
             EQUALIZE:
                 equalize(C, L, xml);
@@ -66,8 +67,10 @@ namespace Yttrium
             // and finally adjust UNBOUNDED with ROAMING
             //
             //--------------------------------------------------------------
+        ROAMING:
+            {
 
-            // TODO
+            }
 
 
         }

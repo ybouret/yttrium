@@ -4,6 +4,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+     
+
         void Warden:: zeroLaws(XWritable  &C,
                                const Level L,
                                XMLog      &xml)
@@ -20,8 +23,8 @@ namespace Yttrium
                     const size_t * const id = sp.indx;
                     const size_t         J  = id[L];
                     const xreal_t        cc = C[J];
-                    Y_XMLOG(xml, std::setw(15) << real_t(cc) << " = [" << sp << "]");
-                    switch( Sign::Of(cc.mantissa) )
+                    const SignType       cs = Sign::Of(cc.mantissa);
+                    switch( cs )
                     {
                         case __Zero__:
                             break;
@@ -31,6 +34,8 @@ namespace Yttrium
                             C[J].ldz();
                             break;
                     }
+                    Y_XMLOG(xml, '(' << Sign::ToChar(cs) << ')'  << ' ' << std::setw(15) << real_t(cc) << " = [" << sp << "]");
+
                 }
             }
         }

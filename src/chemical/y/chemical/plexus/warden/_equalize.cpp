@@ -1,4 +1,5 @@
 #include "y/chemical/plexus/warden.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -16,11 +17,11 @@ namespace Yttrium
             ++cycle;
             Y_XMLOG(xml, "-------- #cycle = " << cycle << " --------");
 
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             //
             // process limited equilibria
             //
-            //--------------------------------------------------------------
+            //------------------------------------------------------------------
             const size_t unbalanced = getUnbalanced(C, L, xml);
             Y_XMLOG(xml, "(#) unbalanced = " << unbalanced);
             if(unbalanced<=0)
@@ -41,29 +42,44 @@ namespace Yttrium
                 return;
             }
 
+
+            //------------------------------------------------------------------
+            //
+            assert(unbalanced>0);
+            //
+            //------------------------------------------------------------------
             const size_t tradeCount = trades.size();
-            Y_XMLOG(xml, "(#) tradeCount = " << tradeCount << " / " << wobbly);
-            for(const SNode *sn=wobbly.head;sn;sn=sn->next)
+            if(xml.verbose)
             {
-                const Species &sp = **sn;
-                Y_XMLOG(xml, "(!) " << std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]");
+                xml() << "(#) tradeCount = " << tradeCount << " / " << wobbly << std::endl;
+                for(const SNode *sn=wobbly.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    xml() << "(!) " << std::setw(15) << real_t( C[sp.indx[L]]) << " = [" << sp << "]" << std::endl;
+                }
             }
 
+            //------------------------------------------------------------------
+            //
+            // check if best effort was done
+            //
+            //------------------------------------------------------------------
             if(tradeCount<=0)
             {
-                std::cerr << "No Trade!!" << std::endl;
-                if(!lawz.size)
+                if(lawz.size<=0)
                 {
                     // bad!
-                    throw Specific::Exception("here", "no lawz");
+                    throw Specific::Exception(CallSign, "No Fail-Safe Conservation Law");
                 }
                 zeroLaws(C,L,xml);
-                std::cerr << "Emergency Exit!!" << std::endl << std::endl;
-                exit(9);
                 return;
             }
 
-
+            //------------------------------------------------------------------
+            //
+            // improve concentrations
+            //
+            //------------------------------------------------------------------
             optimizeTrade(C, L, xml);
             goto CYCLE;
         }

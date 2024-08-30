@@ -9,7 +9,6 @@
 #include "y/chemical/plexus/warden/trade.hpp"
 #include "y/chemical/plexus/cluster.hpp"
 
-#include "y/system/exception.hpp"
 #include "y/sort/heap.hpp"
 
 namespace Yttrium
@@ -34,9 +33,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Conservation::Laws::Group Group; //!< alias
-            typedef Conservation::LNode       LNode; //!< alias
-            typedef Conservation::LRepo       LRepo; //!< alias
+            typedef Conservation::Laws::Group Group;    //!< alias
+            typedef Conservation::LNode       LNode;    //!< alias
+            typedef Conservation::LRepo       LRepo;    //!< alias
+            static const char * const         CallSign; //!< "Chemical::Warden"
 
             //__________________________________________________________________
             //

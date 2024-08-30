@@ -5,6 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        const char * const Warden:: CallSign = "Chemical::Warden";
 
         Warden:: ~Warden() noexcept {}
 

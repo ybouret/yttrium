@@ -137,4 +137,16 @@ namespace Yttrium
         }
         return true;
     }
+
+
+    char Sign:: ToChar(const SignType s) noexcept
+    {
+        switch(s)
+        {
+            case __Zero__: break;
+            case Negative: return '-';
+            case Positive: return '+';
+        }
+        return '0';
+    }
 }
