@@ -53,7 +53,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void prolog() noexcept; //! free all injected
+            void prolog() noexcept; //!< free all injected
 
             //! sanitize  equilibria
             void sanitize(XWritable &C, const Level L, XMLog &xml);
