@@ -68,10 +68,8 @@ namespace Yttrium
                     }
                 }
 
-                if(F.size>0)
-                {
-                    Y_XMLOG(xml, "(+) " << eq << " @" << F);
-                }
+                if(F.size<=0) continue;;
+                Y_XMLOG(xml, (direct ? "(>)" : "(<)") << ' '  << eq << " @" << F);
 
             }
 
