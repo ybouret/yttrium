@@ -68,9 +68,20 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
         ROAMING:
-            if(mine.unbounded.list.size<=0) return;
 
-            Y_XML_SECTION_OPT(xml, "unbounded", "size='" << mine.unbounded.list.size << "'");
+            // collect wobbly unbounded species
+            wobbly.free();
+            for(const SNode *sn = mine.unbounded.list.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                if( C[ sp.indx[L]].mantissa < 0 )
+                    wobbly << sp;
+
+            }
+
+            if(wobbly.size<=0) return;
+
+            Y_XML_SECTION_OPT(xml, "unbounded", wobbly);
 
 
         }
