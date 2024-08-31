@@ -67,6 +67,7 @@ namespace Yttrium
             const XReadable   & cc; //!< improved concentrations
             const xreal_t       gg; //!< total gain
             const XReadable   & dc; //!< delta to compute multiple trades
+            //const size_t        nc; //!< optional num components
 
         private:
             Y_DISABLE_ASSIGN(Trade);

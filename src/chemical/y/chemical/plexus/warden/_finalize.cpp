@@ -8,7 +8,7 @@ namespace Yttrium
     {
 
         size_t Warden:: roamingGather(ERepo       &target,
-                                       const EList &source) const
+                                      const EList &source) const
         {
             assert(0==target.size);
             for(const ENode *en=source.head;en;en=en->next)
@@ -37,7 +37,7 @@ namespace Yttrium
             assert(ff.xi.mantissa>0);
             assert(ff->size>0);
 
-            // increase
+            // increase species with xi
             {
                 const xreal_t xi = ff.xi;
                 for(const Actor *a=ac->head;a;a=a->next)
@@ -47,7 +47,7 @@ namespace Yttrium
                 }
             }
 
-            // vanish
+            // vanishing species
             for(const SNode *sn=ff->head;sn;sn=sn->next)
             {
                 cc[ (**sn).indx[SubLevel] ].ldz();
@@ -79,7 +79,7 @@ namespace Yttrium
                     case Nebulous:
                     case Standard:
                         throw Specific::Exception(CallSign, "no possible roaming trade for '%s", eq.name.c_str());
-                   
+
                     case ReacOnly:
                         ac = &eq.reac;
                         ro = true;
@@ -109,7 +109,7 @@ namespace Yttrium
                     }
                 }
 
-                if(F.size<=0) 
+                if(F.size<=0)
                 {
                     Y_XMLOG(xml, "(-) " << eq);
                     continue;
@@ -137,15 +137,20 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 Regularize(cc, *ac, ff);
 
-
+                //--------------------------------------------------------------
+                //
+                //
                 // generate dc and gain
+                //
+                //
+                //--------------------------------------------------------------
                 xadd.free();
                 for(const Actor *a = (*ac)->head; a; a=a->next)
                 {
-                    const Species &      sp = a->sp;
-                    const size_t * const id = sp.indx;
-                    const size_t         ii = id[SubLevel];
-                    const size_t         II = id[L];
+                    const Species &      sp   = a->sp;
+                    const size_t * const id   = sp.indx;
+                    const size_t         ii   = id[SubLevel];
+                    const size_t         II   = id[L];
                     const xreal_t        cOld = C[II];
                     const xreal_t        cNew = cc[ii];
                     if(cOld.mantissa<0) xadd << -cOld;
@@ -154,9 +159,10 @@ namespace Yttrium
                 }
                 const xreal_t gg = xadd.sum();
 
-                Y_XMLOG(xml, (ro ? "(<)" : "(>)") << ' '  << eq << " @" << ff << " => gain = " << real_t(gg) << " / #=" << F.size);
+                Y_XMLOG(xml, (ro ? "(<)" : "(>)") << ' '  << eq << " @" << ff << " => gain = " << real_t(gg) << " /  " << F);
 
-
+                const Trade tr(eq,cc,gg,dc);
+                trades << tr;
             }
 
         }
@@ -164,7 +170,14 @@ namespace Yttrium
 
         void Warden:: finalize(XWritable &C, const Level L, XMLog &xml)
         {
+        FINALIZE:
+            //------------------------------------------------------------------
+            //
+            //
             // collect wobbly unbounded species
+            //
+            //
+            //------------------------------------------------------------------
             wobbly.free();
             for(const SNode *sn = mine.unbounded.list.head;sn;sn=sn->next)
             {
@@ -180,7 +193,13 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "unbounded", wobbly);
 
-            // collect concerned eqs
+            //------------------------------------------------------------------
+            //
+            //
+            // collect reachable eqs
+            //
+            //
+            //------------------------------------------------------------------
             ERepo  reacOnly(fund.ebank);
             ERepo  prodOnly(fund.ebank);
             size_t reachable = roamingGather(reacOnly, mine.roaming.reacOnly);
@@ -192,11 +211,33 @@ namespace Yttrium
             if(!reachable) throw Specific::Exception(CallSign, "no reachable roaming equilbrium!");
 
 
+            //------------------------------------------------------------------
+            //
+            //
+            // build one-sided trades
+            //
+            //
+            //------------------------------------------------------------------
             trades.free();
             roamingTrades(reacOnly.head,C,L,xml);
             roamingTrades(prodOnly.head,C,L,xml);
 
 
+            if(trades.size()<=0) throw Specific::Exception(CallSign, "no valid roaming equilbrium!");
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            // apply most promising trade
+            //
+            //
+            //------------------------------------------------------------------
+            HeapSort::Call(trades,Trade::Compare);
+            const Trade &tr = trades.head();
+            Y_XMLOG(xml, "($) " << tr);
+            mine.transfer(C, L, tr.cc, SubLevel);
+            goto FINALIZE;
         }
 
 
