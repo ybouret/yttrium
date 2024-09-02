@@ -13,15 +13,36 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Set of Wardens
+        //
+        //
+        //______________________________________________________________________
         class Wardens : public Warden::Set
         {
         public:
-            
-            explicit Wardens(const Clusters &);
-            virtual ~Wardens() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            void operator()(const Clusters &cls,
-                            XWritable      &C,
+            explicit Wardens(const Clusters &); //!< setup for PERSISTENT clusters
+            virtual ~Wardens() noexcept;        //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            //! methods
+            //
+            //__________________________________________________________________
+
+            //! apply to all registered clusters
+            void operator()(XWritable      &C,
                             XWritable      &dC,
                             const Level     L,
                             XMLog          &xml);

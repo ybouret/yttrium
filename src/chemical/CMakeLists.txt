@@ -10,6 +10,7 @@ chemical/plexus
 chemical/plexus/cluster
 chemical/plexus/cluster/conservation
 chemical/plexus/warden
+chemical/plexus/warden/code
 )
 
 add_subdirectory(tests)

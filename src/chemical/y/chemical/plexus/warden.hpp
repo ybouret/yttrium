@@ -37,8 +37,8 @@ namespace Yttrium
             typedef Conservation::LNode       LNode;    //!< alias
             typedef Conservation::LRepo       LRepo;    //!< alias
             static const char * const         CallSign; //!< "Chemical::Warden"
-            typedef ArkPtr<KeyType,Warden>    Ptr;
-            typedef SuffixSet<KeyType,Ptr>    Set;
+            typedef ArkPtr<KeyType,Warden>    Ptr;      //!< alias
+            typedef SuffixSet<KeyType,Ptr>    Set;      //!< alias
 
             //__________________________________________________________________
             //
@@ -63,6 +63,7 @@ namespace Yttrium
             //! transfer accumulated correction
             void epilog(XWritable &dC, const Level L);
             
+            //! prolog/sanitize/epilog
             void operator()(XWritable      &C,
                             XWritable      &dC,
                             const Level     L,

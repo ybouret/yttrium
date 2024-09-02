@@ -57,19 +57,16 @@ Y_UTEST(plexus)
     XVector C0(lib->size(),0);
     XVector dC(C0);
 
-
-
     for(size_t iter=0;iter<1;++iter)
     {
         std::cerr << std::endl << "--" << std::endl;
         plexus.conc(C0,0.3,0.5);
         XVector     C1(C0);
         lib(std::cerr << "C0=","\t[",C0,"]");
-        ward(cls,C1,dC,TopLevel,xml);
+        ward(C1,dC,TopLevel,xml);
         lib(std::cerr << "C0=","\t[",C0,"]");
         lib(std::cerr << "C1=","\t[",C1,"]");
         lib(std::cerr << "dC=","\t[",dC,"]");
-
     }
 
 

@@ -17,9 +17,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //----------------------------------------------------------------------
         typedef double                      real_t;    //!< machine real
         typedef XReal<real_t>               xreal_t;   //!< soft real
 
+        //----------------------------------------------------------------------
         typedef Readable<xreal_t>           XReadable; //!< alias
         typedef Writable<xreal_t>           XWritable; //!< alias
         typedef Memory::Dyadic              XMemory;   //!< alias
@@ -28,15 +30,14 @@ namespace Yttrium
         typedef CxxArray<xreal_t,XMemory>   XArray;    //!< alias
         typedef CxxSeries<xreal_t,XMemory>  XSeries;   //!< alias
 
-
-        typedef MKL::Antelope::Add<xreal_t> XAdd; //!< alias
-        typedef MKL::Antelope::Mul<xreal_t> XMul; //!< alias
-
+        //----------------------------------------------------------------------
+        typedef MKL::Antelope::Add<xreal_t> XAdd;   //!< alias
+        typedef MKL::Antelope::Mul<xreal_t> XMul;   //!< alias
         typedef CxxArray<XAdd,XMemory>      XSwell; //!< alias
 
-
-        typedef LittleEndianKey     KeyType;
-        typedef LittleEndianAddress KeyAddr;
+        //----------------------------------------------------------------------
+        typedef LittleEndianKey             KeyType; //!< alias
+        typedef LittleEndianAddress         KeyAddr; //!< alias
 
     }
 }
