@@ -230,18 +230,21 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml, "Topology");
-                XMatrix &topo = Coerce(topology);
-                topo.make(size,species.size);
+                Matrix<int> &itopo = Coerce(iTopo);
+                XMatrix     &xtopo = Coerce(xTopo);
+                xtopo.make(size,species.size);
+                itopo.make(size,species.size);
                 for(const ENode *en=head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    XWritable         &nu = topo[eq.indx[SubLevel]];
-                    eq.topology(nu,SubLevel);
+                    const size_t       ei = eq.indx[SubLevel];
+                    XWritable         &xnu = xtopo[ei];
+                    Writable<int>     &inu = itopo[ei];
+                    eq.topology(xnu,SubLevel);
+                    eq.topology(inu,SubLevel);
                     if(xml.verbose)
                     {
-                        CxxArray<int> tmp(species.size);
-                        eq.topology(tmp,SubLevel);
-                        uuid.pad( xml() << eq.name, eq) << " : " << tmp << std::endl;
+                        uuid.pad( xml() << eq.name, eq) << " : " << inu << std::endl;
                     }
                 }
             }

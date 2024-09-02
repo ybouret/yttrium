@@ -118,7 +118,8 @@ namespace Yttrium
             const EList            limited;   //!< limited equilibria
             const Roaming          roaming;   //!< roaming equilibria
             const Lists            order;     //!< eqs per order
-            const XMatrix          topology;  //!< full topology
+            const Matrix<int>      iTopo;     //!< full integer topology
+            const XMatrix          xTopo;     //!< full topology
             const Matrix<bool>     attached;  //!< boolean attached
             const Matrix<bool>     detached;  //!< boolean detached of limited equilibria
             Cluster *              next;      //!< for list
