@@ -7,7 +7,7 @@
 #include "y/chemical/plexus/warden/trims.hpp"
 #include "y/chemical/plexus/warden/fixed.hpp"
 #include "y/chemical/plexus/warden/trade.hpp"
-#include "y/chemical/plexus/cluster.hpp"
+#include "y/chemical/plexus/joint.hpp"
 
 
 namespace Yttrium
@@ -24,7 +24,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Warden : public Quantized
+        class Warden : public Joint
         {
         public:
             //__________________________________________________________________
@@ -68,14 +68,12 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Cluster      &mine;    //!< my cluster
             const Group * const head;    //!< first group
             const size_t        rows;    //!< laws max group size
             const size_t        cols;    //!< max species in sub-level
             XAdd                xadd;    //!< for internal computations
             XMatrix             conc;    //!< workspace for fixed concentrations
             Fixed::Series       jail;    //!< fixed
-            const size_t        nspc;    //!< num species
             XSwell              cinj;    //!< injected accumulator
             Fund                fund;    //!< shared memories
             LRepo               lawz;    //!< laws with zero values

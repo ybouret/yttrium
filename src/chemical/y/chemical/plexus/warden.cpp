@@ -11,14 +11,13 @@ namespace Yttrium
 
 
         Warden:: Warden(const Cluster &cluster) :
-        mine(cluster),
+        Joint(cluster),
         head( mine.laws.isValid() ? mine.laws->groups.head : 0),
         rows( (0!=head) ? mine.laws->maxGroupSize : 0 ),
-        cols( (0!=head) ? mine.species.size       : 0 ),
+        cols( (0!=head) ? nspc                    : 0 ),
         xadd( cols ),
         conc( rows, cols),
         jail( rows ),
-        nspc( mine.species.size ),
         cinj( nspc ),
         fund(),
         lawz(fund.lbank),
