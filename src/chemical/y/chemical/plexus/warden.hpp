@@ -9,7 +9,6 @@
 #include "y/chemical/plexus/warden/trade.hpp"
 #include "y/chemical/plexus/cluster.hpp"
 
-#include "y/sort/heap.hpp"
 
 namespace Yttrium
 {
@@ -17,7 +16,6 @@ namespace Yttrium
     {
 
         
-
         //______________________________________________________________________
         //
         //

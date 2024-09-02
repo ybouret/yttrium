@@ -1,4 +1,6 @@
 #include "y/chemical/plexus/warden.hpp"
+#include "y/sort/heap.hpp"
+
 
 namespace Yttrium
 {
