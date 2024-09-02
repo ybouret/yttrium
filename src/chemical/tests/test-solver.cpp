@@ -201,6 +201,8 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
+            
+
 
             // select family
             for(size_t i=1;i<=pps.size();++i)
