@@ -65,10 +65,14 @@ Y_UTEST(plexus)
         {
             std::cerr << std::endl << "--" << std::endl;
             plexus.conc(C0,0.3,0.5);
+            XVector     C1(C0);
             warden.prolog();
             lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.sanitize(C0,TopLevel,xml);
-            lib(std::cerr << "C1=","\t[",C0,"]");
+            warden.sanitize(C1,TopLevel,xml);
+            warden.epilog(dC,TopLevel);
+            lib(std::cerr << "C0=","\t[",C0,"]");
+            lib(std::cerr << "C1=","\t[",C1,"]");
+            lib(std::cerr << "dC=","\t[",dC,"]");
 
         }
 
