@@ -63,6 +63,10 @@ namespace Yttrium
             //! transfer accumulated correction
             void epilog(XWritable &dC, const Level L);
             
+            void operator()(XWritable      &C,
+                            XWritable      &dC,
+                            const Level     L,
+                            XMLog          &xml);
 
             //__________________________________________________________________
             //

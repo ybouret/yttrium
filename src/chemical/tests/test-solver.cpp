@@ -10,8 +10,8 @@ using namespace Chemical;
 
 Y_UTEST(solver)
 {
-    typedef ArkPtr<Joint::KeyType,Joint>   JPtr;
-    typedef SuffixSet<Joint::KeyType,JPtr> JSet;
+    typedef ArkPtr<KeyType,Joint>   JPtr;
+    typedef SuffixSet<KeyType,JPtr> JSet;
 
     Plexus plexus(true);
     for(int i=1;i<argc;++i)

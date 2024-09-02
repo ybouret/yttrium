@@ -20,6 +20,12 @@ namespace Yttrium
             explicit Wardens(const Clusters &);
             virtual ~Wardens() noexcept;
 
+            void operator()(const Clusters &cls,
+                            XWritable      &C,
+                            XWritable      &dC,
+                            const Level     L,
+                            XMLog          &xml);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wardens);
         };

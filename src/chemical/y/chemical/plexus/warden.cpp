@@ -47,6 +47,17 @@ namespace Yttrium
         }
 
 
+        void Warden:: operator()(XWritable      &C,
+                                 XWritable      &dC,
+                                 const Level     L,
+                                 XMLog          &xml)
+        {
+            prolog();
+            sanitize(C, L, xml);
+            epilog(dC,L);
+        }
+
+
     }
 
 

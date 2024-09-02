@@ -5,7 +5,6 @@
 #define Y_Chemical_Joint_Included 1
 
 #include "y/chemical/plexus/cluster.hpp"
-#include "y/associative/little-endian-address.hpp"
 
 namespace Yttrium
 {
@@ -15,9 +14,6 @@ namespace Yttrium
         class Joint : public Quantized, public Counted
         {
         public:
-            typedef LittleEndianKey     KeyType;
-            typedef LittleEndianAddress KeyAddr;
-
             explicit Joint(const Cluster &cluster) noexcept;
             virtual ~Joint() noexcept;
 

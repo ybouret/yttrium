@@ -1,4 +1,4 @@
-#include "y/chemical/plexus/warden.hpp"
+#include "y/chemical/plexus/wardens.hpp"
 #include "y/chemical/plexus.hpp"
 #include "y/utest/run.hpp"
 
@@ -50,6 +50,7 @@ Y_UTEST(plexus)
     std::cerr << "eqs=" << eqs << std::endl;
 
     Clusters        &cls = plexus.assemble();
+    Wardens          ward(cls);
     //const XReadable &K   = cls.K(0);
 
 
@@ -57,27 +58,22 @@ Y_UTEST(plexus)
     XVector dC(C0);
 
 
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+
+    for(size_t iter=0;iter<1;++iter)
     {
-
-        Warden warden(*cl);
-        for(size_t iter=0;iter<1;++iter)
-        {
-            std::cerr << std::endl << "--" << std::endl;
-            plexus.conc(C0,0.3,0.5);
-            XVector     C1(C0);
-            warden.prolog();
-            lib(std::cerr << "C0=","\t[",C0,"]");
-            warden.sanitize(C1,TopLevel,xml);
-            warden.epilog(dC,TopLevel);
-            lib(std::cerr << "C0=","\t[",C0,"]");
-            lib(std::cerr << "C1=","\t[",C1,"]");
-            lib(std::cerr << "dC=","\t[",dC,"]");
-
-        }
-
+        std::cerr << std::endl << "--" << std::endl;
+        plexus.conc(C0,0.3,0.5);
+        XVector     C1(C0);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        ward(cls,C1,dC,TopLevel,xml);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        lib(std::cerr << "C1=","\t[",C1,"]");
+        lib(std::cerr << "dC=","\t[",dC,"]");
 
     }
+
+
+
 #endif
 
 

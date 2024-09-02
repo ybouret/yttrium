@@ -24,6 +24,26 @@ namespace Yttrium
         }
 
 
+        void Wardens:: operator()(const Clusters &cls,
+                                  XWritable      &C,
+                                  XWritable      &dC,
+                                  const Level     L,
+                                  XMLog          &xml)
+        {
+
+            for(const Cluster *cl=cls->head;cl;cl=cl->next)
+            {
+                const Cluster       &     mine = *cl;
+                const LittleEndianAddress clk(mine);
+                Warden::Ptr *             ppw  = search(clk);
+                if(!ppw) throw Specific::Exception(Name,"foreing cluster provided");
+                Warden &w = **ppw;
+
+                w(C,dC,L,xml);
+            }
+
+        }
+
     }
 
 }

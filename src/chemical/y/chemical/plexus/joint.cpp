@@ -17,7 +17,7 @@ namespace Yttrium
         {
         }
         
-        const Joint::KeyType & Joint:: key() const noexcept
+        const KeyType & Joint:: key() const noexcept
         {
             return key_;
         }

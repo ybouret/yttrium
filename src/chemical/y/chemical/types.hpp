@@ -11,6 +11,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/container/cxx/series.hpp"
+#include "y/associative/little-endian-address.hpp"
 
 namespace Yttrium
 {
@@ -34,7 +35,9 @@ namespace Yttrium
         typedef CxxArray<XAdd,XMemory>      XSwell; //!< alias
 
 
-        
+        typedef LittleEndianKey     KeyType;
+        typedef LittleEndianAddress KeyAddr;
+
     }
 }
 
