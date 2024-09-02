@@ -15,7 +15,7 @@ namespace Yttrium
             //
             //--------------------------------------------------------------
             size_t             unbalanced = 0;
-            const AddressBook &cdb  = mine.conserved.book;
+            const AddressBook &cdb        = mine.conserved.book;
             trades.free();
             wobbly.free();
 
@@ -176,6 +176,7 @@ namespace Yttrium
                     if( C[ sp.indx[L] ].mantissa >= 0 ) continue;
                     wobbly << sp;
                 }
+                assert(wobbly.size>0);
                 return unbalanced;
             }
             else

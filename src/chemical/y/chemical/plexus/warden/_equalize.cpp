@@ -22,13 +22,13 @@ namespace Yttrium
             // process limited equilibria
             //
             //------------------------------------------------------------------
-            const size_t unbalanced = getUnbalanced(C, L, xml);
+            const size_t unbalanced = getUnbalanced(C, L, xml); // unbalanced limited
             Y_XMLOG(xml, "(#) unbalanced = " << unbalanced);
             if(unbalanced<=0)
             {
                 //----------------------------------------------------------
                 //
-                // numerical succes, check lawz
+                // numerical succes, check lawz to enforce
                 //
                 //----------------------------------------------------------
                 assert(0==trades.size());

@@ -18,16 +18,17 @@ namespace Yttrium
         xadd( cols ),
         conc( rows, cols),
         jail( rows ),
-        cinj( cols ),
+        nspc( mine.species.size ),
+        cinj( nspc ),
         fund(),
         lawz(fund.lbank),
         trms(fund),
         best(fund.sbank),
         wobbly(fund.sbank),
-        ctrade(mine.size,mine.species.size),
-        dtrade(mine.size,mine.species.size),
+        ctrade(mine.size,nspc),
+        dtrade(mine.size,nspc),
         trades(mine.size),
-        xaccum(mine.species.size)
+        xaccum(nspc)
         {
         }
 
@@ -35,6 +36,18 @@ namespace Yttrium
         {
             cinj.forEach( & XAdd::free );
         }
+
+        void Warden:: epilog(XWritable &dC, const Level L)
+        {
+            for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+            {
+                const Species &      sp = **sn;
+                const size_t * const id = sp.indx;
+                dC[ id[L] ] = cinj[ id[SubLevel] ].sum();
+            }
+            
+        }
+
 
     }
 

@@ -60,7 +60,9 @@ namespace Yttrium
             //! sanitize  equilibria
             void sanitize(XWritable &C, const Level L, XMLog &xml);
 
-
+            //! transfer accumulated correction
+            void epilog(XWritable &dC, const Level L);
+            
 
             //__________________________________________________________________
             //
@@ -75,6 +77,7 @@ namespace Yttrium
             XAdd                xadd;    //!< for internal computations
             XMatrix             conc;    //!< workspace for fixed concentrations
             Fixed::Series       jail;    //!< fixed
+            const size_t        nspc;    //!< num species
             XSwell              cinj;    //!< injected accumulator
             Fund                fund;    //!< shared memories
             LRepo               lawz;    //!< laws with zero values

@@ -19,6 +19,7 @@ namespace Yttrium
                     const Species &sp = **sn;
                     if( eq.query(sp) )
                     {
+                        // eq has a wobbly species!
                         target << eq;
                         break;
                     }
@@ -37,7 +38,7 @@ namespace Yttrium
             assert(ff.xi.mantissa>0);
             assert(ff->size>0);
 
-            // increase species with xi
+            // increase actors's concentrations with xi
             {
                 const xreal_t xi = ff.xi;
                 for(const Actor *a=ac->head;a;a=a->next)
@@ -47,7 +48,7 @@ namespace Yttrium
                 }
             }
 
-            // vanishing species
+            // numerical vanishing species
             for(const SNode *sn=ff->head;sn;sn=sn->next)
             {
                 cc[ (**sn).indx[SubLevel] ].ldz();
@@ -69,7 +70,6 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-
                 const Equilibrium &eq = **en;
                 const Actors  *    ac  = 0;
                 bool               ro  = false;
@@ -118,7 +118,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 //
                 //
-                // select highest frontier
+                // select highest frontier => best correction
                 //
                 //
                 //--------------------------------------------------------------

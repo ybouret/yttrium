@@ -41,7 +41,7 @@ namespace Yttrium
                 }
                 const SNode * const node = mine.conserved.list.head;
 
-                if(xml.verbose)
+                if(false)
                 {
                     for(const SNode *sn = node;sn;sn=sn->next)
                     {
