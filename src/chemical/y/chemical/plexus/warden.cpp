@@ -24,9 +24,9 @@ namespace Yttrium
         trms(fund),
         best(fund.sbank),
         wobbly(fund.sbank),
-        ctrade(mine.size,nspc),
-        dtrade(mine.size,nspc),
-        trades(mine.size),
+        ctrade(neqs,nspc),
+        dtrade(neqs,nspc),
+        trades(neqs),
         xaccum(nspc)
         {
         }
@@ -44,7 +44,6 @@ namespace Yttrium
                 const size_t * const id = sp.indx;
                 dC[ id[L] ] = cinj[ id[SubLevel] ].sum();
             }
-            
         }
 
 

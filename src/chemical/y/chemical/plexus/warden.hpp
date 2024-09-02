@@ -37,6 +37,8 @@ namespace Yttrium
             typedef Conservation::LNode       LNode;    //!< alias
             typedef Conservation::LRepo       LRepo;    //!< alias
             static const char * const         CallSign; //!< "Chemical::Warden"
+            typedef ArkPtr<KeyType,Warden>    Ptr;
+            typedef SuffixSet<KeyType,Ptr>    Set;
 
             //__________________________________________________________________
             //
