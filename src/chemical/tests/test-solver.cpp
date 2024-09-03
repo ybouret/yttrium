@@ -70,6 +70,20 @@ namespace Yttrium
                 return Comparison::Decreasing(lhs.ax, rhs.ax);
             }
 
+            void step(XSwell &sw) const
+            {
+                size_t             nc  = eq->size();
+                for(Equilibrium::ConstIterator it=eq->begin();nc>0;--nc,++it)
+                {
+                    const Component     &cm = **it;
+                    const Species       &sp = cm.sp;
+                    const size_t * const id = sp.indx;
+
+                    sw[ id[SubLevel] ] << cm.xn * xi;
+                }
+            }
+
+
             const Situation     st;
             const Equilibrium & eq;
             const xreal_t       ek;
@@ -104,6 +118,7 @@ namespace Yttrium
             Cex(nspc),
             Cws(nspc),
             ddC(nspc),
+            inc(nspc),
             xlu(dof)
             {
             }
@@ -115,6 +130,7 @@ namespace Yttrium
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
             xreal_t  objFunc(const XReadable &C, const Level L);
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
+            void     odeStep(XWritable &C, const Level L, XMLog &xml);
 
             const XReadable &probe(const xreal_t u)
             {
@@ -131,6 +147,25 @@ namespace Yttrium
                 }
                 return C;
             }
+
+            void basisToRate(XWritable &rate)
+            {
+                // initialize inc
+                inc.forEach( &XAdd::free );
+
+                // collect of increases from current basis
+                for(const PNode *pn=basis.head;pn;pn=pn->next)
+                    (**pn).step(inc);
+
+                // deduce rate
+                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+                {
+                    const size_t j = (**sn).indx[ SubLevel ];
+                    rate[j] = inc[j].sum();
+                }
+
+            }
+
 
             xreal_t operator()(const xreal_t u)
             {
@@ -150,6 +185,7 @@ namespace Yttrium
             XArray             Cex;
             XArray             Cws;
             XArray             ddC;
+            XSwell             inc;
             MKL::LU<xreal_t>   xlu;
 
         private:
@@ -369,7 +405,7 @@ namespace Yttrium
             }
 
             nrStage(C, L, xml);
-
+            odeStep(C, L, xml);
 
 
 
@@ -503,6 +539,21 @@ namespace Yttrium
             }
 
         }
+
+
+
+        void Solver:: odeStep(XWritable &C, const Level L, XMLog &xml)
+        {
+            const size_t n = basis.size;
+            const size_t m = nspc;
+
+            Y_XML_SECTION_OPT(xml, "odeStep", " n='" << n << "' m='" << m << "'");
+
+            // dC = Nu' * xi
+            basisToRate(ddC);
+            Y_XMLOG(xml, "ddC=" << ddC );
+        }
+
 
     }
 }
