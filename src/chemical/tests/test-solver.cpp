@@ -127,6 +127,14 @@ namespace Yttrium
             Y_XML_SECTION(xml, "process");
 
             size_t cycle = 0;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // looking for running/crucial solutions
+            //
+            //
+            //------------------------------------------------------------------
             ortho.free();
             basis.free();
         PROSPECT:
@@ -136,6 +144,11 @@ namespace Yttrium
                 pps.free();
                 bool emergency = false; // keep only crucial otherwise
 
+                //--------------------------------------------------------------
+                //
+                // loop over eqs
+                //
+                //------------------------------------------------------------------
                 for(const ENode *en=mine.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -167,15 +180,27 @@ namespace Yttrium
                     pps << pro;
                 }
 
-                if(pps.size() <= 0 )
+                //--------------------------------------------------------------
+                //
+                // special case: all blocks
+                //
+                //--------------------------------------------------------------
+                if( pps.size() <= 0 )
                 {
                     Y_XMLOG(xml, "[Jammed]");
                     return;
                 }
 
-
+                //--------------------------------------------------------------
+                //
+                // in case of emergency: move and try again
+                //
+                //--------------------------------------------------------------
                 if(emergency)
                 {
+                    assert(pps.size()>0);
+
+                    // remove not crucial
                     for(size_t i=pps.size();i>0;--i) {
                         if( Crucial != pps[i].st ) {
                             assert(Running==pps[i].st);
@@ -184,27 +209,38 @@ namespace Yttrium
                     }
 
                     Y_XML_SECTION_OPT(xml, "emergency","count='"<<pps.size() << "'");
-
                     assert( pps.size() > 0);
 
+                    // sort remaingin crucial
                     HeapSort::Call(pps,Prospect::Compare);
                     showProspects(xml,Ktop);
 
                     const Prospect &pro = pps.head();
                     mine.transfer(C, L, pro.cc, SubLevel);
-                    goto PROSPECT;
+                    goto PROSPECT; // until no crucial was found
 
                 }
+
             }
 
+            //------------------------------------------------------------------
             //
+            //
+            // looking for running/crucial solutions
+            //
+            //
+            //------------------------------------------------------------------
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
             
-
-
+            //------------------------------------------------------------------
+            //
+            //
             // select family
+            //
+            //
+            //------------------------------------------------------------------
             for(size_t i=1;i<=pps.size();++i)
             {
                 const Prospect    &   pro = pps[i];
