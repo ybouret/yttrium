@@ -401,7 +401,7 @@ namespace Yttrium
                 }
             }
             //Y_XMLOG(xml, "Phi=" << Phi);
-            //Y_XMLOG(xml, "Nu="  << Nu);
+            Y_XMLOG(xml, "Nu="  << Nu);
             Y_XMLOG(xml, "Chi=" << Chi);
             Y_XMLOG(xml, "lhs=" << xi);
 
@@ -413,6 +413,9 @@ namespace Yttrium
 
             xlu.solve(Chi,xi);
             Y_XMLOG(xml, "xi =" << xi);
+            mine.transfer(Cin, SubLevel, C, L);
+            bool    abate = false;
+            xreal_t scale = 1.0;
 
             for(size_t j=m;j>0;--j)
             {
@@ -421,10 +424,29 @@ namespace Yttrium
                 {
                     xadd << Nu[k][j] * xi[k];
                 }
-                ddC[j] = xadd.sum();
+                const xreal_t d = (ddC[j] = xadd.sum());
+                if(d.mantissa<0)
+                {
+                    const xreal_t c = Cin[j];
+                    const xreal_t f = c/(-d);
+                    if(f<=scale)
+                    {
+                        abate = true;
+                        scale = f;
+                    }
+                }
             }
-            Y_XMLOG(xml, "ddC =" << ddC);
 
+            Y_XMLOG(xml, "abate = " << abate);
+            Y_XMLOG(xml, "scale = " << scale);
+
+            if(xml.verbose)
+            {
+                for(size_t j=1;j<=m;++j)
+                {
+                    xml() << "C = " << std::setw(15) << real_t(Cin[j]) << " | dC = " << std::setw(15) << real_t(ddC[j]) << std::endl;
+                }
+            }
 
 
         }
@@ -470,7 +492,7 @@ Y_UTEST(solver)
             solver.process(C0, TopLevel, K, xml);
 
             lib(std::cerr << "C1=","\t[",C0,"]");
-            
+
         }
     }
 
