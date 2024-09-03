@@ -438,7 +438,7 @@ namespace Yttrium
             }
 
             Y_XMLOG(xml, "abate = " << abate);
-            Y_XMLOG(xml, "scale = " << scale);
+            Y_XMLOG(xml, "scale = " << real_t(scale) );
 
             if(xml.verbose)
             {
