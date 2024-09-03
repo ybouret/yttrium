@@ -55,6 +55,13 @@ namespace Yttrium
                 return os;
             }
 
+            xreal_t affinity(XMul            &X,
+                             const XReadable &C,
+                             const Level      L) const
+            {
+                return eq.affinity(ek,X,C,L);
+            }
+
             static int Compare(const Prospect &lhs, const Prospect &rhs) noexcept
             {
                 return Comparison::Decreasing(lhs.ax, rhs.ax);
@@ -233,26 +240,43 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
-            
-            //------------------------------------------------------------------
-            //
-            //
-            // select family
-            //
-            //
-            //------------------------------------------------------------------
+
             for(size_t i=1;i<=pps.size();++i)
             {
-                const Prospect    &   pro = pps[i];
-                const Equilibrium &   eq  = pro.eq;
-                const size_t          ei  = eq.indx[SubLevel];
-                const Readable<int> & nu  = mine.iTopo[ei];
-                if(ortho.wouldAccept(nu))
+                pps[i].eq.mustSupport(C,L);
+            }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // select family/basis of running equilibria
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                size_t i=1;
+                for(;i<=pps.size();++i)
                 {
-                    ortho.expand();
-                    basis << eq;
-                    if(ortho.size>=dof) break;
+                    const Prospect    &   pro = pps[i];
+                    const Equilibrium &   eq  = pro.eq;
+                    const size_t          ei  = eq.indx[SubLevel];
+                    const Readable<int> & nu  = mine.iTopo[ei];
+                    eq.mustSupport(C,L);
+                    if(ortho.wouldAccept(nu))
+                    {
+                        ortho.expand();
+                        basis << eq;
+                        if(ortho.size>=dof) break;
+                    }
                 }
+
+                for(++i;i<=pps.size();++i)
+                {
+                    const Prospect    &   pro = pps[i];
+                    const Equilibrium &   eq  = pro.eq;
+                    eq.mustSupport(C,L);
+                }
+
             }
 
             Y_XMLOG(xml, "family=" << basis);
