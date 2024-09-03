@@ -9,6 +9,7 @@
 #include "y/orthogonal/family.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/algebra/lu.hpp"
+#include "y/stream/libc/output.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -101,6 +102,7 @@ namespace Yttrium
             basis(pbank),
             Cin(nspc),
             Cex(nspc),
+            Cws(nspc),
             ddC(nspc),
             xlu(dof)
             {
@@ -114,6 +116,28 @@ namespace Yttrium
             xreal_t  objFunc(const XReadable &C, const Level L);
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
 
+            const XReadable &probe(const xreal_t u)
+            {
+                const xreal_t one = 1;
+                const xreal_t v   = one-u;
+                XWritable    &C   = Cws;
+                for(size_t j=nspc;j>0;--j)
+                {
+                    const xreal_t c0 = Cin[j];
+                    const xreal_t c1 = Cex[j];
+                    xreal_t cmin=c0, cmax=c1;
+                    if(cmax<cmin) Swap(cmin,cmax);
+                    C[j] = Clamp(cmin, c0*v + c1*u, cmax);
+                }
+                return C;
+            }
+
+            xreal_t operator()(const xreal_t u)
+            {
+                return objFunc( probe(u), SubLevel);
+            }
+
+
             Aftermath          afm;
             XMatrix            ceq;
             Prospect::Series   pps;
@@ -124,6 +148,7 @@ namespace Yttrium
             PRepo              basis;
             XArray             Cin;
             XArray             Cex;
+            XArray             Cws;
             XArray             ddC;
             MKL::LU<xreal_t>   xlu;
 
@@ -448,6 +473,35 @@ namespace Yttrium
                 }
             }
 
+            if(abate)
+            {
+                scale *= 0.99;
+                for(size_t j=m;j>0;--j)
+                {
+                    Cex[j] = Cin[j] + scale * ddC[j];
+                }
+            }
+            else
+            {
+                for(size_t j=m;j>0;--j)
+                {
+                    Cex[j] = Cin[j] + ddC[j];
+                }
+            }
+
+            Solver &F = *this;
+            std::cerr << "Ain = " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
+            std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(F(1)) << std::endl;
+
+            {
+                OutputFile fp("nrstage.dat");
+                const size_t np = 1000;
+                for(size_t i=0;i<=np;++i)
+                {
+                    const real_t u = double(i)/np;
+                    fp("%.15g %.15g\n", u, real_t(F(u)));
+                }
+            }
 
         }
 
