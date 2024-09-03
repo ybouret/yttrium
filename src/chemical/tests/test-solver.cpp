@@ -7,6 +7,7 @@
 #include "y/sort/heap.hpp"
 
 #include "y/orthogonal/family.hpp"
+#include "y/system/exception.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -230,6 +231,8 @@ namespace Yttrium
 
             }
 
+            assert(pps.size()>0);
+
             //------------------------------------------------------------------
             //
             //
@@ -241,10 +244,6 @@ namespace Yttrium
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
 
-            for(size_t i=1;i<=pps.size();++i)
-            {
-                pps[i].eq.mustSupport(C,L);
-            }
 
             //------------------------------------------------------------------
             //
@@ -257,10 +256,11 @@ namespace Yttrium
                 size_t i=1;
                 for(;i<=pps.size();++i)
                 {
-                    const Prospect    &   pro = pps[i];
+                    const Prospect    &   pro = pps[i]; assert(Running==pro.st);
                     const Equilibrium &   eq  = pro.eq;
                     const size_t          ei  = eq.indx[SubLevel];
                     const Readable<int> & nu  = mine.iTopo[ei];
+
                     eq.mustSupport(C,L);
                     if(ortho.wouldAccept(nu))
                     {
@@ -272,7 +272,7 @@ namespace Yttrium
 
                 for(++i;i<=pps.size();++i)
                 {
-                    const Prospect    &   pro = pps[i];
+                    const Prospect    &   pro = pps[i]; assert(Running==pro.st);
                     const Equilibrium &   eq  = pro.eq;
                     eq.mustSupport(C,L);
                 }
@@ -282,6 +282,27 @@ namespace Yttrium
             Y_XMLOG(xml, "family=" << basis);
 
 
+            //------------------------------------------------------------------
+            //
+            //
+            // select family/basis of running equilibria
+            //
+            //
+            //------------------------------------------------------------------
+            const size_t np = pps.size();
+            switch(np)
+            {
+                case 0: 
+                    throw Specific::Exception("here", "not possible");
+
+                case 1: {
+                    const Prospect &pro = pps.head();
+                    mine.transfer(C, L, pro.cc, SubLevel);
+                } return;
+
+                default:
+                    break;
+            }
 
         }
 
@@ -323,8 +344,8 @@ Y_UTEST(solver)
             lib(std::cerr << "C0=","\t[",C0,"]");
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
-
             solver.process(C0, TopLevel, K, xml);
+            lib(std::cerr << "C1=","\t[",C0,"]");
 
         }
     }
