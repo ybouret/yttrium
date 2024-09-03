@@ -101,6 +101,7 @@ namespace Yttrium
             basis(pbank),
             Cin(nspc),
             Cex(nspc),
+            ddC(nspc),
             xlu(dof)
             {
             }
@@ -123,6 +124,7 @@ namespace Yttrium
             PRepo              basis;
             XArray             Cin;
             XArray             Cex;
+            XArray             ddC;
             MKL::LU<xreal_t>   xlu;
 
         private:
@@ -412,6 +414,18 @@ namespace Yttrium
             xlu.solve(Chi,xi);
             Y_XMLOG(xml, "xi =" << xi);
 
+            for(size_t j=m;j>0;--j)
+            {
+                xadd.free();
+                for(size_t k=n;k>0;--k)
+                {
+                    xadd << Nu[k][j] * xi[k];
+                }
+                ddC[j] = xadd.sum();
+            }
+            Y_XMLOG(xml, "ddC =" << ddC);
+
+
 
         }
 
@@ -454,8 +468,9 @@ Y_UTEST(solver)
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
             solver.process(C0, TopLevel, K, xml);
-            lib(std::cerr << "C1=","\t[",C0,"]");
 
+            lib(std::cerr << "C1=","\t[",C0,"]");
+            
         }
     }
 
