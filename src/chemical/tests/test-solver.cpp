@@ -338,14 +338,13 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                xml() << "<family size='" << basis.size << "'>" << std::endl;
+                xml() << "<family size='" << basis.size << "' dof='" << dof << "'>" << std::endl;
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
                     xml() << "\t(+) " << (**pn).eq << std::endl;
                 }
                 xml() << "<family/>" << std::endl;
             }
-            //Y_XMLOG(xml, "family=" << basis);
 
 
             //------------------------------------------------------------------
