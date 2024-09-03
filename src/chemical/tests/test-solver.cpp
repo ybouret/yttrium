@@ -89,24 +89,33 @@ namespace Yttrium
             ceq(neqs,nspc),
             pps(neqs),
             dof(mine.Nu.rows),
+            obj(neqs),
             ortho(nspc,dof),
             ebank(),
-            basis(ebank)
+            basis(ebank),
+            Cin(nspc),
+            Cex(nspc)
             {
             }
 
             virtual ~Solver() noexcept {}
 
 
-            void process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
+            void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+            xreal_t  objFunc(const XReadable &C, const Level L);
+            void     nrStage(XWritable &C, const Level L, XMLog &xml);
 
             Aftermath          afm;
             XMatrix            ceq;
             Prospect::Series   pps;
             const size_t       dof;
+            XSeries            obj;
             Orthogonal::Family ortho;
             EBank              ebank;
             ERepo              basis;
+            XArray             Cin;
+            XArray             Cex;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
@@ -125,6 +134,19 @@ namespace Yttrium
 
 
         };
+
+        xreal_t Solver:: objFunc(const XReadable &C, const Level L)
+        {
+            obj.free();
+
+            for(size_t i=pps.size();i>0;--i)
+            {
+                obj << pps[i].affinity(afm.xmul,C,L);
+            }
+
+            return afm.xadd.normOf(obj);
+        }
+
 
         void Solver:: process(XWritable &       C,
                               const Level       L,
@@ -289,8 +311,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            const size_t np = pps.size();
-            switch(np)
+            switch( pps.size() )
             {
                 case 0: 
                     throw Specific::Exception("here", "not possible");
@@ -304,6 +325,62 @@ namespace Yttrium
                     break;
             }
 
+            nrStage(C, L, xml);
+
+
+
+
+        }
+
+
+        void Solver:: nrStage(XWritable &C, const Level L, XMLog &xml)
+        {
+            const size_t n = pps.size();
+            const size_t m = nspc;
+
+            Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            //
+            //
+            //------------------------------------------------------------------
+            XMatrix Phi(n,m);
+            XMatrix Nu(n,m);
+            {
+                size_t j=0;
+                for(size_t i=1;i<=n;++i)
+                {
+                    ++j;
+                    const Prospect    &pro = pps[i];
+                    const Equilibrium &eq  = pro.eq;
+                    XWritable         &phi = Phi[j];
+                    XWritable         &nu  = Nu[j];
+                    eq.drvsMassAction(pro.ek, phi, SubLevel, C, L, afm.xmul);
+                    eq.topology(nu, SubLevel);
+                }
+            }
+
+
+            XMatrix Chi(n,n);
+            XAdd   &xadd = afm.xadd;
+            for(size_t i=n;i>0;--i)
+            {
+                for(size_t j=n;j>0;--j)
+                {
+                    xadd.free();
+                    for(size_t k=m;k>0;--k)
+                    {
+                        xadd << Phi[i][k] * Nu[j][k];
+                    }
+                    Chi[i][j] = xadd.sum();
+                }
+            }
+            //Y_XMLOG(xml, "Phi=" << Phi);
+            //Y_XMLOG(xml, "Nu="  << Nu);
+            Y_XMLOG(xml, "Chi=" << Chi);
         }
 
     }
