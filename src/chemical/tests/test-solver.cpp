@@ -8,6 +8,7 @@
 
 #include "y/orthogonal/family.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/algebra/lu.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -79,6 +80,11 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Prospect);
         };
 
+
+        typedef Small::CoopLightList<const Prospect> PRepo;
+        typedef PRepo::ProxyType                     PBank;
+        typedef PRepo::NodeType                      PNode;
+
         class Solver : public Joint
         {
         public:
@@ -91,10 +97,11 @@ namespace Yttrium
             dof(mine.Nu.rows),
             obj(neqs),
             ortho(nspc,dof),
-            ebank(),
-            basis(ebank),
+            pbank(),
+            basis(pbank),
             Cin(nspc),
-            Cex(nspc)
+            Cex(nspc),
+            xlu(dof)
             {
             }
 
@@ -112,10 +119,11 @@ namespace Yttrium
             const size_t       dof;
             XSeries            obj;
             Orthogonal::Family ortho;
-            EBank              ebank;
-            ERepo              basis;
+            PBank              pbank;
+            PRepo              basis;
             XArray             Cin;
             XArray             Cex;
+            MKL::LU<xreal_t>   xlu;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
@@ -287,7 +295,7 @@ namespace Yttrium
                     if(ortho.wouldAccept(nu))
                     {
                         ortho.expand();
-                        basis << eq;
+                        basis << pro;
                         if(ortho.size>=dof) break;
                     }
                 }
@@ -301,7 +309,16 @@ namespace Yttrium
 
             }
 
-            Y_XMLOG(xml, "family=" << basis);
+            if(xml.verbose)
+            {
+                xml() << "<family size='" << basis.size << "'>" << std::endl;
+                for(const PNode *pn=basis.head;pn;pn=pn->next)
+                {
+                    xml() << "\t(+) " << (**pn).eq << std::endl;
+                }
+                xml() << "<family/>" << std::endl;
+            }
+            //Y_XMLOG(xml, "family=" << basis);
 
 
             //------------------------------------------------------------------
@@ -333,9 +350,9 @@ namespace Yttrium
         }
 
 
-        void Solver:: nrStage(XWritable &C, const Level L, XMLog &xml)
+        void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
         {
-            const size_t n = pps.size();
+            const size_t n = basis.size;
             const size_t m = nspc;
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
@@ -349,17 +366,20 @@ namespace Yttrium
             //------------------------------------------------------------------
             XMatrix Phi(n,m);
             XMatrix Nu(n,m);
+            XArray  xi(n);
+
             {
-                size_t j=0;
-                for(size_t i=1;i<=n;++i)
+                const PNode *pn = basis.head;
+                for(size_t i=1;i<=n;++i,pn=pn->next)
                 {
-                    ++j;
-                    const Prospect    &pro = pps[i];
+                    assert(0!=pn);
+                    const Prospect    &pro = **pn;
                     const Equilibrium &eq  = pro.eq;
-                    XWritable         &phi = Phi[j];
-                    XWritable         &nu  = Nu[j];
+                    XWritable         &phi = Phi[i];
+                    XWritable         &nu  = Nu[i];
                     eq.drvsMassAction(pro.ek, phi, SubLevel, C, L, afm.xmul);
                     eq.topology(nu, SubLevel);
+                    (xi[i] = eq.massAction(pro.ek, afm.xmul, C, L)).neg();
                 }
             }
 
@@ -381,6 +401,18 @@ namespace Yttrium
             //Y_XMLOG(xml, "Phi=" << Phi);
             //Y_XMLOG(xml, "Nu="  << Nu);
             Y_XMLOG(xml, "Chi=" << Chi);
+            Y_XMLOG(xml, "lhs=" << xi);
+
+            if(!xlu.build(Chi))
+            {
+                std::cerr << "Singular Matrix" << std::endl;
+                return;
+            }
+
+            xlu.solve(Chi,xi);
+            Y_XMLOG(xml, "xi =" << xi);
+
+
         }
 
     }
