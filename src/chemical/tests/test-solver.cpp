@@ -2,13 +2,12 @@
 #include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/wardens.hpp"
 
-#include "y/chemical/plexus/joint.hpp"
-#include "y/chemical/reactive/aftermath.hpp"
+#include "y/chemical/plexus/solver.hpp"
+
+
 #include "y/sort/heap.hpp"
 
-#include "y/orthogonal/family.hpp"
 #include "y/system/exception.hpp"
-#include "y/mkl/algebra/lu.hpp"
 #include "y/stream/libc/output.hpp"
 
 #include "y/utest/run.hpp"
@@ -20,191 +19,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Prospect
-        {
-        public:
-            typedef CxxSeries<Prospect> Series;
-
-            explicit Prospect(const Situation     _st,
-                              const Equilibrium & _eq,
-                              const xreal_t       _ek,
-                              const XReadable &   _cc,
-                              const xreal_t       _xi) noexcept:
-            st(_st),
-            eq(_eq),
-            ek(_ek),
-            cc(_cc),
-            xi(_xi),
-            ax(xi.abs())
-            {
-            }
-
-            Prospect(const Prospect &_) noexcept :
-            st(_.st),
-            eq(_.eq),
-            ek(_.ek),
-            cc(_.cc),
-            xi(_.xi),
-            ax(_.ax)
-            {
-            }
-
-            ~Prospect() noexcept {}
-
-            std::ostream & show(std::ostream &os, const Cluster &cl, const XReadable &Ktop) const
-            {
-                os << std::setw(15) << real_t(xi) << " @";
-                cl.display(os,eq,Ktop);
-                return os;
-            }
-
-            xreal_t affinity(XMul            &X,
-                             const XReadable &C,
-                             const Level      L) const
-            {
-                return eq.affinity(ek,X,C,L);
-            }
-
-            static int Compare(const Prospect &lhs, const Prospect &rhs) noexcept
-            {
-                return Comparison::Decreasing(lhs.ax, rhs.ax);
-            }
-
-            void step(XSwell &sw) const
-            {
-                size_t             nc  = eq->size();
-                for(Equilibrium::ConstIterator it=eq->begin();nc>0;--nc,++it)
-                {
-                    const Component     &cm = **it;
-                    const Species       &sp = cm.sp;
-                    const size_t * const id = sp.indx;
-
-                    sw[ id[SubLevel] ] << cm.xn * xi;
-                }
-            }
-
-
-            const Situation     st;
-            const Equilibrium & eq;
-            const xreal_t       ek;
-            const XReadable &   cc;
-            const xreal_t       xi;
-            const xreal_t       ax;
-
-        private:
-            Y_DISABLE_ASSIGN(Prospect);
-        };
-
-
-        typedef Small::CoopLightList<const Prospect> PRepo;
-        typedef PRepo::ProxyType                     PBank;
-        typedef PRepo::NodeType                      PNode;
-
-        class Solver : public Joint
-        {
-        public:
-
-            explicit Solver(const Cluster &cl) :
-            Joint(cl),
-            afm(),
-            ceq(neqs,nspc),
-            pps(neqs),
-            dof(mine.Nu.rows),
-            obj(neqs),
-            ortho(nspc,dof),
-            pbank(),
-            basis(pbank),
-            Cin(nspc),
-            Cex(nspc),
-            Cws(nspc),
-            ddC(nspc),
-            inc(nspc),
-            xlu(dof)
-            {
-            }
-
-            virtual ~Solver() noexcept {}
-
-
-
-            void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
-            xreal_t  objFunc(const XReadable &C, const Level L);
-            void     nrStage(XWritable &C, const Level L, XMLog &xml);
-            void     odeStep(XWritable &C, const Level L, XMLog &xml);
-
-            const XReadable &probe(const xreal_t u)
-            {
-                const xreal_t one = 1;
-                const xreal_t v   = one-u;
-                XWritable    &C   = Cws;
-                for(size_t j=nspc;j>0;--j)
-                {
-                    const xreal_t c0 = Cin[j];
-                    const xreal_t c1 = Cex[j];
-                    xreal_t cmin=c0, cmax=c1;
-                    if(cmax<cmin) Swap(cmin,cmax);
-                    C[j] = Clamp(cmin, c0*v + c1*u, cmax);
-                }
-                return C;
-            }
-
-            void basisToRate(XWritable &rate)
-            {
-                // initialize inc
-                inc.forEach( &XAdd::free );
-
-                // collect of increases from current basis
-                for(const PNode *pn=basis.head;pn;pn=pn->next)
-                    (**pn).step(inc);
-
-                // deduce rate
-                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
-                {
-                    const size_t j = (**sn).indx[ SubLevel ];
-                    rate[j] = inc[j].sum();
-                }
-
-            }
-
-
-            xreal_t operator()(const xreal_t u)
-            {
-                return objFunc( probe(u), SubLevel);
-            }
-
-
-            Aftermath          afm;
-            XMatrix            ceq;
-            Prospect::Series   pps;
-            const size_t       dof;
-            XSeries            obj;
-            Orthogonal::Family ortho;
-            PBank              pbank;
-            PRepo              basis;
-            XArray             Cin;
-            XArray             Cex;
-            XArray             Cws;
-            XArray             ddC;
-            XSwell             inc;
-            MKL::LU<xreal_t>   xlu;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Solver);
-
-            void showProspects(XMLog &xml, const XReadable &Ktop) const
-            {
-                if(xml.verbose)
-                {
-                    for(size_t i=1;i<=pps.size();++i)
-                    {
-                        pps[i].show( xml(), mine, Ktop) << std::endl;
-                    }
-                }
-            }
-
-
-
-        };
+     
+       
 
         xreal_t Solver:: objFunc(const XReadable &C, const Level L)
         {
