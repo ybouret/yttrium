@@ -31,21 +31,11 @@ namespace Yttrium
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
             void     odeStep(XWritable &C, const Level L, XMLog &xml);
 
-            const XReadable &probe(const xreal_t u)
-            {
-                const xreal_t one = 1;
-                const xreal_t v   = one-u;
-                XWritable    &C   = Cws;
-                for(size_t j=nspc;j>0;--j)
-                {
-                    const xreal_t c0 = Cin[j];
-                    const xreal_t c1 = Cex[j];
-                    xreal_t cmin=c0, cmax=c1;
-                    if(cmax<cmin) Swap(cmin,cmax);
-                    C[j] = Clamp(cmin, c0*v + c1*u, cmax);
-                }
-                return C;
-            }
+            //! return Cws as Cin*(1-u) + Cex*u, clamped
+            const XReadable &probe(const xreal_t u);
+
+            //! objFunc( probe(u), SubLevel )
+            xreal_t operator()(const xreal_t u);
 
             void basisToRate(XWritable &rate)
             {
@@ -65,11 +55,6 @@ namespace Yttrium
 
             }
 
-
-            xreal_t operator()(const xreal_t u)
-            {
-                return objFunc( probe(u), SubLevel);
-            }
 
 
             Aftermath          afm;
