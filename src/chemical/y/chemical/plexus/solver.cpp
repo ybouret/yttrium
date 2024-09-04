@@ -49,21 +49,38 @@ namespace Yttrium
             }
             return true;
         }
-        
-        bool Solver:: mustCut(xreal_t         &scale,
-                              const XReadable &C,
-                              const XReadable &dC) const noexcept
+
+        bool Solver:: stepWasCut(XWritable &       target,
+                                 const XReadable & source,
+                                 const XReadable & deltaC,
+                                 xreal_t * const   result) const
         {
 
-            scale      = 1.0;
-            bool abate = false;
+            //------------------------------------------------------------------
+            //
+            //
+            // initialize
+            //
+            //       
+            //------------------------------------------------------------------
+            real_t scale = 1.0;
+            bool   abate = false;
+            assert( basisOkWith(source,SubLevel) );
+            assert(target.size()==source.size());
+            assert(target.size()==deltaC.size());
 
-            assert( basisOkWith(C,SubLevel) );
-
-            for(size_t j=C.size();j>0;--j)
+            //------------------------------------------------------------------
+            //
+            //
+            // loop over components, act on negative deltaC
+            //
+            //
+            //------------------------------------------------------------------
+            const size_t m = target.size();
+            for(size_t j=m;j>0;--j)
             {
-                const xreal_t d = dC[j];  if(d.mantissa>=0) continue;
-                const xreal_t c = C[j];   assert(c.mantissa>=0);
+                const xreal_t d = deltaC[j];  if(d.mantissa>=0) continue;
+                const xreal_t c = source[j];  assert(c.mantissa>=0);
                 const xreal_t f = c/(-d);
                 if(f<=scale)
                 {
@@ -72,13 +89,38 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // apply safety
+            //
+            //
+            //------------------------------------------------------------------
             if( abate )
+                scale *= xsf;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // generate
+            //
+            //
+            //------------------------------------------------------------------
+        GENERATE:
+            for(size_t j=m;j>0;--j)
+                target[j] = source[j] + scale * deltaC[j];
+
+            if( !basisOkWith(target,SubLevel) )
             {
                 scale *= xsf;
+                abate  = true;
+                goto GENERATE;
             }
-
+            
+            if(result) *result = scale;
             return abate;
         }
+
 
     }
 

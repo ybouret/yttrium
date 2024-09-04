@@ -37,13 +37,16 @@ namespace Yttrium
             //! objFunc( probe(u), SubLevel )
             xreal_t operator()(const xreal_t u);
 
-            //! assuming C is Ok, cut according to negative dC
-            bool mustCut(xreal_t         &scale,
-                         const XReadable &C,
-                         const XReadable &dC) const noexcept;
+            bool stepWasCut(XWritable &       target,
+                            const XReadable & source,
+                            const XReadable & deltaC,
+                            xreal_t * const   result) const;
+
+
+
+
 
             
-
 
             void basisToRate(XWritable &rate);
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;

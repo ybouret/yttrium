@@ -1,5 +1,6 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/text/boolean.hpp"
 
 namespace Yttrium
 {
@@ -15,7 +16,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            //
+            // initialize Phi and Nu
             //
             //
             //------------------------------------------------------------------
@@ -38,7 +39,13 @@ namespace Yttrium
                 }
             }
 
-
+            //------------------------------------------------------------------
+            //
+            //
+            // compute Phi*Nu'
+            //
+            //
+            //------------------------------------------------------------------
             XMatrix Chi(n,n);
             XAdd   &xadd = afm.xadd;
             for(size_t i=n;i>0;--i)
@@ -58,17 +65,29 @@ namespace Yttrium
             Y_XMLOG(xml, "Chi=" << Chi);
             Y_XMLOG(xml, "lhs=" << xi);
 
+            //------------------------------------------------------------------
+            //
+            //
+            // compute inv(Phi*Nu')
+            //
+            //
+            //------------------------------------------------------------------
             if(!xlu.build(Chi))
             {
                 std::cerr << "Singular Matrix" << std::endl;
                 return;
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // deduce xi and dC
+            //
+            //
+            //------------------------------------------------------------------
             xlu.solve(Chi,xi);
             Y_XMLOG(xml, "xi =" << xi);
             mine.transfer(Cin, SubLevel, C, L);
-            bool    abate = false;
-            xreal_t scale = 1.0;
 
             for(size_t j=m;j>0;--j)
             {
@@ -77,45 +96,20 @@ namespace Yttrium
                 {
                     xadd << Nu[k][j] * xi[k];
                 }
-                const xreal_t d = (ddC[j] = xadd.sum());
-                if(d.mantissa<0)
-                {
-                    const xreal_t c = Cin[j];
-                    const xreal_t f = c/(-d);
-                    if(f<=scale)
-                    {
-                        abate = true;
-                        scale = f;
-                    }
-                }
+                ddC[j] = xadd.sum();
             }
 
-            Y_XMLOG(xml, "abate = " << abate);
+            //------------------------------------------------------------------
+            //
+            //
+            // scaling
+            //
+            //
+            //------------------------------------------------------------------
+            xreal_t    scale;
+            const bool abate = stepWasCut(Cex,Cin,ddC,&scale);
+            Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
             Y_XMLOG(xml, "scale = " << real_t(scale) );
-
-            if(xml.verbose)
-            {
-                for(size_t j=1;j<=m;++j)
-                {
-                    xml() << "C = " << std::setw(15) << real_t(Cin[j]) << " | dC = " << std::setw(15) << real_t(ddC[j]) << std::endl;
-                }
-            }
-
-            if(abate)
-            {
-                scale *= 0.99;
-                for(size_t j=m;j>0;--j)
-                {
-                    Cex[j] = Cin[j] + scale * ddC[j];
-                }
-            }
-            else
-            {
-                for(size_t j=m;j>0;--j)
-                {
-                    Cex[j] = Cin[j] + ddC[j];
-                }
-            }
 
             Solver &F = *this;
             std::cerr << "Ain = " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
