@@ -112,11 +112,13 @@ namespace Yttrium
             Y_XMLOG(xml, "scale = " << real_t(scale) );
 
             Solver &F = *this;
-            const xreal_t Ain = objGrad(Cin,SubLevel);
-
+            const xreal_t Ain   = objGrad(Cin,SubLevel);
+            const xreal_t slope = afm.xadd.dot(ddC,grd);
 
             std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
             std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(F(1)) << std::endl;
+
+            std::cerr << "slope=" << slope << std::endl;
 
             {
                 OutputFile fp("nrstage.dat");
