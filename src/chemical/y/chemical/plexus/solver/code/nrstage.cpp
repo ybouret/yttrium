@@ -118,7 +118,7 @@ namespace Yttrium
             std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
             std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(F(1)) << std::endl;
 
-            std::cerr << "slope=" << slope << std::endl;
+            std::cerr << "slope=" << real_t(slope) << std::endl;
 
             {
                 OutputFile fp("nrstage.dat");
