@@ -37,24 +37,7 @@ namespace Yttrium
             //! objFunc( probe(u), SubLevel )
             xreal_t operator()(const xreal_t u);
 
-            void basisToRate(XWritable &rate)
-            {
-                // initialize inc
-                inc.forEach( &XAdd::free );
-
-                // collect of increases from current basis
-                for(const PNode *pn=basis.head;pn;pn=pn->next)
-                    (**pn).step(inc);
-
-                // deduce rate
-                for(const SNode *sn=mine.species.head;sn;sn=sn->next)
-                {
-                    const size_t j = (**sn).indx[ SubLevel ];
-                    rate[j] = inc[j].sum();
-                }
-
-            }
-
+            void basisToRate(XWritable &rate);
 
 
             Aftermath          afm;
@@ -75,18 +58,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
-            void showProspects(XMLog &xml, const XReadable &Ktop) const
-            {
-                if(xml.verbose)
-                {
-                    for(size_t i=1;i<=pps.size();++i)
-                    {
-                        pps[i].show( xml(), mine, Ktop) << std::endl;
-                    }
-                }
-            }
-
-
+            void showProspects(XMLog &xml, const XReadable &Ktop) const;
 
         };
     }

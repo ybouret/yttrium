@@ -29,6 +29,16 @@ namespace Yttrium
 
         Solver:: ~Solver() noexcept {}
 
+        void Solver:: showProspects(XMLog &xml, const XReadable &Ktop) const
+        {
+            if(xml.verbose)
+            {
+                for(size_t i=1;i<=pps.size();++i)
+                {
+                    pps[i].show( xml(), mine, Ktop) << std::endl;
+                }
+            }
+        }
 
     }
 
