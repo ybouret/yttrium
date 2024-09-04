@@ -22,7 +22,8 @@ namespace Yttrium
         Cws(nspc),
         ddC(nspc),
         inc(nspc),
-        xlu(dof)
+        xlu(dof),
+        xsf(0.99)
         {
         }
 
@@ -47,6 +48,36 @@ namespace Yttrium
                 if( ! (**pn).eq.canTolerate(C,L) ) return false;
             }
             return true;
+        }
+        
+        bool Solver:: mustCut(xreal_t         &scale,
+                              const XReadable &C,
+                              const XReadable &dC) const noexcept
+        {
+
+            scale      = 1.0;
+            bool abate = false;
+
+            assert( basisOkWith(C,SubLevel) );
+
+            for(size_t j=C.size();j>0;--j)
+            {
+                const xreal_t d = dC[j];  if(d.mantissa>=0) continue;
+                const xreal_t c = C[j];   assert(c.mantissa>=0);
+                const xreal_t f = c/(-d);
+                if(f<=scale)
+                {
+                    abate = true;
+                    scale = f;
+                }
+            }
+
+            if( abate )
+            {
+                scale *= xsf;
+            }
+
+            return abate;
         }
 
     }

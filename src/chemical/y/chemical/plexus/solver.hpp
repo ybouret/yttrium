@@ -37,6 +37,14 @@ namespace Yttrium
             //! objFunc( probe(u), SubLevel )
             xreal_t operator()(const xreal_t u);
 
+            //! assuming C is Ok, cut according to negative dC
+            bool mustCut(xreal_t         &scale,
+                         const XReadable &C,
+                         const XReadable &dC) const noexcept;
+
+            
+
+
             void basisToRate(XWritable &rate);
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;
 
@@ -54,7 +62,8 @@ namespace Yttrium
             XArray             ddC;
             XSwell             inc;
             MKL::LU<xreal_t>   xlu;
-
+            const xreal_t      xsf; //!< xreal safe factor = 0.99
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
