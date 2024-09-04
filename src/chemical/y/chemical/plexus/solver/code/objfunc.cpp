@@ -38,22 +38,40 @@ namespace Yttrium
         }
 
 
-        void Solver:: objGrad(XWritable       &dF,
-                              const XReadable &C,
-                              const Level      L)
+        xreal_t Solver:: objGrad(const XReadable &C,
+                                 const Level      L)
         {
+            const xreal_t _0;
             inc.forEach( &XAdd::free );
-            XWritable &dA = Cws;
+            obj.free();
+            grd.ld(_0);
+
+            const size_t m  = nspc;
+            XWritable &  dA = Cws;
 
             for(size_t i=pps.size();i>0;--i)
             {
                 const Prospect    &pro = pps[i];
                 const Equilibrium &eq  = pro.eq;
-
+                const xreal_t      A   = pro.affinity(afm.xmul,C,L);
                 eq.drvsAffinity(dA, SubLevel, C, L);
-
+                for(size_t j=m;j>0;--j)
+                {
+                    inc[j] << A * dA[j];
+                }
+                obj << A;
             }
 
+            const xreal_t den = afm.xadd.normOf(obj);
+            if(den.mantissa>0)
+            {
+                for(size_t j=m;j>0;--j)
+                {
+                    grd[j] = inc[j].sum() / den;
+                }
+            }
+
+            return den;
         }
 
     }

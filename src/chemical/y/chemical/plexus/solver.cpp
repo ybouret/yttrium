@@ -21,6 +21,7 @@ namespace Yttrium
         Cex(nspc),
         Cws(nspc),
         ddC(nspc),
+        grd(nspc),
         inc(nspc),
         xlu(dof),
         xsf(0.99)

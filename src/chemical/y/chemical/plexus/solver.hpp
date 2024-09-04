@@ -49,7 +49,7 @@ namespace Yttrium
             void     odeStep(XWritable &C, const Level L, XMLog &xml);
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
             xreal_t  objFunc(const XReadable &C, const Level L);
-            void     objGrad(XWritable &dF, const XReadable &C, const Level L);
+            xreal_t  objGrad(const XReadable &C, const Level L);
 
             //! return Cws as Cin*(1-u) + Cex*u, clamped
             const XReadable &probe(const xreal_t u);
@@ -84,6 +84,7 @@ namespace Yttrium
             XArray             Cex;   //!< C exit for lookup
             XArray             Cws;   //!< C workspace
             XArray             ddC;   //!< deltaC
+            XArray             grd;   //!< initial gradient
             XSwell             inc;   //!< increases
             MKL::LU<xreal_t>   xlu;   //!< linear solver
             const xreal_t      xsf;   //!< xreal safe factor = 0.99

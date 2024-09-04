@@ -112,7 +112,10 @@ namespace Yttrium
             Y_XMLOG(xml, "scale = " << real_t(scale) );
 
             Solver &F = *this;
-            std::cerr << "Ain = " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
+            const xreal_t Ain = objGrad(Cin,SubLevel);
+
+
+            std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
             std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(F(1)) << std::endl;
 
             {
