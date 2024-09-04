@@ -110,11 +110,17 @@ namespace Yttrium
                                const Level       L,
                                const xreal_t     xi) const;
 
-            //! get affinity from fully valid concentration
+            //! get affinity from fully valid concentrations
             real_t affinity(const xreal_t    K,
                             XMul            &xmul,
                             const XReadable &C,
                             const Level      L) const;
+
+            //! d_affinity/d_C
+            void  drvsAffinity(XWritable  &       drvs,
+                               const Level        Lout,
+                               const XReadable &  Cinp,
+                               const Level        Linp) const;
 
             //! d_massAction/d_C
             void drvsMassAction(const xreal_t      K,

@@ -81,7 +81,7 @@ namespace Yttrium
 
             try
             {
-               (*ac)(nn,sp);
+                (*ac)(nn,sp);
             }
             catch(...)
             {
@@ -108,7 +108,7 @@ namespace Yttrium
             xmul << mOne;
             prod.massAction(xmul,C,L);
             const xreal_t lhs = xmul.product();
-            
+
             return rhs + lhs;
         }
 
@@ -131,8 +131,26 @@ namespace Yttrium
 
 
             const xreal_t K_Over_Q = num/den;
-            //std::cerr << "Num=" << num << " / Den=" << den << " => " << K_Over_Q << std::endl;
             return K_Over_Q.log();
+
+        }
+
+
+        void  Components:: drvsAffinity(XWritable  &       drvs,
+                                        const Level        Lout,
+                                        const XReadable &  Cinp,
+                                        const Level        Linp) const
+        {
+            drvs.ld(zero);
+            size_t            n  = db.size();
+            for(ConstIterator it = db.begin();n>0;--n,++it)
+            {
+                const Component &    cm = **it;
+                const Species   &    sp = cm.sp;
+                const size_t * const id = sp.indx;
+                const xreal_t        cc = Cinp[ id[Linp] ];
+                drvs[ id[Lout] ] = -cm.xn/cc;
+            }
 
         }
 
@@ -149,7 +167,7 @@ namespace Yttrium
             xmul << K;
             reac.massAction(xmul,C,L,-xi);
             const xreal_t rhs = xmul.product();
-            
+
 
             assert(xmul.isEmpty());
             xmul << mOne;
@@ -211,6 +229,8 @@ namespace Yttrium
         }
 
 
+
+
         bool Components:: linkedTo(const Species &sp) const noexcept
         {
             return 0 != db.search(sp.name);
@@ -222,7 +242,7 @@ namespace Yttrium
             if(0!=pcm) return & **pcm;
             return 0;
         }
-        
+
 
         bool Components:: linkedTo(const Components &other) const noexcept
         {

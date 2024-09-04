@@ -39,7 +39,7 @@ namespace Yttrium
 
             bool stepWasCut(XWritable &       target,
                             const XReadable & source,
-                            const XReadable & deltaC,
+                            XWritable &       deltaC,
                             xreal_t * const   result) const;
 
 

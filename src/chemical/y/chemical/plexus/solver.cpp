@@ -52,7 +52,7 @@ namespace Yttrium
 
         bool Solver:: stepWasCut(XWritable &       target,
                                  const XReadable & source,
-                                 const XReadable & deltaC,
+                                 XWritable &       deltaC,
                                  xreal_t * const   result) const
         {
 
@@ -118,6 +118,10 @@ namespace Yttrium
             }
             
             if(result) *result = scale;
+            for(size_t j=m;j>0;--j)
+            {
+                deltaC[j] = target[j] - source[j];
+            }
             return abate;
         }
 
