@@ -36,6 +36,26 @@ namespace Yttrium
 
             return afm.xadd.normOf(obj);
         }
+
+
+        void Solver:: objGrad(XWritable       &dF,
+                              const XReadable &C,
+                              const Level      L)
+        {
+            inc.forEach( &XAdd::free );
+            XWritable &dA = Cws;
+
+            for(size_t i=pps.size();i>0;--i)
+            {
+                const Prospect    &pro = pps[i];
+                const Equilibrium &eq  = pro.eq;
+
+                eq.drvsAffinity(dA, SubLevel, C, L);
+
+            }
+
+        }
+
     }
 
 }

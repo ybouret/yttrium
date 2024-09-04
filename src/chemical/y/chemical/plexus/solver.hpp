@@ -26,10 +26,11 @@ namespace Yttrium
 
 
             
-            void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
-            xreal_t  objFunc(const XReadable &C, const Level L);
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
             void     odeStep(XWritable &C, const Level L, XMLog &xml);
+            void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+            xreal_t  objFunc(const XReadable &C, const Level L);
+            void     objGrad(XWritable &dF, const XReadable &C, const Level L);
 
             //! return Cws as Cin*(1-u) + Cex*u, clamped
             const XReadable &probe(const xreal_t u);
