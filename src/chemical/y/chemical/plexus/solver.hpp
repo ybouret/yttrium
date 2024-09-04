@@ -17,15 +17,34 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Solver for a cluster with valid concentrations
+        //
+        //
+        //______________________________________________________________________
         class Solver : public Joint
         {
         public:
 
-            explicit Solver(const Cluster &);
-            virtual ~Solver() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Solver(const Cluster &); //!< setup
+            virtual ~Solver() noexcept;       //!< cleanup
 
 
-            
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
             void     odeStep(XWritable &C, const Level L, XMLog &xml);
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
@@ -44,30 +63,31 @@ namespace Yttrium
                             xreal_t * const   result) const;
 
 
-
-
-
-            
-
             void basisToRate(XWritable &rate);
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;
+        
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Aftermath          afm;   //!< compute prospects
+            XMatrix            ceq;   //!< cc memory
+            Prospect::Series   pps;   //!< current prospects
+            const size_t       dof;   //!< number of original eqs
+            XSeries            obj;   //!< helper for objFunc
+            Orthogonal::Family ortho; //!< helper to find basis
+            PBank              pbank; //!< memory for basis
+            PRepo              basis; //!< basis of leading eqs
+            XArray             Cin;   //!< C init for lookup
+            XArray             Cex;   //!< C exit for lookup
+            XArray             Cws;   //!< C workspace
+            XArray             ddC;   //!< deltaC
+            XSwell             inc;   //!< increases
+            MKL::LU<xreal_t>   xlu;   //!< linear solver
+            const xreal_t      xsf;   //!< xreal safe factor = 0.99
 
-            Aftermath          afm;
-            XMatrix            ceq;
-            Prospect::Series   pps;
-            const size_t       dof;
-            XSeries            obj;
-            Orthogonal::Family ortho;
-            PBank              pbank;
-            PRepo              basis;
-            XArray             Cin;
-            XArray             Cex;
-            XArray             Cws;
-            XArray             ddC;
-            XSwell             inc;
-            MKL::LU<xreal_t>   xlu;
-            const xreal_t      xsf; //!< xreal safe factor = 0.99
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 

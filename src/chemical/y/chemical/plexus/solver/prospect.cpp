@@ -36,6 +36,15 @@ namespace Yttrium
         Prospect:: ~Prospect() noexcept {}
 
 
+        std::ostream & Prospect:: show(std::ostream &os, const Cluster &cl, const XReadable &Ktop) const
+
+        {
+            os << std::setw(15) << real_t(xi) << " @";
+            cl.display(os,eq,Ktop);
+            return os;
+        }
+
+
         xreal_t Prospect:: affinity(XMul            &X,
                                     const XReadable &C,
                                     const Level      L) const
