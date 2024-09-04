@@ -234,6 +234,9 @@ namespace Yttrium
             //! check all accounted, throw exception otherwise
             void mustSupport(const XReadable &C, const Level L) const;
 
+            //! ok if all accounted
+            bool canTolerate(const XReadable &C, const Level L) const noexcept;
+
             //! check if species is a component
             const Component * query(const Species &sp) const noexcept;
 

@@ -38,7 +38,7 @@ namespace Yttrium
             xreal_t operator()(const xreal_t u);
 
             void basisToRate(XWritable &rate);
-
+            bool basisOkWith(const XReadable &C, const Level L) const noexcept;
 
             Aftermath          afm;
             XMatrix            ceq;

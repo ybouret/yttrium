@@ -40,6 +40,15 @@ namespace Yttrium
             }
         }
 
+        bool Solver:: basisOkWith(const XReadable &C, const Level L) const noexcept
+        {
+            for(const PNode *pn=basis.head;pn;pn=pn->next)
+            {
+                if( ! (**pn).eq.canTolerate(C,L) ) return false;
+            }
+            return true;
+        }
+
     }
 
 }

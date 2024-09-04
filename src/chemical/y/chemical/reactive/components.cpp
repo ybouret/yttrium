@@ -327,6 +327,10 @@ namespace Yttrium
             if( prod.deficient(C,L) ) throw Specific::Exception( name.c_str(), "deficient in %s product%s",  LevelText(L), Plural::s(prod->size) );
         }
 
+        bool Components:: canTolerate(const XReadable &C, const Level L) const noexcept
+        {
+            return reac.accounted(C,L) && prod.accounted(C,L);
+        }
 
     }
 
