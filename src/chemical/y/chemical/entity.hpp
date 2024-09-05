@@ -7,6 +7,7 @@
 #include "y/graphviz/vizible.hpp"
 #include "y/string.hpp"
 #include "y/quantized.hpp"
+#include "y/associative/little-endian-addressed.hpp"
 
 namespace Yttrium
 {
@@ -20,7 +21,11 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Quantized, public Counted, public GraphViz::Vizible
+        class Entity : 
+        public Quantized,
+        public Counted,
+        public LittleEndianAddressed,
+        public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -35,6 +40,7 @@ namespace Yttrium
             explicit Entity(const ID & userName ) :
             Quantized(),
             Counted(),
+            LittleEndianAddressed(),
             GraphViz::Vizible(),
             name(userName)
             {
