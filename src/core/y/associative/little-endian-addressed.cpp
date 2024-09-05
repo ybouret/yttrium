@@ -2,6 +2,13 @@
 
 namespace Yttrium
 {
+    LittleEndianAddressed:: LittleEndianAddressed() noexcept :
+    leak(*this)
+    {
+    }
 
+    LittleEndianAddressed:: ~LittleEndianAddressed() noexcept
+    {
+    }
 
 }

@@ -272,7 +272,7 @@ add_test(associative:key-set      test-core associative_key_set)
 add_test(associative:address-book test-core associative_addrbook)
 add_test(associative:pod-key      test-core associative_pod_key)
 add_test(associative:flexible-key test-core associative_flexible_key)
-
+add_test(associative:leak         test-core associative_leak)
 
 
 #mkl
