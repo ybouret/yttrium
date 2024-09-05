@@ -63,7 +63,7 @@ namespace Yttrium
                             xreal_t * const   result) const;
 
 
-            void basisToRate(XWritable &rate);
+            void computeRate(XWritable &rate);
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;
         
             //__________________________________________________________________

@@ -265,6 +265,7 @@ namespace Yttrium
                 }
             }
 
+            void step(XSwell &inc, const xreal_t xi) const;
 
             //__________________________________________________________________
             //

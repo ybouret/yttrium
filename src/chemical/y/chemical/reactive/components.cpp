@@ -347,6 +347,19 @@ namespace Yttrium
             return reac.accounted(C,L) && prod.accounted(C,L);
         }
 
+
+        void Components:: step(XSwell &inc, const xreal_t xi) const
+        {
+            size_t i=db.size();
+            for(ConstIterator it=db.begin();i>0;--i,++it)
+            {
+                const Component &cm = **it;
+                const Species       &sp = cm.sp;
+                const size_t * const id = sp.indx;
+                inc[ id[SubLevel] ] << cm.xn * xi;
+            }
+        }
+
     }
 
 }

@@ -145,6 +145,39 @@ So the next set of concentration is given by the solution of:
 	\partial_{\vec C} \vec F = \bm{\nu}^T \bm{\Delta}^\star \bm{\Phi}^\star 
 \end{equation}
 
+\subsubsection{Finding increase}
+ 
+ We start from $\vec C _0$, which produces:
+ \begin{equation}
+ 	\vec C_i^\star = \vec C_0 + \delta \vec C_i^\star = \vec C_0 + \xi_i^\star \vec \nu_i
+ \end{equation}
+ 
+ The error is:
+ \begin{equation}
+ 	\chi^2 = \dfrac{1}{2} \sum_i \left\vert \vec{C}_i^\star - \vec{C}_0 \right \vert^2
+	 = \dfrac{1}{2} \sum_i {\xi_i^\star}^2 \left\vert \vec \nu_i \right\vert^2
+ \end{equation}
+ 
+ If we add $\delta \vec C$, then we obtain:
+ \begin{equation}
+ 	\delta \xi_i^\star = - \dfrac{\langle \vec \Phi_i^\star \vert \delta \vec C\rangle}{\langle \vec \Phi_i^\star \vert \vec\nu_i \rangle}
+ \end{equation}
+ and
+ \begin{equation}
+ 	\delta \vec C_i^\star = \delta \xi_i^\star \vec \nu _i
+ \end{equation}
+ 
+ \begin{equation}
+ 	\chi^2(\delta \vec C) = \dfrac{1}{2}
+	\sum_i 
+	\left \vert
+	\vec C_i^\star + \delta \vec C_i^\star - \vec{C}_0 - \delta \vec C
+	\right\vert^2
+	=\dfrac{1}{2}
+	\sum_i\left \vert
+	(\xi_i^\star+\delta \xi_i^\star) \vec\nu_i - \delta \vec{C}
+	\right\vert^2
+ \end{equation}	
  
 
 \subsection{Conservation}

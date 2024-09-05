@@ -6,8 +6,9 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Solver:: basisToRate(XWritable &rate)
+        void Solver:: computeRate(XWritable &rate)
         {
+            
             // initialize inc
             inc.forEach( &XAdd::free );
 
@@ -34,15 +35,20 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml, "odeStep", " n='" << n << "' m='" << m << "'");
 
             // dC = Nu' * xi
-            xreal_t scale;
-            xreal_t tau   = 1;
+            xreal_t full   = 1;
+            xreal_t half   = 0.5;
             mine.transfer(Cin, SubLevel, C, L);
-            basisToRate(ddC);
+            computeRate(ddC);
             Y_XMLOG(xml, "ddC=" << ddC );
 
-            if(stepWasCut(Cex, Cin, ddC, &scale))
             {
-                
+                xreal_t scale;
+                if(stepWasCut(Cex, Cin, ddC, &scale))
+                {
+                    Y_XMLOG(xml, "cut by " << real_t(scale));
+                    full *= scale;
+                    half *= scale;
+                }
             }
 
 

@@ -57,16 +57,10 @@ namespace Yttrium
             return Comparison::Decreasing(lhs.ax, rhs.ax);
         }
 
-        void Prospect:: step(XSwell &sw) const
+        void Prospect:: step(XSwell &inc) const
         {
-            size_t             nc  = eq->size();
-            for(Equilibrium::ConstIterator it=eq->begin();nc>0;--nc,++it)
-            {
-                const Component     &cm = **it;
-                const Species       &sp = cm.sp;
-                const size_t * const id = sp.indx;
-                sw[ id[SubLevel] ] << cm.xn * xi;
-            }
+            assert(Running==st);
+            eq.step(inc,xi);
         }
 
     }
