@@ -35,7 +35,7 @@ Y_UTEST(solver)
 
         for(size_t iter=0;iter<1;++iter)
         {
-            plexus.conc(C0,0.3,0.5);
+            plexus.conc(C0,0.3,0.1);
             lib(std::cerr << "C0=","\t[",C0,"]");
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");

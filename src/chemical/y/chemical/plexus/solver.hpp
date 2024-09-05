@@ -46,8 +46,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
-            void     odeStep(XWritable &C, const Level L, XMLog &xml);
+            void     odeStep(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
+            //! solve crucial, collect prospects and basis
+            void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
+            //! upgrade and apply strategy
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
             xreal_t  objFunc(const XReadable &C, const Level L);
             xreal_t  objGrad(const XReadable &C, const Level L);
 

@@ -7,13 +7,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Solver:: process(XWritable &       C,
-                              const Level       L,
-                              const XReadable & Ktop,
-                              XMLog           & xml)
+        void Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
-
-            Y_XML_SECTION(xml, "process");
+            Y_XML_SECTION(xml, "upgrade");
 
             size_t cycle = 0;
 
@@ -169,33 +165,47 @@ namespace Yttrium
                 }
                 xml() << "<family/>" << std::endl;
             }
-
-
-            //------------------------------------------------------------------
-            //
-            //
-            // select family/basis of running equilibria
-            //
-            //
-            //------------------------------------------------------------------
-            switch( pps.size() )
-            {
-                case 0:
-                    throw Specific::Exception("here", "not possible");
-
-                case 1: {
-                    const Prospect &pro = pps.head();
-                    mine.transfer(C, L, pro.cc, SubLevel);
-                } return;
-
-                default:
-                    break;
-            }
-
-            nrStage(C, L, xml);
-            odeStep(C, L, xml);
-
         }
+
+        void Solver:: process(XWritable &       C,
+                              const Level       L,
+                              const XReadable & Ktop,
+                              XMLog           & xml)
+        {
+
+            Y_XML_SECTION(xml, "process");
+            upgrade(C, L, Ktop, xml);
+
+
+            {
+                Y_XML_SECTION(xml, "evolve");
+                //------------------------------------------------------------------
+                //
+                //
+                // evolve
+                //
+                //
+                //------------------------------------------------------------------
+                switch( pps.size() )
+                {
+                    case 0:
+                        throw Specific::Exception("here", "not possible");
+
+                    case 1: {
+                        const Prospect &pro = pps.head();
+                        mine.transfer(C, L, pro.cc, SubLevel);
+                    } return;
+
+                    default:
+                        break;
+                }
+
+                nrStage(C, L, xml);
+                odeStep(C, L, Ktop, xml);
+            }
+        }
+
+
 
     }
 
