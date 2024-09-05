@@ -173,7 +173,6 @@ namespace Yttrium
             xmul << mOne;
             prod.massAction(xmul,C,L,xi);
             const xreal_t lhs = xmul.product();
-            //std::cerr << "[reac=" << rhs << ", prod=" << lhs << ",xi=" << real_t(xi) << "]" << std::endl;
             return rhs + lhs;
         }
 
@@ -207,7 +206,6 @@ namespace Yttrium
         {
             drvs.ld(zero);
             xmul.free();
-            //std::cerr << "drvs@" << Cinp << std::endl;
             reac.drvsMassAction(drvs, Lout, K,    xmul, Cinp, Linp);
             prod.drvsMassAction(drvs, Lout, mOne, xmul, Cinp, Linp);
         }
@@ -227,9 +225,6 @@ namespace Yttrium
             reac.drvsMassAction(drvs, Cout, Lout, K,    xmul, Cinp, Linp, -xi);
             prod.drvsMassAction(drvs, Cout, Lout, mOne, xmul, Cinp, Linp,  xi);
         }
-
-
-
 
         bool Components:: linkedTo(const Species &sp) const noexcept
         {

@@ -119,10 +119,20 @@ namespace Yttrium
             }
             
             if(result) *result = scale;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // recompute effective step
+            //
+            //
+            //------------------------------------------------------------------
             for(size_t j=m;j>0;--j)
             {
                 deltaC[j] = target[j] - source[j];
             }
+
+
             return abate;
         }
 
