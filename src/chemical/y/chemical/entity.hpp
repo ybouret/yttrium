@@ -13,6 +13,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        //----------------------------------------------------------------------
+        typedef LittleEndianKey             KeyType; //!< alias
+        typedef LittleEndianAddress         KeyAddr; //!< alias
+
         //______________________________________________________________________
         //
         //
