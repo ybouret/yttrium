@@ -193,9 +193,7 @@ namespace Yttrium
             }
 
             nrStage(C, L, xml);
-            //odeStep(C, L, xml);
-
-
+            odeStep(C, L, xml);
 
         }
 
