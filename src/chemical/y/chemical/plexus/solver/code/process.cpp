@@ -153,11 +153,11 @@ namespace Yttrium
                     const Equilibrium &   eq  = pro.eq;
                     eq.mustSupport(C,L);
                 }
-
             }
 
             if(xml.verbose)
             {
+                xml() << std::setw(15) << real_t( objFunc(C, L) ) << " @A0" << std::endl;
                 xml() << "<family size='" << basis.size << "' dof='" << dof << "'>" << std::endl;
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
@@ -199,6 +199,8 @@ namespace Yttrium
                     default:
                         break;
                 }
+
+                return;
 
                 nrStage(C, L, xml);
                 odeStep(C, L, Ktop, xml);
