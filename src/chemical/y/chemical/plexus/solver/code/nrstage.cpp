@@ -6,12 +6,41 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        void Solver:: saveProfile(const String &fn)
+        {
+
+            Solver    &F = *this;
+            OutputFile fp(fn);
+            const size_t np = 1000;
+            for(size_t i=0;i<=np;++i)
+            {
+                const real_t u = double(i)/np;
+                fp("%.15g %.15g\n", u, real_t(F(u)));
+            }
+        }
+
         void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
         {
             const size_t n = basis.size;
             const size_t m = nspc;
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
+
+
+            {
+                int idx = 1;
+                for(const PNode *pn=basis.head;pn;pn=pn->next,++idx)
+                {
+                    const Prospect &pro = (**pn);
+                    mine.transfer(Cin,SubLevel,C,L);
+                    mine.transfer(Cex,SubLevel,pro.cc, SubLevel);
+                    //const String fn = pro.eq.fileName() + ".pro";
+                    const String fn = Formatted::Get("pro%d.dat",idx);
+                    saveProfile(fn);
+                }
+
+            }
 
             //------------------------------------------------------------------
             //

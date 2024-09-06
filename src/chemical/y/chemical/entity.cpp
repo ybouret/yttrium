@@ -19,6 +19,24 @@ namespace Yttrium
         {
         }
         
+        String Entity:: fileName() const
+        {
+            String ans;
+            for(size_t i=1;i<=name.size();++i)
+            {
+                char c = name[i];
+                if( isalnum(c) )
+                {
+                }
+                else
+                {
+                    c = '_';
+                }
+                ans += c;
+            }
+            return ans;
+        }
+
 
     }
 

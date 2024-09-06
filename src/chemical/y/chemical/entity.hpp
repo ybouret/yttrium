@@ -56,6 +56,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const String & key() const noexcept;     //!< for sets/maps
+            String         fileName() const;
 
             //__________________________________________________________________
             //

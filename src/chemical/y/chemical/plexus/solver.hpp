@@ -99,9 +99,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
             void showProspects(XMLog &xml, const XReadable &Ktop) const;
-
+            void saveProfile(const String &fn);
+            
         };
-    }
+     }
 
 }
 
