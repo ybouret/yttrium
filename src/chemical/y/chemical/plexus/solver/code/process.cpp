@@ -113,7 +113,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // We now have Running only solutions
+            // We now have Running only solutions : recompute ff
             //
             //
             //------------------------------------------------------------------
