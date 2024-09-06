@@ -207,9 +207,10 @@ namespace Yttrium
                         break;
                 }
 
-                return;
 
                 nrStage(C, L, xml);
+
+                return;
                 odeStep(C, L, Ktop, xml);
             }
         }
