@@ -113,11 +113,16 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // looking for running/crucial solutions
+            // We now have Running only solutions
             //
             //
             //------------------------------------------------------------------
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
+            for(size_t i=pps.size();i>0;--i)
+            {
+                Prospect &pro = pps[i];
+                pro.ff = objFunc(pro.cc,SubLevel);
+            }
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
 
@@ -157,11 +162,13 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                xml() << std::setw(15) << real_t( objFunc(C, L) ) << " @A0" << std::endl;
                 xml() << "<family size='" << basis.size << "' dof='" << dof << "'>" << std::endl;
+                xml() << "|" << std::setw(15) << "A0=" << "|" << Formatted::Get("%15.4f", real_t( objFunc(C, L) ) ) << "|" << std::endl;
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
-                    xml() << "\t(+) " << (**pn).eq << std::endl;
+                    const Prospect &pro = **pn;
+                    const xreal_t   aff = objFunc(pro.cc, SubLevel);
+                    pro.show(xml(), mine, 0) << std::endl;
                 }
                 xml() << "<family/>" << std::endl;
             }

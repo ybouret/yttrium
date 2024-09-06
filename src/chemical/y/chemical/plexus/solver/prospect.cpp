@@ -17,7 +17,8 @@ namespace Yttrium
         ek(_ek),
         cc(_cc),
         xi(_xi),
-        ax(xi.abs())
+        ax(xi.abs()),
+        ff()
         {
         }
 
@@ -28,7 +29,8 @@ namespace Yttrium
         ek(_.ek),
         cc(_.cc),
         xi(_.xi),
-        ax(_.ax)
+        ax(_.ax),
+        ff(_.ff)
         {
         }
 
@@ -36,11 +38,20 @@ namespace Yttrium
         Prospect:: ~Prospect() noexcept {}
 
 
-        std::ostream & Prospect:: show(std::ostream &os, const Cluster &cl, const XReadable &Ktop) const
+        std::ostream & Prospect:: show(std::ostream &os, const Cluster &cl, const XReadable * const Ktop) const
 
         {
-            os << std::setw(15) << real_t(xi) << " @";
-            cl.display(os,eq,Ktop);
+            os << "|" << std::setw(15) << real_t(xi);
+            os << "|" << Formatted::Get("%15.4f",real_t(ff));
+            os << "|"; 
+            if(0!=Ktop)
+            {
+                cl.display(os,eq,*Ktop);
+            }
+            else
+            {
+                os << eq;
+            }
             return os;
         }
 

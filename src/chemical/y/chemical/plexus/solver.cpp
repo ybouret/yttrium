@@ -37,7 +37,7 @@ namespace Yttrium
             {
                 for(size_t i=1;i<=pps.size();++i)
                 {
-                    pps[i].show( xml(), mine, Ktop) << std::endl;
+                    pps[i].show( xml(), mine, &Ktop) << std::endl;
                 }
             }
         }

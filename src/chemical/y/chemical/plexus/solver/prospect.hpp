@@ -54,7 +54,9 @@ namespace Yttrium
             //__________________________________________________________________
            
             //! full human readable info
-            std::ostream & show(std::ostream &os, const Cluster &cl, const XReadable &Ktop) const;
+            std::ostream & show(std::ostream    &os,
+                                const Cluster   &cl,
+                                const XReadable * const Ktop) const;
 
 
             //! use equilibrium and its K to compute affinity
@@ -80,7 +82,8 @@ namespace Yttrium
             const XReadable &   cc; //!< the solution
             const xreal_t       xi; //!< the extent from original state
             const xreal_t       ax; //!< |xi|
-
+            xreal_t             ff; //!< objective function value
+            
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };
