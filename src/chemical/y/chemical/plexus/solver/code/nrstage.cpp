@@ -42,6 +42,19 @@ namespace Yttrium
 
             }
 
+            const xreal_t A0 = objGrad(C,L);
+            std::cerr << "A0=" << real_t(A0) << std::endl;
+            std::cerr << "g0=" << grd << std::endl;
+            for(const PNode *pn=basis.head;pn;pn=pn->next)
+            {
+                const Prospect  & pro = (**pn);
+                const XReadable & dc  = pro.dc;
+                const xreal_t     sig = afm.xadd.dot(grd,dc);
+                std::cerr << "sig = " << std::setw(15) << real_t(sig) << " @" << pro.eq << std::endl;
+            }
+
+            return;
+
             //------------------------------------------------------------------
             //
             //

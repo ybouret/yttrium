@@ -40,6 +40,7 @@ namespace Yttrium
                     const xreal_t      ek = Ktop[eq.indx[TopLevel]];
                     const size_t       ii = pps.size() + 1;
                     XWritable         &cc = mine.transfer(ceq[ii],SubLevel,C,L);
+                    XWritable         &dc = deq[ii];
                     const Situation    st = afm.seek(cc, SubLevel, eq, ek);
 
                     switch(st)
@@ -61,7 +62,7 @@ namespace Yttrium
                             break;
                     }
 
-                    const Prospect pro(st,eq,ek,cc,afm.eval(cc,SubLevel, C, L, eq) );
+                    const Prospect pro(st,eq,ek,cc,afm.eval(dc,cc,SubLevel,C,L,eq),dc);
                     pps << pro;
                 }
 

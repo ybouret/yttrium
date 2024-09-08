@@ -80,6 +80,7 @@ namespace Yttrium
             //__________________________________________________________________
             Aftermath          afm;   //!< compute prospects
             XMatrix            ceq;   //!< cc memory
+            XMatrix            deq;   //!< dc memory
             Prospect::Series   pps;   //!< current prospects
             const size_t       dof;   //!< number of original eqs
             XSeries            obj;   //!< helper for objFunc

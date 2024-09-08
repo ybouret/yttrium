@@ -11,12 +11,14 @@ namespace Yttrium
                             const Equilibrium & _eq,
                             const xreal_t       _ek,
                             const XReadable &   _cc,
-                            const xreal_t       _xi) noexcept:
+                            const xreal_t       _xi,
+                            const XReadable &   _dc) noexcept:
         st(_st),
         eq(_eq),
         ek(_ek),
         cc(_cc),
         xi(_xi),
+        dc(_dc),
         ax(xi.abs()),
         ff()
         {
@@ -29,6 +31,7 @@ namespace Yttrium
         ek(_.ek),
         cc(_.cc),
         xi(_.xi),
+        dc(_.dc),
         ax(_.ax),
         ff(_.ff)
         {

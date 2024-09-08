@@ -42,7 +42,8 @@ namespace Yttrium
                      const Equilibrium & _eq,
                      const xreal_t       _ek,
                      const XReadable &   _cc,
-                     const xreal_t       _xi) noexcept;
+                     const xreal_t       _xi,
+                     const XReadable &   _dc) noexcept;
             Prospect(const Prospect &_) noexcept; //!< duplicate
             ~Prospect() noexcept;                 //!< cleanup
 
@@ -81,6 +82,7 @@ namespace Yttrium
             const xreal_t       ek; //!< its precomputed constant
             const XReadable &   cc; //!< the solution
             const xreal_t       xi; //!< the extent from original state
+            const XReadable &   dc; //!< cc-Corg
             const xreal_t       ax; //!< |xi|
             xreal_t             ff; //!< objective function value
             

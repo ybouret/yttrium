@@ -11,6 +11,7 @@ namespace Yttrium
         Joint(cl),
         afm(),
         ceq(neqs,nspc),
+        deq(neqs,nspc),
         pps(neqs),
         dof(mine.Nu.rows),
         obj(neqs),
