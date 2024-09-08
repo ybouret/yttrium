@@ -53,6 +53,8 @@ namespace Yttrium
     {
     }
 
+    const VFS::Entry & VFS::Entry:: operator*() const noexcept { return *this; }
+
     bool VFS::Entry:: isReg() const noexcept  { return VFS::IsReg == type; }
     bool VFS::Entry:: isDir() const noexcept  { return VFS::IsDir == type; }
 

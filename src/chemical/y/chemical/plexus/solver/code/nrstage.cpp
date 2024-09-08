@@ -1,11 +1,17 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/text/boolean.hpp"
+#include "y/mkl/opt/minimize.hpp"
+
+#include "y/jive/pattern/vfs.hpp"
+#include "y/vfs/local-fs.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        using namespace MKL;
 
         void Solver:: saveProfile(const String &fn)
         {
@@ -22,6 +28,7 @@ namespace Yttrium
 
         void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
         {
+            Solver &     F = *this;
             const size_t n = basis.size; assert(n>=2);
             const size_t m = nspc;
 
@@ -29,6 +36,17 @@ namespace Yttrium
 
 
             {
+                {
+                    VFS::Entries        toRemove;
+                    Jive::Matcher       match = "pro[:digit:]+.dat";
+                    VFS                &fs    = LocalFS::Instance();
+                    Jive::VirtualFileSystem::Find(fs, ".", toRemove, match, VFS::Entry::Base);
+                    //std::cerr << "toRemove=" << toRemove << std::endl;
+                    for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
+                    {
+                        fs.tryRemoveFile(ep->path);
+                    }
+                }
                 int idx = 1;
                 for(const PNode *pn=basis.head;pn;pn=pn->next,++idx)
                 {
@@ -42,6 +60,7 @@ namespace Yttrium
 
             }
 
+#if 0
             const xreal_t A0 = objGrad(C,L);
             std::cerr << "A0=" << real_t(A0) << std::endl;
             std::cerr << "g0=" << grd << std::endl;
@@ -52,6 +71,24 @@ namespace Yttrium
                 const xreal_t     sig = afm.xadd.dot(grd,dc);
                 std::cerr << "sig = " << std::setw(15) << real_t(sig) << " @" << pro.eq << std::endl;
             }
+#endif
+
+            for(const PNode *pn=basis.head;pn;pn=pn->next)
+            {
+                const Prospect &pro = (**pn);
+                mine.transfer(Cin,SubLevel,C,L);
+                mine.transfer(Cex,SubLevel,pro.cc, SubLevel);
+                Triplet<xreal_t> uu = { 0, -1, 1 };
+                Triplet<xreal_t> ff = { objFunc(Cin,SubLevel), -1, objFunc(Cex,SubLevel) };
+
+                //std::cerr << "uu=" << uu << std::endl;
+                //std::cerr << "ff=" << ff << std::endl;
+                const xreal_t uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
+                const xreal_t Fopt = F(uopt);
+                Y_XMLOG(xml, Formatted::Get("%15.4f", real_t(Fopt)) << " @" << std::setw(15) << real_t(uopt) << " : " << pro.eq);
+            }
+
+
 
             return;
 
@@ -158,7 +195,6 @@ namespace Yttrium
             Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
             Y_XMLOG(xml, "scale = " << real_t(scale) );
 
-            Solver &F = *this;
             const xreal_t Ain   = objGrad(Cin,SubLevel);
             const xreal_t slope = afm.xadd.dot(ddC,grd);
 

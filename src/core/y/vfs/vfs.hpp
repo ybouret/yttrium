@@ -112,7 +112,8 @@ namespace Yttrium
             virtual ~Entry() noexcept;                   //!< cleanup
             Entry(const Entry &);                        //!< duplicate
             Y_OSTREAM_PROTO(Entry);                      //!< full display
-
+            const Entry & operator*() const noexcept;    //!< access to display
+            
             //__________________________________________________________________
             //
             // methods
