@@ -22,7 +22,7 @@ namespace Yttrium
 
         void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
         {
-            const size_t n = basis.size;
+            const size_t n = basis.size; assert(n>=2);
             const size_t m = nspc;
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
@@ -62,9 +62,14 @@ namespace Yttrium
                     const Equilibrium &eq  = pro.eq;
                     XWritable         &phi = Phi[i];
                     XWritable         &nu  = Nu[i];
-                    eq.drvsMassAction(pro.ek, phi, SubLevel, C, L, afm.xmul);
                     eq.topology(nu, SubLevel);
+#if 0
+                    eq.drvsMassAction(pro.ek, phi, SubLevel, C, L, afm.xmul);
                     (xi[i] = eq.massAction(pro.ek, afm.xmul, C, L)).neg();
+#else
+                    eq.drvsAffinity(phi, SubLevel, C, L);
+                    (xi[i] = eq.affinity(pro.ek, afm.xmul, C, L)).neg();
+#endif
                 }
             }
 
@@ -89,7 +94,7 @@ namespace Yttrium
                     Chi[i][j] = xadd.sum();
                 }
             }
-            //Y_XMLOG(xml, "Phi=" << Phi);
+            Y_XMLOG(xml, "Phi=" << Phi);
             Y_XMLOG(xml, "Nu="  << Nu);
             Y_XMLOG(xml, "Chi=" << Chi);
             Y_XMLOG(xml, "lhs=" << xi);
