@@ -1,4 +1,5 @@
 #include "y/vfs/vfs.hpp"
+#include "y/system/exception.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -64,6 +65,8 @@ namespace Yttrium
         return VFS::EntryTypeText(type);
     }
 
+    const char * const VFS::Entry:: CallSign = "VFS::Entry";
+    
     String VFS::Entry:: pry(const Part part) const
     {
         switch(part)
@@ -74,7 +77,8 @@ namespace Yttrium
             case BaseWE: return ext ? String(base,ext-base) : String(base);
             case Ext:    return String(ext?ext+1:0);
         }
-        return String();
+        throw Specific::Exception(CallSign,"corrupted Part value");
+        //return String();
     }
 
     std::ostream & operator<<(std::ostream &os, const VFS::Entry &ep)

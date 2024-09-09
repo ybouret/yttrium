@@ -103,6 +103,8 @@ namespace Yttrium
                 Ext        //!< use extension
             };
 
+            static const char * const CallSign; //!< "VFS::Entry"
+
             //__________________________________________________________________
             //
             // C++
