@@ -23,7 +23,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! make index using 'int compare(lhs,rhs)'
+        //! make index using 'SignType compare(lhs,rhs)'
         //
         //______________________________________________________________________
         template <typename T,typename FUNC> static inline
@@ -59,7 +59,7 @@ namespace Yttrium
                     size_t         d = j-inc;
                     assert( t      <= n );
                     assert( idx[d] <= n );
-                    while( compare( v, arr[ idx[d] ] ) < 0 )
+                    while( compare( v, arr[ idx[d] ] ) == Negative )
                     {
                         idx[j] = idx[d];
                         j = d;

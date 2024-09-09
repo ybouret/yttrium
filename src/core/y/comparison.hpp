@@ -19,39 +19,6 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
-        //! C style increasing
-        //______________________________________________________________________
-        template <typename T> static inline
-        int Increasing(const T &lhs, const T &rhs)
-        {
-            return lhs < rhs ? -1 : ( rhs < lhs ? 1 : 0);
-        }
-
-        //______________________________________________________________________
-        //
-        //! C style increasing abs
-        //______________________________________________________________________
-        template <typename T> static inline
-        int IncreasingAbs(const T &lhs, const T &rhs)
-        {
-            const T zero(0);
-            const T l = lhs <= zero ? -lhs : lhs;
-            const T r = rhs <= zero ? -rhs : rhs;
-            return Increasing(l,r);
-        }
-
-        //______________________________________________________________________
-        //
-        //! C style decreasing
-        //______________________________________________________________________
-        template <typename T> static inline
-        int Decreasing(const T &lhs, const T &rhs)
-        {
-            return lhs < rhs ? 1 : ( rhs < lhs ? -1 : 0);
-        }
-
-        //______________________________________________________________________
-        //
         //! C++ style increasing
         //______________________________________________________________________
         template <typename T> static inline

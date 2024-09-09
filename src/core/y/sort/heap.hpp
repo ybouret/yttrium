@@ -5,6 +5,7 @@
 
 #include "y/calculus/align.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/type/signs.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -27,7 +28,7 @@ namespace Yttrium
         template <typename T, typename COMPARE> static inline
         void Tableau(T arr[], size_t num, COMPARE &proc)
         {
-            T *tab =Memory::OutOfReach::Shift(arr,-1);
+            T *tab = Memory::OutOfReach::Shift(arr,-1);
             Call<T,T*,COMPARE>(tab,num,proc);
         }
 
@@ -49,7 +50,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! arr = T[1..n]
+        //! arr = T[1..n], CXX comparator
         //
         //______________________________________________________________________
         template <
@@ -88,10 +89,10 @@ namespace Yttrium
                 size_t    j   = il<<1;
                 while (j <= ir)
                 {
-                    if( (j<ir) && proc(arr[j],arr[j+1]) < 0 )
+                    if( (j<ir) && proc(arr[j],arr[j+1]) == Negative )
                             ++j;
 
-                    if( proc(ta,arr[j]) < 0 )
+                    if( proc(ta,arr[j]) == Negative )
                     {
                         Memory::OutOfReach::Copy(&arr[i],&arr[j],sizeof(T));
                         i   = j;
@@ -168,10 +169,10 @@ namespace Yttrium
                 size_t    j   = il<<1;
                 while (j <= ir)
                 {
-                    if( (j<ir) && proc(arr[j],arr[j+1]) < 0 )
+                    if( (j<ir) && proc(arr[j],arr[j+1]) == Negative )
                         ++j;
 
-                    if( proc(ta,arr[j]) < 0 )
+                    if( proc(ta,arr[j]) == Negative )
                     {
                         Memory::OutOfReach::Copy(&arr[i],&arr[j],sizeof(T));
                         Memory::OutOfReach::Copy(&brr[i],&brr[j],sizeof(U));

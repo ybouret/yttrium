@@ -204,8 +204,8 @@ inline bool QR( Matrix<T> &a, Writable<T> &wr, Writable<T> &wi, size_t &nr)
     if(nr>0)
     {
         LightArray<T> W(&wr[1],nr);
-        HeapSort::Call(W, Comparison::Increasing<T> );
+        HeapSort::Call(W, Comparison::CxxIncreasing<T> );
     }
 
     return true;
-    }
+}

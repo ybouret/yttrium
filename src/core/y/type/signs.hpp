@@ -17,9 +17,9 @@ namespace Yttrium
     //_________________________________________________________________________
     enum SignType
     {
-        Negative = -1, //!< alias for negative sign
-        __Zero__ =  0, //!< alias for zero sign
-        Positive =  1  //!< alias for positive sign
+        Negative, //!< alias for negative sign
+        __Zero__, //!< alias for zero sign
+        Positive  //!< alias for positive sign
     };
 
     //__________________________________________________________________________

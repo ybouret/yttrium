@@ -20,14 +20,14 @@ Y_UTEST(random_gaussian)
     Vector<double> g;
 
     for(size_t i=1000;i>0;--i) g << gd();
-    HeapSort::Call(g,Comparison::IncreasingAbs<double>);
+    HeapSort::Call(g,Comparison::CxxIncreasingAbs<double>);
     //std::cerr << g << std::endl;
     double ave = 0;
     for(size_t i=1;i<=g.size();++i) ave += g[i];
     ave /= g.size();
     std::cerr << "ave=" << ave << std::endl;
     for(size_t i=g.size();i>0;--i) g[i] = Squared( g[i] - ave );
-    HeapSort::Call(g,Comparison::Increasing<double>);
+    HeapSort::Call(g,Comparison::CxxIncreasing<double>);
     double var = 0;
     for(size_t i=1;i<=g.size();++i)
     {

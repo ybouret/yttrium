@@ -67,7 +67,7 @@ Y_UTEST(strain_filter)
         y << 0.1f + 1.3f * sinf( x.tail() ) + 0.1f * ran.symm<float>();;
     }
 
-    HeapSort::Call(x, Comparison::Increasing<float>, y);
+    HeapSort::Call(x, Comparison::CxxIncreasing<float>, y);
 
     {
         OutputFile fp("strain-data.dat");

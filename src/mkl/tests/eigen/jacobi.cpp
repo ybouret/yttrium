@@ -39,7 +39,7 @@ namespace
                 continue;
             }
             //std::cerr << "a1=" << a << std::endl;
-            MKL::Eigen::Sort(d,v, Comparison::Decreasing<T>);
+            MKL::Eigen::Sort(d,v, Comparison::CxxDecreasing<T>);
 
             std::cerr << "d=diagm(" << d << ")" << std::endl;
             std::cerr << "v=" << v << std::endl;

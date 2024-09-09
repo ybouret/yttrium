@@ -58,7 +58,7 @@ static inline void TestBits( Random::Bits &ran )
         dbl[i] = ran.to<T>();
     }
 
-    HeapSort::Tableau(dbl,n,Comparison::Increasing<double>);
+    HeapSort::Tableau(dbl,n,Comparison::CxxIncreasing<double>);
 
 
     T sum = 0;

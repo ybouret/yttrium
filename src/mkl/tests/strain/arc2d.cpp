@@ -63,7 +63,7 @@ Y_UTEST(strain_arc2d)
                         -0.3f + 0.8f * s + 0.05f * ran.symm<float>());
     }
 
-    HeapSort::Call(theta, Comparison::Increasing<float>, r);
+    HeapSort::Call(theta, Comparison::CxxIncreasing<float>, r);
 
     {
         OutputFile fp("arc2d.dat");

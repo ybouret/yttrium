@@ -39,7 +39,7 @@ namespace Yttrium
 
         int Fixed:: Compare(const Fixed &lhs, const Fixed &rhs) noexcept
         {
-            return Comparison::Decreasing(lhs.gg, rhs.gg);
+            return Comparison::CxxDecreasing(lhs.gg, rhs.gg);
         }
 
     }
