@@ -36,14 +36,7 @@ namespace Yttrium
 
 
             {
-                {
-                    VFS::Entries toRemove;
-                    VFS &fs = Jive::VirtualFileSystem::List(toRemove, LocalFS::Instance(), ".", "pro[:digit:]+.dat", VFS::Entry::Base);
-                    for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
-                    {
-                        fs.tryRemoveFile(ep->path);
-                    }
-                }
+                Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro[:digit:]+.dat", VFS::Entry::Base);
                 int idx = 1;
                 for(const PNode *pn=basis.head;pn;pn=pn->next,++idx)
                 {

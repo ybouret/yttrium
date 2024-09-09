@@ -46,6 +46,23 @@ namespace Yttrium
                 Matcher matching(regExpr);
                 return Find(entries,fileSys,dirName,matching,thePart);
             }
+            
+            template <typename DIRNAME, typename REGEXPR> static inline
+            VFS &TryRemove(VFS &                  fileSys,
+                           const DIRNAME &        dirName,
+                           const REGEXPR &        regExpr,
+                           const VFS::Entry::Part thePart)
+            {
+                VFS::Entries entries;
+                VFS &fs = List(entries,fileSys,dirName,regExpr,thePart);
+                while(entries.size)
+                {
+                    fs.tryRemoveFile(entries.tail->path);
+                    delete entries.popTail();
+                }
+                return fs;
+            }
+
 
         };
     }
