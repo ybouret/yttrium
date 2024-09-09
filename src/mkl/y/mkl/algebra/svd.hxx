@@ -45,5 +45,5 @@ void SVD<real_t>:: Sort(Matrix<real_t> &u, Writable<real_t> &d, Matrix<real_t> &
 template <>
 void SVD<real_t>:: Sort(Matrix<real_t> &u, Writable<real_t> &d, Matrix<real_t> &v)
 {
-    Sort(u,d,v,Comparison::CxxIncreasingAbs<real_t>);
+    Sort(u,d,v,Comparison::IncreasingAbs<real_t>);
 }

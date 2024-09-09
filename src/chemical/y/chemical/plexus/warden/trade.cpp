@@ -38,7 +38,7 @@ namespace Yttrium
 
         int Trade:: Compare(const Trade &lhs, const Trade &rhs) noexcept
         {
-            return Comparison::CxxDecreasing(lhs.gg,rhs.gg);
+            return Comparison::Decreasing(lhs.gg,rhs.gg);
         }
     }
 

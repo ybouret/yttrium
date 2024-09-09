@@ -25,7 +25,7 @@ Y_UTEST(ordered_locate)
         for(size_t i=1;i<=data.size();++i)
         {
             size_t ipos=0;
-            Y_ASSERT(false==Orderly::Locate(ipos,data[i],arr,num, Comparison::CxxIncreasing<int>));
+            Y_ASSERT(false==Orderly::Locate(ipos,data[i],arr,num, Comparison::Increasing<int>));
             Orderly::Insert(ipos, data[i], arr, num);
             Core::Display(std::cerr,arr,num) << std::endl;
         }

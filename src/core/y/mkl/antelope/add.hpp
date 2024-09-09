@@ -68,7 +68,7 @@ namespace Yttrium
 
                         //! keep smallest absValue on top
                         inline SignType operator()(const Unit &lhs, const Unit &rhs) const noexcept
-                        { return Comparison::CxxDecreasing(lhs.absValue,rhs.absValue); }
+                        { return Comparison::Decreasing(lhs.absValue,rhs.absValue); }
 
                     private:
                         Y_DISABLE_COPY_AND_ASSIGN(Comparator);

@@ -68,8 +68,8 @@ namespace Yttrium
 
         int Prospect:: Compare(const Prospect &lhs, const Prospect &rhs) noexcept
         {
-            //return Comparison::CxxDecreasing(lhs.ax, rhs.ax);
-            return Comparison::CxxIncreasing(lhs.ff, rhs.ff);
+            //return Comparison::Decreasing(lhs.ax, rhs.ax);
+            return Comparison::Increasing(lhs.ff, rhs.ff);
         }
 
         void Prospect:: step(XSwell &inc) const

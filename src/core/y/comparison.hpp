@@ -22,7 +22,7 @@ namespace Yttrium
         //! C++ style increasing
         //______________________________________________________________________
         template <typename T> static inline
-        SignType CxxIncreasing(const T &lhs, const T &rhs)
+        SignType Increasing(const T &lhs, const T &rhs)
         {
             return Sign::Of(lhs,rhs);
         }
@@ -32,7 +32,7 @@ namespace Yttrium
         //! C++ style decreasing
         //______________________________________________________________________
         template <typename T> static inline
-        SignType CxxDecreasing(const T &lhs, const T &rhs)
+        SignType Decreasing(const T &lhs, const T &rhs)
         {
             return Sign::Of(rhs,lhs);
         }
@@ -42,12 +42,12 @@ namespace Yttrium
         //! C style increasing abs
         //______________________________________________________________________
         template <typename T> static inline
-        SignType CxxIncreasingAbs(const T &lhs, const T &rhs)
+        SignType IncreasingAbs(const T &lhs, const T &rhs)
         {
             const T zero(0);
             const T l = lhs <= zero ? -lhs : lhs;
             const T r = rhs <= zero ? -rhs : rhs;
-            return CxxIncreasing(l,r);
+            return Increasing(l,r);
         }
 
         //______________________________________________________________________
@@ -98,7 +98,7 @@ namespace Yttrium
 
         //! generic interface
         template <typename T> inline
-        SignType operator()(const T &lhs, const T &rhs) const { return Comparison::CxxIncreasing<T>(lhs,rhs); }
+        SignType operator()(const T &lhs, const T &rhs) const { return Comparison::Increasing<T>(lhs,rhs); }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(IncreasingComparator);
@@ -118,7 +118,7 @@ namespace Yttrium
 
         //! generic interface
         template <typename T> inline
-        SignType operator()(const T &lhs, const T &rhs) const { return Comparison::CxxDecreasing<T>(lhs,rhs); }
+        SignType operator()(const T &lhs, const T &rhs) const { return Comparison::Decreasing<T>(lhs,rhs); }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(DecreasingComparator);

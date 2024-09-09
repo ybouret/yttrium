@@ -26,7 +26,7 @@ namespace
         static inline SignType Compare(const XNode *lhs,
                                        const XNode *rhs) noexcept
         {
-            return Comparison::CxxIncreasing(**lhs,**rhs);
+            return Comparison::Increasing(**lhs,**rhs);
         }
 
     private:

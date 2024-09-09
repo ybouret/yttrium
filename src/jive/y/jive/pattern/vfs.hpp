@@ -47,6 +47,8 @@ namespace Yttrium
                 return Find(entries,fileSys,dirName,matching,thePart);
             }
             
+
+            //! try remove all entires whose part is matching expression
             template <typename DIRNAME, typename REGEXPR> static inline
             VFS &TryRemove(VFS &                  fileSys,
                            const DIRNAME &        dirName,

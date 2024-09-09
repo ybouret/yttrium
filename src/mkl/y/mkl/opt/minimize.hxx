@@ -5,7 +5,7 @@ namespace
                               real_t * const ff,
                               const size_t   nn)
     {
-        HeapSort::Tableau(xx, nn, Comparison::CxxIncreasing<real_t>, ff);
+        HeapSort::Tableau(xx, nn, Comparison::Increasing<real_t>, ff);
     }
 
     //------------------------------------------------------------------------------

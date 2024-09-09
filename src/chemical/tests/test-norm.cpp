@@ -36,7 +36,7 @@ namespace {
 
 
             Vector<size_t> idx(n,0);
-            Indexing::Make(idx, Comparison::CxxIncreasing<double>, z);
+            Indexing::Make(idx, Comparison::Increasing<double>, z);
             Memory::BufferOf<double> buf(n);
             Indexing::Rank(Coerce(z),idx, buf.rw_addr());
             Indexing::Rank(Coerce(a),idx, buf.rw_addr());

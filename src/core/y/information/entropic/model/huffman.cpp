@@ -15,7 +15,7 @@ namespace Yttrium
             Huffman::Node::Comparator:: ~Comparator() noexcept {}
             SignType Huffman::Node::Comparator:: operator()(const Node * const lhs, const Node * const rhs) const noexcept
             {
-                return Comparison::CxxDecreasing(lhs->freq,rhs->freq);
+                return Comparison::Decreasing(lhs->freq,rhs->freq);
             }
 
             void Huffman::Node:: make() noexcept

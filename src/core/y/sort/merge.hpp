@@ -56,7 +56,7 @@ namespace Yttrium
         template <typename NODE> static inline
         void ByIncreasingAddress(ListOf<NODE> &L)
         {
-            return Call(L,Comparison::CxxIncreasing<NODE*>);
+            return Call(L,Comparison::Increasing<NODE*>);
         }
 
 
