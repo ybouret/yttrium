@@ -34,7 +34,7 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
 
-
+            
             {
                 Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro[:digit:]+.dat", VFS::Entry::Base);
                 int idx = 1;
