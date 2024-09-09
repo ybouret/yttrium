@@ -22,18 +22,18 @@ namespace Yttrium
         struct VirtualFileSystem
         {
             //! find in VFS directory the list of matching REGULAR entries
-            static void Find(VFS &                  vfs,
-                             const String &         dname,
-                             VFS::Entries &         elist,
-                             Matcher &              match,
-                             const VFS::Entry::Part part);
+            static VFS & Find(VFS::Entries &         entries,
+                              VFS &                  fileSys,
+                              const String &         dirName,
+                              Matcher &              rxMatch,
+                              const VFS::Entry::Part thePart);
 
             //! alias
-            static void Find(VFS &                  fs,
-                             const char * const     name,
-                             VFS::Entries &         elist,
-                             Matcher      &         match,
-                             const VFS::Entry::Part part);
+            static VFS & Find(VFS::Entries &         entries,
+                              VFS &                  fileSys,
+                              const char * const     dirName,
+                              Matcher &              rxMatch,
+                              const VFS::Entry::Part thePart);
 
             //! helper
             template <typename DIRNAME, typename REGEXPR> static inline
@@ -44,8 +44,7 @@ namespace Yttrium
                       const VFS::Entry::Part thePart)
             {
                 Matcher matching(regExpr);
-                Find(fileSys,dirName,entries,matching,thePart);
-                return fileSys;
+                return Find(entries,fileSys,dirName,matching,thePart);
             }
 
         };

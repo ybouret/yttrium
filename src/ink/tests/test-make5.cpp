@@ -71,8 +71,7 @@ Y_UTEST(make5)
     fs.makeDirectory(outDir,true);
     {
         VFS::Entries          toRemove;
-        Jive::Matcher         match = "pbm";
-        Jive::VirtualFileSystem::Find(fs, outDir, toRemove, match, VFS::Entry::Ext);
+        Jive::VirtualFileSystem::List(toRemove, fs, outDir, "pbm", VFS::Entry::Ext);
         std::cerr << "Found #toRemove=" << toRemove.size << std::endl;
         for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
         {

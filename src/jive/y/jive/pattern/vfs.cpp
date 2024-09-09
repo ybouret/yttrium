@@ -6,36 +6,37 @@ namespace Yttrium
 {
     namespace Jive
     {
-        void VirtualFileSystem:: Find(VFS              &vfs,
-                                      const String     &dname,
-                                      VFS::Entries     &elist,
-                                      Matcher          &match,
-                                      VFS::Entry::Part  part)
+        VFS & VirtualFileSystem:: Find(VFS::Entries &         entries,
+                                       VFS &                  fileSys,
+                                       const String &         dirName,
+                                       Matcher &              rxMatch,
+                                       const VFS::Entry::Part thePart)
         {
-            elist.release();
-            const String          path = VFS::MakeDirName(dname);
-            AutoPtr<VFS::Scanner> scan = vfs.openDirectory(path);
+            entries.release();
+            const String          path = VFS::MakeDirName(dirName);
+            AutoPtr<VFS::Scanner> scan = fileSys.openDirectory(path);
             AutoPtr<VFS::Entry>   ep   = 0;
             while( (ep = scan->get() ).isValid() )
             {
                 if(!ep->isReg()) continue;
-                const String data = ep->pry(part);
-                if( match.exactly(ep->path,data) )
+                const String data = ep->pry(thePart);
+                if( rxMatch.exactly(ep->path,data) )
                 {
-                    elist.pushTail( ep.yield() );
+                    entries.pushTail( ep.yield() );
                 }
             }
-            MergeSort::Call(elist,VFS::Entry::CompareByName);
+            MergeSort::Call(entries,VFS::Entry::CompareByName);
+            return fileSys;
         }
 
-        void VirtualFileSystem:: Find(VFS          &       vfs,
-                                      const char   * const dname,
-                                      VFS::Entries &       elist,
-                                      Matcher      &       match,
-                                      VFS::Entry::Part     part)
+        VFS & VirtualFileSystem:: Find(VFS::Entries &         entries,
+                                       VFS &                  fileSys,
+                                       const char * const     dirName,
+                                       Matcher &              rxMatch,
+                                       const VFS::Entry::Part thePart)
         {
-            const String _(dname);
-            Find(vfs,_,elist,match,part);
+            const String _(dirName);
+            return Find(entries,fileSys,_,rxMatch,thePart);
         }
     }
 }

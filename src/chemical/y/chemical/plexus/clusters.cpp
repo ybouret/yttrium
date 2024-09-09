@@ -194,12 +194,10 @@ namespace Yttrium
         void Clusters:: render(const String &rootName) const
         {
             {
-                LocalFS       &vfs   = LocalFS:: Instance();
                 const String   rxp   = rootName + "[:digit:]+[.](png|dot)";
-                Jive::Matcher  match = rxp;
-                //GraphViz::Vizible::DotToPng("matching.dot", *match.motif);
+                Jive::Matcher  match = rxp;  //GraphViz::Vizible::DotToPng("matching.dot", *match.motif);
                 VFS::Entries   entries;
-                Jive::VirtualFileSystem::Find(vfs, "", entries, match, VFS::Entry::Base);
+                VFS           &vfs = Jive::VirtualFileSystem::List(entries, LocalFS::Instance(), "", rxp, VFS::Entry::Base);
                 for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
                 {
                     std::cerr << " (-) " << ep->path << std::endl;
