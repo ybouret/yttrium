@@ -2,11 +2,14 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+        using namespace MKL;
+
         void Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
             Y_XML_SECTION(xml, "upgrade");
@@ -114,19 +117,42 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // We now have Running only solutions : recompute ff
-            //
+            // We now have Running only solutions
+            // -> we can compute objFunc
+            // -> we can compute objFunc(pro) and order them
             //
             //------------------------------------------------------------------
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
             for(size_t i=pps.size();i>0;--i)
             {
-                Prospect &pro = pps[i];
+                Prospect &pro = pps[i]; assert(Running==pro.st);
                 pro.ff = objFunc(pro.cc,SubLevel);
             }
             HeapSort::Call(pps,Prospect::Compare);
             showProspects(xml,Ktop);
 
+
+            {
+                mine.transfer(Cin, SubLevel, C, L);
+                const xreal_t A0 = objFunc(Cin,SubLevel);
+                Solver       &F  = *this;
+                std::cerr << "A0 = " << real_t(A0) << std::endl;
+                for(size_t i=1;i<=pps.size();++i)
+                {
+                    Prospect &pro = pps[i];
+                    mine.transfer(Cex, SubLevel, pro.cc, SubLevel);
+                    Triplet<xreal_t> uu   = { 0, -1, 1 };
+                    Triplet<xreal_t> ff   = { A0, -1, pro.ff };
+                    const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
+                    const xreal_t    Fopt = F(uopt);
+                    std::cerr << "A=" << real_t(Fopt) << " @" << pro.eq << std::endl;
+                }
+            }
+
+
+
+
+            throw Exception("Not Finished");
 
             //------------------------------------------------------------------
             //
