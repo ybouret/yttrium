@@ -21,17 +21,27 @@ namespace Yttrium
         
         String Entity:: fileName() const
         {
-            String ans;
+            String ans = "pro_";
             for(size_t i=1;i<=name.size();++i)
             {
                 char c = name[i];
-                if( isalnum(c) )
+                if(isalnum(c))
                 {
+                    ans +=c;
+                    continue;
                 }
-                else
+
+               
+                switch(c)
                 {
-                    c = '_';
+                    case '+':
+                    case '-':
+                        break;
+
+                    default:
+                        c = '_';
                 }
+
                 ans += c;
             }
             return ans;

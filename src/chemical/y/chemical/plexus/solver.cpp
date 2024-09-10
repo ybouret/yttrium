@@ -1,6 +1,7 @@
 
 
 #include "y/chemical/plexus/solver.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -137,6 +138,19 @@ namespace Yttrium
             return abate;
         }
 
+
+        void Solver:: saveProfile(const String &fn)
+        {
+
+            Solver    &F = *this;
+            OutputFile fp(fn);
+            const size_t np = 1000;
+            for(size_t i=0;i<=np;++i)
+            {
+                const real_t u = double(i)/np;
+                fp("%.15g %.15g\n", u, real_t(F(u)));
+            }
+        }
 
     }
 

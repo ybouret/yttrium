@@ -41,9 +41,9 @@ namespace Yttrium
             Prospect(const Situation     _st,
                      const Equilibrium & _eq,
                      const xreal_t       _ek,
-                     const XReadable &   _cc,
+                     XWritable &         _cc,
                      const xreal_t       _xi,
-                     const XReadable &   _dc) noexcept;
+                     XWritable &         _dc) noexcept;
             Prospect(const Prospect &_) noexcept; //!< duplicate
             ~Prospect() noexcept;                 //!< cleanup
 
@@ -80,12 +80,11 @@ namespace Yttrium
             const Situation     st; //!< situation Running|Crucial
             const Equilibrium & eq; //!< the equlibrium
             const xreal_t       ek; //!< its precomputed constant
-            const XReadable &   cc; //!< the solution
-            const xreal_t       xi; //!< the extent from original state
-            const XReadable &   dc; //!< cc-Corg
-            const xreal_t       ax; //!< |xi|
+            XWritable &         cc; //!< the solution
+            xreal_t             xi; //!< the extent from original state
+            XWritable &         dc; //!< cc-Corg
             xreal_t             ff; //!< objective function value
-            
+
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };

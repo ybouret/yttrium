@@ -3,6 +3,8 @@
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/opt/minimize.hpp"
+#include "y/jive/pattern/vfs.hpp"
+#include "y/vfs/local-fs.hpp"
 
 namespace Yttrium
 {
@@ -13,6 +15,8 @@ namespace Yttrium
         void Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
             Y_XML_SECTION(xml, "upgrade");
+
+            Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
             size_t cycle = 0;
 
@@ -123,30 +127,62 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
-            for(size_t i=pps.size();i>0;--i)
             {
-                Prospect &pro = pps[i]; assert(Running==pro.st);
-                pro.ff = objFunc(pro.cc,SubLevel);
+                Y_XMLOG(xml, "[[ raw values ]]");
+                for(size_t i=pps.size();i>0;--i)
+                {
+                    Prospect &pro = pps[i]; assert(Running==pro.st);
+                    pro.ff = objFunc(pro.cc,SubLevel);
+                }
+                HeapSort::Call(pps,Prospect::Compare);
+                showProspects(xml,Ktop);
             }
-            HeapSort::Call(pps,Prospect::Compare);
-            showProspects(xml,Ktop);
 
-
+            if(pps.size()>1)
             {
+                Y_XMLOG(xml, "[[ opt values ]]");
+
+                // set common starting points
                 mine.transfer(Cin, SubLevel, C, L);
                 const xreal_t A0 = objFunc(Cin,SubLevel);
                 Solver       &F  = *this;
-                std::cerr << "A0 = " << real_t(A0) << std::endl;
+                const size_t  m  = nspc;
+                Y_XMLOG(xml, "                |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
+
+                // optimize each
                 for(size_t i=1;i<=pps.size();++i)
                 {
                     Prospect &pro = pps[i];
-                    mine.transfer(Cex, SubLevel, pro.cc, SubLevel);
+
+                    // initialize end point
+                    for(size_t j=m;j>0;--j) Cex[j] = pro.cc[j];
                     Triplet<xreal_t> uu   = { 0, -1, 1 };
                     Triplet<xreal_t> ff   = { A0, -1, pro.ff };
+
+                    // apply minimize
                     const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
                     const xreal_t    Fopt = F(uopt);
-                    std::cerr << "A=" << real_t(Fopt) << " @" << pro.eq << std::endl;
+
+                    // update status: cc and xi
+                    pro.ff = Fopt;
+                    for(size_t j=m;j>0;--j)
+                    {
+                        pro.cc[j] = Cws[j];
+                    }
+                    pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
+
+
+                    {
+                        const String fn = pro.eq.fileName() + ".pro";
+                        saveProfile(fn);
+                    }
+
                 }
+
+
+                // get new order
+                HeapSort::Call(pps,Prospect::Compare);
+                showProspects(xml,Ktop);
             }
 
 

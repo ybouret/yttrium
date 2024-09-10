@@ -10,16 +10,15 @@ namespace Yttrium
         Prospect:: Prospect(const Situation     _st,
                             const Equilibrium & _eq,
                             const xreal_t       _ek,
-                            const XReadable &   _cc,
+                            XWritable &         _cc,
                             const xreal_t       _xi,
-                            const XReadable &   _dc) noexcept:
+                            XWritable &         _dc) noexcept:
         st(_st),
         eq(_eq),
         ek(_ek),
         cc(_cc),
         xi(_xi),
         dc(_dc),
-        ax(xi.abs()),
         ff()
         {
         }
@@ -32,7 +31,6 @@ namespace Yttrium
         cc(_.cc),
         xi(_.xi),
         dc(_.dc),
-        ax(_.ax),
         ff(_.ff)
         {
         }
