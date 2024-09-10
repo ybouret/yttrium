@@ -138,10 +138,17 @@ namespace Yttrium
                 showProspects(xml,Ktop);
             }
 
+            if(pps.size()<=1)
+            {
+                assert(1==pps.size());
+                assert(0==basis.size);
+                basis << pps[1];
+                return;
+            }
+
+
             mine.transfer(Cin, SubLevel, C, L);
             const xreal_t A0 = objGrad(Cin,SubLevel);
-            //MKL::Bracketing::Verbose = true;
-            if(pps.size()>1)
             {
                 Y_XML_SECTION(xml,"xselect");
 
@@ -252,12 +259,9 @@ namespace Yttrium
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
-                    const Prospect &pro = **pn;
-                    pro.show(xml(), mine, 0) << std::endl;
+                    (**pn).show(xml(), mine, 0) << std::endl;
                 }
             }
-
-            throw Exception("Not Finished");
 
         }
 
