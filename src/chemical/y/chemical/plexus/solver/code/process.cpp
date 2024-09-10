@@ -136,6 +136,8 @@ namespace Yttrium
                 showProspects(xml,Ktop);
             }
 
+            mine.transfer(Cin, SubLevel, C, L);
+            const xreal_t A0 = objGrad(Cin,SubLevel);
             if(pps.size()>1)
             {
                 Y_XML_SECTION(xml,"xselect");
@@ -145,8 +147,7 @@ namespace Yttrium
                 // set common starting points
                 //
                 //--------------------------------------------------------------
-                mine.transfer(Cin, SubLevel, C, L);
-                const xreal_t A0 = objGrad(Cin,SubLevel);
+
                 Solver       &F  = *this;
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
 
@@ -213,7 +214,6 @@ namespace Yttrium
 
 
 
-            throw Exception("Not Finished");
 
             //------------------------------------------------------------------
             //
@@ -250,16 +250,19 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                xml() << "<family size='" << basis.size << "' dof='" << dof << "'>" << std::endl;
-                xml() << "|" << std::setw(15) << "A0=" << "|" << Formatted::Get("%15.4f", real_t( objFunc(C, L) ) ) << "|" << std::endl;
+                Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
+                //xml() << "|" << std::setw(15) << "A0=" << "|" << Formatted::Get("%15.4f", real_t( objFunc(C, L) ) ) << "|" << std::endl;
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
                     const Prospect &pro = **pn;
-                    const xreal_t   aff = objFunc(pro.cc, SubLevel);
+                    //const xreal_t   aff = objFunc(pro.cc, SubLevel);
                     pro.show(xml(), mine, 0) << std::endl;
                 }
-                xml() << "<family/>" << std::endl;
             }
+
+            throw Exception("Not Finished");
+
         }
 
         void Solver:: process(XWritable &       C,
