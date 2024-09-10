@@ -3,6 +3,8 @@
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/opt/bracket.hpp"
+
 #include "y/jive/pattern/vfs.hpp"
 #include "y/vfs/local-fs.hpp"
 
@@ -138,6 +140,7 @@ namespace Yttrium
 
             mine.transfer(Cin, SubLevel, C, L);
             const xreal_t A0 = objGrad(Cin,SubLevel);
+            //MKL::Bracketing::Verbose = true;
             if(pps.size()>1)
             {
                 Y_XML_SECTION(xml,"xselect");
@@ -160,17 +163,13 @@ namespace Yttrium
                 {
                     Prospect &    pro = pps[i];
                     const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
-                    {
-                        Cex.ld(pro.cc);
-                        const String fn = pro.eq.fileName() + ".pro";
-                        saveProfile(fn);
-                    }
 
                     if(sig.mantissa>=0.0)
                     {
                         //------------------------------------------------------
                         // cancel this position
                         //------------------------------------------------------
+                        saveProfile(pro);
                         mine.transfer(pro.cc, SubLevel, C, L);
                         pro.dc.ld(pro.xi=0);
                         pro.ff = A0;
@@ -196,6 +195,8 @@ namespace Yttrium
                         pro.ff = Fopt;
                         pro.cc.ld(Cws);
                         pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
+                        saveProfile(pro);
+
                     }
 
                     //if(xml.verbose) pro.show( xml(), mine, &Ktop) << " | slope = " << real_t(sig) << std::endl;

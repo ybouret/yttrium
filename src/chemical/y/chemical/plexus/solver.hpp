@@ -100,8 +100,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
             void showProspects(XMLog &xml, const XReadable &Ktop) const;
-            void saveProfile(const String &fn);
-            
+            void saveProfile(const String &fn);    //!< assuming Cin and Cex are set
+            void saveProfile(const Prospect &pro); //!< assuming Cin is set
+
         };
      }
 

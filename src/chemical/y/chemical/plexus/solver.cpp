@@ -152,6 +152,14 @@ namespace Yttrium
             }
         }
 
+        void Solver:: saveProfile(const Prospect &pro)
+        {
+            Cex.ld(pro.cc);
+            const String fn = (pro.xi.abs().mantissa > 0 ? "good_" : "bad_") +pro.eq.fileName() + ".pro";
+            saveProfile(fn);
+        }
+
+
     }
 
 }

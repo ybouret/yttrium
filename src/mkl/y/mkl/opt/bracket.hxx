@@ -15,6 +15,7 @@ bool Bracket<real_t>:: Inside(Triplet<real_t>   &x,
         Swap(x.a,x.c);
         Swap(f.a,f.c);
     }
+    assert(f.a<=f.c);
     real_t width = Fabs<real_t>::Of(x.c-x.a);
 
 PROBE:
@@ -30,7 +31,15 @@ PROBE:
     if(f.b <= f.a)
     {
         assert(f.isLocalMinimum());
-        x.makeIncreasingWith(f);
+        assert(x.isOrdered());
+        if(x.c<x.a)
+        {
+            Swap(x.a,x.c);
+            Swap(f.a,f.c);
+        }
+        //x.makeIncreasingWith(f);
+        //std::cerr << "x=" << x << std::endl;
+        //std::cerr << "f=" << f << std::endl;
         assert(x.isIncreasing());
         assert(f.isLocalMinimum());
         Y_BRACKET_PRINT("found @x=" << x << " f=" << f);
