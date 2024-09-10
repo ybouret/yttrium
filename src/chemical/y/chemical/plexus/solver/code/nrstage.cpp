@@ -34,9 +34,22 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
 
-            
             {
-                Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro[:digit:]+.dat", VFS::Entry::Base);
+                Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
+                for(size_t i=1;i<=pps.size();++i)
+                {
+                    const Prospect &pro = pps[i];
+                    mine.transfer(Cin,SubLevel,C,L);
+                    mine.transfer(Cex,SubLevel,pro.cc, SubLevel);
+                    const String fn = pro.eq.fileName() + ".pro";
+                    //const String fn = Formatted::Get("pro%d.dat",idx);
+                    saveProfile(fn);
+                }
+            }
+
+            if(false)
+            {
+                Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro[:digit:]+[.]dat", VFS::Entry::Base);
                 int idx = 1;
                 for(const PNode *pn=basis.head;pn;pn=pn->next,++idx)
                 {
