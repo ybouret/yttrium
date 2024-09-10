@@ -199,7 +199,6 @@ namespace Yttrium
 
                     }
 
-                    //if(xml.verbose) pro.show( xml(), mine, &Ktop) << " | slope = " << real_t(sig) << std::endl;
 
                 }
 
@@ -211,8 +210,6 @@ namespace Yttrium
                 HeapSort::Call(pps,Prospect::Compare);
                 showProspects(xml,Ktop);
             }
-
-
 
 
 
@@ -252,12 +249,10 @@ namespace Yttrium
             if(xml.verbose)
             {
                 Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
-                //xml() << "|" << std::setw(15) << "A0=" << "|" << Formatted::Get("%15.4f", real_t( objFunc(C, L) ) ) << "|" << std::endl;
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
                     const Prospect &pro = **pn;
-                    //const xreal_t   aff = objFunc(pro.cc, SubLevel);
                     pro.show(xml(), mine, 0) << std::endl;
                 }
             }
