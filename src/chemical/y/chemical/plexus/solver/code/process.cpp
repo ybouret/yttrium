@@ -126,9 +126,8 @@ namespace Yttrium
             // -> we can compute objFunc(pro) and order them
             //
             //------------------------------------------------------------------
-            Y_XML_SECTION_OPT(xml, "running", "count='" << pps.size() << "'");
             {
-                Y_XMLOG(xml, "[[ raw values ]]");
+                Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
                 for(size_t i=pps.size();i>0;--i)
                 {
                     Prospect &pro = pps[i]; assert(Running==pro.st);
@@ -140,19 +139,20 @@ namespace Yttrium
 
             if(pps.size()>1)
             {
-                Y_XMLOG(xml, "[[ opt values ]]");
+                Y_XML_SECTION(xml,"xselect");
 
                 // set common starting points
                 mine.transfer(Cin, SubLevel, C, L);
-                const xreal_t A0 = objFunc(Cin,SubLevel);
+                const xreal_t A0 = objGrad(Cin,SubLevel);
                 Solver       &F  = *this;
                 const size_t  m  = nspc;
-                Y_XMLOG(xml, "                |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
 
                 // optimize each
                 for(size_t i=1;i<=pps.size();++i)
                 {
-                    Prospect &pro = pps[i];
+                    Prospect &    pro = pps[i];
+                    const xreal_t sig = afm.xadd.dot(pro.dc,grd);
 
                     // initialize end point
                     for(size_t j=m;j>0;--j) Cex[j] = pro.cc[j];
@@ -171,18 +171,31 @@ namespace Yttrium
                     }
                     pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
 
+                    if(xml.verbose) pro.show( xml(), mine, &Ktop) << " | slope = " << real_t(sig) << std::endl;
 
                     {
                         const String fn = pro.eq.fileName() + ".pro";
                         saveProfile(fn);
                     }
-
                 }
 
 
                 // get new order
                 HeapSort::Call(pps,Prospect::Compare);
-                showProspects(xml,Ktop);
+
+                // keep only meaning full
+                while(pps.size()>0)
+                {
+                    const Prospect &pro = pps.tail();
+                    if(pro.xi.abs().mantissa<=0 || pro.ff>A0)
+                    {
+                        pps.popTail();
+                        continue;
+                    }
+                    break;
+                }
+
+                //showProspects(xml,Ktop);
             }
 
 
