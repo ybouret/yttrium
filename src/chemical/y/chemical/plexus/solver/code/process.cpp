@@ -121,8 +121,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // We now have Running only solutions
-            // -> we can compute objFunc
+            // We now have Running only solutions : objFunc is available
             // -> we can compute objFunc(pro) and order them
             //
             //------------------------------------------------------------------
@@ -141,61 +140,74 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,"xselect");
 
+                //--------------------------------------------------------------
+                //
                 // set common starting points
+                //
+                //--------------------------------------------------------------
                 mine.transfer(Cin, SubLevel, C, L);
                 const xreal_t A0 = objGrad(Cin,SubLevel);
                 Solver       &F  = *this;
-                const size_t  m  = nspc;
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
 
+                //--------------------------------------------------------------
+                //
                 // optimize each
+                //
+                //--------------------------------------------------------------
                 for(size_t i=1;i<=pps.size();++i)
                 {
                     Prospect &    pro = pps[i];
-                    const xreal_t sig = afm.xadd.dot(pro.dc,grd);
-
-                    // initialize end point
-                    for(size_t j=m;j>0;--j) Cex[j] = pro.cc[j];
-                    Triplet<xreal_t> uu   = { 0, -1, 1 };
-                    Triplet<xreal_t> ff   = { A0, -1, pro.ff };
-
-                    // apply minimize
-                    const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
-                    const xreal_t    Fopt = F(uopt);
-
-                    // update status: cc and xi
-                    pro.ff = Fopt;
-                    for(size_t j=m;j>0;--j)
+                    const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
                     {
-                        pro.cc[j] = Cws[j];
-                    }
-                    pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
-
-                    if(xml.verbose) pro.show( xml(), mine, &Ktop) << " | slope = " << real_t(sig) << std::endl;
-
-                    {
+                        Cex.ld(pro.cc);
                         const String fn = pro.eq.fileName() + ".pro";
                         saveProfile(fn);
                     }
-                }
 
-
-                // get new order
-                HeapSort::Call(pps,Prospect::Compare);
-
-                // keep only meaning full
-                while(pps.size()>0)
-                {
-                    const Prospect &pro = pps.tail();
-                    if(pro.xi.abs().mantissa<=0 || pro.ff>A0)
+                    if(sig.mantissa>=0.0)
                     {
-                        pps.popTail();
-                        continue;
+                        //------------------------------------------------------
+                        // cancel this position
+                        //------------------------------------------------------
+                        mine.transfer(pro.cc, SubLevel, C, L);
+                        pro.dc.ld(pro.xi=0);
+                        pro.ff = A0;
                     }
-                    break;
+                    else
+                    {
+                        //------------------------------------------------------
+                        // initialize end point and triplets
+                        //------------------------------------------------------
+                        Cex.ld(pro.cc);
+                        Triplet<xreal_t> uu   = { 0,  -1, 1      };
+                        Triplet<xreal_t> ff   = { A0, -1, pro.ff };
+
+                        //------------------------------------------------------
+                        // apply minimize
+                        //------------------------------------------------------
+                        const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
+                        const xreal_t    Fopt = F(uopt);
+
+                        //------------------------------------------------------
+                        // update status: cc and xi
+                        //------------------------------------------------------
+                        pro.ff = Fopt;
+                        pro.cc.ld(Cws);
+                        pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
+                    }
+
+                    //if(xml.verbose) pro.show( xml(), mine, &Ktop) << " | slope = " << real_t(sig) << std::endl;
+
                 }
 
-                //showProspects(xml,Ktop);
+                //--------------------------------------------------------------
+                //
+                // get new order
+                //
+                //--------------------------------------------------------------
+                HeapSort::Call(pps,Prospect::Compare);
+                showProspects(xml,Ktop);
             }
 
 

@@ -57,6 +57,17 @@ namespace Yttrium
             return self;
         }
 
+        //! load a copy
+        template <typename U> inline
+        Writable & ld(const Readable<U> &other)
+        {
+            Writable<T> &self = *this;
+            assert(other.size()>=self.size());
+            for(size_t i=self.size();i>0;--i) self[i] = other[i];
+            return self;
+        }
+
+
         //! apply the same method to all data
         template <typename METHOD_POINTER> inline
         Writable &forEach(METHOD_POINTER meth)

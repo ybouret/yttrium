@@ -144,7 +144,7 @@ namespace Yttrium
 
             Solver    &F = *this;
             OutputFile fp(fn);
-            const size_t np = 1000;
+            const size_t np = 100;
             for(size_t i=0;i<=np;++i)
             {
                 const real_t u = double(i)/np;

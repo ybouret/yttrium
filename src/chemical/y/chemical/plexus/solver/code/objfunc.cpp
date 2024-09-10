@@ -6,6 +6,7 @@ namespace Yttrium
     {
         xreal_t Solver:: operator()(const xreal_t u)
         {
+            //std::cerr << "solver(" << probe(u) << ")" << std::endl;
             return objFunc( probe(u), SubLevel);
         }
 
