@@ -13,9 +13,9 @@ namespace Yttrium
             // initialize inc
             inc.forEach( &XAdd::free );
 
-
-            for(size_t j=pps.size();j>0;--j)
-                pps[j].step(inc);
+            // use prospects to compute increases
+            for(size_t i=pps.size();i>0;--i)
+                pps[i].step(inc);
 
             // deduce rate
             for(const SNode *sn=mine.species.head;sn;sn=sn->next)
