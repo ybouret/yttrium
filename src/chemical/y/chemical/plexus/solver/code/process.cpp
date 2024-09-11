@@ -21,7 +21,8 @@ namespace Yttrium
 
             Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
-            size_t cycle = 0;
+            ortho.free();
+            basis.free();
 
             //------------------------------------------------------------------
             //
@@ -30,8 +31,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            ortho.free();
-            basis.free();
+            size_t cycle = 0;
         PROSPECT:
             {
                 bool emergency = false; // keep only crucial otherwise
@@ -54,16 +54,13 @@ namespace Yttrium
 
                     switch(st)
                     {
-                        case Blocked:
-                            continue;
+                        case Blocked: continue;
 
-                        case Running:
-                            if(emergency) continue;
+                        case Running: if(emergency) continue;
                             Y_XMLOG(xml, "[Running] " << eq);
                             break;
 
-                        case Crucial:
-                            emergency = true;
+                        case Crucial: emergency = true;
                             Y_XMLOG(xml, "[Crucial] " << eq);
                             break;
                     }
@@ -111,17 +108,17 @@ namespace Yttrium
                     showProspects(xml,Ktop);
 
                     //----------------------------------------------------------
-                    // take greatest |xi| to avoid smallest conc
+                    // take greatest |xi| to avoid smallest concentrations
                     //----------------------------------------------------------
                     const Prospect &pro = pps.head();
                     mine.transfer(C, L, pro.cc, SubLevel);
                     goto PROSPECT; // until no crucial was found
-
                 }
 
             }
-
             assert(pps.size()>0);
+            assert(0==ortho.size);
+            assert(0==basis.size);
 
             //------------------------------------------------------------------
             //
@@ -158,13 +155,18 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            mine.transfer(Cin, SubLevel, C, L);
-            const xreal_t A0 = objGrad(Cin,SubLevel);
+            ff0 = objGrad(mine.transfer(Cin, SubLevel, C, L),SubLevel);
+
+            //------------------------------------------------------------------
+            //
+            //
+            // select promising solutions
+            //
+            //
+            //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml,"xselect");
-
-                Solver       &F  = *this;
-                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(ff0)) << "| = ff0");
 
                 //--------------------------------------------------------------
                 //
@@ -184,7 +186,7 @@ namespace Yttrium
                         saveProfile(pro);
                         mine.transfer(pro.cc, SubLevel, C, L);
                         pro.dc.ld(pro.xi=0);
-                        pro.ff = A0;
+                        pro.ff = ff0;
                     }
                     else
                     {
@@ -192,14 +194,14 @@ namespace Yttrium
                         // initialize end point and triplets
                         //------------------------------------------------------
                         Cex.ld(pro.cc);
-                        Triplet<xreal_t> uu   = { 0,  -1, 1      };
-                        Triplet<xreal_t> ff   = { A0, -1, pro.ff };
+                        Triplet<xreal_t> uu   = { 0,   -1, 1      };
+                        Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
 
                         //------------------------------------------------------
                         // apply minimize
                         //------------------------------------------------------
-                        const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, F, uu, ff);
-                        const xreal_t    Fopt = F(uopt);
+                        const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff);
+                        const xreal_t    Fopt = fcn(uopt);
 
                         //------------------------------------------------------
                         // update status: cc and xi
@@ -260,7 +262,7 @@ namespace Yttrium
             if(xml.verbose)
             {
                 Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
-                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(ff0)) << "| = A0");
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
                     (**pn).show(xml(), mine, 0) << std::endl;

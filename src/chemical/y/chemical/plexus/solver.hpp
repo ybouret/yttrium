@@ -99,6 +99,8 @@ namespace Yttrium
             XArray             Cex;   //!< C exit for lookup
             XArray             Cws;   //!< C workspace
             XArray             ddC;   //!< deltaC
+            Solver            &fcn;   //!< *this, to call fcn(...)
+            xreal_t            ff0;   //!< initial value
             XArray             grd;   //!< initial gradient
             XSwell             inc;   //!< increases
             MKL::LU<xreal_t>   xlu;   //!< linear solver
