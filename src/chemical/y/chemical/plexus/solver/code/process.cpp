@@ -281,10 +281,11 @@ namespace Yttrium
             
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
-
+            
+            while(vlist.size) 
+                vpool.store( vlist.popTail() );
+            
             upgrade(C, L, Ktop, xml);
-
-
             {
                 Y_XML_SECTION(xml, "evolve");
                 //------------------------------------------------------------------

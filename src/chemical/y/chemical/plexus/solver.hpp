@@ -18,6 +18,34 @@ namespace Yttrium
     {
         
 
+        class Vertex : public Quantized, public XArray
+        {
+        public:
+            typedef CxxListOf<Vertex> List;
+            typedef CxxPoolOf<Vertex> Pool;
+
+            explicit Vertex(const size_t m) :
+            Quantized(),
+            XArray(m),
+            cost(),
+            next(0),
+            prev(0)
+            {
+            }
+
+            virtual ~Vertex() noexcept
+            {
+            }
+
+
+            xreal_t cost; //!< whatever cost
+            Vertex *next; //!< for list/pool
+            Vertex *prev; //!< for list
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -97,6 +125,8 @@ namespace Yttrium
             Orthogonal::Family ortho; //!< helper to find basis
             PBank              pbank; //!< memory for basis
             PRepo              basis; //!< basis of leading eqs
+            Vertex::List       vlist; //!< list of final candidates
+            Vertex::Pool       vpool; //!< pool of final candidates
             XArray             Cin;   //!< C init for lookup
             XArray             Cex;   //!< C exit for lookup
             XArray             Cws;   //!< C workspace
@@ -107,6 +137,7 @@ namespace Yttrium
             XSwell             inc;   //!< increases
             MKL::LU<xreal_t>   xlu;   //!< linear solver
             const xreal_t      xsf;   //!< xreal safe factor = 0.99
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
