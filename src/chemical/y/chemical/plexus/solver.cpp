@@ -9,6 +9,9 @@ namespace Yttrium
     {
 
         const char * const Solver:: CallSign = "Chemical::Solver";
+        const char * const Solver:: NRA_Step = "nraStep.dat";
+        const char * const Solver:: ODE_Step = "odeStep.dat";
+
 
         Solver:: Solver(const Cluster &cl) :
         Joint(cl),

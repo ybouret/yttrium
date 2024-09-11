@@ -3,8 +3,6 @@
 #include "y/text/boolean.hpp"
 #include "y/mkl/opt/minimize.hpp"
 
-#include "y/jive/pattern/vfs.hpp"
-#include "y/vfs/local-fs.hpp"
 
 namespace Yttrium
 {
@@ -15,16 +13,15 @@ namespace Yttrium
 
       
 
-        bool Solver:: nrStage(XMLog &xml)
+        bool Solver:: nraStep(XMLog &xml)
         {
             const size_t n = basis.size; assert(n>=2);
             const size_t m = nspc;
 
             // incoming with basis, ff0, grd, and Cin
 
-            Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
+            Y_XML_SECTION_OPT(xml, NRA_Step, " n='" << n << "' m='" << m << "'");
 
-            LocalFS::Instance().VFS::tryRemoveFile("nrstage.dat");
 
 
             //------------------------------------------------------------------
@@ -136,7 +133,7 @@ namespace Yttrium
                 }
             }
 
-            saveProfile("nrstage.dat",1000);
+            saveProfile(NRA_Step,1000);
 
             //------------------------------------------------------------------
             //

@@ -35,7 +35,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< definitions
-
+            static const char * const NRA_Step; //!< "nrastep"
+            static const char * const ODE_Step; //!< "odestep"
+            
             //__________________________________________________________________
             //
             //
@@ -112,7 +114,7 @@ namespace Yttrium
             void saveProfile(const String   &fn,  const size_t np); //!< assuming Cin and Cex are set
             void saveProfile(const Prospect &pro, const size_t np); //!< assuming Cin is set, set Cex as pro.cc
 
-            bool nrStage(XMLog &xml);
+            bool nraStep(XMLog &xml);
             bool odeStep(XMLog &xml);
 
         };

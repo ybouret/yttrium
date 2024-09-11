@@ -7,6 +7,7 @@
 
 #include "y/jive/pattern/vfs.hpp"
 #include "y/vfs/local-fs.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -277,6 +278,10 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml, "process");
+            
+            OutputFile::Overwrite(NRA_Step);
+            OutputFile::Overwrite(ODE_Step);
+
             upgrade(C, L, Ktop, xml);
 
 
@@ -303,7 +308,7 @@ namespace Yttrium
                         break;
                 }
 
-                nrStage(xml);
+                nraStep(xml);
                 odeStep(xml);
             }
         }

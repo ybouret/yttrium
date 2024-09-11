@@ -28,11 +28,11 @@ namespace Yttrium
 
 
 
-        bool Solver:: odeStep( XMLog &xml)
+        bool Solver:: odeStep(XMLog &xml)
         {
             const size_t n = pps.size();
             const size_t m = nspc;
-            Y_XML_SECTION_OPT(xml, "odeStep", " n='" << n << "' m='" << m << "'");
+            Y_XML_SECTION_OPT(xml, ODE_Step, " n='" << n << "' m='" << m << "'");
 
             // incoming with Cin, ff0, pps, basis, gradient, ff0
             computeRate(ddC);
@@ -63,8 +63,8 @@ namespace Yttrium
 
             Y_XMLOG(xml, "ff0   = " << real_t(ff0));
             Y_XMLOG(xml, "ff1   = " << real_t(ff1) <<  " @" << real_t(uu1));
-
-            saveProfile("odestep.dat",1000);
+            
+            saveProfile(ODE_Step,1000);
 
             return false;
 
