@@ -69,7 +69,14 @@ namespace Yttrium
             
             saveProfile(ODE_Step,1000);
 
-            return false;
+            if(ff1<=ff0)
+            {
+                vpush(Cws,ff1);
+                return true;
+            }
+            else
+                return false;
+
 
         }
 

@@ -19,7 +19,6 @@ namespace Yttrium
             const size_t m = nspc;
 
             // incoming with basis, ff0, grd, and Cin
-
             Y_XML_SECTION_OPT(xml, NRA_Step, " n='" << n << "' m='" << m << "'");
 
 
@@ -159,8 +158,12 @@ namespace Yttrium
             Y_XMLOG(xml, "ff1   = " << real_t(ff1) <<  " @" << real_t(uu1));
 
 
-
-            return ff1<=ff0;;
+            if(ff1<=ff0)
+            {
+                vpush(Cws,ff1);
+                return true;
+            }
+            else return false;
         }
 
     }

@@ -281,10 +281,7 @@ namespace Yttrium
             
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
-            
-            while(vlist.size) 
-                vpool.store( vlist.popTail() );
-            
+            vfree();
             upgrade(C, L, Ktop, xml);
             {
                 Y_XML_SECTION(xml, "evolve");
@@ -309,8 +306,46 @@ namespace Yttrium
                         break;
                 }
 
-                nraStep(xml);
-                odeStep(xml);
+                assert(pps.size()>=2);
+                
+                {
+                    const Prospect &pro = pps.head();
+                    vpush(pro.cc,pro.ff); // or another ?
+
+                }
+
+                const bool hasNRA = nraStep(xml);
+                const bool hasODE = odeStep(xml);
+
+
+
+                std::cerr << std::endl;
+
+                {
+                    Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
+                    assert(vlist.size>0);
+                    MergeSort::Call(vlist, Vertex::Compare);
+                    for(const Vertex *v=vlist.head;v;v=v->next)
+                    {
+                        std::cerr << Formatted::Get("%15.4f",real_t(v->cost)) << " @C=" << *v << std::endl;
+                    }
+                    const Vertex &ans = *vlist.head;
+                    mine.transfer(C, L, ans, SubLevel);
+                }
+
+                std::cerr << "plot 'good_" << pps.head().eq.fileName() << ".pro' w l ls 1";
+                if(hasNRA)
+                {
+                    std::cerr << ", '" << NRA_Step << "' w l ls 2";
+                }
+
+                if(hasODE)
+                {
+                    std::cerr << ", '" << ODE_Step << "' w l ls 3";
+                }
+
+                std::cerr << std::endl;
+
             }
         }
 

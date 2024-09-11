@@ -71,7 +71,7 @@ namespace Yttrium
             //
             // initialize
             //
-            //       
+            //
             //------------------------------------------------------------------
             real_t scale = 1.0;
             bool   abate = false;
@@ -126,7 +126,7 @@ namespace Yttrium
                 abate  = true;
                 goto GENERATE;
             }
-            
+
             if(result) *result = scale;
 
             //------------------------------------------------------------------
@@ -163,6 +163,19 @@ namespace Yttrium
             Cex.ld(pro.cc);
             const String fn = (pro.xi.abs().mantissa > 0 ? "good_" : "bad_") +pro.eq.fileName() + ".pro";
             saveProfile(fn,np);
+        }
+
+        void Solver:: vfree() noexcept
+        {
+            while(vlist.size)
+                vpool.store( vlist.popTail() )->ldz();
+        }
+
+        void Solver:: vpush(const XReadable &cc, const xreal_t ff)
+        {
+            Vertex *v = vlist.pushTail( vpool.size>0 ? vpool.query() : new Vertex(nspc) );
+            v->ld(cc);
+            v->cost = ff;
         }
 
 

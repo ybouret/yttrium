@@ -37,6 +37,17 @@ namespace Yttrium
             {
             }
 
+            void ldz() noexcept
+            {
+                ld( cost=0 );
+            }
+
+            static SignType Compare(const Vertex * const lhs,
+                                    const Vertex * const rhs) noexcept
+            {
+                return Comparison::Increasing(lhs->cost, rhs->cost);
+            }
+
 
             xreal_t cost; //!< whatever cost
             Vertex *next; //!< for list/pool
@@ -142,6 +153,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
+
             void showProspects(XMLog &xml, const XReadable &Ktop) const;
             void saveProfile(const String   &fn,  const size_t np); //!< assuming Cin and Cex are set
             void saveProfile(const Prospect &pro, const size_t np); //!< assuming Cin is set, set Cex as pro.cc
@@ -149,6 +161,8 @@ namespace Yttrium
             bool nraStep(XMLog &xml);
             bool odeStep(XMLog &xml);
 
+            void vpush(const XReadable &cc, const xreal_t ff);
+            void vfree() noexcept;
         };
      }
 
