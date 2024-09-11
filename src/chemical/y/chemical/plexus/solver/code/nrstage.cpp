@@ -17,7 +17,6 @@ namespace Yttrium
 
         void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
         {
-            Solver &     F = *this;
             const size_t n = basis.size; assert(n>=2);
             const size_t m = nspc;
 
@@ -129,11 +128,12 @@ namespace Yttrium
             Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
             Y_XMLOG(xml, "scale = " << real_t(scale) );
 
-            const xreal_t Ain   = objGrad(Cin,SubLevel);
+            //const xreal_t Ain   = objGrad(Cin,SubLevel);
+            const xreal_t Ain   = ff0;
             const xreal_t slope = afm.xadd.dot(ddC,grd);
 
-            std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(F(0)) << std::endl;
-            std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(F(1)) << std::endl;
+            std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(fcn(0)) << std::endl;
+            std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(fcn(1)) << std::endl;
 
             std::cerr << "slope=" << real_t(slope) << std::endl;
 

@@ -31,21 +31,23 @@ namespace Yttrium
 
         void Solver:: odeStep(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
-            //const size_t n = basis.size;
             const size_t n = pps.size();
             const size_t m = nspc;
             Y_XML_SECTION_OPT(xml, "odeStep", " n='" << n << "' m='" << m << "'");
 
-            mine.transfer(Cin, SubLevel, C, L);
+            // incoming with Cin, ff0, pps, basis and all dc
             computeRate(ddC);
 
-            if( stepWasCut(Cex,Cin,ddC,0))
             {
+                xreal_t scale;
+                if( stepWasCut(Cex,Cin,ddC,&scale))
+                {
+                    Y_XMLOG(xml, "cut @" << real_t(scale));
+                }
             }
 
-            Solver &F = *this;
-            std::cerr << "Ain = " << real_t(F(0)) << std::endl;
-            std::cerr << "Aex = " << real_t(F(1)) << std::endl;
+            std::cerr << "Ain = " << real_t(fcn(0)) << " / " << real_t(ff0) << std::endl;
+            std::cerr << "Aex = " << real_t(fcn(1)) << std::endl;
 
             saveProfile("odestep.dat");
 
