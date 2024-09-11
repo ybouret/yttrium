@@ -18,6 +18,7 @@ namespace Yttrium
         ek(_ek),
         cc(_cc),
         xi(_xi),
+        ax(xi.abs()),
         dc(_dc),
         ff()
         {
@@ -30,6 +31,7 @@ namespace Yttrium
         ek(_.ek),
         cc(_.cc),
         xi(_.xi),
+        ax(_.ax),
         dc(_.dc),
         ff(_.ff)
         {
@@ -64,10 +66,14 @@ namespace Yttrium
             return eq.affinity(ek,X,C,L);
         }
 
-        int Prospect:: Compare(const Prospect &lhs, const Prospect &rhs) noexcept
+        SignType Prospect:: CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept
         {
-            //return Comparison::Decreasing(lhs.ax, rhs.ax);
             return Comparison::Increasing(lhs.ff, rhs.ff);
+        }
+
+        SignType Prospect:: CompareDecreasingAX(const Prospect &lhs, const Prospect &rhs) noexcept
+        {
+            return Comparison::Decreasing(lhs.ax, rhs.ax);
         }
 
         void Prospect:: step(XSwell &inc) const

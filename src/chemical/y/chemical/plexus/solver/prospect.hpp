@@ -66,7 +66,10 @@ namespace Yttrium
                              const Level      L) const;
 
             //! compare by decreasing |xi|
-            static int Compare(const Prospect &lhs, const Prospect &rhs) noexcept;
+            static SignType CompareDecreasingAX(const Prospect &lhs, const Prospect &rhs) noexcept;
+
+            //! compare by increasing ff
+            static SignType CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept;
 
             //! append xi * nu to species's incresase
             void step(XSwell &inc) const;
@@ -82,6 +85,7 @@ namespace Yttrium
             const xreal_t       ek; //!< its precomputed constant
             XWritable &         cc; //!< the solution
             xreal_t             xi; //!< the extent from original state
+            xreal_t             ax; //!< |xi|
             XWritable &         dc; //!< cc-Corg
             xreal_t             ff; //!< objective function value
 

@@ -23,6 +23,7 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
 
+            LocalFS::Instance().VFS::tryRemoveFile("nrstage.dat");
 
 
             //------------------------------------------------------------------

@@ -28,6 +28,13 @@ namespace Yttrium
         class Solver : public Joint
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< definitions
 
             //__________________________________________________________________
             //
@@ -48,6 +55,7 @@ namespace Yttrium
             void     nrStage(XWritable &C, const Level L, XMLog &xml);
             void     odeStep(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
+            
             //! solve crucial, collect prospects and basis
             void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 

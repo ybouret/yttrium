@@ -14,6 +14,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
+
         void Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
             Y_XML_SECTION(xml, "upgrade");
@@ -33,16 +34,15 @@ namespace Yttrium
             basis.free();
         PROSPECT:
             {
-                ++cycle;
-                Y_XMLOG(xml, "[cycle #" << cycle << "]");
-                pps.free();
                 bool emergency = false; // keep only crucial otherwise
+                Y_XMLOG(xml, "[cycle #" << ++cycle << "]");
+                pps.free();
 
                 //--------------------------------------------------------------
                 //
-                // loop over eqs
+                // loop over equilibria and collect prospects
                 //
-                //------------------------------------------------------------------
+                //---------------------------------------------------------------
                 for(const ENode *en=mine.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -63,10 +63,7 @@ namespace Yttrium
                             break;
 
                         case Crucial:
-                            if(!emergency)
-                            {
-                                emergency = true;
-                            }
+                            emergency = true;
                             Y_XMLOG(xml, "[Crucial] " << eq);
                             break;
                     }
@@ -80,22 +77,23 @@ namespace Yttrium
                 // special case: all blocks
                 //
                 //--------------------------------------------------------------
-                if( pps.size() <= 0 )
-                {
+                if( pps.size() <= 0 ) {
                     Y_XMLOG(xml, "[Jammed]");
                     return;
                 }
 
                 //--------------------------------------------------------------
                 //
-                // in case of emergency: move and try again
+                // in case of emergency: find right move and try again
                 //
                 //--------------------------------------------------------------
                 if(emergency)
                 {
                     assert(pps.size()>0);
 
+                    //----------------------------------------------------------
                     // remove not crucial
+                    //----------------------------------------------------------
                     for(size_t i=pps.size();i>0;--i) {
                         if( Crucial != pps[i].st ) {
                             assert(Running==pps[i].st);
@@ -106,10 +104,15 @@ namespace Yttrium
                     Y_XML_SECTION_OPT(xml, "emergency","count='"<<pps.size() << "'");
                     assert( pps.size() > 0);
 
-                    // sort remaingin crucial
-                    HeapSort::Call(pps,Prospect::Compare);
+                    //----------------------------------------------------------
+                    // sort remaining crucial by decreasing |xi|
+                    //----------------------------------------------------------
+                    HeapSort::Call(pps,Prospect::CompareDecreasingAX);
                     showProspects(xml,Ktop);
 
+                    //----------------------------------------------------------
+                    // take greatest |xi| to avoid smallest conc
+                    //----------------------------------------------------------
                     const Prospect &pro = pps.head();
                     mine.transfer(C, L, pro.cc, SubLevel);
                     goto PROSPECT; // until no crucial was found
@@ -124,7 +127,7 @@ namespace Yttrium
             //
             //
             // We now have Running only solutions : objFunc is available
-            // -> we can compute objFunc(pro) and order them
+            // -> we can compute objFunc(pro) and pre-order them
             //
             //------------------------------------------------------------------
             {
@@ -134,29 +137,31 @@ namespace Yttrium
                     Prospect &pro = pps[i]; assert(Running==pro.st);
                     pro.ff = objFunc(pro.cc,SubLevel);
                 }
-                HeapSort::Call(pps,Prospect::Compare);
+                HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
+                
+                if(pps.size()<=1)
+                {
+                    assert(1==pps.size());
+                    assert(0==basis.size);
+                    basis << pps[1];
+                    return;
+                }
             }
 
-            if(pps.size()<=1)
-            {
-                assert(1==pps.size());
-                assert(0==basis.size);
-                basis << pps[1];
-                return;
-            }
 
 
+            //------------------------------------------------------------------
+            //
+            //
+            // set common starting point and study each prospect
+            //
+            //
+            //------------------------------------------------------------------
             mine.transfer(Cin, SubLevel, C, L);
             const xreal_t A0 = objGrad(Cin,SubLevel);
             {
                 Y_XML_SECTION(xml,"xselect");
-
-                //--------------------------------------------------------------
-                //
-                // set common starting points
-                //
-                //--------------------------------------------------------------
 
                 Solver       &F  = *this;
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(A0)) << "| = A0");
@@ -174,7 +179,7 @@ namespace Yttrium
                     if(sig.mantissa>=0.0)
                     {
                         //------------------------------------------------------
-                        // cancel this position
+                        // positive or zero slope, cancel this position
                         //------------------------------------------------------
                         saveProfile(pro);
                         mine.transfer(pro.cc, SubLevel, C, L);
@@ -201,9 +206,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         pro.ff = Fopt;
                         pro.cc.ld(Cws);
-                        pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq);
+                        pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
                         saveProfile(pro);
-
                     }
 
 
@@ -214,7 +218,7 @@ namespace Yttrium
                 // get new order
                 //
                 //--------------------------------------------------------------
-                HeapSort::Call(pps,Prospect::Compare);
+                HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
             }
 

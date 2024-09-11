@@ -8,6 +8,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+        const char * const Solver:: CallSign = "Chemical::Solver";
+
         Solver:: Solver(const Cluster &cl) :
         Joint(cl),
         afm(),
