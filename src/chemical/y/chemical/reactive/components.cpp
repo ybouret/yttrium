@@ -353,12 +353,26 @@ namespace Yttrium
             size_t i=db.size();
             for(ConstIterator it=db.begin();i>0;--i,++it)
             {
-                const Component &cm = **it;
-                const Species       &sp = cm.sp;
+                const Component &    cm = **it;
+                const Species &      sp = cm.sp;
                 const size_t * const id = sp.indx;
                 inc[ id[SubLevel] ] << cm.xn * xi;
             }
         }
+
+        void Components:: step(XSwell &inc, const XReadable &dc) const
+        {
+            size_t i=db.size();
+            for(ConstIterator it=db.begin();i>0;--i,++it)
+            {
+                const Component &    cm = **it;
+                const Species   &    sp = cm.sp;
+                const size_t * const id = sp.indx;
+                const size_t         j  = id[SubLevel];
+                inc[ j ] << dc[j];
+            }
+        }
+
 
     }
 

@@ -268,6 +268,11 @@ namespace Yttrium
             //! add xi * nu  in corresponding inc
             void step(XSwell &inc, const xreal_t xi) const;
 
+            //! add dc to corresponding inc
+            void step(XSwell &inc, const XReadable &dc) const;
+
+
+
             //__________________________________________________________________
             //
             //

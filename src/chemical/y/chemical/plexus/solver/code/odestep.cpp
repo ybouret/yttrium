@@ -15,7 +15,9 @@ namespace Yttrium
 
             // use prospects to compute increases
             for(size_t i=pps.size();i>0;--i)
+            {
                 pps[i].step(inc);
+            }
 
             // deduce rate
             for(const SNode *sn=mine.species.head;sn;sn=sn->next)

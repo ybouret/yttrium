@@ -79,7 +79,7 @@ namespace Yttrium
         void Prospect:: step(XSwell &inc) const
         {
             assert(Running==st);
-            eq.step(inc,xi);
+            eq.step(inc,dc);
         }
 
     }
