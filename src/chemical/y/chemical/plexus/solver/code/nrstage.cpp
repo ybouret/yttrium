@@ -136,7 +136,7 @@ namespace Yttrium
                 }
             }
 
-            saveProfile("nrstage.dat");
+            saveProfile("nrstage.dat",1000);
 
             //------------------------------------------------------------------
             //

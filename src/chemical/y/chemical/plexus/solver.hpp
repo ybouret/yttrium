@@ -52,8 +52,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            bool     nrStage(XMLog &xml);
-            void     odeStep(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
 
 
             //! solve crucial, collect prospects and basis
@@ -110,8 +109,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
             void showProspects(XMLog &xml, const XReadable &Ktop) const;
-            void saveProfile(const String &fn);    //!< assuming Cin and Cex are set
-            void saveProfile(const Prospect &pro); //!< assuming Cin is set
+            void saveProfile(const String   &fn,  const size_t np); //!< assuming Cin and Cex are set
+            void saveProfile(const Prospect &pro, const size_t np); //!< assuming Cin is set, set Cex as pro.cc
+
+            bool nrStage(XMLog &xml);
+            bool odeStep(XMLog &xml);
 
         };
      }

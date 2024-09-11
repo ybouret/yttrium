@@ -143,12 +143,11 @@ namespace Yttrium
         }
 
 
-        void Solver:: saveProfile(const String &fn)
+        void Solver:: saveProfile(const String &fn, const size_t np)
         {
 
             Solver    &F = *this;
             OutputFile fp(fn);
-            const size_t np = 100;
             for(size_t i=0;i<=np;++i)
             {
                 const real_t u = double(i)/np;
@@ -156,11 +155,11 @@ namespace Yttrium
             }
         }
 
-        void Solver:: saveProfile(const Prospect &pro)
+        void Solver:: saveProfile(const Prospect &pro, const size_t np)
         {
             Cex.ld(pro.cc);
             const String fn = (pro.xi.abs().mantissa > 0 ? "good_" : "bad_") +pro.eq.fileName() + ".pro";
-            saveProfile(fn);
+            saveProfile(fn,np);
         }
 
 

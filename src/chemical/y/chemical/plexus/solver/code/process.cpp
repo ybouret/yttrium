@@ -147,7 +147,6 @@ namespace Yttrium
             }
 
 
-
             //------------------------------------------------------------------
             //
             //
@@ -183,7 +182,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // positive or zero slope, cancel this position
                         //------------------------------------------------------
-                        saveProfile(pro);
+                        saveProfile(pro,50);
                         mine.transfer(pro.cc, SubLevel, C, L);
                         pro.dc.ld(pro.xi=0);
                         pro.ff = ff0;
@@ -209,7 +208,7 @@ namespace Yttrium
                         pro.ff = Fopt;
                         pro.cc.ld(Cws);
                         pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
-                        saveProfile(pro);
+                        saveProfile(pro,100);
                     }
 
 
@@ -305,7 +304,7 @@ namespace Yttrium
                 }
 
                 nrStage(xml);
-                //odeStep(C, L, Ktop, xml);
+                odeStep(xml);
             }
         }
 
