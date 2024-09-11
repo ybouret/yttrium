@@ -46,8 +46,8 @@ namespace Yttrium
                 }
             }
 
-            std::cerr << "Ain = " << real_t(fcn(0)) << " / " << real_t(ff0) << std::endl;
-            std::cerr << "Aex = " << real_t(fcn(1)) << std::endl;
+            Y_XMLOG(xml,"Ain = " << real_t(fcn(0)) << " / " << real_t(ff0));
+            Y_XMLOG(xml,"Aex = " << real_t(fcn(1)));
 
             saveProfile("odestep.dat");
 
