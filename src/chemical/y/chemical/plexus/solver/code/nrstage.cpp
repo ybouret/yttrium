@@ -15,10 +15,12 @@ namespace Yttrium
 
       
 
-        void Solver:: nrStage(XWritable &C, const Level L,  XMLog &xml)
+        bool Solver:: nrStage(XMLog &xml)
         {
             const size_t n = basis.size; assert(n>=2);
             const size_t m = nspc;
+
+            // incoming with basis, ff0, grd, and Cin
 
             Y_XML_SECTION_OPT(xml, "nrStage", " n='" << n << "' m='" << m << "'");
 
@@ -50,8 +52,8 @@ namespace Yttrium
                     eq.drvsMassAction(pro.ek, phi, SubLevel, C, L, afm.xmul);
                     (xi[i] = eq.massAction(pro.ek, afm.xmul, C, L)).neg();
 #else
-                    eq.drvsAffinity(phi, SubLevel, C, L);
-                    (xi[i] = eq.affinity(pro.ek, afm.xmul, C, L)).neg();
+                    eq.drvsAffinity(phi, SubLevel, Cin, SubLevel);
+                    (xi[i] = eq.affinity(pro.ek, afm.xmul, Cin, SubLevel)).neg();
 #endif
                 }
             }
@@ -92,7 +94,7 @@ namespace Yttrium
             if(!xlu.build(Chi))
             {
                 std::cerr << "Singular Matrix" << std::endl;
-                return;
+                return false;
             }
 
             //------------------------------------------------------------------
@@ -104,7 +106,6 @@ namespace Yttrium
             //------------------------------------------------------------------
             xlu.solve(Chi,xi);
             Y_XMLOG(xml, "xi =" << xi);
-            mine.transfer(Cin, SubLevel, C, L);
 
             for(size_t j=m;j>0;--j)
             {
@@ -119,27 +120,50 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // scaling
+            // Compute Cex by acceptable ddC
             //
             //
             //------------------------------------------------------------------
-            xreal_t    scale;
-            const bool abate = stepWasCut(Cex,Cin,ddC,&scale);
-            Y_XMLOG(xml, "abate = " << BooleanTo::text(abate) );
-            Y_XMLOG(xml, "scale = " << real_t(scale) );
-
-            //const xreal_t Ain   = objGrad(Cin,SubLevel);
-            const xreal_t Ain   = ff0;
-            const xreal_t slope = afm.xadd.dot(ddC,grd);
-
-            std::cerr << "Ain = " << real_t(Ain) << " / " << real_t(objFunc(Cin, SubLevel)) << " / " << real_t(fcn(0)) << std::endl;
-            std::cerr << "Aex = " << real_t(objFunc(Cex, SubLevel)) << " / " << real_t(fcn(1)) << std::endl;
-
-            std::cerr << "slope=" << real_t(slope) << std::endl;
+            {
+                xreal_t    scale;
+                if( stepWasCut(Cex,Cin,ddC,&scale) )
+                {
+                    Y_XMLOG(xml, "# scale = " << real_t(scale) );
+                }
+                else
+                {
+                    Y_XMLOG(xml, "# full step");
+                }
+            }
 
             saveProfile("nrstage.dat");
 
+            //------------------------------------------------------------------
+            //
+            //
+            // Compute slope to see if acceptable direction
+            //
+            //
+            //------------------------------------------------------------------
+            const xreal_t slope = afm.xadd.dot(ddC,grd);
+            Y_XMLOG(xml,"slope = " << real_t(slope));
+            if(slope.mantissa>=0.0)
+            {
+                Y_XMLOG(xml, "positive slope");
+                return false;
+            }
 
+            Triplet<xreal_t> uu = { 0,   -1, 1 };
+            Triplet<xreal_t> ff = { ff0, -1, objFunc(Cex,SubLevel) };
+            const xreal_t    uu1 = Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff);
+            const xreal_t    ff1 = fcn(uu1);
+
+            Y_XMLOG(xml, "ff0   = " << real_t(ff0));
+            Y_XMLOG(xml, "ff1   = " << real_t(ff1) <<  " @" << real_t(uu1));
+
+
+
+            return ff1<=ff0;;
         }
 
     }

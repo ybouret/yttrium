@@ -304,9 +304,8 @@ namespace Yttrium
                         break;
                 }
 
-
-                nrStage(C, L, xml);
-                odeStep(C, L, Ktop, xml);
+                nrStage(xml);
+                //odeStep(C, L, Ktop, xml);
             }
         }
 

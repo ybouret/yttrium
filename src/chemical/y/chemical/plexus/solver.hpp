@@ -52,10 +52,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void     nrStage(XWritable &C, const Level L, XMLog &xml);
+            bool     nrStage(XMLog &xml);
             void     odeStep(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
-            
+
             //! solve crucial, collect prospects and basis
             void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
@@ -64,7 +64,7 @@ namespace Yttrium
 
             xreal_t  objFunc(const XReadable &C, const Level L);
             xreal_t  objGrad(const XReadable &C, const Level L);
-
+            
             //! return Cws as Cin*(1-u) + Cex*u, clamped
             const XReadable &probe(const xreal_t u);
 
