@@ -53,6 +53,7 @@ namespace Yttrium
             Y_XMLOG(xml, "slope = " << real_t(slope));
             if(slope.mantissa>=0)
             {
+                Y_XMLOG(xml, "positive slope");
                 return false;
             }
 
