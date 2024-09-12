@@ -30,7 +30,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-
             ff0 = 0;
             vfree();
             ortho.free();
@@ -46,7 +45,7 @@ namespace Yttrium
             size_t cycle = 0;
         PROSPECT:
             {
-                bool emergency = false; // keep only crucial otherwise
+                bool emergency = false; // start from no-crucial state
                 Y_XMLOG(xml, "[cycle #" << ++cycle << "]");
                 pps.free();
 
@@ -68,7 +67,7 @@ namespace Yttrium
                     {
                         case Blocked: continue;
 
-                        case Running: if(emergency) continue;
+                        case Running: if(emergency) continue; // on crucial state
                             Y_XMLOG(xml, "[Running] " << eq);
                             break;
 
@@ -128,6 +127,7 @@ namespace Yttrium
                 }
 
             }
+
             assert(pps.size()>0);
             assert(0==ortho.size);
             assert(0==basis.size);
@@ -136,29 +136,30 @@ namespace Yttrium
             //
             //
             // We now have Running only solutions : objFunc is available
-            // -> we can compute objFunc(pro) and pre-order them
+            // -> we can compute objFunc(pro)
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
+                //Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
                 for(size_t i=pps.size();i>0;--i)
                 {
                     Prospect &pro = pps[i]; assert(Running==pro.st);
                     pro.ff = objFunc(pro.cc,SubLevel);
                 }
-                HeapSort::Call(pps,Prospect::CompareIncreasingFF);
-                showProspects(xml,Ktop);
+                //HeapSort::Call(pps,Prospect::CompareIncreasingFF);
+                //showProspects(xml,Ktop);
             }
 
 
             //------------------------------------------------------------------
             //
             //
-            // set common starting point and study each prospect
+            // set common starting point : ff0@Cin, and study each prospect
             //
             //
             //------------------------------------------------------------------
             ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
+          
             if(pps.size()<=1)
             {
                 assert(1==pps.size());
@@ -176,7 +177,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION(xml,"xselect");
+                Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
 
                 //--------------------------------------------------------------
@@ -184,7 +185,7 @@ namespace Yttrium
                 // optimize each
                 //
                 //--------------------------------------------------------------
-                for(size_t i=1;i<=pps.size();++i)
+                for(size_t i=pps.size();i>0;--i)
                 {
                     Prospect &    pro = pps[i];
                     const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
@@ -195,7 +196,7 @@ namespace Yttrium
                         // positive or zero slope, cancel this position
                         //------------------------------------------------------
                         mine.transfer(pro.cc, SubLevel, C, L);
-                        pro.dc.ld(pro.xi=0);
+                        pro.dc.ld(pro.ax=pro.xi=0);
                         pro.ff = ff0;
                     }
                     else
@@ -208,25 +209,17 @@ namespace Yttrium
                         Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
 
                         //------------------------------------------------------
-                        // apply minimize
-                        //------------------------------------------------------
-                        const xreal_t    uopt = Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff);
-                        const xreal_t    Fopt = fcn(uopt);
-
-                        //------------------------------------------------------
                         // update status: cc and xi
                         //------------------------------------------------------
-                        pro.ff = Fopt;
+                        pro.ff = fcn( Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff) );
                         pro.cc.ld(Cws);
                         pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
                     }
-
-
                 }
 
                 //--------------------------------------------------------------
                 //
-                // get new order
+                // get new order to build basis
                 //
                 //--------------------------------------------------------------
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
