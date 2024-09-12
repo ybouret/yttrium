@@ -54,7 +54,7 @@ namespace Yttrium
             xreal_t     cost; //!< whatever cost
             Vertex     *next; //!< for list/pool
             Vertex     *prev; //!< for list
-            const char *info; //!< info
+            const char *info; //!< info for output
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Vertex);
@@ -106,12 +106,15 @@ namespace Yttrium
             void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
             //! upgrade and apply strategy
-            void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+            void  process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
-            //! locate min in Cin:Cex, true if decreases ff0
-            bool     located(const char * const fn, XMLog &xml);
+            //! locate min of objective function in Cin:Cex, true if decreases ff0
+            bool  located(const char * const fn, XMLog &xml);
 
+            //! objective function over prospects
             xreal_t  objFunc(const XReadable &C, const Level L);
+
+            //! object function+gradient (in grd) over prospects
             xreal_t  objGrad(const XReadable &C, const Level L);
             
             //! return Cws as Cin*(1-u) + Cex*u, clamped
@@ -120,13 +123,23 @@ namespace Yttrium
             //! objFunc( probe(u), SubLevel )
             xreal_t operator()(const xreal_t u);
 
+            //! compute target from source+deltaC
+            /**
+             deltaC is scaled to guarantee valid target
+             \param target output valid concentrations
+             \param source input valid concentrations
+             \param deltaC input and output deltaC
+             \param result optional scaling factor
+             */
             bool stepWasCut(XWritable &       target,
                             const XReadable & source,
                             XWritable &       deltaC,
                             xreal_t * const   result) const;
 
-
+            //! compute Rate from selected prospects dC
             void computeRate(XWritable &rate);
+
+            //! check all basis eqs are ok with given concentrations
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;
         
             //__________________________________________________________________

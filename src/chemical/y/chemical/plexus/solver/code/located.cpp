@@ -19,11 +19,11 @@ namespace Yttrium
             Y_XMLOG(xml, "ff0   = " << real_t(ff0));
             Y_XMLOG(xml, "ff1   = " << real_t(ff1) <<  " @" << real_t(uu1));
 
-            saveProfile(fn,1000);
 
             if(ff1<=ff0)
             {
                 vpush(Cws,ff1).info  = fn;
+                saveProfile(fn,1000);
                 return true;
             }
             else

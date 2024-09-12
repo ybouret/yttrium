@@ -2,7 +2,7 @@
 #include "y/chemical/plexus/wardens.hpp"
 #include "y/chemical/plexus/solver.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -35,16 +35,24 @@ Y_UTEST(solver)
     {
         Solver solver(*cl);
 
-        for(size_t iter=0;iter<10;++iter)
+        for(size_t iter=0;iter<1;++iter)
         {
             plexus.conc(C0,0.3,0.1);
             lib(std::cerr << "C0=","\t[",C0,"]");
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
 
-            for(size_t turn=1;turn<=5;++turn)
+            OutputFile fp("ff.dat");
+            for(unsigned turn=1;turn<=5;++turn)
             {
                 solver.process(C0, TopLevel, K, xml);
+                if(1==turn)
+                {
+                    fp("0 %.15g %.15g\n", real_t(solver.ff0), real_t(solver.ff0));
+                }
+                fp("%u",turn);
+                fp(" %.15g %.15g", real_t(solver.vlist.head->cost), real_t(solver.objFunc(C0,TopLevel)) );
+                fp << '\n';
                 lib(std::cerr << "C" << turn << "=","\t[",C0,"]");
             }
 

@@ -25,7 +25,7 @@ namespace Yttrium
 
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
-            upgrade(C, L, Ktop, xml);
+            upgrade(C,L,Ktop,xml);
 
             {
                 Y_XML_SECTION(xml, "evolve");
@@ -66,6 +66,7 @@ namespace Yttrium
                 const bool hasODE = odeStep(xml);
 
 
+
                 {
                     Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
                     assert(vlist.size>0);
@@ -87,24 +88,27 @@ namespace Yttrium
                     mine.transfer(C,L,ans, SubLevel);
                 }
 
-                
-                std::cerr << "plot '" << pro.fileName() << "' w l ls 1";
 
-                if(hasNRA) {
-                    std::cerr << ", '" << NRA_Step << "' w l ls 2";
+                if(xml.verbose)
+                {
+                    xml() << std::endl << "plot '" << pro.fileName() << "' w l ls 1";
+
+                    if(hasNRA) {
+                        *xml << ", '" << NRA_Step << "' w l ls 2";
+                    }
+
+                    if(hasODE) {
+                        *xml<< ", '" << ODE_Step << "' w l ls 3";
+                    }
+
+                    *xml << std::endl << std::endl;
                 }
-
-                if(hasODE) {
-                    std::cerr << ", '" << ODE_Step << "' w l ls 3";
-                }
-
-                std::cerr << std::endl;
-
             }
+
         }
 
 
-       
+
 
 
     }

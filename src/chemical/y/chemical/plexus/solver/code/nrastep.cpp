@@ -75,10 +75,10 @@ namespace Yttrium
                     Chi[i][j] = xadd.sum();
                 }
             }
-            Y_XMLOG(xml, "Phi=" << Phi);
-            Y_XMLOG(xml, "Nu="  << Nu);
-            Y_XMLOG(xml, "Chi=" << Chi);
-            Y_XMLOG(xml, "lhs=" << xi);
+            //Y_XMLOG(xml, "Phi=" << Phi);
+            //Y_XMLOG(xml, "Nu="  << Nu);
+            //Y_XMLOG(xml, "Chi=" << Chi);
+            //Y_XMLOG(xml, "lhs=" << xi);
 
             //------------------------------------------------------------------
             //
@@ -89,8 +89,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(!xlu.build(Chi))
             {
-                Y_XMLOG(xml, "Singular Matrix");
-                throw  Specific::Exception(CallSign,"check singular matrix");
+                Y_XMLOG(xml, "# singular matrix");
                 return false;
             }
 
@@ -103,7 +102,6 @@ namespace Yttrium
             //------------------------------------------------------------------
             xlu.solve(Chi,xi);
             Y_XMLOG(xml, "xi =" << xi);
-
             for(size_t j=m;j>0;--j)
             {
                 xadd.free();
@@ -146,7 +144,7 @@ namespace Yttrium
             Y_XMLOG(xml,"slope = " << real_t(slope));
             if(slope.mantissa>=0.0)
             {
-                Y_XMLOG(xml, "positive slope");
+                Y_XMLOG(xml, "# positive slope");
                 return false;
             }
 

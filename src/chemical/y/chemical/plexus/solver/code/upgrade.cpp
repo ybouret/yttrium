@@ -23,6 +23,15 @@ namespace Yttrium
 
             Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
+            //------------------------------------------------------------------
+            //
+            //
+            // initialize
+            //
+            //
+            //------------------------------------------------------------------
+
+            ff0 = 0;
             vfree();
             ortho.free();
             basis.free();
@@ -139,14 +148,6 @@ namespace Yttrium
                 }
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
-
-                if(pps.size()<=1)
-                {
-                    assert(1==pps.size());
-                    assert(0==basis.size);
-                    basis << pps[1];
-                    return;
-                }
             }
 
 
@@ -157,7 +158,15 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            ff0 = objGrad(mine.transfer(Cin, SubLevel, C, L),SubLevel);
+            ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
+            if(pps.size()<=1)
+            {
+                assert(1==pps.size());
+                assert(0==basis.size);
+                const Prospect &pro = pps[1];
+                basis << pro;
+                return;
+            }
 
             //------------------------------------------------------------------
             //
@@ -168,7 +177,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Y_XML_SECTION(xml,"xselect");
-                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(ff0)) << "| = ff0");
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
 
                 //--------------------------------------------------------------
                 //
@@ -185,7 +194,6 @@ namespace Yttrium
                         //------------------------------------------------------
                         // positive or zero slope, cancel this position
                         //------------------------------------------------------
-                        //saveProfile(pro,50);
                         mine.transfer(pro.cc, SubLevel, C, L);
                         pro.dc.ld(pro.xi=0);
                         pro.ff = ff0;
@@ -211,7 +219,6 @@ namespace Yttrium
                         pro.ff = Fopt;
                         pro.cc.ld(Cws);
                         pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
-                        //saveProfile(pro,100);
                     }
 
 
@@ -264,7 +271,7 @@ namespace Yttrium
             if(xml.verbose)
             {
                 Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
-                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4f", real_t(ff0)) << "| = A0");
+                Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
                 for(const PNode *pn=basis.head;pn;pn=pn->next)
                 {
                     (**pn).show(xml(), mine, 0) << std::endl;
