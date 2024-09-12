@@ -25,6 +25,8 @@ namespace Yttrium
         ortho(nspc,dof),
         pbank(),
         basis(pbank),
+        vlist(),
+        vpool(),
         Cin(nspc),
         Cex(nspc),
         Cws(nspc),
