@@ -137,7 +137,7 @@ namespace Yttrium
                 }
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
-                
+
                 if(pps.size()<=1)
                 {
                     assert(1==pps.size());
@@ -183,7 +183,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // positive or zero slope, cancel this position
                         //------------------------------------------------------
-                        saveProfile(pro,50);
+                        //saveProfile(pro,50);
                         mine.transfer(pro.cc, SubLevel, C, L);
                         pro.dc.ld(pro.xi=0);
                         pro.ff = ff0;
@@ -209,7 +209,7 @@ namespace Yttrium
                         pro.ff = Fopt;
                         pro.cc.ld(Cws);
                         pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
-                        saveProfile(pro,100);
+                        //saveProfile(pro,100);
                     }
 
 
@@ -278,7 +278,7 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml, "process");
-            
+
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
             vfree();
@@ -294,8 +294,7 @@ namespace Yttrium
                 //------------------------------------------------------------------
                 switch( pps.size() )
                 {
-                    case 0:
-                        throw Specific::Exception("here", "not possible");
+                    case 0: throw Specific::Exception(CallSign, "not possible");
 
                     case 1: {
                         const Prospect &pro = pps.head();
@@ -307,19 +306,16 @@ namespace Yttrium
                 }
 
                 assert(pps.size()>=2);
-                
-                {
-                    const Prospect &pro = pps.head();
-                    vpush(pro.cc,pro.ff); // or another ?
 
-                }
+
+                const Prospect &pro = pps.head();
+                vpush(pro.cc,pro.ff); // or another ?
+                saveProfile(pro,1000);
+
 
                 const bool hasNRA = nraStep(xml);
                 const bool hasODE = odeStep(xml);
 
-
-
-                std::cerr << std::endl;
 
                 {
                     Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
@@ -330,17 +326,16 @@ namespace Yttrium
                         std::cerr << Formatted::Get("%15.4f",real_t(v->cost)) << " @C=" << *v << std::endl;
                     }
                     const Vertex &ans = *vlist.head;
-                    mine.transfer(C, L, ans, SubLevel);
+                    mine.transfer(C,L,ans, SubLevel);
                 }
 
-                std::cerr << "plot '" << pps.head().fileName() << "' w l ls 1";
-                if(hasNRA)
-                {
+                std::cerr << "plot '" << pro.fileName() << "' w l ls 1";
+
+                if(hasNRA) {
                     std::cerr << ", '" << NRA_Step << "' w l ls 2";
                 }
 
-                if(hasODE)
-                {
+                if(hasODE) {
                     std::cerr << ", '" << ODE_Step << "' w l ls 3";
                 }
 
