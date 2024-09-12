@@ -2,7 +2,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/text/boolean.hpp"
 #include "y/mkl/opt/minimize.hpp"
-
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -89,7 +89,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             if(!xlu.build(Chi))
             {
-                std::cerr << "Singular Matrix" << std::endl;
+                Y_XMLOG(xml, "Singular Matrix");
+                throw  Exception(CallSign,"check singular matrix");
                 return false;
             }
 

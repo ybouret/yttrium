@@ -72,6 +72,7 @@ namespace Yttrium
                     MergeSort::Call(vlist, Vertex::Compare);
                     if(xml.verbose)
                     {
+                        xml() << Formatted::Get("%15.4g",real_t(ff0)) << " = ff0" << std::endl;
                         for(const Vertex *v=vlist.head;v;v=v->next)
                         {
                             xml() << Formatted::Get("%15.4g",real_t(v->cost));

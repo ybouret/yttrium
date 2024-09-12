@@ -10,6 +10,23 @@
 
 namespace Yttrium
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! global output flag
+    //
+    //__________________________________________________________________________
+    struct XRealOutput
+    {
+        //! output modes
+        enum ModeType
+        {
+            Default, //!< mantissa^exponent
+            Compact  //!< converted to real
+        };
+        
+        static ModeType Mode; //!< global value
+    };
 
     Y_SHALLOW_DECL(Raised); //!< helper to make arbitrary high/low XReal
 

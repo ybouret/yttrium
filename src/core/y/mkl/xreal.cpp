@@ -10,6 +10,7 @@
 namespace Yttrium
 {
     Y_SHALLOW_IMPL(Raised);
+    XRealOutput::ModeType XRealOutput::Mode = XRealOutput::Default;
 }
 
 #define real_t float

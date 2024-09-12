@@ -91,27 +91,39 @@ namespace Yttrium
     }
 
     template <>
+    XReal<real_t>:: operator real_t() const
+    { return std::ldexp(mantissa,exponent); }
+
+
+    template <>
     void XReal<real_t>:: display(std::ostream &os) const
     {
         static const unsigned radix = MKL::Numeric<real_t>::RADIX;
-        os << '(' << mantissa;
-        switch(exponent)
+        switch( XRealOutput::Mode )
         {
-            case -1: os << "/" << radix; break;
-            case  0: break;
-            case  1: os << "*" << radix; break;
-            default:
-                if(exponent>0)
-                    os << "*" << radix << "^" << exponent;
-                else
-                    os << "/" << radix << "^" << -exponent;
+            case XRealOutput::Default:
+                os << '(' << mantissa;
+                switch(exponent)
+                {
+                    case -1: os << "/" << radix; break;
+                    case  0: break;
+                    case  1: os << "*" << radix; break;
+                    default:
+                        if(exponent>0)
+                            os << "*" << radix << "^" << exponent;
+                        else
+                            os << "/" << radix << "^" << -exponent;
+                }
+                os << ')';
+                break;
+
+            case XRealOutput::Compact:
+                os << static_cast<real_t>(*this);
+                break;
         }
-        os << ')';
     }
 
-    template <>
-    XReal<real_t>:: operator real_t() const
-    { return std::ldexp(mantissa,exponent); }
+
 
     template<>
     XReal<real_t>:: XReal(const int e, const real_t m) noexcept :
