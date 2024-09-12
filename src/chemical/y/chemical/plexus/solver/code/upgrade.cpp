@@ -23,6 +23,7 @@ namespace Yttrium
 
             Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
+            vfree();
             ortho.free();
             basis.free();
 

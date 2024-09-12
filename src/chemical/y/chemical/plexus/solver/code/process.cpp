@@ -25,8 +25,8 @@ namespace Yttrium
 
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
-            vfree();
             upgrade(C, L, Ktop, xml);
+
             {
                 Y_XML_SECTION(xml, "evolve");
                 //------------------------------------------------------------------
