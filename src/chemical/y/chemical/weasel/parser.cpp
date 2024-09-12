@@ -19,7 +19,7 @@ namespace Yttrium
 
                 const Rule &END    = opt(mark(';'));
                 const Rule &SEP    = mark(':');
-                const Rule &UUID   = term("UUID", "[:alpha:][[:word:]_]*");
+                const Rule &UUID   = term("UUID", "[:alpha:][[:word:]_()]*");
                 const Rule &PLUS   = term('+');
                 const Rule &MINUS  = term('-');
                 const Rule &POS    = agg("POS") << oom(PLUS);

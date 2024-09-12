@@ -44,6 +44,7 @@ namespace Yttrium
                     case 1: {
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
+                        vpush(pro.cc,pro.ff).info = MIN_Step;
                     } return;
 
                     default:
