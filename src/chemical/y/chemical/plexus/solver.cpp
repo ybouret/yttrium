@@ -11,6 +11,7 @@ namespace Yttrium
         const char * const Solver:: CallSign = "Chemical::Solver";
         const char * const Solver:: NRA_Step = "nraStep.dat";
         const char * const Solver:: ODE_Step = "odeStep.dat";
+        const char * const Solver:: MIN_Step = "minStep.dat";
 
 
         Solver:: Solver(const Cluster &cl) :
@@ -169,11 +170,13 @@ namespace Yttrium
                 vpool.store( vlist.popTail() )->ldz();
         }
 
-        void Solver:: vpush(const XReadable &cc, const xreal_t ff)
+        Vertex &Solver:: vpush(const XReadable &cc, const xreal_t ff)
         {
             Vertex *v = vlist.pushTail( vpool.size>0 ? vpool.query() : new Vertex(nspc) );
             v->ld(cc);
             v->cost = ff;
+            v->info = 0;
+            return *v;
         }
 
 

@@ -23,7 +23,7 @@ namespace Yttrium
 
             if(ff1<=ff0)
             {
-                vpush(Cws,ff1);
+                vpush(Cws,ff1).info  = fn;
                 return true;
             }
             else

@@ -29,7 +29,8 @@ namespace Yttrium
             XArray(m),
             cost(),
             next(0),
-            prev(0)
+            prev(0),
+            info(0)
             {
             }
 
@@ -40,6 +41,7 @@ namespace Yttrium
             void ldz() noexcept
             {
                 ld( cost=0 );
+                info = 0;
             }
 
             static SignType Compare(const Vertex * const lhs,
@@ -49,13 +51,15 @@ namespace Yttrium
             }
 
 
-            xreal_t cost; //!< whatever cost
-            Vertex *next; //!< for list/pool
-            Vertex *prev; //!< for list
+            xreal_t     cost; //!< whatever cost
+            Vertex     *next; //!< for list/pool
+            Vertex     *prev; //!< for list
+            const char *info; //!< info
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Vertex);
         };
+
 
         //______________________________________________________________________
         //
@@ -77,7 +81,8 @@ namespace Yttrium
             static const char * const CallSign; //!< definitions
             static const char * const NRA_Step; //!< "nrastep"
             static const char * const ODE_Step; //!< "odestep"
-            
+            static const char * const MIN_Step; //!< "minstep"
+
             //__________________________________________________________________
             //
             //
@@ -103,6 +108,7 @@ namespace Yttrium
             //! upgrade and apply strategy
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
+            //! locate min in Cin:Cex, true if decreases ff0
             bool     located(const char * const fn, XMLog &xml);
 
             xreal_t  objFunc(const XReadable &C, const Level L);
@@ -163,8 +169,8 @@ namespace Yttrium
             bool nraStep(XMLog &xml);
             bool odeStep(XMLog &xml);
 
-            void vpush(const XReadable &cc, const xreal_t ff);
-            void vfree() noexcept;
+            Vertex &vpush(const XReadable &cc, const xreal_t ff);
+            void    vfree() noexcept;
         };
      }
 

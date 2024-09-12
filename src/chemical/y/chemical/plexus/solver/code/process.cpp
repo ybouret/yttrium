@@ -29,13 +29,13 @@ namespace Yttrium
 
             {
                 Y_XML_SECTION(xml, "evolve");
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 //
                 // evolve
                 //
                 //
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 switch( pps.size() )
                 {
                     case 0:
@@ -52,9 +52,15 @@ namespace Yttrium
 
                 assert(pps.size()>=2);
 
-
+                //--------------------------------------------------------------
+                //
+                //
+                // evolve
+                //
+                //
+                //--------------------------------------------------------------
                 const Prospect &pro = pps.head();
-                vpush(pro.cc,pro.ff); // or another ?
+                vpush(pro.cc,pro.ff).info = MIN_Step; // or another ?
                 saveProfile(pro,1000);
                 const bool hasNRA = nraStep(xml);
                 const bool hasODE = odeStep(xml);
@@ -64,14 +70,23 @@ namespace Yttrium
                     Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
                     assert(vlist.size>0);
                     MergeSort::Call(vlist, Vertex::Compare);
-                    for(const Vertex *v=vlist.head;v;v=v->next)
+                    if(xml.verbose)
                     {
-                        std::cerr << Formatted::Get("%15.4f",real_t(v->cost)) << " @C=" << *v << std::endl;
+                        for(const Vertex *v=vlist.head;v;v=v->next)
+                        {
+                            xml() << Formatted::Get("%15.4g",real_t(v->cost));
+                            if(v->info)
+                            {
+                                *xml << " [" << v->info << "]";
+                            }
+                            *xml << " @C=" << *v << std::endl;
+                        }
                     }
                     const Vertex &ans = *vlist.head;
                     mine.transfer(C,L,ans, SubLevel);
                 }
 
+                
                 std::cerr << "plot '" << pro.fileName() << "' w l ls 1";
 
                 if(hasNRA) {
