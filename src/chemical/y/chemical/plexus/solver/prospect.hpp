@@ -74,6 +74,8 @@ namespace Yttrium
             //! append xi * nu to species's incresase
             void step(XSwell &inc) const;
 
+            String fileName() const; //!< [good_|bad_] + eq.fileName() + ".pro"
+
             //__________________________________________________________________
             //
             //

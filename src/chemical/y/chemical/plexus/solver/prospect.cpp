@@ -82,6 +82,11 @@ namespace Yttrium
             eq.step(inc,dc);
         }
 
+
+        String Prospect:: fileName() const
+        {
+            return (xi.abs().mantissa > 0 ? "good_" : "bad_") + eq.fileName() + ".pro";
+        }
     }
 
 }

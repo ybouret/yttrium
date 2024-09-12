@@ -333,7 +333,7 @@ namespace Yttrium
                     mine.transfer(C, L, ans, SubLevel);
                 }
 
-                std::cerr << "plot 'good_" << pps.head().eq.fileName() << ".pro' w l ls 1";
+                std::cerr << "plot '" << pps.head().fileName() << "' w l ls 1";
                 if(hasNRA)
                 {
                     std::cerr << ", '" << NRA_Step << "' w l ls 2";

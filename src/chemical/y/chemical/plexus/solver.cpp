@@ -148,20 +148,18 @@ namespace Yttrium
 
         void Solver:: saveProfile(const String &fn, const size_t np)
         {
-
-            Solver    &F = *this;
             OutputFile fp(fn);
             for(size_t i=0;i<=np;++i)
             {
                 const real_t u = double(i)/np;
-                fp("%.15g %.15g\n", u, real_t(F(u)));
+                fp("%.15g %.15g\n", u, real_t(fcn(u)));
             }
         }
 
         void Solver:: saveProfile(const Prospect &pro, const size_t np)
         {
             Cex.ld(pro.cc);
-            const String fn = (pro.xi.abs().mantissa > 0 ? "good_" : "bad_") +pro.eq.fileName() + ".pro";
+            const String fn = pro.fileName();
             saveProfile(fn,np);
         }
 
