@@ -42,19 +42,23 @@ Y_UTEST(solver)
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
 
+            solver.run(C0, TopLevel, K, xml);
+
+#if 0
             OutputFile fp("ff.dat");
             for(unsigned turn=1;turn<=5;++turn)
             {
                 solver.process(C0, TopLevel, K, xml);
                 if(1==turn)
                 {
-                    fp("0 %.15g %.15g\n", real_t(solver.ff0), real_t(solver.ff0));
+                    fp("0 %.15g\n", real_t(solver.ff0));
                 }
                 fp("%u",turn);
-                fp(" %.15g %.15g", real_t(solver.vlist.head->cost), real_t(solver.objFunc(C0,TopLevel)) );
+                fp(" %.15g",  real_t(solver.objFunc(C0,TopLevel)) );
                 fp << '\n';
                 lib(std::cerr << "C" << turn << "=","\t[",C0,"]");
             }
+#endif
 
         }
     }

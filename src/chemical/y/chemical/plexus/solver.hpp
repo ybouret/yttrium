@@ -102,14 +102,14 @@ namespace Yttrium
 
 
 
-            //! solve crucial, collect prospects and basis
-            void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
             //! upgrade and apply strategy
             void  process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
-            //! locate min of objective function in Cin:Cex, true if decreases ff0
-            bool  located(const char * const fn, XMLog &xml);
+
+            void  run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+
+
 
             //! objective function over prospects
             xreal_t  objFunc(const XReadable &C, const Level L);
@@ -174,13 +174,16 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
-
             void showProspects(XMLog &xml, const XReadable &Ktop) const;
             void saveProfile(const String   &fn,  const size_t np); //!< assuming Cin and Cex are set
             void saveProfile(const Prospect &pro, const size_t np); //!< assuming Cin is set, set Cex as pro.cc
 
-            bool nraStep(XMLog &xml);
-            bool odeStep(XMLog &xml);
+            bool nraStep(XMLog &xml); //!< successful Newton-Raphson Algorithm step
+            bool odeStep(XMLog &xml); //!< successful ODE-like step
+            bool located(const char * const fn, XMLog &xml); //!< locate min of objective function in Cin:Cex, true if decreases ff0
+
+            //! solve crucial, collect prospects and basis
+            void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
             Vertex &vpush(const XReadable &cc, const xreal_t ff);
             void    vfree() noexcept;
