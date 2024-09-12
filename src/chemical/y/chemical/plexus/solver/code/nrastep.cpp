@@ -2,7 +2,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/text/boolean.hpp"
 #include "y/mkl/opt/minimize.hpp"
-#include "y/exception.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -90,7 +90,7 @@ namespace Yttrium
             if(!xlu.build(Chi))
             {
                 Y_XMLOG(xml, "Singular Matrix");
-                throw  Exception(CallSign,"check singular matrix");
+                throw  Specific::Exception(CallSign,"check singular matrix");
                 return false;
             }
 

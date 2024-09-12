@@ -45,7 +45,7 @@ namespace Yttrium
 
         {
             os << "|" << std::setw(15) << real_t(xi);
-            os << "|" << Formatted::Get("%15.4f",real_t(ff));
+            os << "|" << Formatted::Get("%15.4g",real_t(ff));
             os << "|"; 
             if(0!=Ktop)
             {

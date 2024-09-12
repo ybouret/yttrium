@@ -35,7 +35,7 @@ Y_UTEST(solver)
     {
         Solver solver(*cl);
 
-        for(size_t iter=0;iter<1;++iter)
+        for(size_t iter=0;iter<10;++iter)
         {
             plexus.conc(C0,0.3,0.1);
             lib(std::cerr << "C0=","\t[",C0,"]");
