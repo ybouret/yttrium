@@ -149,6 +149,9 @@ namespace Yttrium
                 return false;
             }
 
+            return located(NRA_Step,xml);
+
+#if 0
             Triplet<xreal_t> uu = { 0,   -1, 1 };
             Triplet<xreal_t> ff = { ff0, -1, objFunc(Cex,SubLevel) };
             const xreal_t    uu1 = Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff);
@@ -165,6 +168,7 @@ namespace Yttrium
             }
             else 
                 return false;
+#endif
         }
 
     }

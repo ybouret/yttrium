@@ -103,6 +103,8 @@ namespace Yttrium
             //! upgrade and apply strategy
             void     process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
+            bool     located(const char * const fn, XMLog &xml);
+
             xreal_t  objFunc(const XReadable &C, const Level L);
             xreal_t  objGrad(const XReadable &C, const Level L);
             
