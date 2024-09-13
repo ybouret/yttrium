@@ -185,12 +185,9 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 for(size_t i=npro;i>0;--i)
-                {
-                    Prospect &    pro = pps[i];
-                    if(enhance(pro)) ++good;
-                }
+                    if(enhance(pps[i])) ++good;
 
-                Y_XML_COMMENT(xml, "good = " << good << " / " << npro);
+
 
                 //--------------------------------------------------------------
                 //
@@ -199,6 +196,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
+                Y_XML_COMMENT(xml, "good = " << good << " / " << npro);
             }
 
 
