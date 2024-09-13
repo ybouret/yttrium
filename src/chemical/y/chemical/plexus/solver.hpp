@@ -144,7 +144,13 @@ namespace Yttrium
              \return number of prospects
              */
             size_t     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+           
+            //! enhance propsect along its transformation
             bool       enhance(Prospect &);
+
+            //! extract basis
+            void       extract(XMLog &xml);
+
 
         };
      }

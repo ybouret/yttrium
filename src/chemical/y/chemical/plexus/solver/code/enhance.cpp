@@ -14,7 +14,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             // assuming Cin and ff0 are set
             //------------------------------------------------------------------
-            const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
+            const xreal_t sig = afm.xadd.dot(pro.dc,grd); // numeric slope
             if(sig.mantissa>=0.0)
             {
                 //------------------------------------------------------
@@ -30,16 +30,18 @@ namespace Yttrium
                 //------------------------------------------------------
                 // initialize end point and triplets
                 //------------------------------------------------------
-                Cex.ld(pro.cc);
-                Triplet<xreal_t> uu   = { 0,   -1, 1      };
-                Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
+                {
+                    Cex.ld(pro.cc);
+                    Triplet<xreal_t> uu   = { 0,   -1, 1      };
+                    Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
+                    pro.ff = fcn( Minimize<xreal_t>::Locate(Minimizing::Inside,fcn,uu,ff) );
+                }
 
                 //------------------------------------------------------
-                // update status: cc and xi
+                // update status: cc, then dc, xi and |xi|
                 //------------------------------------------------------
-                pro.ff = fcn( Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff) );
                 pro.cc.ld(Cws);
-                pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
+                pro.ax = (pro.xi = afm.eval(pro.dc,pro.cc,SubLevel,Cin,SubLevel,pro.eq)).abs();
                 return true;
             }
 

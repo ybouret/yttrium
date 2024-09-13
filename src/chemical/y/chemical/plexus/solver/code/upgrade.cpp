@@ -38,7 +38,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // looking for running/crucial solutions
+            // looking for [running|crucial] solutions
             //
             //
             //------------------------------------------------------------------
@@ -82,7 +82,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // special case: all blocked
+                // special case: all blocked, won't move anymore. Ever...
                 //
                 //--------------------------------------------------------------
                 if( pps.size() <= 0 ) {
@@ -125,7 +125,6 @@ namespace Yttrium
                     mine.transfer(C, L, pro.cc, SubLevel);
                     goto PROSPECT; // until no crucial was found
                 }
-
             }
 
             const size_t npro = pps.size();
@@ -136,10 +135,25 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // We now have Running only solutions : objFunc is available
+            // special case with 1 prospect : ff0 = pro.ff = 0
             //
             //
             //------------------------------------------------------------------
+            if(1==npro) {
+                Y_XML_COMMENT(xml,"single: " << pps.head().eq);
+                return 1;
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            // We now have Running only solutions : objFunc is available
+            // -> initialize all prospects at their ceq
+            //
+            //
+            //------------------------------------------------------------------
+            assert(npro>=2);
             for(size_t i=npro;i>0;--i)
             {
                 Prospect &pro = pps[i]; assert(Running==pro.st);
@@ -149,31 +163,24 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // set common starting point : ff0@Cin, and study each prospect
-            //
+            // set common starting point:
+            // - set Cin
+            // - set gradient in grd
+            // - compute ff0 from all active prospects
             //
             //------------------------------------------------------------------
             ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
 
-            if(1==npro)
-            {
-                assert(0==basis.size);
-                const Prospect &pro = pps[1];
-                basis << pro;
-                return 1;
-            }
-
-            assert(npro>=2);
 
             //------------------------------------------------------------------
             //
             //
-            // select promising solutions
+            // enhance solutions by minimum on their line
             //
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION_OPT(xml,"running", "count='" << npro << "'");
+                Y_XML_SECTION_OPT(xml,"enhance", "count='" << npro << "'");
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
                 size_t good = 0;
                 //--------------------------------------------------------------
@@ -205,7 +212,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 size_t i=1;
-                for(;i<=pps.size();++i)
+                for(;i<=npro;++i)
                 {
                     const Prospect    &   pro = pps[i]; assert(Running==pro.st);
                     const Equilibrium &   eq  = pro.eq;
@@ -217,11 +224,12 @@ namespace Yttrium
                     {
                         ortho.expand();
                         basis << pro;
-                        if(ortho.size>=dof) break;
+                        if(ortho.size>=dof) 
+                            break; // basis is full
                     }
                 }
 
-                for(++i;i<=pps.size();++i)
+                for(++i;i<=npro;++i)
                 {
                     const Prospect    &   pro = pps[i]; assert(Running==pro.st);
                     const Equilibrium &   eq  = pro.eq;
@@ -229,6 +237,7 @@ namespace Yttrium
                 }
             }
 
+            
             if(xml.verbose)
             {
                 Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
@@ -241,6 +250,9 @@ namespace Yttrium
 
             return npro;
         }
+
+
+
     }
 
 }

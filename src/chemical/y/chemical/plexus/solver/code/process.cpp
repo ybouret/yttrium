@@ -21,11 +21,11 @@ namespace Yttrium
                               XMLog           & xml)
         {
 
-            Y_XML_SECTION(xml, "process");
 
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
-            upgrade(C,L,Ktop,xml);
+
+            const size_t npro = upgrade(C,L,Ktop,xml);
 
             {
                 Y_XML_SECTION(xml, "evolve");
@@ -36,7 +36,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                switch( pps.size() )
+                switch( npro )
                 {
                     case 0:
                         return;
@@ -51,7 +51,7 @@ namespace Yttrium
                         break;
                 }
 
-                assert(pps.size()>=2);
+                assert(npro>=2);
 
                 //--------------------------------------------------------------
                 //
