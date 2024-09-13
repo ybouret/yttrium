@@ -5,7 +5,7 @@
 #ifndef Y_Chemical_Solver_Included
 #define Y_Chemical_Solver_Included 1
 
-
+#include "y/chemical/plexus/solver/vertices.hpp"
 #include "y/chemical/plexus/solver/prospect.hpp"
 #include "y/chemical/plexus/joint.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
@@ -18,83 +18,7 @@ namespace Yttrium
     {
         
 
-        class Vertex : public Quantized, public XArray
-        {
-        public:
-            typedef CxxListOf<Vertex> List;
-            typedef CxxPoolOf<Vertex> Pool;
-
-            explicit Vertex(const size_t m) :
-            Quantized(),
-            XArray(m),
-            cost(),
-            next(0),
-            prev(0),
-            info(0)
-            {
-            }
-
-            virtual ~Vertex() noexcept
-            {
-            }
-
-           void ldz() noexcept
-            {
-                ld( cost=0 );
-                info = 0;
-            }
-
-            static SignType Compare(const Vertex * const lhs,
-                                    const Vertex * const rhs) noexcept
-            {
-                return Comparison::Increasing(lhs->cost, rhs->cost);
-            }
-
-
-            xreal_t     cost; //!< whatever cost
-            Vertex     *next; //!< for list/pool
-            Vertex     *prev; //!< for list
-            const char *info; //!< info for output
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Vertex);
-        };
-
-        class Vertices : public Vertex::List
-        {
-        public:
-            explicit Vertices(const size_t nspc) noexcept :
-            Vertex::List(),
-            dims(nspc),
-            pool()
-            {
-            }
-
-            virtual ~Vertices() noexcept
-            {
-            }
-
-            virtual void free() noexcept
-            {
-                while(size>0) pool.store( popTail() )->ldz();
-            }
-
-            Vertex &push(const XReadable &cc, const xreal_t ff)
-            {
-                Vertex *v =  pushTail( pool.size>0 ? pool.query() : new Vertex(dims) );
-                v->ld(cc);
-                v->cost = ff;
-                v->info = 0;
-                return *v;
-            }
-
-            const size_t dims;
-            Vertex::Pool pool;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Vertices);
-        };
-
-
+      
         //______________________________________________________________________
         //
         //
