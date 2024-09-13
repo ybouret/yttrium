@@ -142,8 +142,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(size_t i=npro;i>0;--i)
             {
-                Prospect &pro = pps[i]; 
-                assert(Running==pro.st);
+                Prospect &pro = pps[i]; assert(Running==pro.st);
                 pro.ff = objFunc(pro.cc,SubLevel);
             }
 
@@ -177,9 +176,9 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
+                Y_XML_SECTION_OPT(xml,"running", "count='" << npro << "'");
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
-
+                size_t good = 0;
                 //--------------------------------------------------------------
                 //
                 // optimize each
@@ -188,38 +187,14 @@ namespace Yttrium
                 for(size_t i=npro;i>0;--i)
                 {
                     Prospect &    pro = pps[i];
-                    const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
-
-                    if(sig.mantissa>=0.0)
-                    {
-                        //------------------------------------------------------
-                        // positive or zero slope, cancel this position
-                        //------------------------------------------------------
-                        mine.transfer(pro.cc, SubLevel, C, L);
-                        pro.dc.ld(pro.ax=pro.xi=0);
-                        pro.ff = ff0;
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        // initialize end point and triplets
-                        //------------------------------------------------------
-                        Cex.ld(pro.cc);
-                        Triplet<xreal_t> uu   = { 0,   -1, 1      };
-                        Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
-
-                        //------------------------------------------------------
-                        // update status: cc and xi
-                        //------------------------------------------------------
-                        pro.ff = fcn( Minimize<xreal_t>::Locate(Minimizing::Inside, fcn, uu, ff) );
-                        pro.cc.ld(Cws);
-                        pro.ax = (pro.xi = afm.eval(pro.dc, pro.cc, SubLevel, Cin, SubLevel, pro.eq)).abs();
-                    }
+                    if(enhance(pro)) ++good;
                 }
+
+                Y_XML_COMMENT(xml, "good = " << good << " / " << npro);
 
                 //--------------------------------------------------------------
                 //
-                // get new order to build basis
+                // order them to build basis
                 //
                 //--------------------------------------------------------------
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
