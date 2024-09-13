@@ -82,11 +82,11 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // special case: all blocks
+                // special case: all blocked
                 //
                 //--------------------------------------------------------------
                 if( pps.size() <= 0 ) {
-                    Y_XML_COMMENT(xml,"Jammed");
+                    Y_XML_COMMENT(xml,"all jammed");
                     return 0;
                 }
 
@@ -146,9 +146,6 @@ namespace Yttrium
                 pro.ff = objFunc(pro.cc,SubLevel);
             }
 
-
-
-
             //------------------------------------------------------------------
             //
             //
@@ -186,9 +183,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 for(size_t i=npro;i>0;--i)
                     if(enhance(pps[i])) ++good;
-
-
-
+                
                 //--------------------------------------------------------------
                 //
                 // order them to build basis
