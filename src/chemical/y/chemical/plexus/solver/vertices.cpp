@@ -7,7 +7,7 @@ namespace Yttrium
     {
 
         Vertex:: Vertex(const size_t m) :
-        Object(),
+        Quantized(),
         XArray(m),
         cost(),
         next(0),

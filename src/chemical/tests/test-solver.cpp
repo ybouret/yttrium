@@ -63,7 +63,8 @@ Y_UTEST(solver)
         }
     }
 
-
+    Y_SIZEOF(Vertex);
+    Y_SIZEOF(Solver);
 
 
 }

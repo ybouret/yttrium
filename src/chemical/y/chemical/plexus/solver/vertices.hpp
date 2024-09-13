@@ -7,7 +7,7 @@
 #include "y/chemical/types.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/data/pool/cxx.hpp"
-#include "y/object.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -22,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Vertex : public Object, public XArray
+        class Vertex : public Quantized, public XArray
         {
         public:
             //__________________________________________________________________
