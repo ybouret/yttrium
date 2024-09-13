@@ -1,4 +1,4 @@
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
 

@@ -3,7 +3,7 @@
 #include "y/concurrent/loop/crew.hpp"
 #include "y/ink/image/codecs.hpp"
 #include "y/color/ramp/black-and-white.hpp"
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 
 using namespace Yttrium;
 using namespace Ink;

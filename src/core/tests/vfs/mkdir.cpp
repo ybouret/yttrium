@@ -1,5 +1,5 @@
 #include "y/utest/run.hpp"
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 
 using namespace Yttrium;
 

@@ -147,7 +147,7 @@ namespace Yttrium
     }
 }
 
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include "y/system/exception.hpp"
 #include "y/stream/libc/output.hpp"
 

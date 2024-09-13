@@ -162,7 +162,7 @@ namespace Yttrium
 
 }
 
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include "y/jive/pattern/vfs.hpp"
 
 namespace Yttrium

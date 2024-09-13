@@ -109,6 +109,7 @@ mkl/cameo
 mkl/cameo/add
 mkl/antelope
 vfs
+vfs/local
 information
 information/stream
 information/bwt

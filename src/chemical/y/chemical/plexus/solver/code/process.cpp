@@ -6,7 +6,7 @@
 #include "y/mkl/opt/bracket.hpp"
 
 #include "y/jive/pattern/vfs.hpp"
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include "y/stream/libc/output.hpp"
 
 namespace Yttrium

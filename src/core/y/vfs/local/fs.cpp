@@ -1,5 +1,5 @@
 
-#include "y/vfs/local-fs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include "y/system/exception.hpp"
 
 #if defined(Y_WIN)
