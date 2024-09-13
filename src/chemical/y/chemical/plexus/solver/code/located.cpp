@@ -21,7 +21,7 @@ namespace Yttrium
 
             if(ff1<=ff0)
             {
-                vpush(Cws,ff1).info  = fn;
+                vlist.push(Cws,ff1).info  = fn;
                 saveProfile(fn,1000);
                 return true;
             }

@@ -31,7 +31,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             ff0 = 0;
-            vfree();
+            vlist.free();
             ortho.free();
             basis.free();
 

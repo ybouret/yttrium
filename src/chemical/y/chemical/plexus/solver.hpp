@@ -38,7 +38,7 @@ namespace Yttrium
             {
             }
 
-            void ldz() noexcept
+           void ldz() noexcept
             {
                 ld( cost=0 );
                 info = 0;
@@ -58,6 +58,40 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+        };
+
+        class Vertices : public Vertex::List
+        {
+        public:
+            explicit Vertices(const size_t nspc) noexcept :
+            Vertex::List(),
+            dims(nspc),
+            pool()
+            {
+            }
+
+            virtual ~Vertices() noexcept
+            {
+            }
+
+            virtual void free() noexcept
+            {
+                while(size>0) pool.store( popTail() )->ldz();
+            }
+
+            Vertex &push(const XReadable &cc, const xreal_t ff)
+            {
+                Vertex *v =  pushTail( pool.size>0 ? pool.query() : new Vertex(dims) );
+                v->ld(cc);
+                v->cost = ff;
+                v->info = 0;
+                return *v;
+            }
+
+            const size_t dims;
+            Vertex::Pool pool;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Vertices);
         };
 
 
@@ -157,8 +191,7 @@ namespace Yttrium
             Orthogonal::Family ortho; //!< helper to find basis
             PBank              pbank; //!< memory for basis
             PRepo              basis; //!< basis of leading eqs
-            Vertex::List       vlist; //!< list of final candidates
-            Vertex::Pool       vpool; //!< pool of final candidates
+            Vertices           vlist; //!< list of final candidates
             XArray             Cin;   //!< C init for lookup
             XArray             Cex;   //!< C exit for lookup
             XArray             Cws;   //!< C workspace
@@ -185,8 +218,7 @@ namespace Yttrium
             //! solve crucial, collect prospects and basis
             void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
-            Vertex &vpush(const XReadable &cc, const xreal_t ff);
-            void    vfree() noexcept;
+            
         };
      }
 

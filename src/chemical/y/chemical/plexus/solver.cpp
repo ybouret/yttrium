@@ -25,8 +25,7 @@ namespace Yttrium
         ortho(nspc,dof),
         pbank(),
         basis(pbank),
-        vlist(),
-        vpool(),
+        vlist(nspc),
         Cin(nspc),
         Cex(nspc),
         Cws(nspc),
@@ -166,20 +165,7 @@ namespace Yttrium
             saveProfile(fn,np);
         }
 
-        void Solver:: vfree() noexcept
-        {
-            while(vlist.size)
-                vpool.store( vlist.popTail() )->ldz();
-        }
-
-        Vertex &Solver:: vpush(const XReadable &cc, const xreal_t ff)
-        {
-            Vertex *v = vlist.pushTail( vpool.size>0 ? vpool.query() : new Vertex(nspc) );
-            v->ld(cc);
-            v->cost = ff;
-            v->info = 0;
-            return *v;
-        }
+        
 
         void Solver:: run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {

@@ -44,7 +44,7 @@ namespace Yttrium
                     case 1: {
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
-                        vpush(pro.cc,pro.ff).info = MIN_Step;
+                        vlist.push(pro.cc,pro.ff).info = MIN_Step;
                     } return;
 
                     default:
@@ -61,7 +61,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 const Prospect &pro = pps.head();
-                vpush(pro.cc,pro.ff).info = MIN_Step; // or another ?
+                vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
                 saveProfile(pro,1000);
                 const bool hasNRA = nraStep(xml);
                 const bool hasODE = odeStep(xml);
