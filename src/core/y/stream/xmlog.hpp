@@ -13,6 +13,9 @@ namespace Yttrium
     //! output some optional message
 #define Y_XMLOG(XML,MSG) do { if((XML).verbose) do { ((XML)() << MSG << std::endl).flush(); } while(false); } while(false)
 
+    //! output some message as a comment
+#define Y_XML_COMMENT(XML,MSG) Y_XMLOG(XML,Yttrium::XMLog::ENTER_COM << MSG << Yttrium::XMLog::LEAVE_COM)
+
     //! create the xml sub name
 #define Y_XML_SUB__(X,Y) X##Y
 
@@ -48,10 +51,12 @@ do if( (HOST).verbose)  { (*HOST << ' ' << OPTIONS) <<  Yttrium::XMLog::RANGLE <
         // Definitions
         //
         //______________________________________________________________________
-        typedef AutoPtr<const String> Mark; //!< alias
-        static const char LANGLE = '<';     //!< alias
-        static const char RANGLE = '>';     //!< alias
-        static const char SLASH  = '/';     //!< alias
+        typedef AutoPtr<const String> Mark;     //!< alias
+        static const char         LANGLE = '<'; //!< alias
+        static const char         RANGLE = '>'; //!< alias
+        static const char         SLASH  = '/'; //!< alias
+        static const char * const ENTER_COM;    //!< "<!-- "
+        static const char * const LEAVE_COM;    //!< " -->"
 
         //______________________________________________________________________
         //

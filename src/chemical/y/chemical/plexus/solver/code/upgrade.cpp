@@ -17,7 +17,7 @@ namespace Yttrium
         using namespace MKL;
 
 
-        void Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
+        size_t Solver:: upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
             Y_XML_SECTION(xml, "upgrade");
 
@@ -46,7 +46,7 @@ namespace Yttrium
         PROSPECT:
             {
                 bool emergency = false; // start from no-crucial state
-                Y_XMLOG(xml, "[cycle #" << ++cycle << "]");
+                Y_XML_COMMENT(xml, "cycle #" << ++cycle);
                 pps.free();
 
                 //--------------------------------------------------------------
@@ -68,11 +68,11 @@ namespace Yttrium
                         case Blocked: continue;
 
                         case Running: if(emergency) continue; // on crucial state
-                            Y_XMLOG(xml, "[Running] " << eq);
+                            Y_XMLOG(xml, "(+) " << eq);
                             break;
 
                         case Crucial: emergency = true;
-                            Y_XMLOG(xml, "[Crucial] " << eq);
+                            Y_XMLOG(xml, "(!) " << eq);
                             break;
                     }
 
@@ -86,8 +86,8 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 if( pps.size() <= 0 ) {
-                    Y_XMLOG(xml, "[Jammed]");
-                    return;
+                    Y_XML_COMMENT(xml,"Jammed");
+                    return 0;
                 }
 
                 //--------------------------------------------------------------
@@ -128,7 +128,8 @@ namespace Yttrium
 
             }
 
-            assert(pps.size()>0);
+            const size_t npro = pps.size();
+            assert(npro>0);
             assert(0==ortho.size);
             assert(0==basis.size);
 
@@ -136,19 +137,17 @@ namespace Yttrium
             //
             //
             // We now have Running only solutions : objFunc is available
-            // -> we can compute objFunc(pro)
+            //
             //
             //------------------------------------------------------------------
+            for(size_t i=npro;i>0;--i)
             {
-                //Y_XML_SECTION_OPT(xml,"running", "count='" << pps.size() << "'");
-                for(size_t i=pps.size();i>0;--i)
-                {
-                    Prospect &pro = pps[i]; assert(Running==pro.st);
-                    pro.ff = objFunc(pro.cc,SubLevel);
-                }
-                //HeapSort::Call(pps,Prospect::CompareIncreasingFF);
-                //showProspects(xml,Ktop);
+                Prospect &pro = pps[i]; 
+                assert(Running==pro.st);
+                pro.ff = objFunc(pro.cc,SubLevel);
             }
+
+
 
 
             //------------------------------------------------------------------
@@ -159,15 +158,16 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
-          
-            if(pps.size()<=1)
+
+            if(1==npro)
             {
-                assert(1==pps.size());
                 assert(0==basis.size);
                 const Prospect &pro = pps[1];
                 basis << pro;
-                return;
+                return 1;
             }
+
+            assert(npro>=2);
 
             //------------------------------------------------------------------
             //
@@ -185,7 +185,7 @@ namespace Yttrium
                 // optimize each
                 //
                 //--------------------------------------------------------------
-                for(size_t i=pps.size();i>0;--i)
+                for(size_t i=npro;i>0;--i)
                 {
                     Prospect &    pro = pps[i];
                     const xreal_t sig = afm.xadd.dot(pro.dc,grd); // slope
@@ -271,6 +271,7 @@ namespace Yttrium
                 }
             }
 
+            return npro;
         }
     }
 

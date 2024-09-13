@@ -185,6 +185,8 @@ namespace Yttrium
                 return;
             }
 
+            return ;
+
             mine.transfer(Csub,SubLevel, C, L);
 
             xreal_t fsub = vlist.head->cost;

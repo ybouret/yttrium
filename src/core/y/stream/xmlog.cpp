@@ -3,6 +3,10 @@
 namespace Yttrium
 {
 
+    const char * const XMLog:: ENTER_COM = "<!-- ";
+    const char * const XMLog:: LEAVE_COM = " -->";
+
+
     XMLog:: XMLog(bool &globalVerbose) noexcept :
     verbose(globalVerbose),
     depth(0)

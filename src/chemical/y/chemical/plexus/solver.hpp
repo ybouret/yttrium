@@ -140,7 +140,10 @@ namespace Yttrium
             bool located(const char * const fn, XMLog &xml); //!< locate min of objective function in Cin:Cex, true if decreases ff0
 
             //! solve crucial, collect prospects and basis
-            void     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+            /**
+             \return number of prospects
+             */
+            size_t     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
             
         };
