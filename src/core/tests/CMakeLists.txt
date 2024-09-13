@@ -216,6 +216,7 @@ add_test(io:bzip2-read  test-core io_bzip2_read ${DATA}/compressed.db2.bz2)
 add_test(io:bzip2-write test-core io_bzip2_write)
 add_test(io:xmlog       test-core io_xmlog)
 add_test(io:bits        test-core io_bits)
+add_test(ios:disk       test-core io_disk)
 
 #fft
 add_test(fft:xbr  test-core fft_xbr)

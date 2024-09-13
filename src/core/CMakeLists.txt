@@ -37,6 +37,7 @@ stream/gzip
 stream/bzip2
 stream/hash
 stream/char
+stream/disk
 text
 text/ascii
 text/base64
