@@ -26,7 +26,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // initialize
+            // initialize all
             //
             //
             //------------------------------------------------------------------
@@ -148,8 +148,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // We now have Running only solutions : objFunc is available
-            // -> initialize all prospects at their ceq
+            // We now have >= 2 Running solutions : objFunc is available
+            // -> initialize all prospects at their Ceq = pro.cc
             //
             //
             //------------------------------------------------------------------
@@ -163,7 +163,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // set common starting point:
+            // set common starting point for all algorithms:
             // - set Cin
             // - set gradient in grd
             // - compute ff0 from all active prospects
@@ -199,6 +199,7 @@ namespace Yttrium
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
                 Y_XML_COMMENT(xml, "good = " << good << " / " << npro);
+                // TODO: use good to speed up odestep ?
             }
 
 
