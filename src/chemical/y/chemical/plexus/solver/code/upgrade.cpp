@@ -199,7 +199,6 @@ namespace Yttrium
                 HeapSort::Call(pps,Prospect::CompareIncreasingFF);
                 showProspects(xml,Ktop);
                 Y_XML_COMMENT(xml, "good = " << good << " / " << npro);
-                // TODO: use good to speed up odestep ?
             }
 
 

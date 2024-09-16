@@ -155,6 +155,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(io_xmlog);
     Y_UTEST(io_bits);
     Y_UTEST(io_disk);
+    Y_UTEST(io_pstream);
 
     Y_UTEST(fft1);
     Y_UTEST(fft2);
