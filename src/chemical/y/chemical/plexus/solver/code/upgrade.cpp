@@ -232,8 +232,8 @@ namespace Yttrium
 
                 for(++i;i<=npro;++i)
                 {
-                    const Prospect    &   pro = pps[i]; assert(Running==pro.st);
-                    const Equilibrium &   eq  = pro.eq;
+                    const Prospect    & pro = pps[i]; assert(Running==pro.st);
+                    const Equilibrium & eq  = pro.eq;
                     eq.mustSupport(C,L);
                 }
             }
