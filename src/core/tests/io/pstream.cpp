@@ -1,7 +1,6 @@
 
 #include "y/utest/run.hpp"
-#include "y/stream/input.hpp"
-#include "y/string.hpp"
+#include "y/stream/proc/input.hpp"
 
 #if defined(Y_WIN)
 #if   defined(_MSC_VER)
@@ -25,6 +24,14 @@ Y_UTEST(io_pstream)
     if(argc>1)
     {
         const String cmd = argv[1];
+
+        ProcInput    inp( cmd );
+        String       line;
+        while( inp.gets(line) )
+        {
+            std::cerr << "(+) '" << line << "'" << std::endl;
+        }
+#if 0
         std::cerr << "trying '" << cmd << "'" << std::endl;
         FILE *fp = popen( cmd.c_str(), "r" );
         if(0==fp) throw Exception("no '%s'", cmd.c_str() );
@@ -40,6 +47,7 @@ Y_UTEST(io_pstream)
 
 
         pclose(fp);
+#endif
     }
 
 }
