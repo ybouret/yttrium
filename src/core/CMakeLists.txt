@@ -38,6 +38,7 @@ stream/bzip2
 stream/hash
 stream/char
 stream/disk
+stream/proc
 text
 text/ascii
 text/base64
