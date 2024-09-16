@@ -14,13 +14,15 @@ namespace Yttrium
     const char * const ProcInput:: CallSign = "ProcInput";
 
     ProcInput:: ProcInput(const String &cmd) :
-    ProcStream(cmd.c_str(), How)
+    ProcStream(cmd.c_str(), How),
+    buffer()
     {
     }
 
 
     ProcInput:: ProcInput(const char * const cmd) :
-    ProcStream(cmd,How)
+    ProcStream(cmd,How),
+    buffer()
     {
     }
 
