@@ -3,6 +3,20 @@
 #include "y/stream/input.hpp"
 #include "y/string.hpp"
 
+#if defined(Y_WIN)
+#if   defined(_MSC_VER)
+#       define WIN32_LEAN_AND_MEAN
+#       include <windows.h>
+#       define popen  _popen
+#       define pclose _pclose
+#else // Y_WIN
+extern "C" FILE * popen(const char *, const char *);
+extern "C" void   pclose(FILE *);
+#endif // Y_WIN
+#else
+#include <cstdio>
+#endif
+
 using namespace Yttrium;
 
 
