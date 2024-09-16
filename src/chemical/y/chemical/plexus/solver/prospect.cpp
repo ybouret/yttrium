@@ -20,7 +20,8 @@ namespace Yttrium
         xi(_xi),
         ax(xi.abs()),
         dc(_dc),
-        ff()
+        ff(),
+        ok(true)
         {
         }
 
@@ -33,7 +34,8 @@ namespace Yttrium
         xi(_.xi),
         ax(_.ax),
         dc(_.dc),
-        ff(_.ff)
+        ff(_.ff),
+        ok(_.ok)
         {
         }
 

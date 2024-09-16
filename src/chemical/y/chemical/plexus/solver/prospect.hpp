@@ -71,10 +71,10 @@ namespace Yttrium
             //! compare by increasing ff
             static SignType CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept;
 
-            //! append xi * nu to species's incresase
-            void step(XSwell &inc) const;
 
-            String fileName() const; //!< [good_|bad_] + eq.fileName() + ".pro"
+            void   step(XSwell &inc) const; //! append xi * nu to species's incresase
+            String fileName()        const; //!< [good_|bad_] + eq.fileName() + ".pro"
+
 
             //__________________________________________________________________
             //
@@ -90,7 +90,8 @@ namespace Yttrium
             xreal_t             ax; //!< |xi|
             XWritable &         dc; //!< cc-Corg
             xreal_t             ff; //!< objective function value
-
+            bool                ok; //!< contributes to ff decrease
+            
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };

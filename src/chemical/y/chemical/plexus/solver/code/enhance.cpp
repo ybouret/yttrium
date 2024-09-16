@@ -7,7 +7,7 @@ namespace Yttrium
     namespace Chemical
     {
         using namespace MKL;
-
+        
 
         bool Solver:: enhance(Prospect &pro)
         {
@@ -23,7 +23,7 @@ namespace Yttrium
                 pro.cc.ld(Cin);
                 pro.dc.ld(pro.ax=pro.xi=0);
                 pro.ff = ff0;
-                return false;
+                return (pro.ok = false);
             }
             else
             {
@@ -35,14 +35,14 @@ namespace Yttrium
                     Triplet<xreal_t> uu   = { 0,   -1, 1      };
                     Triplet<xreal_t> ff   = { ff0, -1, pro.ff };
                     pro.ff = fcn( Minimize<xreal_t>::Locate(Minimizing::Inside,fcn,uu,ff) );
-                }
+                 }
 
                 //------------------------------------------------------
                 // update status: cc, then dc, xi and |xi|
                 //------------------------------------------------------
                 pro.cc.ld(Cws);
                 pro.ax = (pro.xi = afm.eval(pro.dc,pro.cc,SubLevel,Cin,SubLevel,pro.eq)).abs();
-                return true;
+                return (pro.ok = true);
             }
 
         }
