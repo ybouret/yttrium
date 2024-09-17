@@ -44,11 +44,11 @@ Y_UTEST(solver)
 
             solver.run(C0, TopLevel, K, xml);
 
-#if 0
+#if 1
             OutputFile fp("ff.dat");
             for(unsigned turn=1;turn<=5;++turn)
             {
-                solver.process(C0, TopLevel, K, xml);
+                const bool ans = solver.process(C0, TopLevel, K, xml);
                 if(1==turn)
                 {
                     fp("0 %.15g\n", real_t(solver.ff0));
@@ -57,6 +57,7 @@ Y_UTEST(solver)
                 fp(" %.15g",  real_t(solver.objFunc(C0,TopLevel)) );
                 fp << '\n';
                 lib(std::cerr << "C" << turn << "=","\t[",C0,"]");
+                if(!ans) break;
             }
 #endif
 

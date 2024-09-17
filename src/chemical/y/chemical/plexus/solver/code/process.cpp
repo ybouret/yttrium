@@ -20,13 +20,12 @@ namespace Yttrium
                               const XReadable & Ktop,
                               XMLog           & xml)
         {
-            assert(0==vlist.size);
-
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
 
             const size_t good = upgrade(C,L,Ktop,xml); assert( good <= pps.size() );
             const size_t npro = pps.size();
+            assert(0==vlist.size);
 
             {
                 Y_XML_SECTION(xml, "process");

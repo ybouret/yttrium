@@ -248,7 +248,7 @@ namespace Yttrium
                 }
             }
 
-            return good;;
+            return good;
         }
 
 
