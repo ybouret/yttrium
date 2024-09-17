@@ -61,8 +61,8 @@ namespace Yttrium
 
 
 
-            //! upgrade and apply strategy
-            void  process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
+            //! upgrade and apply strategy w.r.t pps.size() and good prospects
+            bool  process(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
 
 
             void  run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);

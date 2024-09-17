@@ -15,7 +15,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        void Solver:: process(XWritable &       C,
+        bool Solver:: process(XWritable &       C,
                               const Level       L,
                               const XReadable & Ktop,
                               XMLog           & xml)
@@ -43,7 +43,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         // jammed
                         //------------------------------------------------------
-                        return;
+                        assert(0==good);
+                        return false;
 
                     case 1: {
                         //------------------------------------------------------
@@ -51,7 +52,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
-                    } return;
+                    } return true;
 
                     default:
                         break;
@@ -76,11 +77,16 @@ namespace Yttrium
                 const bool hasNRA = nraStep(xml); // then the best NRA step
                 const bool hasODE = odeStep(xml); // then the best ODE step
 
+                Y_XMLOG(xml, "#vertices = " << vlist.size);
+                if(vlist.size<=0)
+                {
+                    return false;
+                }
 
                 //--------------------------------------------------------------
                 //
                 //
-                // the sort collected vertices
+                // then sort collected vertices
                 //
                 //
                 //--------------------------------------------------------------
@@ -124,6 +130,7 @@ namespace Yttrium
                 }
             }
 
+            return true;
         }
 
 
