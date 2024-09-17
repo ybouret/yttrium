@@ -17,8 +17,15 @@ namespace Yttrium
     namespace Chemical
     {
         
+        enum Outcome
+        {
+            Jammed,
+            Solved,
+            Better,
+            Locked
+        };
 
-      
+
         //______________________________________________________________________
         //
         //
