@@ -31,11 +31,11 @@ set(TRSOURCES  jpegtran.c rdswitch.c cdjpeg.c transupp.c)
 add_executable(y_jpegtran ${DSOURCES})
 target_link_libraries(y_jpegtran y-jpeg)
 
-add_executable(y_rdjpgcom rdjpgcom.c)
-target_link_libraries(y_rdjpgcom y-jpeg)
+#add_executable(y_rdjpgcom rdjpgcom.c)
+#target_link_libraries(y_rdjpgcom y-jpeg)
 
-add_executable(y_wrjpgcom wrjpgcom.c)
-target_link_libraries(y_wrjpgcom y-jpeg)
+#add_executable(y_wrjpgcom wrjpgcom.c)
+#target_link_libraries(y_wrjpgcom y-jpeg)
 
 add_custom_target(y_test_jpeg
 DEPENDS y_cjpeg y_djpeg
@@ -58,7 +58,4 @@ COMMAND ${CMAKE_COMMAND} -E ${cmake_rm} -f testout*
 WORKING_DIRECTORY ${HERE}
 COMMENT "Testing JPEG"
 VERBATIM)
-
-#add_executable(jpeg_example example.c)
-#target_link_libraries(jpeg_example y-jpeg)
 

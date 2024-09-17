@@ -179,10 +179,10 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            size_t good = 0;
             {
                 Y_XML_SECTION_OPT(xml,"enhance", "count='" << npro << "'");
                 Y_XMLOG(xml, "|               |" << Formatted::Get("%15.4g", real_t(ff0)) << "| = ff0");
-                size_t good = 0;
                 //--------------------------------------------------------------
                 //
                 // optimize each
@@ -206,7 +206,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // select family/basis of running equilibria
+            // select family/basis of running equilibria for NRA
             //
             //
             //------------------------------------------------------------------
