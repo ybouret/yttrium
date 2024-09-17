@@ -80,7 +80,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 //
                 //
-                // initialize vlist with the best equilibrium
+                // the sort collected vertices
                 //
                 //
                 //--------------------------------------------------------------
