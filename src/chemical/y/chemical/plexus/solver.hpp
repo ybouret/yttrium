@@ -141,7 +141,7 @@ namespace Yttrium
 
             //! solve crucial, collect prospects and basis
             /**
-             \return number of prospects
+             \return number of "good" prospects, decreasing ff0
              */
             size_t     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
            

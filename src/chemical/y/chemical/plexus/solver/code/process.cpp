@@ -25,10 +25,11 @@ namespace Yttrium
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
 
-            const size_t npro = upgrade(C,L,Ktop,xml);
+            const size_t good = upgrade(C,L,Ktop,xml); assert( good <= pps.size() );
+            const size_t npro = pps.size();
 
             {
-                Y_XML_SECTION(xml, "evolve");
+                Y_XML_SECTION(xml, "process");
                 //--------------------------------------------------------------
                 //
                 //
@@ -39,12 +40,17 @@ namespace Yttrium
                 switch( npro )
                 {
                     case 0:
-                        return; // jammed
+                        //------------------------------------------------------
+                        // jammed
+                        //------------------------------------------------------
+                        return;
 
                     case 1: {
+                        //------------------------------------------------------
+                        // single solution, even if good = 0
+                        //------------------------------------------------------
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
-                        //vlist.push(pro.cc,pro.ff).info = MIN_Step;
                     } return;
 
                     default:
@@ -61,8 +67,11 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 const Prospect &pro = pps.head();
-                vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
-                saveProfile(pro,1000);
+                if(good>0)
+                {
+                    vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
+                    saveProfile(pro,1000);
+                }
 
                 const bool hasNRA = nraStep(xml); // then the best NRA step
                 const bool hasODE = odeStep(xml); // then the best ODE step
@@ -99,7 +108,9 @@ namespace Yttrium
 
                 if(xml.verbose)
                 {
+
                     xml() << std::endl << "plot '" << pro.fileName() << "' w l ls 1";
+
 
                     if(hasNRA) {
                         *xml << ", '" << NRA_Step << "' w l ls 2";
