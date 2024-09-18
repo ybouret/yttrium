@@ -119,8 +119,7 @@ namespace
             if(!end) throw Specific:: Exception( portName.c_str(), "missing space after '%s'", org);
             *end = 0;
             //std::cerr << "org='" << org << "'" << std::endl;
-            if( 0 != memcmp(org,portName.c_str(),end-org))
-                throw Specific::Exception( portName.c_str(), "mismatch '%s", org);
+            //if( 0 != memcmp(org,portName.c_str(),end-org)) throw Specific::Exception( portName.c_str(), "mismatch '%s", org);
             return true;
         }
 
