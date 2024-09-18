@@ -163,6 +163,7 @@ if(${Y_CC} MATCHES "gcc.*" )
         set(CMAKE_C_FLAGS   "-Wall -pipe -fPIC -std=gnu99")
         set(CMAKE_CXX_FLAGS "-Wall -pipe -fPIC -fexceptions -Weffc++" )
 
+
         if(${Y_COMPILER_MAJOR} GREATER 4)
                 Y_ADD_FLAGS("-Wextra")
         endif()
