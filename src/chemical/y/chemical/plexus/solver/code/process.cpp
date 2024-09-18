@@ -15,11 +15,15 @@ namespace Yttrium
     {
         using namespace MKL;
 
+#define SOLVER_RETURN(FLAG) Y_XML_COMMENT(xml, #FLAG); return FLAG
+
         Outcome Solver:: process(XWritable &       C,
-                              const Level       L,
-                              const XReadable & Ktop,
-                              XMLog           & xml)
+                                 const Level       L,
+                                 const XReadable & Ktop,
+                                 XMLog           & xml)
         {
+            Y_XML_SECTION(xml, "process");
+
             OutputFile::Overwrite(NRA_Step);
             OutputFile::Overwrite(ODE_Step);
 
@@ -27,116 +31,122 @@ namespace Yttrium
             const size_t npro = pps.size();
             assert(0==vlist.size);
 
+
+            //--------------------------------------------------------------
+            //
+            //
+            // evolve
+            //
+            //
+            //--------------------------------------------------------------
+            switch( npro )
             {
-                Y_XML_SECTION(xml, "process");
-                //--------------------------------------------------------------
-                //
-                //
-                // evolve
-                //
-                //
-                //--------------------------------------------------------------
-                switch( npro )
-                {
-                    case 0:
-                        //------------------------------------------------------
-                        // jammed
-                        //------------------------------------------------------
-                        assert(0==good);
-                        Y_XML_COMMENT(xml, "Jammed");
-                        return Jammed;
+                case 0:
+                    //------------------------------------------------------
+                    // jammed
+                    //------------------------------------------------------
+                    assert(0==good);
+                    SOLVER_RETURN(Jammed);
 
-                    case 1: {
-                        //------------------------------------------------------
-                        // single solution, even if good = 0
-                        //------------------------------------------------------
-                        const Prospect &pro = pps.head();
-                        mine.transfer(C, L, pro.cc, SubLevel);
-                    } Y_XML_COMMENT(xml, "Solved");
-                        return Solved;
+                case 1: {
+                    //------------------------------------------------------
+                    // single solution, even if good = 0
+                    //------------------------------------------------------
+                    const Prospect &pro = pps.head();
+                    mine.transfer(C, L, pro.cc, SubLevel);
+                }  SOLVER_RETURN(Solved);
 
-                    default:
-                        break;
-                }
-
-                assert(npro>=2);
-
-                //--------------------------------------------------------------
-                //
-                //
-                // initialize vlist with the best equilibrium
-                //
-                //
-                //--------------------------------------------------------------
-                const Prospect &pro = pps.head(); // even if not ok
-                if(good>0)
-                {
-                    assert(pro.ok);
-                    vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
-                    saveProfile(pro,1000);
-                }
-
-                const bool hasNRA = nraStep(xml); // then the best NRA step
-                const bool hasODE = odeStep(xml); // then the best ODE step
-
-                Y_XMLOG(xml, "#vertices = " << vlist.size);
-                if(vlist.size<=0) {
-                    Y_XML_COMMENT(xml, "Locked");
-                    return Locked;
-                }
-
-                //--------------------------------------------------------------
-                //
-                //
-                // then sort collected vertices
-                //
-                //
-                //--------------------------------------------------------------
-                {
-                    Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
-                    assert(vlist.size>0);
-                    MergeSort::Call(vlist, Vertex::Compare);
-                    if(xml.verbose)
-                    {
-                        xml() << Formatted::Get("%15.4g",real_t(ff0)) << " = ff0" << std::endl;
-                        for(const Vertex *v=vlist.head;v;v=v->next)
-                        {
-                            xml() << Formatted::Get("%15.4g",real_t(v->cost));
-                            if(v->info)
-                            {
-                                *xml << " [" << v->info << "]";
-                            }
-                            *xml << " @C=" << *v << std::endl;
-                        }
-                    }
-                    const Vertex &ans = *vlist.head;
-                    mine.transfer(C,L,ans, SubLevel);
-                }
-
-
-                if(xml.verbose)
-                {
-
-                    xml() << std::endl << "plot '" << pro.fileName() << "' w l ls 1";
-
-
-                    if(hasNRA) {
-                        *xml << ", '" << NRA_Step << "' w l ls 2";
-                    }
-
-                    if(hasODE) {
-                        *xml<< ", '" << ODE_Step << "' w l ls 3";
-                    }
-
-                    *xml << std::endl << std::endl;
-                }
+                default:
+                    break;
             }
 
-            
-            return Better;
+            assert(npro>=2);
+
+            //--------------------------------------------------------------
+            //
+            //
+            // initialize vlist with the best equilibrium
+            //
+            //
+            //--------------------------------------------------------------
+            const Prospect &pro = pps.head(); // even if not ok
+            if(good>0)
+            {
+                assert(pro.ok);
+                vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
+                saveProfile(pro,1000);
+            }
+
+            //--------------------------------------------------------------
+            //
+            //
+            // Look for solutions
+            //
+            //
+            //--------------------------------------------------------------
+            const bool hasNRA = nraStep(xml); // then the best NRA step
+            const bool hasODE = odeStep(xml); // then the best ODE step
+
+            Y_XMLOG(xml, "#vertices = " << vlist.size);
+            if(vlist.size<=0) {
+                SOLVER_RETURN(Locked);
+            }
+
+            //--------------------------------------------------------------
+            //
+            //
+            // then sort collected vertices
+            //
+            //
+            //--------------------------------------------------------------
+            {
+                Y_XML_SECTION_OPT(xml, "vlist", "size='" << vlist.size << "'");
+                assert(vlist.size>0);
+                MergeSort::Call(vlist, Vertex::Compare);
+                if(xml.verbose)
+                {
+                    xml() << Formatted::Get("%15.4g",real_t(ff0)) << " = ff0" << std::endl;
+                    for(const Vertex *v=vlist.head;v;v=v->next)
+                    {
+                        xml() << Formatted::Get("%15.4g",real_t(v->cost));
+                        if(v->info)
+                        {
+                            *xml << " [" << v->info << "]";
+                        }
+                        *xml << " @C=" << *v << std::endl;
+                    }
+                }
+                const Vertex &ans = *vlist.head;
+                mine.transfer(C,L,ans, SubLevel);
+            }
+
+
+            if(xml.verbose)
+            {
+
+                xml() << std::endl << "plot '" << pro.fileName() << "' w l ls 1";
+
+
+                if(hasNRA) {
+                    *xml << ", '" << NRA_Step << "' w l ls 2";
+                }
+
+                if(hasODE) {
+                    *xml<< ", '" << ODE_Step << "' w l ls 3";
+                }
+
+                *xml << std::endl << std::endl;
+            }
+
+            if( vlist.head->cost.abs().mantissa <= 0.0 )
+            {
+                SOLVER_RETURN(Solved);
+            }
+            else
+            {
+                SOLVER_RETURN(Better);
+            }
         }
-
-
 
 
 
