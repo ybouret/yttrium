@@ -16,13 +16,18 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //! Solver process outcome
+        //
+        //______________________________________________________________________
         enum Outcome
         {
-            Jammed,
-            Solved,
-            Better,
-            Locked
+            Jammed, //!< no active equilibrium
+            Solved, //!< exact zero objectice function
+            Better, //!< improved objective function
+            Locked  //!< spurious objectice function
         };
 
 
@@ -47,7 +52,7 @@ namespace Yttrium
             static const char * const NRA_Step; //!< "nrastep"
             static const char * const ODE_Step; //!< "odestep"
             static const char * const MIN_Step; //!< "minstep"
-
+            
             //__________________________________________________________________
             //
             //

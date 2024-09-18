@@ -43,7 +43,8 @@ namespace Yttrium
                         // jammed
                         //------------------------------------------------------
                         assert(0==good);
-                        return Jammed;;
+                        Y_XML_COMMENT(xml, "Jammed");
+                        return Jammed;
 
                     case 1: {
                         //------------------------------------------------------
@@ -51,7 +52,8 @@ namespace Yttrium
                         //------------------------------------------------------
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
-                    } return Solved;
+                    } Y_XML_COMMENT(xml, "Solved");
+                        return Solved;
 
                     default:
                         break;
@@ -66,9 +68,10 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                const Prospect &pro = pps.head();
+                const Prospect &pro = pps.head(); // even if not ok
                 if(good>0)
                 {
+                    assert(pro.ok);
                     vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
                     saveProfile(pro,1000);
                 }
@@ -77,8 +80,8 @@ namespace Yttrium
                 const bool hasODE = odeStep(xml); // then the best ODE step
 
                 Y_XMLOG(xml, "#vertices = " << vlist.size);
-                if(vlist.size<=0)
-                {
+                if(vlist.size<=0) {
+                    Y_XML_COMMENT(xml, "Locked");
                     return Locked;
                 }
 
