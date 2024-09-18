@@ -1,9 +1,9 @@
 
 #include "y/chemical/plexus/solver.hpp"
+
 #include "y/sort/heap.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/opt/minimize.hpp"
-#include "y/mkl/opt/bracket.hpp"
 
 #include "y/jive/pattern/vfs.hpp"
 #include "y/vfs/local/fs.hpp"
@@ -15,7 +15,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
-        bool Solver:: process(XWritable &       C,
+        Outcome Solver:: process(XWritable &       C,
                               const Level       L,
                               const XReadable & Ktop,
                               XMLog           & xml)
@@ -43,7 +43,7 @@ namespace Yttrium
                         // jammed
                         //------------------------------------------------------
                         assert(0==good);
-                        return false;
+                        return Jammed;;
 
                     case 1: {
                         //------------------------------------------------------
@@ -51,7 +51,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         const Prospect &pro = pps.head();
                         mine.transfer(C, L, pro.cc, SubLevel);
-                    } return true;
+                    } return Solved;
 
                     default:
                         break;
@@ -79,7 +79,7 @@ namespace Yttrium
                 Y_XMLOG(xml, "#vertices = " << vlist.size);
                 if(vlist.size<=0)
                 {
-                    return false;
+                    return Locked;
                 }
 
                 //--------------------------------------------------------------
@@ -129,7 +129,8 @@ namespace Yttrium
                 }
             }
 
-            return true;
+            
+            return Better;
         }
 
 
