@@ -70,7 +70,35 @@ namespace Yttrium
 
         SignType Prospect:: CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept
         {
-            return Comparison::Increasing(lhs.ff, rhs.ff);
+            if(lhs.ok)
+            {
+                // lhs.ok = true
+                if(rhs.ok)
+                {
+                    // lhs.ok = true, rhs.ok = true
+                    return Comparison::Increasing(lhs.ff, rhs.ff);
+                }
+                else
+                {
+                    // lhs.ok = true, rhs.ok = false
+                    return Negative;
+                }
+            }
+            else
+            {
+                // lhs.ok = false
+                if(rhs.ok)
+                {
+                    // lhs.ok = false, rhs.ok = true
+                    return Positive;
+                }
+                else
+                {
+                    // lhs.ok = false, rhs.ok = false
+                    return Comparison::Increasing( lhs.eq.indx[TopLevel], rhs.eq.indx[TopLevel]);
+                }
+            }
+
         }
 
         SignType Prospect:: CompareDecreasingAX(const Prospect &lhs, const Prospect &rhs) noexcept
