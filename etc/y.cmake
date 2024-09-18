@@ -160,9 +160,11 @@ if(${Y_CC} MATCHES "gcc.*" )
         SET(Y_GNU            ON)
         Y_FIND_COMPILER_VERSION()
 
-        set(CMAKE_C_FLAGS   "-Wall -pipe -fPIC -std=gnu99")
-        set(CMAKE_CXX_FLAGS "-Wall -pipe -fPIC -fexceptions -Weffc++" )
+        #set(CMAKE_C_FLAGS   "-Wall -pipe -fPIC -std=gnu99")
+        #set(CMAKE_CXX_FLAGS "-Wall -pipe -fPIC -fexceptions -Weffc++" )
 
+        set(CMAKE_C_FLAGS   "-Wall -fPIC -std=gnu99")
+        set(CMAKE_CXX_FLAGS "-Wall -fPIC -fexceptions -Weffc++" )
 
         if(${Y_COMPILER_MAJOR} GREATER 4)
                 Y_ADD_FLAGS("-Wextra")

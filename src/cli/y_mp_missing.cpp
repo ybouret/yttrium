@@ -6,6 +6,7 @@
 #include "y/system/exception.hpp"
 #include "y/container/algo/crop.hpp"
 #include "y/associative/suffix/set.hpp"
+#include <cstring>
 
 using namespace Yttrium;
 
