@@ -251,6 +251,7 @@ add_test(container:algo       test-core container_algo)
 add_test(sequence:vector test-core sequence_vector)
 add_test(sequence:list   test-core sequence_list)
 add_test(sequence:snake  test-core sequence_snake)
+add_test(sequence:kmp    test-core sequence_kmp)
 
 #counting
 add_test(counting:perm        test-core counting_perm)
