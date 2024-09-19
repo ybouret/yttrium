@@ -2,6 +2,7 @@
 #include "y/container/cxx/array.hpp"
 #include "y/utest/run.hpp"
 
+#include <cstring>
 
 namespace Yttrium
 {
