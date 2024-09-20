@@ -12,14 +12,37 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Skip first bad items
+        //! Brute Force Generic search
+        /**
+         \param output sequence of indices
+         \param source 'Readable' source
+         \param figure 'Readable' figure to find
+         */
         //
         //______________________________________________________________________
-        template <typename SEQUENCE, typename IS_BAD>
-        inline SEQUENCE &Search(SEQUENCE &seq, IS_BAD &is_bad)
+        template <
+        typename OUTPUT,
+        typename SOURCE,
+        typename FIGURE>
+        inline void Search(OUTPUT &output,
+                           SOURCE &source,
+                           FIGURE &figure)
         {
-            while( seq.size() && is_bad(seq.head())) seq.popHead();
-            return seq;
+            const size_t n = source.size();
+            const size_t m = figure.size();
+            for(size_t i=1,j=m;j<=n;++i,++j)
+            {
+                bool match = true;
+                for(size_t k=j,l=m;l>0;--k,--l)
+                {
+                    if( source[k] != figure[l] ) {
+                        match = false;
+                        break;
+                    }
+                }
+                if(!match) continue;
+                output << i;
+            }
         }
     }
 

@@ -10,26 +10,54 @@
 
 namespace Yttrium
 {
-    
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Input Process Stream
+    //
+    //
+    //__________________________________________________________________________
     class ProcInput : public ProcStream, public InputStream
     {
     public:
-        static const char * const How; //!< "r"
+        static const char * const How;      //!< "r"
         static const char * const CallSign; //!< "ProcInput"
 
-        explicit ProcInput(const String &     cmd);
-        explicit ProcInput(const char * const cmd);
-        virtual ~ProcInput() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        explicit ProcInput(const String &     cmd); //!< start command
+        explicit ProcInput(const char * const cmd); //!< start command
+        virtual ~ProcInput() noexcept;              //!< cleanup
+
+        //______________________________________________________________________
+        //
+        //
+        // Interface
+        //
+        //______________________________________________________________________
 
         // [Identifiable]
-        virtual const char * callSign() const noexcept;
+        virtual const char * callSign() const noexcept; //!< CallSing
 
         // [InputStream]
         virtual bool query(char & data);   //!< query a single char, false = EOS
         virtual void store(const  char) ;  //!< unread a char
         virtual bool ready();              //!< next char ?
 
-        IO::Chars buffer;
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        IO::Chars buffer; //!< auxiliary I/O buffer to unread chars
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(ProcInput);
     };

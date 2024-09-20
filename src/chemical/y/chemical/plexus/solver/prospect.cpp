@@ -115,7 +115,7 @@ namespace Yttrium
 
         String Prospect:: fileName() const
         {
-            return (xi.abs().mantissa > 0 ? "good:" : "bad:") + eq.fileName() + ".pro";
+            return (ok ? "good:" : "bad:") + eq.fileName() + ".pro";
         }
     }
 

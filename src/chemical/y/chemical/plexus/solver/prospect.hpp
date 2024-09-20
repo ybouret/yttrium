@@ -72,7 +72,7 @@ namespace Yttrium
             static SignType CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept;
 
 
-            void   step(XSwell &inc) const; //! append xi * nu to species's incresase
+            void   step(XSwell &inc) const; //!< append xi * nu to species's incresase
             String fileName()        const; //!< [good_|bad_] + eq.fileName() + ".pro"
 
 

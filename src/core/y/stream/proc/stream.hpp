@@ -10,15 +10,42 @@
 
 namespace Yttrium
 {
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Process Stream
+    //
+    //
+    //__________________________________________________________________________
     class ProcStream
     {
     public:
-        virtual ~ProcStream() noexcept;
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        virtual ~ProcStream() noexcept; //!< cleanup
 
     protected:
+        //! open process
+        /**
+         \param cmd command to execute
+         \param how read or write
+         */
         explicit ProcStream(const char * const cmd,
                             const char * const how);
-        void * const handle;
+
+        //______________________________________________________________________
+        //
+        //
+        // Members
+        //
+        //______________________________________________________________________
+        void * const handle; //!< anonymous system handle
 
 
     private:
