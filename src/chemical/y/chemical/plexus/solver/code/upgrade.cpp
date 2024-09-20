@@ -135,12 +135,24 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
+            // set common starting point for all algorithms:
+            // - set Cin
+            // - set gradient in grd
+            // - compute ff0 from all active prospects
+            //
+            //------------------------------------------------------------------
+            ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
+
+            //------------------------------------------------------------------
+            //
+            //
             // special case with 1 prospect : ff0 = pro.ff = 0
             //
             //
             //------------------------------------------------------------------
             if(1==npro) {
-                Y_XML_COMMENT(xml,"single: " << pps.head().eq);
+                Prospect &pro = pps.head();
+                Y_XML_COMMENT(xml,"single: " << pro.eq);
                 return 1;
             }
 
@@ -159,18 +171,6 @@ namespace Yttrium
                 Prospect &pro = pps[i]; assert(Running==pro.st);
                 pro.ff = objFunc(pro.cc,SubLevel);
             }
-
-            //------------------------------------------------------------------
-            //
-            //
-            // set common starting point for all algorithms:
-            // - set Cin
-            // - set gradient in grd
-            // - compute ff0 from all active prospects
-            //
-            //------------------------------------------------------------------
-            ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
-
 
             //------------------------------------------------------------------
             //

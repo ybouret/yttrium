@@ -246,6 +246,7 @@ add_test(container:matrix     test-core container_matrix)
 add_test(container:matrix-ops test-core container_matrix_ops)
 add_test(container:operating  test-core container_operating)
 add_test(container:algo       test-core container_algo)
+add_test(container:search     test-core container_search)
 
 #sequence
 add_test(sequence:vector test-core sequence_vector)
