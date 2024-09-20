@@ -53,6 +53,21 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        // Methods
+        //
+        //______________________________________________________________________
+        template <typename COMMAND>
+        static Sequence<String> & AppendTo( Sequence<String> &lines, const COMMAND & cmd)
+        {
+            ProcInput inp( cmd );
+            String    line;
+            while(inp.gets(line)) lines << line;
+            return lines;
+        }
+
+        //______________________________________________________________________
+        //
+        //
         // Members
         //
         //______________________________________________________________________

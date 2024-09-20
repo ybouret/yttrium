@@ -5,125 +5,115 @@
 #include "y/jive/pattern/matcher.hpp"
 #include "y/system/exception.hpp"
 #include "y/container/algo/crop.hpp"
+#include "y/container/algo/search.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/graphviz/vizible.hpp"
+#include "y/jive/pattern/vfs.hpp"
+#include "y/vfs/local/fs.hpp"
 #include <cstring>
 
 using namespace Yttrium;
 
 
-namespace
-{
+namespace {
 
     typedef SuffixSet<String,String> PortDB;
 
-
-    class Port : public Object
+    class Port : public Object, public GraphViz::Vizible
     {
     public:
         typedef CxxListOf<Port> List;
 
-        explicit Port(const String  &_name,
-                      Jive::Matcher &match,
-                      size_t        &level,
-                      PortDB        &missing) :
-        name(_name),
+        static bool Installed(const String &portName)
+        {
+            const String   cmd = "port installed " + portName;
+            Vector<String> lines;
+            switch(ProcInput::AppendTo(lines,cmd).size())
+            {
+                case 0: throw Specific::Exception(portName.c_str(),"installed invalid answer");
+                case 1: return false;
+                default: break;
+            }
+            return true;
+        }
+
+        explicit Port(const String &portName,
+                      size_t       &depth,
+                      PortDB       &missing) :
+        name(portName),
         deps(),
         next(0),
         prev(0)
         {
-            Core::Indent(std::cerr << " |",level<<1,'_') << "[" << name << "]" << std::endl;
-            //std::cerr << "missing=" << missing << std::endl;
-            Vector<String> fields(32,AsCapacity);;
-            getAllDeps(fields,match);
-            ++level;
-            for(size_t i=fields.size();i>0;--i)
+            assert(missing.search(portName));
+            Core::Indent(std::cerr, depth<<1, ' ') << "|_[" << name << "]" << std::endl;
+            ++depth;
+            Vector<String> fields;
             {
-                const String & portName = fields[i];
-                if( IsInstalled(portName)    ) continue; // already installed
-                if( missing.search(portName) ) continue; // already registered
-                missing.insert(portName);
-                deps.pushTail( new Port(portName,match,level,missing) );
+                const String   sep = "Dependencies:";
+                const String   cmd = "port deps " + portName;
+                ProcInput      fp(cmd);
+                String         line;
+                while( fp.gets(line) )
+                {
+                    Vector<size_t> out;
+                    Algo::Search(out,line,sep);
+                    switch( out.size() )
+                    {
+                        case 0: continue;
+                        case 1: break;
+                        default:
+                            throw Specific::Exception(name.c_str(),"invalid deps answer '%s'", line.c_str());
+                    }
+                    const String data = &line[out[1]+sep.size()];
+                    Tokenizer::AppendTo(fields,data, ',');
+                }
             }
-            --level;
+            const size_t nf = fields.size();
+            for(size_t i=1;i<=nf;++i)
+            {
+                const String &sub = Algo::Crop(fields[i], isspace);
+                if( missing.search(sub) ) continue;
+                if( Installed(sub) )      continue;
+                missing.insert(sub);
+                deps.pushTail( new Port(sub,depth,missing) );
+            }
+            --depth;
         }
 
-        virtual ~Port() noexcept
+        void viz(OutputStream &fp) const
         {
+            for(const Port *sub=deps.head;sub;sub=sub->next)
+            {
+                sub->viz(fp);
+            }
+            Node(fp,this) << '[';
+            Label(fp,name);
+            fp << ",shape=box";
+            fp << ']';
+            Endl(fp);
+            for(const Port *sub=deps.head;sub;sub=sub->next)
+            {
+                Arrow(fp, this, sub);
+                Endl(fp);
+            }
         }
+
+        void graphViz(OutputStream &fp) const
+        {
+            Enter(fp, "G");
+            viz(fp);
+            Leave(fp);
+        }
+
 
         const String name;
         List         deps;
-        Port        *next;
-        Port        *prev;
+        Port *       next;
+        Port *       prev;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Port);
-
-        inline
-        void getAllDeps(Vector<String> &fields, Jive::Matcher &match)
-        {
-            const String   cmd = "port deps " + name;
-            ProcInput      fp(cmd);
-            String         line;
-
-            while( fp.gets(line) )
-            {
-                if( line.size()<=0)             continue;
-                if( !match.somehow(line,line) ) continue;
-
-                {
-                    const char * const data = strchr( line.c_str(), ':');
-                    if(!data) throw Specific::Exception(name.c_str(),"corrupted missing ':'");
-                    line = data+1;
-                }
-                Tokenizer::AppendTo(fields, line, ',');
-            }
-            for(size_t i=fields.size();i>0;--i)
-                Algo::Crop(fields[i], isspace);
-            //std::cerr << "deps: " << fields << std::endl;
-        }
-
-    public:
-        static inline
-        bool IsInstalled(const String &portName)
-        {
-
-            Vector<String> ans(8,AsCapacity);
-            {
-                const String   cmd = "port installed " + portName;
-                ProcInput     fp(cmd);
-                String        line;
-                while( fp.gets(line) )
-                {
-                    // std::cerr << "[installed " << portName << "] '" << line << "'" << std::endl;
-                    ans << line;
-                }
-            }
-            //std::cerr << "[" << portName << "]=" << ans << std::endl;
-            const size_t na = ans.size();
-            switch(na)
-            {
-                case 0:
-                case 1:
-                    return false;
-
-                case 2:
-                    break;
-
-                default:
-                    throw Specific:: Exception( portName.c_str(), "unexpected installed answer");
-            }
-            String &id = ans[2];
-            Algo::Crop(id,isspace);
-            const char  * const org = id.c_str();
-            char  * const       end = (char *)strchr(org,' ');
-            if(!end) throw Specific:: Exception( portName.c_str(), "missing space after '%s'", org);
-            *end = 0;
-            //std::cerr << "org='" << org << "'" << std::endl;
-            //if( 0 != memcmp(org,portName.c_str(),end-org)) throw Specific::Exception( portName.c_str(), "mismatch '%s", org);
-            return true;
-        }
-
     };
 }
 
@@ -135,14 +125,24 @@ Y_Program()
         return 0;
     }
 
+    LocalFS &fs = LocalFS::Instance();
+    fs.tryRemoveFile("missing.dot");
+    fs.tryRemoveFile("missing.png");
+
 
     const String   name  = argv[1];
-    if( Port::IsInstalled(name) ) return 0;
-    PortDB         missing; missing.insert( name );
-    Jive::Matcher  match = "Dependencies:";
-    size_t         deep  = 1;
-    AutoPtr<Port>  port  = new Port(name,match,deep,missing);
+    if( Port::Installed(name) )
+    {
+        std::cerr << "[" << name << "] is installed !" << std::endl;
+        return 0;
+    }
 
+    PortDB         missing; missing.insert(name);
+    size_t         depth = 1;
+    AutoPtr<Port>  port  = new Port(name,depth,missing);
+    std::cerr << "Rendering..." << std::endl;
+    std::cerr.flush();
+    GraphViz::Vizible::DotToPng("missing.dot", *port);
 
 }
 Y_End()
