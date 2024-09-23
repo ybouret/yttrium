@@ -156,7 +156,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // in any case, compute ff and check full valid
+            // in any case, compute ff and check full validity
             //
             //------------------------------------------------------------------
             for(size_t i=npro;i>0;--i)
