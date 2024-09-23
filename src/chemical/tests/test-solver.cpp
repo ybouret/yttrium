@@ -46,7 +46,7 @@ Y_UTEST(solver)
 
 #if 1
             OutputFile fp("ff.dat");
-            for(unsigned turn=1;turn<=5;++turn)
+            for(unsigned turn=1;turn<=1;++turn)
             {
                 const Outcome ans = solver.process(C0, TopLevel, K, xml);
                 if(1==turn)

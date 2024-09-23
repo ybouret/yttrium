@@ -152,17 +152,35 @@ namespace Yttrium
             //------------------------------------------------------------------
             ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
             const size_t npro = pps.size();
+            Y_XML_COMMENT(xml," #prospect = " << npro << ", ff0=" << real_t(ff0) );
 
-            Y_XML_COMMENT(xml," #prospect = " << npro );
+            //------------------------------------------------------------------
+            //
+            // in any case, compute ff and check full valid
+            //
+            //------------------------------------------------------------------
+            for(size_t i=npro;i>0;--i)
+            {
+                Prospect &pro = pps[i]; assert(Running==pro.st);
+                pro.ff = objFunc(pro.cc,SubLevel);
+                pro.eq.mustSupport(C,L);
+                for(size_t j=npro;j>0;--j)
+                {
+                    pps[j].eq.mustSupport(pro.cc, SubLevel);
+                }
+            }
 
             switch( npro )
             {
-                case 0: throw Specific::Exception(CallSign,"corrupted code");
-                case 1: {
+
+                case 0:   // corrupted code :(
+                    throw Specific::Exception(CallSign,"corrupted code");
+
+                case 1: { // only one running prospect
                     Y_XML_SECTION(xml, "single");
                     Prospect &pro = pps.head();
                     showProspects(xml,Ktop);
-                    return accepts(pro) ? 1 : 0;
+                    return accepts(pro) ? 1 : 0; // good/bad single
                 }
                 default:
                     break;
@@ -171,46 +189,6 @@ namespace Yttrium
             assert(npro>=2);
 
 
-            throw Specific::Exception(CallSign, "not yet implemented");
-
-#if 0
-            //------------------------------------------------------------------
-            //
-            //
-            // special case with 1 prospect : ff0 = pro.ff = 0
-            //
-            //
-            //------------------------------------------------------------------
-            const size_t npro = pps.size();
-            if(1==npro) {
-                Prospect &pro = pps.head();
-                Y_XML_COMMENT(xml,"single: " << pro.eq);
-                return 1;
-            }
-
-
-            //------------------------------------------------------------------
-            //
-            //
-            // We now have >= 2 Running solutions : objFunc is available
-            // -> initialize all prospects at their Ceq = pro.cc
-            //
-            //
-            //------------------------------------------------------------------
-            assert(npro>=2);
-            for(size_t i=npro;i>0;--i)
-            {
-                Prospect &pro = pps[i]; assert(Running==pro.st);
-                pro.ff = objFunc(pro.cc,SubLevel);
-            }
-
-            //------------------------------------------------------------------
-            //
-            //
-            // enhance solutions by minimum on their line
-            //
-            //
-            //------------------------------------------------------------------
             size_t good = 0;
             {
                 Y_XML_SECTION_OPT(xml,"enhance", "count='" << npro << "'");
@@ -222,7 +200,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 for(size_t i=npro;i>0;--i)
                     if(enhance(pps[i])) ++good;
-                
+
                 //--------------------------------------------------------------
                 //
                 // order them to build basis
@@ -234,42 +212,31 @@ namespace Yttrium
             }
 
 
-
             //------------------------------------------------------------------
             //
             //
-            // select family/basis of running equilibria for NRA
+            // select family/basis of running prospects for NRA
             //
             //
             //------------------------------------------------------------------
+            for(size_t i=1;i<=npro;++i)
             {
-                size_t i=1;
-                for(;i<=npro;++i)
-                {
-                    const Prospect    &   pro = pps[i]; assert(Running==pro.st);
-                    const Equilibrium &   eq  = pro.eq;
-                    const size_t          ei  = eq.indx[SubLevel];
-                    const Readable<int> & nu  = mine.iTopo[ei];
+                const Prospect    &   pro = pps[i]; assert(Running==pro.st);
+                const Equilibrium &   eq  = pro.eq;
+                const size_t          ei  = eq.indx[SubLevel];
+                const Readable<int> & nu  = mine.iTopo[ei];
 
-                    eq.mustSupport(C,L);
-                    if(ortho.wouldAccept(nu))
-                    {
-                        ortho.expand();
-                        basis << pro;
-                        if(ortho.size>=dof) 
-                            break; // basis is full
-                    }
-                }
-
-                for(++i;i<=npro;++i)
+                if(ortho.wouldAccept(nu))
                 {
-                    const Prospect    & pro = pps[i]; assert(Running==pro.st);
-                    const Equilibrium & eq  = pro.eq;
-                    eq.mustSupport(C,L);
+                    ortho.expand();
+                    basis << pro;
+                    if(ortho.size>=dof)
+                        break; // basis is full in any case
                 }
             }
 
-            
+
+
             if(xml.verbose)
             {
                 Y_XML_SECTION_OPT(xml, "family",  "size='" << basis.size << "' dof='" << dof << "'");
@@ -281,7 +248,7 @@ namespace Yttrium
             }
 
             return good;
-#endif
+
         }
 
 

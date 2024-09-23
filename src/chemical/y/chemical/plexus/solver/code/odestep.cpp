@@ -57,7 +57,7 @@ namespace Yttrium
 
             const size_t n = pps.size();
             const size_t m = nspc;
-            Y_XML_SECTION_OPT(xml, ODE_Step, " n='" << n << "' m='" << m << "'");
+            Y_XML_SECTION_OPT(xml, ODE_Step, "n='" << n << "' m='" << m << "'");
 
             computeRate(ddC);
 

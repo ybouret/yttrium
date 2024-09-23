@@ -68,7 +68,7 @@ namespace Yttrium
             //! compare by decreasing |xi|
             static SignType CompareDecreasingAX(const Prospect &lhs, const Prospect &rhs) noexcept;
 
-            //! compare by increasing ff if ok, eq.indx if not ok
+            //! compare by increasing ff if ok, eq.indx if not ok, ok > not not
             static SignType CompareIncreasingFF(const Prospect &lhs, const Prospect &rhs) noexcept;
 
 

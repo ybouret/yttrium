@@ -19,7 +19,7 @@ namespace Yttrium
             const size_t m = nspc;
 
             // incoming with basis, ff0, grd, and Cin
-            Y_XML_SECTION_OPT(xml, NRA_Step, " n='" << n << "' m='" << m << "'");
+            Y_XML_SECTION_OPT(xml, NRA_Step, "n='" << n << "' m='" << m << "'");
 
 
 
