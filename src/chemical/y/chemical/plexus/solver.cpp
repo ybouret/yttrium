@@ -183,37 +183,8 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Solver::run" );
             const size_t n = neqs;
             const size_t m = nspc;
-            XArray Csub(m);
-            XArray Cnew(m);
+            
 
-            // initial step
-            process(C,L,Ktop,xml);
-            size_t nsub = pps.size();
-
-            if(nsub<=0)
-            {
-                // all jammed...
-                return;
-            }
-
-            return ;
-
-            mine.transfer(Csub,SubLevel, C, L);
-
-            xreal_t fsub = vlist.head->cost;
-            std::cerr << "fsub=" << fsub << std::endl;
-            std::cerr << "nsub=" << nsub << " / " << n << std::endl;
-            std::cerr << "Csub=" << Csub << std::endl;
-
-            // control steps
-            {
-                process(C,L,Ktop,xml);
-                const size_t  nnew = pps.size();
-                const xreal_t fnew = vlist.head->cost;
-                std::cerr << "fnew=" << fnew << std::endl;
-                std::cerr << "nnew=" << nnew << " / " << n << std::endl;
-                std::cerr << "Csub=" << Csub << std::endl;
-            }
         }
 
 

@@ -56,6 +56,8 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
+
+        //! append lines produced by cmd
         template <typename COMMAND>
         static Sequence<String> & AppendTo( Sequence<String> &lines, const COMMAND & cmd)
         {
