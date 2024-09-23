@@ -38,13 +38,15 @@ namespace Yttrium
         xsf(0.99),
         xPhi(dof),
         xNu(dof),
-        xChi(dof)
+        xChi(dof),
+        xXi(dof)
         {
             for(size_t i=1;i<=dof;++i)
             {
-                xPhi.grow(i,nspc);
-                xNu. grow(i,nspc);
-                xChi.grow(i,i);
+                xPhi. grow(i,nspc);
+                xNu.  grow(i,nspc);
+                xChi. grow(i,i);
+                xXi.  grow(i);
             }
         }
 

@@ -141,6 +141,8 @@ namespace Yttrium
             XMatrices          xPhi;  //!< Phi[1..dof,nspc]
             XMatrices          xNu;   //!< Nu[1..dof,nspc]
             XMatrices          xChi;  //!< Chi[1..dof,1..dof]
+            XArrays            xXi;   //!< xi[1..dof]
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 

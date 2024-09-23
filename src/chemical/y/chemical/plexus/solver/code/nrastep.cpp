@@ -30,10 +30,10 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            XMatrix &Phi = xPhi[n]; assert(Phi.rows == n);
-            XMatrix &Nu  = xNu[n];  assert(Nu.rows  == n);
-            XMatrix &Chi = xChi[n]; assert(Chi.rows == n);
-            XArray  xi(n);
+            XMatrix &Phi = xPhi[n]; assert(Phi.rows  == n);
+            XMatrix &Nu  = xNu[n];  assert(Nu.rows   == n);
+            XMatrix &Chi = xChi[n]; assert(Chi.rows  == n);
+            XArray  &xi  = xXi[n];  assert(xi.size() == n);
 
             {
                 const PNode *pn = basis.head;
