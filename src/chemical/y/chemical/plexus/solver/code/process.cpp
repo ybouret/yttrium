@@ -75,13 +75,14 @@ namespace Yttrium
             //
             //
             //--------------------------------------------------------------
-            const Prospect &pro = pps.head(); // even if not ok
-            if(good>0)
+            const Prospect &pro    = pps.head(); // even if not ok
+            const bool      hasMIN = good>0;
+            if(hasMIN)
             {
                 assert(pro.ok);
                 vlist.push(pro.cc,pro.ff).info = MIN_Step; // or another ?
-                saveProfile(pro,1000);
             }
+            saveProfile(pro,1000);
 
             //--------------------------------------------------------------
             //
