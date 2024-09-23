@@ -13,6 +13,11 @@ namespace Yttrium
             return afm.xadd.dot(pro.dc,grd).mantissa >= 0.0;
         }
 
+        bool Solver:: accepts(const Prospect &pro)
+        {
+            return ! rejects(pro);
+        }
+
         
         bool Solver:: enhance(Prospect &pro)
         {

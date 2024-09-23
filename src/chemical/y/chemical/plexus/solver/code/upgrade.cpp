@@ -155,12 +155,21 @@ namespace Yttrium
 
             Y_XML_COMMENT(xml," #prospect = " << npro );
 
-            switch(npro)
+            switch( npro )
             {
-                case 0: throw Specific::Exception(CallSign, "corrupted code");
-                    
-
+                case 0: throw Specific::Exception(CallSign,"corrupted code");
+                case 1: {
+                    Y_XML_SECTION(xml, "single");
+                    Prospect &pro = pps.head();
+                    showProspects(xml,Ktop);
+                    return accepts(pro) ? 1 : 0;
+                }
+                default:
+                    break;
             }
+
+            assert(npro>=2);
+
 
             throw Specific::Exception(CallSign, "not yet implemented");
 

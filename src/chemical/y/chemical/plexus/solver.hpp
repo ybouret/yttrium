@@ -163,6 +163,9 @@ namespace Yttrium
             //! rejects if slope >= 0
             bool       rejects(const Prospect &);
 
+            //! accepts if slope < 0
+            bool       accepts(const Prospect &);
+
         };
      }
 
