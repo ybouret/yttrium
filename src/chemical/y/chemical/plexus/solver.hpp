@@ -138,7 +138,8 @@ namespace Yttrium
             XSwell             inc;   //!< increases
             MKL::LU<xreal_t>   xlu;   //!< linear solver
             const xreal_t      xsf;   //!< xreal safe factor = 0.99
-
+            XMatrices          xPhi;  //!< Phi[1..dof,nspc]
+            XMatrices          xNu;   //!< Nu[1..dof,nspc]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);

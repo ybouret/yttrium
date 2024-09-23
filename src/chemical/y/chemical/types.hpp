@@ -29,6 +29,7 @@ namespace Yttrium
         typedef Vector<xreal_t,XMemory>     XVector;   //!< alias
         typedef CxxArray<xreal_t,XMemory>   XArray;    //!< alias
         typedef CxxSeries<xreal_t,XMemory>  XSeries;   //!< alias
+        typedef CxxSeries<XMatrix>          XMatrices; //!< alias
 
         //----------------------------------------------------------------------
         typedef MKL::Antelope::Add<xreal_t> XAdd;   //!< alias

@@ -35,8 +35,16 @@ namespace Yttrium
         grd(nspc),
         inc(nspc),
         xlu(dof),
-        xsf(0.99)
+        xsf(0.99),
+        xPhi(dof),
+        xNu(dof)
         {
+            for(size_t i=1;i<=dof;++i)
+            {
+                xPhi.grow(i,nspc);
+                xNu. grow(i,nspc);
+                
+            }
         }
 
 

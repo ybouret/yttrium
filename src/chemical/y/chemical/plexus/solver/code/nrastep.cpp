@@ -30,8 +30,8 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            XMatrix Phi(n,m);
-            XMatrix Nu(n,m);
+            XMatrix Phi = xPhi[n];
+            XMatrix Nu  = xNu[n];
             XArray  xi(n);
 
             {
