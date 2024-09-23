@@ -30,8 +30,9 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            XMatrix Phi = xPhi[n];
-            XMatrix Nu  = xNu[n];
+            XMatrix &Phi = xPhi[n]; assert(Phi.rows == n);
+            XMatrix &Nu  = xNu[n];  assert(Nu.rows  == n);
+            XMatrix &Chi = xChi[n]; assert(Chi.rows == n);
             XArray  xi(n);
 
             {
@@ -61,7 +62,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            XMatrix Chi(n,n);
             XAdd   &xadd = afm.xadd;
             for(size_t i=n;i>0;--i)
             {
