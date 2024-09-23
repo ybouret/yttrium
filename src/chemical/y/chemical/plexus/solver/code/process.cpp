@@ -123,6 +123,19 @@ namespace Yttrium
                         *xml << " @C=" << *v << std::endl;
                     }
                 }
+
+            }
+
+
+
+            //--------------------------------------------------------------
+            //
+            //
+            // And transfer most promising
+            //
+            //
+            //--------------------------------------------------------------
+            {
                 const Vertex &ans = *vlist.head;
                 mine.transfer(C,L,ans, SubLevel);
             }
