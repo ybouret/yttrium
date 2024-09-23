@@ -157,12 +157,11 @@ namespace Yttrium
              */
             size_t     upgrade(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml);
            
-            //! enhance propsect along its transformation
+            //! enhance prospect along its transformation
             bool       enhance(Prospect &);
 
-            //! extract basis
-            void       extract(XMLog &xml);
-
+            //! rejects if slope >= 0
+            bool       rejects(const Prospect &);
 
         };
      }

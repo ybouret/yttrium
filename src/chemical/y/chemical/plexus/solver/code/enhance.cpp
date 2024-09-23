@@ -7,15 +7,19 @@ namespace Yttrium
     namespace Chemical
     {
         using namespace MKL;
-        
 
+        bool Solver:: rejects(const Prospect &pro)
+        {
+            return afm.xadd.dot(pro.dc,grd).mantissa >= 0.0;
+        }
+
+        
         bool Solver:: enhance(Prospect &pro)
         {
             //------------------------------------------------------------------
             // assuming Cin and ff0 are set
             //------------------------------------------------------------------
-            const xreal_t sig = afm.xadd.dot(pro.dc,grd); // numeric slope
-            if(sig.mantissa>=0.0)
+            if(rejects(pro))
             {
                 //------------------------------------------------------
                 // positive or zero slope, cancel this position

@@ -34,6 +34,7 @@ namespace Yttrium
             vlist.free();
             ortho.free();
             basis.free();
+            //bool hadEmergency = false;
 
             //------------------------------------------------------------------
             //
@@ -71,7 +72,9 @@ namespace Yttrium
                             Y_XMLOG(xml, "(+) " << eq);
                             break;
 
-                        case Crucial: emergency = true;
+                        case Crucial:
+                            emergency    = true;
+                            //hadEmergency = true;
                             Y_XMLOG(xml, "(!) " << eq);
                             break;
                     }
@@ -127,22 +130,41 @@ namespace Yttrium
                 }
             }
 
-            const size_t npro = pps.size();
-            assert(npro>0);
+            //------------------------------------------------------------------
+            //
+            //
+            // at this point, only (at least one) Running prospect(s).
+            //
+            //------------------------------------------------------------------
+            assert(pps.size()>=1);
             assert(0==ortho.size);
             assert(0==basis.size);
+            assert(0==vlist.size);
 
             //------------------------------------------------------------------
             //
             //
             // set common starting point for all algorithms:
-            // - set Cin
-            // - set gradient in grd
-            // - compute ff0 from all active prospects
+            // - set     Cin as starting point
+            // - set     grd as gradient to check all validities
+            // - set     ff0 from all active prospects
             //
             //------------------------------------------------------------------
             ff0 = objGrad(mine.transfer(Cin,SubLevel,C,L),SubLevel);
+            const size_t npro = pps.size();
 
+            Y_XML_COMMENT(xml," #prospect = " << npro );
+
+            switch(npro)
+            {
+                case 0: throw Specific::Exception(CallSign, "corrupted code");
+                    
+
+            }
+
+            throw Specific::Exception(CallSign, "not yet implemented");
+
+#if 0
             //------------------------------------------------------------------
             //
             //
@@ -150,6 +172,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            const size_t npro = pps.size();
             if(1==npro) {
                 Prospect &pro = pps.head();
                 Y_XML_COMMENT(xml,"single: " << pro.eq);
@@ -249,6 +272,7 @@ namespace Yttrium
             }
 
             return good;
+#endif
         }
 
 
