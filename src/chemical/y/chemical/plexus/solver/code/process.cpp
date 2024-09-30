@@ -140,7 +140,7 @@ namespace Yttrium
                 mine.transfer(C,L,ans, SubLevel);
             }
 
-
+            // helper for monitoring
             if(xml.verbose)
             {
 
