@@ -54,6 +54,8 @@ Y_UTEST(plexus)
     //const XReadable &K   = cls.K(0);
 
 
+    cls.render("plexus");
+
     XVector C0(lib->size(),0);
     XVector dC(C0);
 

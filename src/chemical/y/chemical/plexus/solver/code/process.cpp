@@ -160,10 +160,12 @@ namespace Yttrium
 
             if( vlist.head->cost.abs().mantissa <= 0.0 )
             {
+                // numerical solution
                 SOLVER_RETURN(Solved);
             }
             else
             {
+                // numerical improvement
                 SOLVER_RETURN(Better);
             }
         }
