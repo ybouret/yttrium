@@ -7,24 +7,40 @@
 #include "y/stream/libc/output.hpp"
 
 
+
 using namespace Yttrium;
- 
-Y_UTEST(vfs_cwd)
+
+namespace
 {
-    VFS  & fs = LocalFS::Instance();
-    String cwd = fs.getCWD();
-    std::cerr << "cwd=" << cwd << std::endl;
+    static inline void ls()
     {
         OutputFile fp(StdErr);
+        std::cerr << "<listing>" << std::endl;
 #if defined(Y_BSD)
         ProcInput::SendTo(fp, "ls");
 #endif
 
 #if defined(Y_WIN)
-		ProcInput::SendTo(fp, "dir");
+        ProcInput::SendTo(fp, "dir");
 #endif
-        
+
+        std::cerr << "<listing/>" << std::endl;
+
     }
+}
+
+Y_UTEST(vfs_cwd)
+{
+    VFS  & vfs = LocalFS::Instance();
+    String cwd = vfs.getCWD();
+    std::cerr << "cwd=" << cwd << std::endl;
+    ls();
+
+    const char tmp[] = "temporary";
+    vfs.makeDirectory(tmp, true);
+    vfs.setCWD(tmp);
+    ls();
+
 }
 Y_UDONE()
 

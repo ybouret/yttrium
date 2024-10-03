@@ -245,3 +245,13 @@ namespace Yttrium
 
 
 }
+
+namespace Yttrium
+{
+    void VFS:: setCWD(const char * const dirName)
+    {
+        const String _(dirName);
+        setCWD(_);
+    }
+
+}

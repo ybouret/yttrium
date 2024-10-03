@@ -43,6 +43,7 @@ namespace Yttrium
         virtual void      makeDirectory(const String &dirName, const bool mayExist); //!< use O/S functions
         virtual bool      tryEraseEmpty(const String &dirName);                      //!< use O/S functions
         virtual String    getCWD();                                                  //!< use O/S functions
+        virtual void      setCWD(const String &dirName);                             //!< use O/S functions
         static  String    MakeWin32Path(const String &dirName);                      //!< needed for Win32
 
     private:

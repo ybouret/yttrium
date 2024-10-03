@@ -50,11 +50,39 @@ namespace Yttrium
         if (buflen <= 0) throw Win32::Exception(::GetLastError(), fn);
         CxxArray<char> buffer(buflen);
         const DWORD result = ::GetCurrentDirectory(buflen,&buffer[1]);
-        if (result != buflen-1) throw Win32::Exception(::GetLastError(), "%s lengths mismatch!", fn);
+        if (result != buflen-1)
+        {
+            const DOWRD err = ::GetLastError();
+            throw Win32::Exception(err, "%s lengths mismatch!", fn);
+        }
         return String(&buffer[1], result);
 #endif
 
         throw Specific::Exception(fn, "not implemented on %s", Y_PLATFORM);
+    }
+
+    void LocalFS:: setCWD(const String &dirName)
+    {
+#if defined(Y_BSD)
+        Y_GIANT_LOCK();
+        const char * const path = dirName.c_str();
+        if( 0 !=  chdir( path ) )
+        {
+            const int err = errno;
+            throw Libc::Exception(err,"chdir(%s)",path);
+        }
+#endif
+
+#if defined(Y_WIN)
+        Y_GIANT_LOCK();
+        const char * const path = dirName.c_str();
+        if( ! ::SetCurrentDirectory(path) )
+        {
+            const DWORD err = ::GetLastError();
+            throw Win32::Exception(err, "SetCurrentDirectory(%s)", path);
+        }
+#endif
+
     }
 
 }
