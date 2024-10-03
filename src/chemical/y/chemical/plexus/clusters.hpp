@@ -58,8 +58,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             virtual ConstInterface & surrogate() const noexcept;
-            Cluster::List   cls;
-            Vector<xreal_t> shK;
+            Cluster::List   cls; //!< the internal clusters
+            Vector<xreal_t> shK; //!< the updated shared constants, TopLevel
 
         public:
             const size_t  maxEPC;  //!< max Equilibria per cluster
