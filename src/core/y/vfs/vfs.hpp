@@ -190,6 +190,8 @@ namespace Yttrium
         virtual EntryType findEntryType(const String &path, bool &lnk) const        = 0; //!< get entry attributes
         virtual void      makeDirectory(const String &dirName, const bool mayExist) = 0; //!< create a directory
         virtual bool      tryEraseEmpty(const String &dirName)                      = 0; //!< try to erase an empty directory
+        virtual String    getCWD()                                                  = 0; //!< get current working directory
+
 
         //______________________________________________________________________
         //
@@ -202,6 +204,7 @@ namespace Yttrium
         EntryType    findEntryType(const char * const path, bool &lnk) const;        //!< alias
         void         makeDirectory(const char * const dirName, const bool mayExist); //!< alias
         bool         tryEraseEmpty(const char * const dirName);                      //!< alias
+        
 
         //______________________________________________________________________
         //

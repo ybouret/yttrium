@@ -42,7 +42,8 @@ namespace Yttrium
         virtual EntryType findEntryType(const String &path, bool &link) const;       //!< use O/S functions
         virtual void      makeDirectory(const String &dirName, const bool mayExist); //!< use O/S functions
         virtual bool      tryEraseEmpty(const String &dirName);                      //!< use O/S functions
-        static String     MakeWin32Path(const String &dirName);                      //!< needed for Win32
+        virtual String    getCWD();                                                  //!< use O/S functions
+        static  String    MakeWin32Path(const String &dirName);                      //!< needed for Win32
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(LocalFS);
