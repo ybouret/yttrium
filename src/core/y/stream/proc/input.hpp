@@ -75,6 +75,7 @@ namespace Yttrium
             ProcInput inp( cmd );
             char      chr = 0;
             while(inp.query(chr)) fp << chr;
+			fp.flush();
             return fp;
         }
 

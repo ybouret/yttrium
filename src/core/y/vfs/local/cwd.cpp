@@ -52,7 +52,7 @@ namespace Yttrium
         const DWORD result = ::GetCurrentDirectory(buflen,&buffer[1]);
         if (result != buflen-1)
         {
-            const DOWRD err = ::GetLastError();
+            const DWORD err = ::GetLastError();
             throw Win32::Exception(err, "%s lengths mismatch!", fn);
         }
         return String(&buffer[1], result);
