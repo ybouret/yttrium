@@ -301,6 +301,7 @@ add_test(vfs:scan  test-core vfs_scan)
 add_test(vfs:dname test-core vfs_dname)
 add_test(vfs:mkdir test-core vfs_mkdir tmp)
 add_test(vfs:rm    test-core vfs_rm)
+add_test(vfs:cwd   test-core vfs_cwd)
 
 
 #Information

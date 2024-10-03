@@ -6,6 +6,7 @@
 
 #include "y/stream/proc/stream.hpp"
 #include "y/stream/input.hpp"
+#include "y/stream/output.hpp"
 #include "y/stream/io/chars.hpp"
 
 namespace Yttrium
@@ -65,6 +66,16 @@ namespace Yttrium
             String    line;
             while(inp.gets(line)) lines << line;
             return lines;
+        }
+
+        //! redirect to another stream
+        template <typename COMMAND>
+        static OutputStream & SendTo(OutputStream &fp, const COMMAND &cmd)
+        {
+            ProcInput inp( cmd );
+            char      chr = 0;
+            while(inp.query(chr)) fp << chr;
+            return fp;
         }
 
         //______________________________________________________________________
