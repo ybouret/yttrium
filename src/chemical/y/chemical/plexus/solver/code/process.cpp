@@ -15,7 +15,7 @@ namespace Yttrium
     {
         using namespace MKL;
 
-#define SOLVER_RETURN(FLAG) Y_XML_COMMENT(xml, #FLAG); return FLAG
+#define SOLVER_RETURN(FLAG) do { Y_XML_COMMENT(xml, #FLAG); return FLAG; } while(false)
 
         Outcome Solver:: process(XWritable &       C,
                                  const Level       L,
