@@ -68,9 +68,26 @@ namespace Yttrium
     VFS::ChangeDirectory & VFS::ChangeDirectory:: operator<<(const String &dirName)
     {
         assert(0!=code);
-        (*code) << dirName;
-        try        { code->vfs.setCWD(dirName); }
-        catch(...) { code->cutTail(); throw;    }
+        assert(0!=code->tail);
+
+        // check and get 'old'
+        ok();
+        const String &old = **(code->tail);
+        VFS          &vfs = code->vfs;
+
+        // change
+        vfs.setCWD(dirName);
+        try {
+            const String cwd = vfs.getCWD();
+            (*code) << cwd;
+        }
+        catch(...)
+        {
+            // try to failsafe
+            code->vfs.setCWD(old);
+            throw;
+        }
+
         return *this;
     }
 
@@ -82,7 +99,7 @@ namespace Yttrium
 
     const char *   VFS:: ChangeDirectory :: callSign() const noexcept { return CallSign; }
     size_t         VFS:: ChangeDirectory :: size()     const noexcept { assert(0!=code); return code->size; }
-    const String & VFS:: ChangeDirectory:: operator[](const size_t iDir) const noexcept
+    const String & VFS:: ChangeDirectory :: operator[](const size_t iDir) const noexcept
     {
         assert(iDir>0);
         assert(iDir<=code->size);
@@ -90,13 +107,21 @@ namespace Yttrium
     }
 
 
-    VFS::ChangeDirectory & VFS::ChangeDirectory:: up()
+
+    void VFS::ChangeDirectory:: ok()
     {
         assert(0!=code);
         code->check();
+    }
+
+    VFS::ChangeDirectory & VFS::ChangeDirectory:: up()
+    {
+        ok();
         if(code->size>1)
         {
-            
+            const String &dirName = **(code->tail->prev);
+            code->vfs.setCWD(dirName);
+            code->cutTail();
         }
         return *this;
     }

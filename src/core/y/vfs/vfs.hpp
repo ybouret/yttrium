@@ -213,7 +213,8 @@ namespace Yttrium
             ChangeDirectory & operator<<(const String &dirName); //!< change working directory
             ChangeDirectory & operator<<(const char * const   ); //!< change working directory
             ChangeDirectory & up();                              //!< up one dir
-            
+            void              ok();                              //!< check consistency
+
             //------------------------------------------------------------------
             //
             // Interface

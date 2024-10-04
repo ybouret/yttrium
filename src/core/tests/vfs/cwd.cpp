@@ -48,7 +48,13 @@ Y_UTEST(vfs_cwd)
     VFS::ChangeDirectory chDir(vfs);
     std::cerr << "chDir=" << chDir << std::endl;
     chDir.up();
-    
+    std::cerr << "chDir=" << chDir << std::endl;
+    chDir << tmp;
+    std::cerr << "chDir=" << chDir << std::endl;
+    chDir.ok();
+    chDir.up();
+    std::cerr << "chDir=" << chDir << std::endl;
+    chDir.ok();
 }
 Y_UDONE()
 
