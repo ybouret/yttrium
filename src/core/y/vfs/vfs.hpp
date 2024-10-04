@@ -180,13 +180,27 @@ namespace Yttrium
         };
 
 
-        class ChangeDirectory
+        //______________________________________________________________________
+        //
+        //
+        //! Directory Changer
+        //
+        //______________________________________________________________________
+        class ChangeDirectory : public Readable<const String>
         {
         public:
             explicit ChangeDirectory( VFS & );        //!< initialize from CWD
             virtual ~ChangeDirectory() noexcept;      //!< cleanup
             ChangeDirectory(const ChangeDirectory &); //!< copy current state
-            Y_OSTREAM_PROTO(ChangeDirectory);         //!< display
+            
+            ChangeDirectory & operator<<(const String &dirName); //!< change working directory
+            ChangeDirectory & operator<<(const char * const   ); //!< change working directory
+            ChangeDirectory & up();                              //!< up one dir
+
+
+            virtual const char *   callSign()               const noexcept; //!< [Callable]
+            virtual size_t         size()                   const noexcept; //!< [Collection]
+            virtual const String & operator[](const size_t) const noexcept; //!< [Readable]
 
         private:
             Y_DISABLE_ASSIGN(ChangeDirectory);

@@ -53,12 +53,37 @@ namespace Yttrium
         Nullify(code);
     }
 
+#if 0
     std::ostream & operator<<(std::ostream &os, const VFS::ChangeDirectory &self)
     {
         assert(0!=self.code);
         os << *(self.code);
         return os;
     }
+#endif
 
+    VFS::ChangeDirectory & VFS::ChangeDirectory:: operator<<(const String &dirName)
+    {
+        assert(0!=code);
+        (*code) << dirName;
+        try        { code->vfs.setCWD(dirName); }
+        catch(...) { code->cutTail(); throw;    }
+        return *this;
+    }
+
+    VFS::ChangeDirectory & VFS::ChangeDirectory:: operator<<(const char * const  dirName)
+    {
+        const String _(dirName);
+        return (*this) << _;
+    }
+
+    const char *   VFS::ChangeDirectory :: callSign() const noexcept { return "VFS::ChangeDirectory"; }
+    size_t         VFS::ChangeDirectory :: size() const noexcept { assert(0!=code); return code->size; }
+    const String & VFS:: ChangeDirectory:: operator[](const size_t iDir) const noexcept
+    {
+        assert(iDir>0);
+        assert(iDir<=code->size);
+        return **(code->fetch(iDir));
+    }
 
 }
