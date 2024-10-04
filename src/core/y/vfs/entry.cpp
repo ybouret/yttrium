@@ -59,6 +59,34 @@ namespace Yttrium
     bool VFS::Entry:: isReg() const noexcept  { return VFS::IsReg == type; }
     bool VFS::Entry:: isDir() const noexcept  { return VFS::IsDir == type; }
 
+    bool VFS:: Entry:: isDot() const
+    {
+        assert(0!=path);
+        if( 1 == strlen(base) && '.' == base[0] )
+        {
+            if(!isDir()) throw Specific::Exception(CallSign, "'.' is not a directory");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool VFS:: Entry:: isDDot() const
+    {
+        assert(0!=path);
+        if( 2 == strlen(base) && '.' == base[0] && '.' == base[1])
+        {
+            if(!isDir()) throw Specific::Exception(CallSign, "'..' is not a directory");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     const char * VFS::Entry:: typeText() const noexcept
     {
@@ -77,8 +105,7 @@ namespace Yttrium
             case BaseWE: return ext ? String(base,ext-base) : String(base);
             case Ext:    return String(ext?ext+1:0);
         }
-        throw Specific::Exception(CallSign,"corrupted Part value");
-        //return String();
+        throw Specific::Exception(CallSign,"corrupted VFS::Entry::Part value");
     }
 
     std::ostream & operator<<(std::ostream &os, const VFS::Entry &ep)

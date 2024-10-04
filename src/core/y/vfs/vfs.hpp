@@ -124,13 +124,15 @@ namespace Yttrium
             bool         isReg()    const noexcept; //!< type == IsReg
             bool         isDir()    const noexcept; //!< type == IsDir
             String       pry(const Part)     const; //!< convert to string for ops
+            bool         isDot()             const; //!< check if is '.'
+            bool         isDDot()            const; //!< check if is '..'
 
             //! lexicographic path comparison
             static SignType CompareByPath(const Entry *lhs, const Entry *rhs) noexcept;
 
             //! lexicographic base comparison
             static SignType CompareByName(const Entry *lhs, const Entry *rhs) noexcept;
-
+            
 
             //__________________________________________________________________
             //
@@ -256,6 +258,20 @@ namespace Yttrium
         void         makeDirectory(const char * const dirName, const bool mayExist); //!< alias
         bool         tryEraseEmpty(const char * const dirName);                      //!< alias
         void         setCWD(const char * const dirName);                             //!< alias
+
+        //! Add Mode to quickly load entries from a directory
+        enum AddMode
+        {
+            AddReg, //!< add regular files only
+            AddDir, //!< add directory only BUT dot and ddot
+            AddAny  //!< add dir/reg BUT dot and ddot
+        };
+
+        void addTo(Entries &entries, const String &     dirName, const AddMode mode); //!< add to entries dirName content
+        void addTo(Entries &entries, const char * const dirName, const AddMode mode); //!< add to entries dirname content
+
+
+
 
         //______________________________________________________________________
         //

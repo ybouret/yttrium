@@ -255,3 +255,44 @@ namespace Yttrium
     }
 
 }
+
+#include "y/ptr/auto.hpp"
+
+namespace Yttrium
+{
+    void VFS:: addTo(Entries &entries, const String &dirName, const AddMode mode)
+    {
+        AutoPtr<Scanner> scan = openDirectory(dirName);
+        while( true )
+        {
+            AutoPtr<VFS::Entry> ep = scan->get();
+            if(ep.isEmpty()) return;
+
+            if(ep->isDot())  continue;
+            if(ep->isDDot()) continue;
+            switch(ep->type)
+            {
+                case IsUnk:
+                    continue;
+
+                case IsReg:
+                    if(mode==AddDir) continue;
+                    break;
+
+                case IsDir:
+                    if(mode==AddReg) continue;
+                    break;
+            }
+
+            entries.pushTail(ep.yield());
+        }
+    }
+
+    void VFS:: addTo(Entries &entries, const char * const dirName, const AddMode mode)
+    {
+        const String _(dirName);
+        addTo(entries, _, mode);
+    }
+
+
+}
