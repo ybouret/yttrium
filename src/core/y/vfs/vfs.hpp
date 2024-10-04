@@ -179,6 +179,21 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Scanner);
         };
 
+
+        class ChangeDirectory
+        {
+        public:
+            explicit ChangeDirectory( VFS & );        //!< initialize from CWD
+            virtual ~ChangeDirectory() noexcept;      //!< cleanup
+            ChangeDirectory(const ChangeDirectory &); //!< copy current state
+            Y_OSTREAM_PROTO(ChangeDirectory);         //!< display
+
+        private:
+            Y_DISABLE_ASSIGN(ChangeDirectory);
+            class Code;
+            Code *code;
+        };
+
         //______________________________________________________________________
         //
         //

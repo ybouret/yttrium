@@ -25,8 +25,10 @@ namespace
 #endif
 
         std::cerr << "<listing/>" << std::endl;
-
     }
+
+    
+
 }
 
 Y_UTEST(vfs_cwd)
@@ -40,6 +42,11 @@ Y_UTEST(vfs_cwd)
     vfs.makeDirectory(tmp, true);
     vfs.setCWD(tmp);
     ls();
+    vfs.setCWD("..");
+    ls();
+
+    VFS::ChangeDirectory chDir(vfs);
+    std::cerr << "chDir=" << chDir << std::endl;
 
 }
 Y_UDONE()

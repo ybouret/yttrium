@@ -183,8 +183,6 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Solver::run" );
             const size_t n = neqs;
             const size_t m = nspc;
-            
-
         }
 
 
