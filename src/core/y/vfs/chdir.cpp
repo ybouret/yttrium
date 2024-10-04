@@ -77,16 +77,16 @@ namespace Yttrium
         assert(0!=code);
         assert(0!=code->tail);
 
-        // check and get 'old'
+        // check and get 'old' directory
         ok();
         const String &old = **(code->tail);
         VFS          &vfs = code->vfs;
 
-        // change
+        // change to new directory
         vfs.setCWD(dirName);
         try {
-            const String cwd = vfs.getCWD();
-            (*code) << cwd;
+            const String cwd = vfs.getCWD(); // get system cwd
+            (*code) << cwd;                  // add it
         }
         catch(...)
         {
