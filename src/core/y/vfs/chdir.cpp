@@ -46,13 +46,20 @@ namespace Yttrium
         Y_DISABLE_ASSIGN(Code);
     };
 
-    VFS:: ChangeDirectory:: ChangeDirectory(VFS &vfs) : code( new Code(vfs) )
+    VFS:: ChangeDirectory:: ChangeDirectory(VFS &vfs) :
+    Identifiable(),
+    Collection(),
+    Readable<const String>(),
+    code( new Code(vfs) )
     {
         std::cerr << "sizeof(Code)=" << sizeof(Code) << std::endl;
     }
 
 
     VFS:: ChangeDirectory:: ChangeDirectory(const ChangeDirectory &other) :
+    Identifiable(),
+    Collection(),
+    Readable<const String>(),
     code( new Code( *other.code) )
     {
     }
