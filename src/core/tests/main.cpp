@@ -230,6 +230,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(vfs_mkdir);
     Y_UTEST(vfs_rm);
     Y_UTEST(vfs_cwd);
+    Y_UTEST(vfs_subdirs);
 
     Y_UTEST(info_mtf);
     Y_UTEST(info_delta);

@@ -14,6 +14,7 @@ Y_UTEST(vfs_mkdir)
         fs.makeDirectory(argv[1],true);
         Y_CHECK(fs.tryEraseEmpty(argv[1]));;
     }
+    
 
 }
 Y_UDONE()

@@ -79,6 +79,7 @@ namespace Yttrium
             IsUnk  //!< doesn't exists ?
         };
 
+        //! integer value to compare entries
         static int         EntryTypeChar(const EntryType) noexcept;
 
         //! human readable entry type
@@ -263,6 +264,8 @@ namespace Yttrium
         EntryType    findEntryType(const char * const path, bool &lnk) const;        //!< alias
         void         makeDirectory(const char * const dirName, const bool mayExist); //!< alias
         bool         tryEraseEmpty(const char * const dirName);                      //!< alias
+        void         createSubDirs(const String &dirPath);                           //!< create all requested dirs
+        void         createSubDirs(const char * const);                              //!< alias
         void         setCWD(const char * const dirName);                             //!< alias
 
         //! Add Mode to quickly load entries from a directory

@@ -269,6 +269,7 @@ namespace Yttrium
 
 }
 
+
 #include "y/ptr/auto.hpp"
 
 namespace Yttrium
