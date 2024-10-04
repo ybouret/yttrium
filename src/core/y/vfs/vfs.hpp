@@ -7,6 +7,7 @@
 
 #include "y/string.hpp"
 #include "y/data/list/cxx.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -73,10 +74,12 @@ namespace Yttrium
         //! admitted entry type
         enum EntryType
         {
-            IsUnk, //!< doesn't exists ?
+            IsDir, //!< directory
             IsReg, //!< regular file
-            IsDir  //!< directory
+            IsUnk  //!< doesn't exists ?
         };
+
+        static int         EntryTypeChar(const EntryType) noexcept;
 
         //! human readable entry type
         static const char *EntryTypeText(const EntryType) noexcept;
@@ -87,7 +90,7 @@ namespace Yttrium
         //! Entry
         //
         //______________________________________________________________________
-        class Entry : public Object
+        class Entry : public Quantized
         {
         public:
             //______________________________________________________________________
@@ -132,7 +135,10 @@ namespace Yttrium
 
             //! lexicographic base comparison
             static SignType CompareByName(const Entry *lhs, const Entry *rhs) noexcept;
-            
+
+            //! lexicographic path comparison, directory first
+            static SignType CompareByPathDirFirst(const Entry *lhs, const Entry *rhs) noexcept;
+
 
             //__________________________________________________________________
             //

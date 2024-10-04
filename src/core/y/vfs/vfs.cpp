@@ -231,6 +231,19 @@ namespace Yttrium
         return "!";
     }
 
+    int VFS:: EntryTypeChar(const EntryType t) noexcept
+    {
+        switch(t)
+        {
+            case IsReg: return 'f';
+            case IsDir: return 'd';
+            case IsUnk: break;;
+        }
+        return 'u';
+    }
+
+
+    
     void VFS:: makeDirectory(const char *dirName, const bool mayExist)
     {
         const String _(dirName);

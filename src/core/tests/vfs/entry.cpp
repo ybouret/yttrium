@@ -25,6 +25,9 @@ Y_UTEST(vfs_entry)
         SHOW_AS(VFS::Entry::Ext);
 
     }
+
+    Y_SIZEOF(VFS::Entry);
+    
 }
 Y_UDONE()
 

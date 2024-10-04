@@ -19,7 +19,7 @@ Y_UTEST(vfs_scan)
             while( 0 != (ep=scanner->get()))
             {
                 entries.pushTail(ep);
-                std::cerr << "\t" << ep->path << ", " << ep->base << std::endl;
+                std::cerr << "\t" << std::setw(32) << ep->path << ", " << ep->base << std::endl;
                 if(ep->isDot()) std::cerr << "\t|_[DOT]" << std::endl;
                 if(ep->isDDot()) std::cerr << "\t|_[DDOT]" << std::endl;
 

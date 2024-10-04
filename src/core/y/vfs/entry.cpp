@@ -6,7 +6,7 @@ namespace Yttrium
 {
 
     VFS::Entry:: Entry(const VFS &fs, const String &name) :
-    Object(),
+    Quantized(),
     path(name),
     base( BaseName(path)  ),
     ext(  Extension(base) ),
@@ -20,7 +20,7 @@ namespace Yttrium
 
 
     VFS::Entry:: Entry(const VFS &fs, const char *name) :
-    Object(),
+    Quantized(),
     path( name ),
     base( BaseName(path)  ),
     ext(  Extension(base) ),
@@ -43,7 +43,7 @@ namespace Yttrium
     }
 
     VFS::Entry:: Entry(const Entry &entry) :
-    Object(),
+    Quantized(),
     path(entry.path),
     base(path.c_str() + shifting(entry.base,entry.path)),
     ext(0==entry.ext? 0 : path.c_str() + shifting(entry.ext,entry.path)),
@@ -144,6 +144,19 @@ namespace Yttrium
     }
 
 
+    SignType VFS:: Entry::  CompareByPathDirFirst(const Entry *lhs, const Entry *rhs) noexcept
+    {
+        const int L = EntryTypeChar(lhs->type);
+        const int R = EntryTypeChar(rhs->type);
+
+        switch( Sign::Of(L,R) )
+        {
+            case Negative: return Negative;
+            case __Zero__: break;
+            case Positive: return Positive;
+        }
+        return CompareByPath(lhs,rhs);
+     }
 
 }
 
