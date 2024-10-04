@@ -189,15 +189,36 @@ namespace Yttrium
         class ChangeDirectory : public Readable<const String>
         {
         public:
-            explicit ChangeDirectory( VFS & );        //!< initialize from CWD
+            //------------------------------------------------------------------
+            //
+            // Definitions
+            //
+            //------------------------------------------------------------------
+            static const char * const CallSign; //!< VFS::ChangeDirectory
+
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit ChangeDirectory( VFS & );        //!< initialize from CWD = root
             virtual ~ChangeDirectory() noexcept;      //!< cleanup
             ChangeDirectory(const ChangeDirectory &); //!< copy current state
-            
+
+            //------------------------------------------------------------------
+            //
+            // Methods
+            //
+            //------------------------------------------------------------------
             ChangeDirectory & operator<<(const String &dirName); //!< change working directory
             ChangeDirectory & operator<<(const char * const   ); //!< change working directory
             ChangeDirectory & up();                              //!< up one dir
-
-
+            
+            //------------------------------------------------------------------
+            //
+            // Interface
+            //
+            //------------------------------------------------------------------
             virtual const char *   callSign()               const noexcept; //!< [Callable]
             virtual size_t         size()                   const noexcept; //!< [Collection]
             virtual const String & operator[](const size_t) const noexcept; //!< [Readable]

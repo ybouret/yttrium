@@ -2,6 +2,7 @@
 #include "y/data/small/heavy/list/solo.hpp"
 #include "y/type/nullify.hpp"
 #include "y/quantized.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -10,6 +11,8 @@ namespace Yttrium
         typedef Small::SoloHeavyList<const String> DirList;
 
     }
+
+    const char * const VFS:: ChangeDirectory:: CallSign = "VFS::ChangeDirectory";
 
     class VFS::ChangeDirectory::Code : public Quantized, public DirList
     {
@@ -26,6 +29,14 @@ namespace Yttrium
         //! cleanup
         inline virtual ~Code() noexcept {}
 
+        //! check
+        inline void check()
+        {
+            if(size<=0) throw Specific:: Exception(CallSign, "empty state!!!");
+            const String & last = **(tail);
+            const String   here = vfs.getCWD();
+            if(last!=here) throw Specific::Exception(CallSign, "in '%s'!='%s'", here.c_str(), last.c_str());
+        }
 
 
         VFS &vfs; //! user's persistent vfs
@@ -53,14 +64,6 @@ namespace Yttrium
         Nullify(code);
     }
 
-#if 0
-    std::ostream & operator<<(std::ostream &os, const VFS::ChangeDirectory &self)
-    {
-        assert(0!=self.code);
-        os << *(self.code);
-        return os;
-    }
-#endif
 
     VFS::ChangeDirectory & VFS::ChangeDirectory:: operator<<(const String &dirName)
     {
@@ -77,13 +80,25 @@ namespace Yttrium
         return (*this) << _;
     }
 
-    const char *   VFS::ChangeDirectory :: callSign() const noexcept { return "VFS::ChangeDirectory"; }
-    size_t         VFS::ChangeDirectory :: size() const noexcept { assert(0!=code); return code->size; }
+    const char *   VFS:: ChangeDirectory :: callSign() const noexcept { return CallSign; }
+    size_t         VFS:: ChangeDirectory :: size()     const noexcept { assert(0!=code); return code->size; }
     const String & VFS:: ChangeDirectory:: operator[](const size_t iDir) const noexcept
     {
         assert(iDir>0);
         assert(iDir<=code->size);
         return **(code->fetch(iDir));
+    }
+
+
+    VFS::ChangeDirectory & VFS::ChangeDirectory:: up()
+    {
+        assert(0!=code);
+        code->check();
+        if(code->size>1)
+        {
+            
+        }
+        return *this;
     }
 
 }
