@@ -104,6 +104,17 @@ namespace Yttrium
 
         Ansatz:: ~Ansatz() noexcept {}
 
+    }
+
+}
+
+
+#include "y/mkl/opt/minimize.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
 
         class Device : public Joint
         {
@@ -122,6 +133,7 @@ namespace Yttrium
             xreal_t objectiveFunction(const XReadable &C, const Level L);
             xreal_t objectiveGradient(const XReadable &C, const Level L);
             xreal_t operator()(const xreal_t u); //!< objFunc @Ctmp  = Cini(1-u)+Cend*u u in [0:1]
+            bool    enhance(Ansatz &);
 
             Aftermath      aftermath;
             XMatrix        EqConc;
@@ -231,6 +243,24 @@ namespace Yttrium
             for(size_t i=1;i<=na;++i)
             {
                 xml() << ansatz[i] << std::endl;
+            }
+        }
+
+        bool Device:: enhance(Ansatz &ans)
+        {
+            const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
+            if(slope.mantissa>=0)
+            {
+                ans.dc.ld(0);
+                ans.cc.ld(Cini);
+                ans.ff = ff0;
+                ans.xi = ans.ax = 0;
+                return false;
+            }
+            else
+            {
+                Cend.ld(ans.cc);
+
             }
         }
 
