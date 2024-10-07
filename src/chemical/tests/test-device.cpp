@@ -7,6 +7,10 @@
 #include "y/system/exception.hpp"
 #include "y/sort/heap.hpp"
 
+#include "y/stream/libc/output.hpp"
+#include "y/jive/pattern/vfs.hpp"
+#include "y/vfs/local/fs.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -29,9 +33,8 @@ namespace Yttrium
 
             Y_OSTREAM_PROTO(Ansatz);
 
-            static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;
-
-            xreal_t objectiveFunction(XMul &X, const XReadable &C, const Level L) const;
+            static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< decreasing |xi| for Crucial
+            xreal_t         objectiveFunction(XMul &X, const XReadable &C, const Level L) const; //!< affinity
 
             const Equilibrium &eq;
             const xreal_t      ek;
@@ -117,16 +120,21 @@ namespace Yttrium
             void showAnsatz(XMLog &xml) const;
 
             xreal_t objectiveFunction(const XReadable &C, const Level L);
+            xreal_t objectiveGradient(const XReadable &C, const Level L);
+            xreal_t operator()(const xreal_t u); //!< objFunc @Ctmp  = Cini(1-u)+Cend*u u in [0:1]
 
             Aftermath      aftermath;
             XMatrix        EqConc;
             XMatrix        EqDiff;
             Ansatz::Series ansatz;
-            XSeries        objFcn;
             XArray         Cini;
             XArray         Cend;
             XArray         Ctmp;
-            xreal_t        Fini;
+            xreal_t        ff0;
+            XSeries        objValue;
+            XArray         gradient;
+            XSwell         increase;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
@@ -140,21 +148,78 @@ namespace Yttrium
         EqConc(neqs,nspc),
         EqDiff(neqs,nspc),
         ansatz(neqs),
-        objFcn(neqs),
         Cini(nspc),
         Cend(nspc),
         Ctmp(nspc),
-        Fini()
+        ff0(),
+        objValue(neqs),
+        gradient(nspc),
+        increase(nspc)
         {
         }
 
         xreal_t Device:: objectiveFunction(const XReadable &C, const Level L)
         {
-            objFcn.free();
+            objValue.free();
             XMul &X = aftermath.xmul;
             for(size_t i=ansatz.size();i>0;--i)
-                objFcn << ansatz[i].objectiveFunction(X,C,L);
-            return aftermath.xadd.normOf(objFcn);
+                objValue << ansatz[i].objectiveFunction(X,C,L);
+            return aftermath.xadd.normOf(objValue);
+        }
+
+        xreal_t Device:: operator()(const xreal_t u)
+        {
+            const xreal_t one(1);
+            const xreal_t v = one-u;
+            for(size_t i=nspc;i>0;--i)
+            {
+                const xreal_t c0 = Cini[i];
+                const xreal_t c1 = Cend[i];
+                xreal_t cmin = c0, cmax = c1;
+                if(cmax<cmin) Swap(cmin,cmax);
+                Ctmp[i] = Clamp(cmin, v*c0 + u * c1, cmax);
+            }
+            return objectiveFunction(Ctmp,SubLevel);
+        }
+
+        xreal_t Device:: objectiveGradient(const XReadable &C,
+                                           const Level      L)
+        {
+            const xreal_t _0;
+            increase.forEach( &XAdd::free );
+            objValue.free();
+            gradient.ld(_0);
+
+
+            const size_t m  = nspc;
+
+            {
+                XWritable & dA = Ctmp;
+                XMul      &  X = aftermath.xmul;
+                for(size_t i = ansatz.size();i>0;--i)
+                {
+                    const Ansatz      &ans = ansatz[i];
+                    const Equilibrium &eq  = ans.eq;
+                    const xreal_t      A   = ans.objectiveFunction(X,C,L);
+                    eq.drvsAffinity(dA, SubLevel, C, L);
+                    for(size_t j=m;j>0;--j)
+                    {
+                        increase[j] << A * dA[j];
+                    }
+                    objValue << A;
+                }
+            }
+
+            const xreal_t den = aftermath.xadd.normOf(objValue);
+            if(den.mantissa>0)
+            {
+                for(size_t j=m;j>0;--j)
+                {
+                    gradient[j] = increase[j].sum() / den;
+                }
+            }
+
+            return den;
         }
 
 
@@ -178,6 +243,7 @@ namespace Yttrium
             static const char fn[] = "Chemical::Device::process";
 
             Y_XML_SECTION(xml, "process");
+            Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
             //__________________________________________________________________
             //
@@ -290,19 +356,40 @@ namespace Yttrium
             //__________________________________________________________________
             {
                 Y_XML_COMMENT(xml,"[Running]");
+
+                //______________________________________________________________
+                //
+                //
+                // set common initial conditions
+                //
+                //______________________________________________________________
                 {
-                    Y_XML_SECTION(xml, "Initial Condition");
+                    Y_XML_SECTION(xml, "Initial Conditions");
                     mine.transfer(Cini, SubLevel,C,L);
-                    Fini = objectiveFunction(Cini,SubLevel);
-                    Y_XMLOG(xml, " FF=" << Formatted::Get("%15.4g",real_t(Fini)));
+                    ff0 = objectiveGradient(Cini,SubLevel);
+                    Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
                 }
+
                 for(size_t i=ansatz.size();i>0;--i)
                 {
                     Ansatz &ans = ansatz[i];
                     ans.eq.mustSupport(Cini,   SubLevel);
                     ans.eq.mustSupport(ans.cc, SubLevel);
                     ans.ff = objectiveFunction(ans.cc,SubLevel);
+                    Cend.ld(ans.cc);
+                    {
+                        const String fileName = ans.eq.fileName() + ".pro";
+                        OutputFile   fp(fileName);
+                        const size_t np = 1000;
+                        for(size_t i=0;i<=np;++i)
+                        {
+                            const double u = double(i)/np;
+                            const double f = double( (*this)(u) );
+                            fp("%.15g %.15g\n", u, f);
+                        }
+                    }
                 }
+
                 showAnsatz(xml);
             }
 
