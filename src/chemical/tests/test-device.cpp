@@ -387,6 +387,8 @@ namespace Yttrium
                             const double f = double( (*this)(u) );
                             fp("%.15g %.15g\n", u, f);
                         }
+                        const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
+                        std::cerr << "plot '" << fileName << "'  w l, " << real_t(ff0) << "+(" << real_t(slope) << ")*x" << std::endl;
                     }
                 }
 
