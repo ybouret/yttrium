@@ -1,12 +1,13 @@
-#include "y/chemical/plexus.hpp"
+#include "y/chemical/plexus/device.hpp"
 #include "y/chemical/plexus/wardens.hpp"
-#include "y/chemical/plexus/outcome.hpp"
+
+#include "y/chemical/plexus.hpp"
+
 
 #include "y/utest/run.hpp"
 #include "y/jive/module.hpp"
 
 
-#include "y/chemical/reactive/aftermath.hpp"
 #include "y/system/exception.hpp"
 #include "y/sort/heap.hpp"
 
@@ -15,122 +16,7 @@
 #include "y/vfs/local/fs.hpp"
 
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
 
-        class Ansatz
-        {
-        public:
-            typedef CxxSeries<Ansatz,XMemory> Series;
-
-            Ansatz(const Equilibrium &_eq,
-                   const xreal_t      _ek,
-                   const Situation    _st,
-                   XWritable &        _cc,
-                   const xreal_t      _xi,
-                   XWritable &        _dc) noexcept;
-
-            ~Ansatz() noexcept;
-            Ansatz(const Ansatz &) noexcept;
-
-            Y_OSTREAM_PROTO(Ansatz);
-
-            static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< decreasing |xi| for Crucial
-            static SignType IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< increasing ff
-            xreal_t         objectiveFunction(XMul &X, const XReadable &C, const Level L) const; //!< affinity
-            void            step(XSwell &inc) const; //!< append xi * nu to species's incresase
-
-            const Equilibrium &eq;
-            const xreal_t      ek;
-            const Situation    st;
-            XWritable &        cc; //!< optimal concentrations
-            xreal_t            xi; //!< corresponding extent from Cini
-            xreal_t            ax; //!< |xi|
-            XWritable &        dc; //!< corresponding delta fron Cini
-            xreal_t            ff;
-            bool               ok; //!< decrease
-
-        private:
-            Y_DISABLE_ASSIGN(Ansatz);
-
-        };
-
-
-        void Ansatz:: step(XSwell &inc) const
-        {
-            assert(Running==st);
-            eq.step(inc,dc);
-        }
-
-
-        xreal_t Ansatz:: objectiveFunction(XMul &X, const XReadable &C, const Level L) const
-        {
-            return eq.affinity(ek, X, C, L);
-        }
-
-        std::ostream & operator<<(std::ostream &os, const Ansatz &ans)
-        {
-
-            os << "|ff=" << Formatted::Get("%15.4g",real_t(ans.ff));
-            os << "|xi=" << std::setw(15) << real_t(ans.xi);
-            os << " @" << ans.eq;
-            return os;
-        }
-
-
-        SignType Ansatz:: DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept
-        {
-            assert(Crucial==lhs.st);
-            assert(Crucial==rhs.st);
-            return Sign::Of(rhs.ax,lhs.ax);
-        }
-
-        SignType Ansatz:: IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept
-        {
-            assert(Running==lhs.st); assert(lhs.ff.mantissa>=0);
-            assert(Running==rhs.st); assert(rhs.ff.mantissa>=0);
-            return Sign::Of(lhs.ff,rhs.ff);
-        }
-
-        Ansatz:: Ansatz(const Equilibrium &_eq,
-                        const xreal_t      _ek,
-                        const Situation    _st,
-                        XWritable &        _cc,
-                        const xreal_t      _xi,
-                        XWritable &        _dc) noexcept :
-        eq(_eq),
-        ek(_ek),
-        st(_st),
-        cc(_cc),
-        xi(_xi),
-        ax(xi.abs()),
-        dc(_dc),
-        ff(0.0),
-        ok(false)
-        {
-        }
-
-        Ansatz:: Ansatz(const Ansatz &_) noexcept :
-        eq(_.eq),
-        ek(_.ek),
-        st(_.st),
-        cc(_.cc),
-        xi(_.xi),
-        ax(_.ax),
-        dc(_.dc),
-        ff(_.ff),
-        ok(_.ok)
-        {
-
-        }
-
-        Ansatz:: ~Ansatz() noexcept {}
-
-    }
-
-}
 
 
 #include "y/mkl/opt/minimize.hpp"
@@ -140,44 +26,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Device : public Joint
-        {
-        public:
-            explicit Device(const Cluster &);
-            virtual ~Device() noexcept;
-
-
-            Outcome process(XWritable       &C,
-                            const Level      L,
-                            const XReadable &K,
-                            XMLog           &xml);
-
-            void showAnsatz(XMLog &xml) const;
-
-            xreal_t objectiveFunction(const XReadable &C, const Level L);
-            xreal_t objectiveGradient(const XReadable &C, const Level L);
-            xreal_t operator()(const xreal_t u); //!< objFunc @Ctmp  = Cini(1-u)+Cend*u u in [0:1]
-            bool    enhance(Ansatz &);
-            bool    nullify(Ansatz &) noexcept; //!< nullify and return false
-
-            Aftermath      aftermath;
-            XMatrix        EqConc;
-            XMatrix        EqDiff;
-            Ansatz::Series ansatz;
-            XArray         Cini;
-            XArray         Cend;
-            XArray         Ctmp;
-            xreal_t        ff0;      //!< objective function at Cini
-            XSeries        objValue; //!< to compute objective function
-            XArray         gradient; //!< gradient
-            XSwell         increase; //!< to help compute gradient
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Device);
-            void  computeRate(XWritable &rate);
-
-        };
+       
 
         Device:: ~Device() noexcept {}
 

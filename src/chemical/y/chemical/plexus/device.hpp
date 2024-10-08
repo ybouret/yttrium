@@ -1,0 +1,86 @@
+//! \file
+
+#ifndef Y_Chemical_Device_Included
+#define Y_Chemical_Device_Included 1
+
+#include "y/chemical/plexus/device/ansatz.hpp"
+#include "y/chemical/plexus/joint.hpp"
+#include "y/chemical/reactive/aftermath.hpp"
+#include "y/mkl/algebra/lu.hpp"
+#include "y/orthogonal/family.hpp"
+#include "y/chemical/plexus/outcome.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Device to solve phase space
+        //
+        //
+        //______________________________________________________________________
+        class Device : public Joint
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Device(const Cluster &); //!< setup for cluster
+            virtual ~Device() noexcept;       //!< cleanup
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Outcome process(XWritable       &C,
+                            const Level      L,
+                            const XReadable &K,
+                            XMLog           &xml);
+
+            void showAnsatz(XMLog &xml) const;
+
+            xreal_t objectiveFunction(const XReadable &C, const Level L);
+            xreal_t objectiveGradient(const XReadable &C, const Level L);
+            xreal_t operator()(const xreal_t u); //!< objFunc @Ctmp  = Cini(1-u)+Cend*u u in [0:1]
+            bool    enhance(Ansatz &);           //!< enhance/nullify ansatz
+            bool    nullify(Ansatz &) noexcept;  //!< nullify and return false
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Aftermath      aftermath; //!< helper to solve each equilibrium
+            XMatrix        EqConc;    //!< store concentrations
+            XMatrix        EqDiff;    //!< store delta
+            Ansatz::Series ansatz;    //!< (lightweight) ansatz
+            XArray         Cini;      //!< Cini to start searching
+            XArray         Cend;      //!< Cend to finish search
+            XArray         Ctmp;      //!< temporaty phase space
+            xreal_t        ff0;       //!< objective function at Cini
+            XSeries        objValue;  //!< to compute objective function
+            XArray         gradient;  //!< gradient at Cini
+            XSwell         increase;  //!< to help compute gradient
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Device);
+            void  computeRate(XWritable &rate);
+
+        };
+    }
+
+}
+
+#endif
