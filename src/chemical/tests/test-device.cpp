@@ -274,14 +274,14 @@ namespace Yttrium
         bool Device:: enhance(Ansatz &ans)
         {
             const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
-            if(slope.mantissa>=0)
+            if(slope.mantissa>=0.0)
             {
                 // numerically not satistfying
                 return nullify(ans);
             }
             else
             {
-                // look for mininimum in Cini:ans.cc
+                // look for mininimum in [Cini:ans.cc]
                 Cend.ld(ans.cc);
                 Device          &F  = *this;
                 Triplet<xreal_t> xx = { 0,   -1,      1 };
@@ -419,6 +419,22 @@ namespace Yttrium
             //__________________________________________________________________
             {
                 Y_XML_COMMENT(xml,"[Running]");
+
+                const size_t na = ansatz.size();
+                switch(na)
+                {
+                    case 0:
+                        Y_XMLOG(xml, "[[Jammed]]");
+                        return;
+
+                    case 1:
+                        Y_XMLOG(xml, "[[Solved]]/Single");
+                        mine.transfer(C,L,ansatz[1].cc, SubLevel);
+                        return;
+
+                    default:
+                        break;
+                }
 
                 //______________________________________________________________
                 //
