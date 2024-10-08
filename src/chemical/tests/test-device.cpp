@@ -34,6 +34,7 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Ansatz);
 
             static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< decreasing |xi| for Crucial
+            static SignType IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< increasing ff
             xreal_t         objectiveFunction(XMul &X, const XReadable &C, const Level L) const; //!< affinity
 
             const Equilibrium &eq;
@@ -44,6 +45,7 @@ namespace Yttrium
             xreal_t            ax; //!< |xi|
             XWritable &        dc; //!< corresponding delta fron Cini
             xreal_t            ff;
+            bool               ok; //!< decrease
 
         private:
             Y_DISABLE_ASSIGN(Ansatz);
@@ -72,6 +74,13 @@ namespace Yttrium
             return Sign::Of(rhs.ax,lhs.ax);
         }
 
+        SignType Ansatz:: IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept
+        {
+            assert(Running==lhs.st); assert(lhs.ff.mantissa>=0);
+            assert(Running==rhs.st); assert(rhs.ff.mantissa>=0);
+            return Sign::Of(lhs.ff,rhs.ff);
+        }
+
         Ansatz:: Ansatz(const Equilibrium &_eq,
                         const xreal_t      _ek,
                         const Situation    _st,
@@ -85,7 +94,8 @@ namespace Yttrium
         xi(_xi),
         ax(xi.abs()),
         dc(_dc),
-        ff(0.0)
+        ff(0.0),
+        ok(false)
         {
         }
 
@@ -97,7 +107,8 @@ namespace Yttrium
         xi(_.xi),
         ax(_.ax),
         dc(_.dc),
-        ff(_.ff)
+        ff(_.ff),
+        ok(_.ok)
         {
 
         }
@@ -134,6 +145,7 @@ namespace Yttrium
             xreal_t objectiveGradient(const XReadable &C, const Level L);
             xreal_t operator()(const xreal_t u); //!< objFunc @Ctmp  = Cini(1-u)+Cend*u u in [0:1]
             bool    enhance(Ansatz &);
+            bool    nullify(Ansatz &) noexcept; //!< nullify and return false
 
             Aftermath      aftermath;
             XMatrix        EqConc;
@@ -142,10 +154,10 @@ namespace Yttrium
             XArray         Cini;
             XArray         Cend;
             XArray         Ctmp;
-            xreal_t        ff0;
-            XSeries        objValue;
-            XArray         gradient;
-            XSwell         increase;
+            xreal_t        ff0;      //!< objective function at Cini
+            XSeries        objValue; //!< to compute objective function
+            XArray         gradient; //!< gradient
+            XSwell         increase; //!< to help compute gradient
 
 
         private:
@@ -239,11 +251,24 @@ namespace Yttrium
         {
             if(!xml.verbose) return;
             const size_t na = ansatz.size();
-            Y_XML_SECTION_OPT(xml, "Ansatz", "count=" << ansatz.size() );
+            Y_XML_SECTION_OPT(xml, "Ansatz", "count=" << ansatz.size() << "/" << neqs);
             for(size_t i=1;i<=na;++i)
             {
                 xml() << ansatz[i] << std::endl;
             }
+        }
+
+
+        using namespace MKL;
+
+
+        bool Device:: nullify(Ansatz &ans) noexcept
+        {
+            ans.dc.ld(0);
+            ans.cc.ld(Cini);
+            ans.ff = ff0;
+            ans.xi = ans.ax = 0;
+            return (ans.ok = false);
         }
 
         bool Device:: enhance(Ansatz &ans)
@@ -251,16 +276,24 @@ namespace Yttrium
             const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
             if(slope.mantissa>=0)
             {
-                ans.dc.ld(0);
-                ans.cc.ld(Cini);
-                ans.ff = ff0;
-                ans.xi = ans.ax = 0;
-                return false;
+                // numerically not satistfying
+                return nullify(ans);
             }
             else
             {
+                // look for mininimum in Cini:ans.cc
                 Cend.ld(ans.cc);
+                Device          &F  = *this;
+                Triplet<xreal_t> xx = { 0,   -1,      1 };
+                Triplet<xreal_t> ff = { ff0, -1, ans.ff };
+                const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
 
+                // recompute ansatz
+                ans.ff = F(xm); if(ans.ff>ff0) return nullify(ans);
+                ans.cc.ld(Ctmp);
+                ans.xi = aftermath.eval(ans.dc, ans.cc, SubLevel, Cini, SubLevel,ans.eq);
+                ans.ax = ans.xi.abs();
+                return (ans.ok = true);
             }
         }
 
@@ -400,14 +433,17 @@ namespace Yttrium
                     Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
                 }
 
+                size_t good = 0;
                 for(size_t i=ansatz.size();i>0;--i)
                 {
-                    Ansatz &ans = ansatz[i];
+                    Ansatz &ans = ansatz[i]; assert(Running==ans.st);
                     ans.eq.mustSupport(Cini,   SubLevel);
                     ans.eq.mustSupport(ans.cc, SubLevel);
                     ans.ff = objectiveFunction(ans.cc,SubLevel);
-                    Cend.ld(ans.cc);
+
+                    if(false)
                     {
+                        Cend.ld(ans.cc);
                         const String fileName = ans.eq.fileName() + ".pro";
                         OutputFile   fp(fileName);
                         const size_t np = 1000;
@@ -420,8 +456,19 @@ namespace Yttrium
                         const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
                         std::cerr << "plot '" << fileName << "'  w l, " << real_t(ff0) << "+(" << real_t(slope) << ")*x" << std::endl;
                     }
-                }
 
+                    if( enhance(ans) )
+                    {
+                        Y_XMLOG(xml, "(+) " << ans);
+                        ++good;
+                    }
+                    else
+                    {
+                        Y_XMLOG(xml, "(-) " << ans);
+                    }
+                }
+                Y_XML_COMMENT(xml, "good=" << good << "/" << ansatz.size() << "/" << neqs);
+                HeapSort::Call(ansatz,Ansatz::IncreasingFF);
                 showAnsatz(xml);
             }
 

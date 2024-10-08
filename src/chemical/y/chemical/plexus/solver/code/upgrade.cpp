@@ -34,8 +34,7 @@ namespace Yttrium
             vlist.free();
             ortho.free();
             basis.free();
-            //bool hadEmergency = false;
-
+            
             //------------------------------------------------------------------
             //
             //
@@ -248,7 +247,6 @@ namespace Yttrium
             }
 
             return good;
-
         }
 
 

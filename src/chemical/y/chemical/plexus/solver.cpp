@@ -181,8 +181,17 @@ namespace Yttrium
         void Solver:: run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
             Y_XML_SECTION(xml, "Solver::run" );
-            const size_t n = neqs;
-            const size_t m = nspc;
+            // const size_t n = neqs;
+            // const size_t m = nspc;
+
+            // initial run
+            Outcome outcome = process(C, L, Ktop, xml);
+            switch( outcome )
+            {
+                case Jammed: return;
+                case Solved: return;
+                    
+            }
         }
 
 
