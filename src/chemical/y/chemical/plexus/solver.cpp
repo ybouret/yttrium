@@ -177,6 +177,7 @@ namespace Yttrium
         }
 
         
+#if 0
 
         void Solver:: run(XWritable &C, const Level L, const XReadable &Ktop, XMLog &xml)
         {
@@ -193,6 +194,7 @@ namespace Yttrium
                     
             }
         }
+#endif
 
 
 

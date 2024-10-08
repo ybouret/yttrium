@@ -1,7 +1,10 @@
 #include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/wardens.hpp"
+#include "y/chemical/plexus/outcome.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/jive/module.hpp"
+
 
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/system/exception.hpp"
@@ -10,6 +13,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/jive/pattern/vfs.hpp"
 #include "y/vfs/local/fs.hpp"
+
 
 namespace Yttrium
 {
@@ -36,6 +40,7 @@ namespace Yttrium
             static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< decreasing |xi| for Crucial
             static SignType IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< increasing ff
             xreal_t         objectiveFunction(XMul &X, const XReadable &C, const Level L) const; //!< affinity
+            void            step(XSwell &inc) const; //!< append xi * nu to species's incresase
 
             const Equilibrium &eq;
             const xreal_t      ek;
@@ -51,6 +56,14 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Ansatz);
 
         };
+
+
+        void Ansatz:: step(XSwell &inc) const
+        {
+            assert(Running==st);
+            eq.step(inc,dc);
+        }
+
 
         xreal_t Ansatz:: objectiveFunction(XMul &X, const XReadable &C, const Level L) const
         {
@@ -134,10 +147,10 @@ namespace Yttrium
             virtual ~Device() noexcept;
 
 
-            void process(XWritable       &C,
-                         const Level      L,
-                         const XReadable &K,
-                         XMLog           &xml);
+            Outcome process(XWritable       &C,
+                            const Level      L,
+                            const XReadable &K,
+                            XMLog           &xml);
 
             void showAnsatz(XMLog &xml) const;
 
@@ -162,6 +175,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
+            void  computeRate(XWritable &rate);
+
         };
 
         Device:: ~Device() noexcept {}
@@ -289,7 +304,7 @@ namespace Yttrium
                 const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
 
                 // recompute ansatz
-                ans.ff = F(xm); if(ans.ff>ff0) return nullify(ans);
+                ans.ff = F(xm); if(ans.ff>=ff0) return nullify(ans);
                 ans.cc.ld(Ctmp);
                 ans.xi = aftermath.eval(ans.dc, ans.cc, SubLevel, Cini, SubLevel,ans.eq);
                 ans.ax = ans.xi.abs();
@@ -297,11 +312,12 @@ namespace Yttrium
             }
         }
 
+#define Y_DEVICE_RETURN(RES) do { Y_XMLOG(xml,"[[" << #RES << "]]"); return RES; } while(false)
 
-        void Device:: process(XWritable       &C,
-                              const Level      L,
-                              const XReadable &K,
-                              XMLog           &xml)
+        Outcome Device:: process(XWritable       &C,
+                                 const Level      L,
+                                 const XReadable &K,
+                                 XMLog           &xml)
         {
             static const char fn[] = "Chemical::Device::process";
 
@@ -317,7 +333,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             {
-                size_t cycle = 0;
+                size_t makeSafer = 0;
                 while(true)
                 {
 
@@ -327,8 +343,8 @@ namespace Yttrium
                     // detect situation
                     //
                     //__________________________________________________________
-                    ++cycle;
-                    Y_XML_COMMENT(xml, "cycle #" << cycle);
+                    ++makeSafer;
+                    Y_XML_COMMENT(xml, "makeSafer #" << makeSafer);
                     ansatz.free();
                     bool crucial = false;
                     for(const ENode *en=mine.head;en;en=en->next)
@@ -349,7 +365,7 @@ namespace Yttrium
                                 crucial = true;
                                 break;
 
-                            case Running: if(crucial) continue;
+                            case Running: if(crucial) continue; // won't store any more running
                                 Y_XMLOG(xml, "[Running] " << eq);
                                 break;
                         }
@@ -399,7 +415,7 @@ namespace Yttrium
                     //__________________________________________________________
                     //
                     //
-                    // set new starting points
+                    // set new starting phase space and check again
                     //
                     //__________________________________________________________
                     {
@@ -424,13 +440,11 @@ namespace Yttrium
                 switch(na)
                 {
                     case 0:
-                        Y_XMLOG(xml, "[[Jammed]]");
-                        return;
+                        Y_DEVICE_RETURN(Jammed);
 
                     case 1:
-                        Y_XMLOG(xml, "[[Solved]]/Single");
                         mine.transfer(C,L,ansatz[1].cc, SubLevel);
-                        return;
+                        Y_DEVICE_RETURN(Solved);
 
                     default:
                         break;
@@ -450,7 +464,7 @@ namespace Yttrium
                 }
 
                 size_t good = 0;
-                for(size_t i=ansatz.size();i>0;--i)
+                for(size_t i=na;i>0;--i)
                 {
                     Ansatz &ans = ansatz[i]; assert(Running==ans.st);
                     ans.eq.mustSupport(Cini,   SubLevel);
@@ -475,17 +489,55 @@ namespace Yttrium
 
                     if( enhance(ans) )
                     {
-                        Y_XMLOG(xml, "(+) " << ans);
+                        // Y_XMLOG(xml, "(+) " << ans);
                         ++good;
                     }
                     else
                     {
-                        Y_XMLOG(xml, "(-) " << ans);
+                        // Y_XMLOG(xml, "(-) " << ans);
                     }
                 }
                 Y_XML_COMMENT(xml, "good=" << good << "/" << ansatz.size() << "/" << neqs);
                 HeapSort::Call(ansatz,Ansatz::IncreasingFF);
                 showAnsatz(xml);
+            }
+
+
+            Y_DEVICE_RETURN(Locked);
+        }
+
+
+        void Device:: computeRate(XWritable &rate)
+        {
+
+            //------------------------------------------------------------------
+            //
+            // initialize inc
+            //
+            //------------------------------------------------------------------
+            increase.forEach( &XAdd::free );
+
+            //------------------------------------------------------------------
+            //
+            // use prospects to compute increases
+            //
+            //------------------------------------------------------------------
+            for(size_t i=ansatz.size();i>0;--i)
+            {
+                const Ansatz &ans = ansatz[i];
+                if(!ans.ok) continue; //
+                ans.step(increase);
+            }
+
+            //------------------------------------------------------------------
+            //
+            // deduce rate
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+            {
+                const size_t j = (**sn).indx[ SubLevel ];
+                rate[j] = increase[j].sum();
             }
 
         }

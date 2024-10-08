@@ -11,25 +11,13 @@
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/orthogonal/family.hpp"
+#include "y/chemical/plexus/outcome.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //! Solver process outcome
-        //
-        //______________________________________________________________________
-        enum Outcome
-        {
-            Jammed, //!< no active equilibrium
-            Solved, //!< exact zero objectice function
-            Better, //!< improved objective function
-            Locked  //!< spurious objectice function
-        };
-
+        
 
         //______________________________________________________________________
         //
