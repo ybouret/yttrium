@@ -257,7 +257,7 @@ namespace Yttrium
                         const Ansatz  ans(eq,ek,st,cc,xi,dc);
                         ansatz << ans;
                     }
-                    if(!crucial) break; // will process all running
+                    if(!crucial) break; // will process all Running
 
                     //__________________________________________________________
                     //
@@ -283,7 +283,7 @@ namespace Yttrium
                         }
                     }
 
-                    assert(ansatz.size()>0);
+                    assert(ansatz.size()>0); // must have at least one Crucial
 
                     //__________________________________________________________
                     //
@@ -354,31 +354,11 @@ namespace Yttrium
                     ans.eq.mustSupport(ans.cc, SubLevel);
                     ans.ff = objectiveFunction(ans.cc,SubLevel);
 
-                    if(false)
-                    {
-                        Cend.ld(ans.cc);
-                        const String fileName = ans.eq.fileName() + ".pro";
-                        OutputFile   fp(fileName);
-                        const size_t np = 1000;
-                        for(size_t i=0;i<=np;++i)
-                        {
-                            const double u = double(i)/np;
-                            const double f = double( (*this)(u) );
-                            fp("%.15g %.15g\n", u, f);
-                        }
-                        const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
-                        std::cerr << "plot '" << fileName << "'  w l, " << real_t(ff0) << "+(" << real_t(slope) << ")*x" << std::endl;
-                    }
-
                     if( enhance(ans) )
                     {
-                        // Y_XMLOG(xml, "(+) " << ans);
                         ++good;
                     }
-                    else
-                    {
-                        // Y_XMLOG(xml, "(-) " << ans);
-                    }
+
                 }
                 Y_XML_COMMENT(xml, "good=" << good << "/" << ansatz.size() << "/" << neqs);
                 HeapSort::Call(ansatz,Ansatz::IncreasingFF);
@@ -400,7 +380,7 @@ namespace Yttrium
 
             const Ansatz &Aopt = ansatz[1];
             xreal_t       Fopt = Aopt.ff;
-            Copt.ld(ansatz[1].ff);
+            Copt.ld(Aopt.cc);
 
             //__________________________________________________________________
             //
@@ -452,7 +432,7 @@ namespace Yttrium
                 xreal_t scale;
                 if( stepWasCut(Cend,Cini,dC, &scale) )
                 {
-                    Y_XML_COMMENT(xml, "scale=" << real_t(scale) );
+                    Y_XML_COMMENT(xml, "scaled by " << real_t(scale) );
                 }
                 else
                 {
@@ -466,7 +446,7 @@ namespace Yttrium
                     Y_XML_COMMENT(xml,"negative ODE slope");
                     Device          &F  = *this;
                     Triplet<xreal_t> xx = { 0,   -1,      1 };
-                    Triplet<xreal_t> ff = { ff0, -1,      F(xx.c) };
+                    Triplet<xreal_t> ff = { ff0, -1,      objectiveFunction(Cend,SubLevel) };
                     const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
                     const xreal_t    ff1 = F(xm);
                     Y_XMLOG(xml, "|ff1=" << Formatted::Get("%15.4g",real_t(ff1)) << "|");
@@ -583,7 +563,7 @@ namespace Yttrium
                     xreal_t scale;
                     if( stepWasCut(Cend,Cini,dC, &scale) )
                     {
-                        Y_XML_COMMENT(xml, "scale=" << real_t(scale) );
+                        Y_XML_COMMENT(xml, "scaled by " << real_t(scale) );
                     }
                     else
                     {
@@ -597,7 +577,7 @@ namespace Yttrium
                         Y_XML_COMMENT(xml,"negative NRA slope");
                         Device          &F   = *this;
                         Triplet<xreal_t> xx  = { 0,   -1, 1 };
-                        Triplet<xreal_t> ff  = { ff0, -1, F(xx.c) };
+                        Triplet<xreal_t> ff  = { ff0, -1,      objectiveFunction(Cend,SubLevel) };
                         const xreal_t    xm  = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
                         const xreal_t    ff1 = F(xm);
                         Y_XMLOG(xml, "|ff1=" << Formatted::Get("%15.4g",real_t(ff1)) << "|");
