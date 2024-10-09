@@ -75,6 +75,7 @@ namespace Yttrium
                             XWritable &       deltaC,
                             xreal_t * const   result) const;
 
+
             //! saving profile between Cini and Cend. Warning, changes Ctmp
             void saveProfile(const String &fileName, const size_t np);
 
@@ -110,6 +111,13 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
             void  computeRate(XWritable &rate);
+
+            //! minimize between F(0) = objectiveFunction(Cini) and F(1) = objectiveFunction(Cend)
+            /**
+             \return optimized F, Ctmp is computed
+             */
+            xreal_t lookUp();
+
 
         };
     }

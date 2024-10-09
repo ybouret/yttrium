@@ -1,4 +1,3 @@
-
 #include "y/chemical/plexus/device.hpp"
 
 #include "y/system/exception.hpp"
@@ -143,54 +142,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        bool Device:: nullify(Ansatz &ans) noexcept
-        {
-            ans.dc.ld(0);
-            ans.cc.ld(Cini);
-            ans.ff = ff0;
-            ans.xi = ans.ax = 0;
-            return (ans.ok = false);
-        }
-
-        using namespace MKL;
-
-        bool Device:: enhance(Ansatz &ans)
-        {
-            const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
-            if(slope.mantissa>=0.0)
-            {
-                //--------------------------------------------------------------
-                //
-                // numerically not satistfying
-                //
-                //--------------------------------------------------------------
-                return nullify(ans);
-            }
-            else
-            {
-                //--------------------------------------------------------------
-                //
-                // look for mininimum in [Cini:ans.cc]
-                //
-                //--------------------------------------------------------------
-                Cend.ld(ans.cc);
-                Device          &F  = *this;
-                Triplet<xreal_t> xx = { 0,   -1,      1 };
-                Triplet<xreal_t> ff = { ff0, -1, ans.ff };
-                const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
-
-                //--------------------------------------------------------------
-                //
-                // recompute ansatz from the minimum
-                //
-                //--------------------------------------------------------------
-                ans.ff = F(xm); if(ans.ff>=ff0) return nullify(ans);
-                ans.cc.ld(Ctmp);
-                ans.xi = aftermath.eval(ans.dc, ans.cc, SubLevel, Cini, SubLevel,ans.eq);
-                ans.ax = ans.xi.abs();
-                return (ans.ok = true);
-            }
-        }
+       
 
 #define Y_DEVICE_RETURN(RES) do { Y_XMLOG(xml,"[[" << #RES << "]]"); return RES; } while(false)
 
@@ -444,16 +396,12 @@ namespace Yttrium
                 if(slope.mantissa<0.0)
                 {
                     Y_XML_COMMENT(xml,"negative ODE slope");
-                    Device          &F  = *this;
-                    Triplet<xreal_t> xx = { 0,   -1,      1 };
-                    Triplet<xreal_t> ff = { ff0, -1,      objectiveFunction(Cend,SubLevel) };
-                    const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
-                    const xreal_t    ff1 = F(xm);
-                    Y_XMLOG(xml, "|ff1=" << Formatted::Get("%15.4g",real_t(ff1)) << "|");
-                    if(ff1<Fopt)
+                    const xreal_t    ode = lookUp();
+                    Y_XMLOG(xml, "|ode=" << Formatted::Get("%15.4g",real_t(ode)) << "|");
+                    if(ode<Fopt)
                     {
                         Y_XML_COMMENT(xml,"upgrade ODE result");
-                        Fopt = ff1;
+                        Fopt = ode;
                         Copt.ld(Ctmp);
                     }
                     else
@@ -575,16 +523,12 @@ namespace Yttrium
                     if(slope.mantissa<0.0)
                     {
                         Y_XML_COMMENT(xml,"negative NRA slope");
-                        Device          &F   = *this;
-                        Triplet<xreal_t> xx  = { 0,   -1, 1 };
-                        Triplet<xreal_t> ff  = { ff0, -1,      objectiveFunction(Cend,SubLevel) };
-                        const xreal_t    xm  = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
-                        const xreal_t    ff1 = F(xm);
-                        Y_XMLOG(xml, "|ff1=" << Formatted::Get("%15.4g",real_t(ff1)) << "|");
-                        if(ff1<Fopt)
+                        const xreal_t    nra = lookUp();
+                        Y_XMLOG(xml, "|nra=" << Formatted::Get("%15.4g",real_t(nra)) << "|");
+                        if(nra<Fopt)
                         {
                             Y_XML_COMMENT(xml,"upgrade NRA result");
-                            Fopt = ff1;
+                            Fopt = nra;
                             Copt.ld(Ctmp);
                         }
                         else
@@ -663,6 +607,10 @@ namespace Yttrium
             }
 
         }
+
+        
+
+        
 
         bool Device:: stepWasCut(XWritable &       target,
                                  const XReadable & source,
