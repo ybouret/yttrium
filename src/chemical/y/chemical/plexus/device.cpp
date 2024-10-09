@@ -33,7 +33,9 @@ namespace Yttrium
         ff0(),
         objValue(neqs),
         gradient(nspc),
-        increase(nspc)
+        increase(nspc),
+        dof(mine.Nu.rows),
+        ortho(nspc,dof)
         {
         }
 
@@ -186,6 +188,9 @@ namespace Yttrium
             Y_XML_SECTION(xml, "process");
             Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
 
+            ortho.free();
+            basis.free();
+
             //__________________________________________________________________
             //
             //
@@ -295,10 +300,10 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
+            const size_t na = ansatz.size();
             {
                 Y_XML_COMMENT(xml,"[Running]");
 
-                const size_t na = ansatz.size();
                 switch(na)
                 {
                     case 0:
@@ -364,6 +369,36 @@ namespace Yttrium
                 showAnsatz(xml);
             }
 
+            // the first ansatz is the default choice
+
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            // build basis
+            //
+            //
+            //__________________________________________________________________
+            {
+                Y_XML_SECTION(xml, "basis");
+                assert( 0 == ortho.size );
+                assert( 0 == basis.size );
+                assert( na>1 );
+
+                for(size_t i=1;i<=na;++i)
+                {
+                    const Ansatz        & ans = ansatz[i];
+                    const Equilibrium   & eq  = ans.eq;
+                    const Readable<int> & nu  = mine.iTopo[ eq.indx[SubLevel] ];
+                    if( ortho.wouldAccept( nu ) )
+                    {
+                        Y_XMLOG(xml, "=> " << ans);
+                        if( (basis << ans).size >= dof )
+                            break;
+                    }
+                }
+            }
 
             Y_DEVICE_RETURN(Locked);
         }

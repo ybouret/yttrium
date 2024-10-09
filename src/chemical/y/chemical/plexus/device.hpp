@@ -9,11 +9,15 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/orthogonal/family.hpp"
 #include "y/chemical/plexus/outcome.hpp"
+#include "y/data/small/light/list/solo.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        typedef Small::SoloLightList<const Ansatz> AList;
+        typedef AList::NodeType                    ANode;
 
         //______________________________________________________________________
         //
@@ -61,18 +65,20 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Aftermath      aftermath; //!< helper to solve each equilibrium
-            XMatrix        EqConc;    //!< store concentrations
-            XMatrix        EqDiff;    //!< store delta
-            Ansatz::Series ansatz;    //!< (lightweight) ansatz
-            XArray         Cini;      //!< Cini to start searching
-            XArray         Cend;      //!< Cend to finish search
-            XArray         Ctmp;      //!< temporaty phase space
-            xreal_t        ff0;       //!< objective function at Cini
-            XSeries        objValue;  //!< to compute objective function
-            XArray         gradient;  //!< gradient at Cini
-            XSwell         increase;  //!< to help compute gradient
-
+            Aftermath          aftermath; //!< helper to solve each equilibrium
+            XMatrix            EqConc;    //!< store concentrations
+            XMatrix            EqDiff;    //!< store delta
+            Ansatz::Series     ansatz;    //!< (lightweight) ansatz
+            XArray             Cini;      //!< Cini to start searching
+            XArray             Cend;      //!< Cend to finish search
+            XArray             Ctmp;      //!< temporaty phase space
+            xreal_t            ff0;       //!< objective function at Cini
+            XSeries            objValue;  //!< to compute objective function
+            XArray             gradient;  //!< gradient at Cini
+            XSwell             increase;  //!< to help compute gradient
+            const size_t       dof;       //!< initial equilibria
+            Orthogonal::Family ortho;     //!< helper to find basis
+            AList              basis;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
