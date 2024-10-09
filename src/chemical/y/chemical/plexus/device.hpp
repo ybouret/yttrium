@@ -59,6 +59,9 @@ namespace Yttrium
             bool    enhance(Ansatz &);           //!< enhance/nullify ansatz
             bool    nullify(Ansatz &) noexcept;  //!< nullify and return false
 
+            //! check all basis eqs are ok with given concentrations
+            bool basisOkWith(const XReadable &C, const Level L) const noexcept;
+
             //__________________________________________________________________
             //
             //

@@ -393,16 +393,39 @@ namespace Yttrium
                     const Readable<int> & nu  = mine.iTopo[ eq.indx[SubLevel] ];
                     if( ortho.wouldAccept( nu ) )
                     {
-                        Y_XMLOG(xml, "=> " << ans);
+                        Y_XMLOG(xml,ans);
                         if( (basis << ans).size >= dof )
                             break;
                     }
                 }
+                assert( basisOkWith(Cini,SubLevel) );
             }
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            // build ODE Steo
+            //
+            //
+            //__________________________________________________________________
+            {
+                Y_XML_SECTION(xml, "ODE");
+                
+            }
+
 
             Y_DEVICE_RETURN(Locked);
         }
 
+        bool Device:: basisOkWith(const XReadable &C, const Level L) const noexcept
+        {
+            for(const ANode *an=basis.head;an;an=an->next)
+            {
+                if( ! (**an).eq.canTolerate(C,L) ) return false;
+            }
+            return true;
+        }
 
         void Device:: computeRate(XWritable &rate)
         {
