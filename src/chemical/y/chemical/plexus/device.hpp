@@ -46,6 +46,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            void    operator()(XWritable       &C,
+                               const Level      L,
+                               const XReadable &K,
+                               XMLog           &xml);
+
             Outcome process(XWritable       &C,
                             const Level      L,
                             const XReadable &K,

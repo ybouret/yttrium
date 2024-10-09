@@ -1,12 +1,5 @@
 #include "y/chemical/plexus/device.hpp"
 
-
-
-
-
-
-
-
 namespace Yttrium
 {
     namespace Chemical
@@ -122,6 +115,49 @@ namespace Yttrium
             {
                 xml() << ansatz[i] << std::endl;
             }
+        }
+    }
+
+}
+
+#include "y/stream/libc/output.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        void Device::  operator()(XWritable       &C,
+                                  const Level      L,
+                                  const XReadable &K,
+                                  XMLog           &xml)
+        {
+
+            OutputFile    fp("ff.dat");
+            const Outcome first = process(C, L, K, xml);
+            fp("0 %.15g\n", double(ff0));
+
+            switch(first)
+            {
+                case Jammed:
+                    return;
+
+                case Solved:
+                    fp("1 %.15g\n", double(objectiveFunction(C,L)));
+                    return;
+
+                case Better:
+                    fp("1 %.15g\n", double(objectiveFunction(C,L)));
+                    break;
+            }
+
+            
+
+
+
+
         }
 
     }

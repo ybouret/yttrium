@@ -57,10 +57,9 @@ Y_UTEST(device)
             ward(C0,dC,TopLevel,xml);
             lib(std::cerr << "C0=","\t[",C0,"]");
 
-            for(size_t turn=1;turn<=4;++turn)
-            {
-                dev.process(C0, TopLevel, K, xml);
-            }
+            dev(C0, TopLevel, K, xml);
+
+
         }
 
     }
