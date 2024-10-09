@@ -19,8 +19,8 @@ namespace Yttrium
         {
             Jammed, //!< no active equilibrium
             Solved, //!< exact zero objectice function
-            Better, //!< improved objective function
-            Locked  //!< spurious objectice function
+            Better //!< improved objective function
+            //Locked  //!< spurious objectice function
         };
 
     }

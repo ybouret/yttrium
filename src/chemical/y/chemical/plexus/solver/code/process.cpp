@@ -96,7 +96,7 @@ namespace Yttrium
 
             Y_XMLOG(xml, "#vertices = " << vlist.size);
             if(vlist.size<=0) {
-                SOLVER_RETURN(Locked);
+                SOLVER_RETURN(Better);
             }
 
             //--------------------------------------------------------------

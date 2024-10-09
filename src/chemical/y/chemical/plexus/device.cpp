@@ -596,8 +596,8 @@ namespace Yttrium
                     {
                         Y_XML_COMMENT(xml,"negative NRA slope");
                         Device          &F   = *this;
-                        Triplet<xreal_t> xx  = { 0,   -1,      1 };
-                        Triplet<xreal_t> ff  = { ff0, -1,      F(xx.c) };
+                        Triplet<xreal_t> xx  = { 0,   -1, 1 };
+                        Triplet<xreal_t> ff  = { ff0, -1, F(xx.c) };
                         const xreal_t    xm  = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
                         const xreal_t    ff1 = F(xm);
                         Y_XMLOG(xml, "|ff1=" << Formatted::Get("%15.4g",real_t(ff1)) << "|");
@@ -623,14 +623,21 @@ namespace Yttrium
                 {
                     Y_XML_COMMENT(xml, "singular matrix");
                 }
-
             }
 
+            assert(Fopt<=ff0);
+            assert(Fopt.mantissa>=0.0);
 
+            mine.transfer(C,L,Copt,SubLevel);
 
-
-
-            Y_DEVICE_RETURN(Locked);
+            if(Fopt.mantissa<=0.0)
+            {
+                Y_DEVICE_RETURN(Solved);
+            }
+            else
+            {
+                Y_DEVICE_RETURN(Better);
+            }
         }
 
         bool Device:: basisOkWith(const XReadable &C, const Level L) const noexcept
