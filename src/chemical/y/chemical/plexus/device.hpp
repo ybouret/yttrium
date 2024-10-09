@@ -62,6 +62,22 @@ namespace Yttrium
             //! check all basis eqs are ok with given concentrations
             bool basisOkWith(const XReadable &C, const Level L) const noexcept;
 
+            //! compute target from source+deltaC
+            /**
+             deltaC is scaled to guarantee valid target
+             \param target output valid concentrations
+             \param source input valid concentrations
+             \param deltaC input and output deltaC
+             \param result optional scaling factor
+             */
+            bool stepWasCut(XWritable &       target,
+                            const XReadable & source,
+                            XWritable &       deltaC,
+                            xreal_t * const   result) const;
+
+            //! saving profile between Cini and Cend. Warning, changes Ctmp
+            void saveProfile(const String &fileName, const size_t np);
+
             //__________________________________________________________________
             //
             //
@@ -74,7 +90,9 @@ namespace Yttrium
             Ansatz::Series     ansatz;    //!< (lightweight) ansatz
             XArray             Cini;      //!< Cini to start searching
             XArray             Cend;      //!< Cend to finish search
-            XArray             Ctmp;      //!< temporaty phase space
+            XArray             Ctmp;      //!< temporary phase space
+            XArray             Copt;      //!< optimal phase space
+            XArray             dC;        //!< temporary dC
             xreal_t            ff0;       //!< objective function at Cini
             XSeries            objValue;  //!< to compute objective function
             XArray             gradient;  //!< gradient at Cini
@@ -82,7 +100,13 @@ namespace Yttrium
             const size_t       dof;       //!< initial equilibria
             Orthogonal::Family ortho;     //!< helper to find basis
             AList              basis;
-
+            const xreal_t      shield;    //!< 0.99
+            XMatrices          xPhi;      //!< Phi[1..dof,nspc]
+            XMatrices          xNu;       //!< Nu[1..dof,nspc]
+            XMatrices          xChi;      //!< Chi[1..dof,1..dof]
+            XArrays            xXi;       //!< xi[1..dof]
+            MKL::LU<xreal_t>   xlu;       //!< LU solver
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
             void  computeRate(XWritable &rate);

@@ -19,8 +19,8 @@ namespace Yttrium
         std::ostream & operator<<(std::ostream &os, const Ansatz &ans)
         {
 
-            os << "|ff=" << Formatted::Get("%15.4g",real_t(ans.ff));
-            os << "|xi=" << std::setw(15) << real_t(ans.xi);
+            os << "|ff =" << Formatted::Get("%15.4g",real_t(ans.ff));
+            os << "|xi =" << std::setw(15) << real_t(ans.xi);
             os << " @" << ans.eq;
             return os;
         }
