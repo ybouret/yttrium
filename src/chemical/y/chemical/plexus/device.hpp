@@ -100,6 +100,7 @@ namespace Yttrium
             XArray             Copt;      //!< optimal phase space
             XArray             dC;        //!< temporary dC
             xreal_t            ff0;       //!< objective function at Cini
+            xreal_t            ff1;       //!< objective function at Cend
             XSeries            objValue;  //!< to compute objective function
             XArray             gradient;  //!< gradient at Cini
             XSwell             increase;  //!< to help compute gradient

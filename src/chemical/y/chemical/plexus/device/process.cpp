@@ -163,7 +163,7 @@ namespace Yttrium
                 {
                     Y_XML_SECTION(xml, "Initial Conditions");
                     mine.transfer(Cini, SubLevel,C,L);
-                    ff0 = objectiveGradient(Cini,SubLevel);
+                    ff0 = ff1 = objectiveGradient(Cini,SubLevel);
                     Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
                 }
 
@@ -200,7 +200,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             const Ansatz &Aopt = ansatz[1];
-            xreal_t       Fopt = Aopt.ff;
+            ff1 = Aopt.ff;
             Copt.ld(Aopt.cc);
 
             //__________________________________________________________________
@@ -267,10 +267,10 @@ namespace Yttrium
                     Y_XML_COMMENT(xml,"negative ODE slope");
                     const xreal_t    ode = lookUp();
                     Y_XMLOG(xml, "|ode=" << Formatted::Get("%15.4g",real_t(ode)) << "|");
-                    if(ode<Fopt)
+                    if(ode<ff1)
                     {
                         Y_XML_COMMENT(xml,"upgrade ODE result");
-                        Fopt = ode;
+                        ff1 = ode;
                         Copt.ld(Ctmp);
                     }
                     else
@@ -394,10 +394,10 @@ namespace Yttrium
                         Y_XML_COMMENT(xml,"negative NRA slope");
                         const xreal_t    nra = lookUp();
                         Y_XMLOG(xml, "|nra=" << Formatted::Get("%15.4g",real_t(nra)) << "|");
-                        if(nra<Fopt)
+                        if(nra<ff1)
                         {
                             Y_XML_COMMENT(xml,"upgrade NRA result");
-                            Fopt = nra;
+                            ff1 = nra;
                             Copt.ld(Ctmp);
                         }
                         else
@@ -427,11 +427,11 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            assert(Fopt<=ff0);
-            assert(Fopt.mantissa>=0.0);
+            assert(ff1<=ff0);
+            assert(ff1.mantissa>=0.0);
 
             mine.transfer(C,L,Copt,SubLevel);
-            if(Fopt.mantissa<=0.0)
+            if(ff1.mantissa<=0.0)
             {
                 Y_DEVICE_RETURN(Solved);
             }

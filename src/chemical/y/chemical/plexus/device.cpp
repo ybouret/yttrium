@@ -19,6 +19,7 @@ namespace Yttrium
         Copt(nspc),
         dC(nspc),
         ff0(),
+        ff1(),
         objValue(neqs),
         gradient(nspc),
         increase(nspc),
@@ -145,15 +146,29 @@ namespace Yttrium
                     return;
 
                 case Solved:
-                    fp("1 %.15g\n", double(objectiveFunction(C,L)));
+                    fp("1 %.15g\n", double(ff1));
                     return;
 
                 case Better:
-                    fp("1 %.15g\n", double(objectiveFunction(C,L)));
+                    fp("1 %.15g\n", double(ff1));
                     break;
             }
 
-            
+
+
+            unsigned long cycle = 1;
+            while(true)
+            {
+                ++cycle;
+
+                (void) process(C,L,K,xml);
+                fp("%lu %.15g\n", cycle, double(ff1));
+
+                if(cycle>=5) break;
+                //break;
+            }
+
+
 
 
 
