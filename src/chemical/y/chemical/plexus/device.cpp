@@ -35,7 +35,8 @@ namespace Yttrium
         gradient(nspc),
         increase(nspc),
         dof(mine.Nu.rows),
-        ortho(nspc,dof)
+        ortho(nspc,dof),
+        basis(dof)
         {
         }
 
