@@ -113,9 +113,17 @@ namespace Yttrium
             }
         }
 
+    }
 
-        using namespace MKL;
+}
 
+
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
 
         bool Device:: nullify(Ansatz &ans) noexcept
         {
@@ -126,24 +134,38 @@ namespace Yttrium
             return (ans.ok = false);
         }
 
+        using namespace MKL;
+
         bool Device:: enhance(Ansatz &ans)
         {
             const xreal_t slope = aftermath.xadd.dot(ans.dc,gradient);
             if(slope.mantissa>=0.0)
             {
+                //--------------------------------------------------------------
+                //
                 // numerically not satistfying
+                //
+                //--------------------------------------------------------------
                 return nullify(ans);
             }
             else
             {
+                //--------------------------------------------------------------
+                //
                 // look for mininimum in [Cini:ans.cc]
+                //
+                //--------------------------------------------------------------
                 Cend.ld(ans.cc);
                 Device          &F  = *this;
                 Triplet<xreal_t> xx = { 0,   -1,      1 };
                 Triplet<xreal_t> ff = { ff0, -1, ans.ff };
                 const xreal_t    xm = Minimize<xreal_t>::Locate(Minimizing::Inside, F, xx, ff);
 
-                // recompute ansatz
+                //--------------------------------------------------------------
+                //
+                // recompute ansatz from the minimum
+                //
+                //--------------------------------------------------------------
                 ans.ff = F(xm); if(ans.ff>=ff0) return nullify(ans);
                 ans.cc.ld(Ctmp);
                 ans.xi = aftermath.eval(ans.dc, ans.cc, SubLevel, Cini, SubLevel,ans.eq);
