@@ -165,7 +165,17 @@ namespace Yttrium
                     mine.transfer(Cini, SubLevel,C,L);
                     ff0 = ff1 = objectiveGradient(Cini,SubLevel);
                     Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
+                    assert(ff0.mantissa>=0.0);
+                    if(ff0.mantissa<=0.0)
+                    {
+                        Y_DEVICE_RETURN(Solved);
+                    }
                 }
+
+                assert(na>=2);
+                assert(ff0.mantissa>0.0);
+                assert(ff1.mantissa>0.0);
+
 
                 size_t good = 0;
                 for(size_t i=na;i>0;--i)
@@ -202,6 +212,14 @@ namespace Yttrium
             const Ansatz &Aopt = ansatz[1];
             ff1 = Aopt.ff;
             Copt.ld(Aopt.cc);
+
+            if(ff1.mantissa<=0)
+            {
+                Y_XML_COMMENT(xml, "solving by " << Aopt.eq);
+                mine.transfer(C,L,Copt,SubLevel);
+                Y_DEVICE_RETURN(Solved);
+            }
+            assert(ff1.mantissa>0.0);
 
             //__________________________________________________________________
             //
@@ -272,6 +290,12 @@ namespace Yttrium
                         Y_XML_COMMENT(xml,"upgrade ODE result");
                         ff1 = ode;
                         Copt.ld(Ctmp);
+                        if(ff1.mantissa<=0)
+                        {
+                            Y_XML_COMMENT(xml, "solving by ODE step");
+                            mine.transfer(C,L,Copt,SubLevel);
+                            Y_DEVICE_RETURN(Solved);
+                        }
                     }
                     else
                     {
@@ -284,7 +308,7 @@ namespace Yttrium
                 }
 
             }
-
+            assert(ff1.mantissa>0.0);
 
             //__________________________________________________________________
             //
@@ -399,6 +423,12 @@ namespace Yttrium
                             Y_XML_COMMENT(xml,"upgrade NRA result");
                             ff1 = nra;
                             Copt.ld(Ctmp);
+                            if(ff1.mantissa<=0)
+                            {
+                                Y_XML_COMMENT(xml,"solving by NRA step");
+                                mine.transfer(C,L,Copt,SubLevel);
+                                Y_DEVICE_RETURN(Solved);
+                            }
                         }
                         else
                         {
@@ -409,7 +439,6 @@ namespace Yttrium
                     {
                         Y_XML_COMMENT(xml,"positive NRA slope");
                     }
-
 
                 }
                 else
@@ -428,17 +457,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             assert(ff1<=ff0);
-            assert(ff1.mantissa>=0.0);
-
+            assert(ff1.mantissa>0.0);
+            Y_XML_COMMENT(xml,"improved solution");
             mine.transfer(C,L,Copt,SubLevel);
-            if(ff1.mantissa<=0.0)
-            {
-                Y_DEVICE_RETURN(Solved);
-            }
-            else
-            {
-                Y_DEVICE_RETURN(Better);
-            }
+            Y_DEVICE_RETURN(Better);
         }
 
         bool Device:: basisOkWith(const XReadable &C, const Level L) const noexcept
