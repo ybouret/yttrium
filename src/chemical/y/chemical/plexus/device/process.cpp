@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             const size_t na = ansatz.size();
             {
-                Y_XML_COMMENT(xml,"[Running]");
+                Y_XML_COMMENT(xml,"Running");
 
                 switch(na)
                 {
@@ -73,7 +73,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 {
-                    Y_XML_SECTION(xml, "Initial Conditions");
+                    Y_XML_SECTION(xml, "InitialConditions");
                     mine.transfer(Cini, SubLevel,C,L);
                     ff0 = ff1 = objectiveGradient(Cini,SubLevel);
                     Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
@@ -148,69 +148,29 @@ namespace Yttrium
             }
             assert(ff1.mantissa>0.0);
 
-            //__________________________________________________________________
-            //
-            //
-            //
-            // build ODE Step
-            //
-            //
-            //__________________________________________________________________
-            {
-                Y_XML_SECTION(xml, "ODE");
-                computeRate(dC);
-                xreal_t scale;
-                if( stepWasCut(Cend,Cini,dC, &scale) )
-                {
-                    Y_XML_COMMENT(xml, "scaled by " << real_t(scale) );
-                }
-                else
-                {
-                    Y_XML_COMMENT(xml, "full step");
-                }
-                saveProfile("ode.pro",1000);
 
-                const xreal_t slope = aftermath.xadd.dot(gradient,dC);
-                if(slope.mantissa<0.0)
-                {
-                    Y_XML_COMMENT(xml,"negative ODE slope");
-                    const xreal_t    ode = lookUp();
-                    Y_XMLOG(xml, "|ode=" << Formatted::Get("%15.4g",real_t(ode)) << "|");
-                    if(ode<ff1)
-                    {
-                        Y_XML_COMMENT(xml,"upgrade ODE result");
-                        ff1 = ode;
-                        Copt.ld(Ctmp);
-                        if(ff1.mantissa<=0)
-                        {
-                            Y_XML_COMMENT(xml, "solving by ODE step");
-                            mine.transfer(C,L,Copt,SubLevel);
-                            Y_DEVICE_RETURN(Solved);
-                        }
-                    }
-                    else
-                    {
-                        Y_XML_COMMENT(xml,"discard ODE result");
-                    }
-                }
-                else
-                {
-                    Y_XML_COMMENT(xml,"positive ODE slope");
-                }
-
-            }
-            assert(ff1.mantissa>0.0);
 
             //__________________________________________________________________
             //
             //
             //
-            // build NRA Step
+            // build NRA Step, fastest convergence if close to solution
             //
             //
             //__________________________________________________________________
 #           include "nra-stp.hxx"
-           
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            // build ODE Step, backup solution
+            //
+            //
+            //__________________________________________________________________
+#           include "ode-stp.hxx"
 
 
             //__________________________________________________________________

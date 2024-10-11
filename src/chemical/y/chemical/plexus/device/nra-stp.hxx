@@ -125,4 +125,6 @@
     {
         Y_XML_COMMENT(xml, "singular matrix");
     }
-    }
+}
+assert(ff1.mantissa>0.0);
+
