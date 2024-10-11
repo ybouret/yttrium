@@ -36,98 +36,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            {
-                size_t makeSafer = 0;
-                while(true)
-                {
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // detect situation
-                    //
-                    //__________________________________________________________
-                    ++makeSafer;
-                    Y_XML_COMMENT(xml, "makeSafer #" << makeSafer);
-                    ansatz.free();
-                    bool crucial = false;
-                    for(const ENode *en=mine.head;en;en=en->next)
-                    {
-                        const size_t       ii = 1+ansatz.size();
-                        const Equilibrium &eq = **en;
-                        const xreal_t      ek = K[eq.indx[TopLevel]];
-                        XWritable         &cc = mine.transfer(EqConc[ii],SubLevel,C, L);
-                        XWritable         &dc = EqDiff[ii];
-                        const Situation    st = aftermath.seek(cc,SubLevel,eq,ek);
-
-                        switch(st)
-                        {
-                            case Blocked: Y_XMLOG(xml, "[Blocked] " << eq);
-                                continue;
-
-                            case Crucial: Y_XMLOG(xml, "[Crucial] " << eq);
-                                crucial = true;
-                                break;
-
-                            case Running: if(crucial) continue; // won't store any more running
-                                Y_XMLOG(xml, "[Running] " << eq);
-                                break;
-                        }
-
-                        const xreal_t xi = aftermath.eval(dc, cc, SubLevel, C, L, eq);
-                        const Ansatz  ans(eq,ek,st,cc,xi,dc);
-                        ansatz << ans;
-                    }
-                    if(!crucial) break; // will process all Running
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // remove running among crucial
-                    //
-                    //__________________________________________________________
-                    assert( ansatz.size() > 0 );
-                    for(size_t i = ansatz.size(); i>0;--i )
-                    {
-                        Ansatz &ans = ansatz[i];
-                        switch(ans.st)
-                        {
-                            case Blocked: // shouldn't get here
-                                throw Specific::Exception(fn, "forbidden Blocked %s", ans.eq.name.c_str());
-
-                            case Crucial: // keep
-                                continue;
-
-                            case Running: // remove
-                                ansatz.remove(i);
-                                continue;
-                        }
-                    }
-
-                    assert(ansatz.size()>0); // must have at least one Crucial
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // order by decreasing |xi|
-                    //
-                    //__________________________________________________________
-                    HeapSort::Call(ansatz, Ansatz::DecreasingAX);
-                    Y_XML_COMMENT(xml, "[Crucial]");
-                    showAnsatz(xml);
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // set new starting phase space and check again
-                    //
-                    //__________________________________________________________
-                    {
-                        const Ansatz &ans = ansatz.head();
-                        mine.transfer(C, L, ans.cc, SubLevel);
-                    }
-                }
-            }
+#           include "crucial.hxx"
 
             //__________________________________________________________________
             //
@@ -146,9 +55,12 @@ namespace Yttrium
                     case 0:
                         Y_DEVICE_RETURN(Jammed);
 
-                    case 1:
-                        mine.transfer(C,L,ansatz[1].cc, SubLevel);
-                        Y_DEVICE_RETURN(Solved);
+                    case 1: {
+                        const Ansatz &ans = ansatz[1];
+                        mine.transfer(C,L,ans.cc, SubLevel);
+                        basis << ans;
+                        assert(1==basis.size);
+                    } Y_DEVICE_RETURN(Solved);
 
                     default:
                         break;
@@ -166,10 +78,6 @@ namespace Yttrium
                     ff0 = ff1 = objectiveGradient(Cini,SubLevel);
                     Y_XMLOG(xml, " ff=" << Formatted::Get("%15.4g",real_t(ff0)) << " (" << ff0 << "/" << objectiveFunction(Cini,SubLevel) << ")");
                     assert(ff0.mantissa>=0.0);
-                    if(ff0.mantissa<=0.0)
-                    {
-                        Y_DEVICE_RETURN(Solved);
-                    }
                 }
 
                 assert(na>=2);
@@ -204,28 +112,20 @@ namespace Yttrium
             //
             //
             //
-            // Initialize optimal solution
-            //
+            // Initialize first guess, postpone ff1=0 detection to always
+            // build basis
             //
             //__________________________________________________________________
-
             const Ansatz &Aopt = ansatz[1];
             ff1 = Aopt.ff;
             Copt.ld(Aopt.cc);
 
-            if(ff1.mantissa<=0)
-            {
-                Y_XML_COMMENT(xml, "solving by " << Aopt.eq);
-                mine.transfer(C,L,Copt,SubLevel);
-                Y_DEVICE_RETURN(Solved);
-            }
-            assert(ff1.mantissa>0.0);
 
             //__________________________________________________________________
             //
             //
             //
-            // build basis
+            // build basis in any case for asymptotic method
             //
             //
             //__________________________________________________________________
@@ -256,6 +156,13 @@ namespace Yttrium
             }
 
 
+            if(ff1.mantissa<=0)
+            {
+                Y_XML_COMMENT(xml, "solving by " << Aopt.eq);
+                mine.transfer(C,L,Copt,SubLevel);
+                Y_DEVICE_RETURN(Solved);
+            }
+            assert(ff1.mantissa>0.0);
 
             //__________________________________________________________________
             //
