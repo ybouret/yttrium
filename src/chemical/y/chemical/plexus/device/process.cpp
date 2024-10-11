@@ -178,7 +178,7 @@ namespace Yttrium
             //__________________________________________________________________
             assert(ff1<=ff0);
             assert(ff1.mantissa>0.0);
-            Y_XML_COMMENT(xml,"improved solution");
+            Y_XML_COMMENT(xml,"improved solution: " << real_t(ff0) << " => " << real_t(ff1));
             mine.transfer(C,L,Copt,SubLevel);
             Y_DEVICE_RETURN(Better);
         }
