@@ -4,12 +4,17 @@
     assert( 0 == basis.size );
     assert( na>1 );
 
+    //--------------------------------------------------------------------------
+    //
+    //
+    // query indepedent Ansatz in promising order
+    //
+    //
+    //--------------------------------------------------------------------------
     for(size_t i=1;i<=na;++i)
     {
         const Ansatz        & ans = ansatz[i];
-        const Equilibrium   & eq  = ans.eq;
-        const Readable<int> & nu  = mine.iTopo[ eq.indx[SubLevel] ];
-        if( ortho.wouldAccept( nu ) )
+        if( ortho.wouldAccept( mine.iTopo[ ans.eq.indx[SubLevel] ] ) )
         {
             switch(ortho.size)
             {
