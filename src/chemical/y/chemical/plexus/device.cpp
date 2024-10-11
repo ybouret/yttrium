@@ -154,6 +154,7 @@ namespace Yttrium
                     break;
             }
 
+            return;
 
 
             unsigned long cycle = 1;

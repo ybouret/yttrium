@@ -59,6 +59,8 @@ Y_UTEST(device)
 
             dev(C0, TopLevel, K, xml);
 
+            lib(std::cerr << "C0=","\t[",C0,"]");
+
 
         }
 
