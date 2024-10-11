@@ -1,4 +1,3 @@
-
 {
     Y_XML_SECTION(xml, "ODE");
     computeRate(dC);
