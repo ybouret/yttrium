@@ -173,42 +173,29 @@ namespace Yttrium
                                   XMLog           &xml)
         {
 
-            OutputFile    fp("ff.dat");
-            const Outcome first = process(C, L, K, xml);
-            fp("0 %.15g\n", double(ff0));
+            AutoPtr<OutputStream> fp = new OutputFile("ff.dat");
 
-            switch(first)
+            for(unsigned long cycle=1;;++cycle)
             {
-                case Jammed:
-                    return;
+                const Outcome outcome = process(C, L, K, xml);
+                if(fp.isValid())
+                {
+                    if(1==cycle) (*fp)("0 %.15g\n", double(ff0));
+                    (*fp)("%lu %.15g\n", cycle, double(ff1));
+                }
 
-                case Solved:
-                    fp("1 %.15g\n", double(ff1));
-                    return;
+                switch(outcome)
+                {
+                    case Jammed: return;
+                    case Solved: return;
+                    case Better:
+                        break;
 
-                case Better:
-                    fp("1 %.15g\n", double(ff1));
-                    break;
+                }
+
+                if(cycle>=6) break;
+
             }
-
-            return;
-
-
-            unsigned long cycle = 1;
-            while(true)
-            {
-                ++cycle;
-
-                (void) process(C,L,K,xml);
-                fp("%lu %.15g\n", cycle, double(ff1));
-
-                if(cycle>=5) break;
-                //break;
-            }
-
-
-
-
 
 
         }
