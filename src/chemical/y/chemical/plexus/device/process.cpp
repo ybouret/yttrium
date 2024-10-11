@@ -11,8 +11,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-
-
 #define Y_DEVICE_RETURN(RES) do { Y_XMLOG(xml,"[[" << #RES << "]]"); return RES; } while(false)
 
         Outcome Device:: process(XWritable       &C,
@@ -160,8 +158,6 @@ namespace Yttrium
             //__________________________________________________________________
 #           include "nra-stp.hxx"
 
-
-
             //__________________________________________________________________
             //
             //
@@ -171,7 +167,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
 #           include "ode-stp.hxx"
-
 
             //__________________________________________________________________
             //
@@ -188,138 +183,9 @@ namespace Yttrium
             Y_DEVICE_RETURN(Better);
         }
 
-        bool Device:: basisOkWith(const XReadable &C, const Level L) const noexcept
-        {
-            for(const ANode *an=basis.head;an;an=an->next)
-            {
-                if( ! (**an).eq.canTolerate(C,L) ) return false;
-            }
-            return true;
-        }
-
-        void Device:: computeRate(XWritable &rate)
-        {
-
-            //------------------------------------------------------------------
-            //
-            // initialize increases
-            //
-            //------------------------------------------------------------------
-            increase.forEach( &XAdd::free );
-
-            //------------------------------------------------------------------
-            //
-            // use Ansatz to compute increases
-            //
-            //------------------------------------------------------------------
-            for(size_t i=ansatz.size();i>0;--i)
-            {
-                const Ansatz &ans = ansatz[i];
-                if(!ans.ok) continue; // shortcut for zero
-                ans.step(increase);
-            }
-
-            //------------------------------------------------------------------
-            //
-            // deduce rate
-            //
-            //------------------------------------------------------------------
-            for(const SNode *sn=mine.species.head;sn;sn=sn->next)
-            {
-                const size_t j = (**sn).indx[ SubLevel ];
-                rate[j] = increase[j].sum();
-            }
-
-        }
 
 
-
-
-
-        bool Device:: stepWasCut(XWritable &       target,
-                                 const XReadable & source,
-                                 XWritable &       deltaC,
-                                 xreal_t * const   result) const
-        {
-
-            //------------------------------------------------------------------
-            //
-            //
-            // initialize
-            //
-            //
-            //------------------------------------------------------------------
-            xreal_t scale = 1.0;
-            bool    abate = false;
-            assert( basisOkWith(source,SubLevel) );
-            assert(target.size()==source.size());
-            assert(target.size()==deltaC.size());
-
-            //------------------------------------------------------------------
-            //
-            //
-            // loop over components, act on negative deltaC
-            //
-            //
-            //------------------------------------------------------------------
-            const size_t m = target.size();
-            for(size_t j=m;j>0;--j)
-            {
-                const xreal_t d = deltaC[j];  if(d.mantissa>=0) continue;
-                const xreal_t c = source[j];  assert(c.mantissa>=0);
-                const xreal_t f = c/(-d);
-                if(f<=scale)
-                {
-                    abate = true;
-                    scale = f;
-                }
-            }
-
-            //------------------------------------------------------------------
-            //
-            //
-            // apply safety
-            //
-            //
-            //------------------------------------------------------------------
-            if( abate )
-                scale *= shield;
-
-            //------------------------------------------------------------------
-            //
-            //
-            // generate
-            //
-            //
-            //------------------------------------------------------------------
-        GENERATE:
-            for(size_t j=m;j>0;--j)
-                target[j] = source[j] + scale * deltaC[j];
-
-            if( !basisOkWith(target,SubLevel) )
-            {
-                scale *= shield;
-                abate  = true;
-                goto GENERATE;
-            }
-
-            if(result) *result = scale;
-
-            //------------------------------------------------------------------
-            //
-            //
-            // recompute effective step
-            //
-            //
-            //------------------------------------------------------------------
-            for(size_t j=m;j>0;--j)
-            {
-                deltaC[j] = target[j] - source[j];
-            }
-
-
-            return abate;
-        }
+     
 
 
         void Device:: saveProfile(const String &fileName, const size_t np)

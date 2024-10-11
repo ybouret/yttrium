@@ -117,6 +117,43 @@ namespace Yttrium
                 xml() << ansatz[i] << std::endl;
             }
         }
+
+
+        void Device:: computeRate(XWritable &rate)
+        {
+
+            //------------------------------------------------------------------
+            //
+            // initialize increases
+            //
+            //------------------------------------------------------------------
+            increase.forEach( &XAdd::free );
+
+            //------------------------------------------------------------------
+            //
+            // use Ansatz to compute increases
+            //
+            //------------------------------------------------------------------
+            for(size_t i=ansatz.size();i>0;--i)
+            {
+                const Ansatz &ans = ansatz[i];
+                if(!ans.ok) continue; // shortcut for zero
+                ans.step(increase);
+            }
+
+            //------------------------------------------------------------------
+            //
+            // deduce rate
+            //
+            //------------------------------------------------------------------
+            for(const SNode *sn=mine.species.head;sn;sn=sn->next)
+            {
+                const size_t j = (**sn).indx[ SubLevel ];
+                rate[j] = increase[j].sum();
+            }
+
+        }
+
     }
 
 }
