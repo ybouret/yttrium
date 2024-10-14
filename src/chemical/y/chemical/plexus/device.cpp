@@ -177,7 +177,13 @@ namespace Yttrium
 
             AutoPtr<OutputStream> fp = (trace ? new OutputFile("ff.dat") : 0);
 
+            //------------------------------------------------------------------
+            //
+            //
             // processing up to convergence
+            //
+            //
+            //------------------------------------------------------------------
             for(unsigned long cycle=1;;++cycle)
             {
                 const Outcome outcome = process(C, L, K, xml);
@@ -192,46 +198,43 @@ namespace Yttrium
                 {
                     case Jammed: goto CONVERGED;
                     case Solved: goto CONVERGED;
-                    case Better: break;
+                    case Better:
+                        if(ff1>=ff0)
+                        {
+                            Y_XML_COMMENT(xml,"minimum was reached");
+                            goto CONVERGED;
+                        }
+                        break;
                 }
-                assert(Better==outcome);
-
-                if(ff1>=ff0)
-                {
-                    Y_XML_COMMENT(xml,"minimum was reached");
-                    goto CONVERGED;
-                }
-
             }
 
+            //------------------------------------------------------------------
+            //
+            //
             // build final basis
-            CONVERGED:
+            //
+            //
+            //------------------------------------------------------------------
+        CONVERGED:
             {
-                Y_XML_SECTION(xml, "Converged");
+                const size_t na = ansatz.size();
+                Y_XML_SECTION_OPT(xml, "Basis", "ansatz='" << na << "' neqs='" << neqs << "'" << " dof='" << dof << "'");
                 basis.free();
                 ortho.free();
-                const size_t na = ansatz.size();
-                Y_XML_COMMENT(xml, "#ansatz=" << na <<  "/" << mine.size << ", #dof=" << dof);
                 HeapSort::Call(ansatz, Ansatz::NaturalOrder);
-                showAnsatz(xml);
 
+                for(size_t i=1;i<=na;++i)
                 {
-                    Y_XML_SECTION(xml, "Basis");
-                    assert(0==basis.size);
-                    for(size_t i=1;i<=na;++i)
+                    const Ansatz        & ans = ansatz[i];
+                    if( ortho.wouldAccept( mine.iTopo[ ans.eq.indx[SubLevel] ] ) )
                     {
-                        const Ansatz        & ans = ansatz[i];
-                        if( ortho.wouldAccept( mine.iTopo[ ans.eq.indx[SubLevel] ] ) )
-                        {
-                            Y_XMLOG(xml,ans);
-                            ortho.expand();
-                            if( (basis << ans).size >= dof )
-                                break;
-                        }
-                        
+                        Y_XMLOG(xml, "(+) " << ans.eq);
+                        ortho.expand();
+                        if( (basis << ans).size >= dof )
+                            break;
                     }
-                    assert( basisOkWith(C,L) );
                 }
+                assert( basisOkWith(C,L) );
             }
 
         }
