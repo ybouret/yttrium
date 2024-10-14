@@ -62,11 +62,8 @@ namespace Yttrium
             Vector<xreal_t> shK; //!< the updated shared constants, TopLevel
 
         public:
-            const size_t  maxEPC;  //!< max Equilibria per cluster
-            const size_t  maxSPC;  //!< max Species per cluster
-            const size_t  maxLPG;  //!< max Laws per Group
-            const size_t  maxORD;  //!< max combination order
-            const SList   species; //!< all reactive species
+            const size_t  maxOrder;  //!< max combination order
+            const SList   species;   //!< all reactive species
         };
 
         //______________________________________________________________________

@@ -21,7 +21,11 @@ namespace Yttrium
             static const char fn[] = "Chemical::Device::process";
 
             Y_XML_SECTION(xml, "process");
-            Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
+
+            if(trace)
+            {
+                Jive::VirtualFileSystem::TryRemove(LocalFS::Instance(), ".", "pro", VFS::Entry::Ext);
+            }
 
             ortho.free();
             basis.free();

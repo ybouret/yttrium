@@ -21,10 +21,7 @@ namespace Yttrium
         Proxy<const Cluster::List>(),
         cls(),
         shK(),
-        maxEPC(0),
-        maxSPC(0),
-        maxLPG(0),
-        maxORD(0),
+        maxOrder(0),
         species()
         {
             Y_XML_SECTION(xml, "Clusters");
@@ -90,12 +87,7 @@ namespace Yttrium
             for(Cluster *cl = cls.head; cl; cl=cl->next )
             {
                 total += cl->compile(xml,eqs,shK).size;
-                Coerce(maxEPC) = Max(maxEPC,cl->size);
-                Coerce(maxSPC) = Max(maxSPC,cl->species.size);
-                Coerce(maxORD) = Max(maxORD,cl->maxOrder());
-
-                if(cl->laws.isValid())
-                    Coerce(maxLPG) = Max(maxLPG,cl->laws->maxGroupSize);
+                Coerce(maxOrder) = Max(maxOrder,cl->maxOrder());
                 Coerce(species) << cl->species;
 
             }
@@ -118,12 +110,9 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Y_XML_SECTION(xml, "Metrics");
-            Y_XMLOG(xml, "#equilibria                = " << total);
-            Y_XMLOG(xml, "#active species            = " << species.size);
-            Y_XMLOG(xml, "max Equilibria Per Cluster = " << maxEPC);
-            Y_XMLOG(xml, "max Species    Per Cluster = " << maxSPC);
-            Y_XMLOG(xml, "max Laws       Per Group   = " << maxLPG);
-            Y_XMLOG(xml, "max Combinations Order     = " << maxORD);
+            Y_XMLOG(xml, "#equilibria            = " << total);
+            Y_XMLOG(xml, "#active species        = " << species.size);
+            Y_XMLOG(xml, "max Combinations Order = " << maxOrder);
 
         }
 
@@ -205,7 +194,7 @@ namespace Yttrium
                 }
             }
 
-            for(size_t i=1;i<=maxORD;++i)
+            for(size_t i=1;i<=maxOrder;++i)
             {
                 render(rootName,i);
             }

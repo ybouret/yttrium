@@ -198,9 +198,12 @@ namespace Yttrium
                 assert(Better==outcome);
 
                 if(ff1>=ff0)
+                {
+                    
                     return;
+                }
 
-                if(cycle>=6) break;
+                //if(cycle>=6) break;
 
             }
 
