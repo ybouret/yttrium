@@ -36,8 +36,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Device(const Cluster &); //!< setup for cluster
-            virtual ~Device() noexcept;       //!< cleanup
+            explicit Device(const Cluster &, const bool doTrace); //!< setup for cluster
+            virtual ~Device() noexcept;                           //!< cleanup
 
 
             //__________________________________________________________________
@@ -113,7 +113,8 @@ namespace Yttrium
             XMatrices          xChi;      //!< Chi[1..dof,1..dof]
             XArrays            xXi;       //!< xi[1..dof]
             MKL::LU<xreal_t>   xlu;       //!< LU solver
-            
+            bool               trace;     //!< trace
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Device);
             void  computeRate(XWritable &rate);

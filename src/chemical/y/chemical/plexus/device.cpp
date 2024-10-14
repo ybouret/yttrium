@@ -7,7 +7,7 @@ namespace Yttrium
 
         Device:: ~Device() noexcept {}
 
-        Device:: Device(const Cluster &_) :
+        Device:: Device(const Cluster &_, const bool doTrace) :
         Joint(_),
         aftermath(),
         EqConc(neqs,nspc),
@@ -31,7 +31,8 @@ namespace Yttrium
         xNu(dof),
         xChi(dof),
         xXi(dof),
-        xlu(dof)
+        xlu(dof),
+        trace(doTrace)
         {
             for(size_t i=1;i<=dof;++i)
             {
@@ -178,6 +179,7 @@ namespace Yttrium
             for(unsigned long cycle=1;;++cycle)
             {
                 const Outcome outcome = process(C, L, K, xml);
+
                 if(fp.isValid())
                 {
                     if(1==cycle) (*fp)("0 %.15g\n", double(ff0));

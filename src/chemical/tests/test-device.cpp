@@ -48,7 +48,7 @@ Y_UTEST(device)
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
 
-        Device dev(*cl);
+        Device dev(*cl,true);
 
         for(size_t iter=0;iter<1;++iter)
         {
