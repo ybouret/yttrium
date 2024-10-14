@@ -1,4 +1,4 @@
-#include "y/chemical/plexus/device.hpp"
+#include "y/chemical/plexus/devices.hpp"
 #include "y/chemical/plexus/wardens.hpp"
 
 #include "y/chemical/plexus.hpp"
@@ -37,13 +37,28 @@ Y_UTEST(device)
     Clusters        &cls = plexus.assemble();
     const XReadable &K   = cls.K(0);
     Wardens          ward(cls);
-
+    Devices          devs(cls,true);
     const Library    &lib = plexus.lib;
     //const Equilibria &eqs = plexus.eqs;
     XMLog            &xml = plexus.xml;
 
     XVector C0(lib->size(),0);
     XVector dC(C0);
+
+    cls.render("plexus", 1);
+    
+    for(size_t iter=0;iter<1;++iter)
+    {
+        plexus.conc(C0,0.3,0.1);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        ward(C0,dC,TopLevel,xml);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+        devs(C0,TopLevel,K,xml);
+        lib(std::cerr << "C0=","\t[",C0,"]");
+    }
+
+
+    return 0;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {

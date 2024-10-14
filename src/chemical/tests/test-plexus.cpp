@@ -76,7 +76,8 @@ Y_UTEST(plexus)
 #endif
 
 
-    Y_SIZEOF(Warden);
+    plexus.wpc.showDB();
+
 }
 Y_UDONE()
 

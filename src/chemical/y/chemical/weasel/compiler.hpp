@@ -49,6 +49,8 @@ namespace Yttrium
 
                 void record(const String       &entry); //!< record precompiled
                 void record(const char * const entry);  //!< record precompiled
+                void showDB() const;                    //!< show pre-compiled
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);

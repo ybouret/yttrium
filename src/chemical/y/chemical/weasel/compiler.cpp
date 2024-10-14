@@ -100,7 +100,6 @@ namespace Yttrium
 
             Compiler:: Compiler()
             {
-                std::cerr << "sizeof(Code)=" << sizeof(_code) << std::endl;
                 code = new ( Y_STATIC_ZARR(_code) ) Code();
             }
 
@@ -132,7 +131,7 @@ namespace Yttrium
                     size_t count = 0;
                     for(Iterator it=code->db.begin();it!=code->db.end();++it)
                     {
-                        const String name = it->key;
+                        const String &name = it->key;
                         if( match.exactly(name,name) )
                         {
                             ++count;
@@ -142,8 +141,18 @@ namespace Yttrium
                     if(count<=0) throw Specific::Exception(CallSign, "no match for '%s' in database", regexp.c_str());
                 }
 
+            }
 
-
+            void Compiler:: showDB() const
+            {
+                assert(0!=code);
+                std::cerr << "<RecordedEquilibria>" << std::endl;
+                for(Iterator it=code->db.begin();it!=code->db.end();++it)
+                {
+                    //const String &name = it->key;
+                    std::cerr << "\t" << *it << std::endl;
+                }
+                std::cerr << "<RecordedEquilibria>" << std::endl;
             }
 
         }

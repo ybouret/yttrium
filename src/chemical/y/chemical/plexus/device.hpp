@@ -38,6 +38,15 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<KeyType,Device>    Ptr;      //!< alias
+            typedef SuffixSet<KeyType,Ptr>    Set;      //!< alias
+
+            //__________________________________________________________________
+            //
+            //
             // C++
             //
             //__________________________________________________________________
@@ -96,7 +105,7 @@ namespace Yttrium
                             xreal_t * const   result) const;
 
 
-            //! saving profile between Cini and Cend. Warning, changes Ctmp
+            //! saving profile between Cini and Cend: warning, changes Ctmp
             void saveProfile(const String &fileName, const size_t np);
 
             //__________________________________________________________________
