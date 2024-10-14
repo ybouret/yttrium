@@ -18,14 +18,35 @@ namespace Yttrium
 
             typedef Jive::Syntax::XNode XNode; //!< alias
 
+
+            //__________________________________________________________________
+            //
+            //
+            //
             //! WEASEL is Equilibria And Species Elementary Language
+            //
+            //
+            //__________________________________________________________________
             class Parser : public Jive::Parser
             {
             public:
-
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 explicit Parser(const char * const); //!< setup with name
                 virtual ~Parser() noexcept;          //!< cleanup
-                XNode *  load(Jive::Module *); //!< parse and post-process
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                XNode *  load(Jive::Module *); //!< parse and post-process module's content
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
