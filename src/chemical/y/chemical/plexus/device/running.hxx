@@ -10,8 +10,6 @@
         case 1: {
             const Ansatz &ans = ansatz[1];
             mine.transfer(C,L,ans.cc, SubLevel);
-            basis << ans;
-            assert(1==basis.size);
         } Y_DEVICE_RETURN(Solved);
 
         default:

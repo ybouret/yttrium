@@ -34,25 +34,24 @@ namespace Yttrium
             //
             //
             //
-            // Moving to a fully safe place
+            // Moving to a fully safe place to compute objectiveFunction
             //
             //
             //__________________________________________________________________
 #           include "crucial.hxx"
 
-            // at this point, we can compute objectiveFunction
 
             //__________________________________________________________________
             //
             //
             //
-            // Sorting out Running ansatz
+            // Sorting out Running ansatz, processing 0, 1, >1 cases
             //
             //
             //__________________________________________________________________
             const size_t na = ansatz.size();
 #           include "running.hxx"
-
+            assert(na>1);
            
 
 
@@ -60,34 +59,14 @@ namespace Yttrium
             //
             //
             //
-            // Initialize first guess, postpone ff1=0 detection to always
-            // build basis
+            // Initialize first guess
+            //
             //
             //__________________________________________________________________
             const Ansatz &Aopt = ansatz[1];
             ff1 = Aopt.ff;
             Copt.ld(Aopt.cc);
 
-
-            //__________________________________________________________________
-            //
-            //
-            //
-            // build basis IN ANY CASE for asymptotic method
-            //
-            //
-            //__________________________________________________________________
-#           include "mkbasis.hxx"
-
-
-            //__________________________________________________________________
-            //
-            //
-            //
-            // and now test if the first Ansatz is solving
-            //
-            //
-            //__________________________________________________________________
             if(ff1.mantissa<=0)
             {
                 Y_XML_COMMENT(xml, "solving by " << Aopt.eq);
@@ -95,6 +74,16 @@ namespace Yttrium
                 Y_DEVICE_RETURN(Solved);
             }
             assert(ff1.mantissa>0.0);
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            // build basis for multiple non solving
+            //
+            //
+            //__________________________________________________________________
+#           include "mkbasis.hxx"
 
 
 
@@ -133,11 +122,7 @@ namespace Yttrium
             Y_DEVICE_RETURN(Better);
         }
 
-
-
-     
-
-
+        
         void Device:: saveProfile(const String &fileName, const size_t np)
         {
             OutputFile fp(fileName);

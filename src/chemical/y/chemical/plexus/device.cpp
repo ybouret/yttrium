@@ -188,8 +188,8 @@ namespace Yttrium
 
                 switch(outcome)
                 {
-                    case Jammed: return;
-                    case Solved: return;
+                    case Jammed: assert(0==basis.size); return;
+                    case Solved: goto CONVERGED;
                     case Better:
                         break;
 
@@ -200,13 +200,20 @@ namespace Yttrium
                 if(ff1>=ff0)
                 {
                     
-                    return;
+                    goto CONVERGED;
                 }
 
-                //if(cycle>=6) break;
+
 
             }
 
+            CONVERGED:
+            {
+                Y_XML_SECTION(xml, "Converged");
+                basis.free();
+                const size_t na = ansatz.size();
+                Y_XML_COMMENT(xml, "#ansatz=" << na);
+            }
 
         }
 
