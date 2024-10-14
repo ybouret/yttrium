@@ -51,7 +51,7 @@ namespace Yttrium
             //__________________________________________________________________
             const size_t na = ansatz.size();
 #           include "running.hxx"
-            assert(na>1);
+            assert(na>=2);
            
 
 
@@ -122,7 +122,7 @@ namespace Yttrium
             Y_DEVICE_RETURN(Better);
         }
 
-        
+
         void Device:: saveProfile(const String &fileName, const size_t np)
         {
             OutputFile fp(fileName);

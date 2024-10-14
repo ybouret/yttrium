@@ -5,11 +5,13 @@
     switch(na)
     {
         case 0:
+            ff0 = ff1 = 0;
             Y_DEVICE_RETURN(Jammed);
 
         case 1: {
             const Ansatz &ans = ansatz[1];
             mine.transfer(C,L,ans.cc, SubLevel);
+            ff0 = ff1 = objectiveFunction(C,L);
         } Y_DEVICE_RETURN(Solved);
 
         default:
@@ -47,7 +49,6 @@
         {
             ++good;
         }
-
     }
     Y_XML_COMMENT(xml, "good=" << good << "/" << ansatz.size() << "/" << neqs);
     HeapSort::Call(ansatz,Ansatz::IncreasingFF);
