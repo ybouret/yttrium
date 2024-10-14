@@ -54,7 +54,10 @@
     Y_XML_COMMENT(xml, "good=" << good << "/" << ansatz.size() << "/" << neqs);
     HeapSort::Call(ansatz,Ansatz::IncreasingFF);
     showAnsatz(xml);
-
+    
     // the first ansatz is the default choice
-    Cend.ld(ansatz[1].cc); saveProfile("min.pro",1000);
+    if(trace)
+    {
+        Cend.ld(ansatz[1].cc); saveProfile("min.pro",1000);
+    }
 }

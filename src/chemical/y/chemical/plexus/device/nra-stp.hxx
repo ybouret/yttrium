@@ -90,7 +90,11 @@
         {
             Y_XML_COMMENT(xml, "full step");
         }
-        saveProfile("nra.pro",1000);
+
+        if(trace)
+        {
+            saveProfile("nra.pro",1000);
+        }
 
         const xreal_t slope = aftermath.xadd.dot(gradient,dC);
         if(slope.mantissa<0.0)

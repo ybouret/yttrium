@@ -174,7 +174,7 @@ namespace Yttrium
                                   XMLog           &xml)
         {
 
-            AutoPtr<OutputStream> fp = new OutputFile("ff.dat");
+            AutoPtr<OutputStream> fp = (trace ? new OutputFile("ff.dat") : 0);
 
             for(unsigned long cycle=1;;++cycle)
             {
