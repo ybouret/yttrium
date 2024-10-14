@@ -12,13 +12,34 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Device to solve all pre-computed clusters
+        //
+        //
+        //______________________________________________________________________
         class Devices : public Device::Set
         {
         public:
-            explicit Devices(const Clusters &, const bool doTrace=false);
-            virtual ~Devices() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Devices(const Clusters &, const bool doTrace=false); //!< setup
+            virtual ~Devices() noexcept;                                  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! compute all phase spaces
             void    operator()(XWritable       &C,
                                const Level      L,
                                const XReadable &K,
