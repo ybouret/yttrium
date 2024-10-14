@@ -11,8 +11,6 @@ chemical/plexus/cluster
 chemical/plexus/cluster/conservation
 chemical/plexus/warden
 chemical/plexus/warden/code
-chemical/plexus/solver
-chemical/plexus/solver/code
 chemical/plexus/device
 )
 

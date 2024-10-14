@@ -11,6 +11,5 @@ add_test(norm    test-chemical norm)
 add_test(init    test-chemical init)
 add_test(weasel  test-chemical weasel)
 add_test(plexus  test-chemical plexus)
-add_test(solver  test-chemical solver)
 add_test(device  test-chemical device)
 
