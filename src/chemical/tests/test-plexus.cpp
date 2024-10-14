@@ -76,7 +76,7 @@ Y_UTEST(plexus)
 #endif
 
 
-    plexus.wpc.showDB();
+    //plexus.wpc.showDB();
 
 }
 Y_UDONE()

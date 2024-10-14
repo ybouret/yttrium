@@ -12,4 +12,4 @@ add_test(init    test-chemical init)
 add_test(weasel  test-chemical weasel)
 add_test(plexus  test-chemical plexus)
 add_test(device  test-chemical device)
-
+add_test(showdb  test-chemical showdb)

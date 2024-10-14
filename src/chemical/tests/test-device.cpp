@@ -46,7 +46,7 @@ Y_UTEST(device)
     XVector dC(C0);
 
     cls.render("plexus", 1);
-    
+
     for(size_t iter=0;iter<1;++iter)
     {
         plexus.conc(C0,0.3,0.1);
@@ -57,28 +57,6 @@ Y_UTEST(device)
         lib(std::cerr << "C0=","\t[",C0,"]");
     }
 
-
-    return 0;
-
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-    {
-
-        Device dev(*cl,true);
-
-        for(size_t iter=0;iter<1;++iter)
-        {
-            plexus.conc(C0,0.3,0.1);
-            lib(std::cerr << "C0=","\t[",C0,"]");
-            ward(C0,dC,TopLevel,xml);
-            lib(std::cerr << "C0=","\t[",C0,"]");
-
-            dev(C0, TopLevel, K, xml);
-
-            lib(std::cerr << "C0=","\t[",C0,"]");
-
-
-        }
-
-    }
+    
 }
 Y_UDONE()
