@@ -40,6 +40,13 @@ namespace Yttrium
             return Sign::Of(lhs.ff,rhs.ff);
         }
 
+        SignType Ansatz:: NaturalOrder(const Ansatz &lhs, const Ansatz &rhs) noexcept
+        {
+            assert(Running==lhs.st); assert(lhs.ff.mantissa>=0);
+            assert(Running==rhs.st); assert(rhs.ff.mantissa>=0);
+            return Sign::Of(lhs.eq.indx[TopLevel],rhs.eq.indx[TopLevel]);
+        }
+
         Ansatz:: Ansatz(const Equilibrium &_eq,
                         const xreal_t      _ek,
                         const Situation    _st,

@@ -20,12 +20,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Ansatz
         {
-            public: //__________________________________________________________________
-                    //
-                    //
-                    // Definitions
-                    //
-                    //__________________________________________________________________
+            public:  
             //__________________________________________________________________
             //
             //
@@ -66,6 +61,8 @@ namespace Yttrium
             //__________________________________________________________________
             static SignType DecreasingAX(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< decreasing |xi| for Crucial
             static SignType IncreasingFF(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< increasing ff
+            static SignType NaturalOrder(const Ansatz &lhs, const Ansatz &rhs) noexcept;         //!< increasing index
+            
             xreal_t         objectiveFunction(XMul &X, const XReadable &C, const Level L) const; //!< affinity
             void            step(XSwell &inc) const; //!< append xi * nu to species's incresase
 
