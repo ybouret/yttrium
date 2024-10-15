@@ -43,7 +43,7 @@ namespace Yttrium
                 void run(Jive::Module *m)
                 {
                     AutoPtr<XNode> ast = (*this)(m);
-                    GraphViz::Vizible::DotToPng( *name + "-ast.dot", *ast);
+                   // GraphViz::Vizible::DotToPng( *name + "-ast.dot", *ast);
 
                     //translate(*ast,Yttrium::Jive::Syntax::Permissive);
                     translate(*ast,Yttrium::Jive::Syntax::Restricted);

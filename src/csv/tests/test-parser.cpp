@@ -10,6 +10,8 @@ Y_UTEST(parser)
     if(argc>1)
     {
         AutoPtr<Jive::Syntax::XNode> tree = parser( Jive::Module::OpenFile(argv[1]) );
+        GraphViz::Vizible::DotToPng( *parser.name + "-tree.dot", *tree);
+
     }
 
 }
