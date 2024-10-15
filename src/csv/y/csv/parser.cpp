@@ -26,6 +26,8 @@ namespace Yttrium
             CSV << zom(LINE);
 
             lexer.drop("[:blank:]");
+            renderGraphViz();
+            validate();
         }
     }
 
