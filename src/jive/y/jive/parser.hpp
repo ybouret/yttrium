@@ -74,19 +74,18 @@ namespace Yttrium
                 return term_(lexer.emit(rx,rx),Term::IsDivider);
             }
 
-            //! use end-line in rx with name ID
+            //! produce an End-Of-Line terminal
+            /**
+             \param id name of the terminal
+             \param rx expression of end-of-line
+             */
             template <typename ID, typename RX>
-            const Rule & endl(const ID &id, const RX &rx)
+            const Rule & endl(const ID &id, const RX &rx, const bool isRegular)
             {
-                return term_( lexer.endl(id,rx,true), Term::IsRegular );
+                return term_( lexer.endl(id,rx,true), isRegular ? Term::IsRegular : Term::IsDivider);
             }
 
-            //! use end-line in rx
-            template <typename RX>
-            const Rule & endl(const RX &rx)
-            {
-                return term_( lexer.endl(rx,rx,true), Term::IsRegular );
-            }
+
 
             //! make a terminal from a plugin
             template <typename PLUGIN, typename ID>

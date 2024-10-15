@@ -165,7 +165,7 @@ namespace Yttrium
 
                 //______________________________________________________________
                 //
-                //! lexical end line
+                //! lexical end of line
                 //______________________________________________________________
                 template <typename ID, typename RX>
                 inline const Action &endl(const ID &id, const RX &rx, const bool emit = false)
@@ -176,7 +176,7 @@ namespace Yttrium
 
                 //______________________________________________________________
                 //
-                //! lexical end line, name=expression
+                //! lexical end of line, name=expression
                 //______________________________________________________________
                 template < typename RX>
                 inline const Action &endl(const RX &rx, const bool emit = false)
