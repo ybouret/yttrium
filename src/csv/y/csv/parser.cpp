@@ -19,8 +19,10 @@ namespace Yttrium
             const Rule & RSTR  = plug<Jive::Lexical::RString>("RString");
             const Rule & DATA  = term("DATA","[[:alnum:][:blank:]]+");
             const Rule & FIELD = alt("FIELD") << DATA << JSTR << RSTR;
+            const Rule & COMMA = term("COMMA",',');
             const Rule & ENDL  = endl("ENDL","[:endl:]",false);
-            const Rule & LINE  = agg("LINE") << FIELD << ENDL;
+            const Rule & LINE  = agg("LINE") << zom(pick(FIELD,COMMA)) << ENDL;
+
             CSV << zom(LINE);
 
             lexer.drop("[:blank:]");

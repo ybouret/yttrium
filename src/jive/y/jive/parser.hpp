@@ -78,14 +78,13 @@ namespace Yttrium
             /**
              \param id name of the terminal
              \param rx expression of end-of-line
+             \param isRegular if true then Term::IsRegular else Term::IsDivider
              */
             template <typename ID, typename RX>
             const Rule & endl(const ID &id, const RX &rx, const bool isRegular)
             {
                 return term_( lexer.endl(id,rx,true), isRegular ? Term::IsRegular : Term::IsDivider);
             }
-
-
 
             //! make a terminal from a plugin
             template <typename PLUGIN, typename ID>
