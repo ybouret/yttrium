@@ -41,7 +41,9 @@
             const Ansatz  ans(eq,ek,st,cc,xi,dc);
             ansatz << ans;
         }
-        if(!crucial) break; // will process all Running
+
+        if(!crucial)
+            break; // will process all Running
 
         //__________________________________________________________
         //

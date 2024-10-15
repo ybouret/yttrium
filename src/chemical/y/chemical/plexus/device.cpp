@@ -186,7 +186,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(unsigned long cycle=1;;++cycle)
             {
-                const Outcome outcome = process(C, L, K, xml);
+                const Outcome outcome = process(C,L,K,xml);
 
                 if(fp.isValid())
                 {
