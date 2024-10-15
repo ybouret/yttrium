@@ -6,6 +6,11 @@ using namespace Yttrium;
 Y_UTEST(parser)
 {
     CSV::Parser parser;
-    
+
+    if(argc>1)
+    {
+        AutoPtr<Jive::Syntax::XNode> tree = parser( Jive::Module::OpenFile(argv[1]) );
+    }
+
 }
 Y_UDONE()
