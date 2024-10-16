@@ -87,10 +87,8 @@ namespace Yttrium
         };
 
         Document::  Document() noexcept : Object(), Counted(), Lines() {}
-
         Document:: ~Document() noexcept {}
-
-        Document:: Document(const Document &doc) :
+        Document::  Document(const Document &doc) :
         Identifiable(),
         Collection(),
         Object(),
