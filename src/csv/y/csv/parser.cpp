@@ -37,13 +37,11 @@ namespace Yttrium
 
             inline Document * docFrom(Jive::Module *m)
             {
-                const AutoPtr<XNode> ast = (*this)(m);     if(ast.isEmpty()) throw Specific::Exception( name->c_str(), "invalid root");
-                AutoPtr<Document>    doc = new Document();
-                GraphViz::Vizible::DotToPng( *name + "-ast.dot", *ast);
-                assert( "CSV" == ast->name() );
-                assert( Jive::Syntax::IsInternal == ast->type);
+                const AutoPtr<XNode> ast = (*this)(m); checkAST(ast);
+                const XList         &xll = ast->branch();
+                AutoPtr<Document>    doc = new Document(xll.size);
 
-                for(const XNode *node=ast->branch().head;node;node=node->next)
+                for(const XNode *node=xll.head;node;node=node->next)
                 {
                     assert(Jive::Syntax::IsInternal == node->type);
                     assert("LINE" == node->name() );
@@ -57,13 +55,26 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
 
-            static inline void AddLineTo(Document &doc, const XNode * const node)
+            inline void checkAST(const AutoPtr<XNode> &ast)
+            {
+
+                if(ast.isEmpty())
+                    throw Specific::Exception( name->c_str(), "invalid root");
+                GraphViz::Vizible::DotToPng( *name + "-ast.dot", *ast);
+                assert( "CSV" == ast->name() );
+                assert( Jive::Syntax::IsInternal == ast->type);
+            }
+
+
+            static inline void AddLineTo(Document    &       doc,
+                                         const XNode * const node)
             {
                 std::cerr << "Parsing line" << std::endl;
                 
                 for(const XNode *curr=node->branch().head;curr;curr=curr->next)
                 {
                     std::cerr << curr->name() << std::endl;
+                    
                 }
             }
 

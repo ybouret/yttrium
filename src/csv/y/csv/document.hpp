@@ -38,9 +38,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Document() noexcept; //!< setup empty
-            virtual ~Document() noexcept; //!< cleanup
-            Document(const Document &);   //!< hard copy
+            explicit Document() noexcept;         //!< setup empty
+            explicit Document(const size_t capa); //!< setup with capacity
+            virtual ~Document() noexcept;         //!< cleanup
+            Document(const Document &);           //!< hard copy
 
             //__________________________________________________________________
             //

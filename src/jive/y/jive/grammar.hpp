@@ -39,6 +39,7 @@ namespace Yttrium
             typedef Syntax::Repeat       Rep;   //!< alias
             typedef Syntax::XNode        XNode; //!< alias
             typedef Syntax::XTree        XTree; //!< alias
+            typedef Syntax::XList        XList; //!< alias
             typedef Syntax::Terminal     Term;  //!< alias
             
             //__________________________________________________________________

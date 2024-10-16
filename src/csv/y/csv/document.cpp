@@ -7,6 +7,10 @@ namespace Yttrium
     {
         Document::  Document() noexcept : Object(), Counted(), Lines() {}
 
+
+        Document::  Document(const size_t capa)   : Object(), Counted(), Lines(capa,AsCapacity) {}
+
+
         Document:: ~Document() noexcept {}
 
         Document::  Document(const Document &doc) :
