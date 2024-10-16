@@ -11,25 +11,55 @@ namespace Yttrium
 
     namespace CSV
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! field=value of CSV
+        //
+        //
+        //______________________________________________________________________
         class Field
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+
+            //! format kind
             enum Kind
             {
                 Generic, //!< whatever
                 DQMarks, //!< double quotation marks
                 SQMarks  //!< single quotation marks
             };
-            Field();
-            ~Field() noexcept;
-            Field(const Field &);
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Field();               //!< setup empty, generic
+            ~Field() noexcept;     //!< cleanup
+            Field(const Field &);  //!< copy
+
+            //! setup with some data and kind
             template <typename DATA> inline
             Field(const DATA &d, const Kind k) : text(d), kind(k) {}
 
-            String text;
-            Kind   kind;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            String text; //!< content
+            Kind   kind; //!< format
+            
         private:
             Y_DISABLE_ASSIGN(Field);
         };

@@ -13,17 +13,43 @@ namespace Yttrium
     namespace CSV
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! alias to sequence of Fields
+        //
+        //______________________________________________________________________
         typedef Vector<Field> Fields;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a Line is a sequence of Fields
+        //
+        //
+        //______________________________________________________________________
         class Line :  public Fields
         {
         public:
-            explicit Line() noexcept;
-            explicit Line(const size_t capa);
-            virtual ~Line() noexcept;
-            Line(const Line &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Line() noexcept;          //!< setup empty
+            explicit Line(const size_t capa);  //!< setup with capacity
+            virtual ~Line() noexcept;          //!< cleanup
+            Line(const Line &);                //!< copy
 
-            virtual const char * callSign() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const char * callSign() const noexcept; //!< [Identifiable] "CSV::Line"
 
         private:
             Y_DISABLE_ASSIGN(Line);

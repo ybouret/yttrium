@@ -94,6 +94,9 @@ namespace Yttrium
                     source.swapWith(target);
                 }
 
+                //! alias to get *(rule.name)
+                const String &name() const noexcept;
+
                 //______________________________________________________________
                 //
                 //

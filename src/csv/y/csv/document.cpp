@@ -16,7 +16,7 @@ namespace Yttrium
         Counted(),
         Lines(doc)
         {}
-
+        
         const char * Document:: callSign() const noexcept
         {
             return "CSV::Document";

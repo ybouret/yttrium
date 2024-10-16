@@ -39,6 +39,8 @@ namespace Yttrium
             }
 
 
+
+
             size_t XNode:: weight() const noexcept
             {
                 switch(type)
@@ -169,6 +171,11 @@ namespace Yttrium
         namespace Syntax
         {
 
+            const String & XNode:: name() const noexcept
+            {
+                return *(rule.name);
+            }
+            
             XNode * XNode:: Create(const Internal &from)
             {
                 return new XNode(from);

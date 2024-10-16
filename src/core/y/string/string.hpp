@@ -127,10 +127,10 @@ namespace Yttrium
             ConstType         *  operator()(void)               const noexcept; //!< legacy access
             ConstType         *  c_str()                        const noexcept; //!< legacy access
             
-            virtual void pushHead(ParamType);
-            virtual void pushTail(ParamType);
-            virtual void popTail()  noexcept;
-            virtual void popHead()  noexcept;
+            virtual void pushHead(ParamType); //!< [Sequence] push new char at head
+            virtual void pushTail(ParamType); //!< [Sequence] push new char at tail
+            virtual void popTail()  noexcept; //!< [Sequence] remove tail char
+            virtual void popHead()  noexcept; //!< [Sequence] remove head char
 
             void         reverse() noexcept; //!< reverse string
 
