@@ -2,6 +2,7 @@
 #include "y/text/hexadecimal.hpp"
 #include "y/stream/output.hpp"
 #include "y/type/utils.hpp"
+#include "y/check/crc32.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -17,6 +18,12 @@ namespace Yttrium
         ReadOnlyBuffer:: ~ReadOnlyBuffer() noexcept
         {
         }
+
+        uint32_t ReadOnlyBuffer:: crc32() const noexcept
+        {
+            return CRC32:: Of( ro_addr(), measure() );
+        }
+
 
 
         bool ReadOnlyBuffer:: hasSameContentThan(const ReadOnlyBuffer &other) const noexcept

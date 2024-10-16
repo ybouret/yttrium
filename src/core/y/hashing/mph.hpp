@@ -16,6 +16,11 @@ namespace Yttrium
             explicit MinimalPerfect();
             virtual ~MinimalPerfect() noexcept;
 
+            MinimalPerfect & operator()(const Memory::ReadOnlyBuffer &buffer,
+                                        const int                     hvalue);
+            
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MinimalPerfect);
             class Node;

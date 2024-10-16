@@ -47,8 +47,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            bool   hasSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< compare byte-wise contents
-            size_t maxSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< maximum byte-wise same content
+            bool     hasSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< compare byte-wise contents
+            size_t   maxSameContentThan(const ReadOnlyBuffer &) const noexcept; //!< maximum byte-wise same content
+            uint32_t crc32() const noexcept;
 
             //__________________________________________________________________
             //

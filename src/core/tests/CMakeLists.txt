@@ -107,6 +107,7 @@ add_test(memory:digest    test-core memory_digest)
 add_test(memory:specimen  test-core memory_specimen)
 add_test(memory:objloc    test-core memory_objloc)
 add_test(memory:archon    test-core memory_archon)
+add_test(memory:zone      test-core memory_zone)
 
 
 #type
