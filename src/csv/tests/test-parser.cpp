@@ -70,6 +70,40 @@ namespace Yttrium
             return "CSV::Line";
         }
 
+        typedef Vector<Line,Memory::Dyadic> Lines;
+
+        class Document : public Object, public Counted, public Lines
+        {
+        public:
+            explicit Document() noexcept;
+            virtual ~Document() noexcept;
+            Document(const Document &);
+
+            virtual const char * callSign() const noexcept;
+
+        private:
+            Y_DISABLE_ASSIGN(Document);
+
+        };
+
+        Document::  Document() noexcept : Object(), Counted(), Lines() {}
+
+        Document:: ~Document() noexcept {}
+
+        Document:: Document(const Document &doc) :
+        Identifiable(),
+        Collection(),
+        Object(),
+        Counted(),
+        Lines(doc)
+        {}
+
+        const char * Document:: callSign() const noexcept
+        {
+            return "CSV::Document";
+        }
+
+
 
     }
 }
@@ -84,6 +118,7 @@ Y_UTEST(parser)
 
     Y_SIZEOF(CSV::Field);
     Y_SIZEOF(CSV::Line);
+    Y_SIZEOF(CSV::Document);
 
     if(argc>1)
     {
