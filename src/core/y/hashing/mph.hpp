@@ -16,10 +16,16 @@ namespace Yttrium
             explicit MinimalPerfect();
             virtual ~MinimalPerfect() noexcept;
 
-            MinimalPerfect & operator()(const Memory::ReadOnlyBuffer &buffer,
-                                        const int                     hvalue);
-            
+            MinimalPerfect & operator()(const void * const data,
+                                        size_t             size,
+                                        const int          hash);
 
+            MinimalPerfect & operator()(const Memory::ReadOnlyBuffer &buff, const int hash);
+            MinimalPerfect & operator()(const char * const            text, const int hash);
+
+            int operator()(const void * const data, size_t size) const noexcept;
+            int operator()(const Memory::ReadOnlyBuffer &  buff) const noexcept;
+            int operator()(const char * const              text) const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MinimalPerfect);
