@@ -70,11 +70,10 @@ namespace Yttrium
                                          const XNode * const node)
             {
                 std::cerr << "Parsing line" << std::endl;
-                
-                for(const XNode *curr=node->branch().head;curr;curr=curr->next)
+                const XList &line = node->branch();
+                for(const XNode *curr=line.head;curr;curr=curr->next)
                 {
                     std::cerr << curr->name() << std::endl;
-                    
                 }
             }
 

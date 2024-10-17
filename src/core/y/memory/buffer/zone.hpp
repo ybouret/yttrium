@@ -11,18 +11,35 @@ namespace Yttrium
 
     namespace Memory
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Zone on a PERSISTENT memory area
+        //
+        //
+        //______________________________________________________________________
         class Zone : public ReadOnlyBuffer
         {
         public:
-            explicit Zone(const void * _addr,
-                          const size_t _size) noexcept;
-            virtual ~Zone() noexcept;
-            explicit Zone(const char * const text) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Zone(const void * _addr, const size_t _size) noexcept; //!< setup on _addr[_size]
+            explicit Zone(const char * const text)                noexcept; //!< setup on _text
+            virtual ~Zone() noexcept;                                       //!< cleanup
 
-            virtual const void * ro_addr() const noexcept;
-            virtual size_t       measure() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const void * ro_addr() const noexcept; //!< [ReadOnlyBuffer] addr
+            virtual size_t       measure() const noexcept; //!< [ReadOnlyBuffer] size
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Zone);
