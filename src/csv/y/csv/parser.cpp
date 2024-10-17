@@ -20,6 +20,13 @@ namespace Yttrium
             "COMMA"
         };
 
+#define Y_CSV_JSTR  0
+#define Y_CSV_RSTR  1
+#define Y_CSV_DATA  2
+#define Y_CSV_COMMA 3
+
+
+
         static const size_t nkw = sizeof(kws)/sizeof(kws[0]);
 
         class Parser :: Code : public Jive::Parser
@@ -58,7 +65,7 @@ namespace Yttrium
                     assert(Jive::Syntax::IsInternal == node->type);
                     assert("LINE" == node->name() );
 
-                    AddLineTo(*doc,node);
+                    addLineTo(*doc,node);
                 }
 
                 return doc.yield();
@@ -80,16 +87,57 @@ namespace Yttrium
             }
 
 
-            static inline void AddLineTo(Document    &       doc,
-                                         const XNode * const node)
+            inline void addLineTo(Document    &       doc,
+                                  const XNode * const node) const
             {
                 std::cerr << "Parsing line" << std::endl;
-                const XList &line = node->branch();
-                for(const XNode *curr=line.head;curr;curr=curr->next)
+                Line & line = doc.add(); assert(doc.size()>0);
+                try
                 {
-                    const String &instr = curr->name();
-                    std::cerr << instr << std::endl;
-                    assert( Jive::Syntax::IsTerminal == curr->type );
+                    const XList &sub  = node->branch();
+                    for(const XNode *curr=sub.head;curr;curr=curr->next)
+                    {
+                        const String       &cid = curr->name();
+                        const Jive::Lexeme &lex = curr->lexeme();
+                        std::cerr << cid << std::endl;
+                        assert( Jive::Syntax::IsTerminal == curr->type );
+                        switch( kw(cid) )
+                        {
+                            case Y_CSV_JSTR : {
+                                std::cerr << "+" << lex << std::endl;
+                                const String s = lex.toString(1,1);
+                                const Field  f(s,Field::DQMarks);
+                                line << f;
+                            } break;
+
+                            case Y_CSV_RSTR : {
+                                std::cerr << "+" << lex << std::endl;
+                                const String s = lex.toString(1,1);
+                                const Field  f(s,Field::SQMarks);
+                                line << f;
+                            } break;
+
+                            case Y_CSV_DATA : {
+                                std::cerr << "+" << lex << std::endl;
+                                const String s = lex.toString();
+                                const Field  f(s,Field::Generic);
+                                line << f;
+                            }  break;
+
+                            case Y_CSV_COMMA:
+                                break;
+
+                            default:
+                                throw Specific::Exception( name->c_str(), "invalid content '%s'", cid.c_str() );
+                        }
+                    }
+                    std::cerr << line << std::endl;
+                }
+                catch(...)
+                {
+                    assert(doc.size()>0);
+                    doc.popTail();
+                    throw;
                 }
             }
 

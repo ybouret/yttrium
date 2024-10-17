@@ -26,6 +26,16 @@ namespace Yttrium
             return "CSV::Document";
         }
 
+
+        Line & Document:: add()
+        {
+            {
+                const Line _;
+                pushTail(_);
+            }
+            return tail();
+        }
+
     }
 
 }

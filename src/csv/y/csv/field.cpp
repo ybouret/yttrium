@@ -16,6 +16,12 @@ namespace Yttrium
 
         Field:: Field(const Field &other) : text(other.text), kind(other.kind) {}
 
+        std::ostream & operator<<(std::ostream &os, const Field &f)
+        {
+            os << f.text;
+            return os;
+        }
+
     }
 
 }

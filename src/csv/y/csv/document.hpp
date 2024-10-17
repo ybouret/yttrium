@@ -51,6 +51,14 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char * callSign() const noexcept; //!< [Identifiable] "CSV::Document"
 
+            //__________________________________________________________________
+            //
+            //
+            //  Methods
+            //
+            //__________________________________________________________________
+            Line & add();
+
         private:
             Y_DISABLE_ASSIGN(Document);
 

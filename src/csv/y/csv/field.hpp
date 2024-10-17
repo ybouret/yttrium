@@ -43,9 +43,11 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Field();               //!< setup empty, generic
-            ~Field() noexcept;     //!< cleanup
-            Field(const Field &);  //!< copy
+            Field();                //!< setup empty, generic
+            ~Field() noexcept;      //!< cleanup
+            Field(const Field &);   //!< copy
+            Y_OSTREAM_PROTO(Field); //!< display
+            
 
             //! setup with some data and kind
             template <typename DATA> inline
