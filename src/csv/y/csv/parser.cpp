@@ -35,6 +35,21 @@ namespace Yttrium
 
             inline explicit Code() : Jive::Parser("CSV"), kw(kws,nkw)
             {
+                Agg &        CSV      = agg("CSV");
+                const Rule & MARK     = mark("MARK","[:blank:]");
+                const Rule & MARKS    = zom(MARK);
+                const Rule & JSTRING  = plug<Jive::Lexical::JString>("JSTRING");
+                //const Rule & RSTRING  = plug<Jive::Lexical::RString>("RSTRING");
+                const Rule & JSTR  = agg("JSTR") << MARKS << JSTRING << MARKS;
+                //const Rule & RSTR  = agg("RSTR") << MARKS << RSTRING << MARKS;
+                const Rule & ENDL  = endl("ENDL","[:endl:]",false);
+
+                const Rule & LINE  = agg("LINE") << JSTR << ENDL;
+                CSV << zom(LINE);
+
+                renderGraphViz();
+
+#if 0
                 Agg        & CSV   = agg("CSV");
                 const Rule & JSTR  = plug<Jive::Lexical::JString>("JSTR");
                 const Rule & RSTR  = plug<Jive::Lexical::RString>("RSTR");
@@ -43,12 +58,13 @@ namespace Yttrium
                 const Rule & COMMA = term("COMMA",',');
                 const Rule & ENDL  = endl("ENDL","[:endl:]",false);
                 const Rule & LINE  = agg("LINE") << zom(pick(FIELD,COMMA)) << ENDL;
-                
+
                 CSV << zom(LINE);
 
                 lexer.drop("[:blank:]");
                 renderGraphViz();
                 validate();
+#endif
             }
 
             inline virtual ~Code() noexcept {}
@@ -56,10 +72,12 @@ namespace Yttrium
 
             inline Document * docFrom(Jive::Module *m)
             {
+
                 const AutoPtr<XNode> ast = (*this)(m); checkAST(ast);
                 const XList         &xll = ast->branch();
                 AutoPtr<Document>    doc = new Document(xll.size);
 
+#if 0
                 for(const XNode *node=xll.head;node;node=node->next)
                 {
                     assert(Jive::Syntax::IsInternal == node->type);
@@ -67,6 +85,7 @@ namespace Yttrium
 
                     addLineTo(*doc,node);
                 }
+#endif
 
                 return doc.yield();
             }

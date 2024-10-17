@@ -28,6 +28,8 @@ namespace Yttrium
                 assert(0!=root);
                 assert(IsTerminal==root->type);
 
+                std::cerr << "astTerminal('" << root->name() << "')" << std::endl;
+
                 const Rule &rule = root->rule;
                 if(rule.is<Terminal>())
                 {
@@ -41,6 +43,7 @@ namespace Yttrium
                         case Terminal::IsDivider:
                             if(root->sire)
                             {
+                                std::cerr << "divider '" << root->name() << "': sire='" << root->sire->name() << "'" << std::endl;
                                 assert(IsInternal==root->sire->type);
                                 delete root;
                                 return 0;
@@ -58,6 +61,8 @@ namespace Yttrium
                 assert(0!=root);
                 assert(IsInternal==root->type);
 
+                std::cerr << "astInternal('" << root->name() << "')" << std::endl;
+
                 //--------------------------------------------------------------
                 //
                 // pre-process child(ren)
@@ -68,10 +73,8 @@ namespace Yttrium
                     XList &source = root->chld;
                     while(source.size>0)
                     {
-                        AutoPtr<XNode> node = AST( source.popHead() );
-
-                        if(node.isEmpty()) continue;
-                        const Rule &rule = node->rule;
+                        AutoPtr<XNode> node = AST( source.popHead() ); if(node.isEmpty()) continue;
+                        const Rule &   rule = node->rule;
                         if(rule.is<Aggregate>() )
                         {
                             assert(IsInternal==node->type);

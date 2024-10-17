@@ -401,6 +401,9 @@ namespace Yttrium
                 throw excp;
             }
 
+            
+            GraphViz::Vizible::DotToPng( *name + "-tree.dot", *tree);
+
             return prune( XNode::AST( tree.yield() ) );
         }
 
