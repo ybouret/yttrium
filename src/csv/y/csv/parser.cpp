@@ -43,7 +43,7 @@ namespace Yttrium
                 const Rule & COMMA = term("COMMA",',');
                 const Rule & ENDL  = endl("ENDL","[:endl:]",false);
                 const Rule & LINE  = agg("LINE") << zom(pick(FIELD,COMMA)) << ENDL;
-
+                
                 CSV << zom(LINE);
 
                 lexer.drop("[:blank:]");
