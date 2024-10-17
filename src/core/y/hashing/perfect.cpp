@@ -1,5 +1,5 @@
 
-#include "y/hashing/mph.hpp"
+#include "y/hashing/perfect.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/object.hpp"
 #include "y/type/nullify.hpp"
@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Hashing
     {
 
-        class MinimalPerfect:: Node : public Object
+        class Perfect:: Node : public Object
         {
         public:
             typedef CxxListOf<Node> List;
@@ -34,21 +34,33 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Node);
         };
 
-        MinimalPerfect:: MinimalPerfect() : root( new Node() )
+        Perfect:: Perfect() : root( new Node() )
         {
         }
 
-        MinimalPerfect:: ~MinimalPerfect() noexcept
+
+        Perfect:: Perfect(const char  *argv[],
+                          const size_t argc) :
+        root( new Node() )
+        {
+            assert(Good(argv,argc));
+            Perfect &self = *this;
+            for(size_t i=0;i<argc;++i) {
+                self(argv[i],int(i));
+            }
+        }
+
+        Perfect:: ~Perfect() noexcept
         {
             assert(0!=root);
             Nullify(root);
         }
 
-        static const char CallSign[] = "Hashing::MinimalPerfect";
+        static const char CallSign[] = "Hashing::Perfect";
 
-        MinimalPerfect & MinimalPerfect:: operator()(const void *const data,
-                                                     size_t            size,
-                                                     const int         hash)
+        Perfect & Perfect:: operator()(const void *const data,
+                                       size_t            size,
+                                       const int         hash)
         {
             assert(Good(data,size));
             assert(0!=root);
@@ -115,18 +127,18 @@ namespace Yttrium
         }
 
 
-        MinimalPerfect & MinimalPerfect:: operator()(const Memory::ReadOnlyBuffer &buff, const int hash)
+        Perfect & Perfect:: operator()(const Memory::ReadOnlyBuffer &buff, const int hash)
         {
             return (*this)(buff.ro_addr(),buff.measure(),hash);
         }
 
-        MinimalPerfect & MinimalPerfect:: operator()(const char * const text, const int hash)
+        Perfect & Perfect:: operator()(const char * const text, const int hash)
         {
             return (*this)(text,text?strlen(text):0,hash);
         }
 
 
-        int MinimalPerfect:: operator()(const void * const data, size_t size) const noexcept
+        int Perfect:: operator()(const void * const data, size_t size) const noexcept
         {
             assert( Good(data,size) );
             const uint8_t * path = static_cast<const uint8_t *>( data);
@@ -152,12 +164,12 @@ namespace Yttrium
             return curr->hash;
         }
 
-        int MinimalPerfect:: operator()(const Memory::ReadOnlyBuffer &  buff) const noexcept
+        int Perfect:: operator()(const Memory::ReadOnlyBuffer &  buff) const noexcept
         {
             return (*this)( buff.ro_addr(), buff.measure() );
         }
 
-        int MinimalPerfect:: operator()(const char * const              text) const noexcept
+        int Perfect:: operator()(const char * const              text) const noexcept
         {
             return (*this)( text, text?strlen(text):0 );
         }

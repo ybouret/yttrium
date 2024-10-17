@@ -123,7 +123,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(hashing_functions);
     Y_UTEST(hashing_to);
     Y_UTEST(hashing_mac);
-    Y_UTEST(hashing_mph);
+    Y_UTEST(hashing_perfect);
 
     Y_UTEST(random_bits);
     Y_UTEST(random_shuffle);

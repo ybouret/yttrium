@@ -187,7 +187,7 @@ add_test(hashing:mix64     test-core hashing_mix64)
 add_test(hashing:functions test-core hashing_functions)
 add_test(hashing:to        test-core hashing_to)
 add_test(hashing:mac       test-core hashing_mac)
-add_test(hashing:mph       test-core hashing_mph)
+add_test(hashing:perfect   test-core hashing_perfect)
 
 #sort
 add_test(sort:heap     test-core sort_heap)

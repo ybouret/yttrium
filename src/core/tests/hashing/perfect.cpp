@@ -1,4 +1,4 @@
-#include "y/hashing/mph.hpp"
+#include "y/hashing/perfect.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 
@@ -6,9 +6,9 @@ using namespace Yttrium;
 
 #define HASHOF(KEY) std::cerr << "mph(" << KEY << ")=" << mph(KEY) << std::endl
 
-Y_UTEST(hashing_mph)
+Y_UTEST(hashing_perfect)
 {
-    Hashing::MinimalPerfect mph;
+    Hashing::Perfect mph;
     const char key1[] = "hello";
     const String key2 = "world";
     const String key3 = "hell";
