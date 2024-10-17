@@ -4,21 +4,33 @@
 #include "y/jive/lexical/plugin/rstring.hpp"
 #include "y/type/nullify.hpp"
 #include "y/system/exception.hpp"
+#include "y/hashing/perfect.hpp"
 
 namespace Yttrium
 {
 
     namespace CSV
     {
+
+        static const char *kws[] =
+        {
+            "JSTR",
+            "RSTR",
+            "DATA",
+            "COMMA"
+        };
+
+        static const size_t nkw = sizeof(kws)/sizeof(kws[0]);
+
         class Parser :: Code : public Jive::Parser
         {
         public:
 
-            inline explicit Code() : Jive::Parser("CSV")
+            inline explicit Code() : Jive::Parser("CSV"), kw(kws,nkw)
             {
                 Agg        & CSV   = agg("CSV");
-                const Rule & JSTR  = plug<Jive::Lexical::JString>("JString");
-                const Rule & RSTR  = plug<Jive::Lexical::RString>("RString");
+                const Rule & JSTR  = plug<Jive::Lexical::JString>("JSTR");
+                const Rule & RSTR  = plug<Jive::Lexical::RString>("RSTR");
                 const Rule & DATA  = term("DATA","[[:alnum:][:blank:]]+");
                 const Rule & FIELD = alt("FIELD") << DATA << JSTR << RSTR;
                 const Rule & COMMA = term("COMMA",',');
@@ -51,7 +63,9 @@ namespace Yttrium
 
                 return doc.yield();
             }
-            
+
+            const Hashing::Perfect kw;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
 
@@ -73,7 +87,9 @@ namespace Yttrium
                 const XList &line = node->branch();
                 for(const XNode *curr=line.head;curr;curr=curr->next)
                 {
-                    std::cerr << curr->name() << std::endl;
+                    const String &instr = curr->name();
+                    std::cerr << instr << std::endl;
+                    assert( Jive::Syntax::IsTerminal == curr->type );
                 }
             }
 
