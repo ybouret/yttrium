@@ -945,6 +945,7 @@ WARN_LOGFILE           =
 
 INPUT                  = src/core/y \
                          src/jive/y \
+                         src/lingo/y \
                          src/mkl/y  \
                          src/ink/y  \
                          src/chemical/y \

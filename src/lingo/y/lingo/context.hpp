@@ -11,12 +11,23 @@ namespace Yttrium
 
     namespace Lingo
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! full context
+        //
+        //
+        //______________________________________________________________________
         class Context
         {
         public:
-
+            //__________________________________________________________________
+            //
+            //
             // C++
+            //
+            //__________________________________________________________________
 
             //! generic constructor
             template <typename CAPTION>
@@ -28,7 +39,12 @@ namespace Yttrium
             explicit Context(const Context &) noexcept; //!< copy
             virtual ~Context()                noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
             // Methods
+            //
+            //__________________________________________________________________
 
             //! stamp exception with 'caption:line:colum: '
             Exception & stamp(Exception &) const noexcept;
@@ -36,10 +52,15 @@ namespace Yttrium
             void newChar() noexcept; //!< increase column
             void newLine() noexcept; //!< incrase  line, column=1
 
+            //__________________________________________________________________
+            //
+            //
             // Members
-            const Caption       caption;
-            const unsigned long line;
-            const unsigned long column;
+            //
+            //__________________________________________________________________
+            const Caption       caption; //!< shared caption
+            const unsigned long line;    //!< line number
+            const unsigned long column;  //!< column number
 
         private:
             Y_DISABLE_ASSIGN(Context);

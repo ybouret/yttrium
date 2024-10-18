@@ -30,6 +30,7 @@ namespace Yttrium
             explicit Perfect();           //!< setup with root node
             virtual ~Perfect() noexcept;  //!< cleanup
 
+            //! build default 0..argc-1 hashing values
             explicit Perfect(const char  *argv[],
                              const size_t argc);
 
