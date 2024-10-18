@@ -34,6 +34,13 @@ namespace Yttrium
             return !univocal();
         }
 
+        bool Pattern:: feeble() const noexcept
+        {
+            return !strong();
+        }
+
+
+
 
         const char * Pattern:: ByteToRegExp(const uint8_t byte) noexcept
         {
@@ -43,6 +50,12 @@ namespace Yttrium
             return rx[byte];
         }
 
+        bool operator==(const Pattern &lhs, const Pattern &rhs)
+        {
+            const String l = lhs.toBinary();
+            const String r = rhs.toBinary();
+            return l == r;
+        }
     }
 
 }

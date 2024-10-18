@@ -77,6 +77,10 @@ namespace Yttrium
 
             size_t emitUUID(OutputStream &fp) const;
             static const char *ByteToRegExp(const uint8_t byte) noexcept;
+            static Pattern    *Read(InputStream &);
+
+            friend bool operator==(const Pattern &lhs, const Pattern &rhs);
+
 
             //__________________________________________________________________
             //

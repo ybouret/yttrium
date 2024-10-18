@@ -18,7 +18,6 @@ namespace Yttrium
         public:
             virtual ~Joker() noexcept;
 
-            virtual size_t serialize(OutputStream &) const; //!< uuid + motif
             virtual void   query(CharDB &)           const; //!< motif->query
 
         protected:

@@ -25,7 +25,8 @@ namespace Yttrium
             virtual bool      univocal()          const noexcept; //!< true
             virtual String    regularExpression()          const; //!< (motif)?
             virtual bool      takes(Token &, Source &)     const; //!< always true
-            
+            virtual size_t    serialize(OutputStream &)    const; //!< uuid + motif
+
         private:
             explicit Optional(Pattern *) noexcept;;
             Y_DISABLE_COPY_AND_ASSIGN(Optional);

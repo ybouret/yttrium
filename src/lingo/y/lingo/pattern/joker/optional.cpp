@@ -27,6 +27,13 @@ namespace Yttrium
             }
         }
 
+
+        size_t Optional:: serialize(OutputStream &fp) const
+        {
+            const size_t ans = emitUUID(fp);
+            return ans + motif->serialize(fp);
+        }
+
         Pattern * Optional:: clone() const
         {
             assert(0!=motif);
