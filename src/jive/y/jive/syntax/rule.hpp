@@ -83,7 +83,7 @@ namespace Yttrium
                 //! interface
                 virtual bool accepts(Y_JIVE_SYNTAX_RULE_API) const = 0;
 
-                //! frail is accepts emtpy expression
+                //! is frail if accepts emtpy expression
                 virtual bool isFrail() const noexcept = 0;
 
                 //! !frail

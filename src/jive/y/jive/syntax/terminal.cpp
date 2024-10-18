@@ -89,7 +89,6 @@ namespace Yttrium
 
             void Terminal:: vizLink(OutputStream &) const
             {
-                
             }
 
             

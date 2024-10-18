@@ -25,6 +25,12 @@ namespace Yttrium
                     case IsTerminal: vizTerminal(fp); break;
                     case IsInternal: vizInternal(fp); break;
                 }
+                if(this->sire)
+                {
+                    Arrow(fp, this, this->sire);
+                    fp << "[color=red]";
+                    Endl(fp);
+                }
             }
 
             void XNode:: vizTerminal(OutputStream &fp) const
