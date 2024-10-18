@@ -67,7 +67,22 @@ namespace Yttrium
         bool And:: takes(Token &token, Source &source) const
         {
             assert(0==token.size);
-            
+
+            Token local;
+            for(const Pattern *p=head;p;p=p->next)
+            {
+                Token temp;
+                if(p->takes(temp,source))
+                {
+                    local<<temp;
+                }
+                else
+                {
+                    source.put(local);
+                    return false;
+                }
+            }
+            local.swapWith(token);
             return true;
         }
 
