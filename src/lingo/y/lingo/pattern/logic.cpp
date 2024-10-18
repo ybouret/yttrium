@@ -22,6 +22,14 @@ namespace Yttrium
         {
         }
         
+        size_t Logic:: serialize(OutputStream &fp) const
+        {
+            size_t ans = emitUUID(fp);
+            ans += fp.emitVBR(size);
+            for(const Pattern *p=head;p;p=p->next)
+                ans += p->serialize(fp);
+            return ans;
+        }
 
 
     }

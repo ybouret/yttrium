@@ -20,7 +20,9 @@ namespace Yttrium
         public:
             virtual ~Logic() noexcept;
 
+            virtual size_t serialize(OutputStream &fp) const;
             
+
         private:
             Y_DISABLE_ASSIGN(Logic);
         };

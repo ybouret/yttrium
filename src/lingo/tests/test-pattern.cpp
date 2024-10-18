@@ -43,7 +43,12 @@ Y_UTEST(pattern)
     process( plist, Repeated::Create( new Range('a','z'),0 ), "rep0.dat");
     process( plist, Repeated::Create( new Range('0','9'),1 ), "rep1.dat");
     process( plist, Repeated::Create( new Range('A','Z'),5 ), "rep5.dat");
-    
+    process( plist, Counting::Create( new Range('A','Z'),1,3 ), "counting.dat");
+
+    {
+        AutoPtr<Logic> p = new And();
+        process( plist, p.yield(), "and.dat");
+    }
 
 
 

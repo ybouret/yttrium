@@ -6,5 +6,6 @@
 
 #include "y/lingo/pattern/joker/optional.hpp"
 #include "y/lingo/pattern/joker/repeated.hpp"
+#include "y/lingo/pattern/joker/counting.hpp"
 
 #endif

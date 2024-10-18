@@ -7,6 +7,16 @@ namespace Yttrium
     namespace Lingo
     {
 
+        static inline Pattern * ReadLogic( AutoPtr<Logic> &p, InputStream &fp)
+        {
+            const size_t sz = fp.readVBR<size_t>("Logic.size");
+            for(size_t i=0;i<sz;++i)
+            {
+                p->pushTail( Pattern::Read(fp) );
+            }
+            return p.yield();
+        }
+
         Pattern * Pattern:: Read(InputStream &fp)
         {
             const uint32_t uid = fp.readCBR<uint32_t>("Pattern UUID");
@@ -33,6 +43,14 @@ namespace Yttrium
                     const size_t nmin = fp.readVBR<size_t>("Repeated.minimalCount");
                     return Repeated:: Create( Read(fp), nmin );
                 }
+                case Counting::UUID: {
+                    const size_t nmin = fp.readVBR<size_t>("Counting.minimalCount");
+                    const size_t nmax = fp.readVBR<size_t>("Counting.maximalCount");
+                    return Counting:: Create( Read(fp), nmin, nmax );
+                }
+                    // Logic
+
+                case And::UUID: { AutoPtr<Logic> p = new And(); return ReadLogic(p,fp); }
 
 
                 default:
