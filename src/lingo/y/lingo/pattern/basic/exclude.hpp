@@ -42,6 +42,7 @@ namespace Yttrium
             virtual Pattern * clone()                             const; //!< [Pattern]
             virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
             virtual void      query( CharDB &firstChars )         const; //!< [Pattern] append byte
+            virtual String    regularExpression()                 const; //!< [^byte]
             
             //__________________________________________________________________
             //

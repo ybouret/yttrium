@@ -67,5 +67,16 @@ namespace Yttrium
                 firstChars.set(i);
         }
 
+        String Range:: regularExpression() const
+        {
+            String ans = '[';
+            ans += ByteToRegExp(lower);
+            ans += '-';
+            ans += ByteToRegExp(upper);
+            ans += ']';
+            return ans;
+        }
+
+
     }
 }

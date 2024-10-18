@@ -61,6 +61,7 @@ namespace Yttrium
             virtual Pattern * clone() const = 0; //!< full clone
             virtual bool      takes(Token &token, Source &source) const = 0;
             virtual void      query( CharDB &firstChars )         const = 0;
+            virtual String    regularExpression()                 const = 0;
 
             //__________________________________________________________________
             //
@@ -70,7 +71,8 @@ namespace Yttrium
             //__________________________________________________________________
 
             size_t emitUUID(OutputStream &fp) const;
-
+            static const char *ByteToRegExp(const uint8_t byte) noexcept;
+            
             //__________________________________________________________________
             //
             //

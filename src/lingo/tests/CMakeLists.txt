@@ -9,4 +9,5 @@ enable_testing()
 
 add_test(source  test-lingo source)
 add_test(chardb  test-lingo chardb)
+add_test(makerx  test-lingo makerx)
 add_test(pattern test-lingo pattern)

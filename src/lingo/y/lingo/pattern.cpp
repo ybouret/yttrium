@@ -1,5 +1,6 @@
 
 #include "y/lingo/pattern.hpp"
+#include <cstdlib>
 
 namespace Yttrium
 {
@@ -28,6 +29,15 @@ namespace Yttrium
             return fp.emitCBR(uuid);
         }
 
+
+
+        const char * Pattern:: ByteToRegExp(const uint8_t byte) noexcept
+        {
+            static const char *rx[256] = {
+#               include "pattern/rx.hxx"
+            };
+            return rx[byte];
+        }
 
     }
 

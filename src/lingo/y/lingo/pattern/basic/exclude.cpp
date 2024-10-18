@@ -63,5 +63,14 @@ namespace Yttrium
             firstChars += mine;
         }
 
+        String Exclude:: regularExpression() const
+        {
+            String ans = '[';
+            ans += '^';
+            ans += ByteToRegExp(byte);
+            ans += ']';
+            return ans;
+        }
+
     }
 }

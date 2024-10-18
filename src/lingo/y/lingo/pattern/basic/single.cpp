@@ -59,5 +59,11 @@ namespace Yttrium
             firstChars.set(byte);
         }
 
+        String Single:: regularExpression() const
+        {
+            return ByteToRegExp(byte);
+        }
+
+
     }
 }
