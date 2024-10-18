@@ -106,7 +106,6 @@ namespace Yttrium
 
             token.swapWith(local);
             return true;
-
         }
 
     }

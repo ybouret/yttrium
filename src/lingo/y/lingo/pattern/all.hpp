@@ -6,6 +6,7 @@
 
 #include "y/lingo/pattern/basic/all.hpp"
 #include "y/lingo/pattern/joker/all.hpp"
+#include "y/lingo/pattern/logic/all.hpp"
 
 #endif
 
