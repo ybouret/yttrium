@@ -36,17 +36,14 @@ Y_UTEST(pattern)
 {
     Pattern::List plist;
 
-    process( plist, new Single('a'),                           "single.dat");
-    process( plist, new Range('a','z'),                        "range.dat");
-    process( plist, new Exclude('k'),                          "exclude.dat");
-    process( plist, Optional::Create( new Single('1') ),       "optional.dat");
+    process( plist, new Single('a'),                          "single.dat");
+    process( plist, new Range('a','z'),                       "range.dat");
+    process( plist, new Exclude('k'),                         "exclude.dat");
+    process( plist, Optional::Create( new Single('1') ),      "optional.dat");
     process( plist, Repeated::Create( new Range('a','z'),0 ), "rep0.dat");
     process( plist, Repeated::Create( new Range('0','9'),1 ), "rep1.dat");
     process( plist, Repeated::Create( new Range('A','Z'),5 ), "rep5.dat");
-
-
-
-
+    
 
 
 

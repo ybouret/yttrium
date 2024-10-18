@@ -65,7 +65,7 @@ namespace Yttrium
 
         bool Repeated:: strong() const noexcept
         {
-            return false;
+            return minimalCount>0;
         }
 
         bool Repeated:: takes(Token &token, Source &source) const

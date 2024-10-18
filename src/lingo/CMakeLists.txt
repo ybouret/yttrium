@@ -5,6 +5,7 @@ lingo
 lingo/pattern
 lingo/pattern/basic
 lingo/pattern/joker
+lingo/pattern/logic
 )
 
 add_subdirectory(tests)
