@@ -140,9 +140,9 @@ namespace Yttrium
 
                 void          vizTerminal(OutputStream &) const; //!< viz for Terminal
                 void          vizInternal(OutputStream &) const; //!< viz for Internal
-                static XNode *astTerminal(XNode *)     noexcept;
-                static XNode *astInternal(XNode *)     noexcept;
-
+                static XNode *astTerminal(XNode *)     noexcept; //!< process AST for terminal
+                static XNode *astInternal(XNode *)     noexcept; //!< process AST for internal
+                static void   GrowLineage(XNode * const parent, XNode * const child) noexcept;
             };
 
             //__________________________________________________________________

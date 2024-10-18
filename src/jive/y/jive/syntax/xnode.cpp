@@ -70,6 +70,14 @@ namespace Yttrium
                 return chld;
             }
 
+
+            void XNode:: GrowLineage(XNode * const parent, XNode * const child) noexcept
+            {
+                assert(0!=parent);
+                assert(0!=child);
+                parent->chld.pushTail(child)->sire = parent;
+            }
+
             void XNode:: fusion(Tree &tree) noexcept
             {
                 assert(tree.isValid());
@@ -77,11 +85,14 @@ namespace Yttrium
                 switch(tree->type)
                 {
                     case IsTerminal:
-                        chld.pushTail( tree.yield() );
+                        GrowLineage(this,tree.yield());
+                        //chld.pushTail( tree.yield() );
                         break;
 
                     case IsInternal:
-                        chld.mergeTail( tree->chld );
+                        while(tree->chld.size)
+                            GrowLineage(this, tree->chld.popHead() );
+                        //chld.mergeTail( tree->chld );
                         break;
                 }
             }
