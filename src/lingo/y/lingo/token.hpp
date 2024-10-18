@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! List of Chars
+        //! List of Chars, for lexeme or internal caches
         //
         //
         //______________________________________________________________________
