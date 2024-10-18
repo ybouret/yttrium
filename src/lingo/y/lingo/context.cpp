@@ -8,6 +8,12 @@ namespace Yttrium
     {
         Context:: ~Context() noexcept { Coerce(column)=0; Coerce(line)=0; }
 
+        Context:: Context(const Context &_) noexcept :
+        caption(_.caption),
+        line(_.line),
+        column(_.column)
+        {
+        }
 
         Exception & Context:: stamp(Exception &excp) const noexcept
         {

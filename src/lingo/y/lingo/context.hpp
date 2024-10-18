@@ -8,7 +8,7 @@
 namespace Yttrium
 {
     class Exception;
-    
+
     namespace Lingo
     {
 
@@ -25,7 +25,7 @@ namespace Yttrium
             {
             }
 
-            explicit Context(const Caption &) noexcept; //!< copy
+            explicit Context(const Context &) noexcept; //!< copy
             virtual ~Context()                noexcept; //!< cleanup
 
             // Methods
@@ -40,6 +40,7 @@ namespace Yttrium
             const Caption       caption;
             const unsigned long line;
             const unsigned long column;
+
         private:
             Y_DISABLE_ASSIGN(Context);
         };
