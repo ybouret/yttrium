@@ -6,8 +6,7 @@ namespace Yttrium
     namespace Lingo
     {
 
-        And:: And() noexcept :
-        Logic(UUID)
+        And:: And() noexcept : Logic(UUID)
         {
         }
 
