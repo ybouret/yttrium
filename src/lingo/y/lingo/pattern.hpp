@@ -59,6 +59,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual Pattern * clone() const = 0; //!< full clone
+            virtual bool      takes(Token &token, Source &source) const = 0;
+            virtual void      query( CharDB &firstChars )         const = 0;
 
             //__________________________________________________________________
             //

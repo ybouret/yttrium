@@ -1,4 +1,5 @@
 #include "y/lingo/pattern/basic/single.hpp"
+#include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
 {
@@ -26,6 +27,36 @@ namespace Yttrium
             const size_t ans = emitUUID(fp)+1;
             fp.write(byte);
             return ans;
+        }
+
+        bool Single:: takes(Token &token, Source &source) const
+        {
+            assert( 0 == token.size );
+            Char *ch = source.get();
+            if(0!=ch)
+            {
+                if(byte == **ch)
+                {
+                    token.pushTail(ch);
+                    return true;
+                }
+                else
+                {
+                    source.put(ch);
+                    return false;
+                }
+            }
+            else
+            {
+                source.put(ch);
+                return false;
+            }
+
+        }
+
+        void  Single:: query( CharDB &firstChars ) const
+        {
+            firstChars.set(byte);
         }
 
     }

@@ -82,7 +82,7 @@ namespace Yttrium
         }
 
 
-        CharDB & CharDB:: operator<<(const CharDB &db)    noexcept
+        CharDB & CharDB:: operator += (const CharDB &db)    noexcept
         {
             for(size_t i=0;i<WORDS;++i)
             {

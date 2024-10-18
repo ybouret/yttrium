@@ -51,8 +51,8 @@ namespace Yttrium
             CharDB & set(const uint8_t ibit)       noexcept; //!< set  ibit
             CharDB & clr(const uint8_t ibit)       noexcept; //!< clear ibit
             bool     has(const uint8_t ibit) const noexcept; //!< check ibit
-            CharDB & operator<<(const CharDB &)    noexcept; //!< merge content
-
+            CharDB & operator += (const CharDB &)  noexcept; //!< merge content
+            
         private:
             uint8_t words[WORDS];
         };
