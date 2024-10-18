@@ -26,8 +26,15 @@ Y_UTEST(pattern)
         plist.pushTail( p2.clone() );
     }
 
+    {
+        const Exclude p3('k');
+        p3.toBinary("exclude.dat");
+        plist.pushTail( p3.clone() );
+    }
+
     Y_SIZEOF(Single);
     Y_SIZEOF(Range);
+    Y_SIZEOF(Exclude);
 
 }
 Y_UDONE()

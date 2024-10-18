@@ -6,6 +6,7 @@
 
 #include "y/lingo/pattern/basic/single.hpp"
 #include "y/lingo/pattern/basic/range.hpp"
+#include "y/lingo/pattern/basic/exclude.hpp"
 
 #endif
 
