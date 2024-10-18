@@ -34,7 +34,13 @@ Y_UTEST(pattern)
         p3.toBinary("exclude.dat");
         plist.pushTail( p3.clone() );
         std::cerr << "excl='" << p3.regularExpression() << "'" << std::endl;
+    }
 
+    {
+        const AutoPtr<const Pattern> p4 = Optional::Create( new Single('1') );
+        p4->toBinary("optional.dat");
+        plist.pushTail( p4->clone() );
+        std::cerr << "opt='" << p4->regularExpression() << "'" << std::endl;
     }
 
     Y_SIZEOF(Single);

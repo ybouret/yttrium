@@ -1,5 +1,6 @@
 #include "y/utest/run.hpp"
 #include <cstdio>
+#include <cstring>
 
 using namespace Yttrium;
 
@@ -27,6 +28,9 @@ Y_UTEST(makerx)
         fprintf(stdout,"\n");
     }
 
+    //optional;
+    //repeated;
+    //counting;
 
 }
 Y_UDONE()
