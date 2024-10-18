@@ -1,11 +1,13 @@
+
 //! \file
 
-#ifndef Y_Lingo_Char_Included
-#define Y_Lingo_Char_Included 1
+#ifndef Y_Lingo_Pattern_Included
+#define Y_Lingo_Pattern_Included 1
 
-#include "y/lingo/context.hpp"
-#include "y/memory/exclusive/decl.hpp"
-#include "y/data/list/cxx.hpp"
+#include "y/lingo/source.hpp"
+#include "y/type/fourcc.hpp"
+#include "y/graphviz/vizible.hpp"
+#include "y/data/list/cloneable.hpp"
 
 namespace Yttrium
 {
@@ -15,11 +17,14 @@ namespace Yttrium
         //
         //
         //
-        //! Char with full Context
+        //! Pattern API
         //
         //
         //______________________________________________________________________
-        class Char : public Context
+        class Pattern :
+        public Quantized,
+        public Serializable,
+        public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -28,7 +33,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<Char> List; //!< alias
+            typedef ListOfCloneable<Pattern> List;
 
             //__________________________________________________________________
             //
@@ -36,40 +41,39 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Char(const Context &, const uint8_t) noexcept; //!< setup
-            virtual ~Char()                               noexcept; //!< cleanup
-            Char(const Char &)                            noexcept; //!< copy
+
+        protected:
+            explicit Pattern(const uint32_t t) noexcept;
+            explicit Pattern(const Pattern &) noexcept;
+
+        public:
+            virtual ~Pattern() noexcept;
 
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Interface
             //
             //__________________________________________________________________
-            uint8_t &       operator*()       noexcept; //!< r/w access
-            const uint8_t & operator*() const noexcept; //!< r/o access
-            const char    * printable() const noexcept; //!< printable
+            virtual Pattern * clone() const = 0;
 
             //__________________________________________________________________
             //
             //
-            //  Members
+            // Members
             //
             //__________________________________________________________________
-            Char *  next; //!< for token
-            Char *  prev; //!< for token
-
-            //__________________________________________________________________
-            //
-            //! managed by a Memory::Studio
-            //__________________________________________________________________
-            Y_EXCLUSIVE_DECL();
-
+            const uint32_t uuid; //!< Unique Identifier
+            Pattern       *next; //!< for list
+            Pattern       *prev; //!< for list
+            
         private:
-            uint8_t data;
-            Y_DISABLE_ASSIGN(Char);
+            Y_DISABLE_ASSIGN(Pattern);
         };
+
+        
     }
+
 }
 
 #endif

@@ -1,6 +1,5 @@
 
 #include "y/lingo/token.hpp"
-#include "y/text/ascii/printable.hpp"
 
 namespace Yttrium
 {
@@ -42,7 +41,7 @@ namespace Yttrium
             String res;
             for(const Char *chr=head;chr;chr=chr->next)
             {
-                res << ASCII::Printable::Char[ **chr ];
+                res << chr->printable();
             }
             return res;
         }

@@ -6,6 +6,7 @@
 #include "y/lingo/token.hpp"
 #include "y/stream/input.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -27,7 +28,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Module : public Object, public Context
+        class Module : public Quantized, public Context
         {
         public:
             //__________________________________________________________________
@@ -40,7 +41,7 @@ namespace Yttrium
             //! setup
             explicit Module(const Context &ctx,
                             const Input   &inp) noexcept;
-            
+
             //! cleanup
             virtual ~Module() noexcept;
 
@@ -74,7 +75,7 @@ namespace Yttrium
 
             //! open user's buffer
             template <typename DATANAME> static inline
-             Module * OpenData(DATANAME &dataName, const Memory::ReadOnlyBuffer &buff)
+            Module * OpenData(DATANAME &dataName, const Memory::ReadOnlyBuffer &buff)
             {
                 const Context ctx(dataName,AsCaption);
                 return OpenData_(ctx,buff.ro_addr(),buff.measure());

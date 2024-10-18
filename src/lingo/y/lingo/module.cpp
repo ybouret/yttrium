@@ -11,6 +11,7 @@ namespace Yttrium
         }
 
         Module:: Module(const Context &ctx, const Input &inp) noexcept :
+        Quantized(),
         Context(ctx),
         input(inp)
         {

@@ -6,6 +6,8 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_SHALLOW_IMPL(AsCaption);
+        
         Caption:: Caption(const String &_) : Caption_( new String(_) )
         {
         }

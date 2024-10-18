@@ -1,6 +1,7 @@
 
 #include "y/lingo/char.hpp"
 #include "y/memory/exclusive/impl.hpp"
+#include "y/text/ascii/printable.hpp"
 
 Y_Studio(Yttrium::Lingo::Char,AtExit::MaximumLongevity-7,128);
 
@@ -39,7 +40,10 @@ namespace Yttrium
             return data;
         }
 
-
+        const char    * Char:: printable() const noexcept
+        {
+            return ASCII::Printable::Char[data];
+        }
     }
 
 }

@@ -7,3 +7,5 @@ set( DATA ${HERE}/../../../var)
 
 enable_testing()
 
+add_test(source test-lingo source)
+add_test(chardb test-lingo chardb)
