@@ -9,6 +9,14 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Single byte
+        //
+        //
+        //______________________________________________________________________
         class Single : public Pattern
         {
         public:
@@ -18,7 +26,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('B','Y','T','E');
+            static const uint32_t UUID = Y_FOURCC('B','Y','T','E'); //!< alias
 
 
             //__________________________________________________________________
@@ -37,8 +45,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable]
-            virtual Pattern * clone()                             const; //!< [Pattern]
+            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable] uuid+byte
+            virtual Pattern * clone()                             const; //!< [Pattern] new Single(self)
             virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
             virtual void      query( CharDB &firstChars )         const; //!< [Pattern] append byte
             virtual String    regularExpression()                 const; //!< [Pattern] escaped char

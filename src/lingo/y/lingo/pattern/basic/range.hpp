@@ -10,6 +10,14 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Range of bytes
+        //
+        //
+        //______________________________________________________________________
         class Range : public Pattern
         {
         public:
@@ -19,7 +27,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('R','N','G','E');
+            static const uint32_t UUID = Y_FOURCC('R','N','G','E'); //!< alias
 
             //__________________________________________________________________
             //
@@ -37,8 +45,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable]
-            virtual Pattern * clone()                             const; //!< [Pattern]
+            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable] uuid+lower+upper
+            virtual Pattern * clone()                             const; //!< [Pattern] new Range(self)
             virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
             virtual void      query(CharDB &firstChars )          const; //!< [Pattern] append byte
             virtual String    regularExpression()                 const; //!< [Pattern] [lower-upper]

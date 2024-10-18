@@ -11,21 +11,47 @@ namespace Yttrium
     namespace Lingo
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! And operands
+        //
+        //
+        //______________________________________________________________________
         class And : public Logic
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('[','&', '&', ']');
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('[','&', '&', ']'); //!< alias
 
-            explicit And() noexcept;
-            virtual ~And() noexcept;
-            And(const And &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit And() noexcept; //!< create empty
+            virtual ~And() noexcept; //!< cleanup
+            And(const And &);        //!< copy
 
-            virtual Pattern *clone() const;
-            virtual bool     strong()       const noexcept; //!< if size>0 and all strong
-            virtual bool     univocal()     const noexcept; //!< false is one is feeble or not univocal
-            virtual String   regularExpression()     const; //!< (all)
-            virtual void     query(CharDB &fc)       const; //!< up to first strong
-            virtual bool     takes(Token &,Source &) const; //!< all are taken
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual Pattern *clone()                 const; //!< [Pattern] new And(self)
+            virtual bool     strong()       const noexcept; //!< [Pattern] if size>0 and all strong
+            virtual bool     univocal()     const noexcept; //!< [Pattern] false is one is feeble or not univocal
+            virtual String   regularExpression()     const; //!< [Pattern] (all)
+            virtual void     query(CharDB &fc)       const; //!< [Pattern] up to first strong
+            virtual bool     takes(Token &,Source &) const; //!< [Pattern] all are taken
 
         private:
             Y_DISABLE_ASSIGN(And);

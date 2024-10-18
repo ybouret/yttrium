@@ -11,20 +11,45 @@ namespace Yttrium
     namespace Lingo
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Optional motif
+        //
+        //
+        //______________________________________________________________________
         class Optional : public Joker
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('O', 'P', 'T', '?');
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('[','?','?',']'); //!< alias
 
-            virtual ~Optional() noexcept;
-            static Pattern * Create(Pattern *);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            virtual ~Optional()       noexcept; //!< cleanup
+            static Pattern * Create(Pattern *); //!< create
 
-
-            virtual Pattern * clone()             const;          //!< protected clone
-            virtual bool      strong()            const noexcept; //!< false
-            virtual bool      univocal()          const noexcept; //!< true
-            virtual String    regularExpression()          const; //!< (motif)?
-            virtual bool      takes(Token &, Source &)     const; //!< always true
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual Pattern * clone()                      const; //!< [Pattern] protected clone
+            virtual bool      strong()            const noexcept; //!< [Pattern] false
+            virtual bool      univocal()          const noexcept; //!< [Pattern] motif->univocal
+            virtual String    regularExpression()          const; //!< [Pattern] (motif)?
+            virtual bool      takes(Token &, Source &)     const; //!< [Pattern] always true
             virtual size_t    serialize(OutputStream &)    const; //!< uuid + motif
 
         private:

@@ -59,9 +59,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual Pattern * clone() const = 0; //!< full clone
-            virtual bool      takes(Token &token, Source &source) const = 0;
-            virtual void      query( CharDB &firstChars )         const = 0;
-            virtual String    regularExpression()                 const = 0;
+            virtual bool      takes(Token &token, Source &source)  const = 0; //!< try to take a token from source
+            virtual void      query( CharDB &firstChars )          const = 0; //!< query first char for source lookup
+            virtual String    regularExpression()                  const = 0; //!< return as regular expression
             virtual bool      univocal()                  const noexcept = 0; //!< univocal result
             bool              multiple()                  const noexcept;     //!< !univocal()
             virtual bool      strong()                    const noexcept = 0; //!< never accepts an empty token
@@ -74,12 +74,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            size_t emitUUID(OutputStream &fp) const;
-            static const char *ByteToRegExp(const uint8_t byte) noexcept;
-            static Pattern    *Read(InputStream &);
-
-            friend bool operator==(const Pattern &lhs, const Pattern &rhs);
+            size_t             emitUUID(OutputStream &fp)       const;      //!< emit UUID
+            static const char *ByteToRegExp(const uint8_t byte) noexcept;   //!< byte to regular expression
+            static Pattern    *Read(InputStream &);                         //!< read serialized pattern
+            friend bool operator==(const Pattern &lhs, const Pattern &rhs); //!< test by binary representation
 
 
             //__________________________________________________________________

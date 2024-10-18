@@ -10,12 +10,20 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Logic is a Pattern and a list of operands
+        //
+        //
+        //______________________________________________________________________
         class Logic : public Pattern, public Pattern::List
         {
+            
         protected:
-            //! pattern must be protected
-            explicit Logic(const uint32_t t) noexcept;
-            Logic(const Logic &);
+            explicit Logic(const uint32_t t) noexcept; //!< setup
+            Logic(const Logic &);                      //!< copy
 
         public:
             virtual ~Logic() noexcept;

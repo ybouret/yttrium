@@ -1,4 +1,5 @@
 #include "y/lingo/pattern/logic/and.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -30,10 +31,15 @@ namespace Yttrium
 
         bool And:: strong() const noexcept
         {
+            if(size<=0)
+                return false;
+
             for(const Pattern *p=head;p;p=p->next)
             {
-                if( p->feeble() ) return false;
+                if( p->feeble() )
+                    return false;
             }
+
             return true;
         }
 
@@ -62,8 +68,7 @@ namespace Yttrium
         {
             assert(0==token.size);
             
-
-            return false;
+            return true;
         }
 
     }

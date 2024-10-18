@@ -9,17 +9,42 @@ namespace Yttrium
 {
     namespace Lingo
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! None operands
+        //
+        //
+        //______________________________________________________________________
         class None : public Logic
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('[','^', '^', ']');
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('[','^', '^', ']'); //!< alias
 
-            explicit None() noexcept;
-            virtual ~None() noexcept;
-            None(const None &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit None() noexcept; //!< setup empty
+            virtual ~None() noexcept; //!< cleanup
+            None(const None &);       //!< copy
 
-            virtual Pattern *clone() const;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual Pattern *clone() const; //!< [Pattern] new None(self)
 
         private:
             Y_DISABLE_ASSIGN(None);

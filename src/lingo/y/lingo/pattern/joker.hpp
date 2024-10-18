@@ -9,19 +9,41 @@ namespace Yttrium
 {
     namespace Lingo
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! a Joker is a Pattern with a motif (a.k.a smart pointer)
+        //
+        //
+        //______________________________________________________________________
         class Joker : public Pattern
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
         protected:
-            //! pattern must be protected
+            //! pattern must be protected !
             explicit Joker(const uint32_t t, Pattern *m) noexcept;
 
         public:
-            virtual ~Joker() noexcept;
+            virtual ~Joker() noexcept; //!< cleanup
 
-            virtual void   query(CharDB &)           const; //!< motif->query
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void   query(CharDB &) const; //!< [Pattern] motif->query
 
         protected:
-            Pattern * const motif;
+            Pattern * const motif; //!< created pattern for this joker
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Joker);

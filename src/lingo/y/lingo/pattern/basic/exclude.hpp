@@ -10,6 +10,14 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Exclude one byte
+        //
+        //
+        //______________________________________________________________________
         class Exclude : public Pattern
         {
         public:
@@ -19,7 +27,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('E','X','C','L');
+            static const uint32_t UUID = Y_FOURCC('E','X','C','L'); //!< alias
 
 
             //__________________________________________________________________
@@ -52,7 +60,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const uint8_t byte; //!< single byte avoidance
+            const uint8_t byte; //!< single byte to exclude
 
         private:
             Y_DISABLE_ASSIGN(Exclude);

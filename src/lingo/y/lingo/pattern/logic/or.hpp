@@ -9,17 +9,42 @@ namespace Yttrium
 {
     namespace Lingo
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Or operands
+        //
+        //
+        //______________________________________________________________________
         class Or : public Logic
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('[','|', '|', ']');
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const uint32_t UUID = Y_FOURCC('[','|', '|', ']'); //!< alias
 
-            explicit Or() noexcept;
-            virtual ~Or() noexcept;
-            Or(const Or &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Or() noexcept; //!< create empty
+            virtual ~Or() noexcept; //!< cleanup
+            Or(const Or &);         //!< copy
 
-            virtual Pattern *clone() const;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual Pattern *clone() const; //!< [Pattern] new Or(self)
 
         private:
             Y_DISABLE_ASSIGN(Or);
