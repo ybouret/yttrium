@@ -62,6 +62,11 @@ namespace Yttrium
             virtual bool      takes(Token &token, Source &source) const = 0;
             virtual void      query( CharDB &firstChars )         const = 0;
             virtual String    regularExpression()                 const = 0;
+            virtual bool      univocal()                  const noexcept = 0; //!< univocal result
+            bool              multiple()                  const noexcept;     //!< !univocal()
+            virtual bool      strong()                    const noexcept = 0; //!< never accepts an empty token
+            bool              feeble()                    const noexcept;     //!< !strong(), may accept an empty token
+
 
             //__________________________________________________________________
             //
@@ -72,7 +77,7 @@ namespace Yttrium
 
             size_t emitUUID(OutputStream &fp) const;
             static const char *ByteToRegExp(const uint8_t byte) noexcept;
-            
+
             //__________________________________________________________________
             //
             //

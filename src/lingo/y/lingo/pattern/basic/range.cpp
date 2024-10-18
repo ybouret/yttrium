@@ -77,6 +77,14 @@ namespace Yttrium
             return ans;
         }
 
+        bool Range:: univocal() const noexcept
+        {
+            return lower>=upper;;
+        }
 
+        bool Range:: strong() const noexcept
+        {
+            return true;
+        }
     }
 }

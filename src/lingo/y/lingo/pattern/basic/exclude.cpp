@@ -55,7 +55,7 @@ namespace Yttrium
 
         }
 
-        void  Exclude:: query( CharDB &firstChars ) const
+        void  Exclude:: query(CharDB &firstChars) const
         {
             CharDB mine;
             mine.fill();
@@ -70,6 +70,16 @@ namespace Yttrium
             ans += ByteToRegExp(byte);
             ans += ']';
             return ans;
+        }
+
+        bool Exclude:: univocal() const noexcept
+        {
+            return false;
+        }
+
+        bool Exclude:: strong() const noexcept
+        {
+            return true;
         }
 
     }

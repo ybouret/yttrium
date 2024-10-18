@@ -42,7 +42,9 @@ namespace Yttrium
             virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
             virtual void      query(CharDB &firstChars )          const; //!< [Pattern] append byte
             virtual String    regularExpression()                 const; //!< [Pattern] [lower-upper]
-            
+            virtual bool      univocal()                 const noexcept; //!< [Pattern] true if lower>=upper
+            virtual bool      strong()                   const noexcept; //!< [Pattern] false
+
             //__________________________________________________________________
             //
             //

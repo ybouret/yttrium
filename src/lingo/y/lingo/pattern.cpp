@@ -29,6 +29,10 @@ namespace Yttrium
             return fp.emitCBR(uuid);
         }
 
+        bool Pattern:: multiple() const noexcept
+        {
+            return !univocal();
+        }
 
 
         const char * Pattern:: ByteToRegExp(const uint8_t byte) noexcept

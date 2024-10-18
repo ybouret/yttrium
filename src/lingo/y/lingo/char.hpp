@@ -48,7 +48,7 @@ namespace Yttrium
             //__________________________________________________________________
             uint8_t &       operator*()       noexcept; //!< r/w access
             const uint8_t & operator*() const noexcept; //!< r/o access
-            const char    * printable() const noexcept; //!< printable
+            const char    * printable() const noexcept; //!< printable for token
 
             //__________________________________________________________________
             //

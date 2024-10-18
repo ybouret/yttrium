@@ -64,6 +64,15 @@ namespace Yttrium
             return ByteToRegExp(byte);
         }
 
+        bool Single:: univocal() const noexcept
+        {
+            return true;
+        }
+
+        bool Single:: strong() const noexcept
+        {
+            return true;
+        }
 
     }
 }
