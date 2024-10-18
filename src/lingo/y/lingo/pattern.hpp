@@ -13,6 +13,9 @@ namespace Yttrium
 {
     namespace Lingo
     {
+
+        class CharDB;
+
         //______________________________________________________________________
         //
         //
@@ -33,7 +36,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ListOfCloneable<Pattern> List;
+            typedef ListOfCloneable<Pattern> List; //!< alias
 
             //__________________________________________________________________
             //
@@ -43,8 +46,8 @@ namespace Yttrium
             //__________________________________________________________________
 
         protected:
-            explicit Pattern(const uint32_t t) noexcept;
-            explicit Pattern(const Pattern &) noexcept;
+            explicit Pattern(const uint32_t t) noexcept; //!< setup with uuid
+            explicit Pattern(const Pattern  &) noexcept; //!< copy
 
         public:
             virtual ~Pattern() noexcept;
@@ -55,7 +58,16 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual Pattern * clone() const = 0;
+            virtual Pattern * clone() const = 0; //!< full clone
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            size_t emitUUID(OutputStream &fp) const;
 
             //__________________________________________________________________
             //

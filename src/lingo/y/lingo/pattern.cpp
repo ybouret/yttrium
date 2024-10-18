@@ -22,7 +22,13 @@ namespace Yttrium
         prev(0)
         {
         }
-        
+
+        size_t Pattern:: emitUUID(OutputStream &fp) const
+        {
+            return fp.emitCBR(uuid);
+        }
+
+
     }
 
 }

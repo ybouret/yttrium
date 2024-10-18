@@ -9,8 +9,17 @@ using namespace Lingo;
 
 Y_UTEST(chardb)
 {
-    Y_SIZEOF(CharDB);
-    Y_USHOW(CharDB::WORDS);
-    Y_CHECK(256==CharDB::WORDS * CharDB::WORD_BITS);
+    CharDB fc;
+
+    for(unsigned i=0;i<256;++i)
+    {
+        fc.free();
+        fc.set(i);
+        Y_ASSERT(fc.has(i));
+        fc.clr(i);
+        Y_ASSERT(!fc.has(i));
+    }
+
+
 }
 Y_UDONE()
