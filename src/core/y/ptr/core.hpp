@@ -22,9 +22,10 @@ namespace Yttrium
         //______________________________________________________________________
         class Ptr
         {
-        public:    static const char Nil[]; //!< "(nil)"
-        protected: explicit Ptr() noexcept; //!< setup
-        public:    virtual ~Ptr() noexcept; //!< cleanup
+            public:    static const char Nil[]; //!< "(nil)"
+            protected: explicit Ptr() noexcept; //!< setup
+            public:    virtual ~Ptr() noexcept; //!< cleanup
+
             //! abort() is NULL handle
             static void Critical(const void *, const char * const) noexcept;
 

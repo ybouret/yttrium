@@ -59,9 +59,16 @@ Y_UTEST(pattern)
     Y_SIZEOF(Single);
     Y_SIZEOF(Range);
     Y_SIZEOF(Exclude);
+    std::cerr << std::endl;
+
     Y_SIZEOF(Optional);
     Y_SIZEOF(Repeated);
+    Y_SIZEOF(Counting);
+    std::cerr << std::endl;
+
+    Y_SIZEOF(And);
     
+
 
 }
 Y_UDONE()
