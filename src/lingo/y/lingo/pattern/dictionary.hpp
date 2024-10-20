@@ -10,24 +10,51 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        typedef AutoPtr<const Pattern>             PatternPtr;
-        typedef SuffixMap<String,const PatternPtr> PatternMap;
+        //______________________________________________________________________
+        //
+        //
+        // Types for Dictionary
+        //
+        //______________________________________________________________________
+        typedef AutoPtr<const Pattern>             PatternPtr; //!< alias
+        typedef SuffixMap<String,const PatternPtr> PatternMap; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Dictionary of precompiled patterns
+        //
+        //
+        //______________________________________________________________________
         class Dictionary : public PatternMap
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Dictionary();
             virtual ~Dictionary() noexcept;
 
-            template <typename NAME> inline
-            void operator()(const NAME &name, Pattern * const p) {
-                const PatternPtr pp = p;
-                if(!insert(name,pp)) { const String _(name); MultipleEntry(_); }
-            }
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void operator()(const String &     name, Pattern * const p); //!< insert new pattern
+            void operator()(const char * const name, Pattern * const p); //!< insert new pattern
+
+            Pattern * operator()(const String &);     //!< clone named pattern
+            Pattern * operator()(const char * const); //!< cline named pattern
+
 
         private:
             Y_DISABLE_ASSIGN(Dictionary);
-            static void MultipleEntry(const String &);
         };
     }
 

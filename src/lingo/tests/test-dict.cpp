@@ -22,6 +22,10 @@ Y_UTEST(dict)
         Y_CHECK(pp.isValid());
     }
 
+    Y_CHECK( dict.search("lower") );
+    Y_CHECK( dict.search("upper") );
+
+
 
 }
 Y_UDONE()
