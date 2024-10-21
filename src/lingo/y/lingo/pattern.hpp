@@ -96,6 +96,10 @@ namespace Yttrium
             static Pattern * Among(const char * const);
             static Pattern * Exact(const char * const);
 
+            bool isBasic() const noexcept;
+            bool isLogic() const noexcept;
+            bool isJoker() const noexcept;
+            
             //__________________________________________________________________
             //
             //

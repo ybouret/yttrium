@@ -57,9 +57,9 @@ namespace Yttrium
                     return Counting:: Create( Read(fp), nmin, nmax );
                 }
                     // Logic
-
-                case And::UUID: { AutoPtr<Logic> p = new And(); return ReadLogic(p,fp); }
-                case Or::UUID:  { AutoPtr<Logic> p = new Or();  return ReadLogic(p,fp); }
+                case And::UUID:  { AutoPtr<Logic> p = new And(); return ReadLogic(p,fp); }
+                case Or::UUID:   { AutoPtr<Logic> p = new Or();  return ReadLogic(p,fp); }
+                case None::UUID: { AutoPtr<Logic> p = new None();  return ReadLogic(p,fp); }
 
 
                 default:

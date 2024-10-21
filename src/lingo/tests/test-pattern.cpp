@@ -37,7 +37,7 @@ namespace
         {
             const String dotName = VFS::ChangedExtension("dot",fileName);
             std::cerr << "dotName=" << dotName << std::endl;
-            GraphViz::Vizible::DotToPng(dotName,*p,true);
+            GraphViz::Vizible::DotToPng(dotName,*p);
         }
 
     }
