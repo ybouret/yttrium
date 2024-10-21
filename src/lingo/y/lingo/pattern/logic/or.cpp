@@ -35,7 +35,19 @@ namespace Yttrium
         String Or:: regularExpression() const
         {
             String ans;
-
+            switch(size)
+            {
+                case 0: return ans;
+                case 1: return head->regularExpression();
+                default:
+                    break;
+            }
+            ans += '(';
+            const Pattern *node = head;
+            ans += node->regularExpression();
+            for(node=node->next;node;node=node->next)
+                ans += '|' + node->regularExpression();
+            ans += ')';
             return ans;
         }
 
