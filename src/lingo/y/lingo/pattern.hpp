@@ -66,6 +66,7 @@ namespace Yttrium
             bool              multiple()                  const noexcept;     //!< !univocal()
             virtual bool      strong()                    const noexcept = 0; //!< never accepts an empty token
             bool              feeble()                    const noexcept;     //!< !strong(), may accept an empty token
+            virtual void      viz(OutputStream &fp)       const          = 0; //!< produce GraphViz code
 
 
             //__________________________________________________________________
@@ -74,11 +75,13 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            friend bool operator==(const Pattern &lhs, const Pattern &rhs); //!< test by binary representation
-            size_t             emitUUID(OutputStream &fp)       const;      //!< emit UUID
-            static const char *ByteToRegExp(const uint8_t byte) noexcept;   //!< byte to regular expression
-            static Pattern    *Read(InputStream &);                         //!< read serialized pattern
-            static Pattern    *Optimize(Pattern * const);                   //!< optimizations
+            friend bool operator==(const Pattern &lhs, const Pattern &rhs);          //!< test by binary representation
+            size_t             emitUUID(OutputStream &fp)       const;               //!< emit UUID
+            static const char *ByteToRegExp(const uint8_t byte) noexcept;            //!< byte to regular expression
+            static Pattern    *Read(InputStream &);                                  //!< read serialized pattern
+            static Pattern    *Optimize(Pattern * const);                            //!< optimizations
+            void               graphViz(OutputStream &fp) const;                     //!< standalone GraphViz code
+            void               vizLink(OutputStream &, const Pattern::List &) const; //!< produce link to children
 
             template <typename T> inline
             const T * as() const noexcept
@@ -93,7 +96,6 @@ namespace Yttrium
             static Pattern * Among(const char * const);
             static Pattern * Exact(const char * const);
 
-            
             //__________________________________________________________________
             //
             //

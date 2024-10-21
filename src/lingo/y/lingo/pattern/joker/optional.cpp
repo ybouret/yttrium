@@ -43,7 +43,7 @@ namespace Yttrium
 
         String Optional:: regularExpression() const
         {
-            return "(" + motif->regularExpression() + ")?";
+            return  motif->regularExpression() + '?';
         }
 
         bool Optional:: univocal() const noexcept
@@ -61,6 +61,19 @@ namespace Yttrium
             assert(0==token.size);
             (void) motif->takes(token,source);
             return true;
+        }
+
+        void Optional:: viz(OutputStream &fp) const
+        {
+            motif->viz(fp);
+            Node(fp,this) << '[';
+            Label(fp,"?");
+            fp << ",shape=triangle";
+            fp << ']';
+            Endl(fp);
+
+            Endl( Arrow(fp,this,motif) );
+
         }
 
     }

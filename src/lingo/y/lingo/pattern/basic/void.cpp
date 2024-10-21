@@ -54,5 +54,11 @@ namespace Yttrium
             return true;
         }
 
+        void Void:: viz(OutputStream &fp) const
+        {
+            Node(fp,this) << "[label=\"\",shape=star]";
+            Endl(fp);
+        }
+
     }
 }

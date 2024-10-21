@@ -64,5 +64,12 @@ namespace Yttrium
             return true;
         }
 
+
+        void Any1:: viz(OutputStream &fp) const
+        {
+            Node(fp,this) << "[label=\"ANY1\",shape=circle]";
+            Endl(fp);
+        }
+
     }
 }

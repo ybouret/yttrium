@@ -102,6 +102,21 @@ namespace Yttrium
             return p.yield();
         }
 
+
+        void And:: viz(OutputStream &fp) const
+        {
+            for(const Pattern *node=head;node;node=node->next)
+            {
+                node->viz(fp);
+            }
+
+            Node(fp,this) << '[';
+            Label(fp, "&") << ",shape=house";
+            Endl(fp << ']');
+            
+            vizLink(fp,*this);
+        }
+
     }
 
 }

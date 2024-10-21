@@ -50,6 +50,7 @@ namespace Yttrium
             virtual String   regularExpression()     const; //!< [Pattern]
             virtual void     query(CharDB &fc)       const; //!< [Pattern]
             virtual bool     takes(Token &,Source &) const; //!< [Pattern]
+            virtual void     viz(OutputStream &)     const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(Or);

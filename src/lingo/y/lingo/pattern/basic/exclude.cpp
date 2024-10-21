@@ -85,5 +85,14 @@ namespace Yttrium
             return true;
         }
 
+        void Exclude:: viz(OutputStream &fp) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,&byte,1);
+            fp << ",shape=doublecircle";
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 }

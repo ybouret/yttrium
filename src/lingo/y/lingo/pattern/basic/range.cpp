@@ -87,5 +87,14 @@ namespace Yttrium
         {
             return true;
         }
+
+        void Range:: viz(OutputStream &fp) const
+        {
+            Node(fp,this) << "[label=\"";
+            const char text[4] = { char(lower), '-', char(upper), 0 };
+            Text(fp,text);
+            fp << "\",shape=rectangle]";
+            Endl(fp);
+        }
     }
 }

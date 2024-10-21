@@ -71,6 +71,21 @@ namespace Yttrium
             return Exact(_);
         }
 
+        void Pattern:: vizLink(OutputStream &fp, const Pattern::List &patterns) const
+        {
+            for(const Pattern *node=patterns.head;node;node=node->next)
+            {
+                Endl(Arrow(fp,this,node));
+            }
+        }
+
+        void Pattern:: graphViz(OutputStream &fp) const
+        {
+            Enter(fp, "G");
+            viz(fp);
+            Leave(fp);
+        }
+
     }
 
 }

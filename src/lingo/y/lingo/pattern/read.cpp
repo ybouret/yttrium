@@ -59,6 +59,7 @@ namespace Yttrium
                     // Logic
 
                 case And::UUID: { AutoPtr<Logic> p = new And(); return ReadLogic(p,fp); }
+                case Or::UUID:  { AutoPtr<Logic> p = new Or();  return ReadLogic(p,fp); }
 
 
                 default:

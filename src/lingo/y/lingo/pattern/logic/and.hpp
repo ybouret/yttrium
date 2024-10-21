@@ -52,6 +52,7 @@ namespace Yttrium
             virtual String   regularExpression()     const; //!< [Pattern] (all)
             virtual void     query(CharDB &fc)       const; //!< [Pattern] up to first strong
             virtual bool     takes(Token &,Source &) const; //!< [Pattern] all are taken
+            virtual void      viz(OutputStream &)    const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(And);

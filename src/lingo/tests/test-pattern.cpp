@@ -3,7 +3,7 @@
 #include "y/lingo/pattern/all.hpp"
 #include "y/lingo/pattern/char-db.hpp"
 #include "y/stream/libc/input.hpp"
-
+#include "y/vfs/vfs.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -34,6 +34,12 @@ namespace
             Y_CHECK( *reloaded == *p );
         }
 
+        {
+            const String dotName = VFS::ChangedExtension("dot",fileName);
+            std::cerr << "dotName=" << dotName << std::endl;
+            GraphViz::Vizible::DotToPng(dotName,*p,true);
+        }
+
     }
 
 }
@@ -56,7 +62,18 @@ Y_UTEST(pattern)
 
     {
         AutoPtr<Logic> p = new And();
+        p->add('_');
+        p->add('a','z');
+        p->add('A','Z');
         process( plist, p.yield(), "and.dat");
+    }
+
+    {
+        AutoPtr<Logic> p = new Or();
+        p->add('_');
+        p->add('a','z');
+        p->add('A','Z');
+        process( plist, p.yield(), "or.dat");
     }
 
 

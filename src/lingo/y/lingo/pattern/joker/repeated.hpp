@@ -51,6 +51,7 @@ namespace Yttrium
             virtual String    regularExpression()          const; //!< [Pattern] (motif)(*|+|[n,])*
             virtual bool      takes(Token &, Source &)     const; //!< [Pattern] if found minimalCount
             virtual size_t    serialize(OutputStream &)    const; //!< [Serializable] uuid + nmin + motif
+            virtual void      viz(OutputStream &)          const; //!< [Pattern]
 
             //__________________________________________________________________
             //

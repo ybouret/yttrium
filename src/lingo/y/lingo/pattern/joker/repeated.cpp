@@ -74,7 +74,7 @@ namespace Yttrium
             assert(0==token.size);
             Token  local;
             size_t count = 0;
-            
+
             {
                 Token temp;
                 while(motif->takes(temp,source))
@@ -94,6 +94,27 @@ namespace Yttrium
                 source.put(local);
                 return false;
             }
+        }
+
+        void Repeated:: viz(OutputStream &fp) const
+        {
+            motif->viz(fp);
+            Node(fp,this) << '[';
+            switch(minimalCount)
+            {
+                case 0: Label(fp,"*") << ",shape=triangle"; break;
+                case 1: Label(fp,"+") << ",shape=triangle"; break;
+                default: {
+                    const String text = Formatted::Get("[%u,]", unsigned(minimalCount));
+                    Label(fp,text) << ",shape=ellipse";
+                }
+
+            }
+            fp << ']';
+            Endl(fp);
+
+            Endl( Arrow(fp,this,motif) );
+
         }
 
     }

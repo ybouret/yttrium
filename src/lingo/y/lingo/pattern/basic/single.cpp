@@ -75,5 +75,14 @@ namespace Yttrium
             return true;
         }
 
+        void Single:: viz(OutputStream &fp) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,&byte,1);
+            fp << ",shape=box";
+            fp << ']';
+            Endl(fp);
+        }
+
     }
 }

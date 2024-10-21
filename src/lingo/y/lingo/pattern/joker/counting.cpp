@@ -109,6 +109,21 @@ namespace Yttrium
             return true;
         }
 
+
+        void Counting:: viz(OutputStream &fp) const
+        {
+            motif->viz(fp);
+            Node(fp,this) << '[';
+            const String text = Formatted::Get("[%u,%u]", unsigned(minimalCount), unsigned(maximalCount) );
+            Label(fp,text);
+            fp << ",shape=component";
+            fp << ']';
+            Endl(fp);
+
+            Endl( Arrow(fp,this,motif) );
+
+        }
+
     }
 
 }

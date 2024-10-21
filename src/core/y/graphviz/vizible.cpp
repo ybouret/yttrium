@@ -57,7 +57,7 @@ namespace Yttrium
             while(len-- > 0)
             {
                 const uint8_t byte = uint8_t(*(msg++));
-                const char   *data =ASCII::Embedding::Char[byte];
+                const char   *data = ASCII::Embedding::Char[byte];
                 //std::cerr << "emit '" << data << "'" << std::endl;
                 fp << data;
             }

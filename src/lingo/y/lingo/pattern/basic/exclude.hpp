@@ -53,6 +53,7 @@ namespace Yttrium
             virtual String    regularExpression()                 const; //!< [Patterm] [^byte]
             virtual bool      univocal()                 const noexcept; //!< [Pattern] false
             virtual bool      strong()                   const noexcept; //!< [Pattern] false
+            virtual void      viz(OutputStream &)                 const; //!< [Pattern]
 
             //__________________________________________________________________
             //
