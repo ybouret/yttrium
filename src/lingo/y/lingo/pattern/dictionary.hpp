@@ -4,20 +4,12 @@
 #define Y_Lingo_Pattern_Dictionary_Included 1
 
 #include "y/lingo/pattern.hpp"
-#include "y/associative/suffix/map.hpp"
 
 namespace Yttrium
 {
     namespace Lingo
     {
-        //______________________________________________________________________
-        //
-        //
-        // Types for Dictionary
-        //
-        //______________________________________________________________________
-        typedef AutoPtr<const Pattern>             PatternPtr; //!< alias
-        typedef SuffixMap<String,const PatternPtr> PatternMap; //!< alias
+        
 
         //______________________________________________________________________
         //
@@ -27,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Dictionary : public PatternMap
+        class Dictionary
         {
         public:
             //__________________________________________________________________
@@ -55,6 +47,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Dictionary);
+            class Code;
+            Code *code;
         };
     }
 

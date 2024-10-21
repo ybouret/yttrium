@@ -15,15 +15,7 @@ Y_UTEST(dict)
     dict("upper", new Range('A','Z') );
 
 
-    for(Dictionary::Iterator it = dict.begin(); it != dict.end(); ++it)
-    {
-        std::cerr << it->key << std::endl;
-        const PatternPtr &pp = *it;
-        Y_CHECK(pp.isValid());
-    }
-
-    Y_CHECK( dict.search("lower") );
-    Y_CHECK( dict.search("upper") );
+    
 
 
 
