@@ -13,11 +13,13 @@ namespace Yttrium
         Void::  Void() noexcept :
         Pattern(UUID)
         {
+            Y_Lingo_Pattern(Void);
         }
 
         Void:: Void(const Void &_) noexcept :
         Pattern(_)
         {
+            Y_Lingo_Pattern(Void);
         }
 
         Pattern * Void:: clone() const { return new Void( *this ); }

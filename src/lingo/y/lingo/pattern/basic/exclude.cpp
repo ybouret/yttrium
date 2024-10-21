@@ -13,12 +13,14 @@ namespace Yttrium
         Pattern(UUID),
         byte(_)
         {
+            Y_Lingo_Pattern(Exclude);
         }
 
         Exclude:: Exclude(const Exclude &_) noexcept :
         Pattern(_),
         byte(_.byte)
         {
+            Y_Lingo_Pattern(Exclude);
         }
 
         Pattern * Exclude:: clone() const { return new Exclude( *this ); }

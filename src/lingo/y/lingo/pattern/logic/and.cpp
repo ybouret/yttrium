@@ -8,11 +8,15 @@ namespace Yttrium
 
         And:: And() noexcept : Logic(UUID)
         {
+            Y_Lingo_Pattern(And);
         }
 
         And:: ~And() noexcept {}
 
-        And:: And(const And &other) : Logic(other) {}
+        And:: And(const And &other) : Logic(other)
+        {
+            Y_Lingo_Pattern(And);
+        }
 
         Pattern * And:: clone() const
         {
@@ -83,6 +87,19 @@ namespace Yttrium
             }
             local.swapWith(token);
             return true;
+        }
+
+        Pattern * Pattern:: Exact(const String &str)
+        {
+            const size_t n = str.size();
+            if(n<=0) throw Specific::Exception("Pattern::Exact","empty string");
+
+            AutoPtr<Logic> p = new And();
+            for(size_t i=1;i<=n;++i)
+            {
+                p->add( str[i] );
+            }
+            return p.yield();
         }
 
     }

@@ -9,8 +9,9 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        Pattern * RegExp(const String &expr, const Dictionary * const dict);
-        
+        Pattern * RegExp(const String &     expr, const Dictionary * const dict);
+        Pattern * RegExp(const char * const expr, const Dictionary * const dict);
+
     }
 }
 

@@ -6,6 +6,8 @@ namespace Yttrium
     namespace Lingo
     {
 
+        const char * const RXC:: CallSign = "Regular Expression";
+
         RXC:: ~RXC() noexcept
         {
             
@@ -23,7 +25,8 @@ namespace Yttrium
             assert(Good(_expr,_size));
         }
 
-        
+
+     
     }
 
 }

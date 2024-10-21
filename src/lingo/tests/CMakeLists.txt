@@ -13,4 +13,6 @@ add_test(makerx  test-lingo makerx)
 add_test(nbits   test-lingo nbits)
 add_test(pattern test-lingo pattern)
 add_test(dict    test-lingo dict)
+add_test(dict    test-lingo rx)
+
 

@@ -9,11 +9,15 @@ namespace Yttrium
         Or:: Or() noexcept :
         Logic(UUID)
         {
+            Y_Lingo_Pattern(Or);
         }
 
         Or:: ~Or() noexcept {}
 
-        Or:: Or(const Or &other) : Logic(other) {}
+        Or:: Or(const Or &other) : Logic(other)
+        {
+            Y_Lingo_Pattern(Or);
+        }
 
         Pattern * Or:: clone() const { return new Or(*this); }
 

@@ -8,5 +8,6 @@ Y_UTEST_DECL(32)
     Y_UTEST(makerx);
     Y_UTEST(nbits);
     Y_UTEST(dict);
+    Y_UTEST(rx);
 }
 Y_UTEST_EXEC()

@@ -14,6 +14,7 @@ namespace Yttrium
         lower(lo),
         upper(up)
         {
+            Y_Lingo_Pattern(Range);
             if(upper<lower) CoerceSwap(lower,upper);
         }
 
@@ -22,6 +23,7 @@ namespace Yttrium
         lower(_.lower),
         upper(_.upper)
         {
+            Y_Lingo_Pattern(Range);
         }
 
         Pattern * Range:: clone() const { return new Range( *this ); }

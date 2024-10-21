@@ -74,27 +74,46 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+            friend bool operator==(const Pattern &lhs, const Pattern &rhs); //!< test by binary representation
             size_t             emitUUID(OutputStream &fp)       const;      //!< emit UUID
             static const char *ByteToRegExp(const uint8_t byte) noexcept;   //!< byte to regular expression
             static Pattern    *Read(InputStream &);                         //!< read serialized pattern
-            friend bool operator==(const Pattern &lhs, const Pattern &rhs); //!< test by binary representation
+            static Pattern    *Optimize(Pattern * const);                   //!< optimizations
 
+            template <typename T> inline
+            const T * as() const noexcept
+            {
+                assert(T::UUID==uuid);
+                assert(0!=self);
+                return static_cast<const T *>(self);
+            }
 
+            static Pattern * Among(const String &);
+            static Pattern * Exact(const String &);
+            static Pattern * Among(const char * const);
+            static Pattern * Exact(const char * const);
+
+            
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            const uint32_t uuid; //!< Unique Identifier
-            Pattern       *next; //!< for list
-            Pattern       *prev; //!< for list
+            const uint32_t     uuid; //!< Unique Identifier
+            Pattern       *    next; //!< for list
+            Pattern       *    prev; //!< for list
+        protected:
+            const void * const self;
             
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
 
-        
+#define Y_Lingo_Pattern(TYPE) Coerce(self) = static_cast<const TYPE *>(this)
+
+        typedef Pattern::List Patterns;
+
     }
 
 }

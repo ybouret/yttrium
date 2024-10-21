@@ -18,6 +18,7 @@ namespace Yttrium
         minimalCount(nmin),
         maximalCount(nmax)
         {
+            Y_Lingo_Pattern(Counting);
             if(nmax<nmin) CoerceSwap(nmin,nmax);
         }
 

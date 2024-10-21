@@ -10,11 +10,16 @@ namespace Yttrium
         None:: None() noexcept :
         Logic(UUID)
         {
+            Y_Lingo_Pattern(None);
         }
 
         None:: ~None() noexcept {}
 
-        None::None(const None &other) : Logic(other) {}
+        None::None(const None &other) :
+        Logic(other)
+        {
+            Y_Lingo_Pattern(None);
+        }
 
     }
 

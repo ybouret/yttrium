@@ -11,13 +11,19 @@ namespace Yttrium
                           const Dictionary * const dict)
         {
             RXC    rxc(expr,size,dict);
-            return 0;
+            return rxc.subExpr();
         }
 
         Pattern * RegExp(const String     &       expr,
                          const Dictionary * const dict)
         {
             return _RegExp(expr.c_str(), expr.size(), dict);
+        }
+
+        Pattern * RegExp(const char * const expr, const Dictionary * const dict)
+        {
+            const String _(expr);
+            return RegExp(_,dict);
         }
 
     }

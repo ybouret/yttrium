@@ -228,6 +228,18 @@ namespace Yttrium
             return os << p->regularExpression();
         }
 
+        Pattern * Pattern:: Among(const String &str)
+        {
+            const size_t n = str.size();
+            if(n<=0) throw Specific::Exception("Pattern::Among","empty string!");
+            CharDB db;
+            for(size_t i=1;i<=n;++i)
+            {
+                db.set( str[i] );
+            }
+            return db.compile();
+        }
+
     }
 
 }

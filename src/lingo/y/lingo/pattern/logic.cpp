@@ -31,8 +31,37 @@ namespace Yttrium
             return ans;
         }
 
-
+        Logic & Logic:: operator<<(Pattern * const p) noexcept
+        {
+            assert(0!=p);
+            pushTail(p);
+            return *this;
+        }
     }
 
 }
+
+
+#include "y/lingo/pattern/basic/single.hpp"
+#include "y/lingo/pattern/basic/range.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        Logic & Logic:: add(const uint8_t single)
+        {
+            pushTail( new Single(single) );
+            return *this;
+        }
+
+        Logic & Logic:: add(const uint8_t lower, const uint8_t upper)
+        {
+            pushTail( new Range(lower,upper) );
+            return *this;
+        }
+    }
+
+}
+
 

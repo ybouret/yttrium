@@ -12,6 +12,7 @@ namespace Yttrium
 
         Optional:: Optional(Pattern *m) noexcept : Joker(UUID,m)
         {
+            Y_Lingo_Pattern(Optional);
         }
 
         Pattern * Optional:: Create(Pattern *m)

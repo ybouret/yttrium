@@ -1,0 +1,27 @@
+#include "y/lingo/pattern/regexp/compiler.hpp"
+#include "y/lingo/pattern/all.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+
+        Pattern * RXC:: subExpr()
+        {
+            AutoPtr<Logic>     motif = new And();
+            const char * const start = curr;
+
+            
+
+            if( motif->size <= 0 )
+                throw Specific::Exception(CallSign, "empty sub expression after '%s'", start);
+
+
+            return 0;
+        }
+
+    }
+
+}
+

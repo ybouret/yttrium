@@ -12,17 +12,19 @@ namespace Yttrium
         Pattern(UUID),
         byte(_)
         {
+            Y_Lingo_Pattern(Single);
         }
 
         Single:: Single(const Single &_) noexcept :
         Pattern(_),
         byte(_.byte)
         {
+            Y_Lingo_Pattern(Single);
         }
 
         Pattern * Single:: clone() const { return new Single( *this ); }
 
-        size_t Single:: serialize(OutputStream &fp) const
+        size_t    Single:: serialize(OutputStream &fp) const
         {
             const size_t ans = emitUUID(fp)+1;
             fp.write(byte);

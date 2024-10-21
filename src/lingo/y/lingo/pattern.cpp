@@ -12,7 +12,8 @@ namespace Yttrium
         Quantized(), Serializable(), GraphViz::Vizible(),
         uuid(t),
         next(0),
-        prev(0)
+        prev(0),
+        self(0)
         {
         }
 
@@ -20,7 +21,8 @@ namespace Yttrium
         Quantized(), Serializable(), GraphViz::Vizible(),
         uuid(_.uuid),
         next(0),
-        prev(0)
+        prev(0),
+        self(0)
         {
         }
 
@@ -56,6 +58,19 @@ namespace Yttrium
             const String r = rhs.toBinary();
             return l == r;
         }
+
+        Pattern * Pattern:: Among(const char * const text)
+        {
+            const String _(text);
+            return Among(_);
+        }
+
+        Pattern * Pattern:: Exact(const char * const text)
+        {
+            const String _(text);
+            return Exact(_);
+        }
+
     }
 
 }

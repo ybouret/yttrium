@@ -20,16 +20,37 @@ namespace Yttrium
         //______________________________________________________________________
         class Logic : public Pattern, public Pattern::List
         {
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
             explicit Logic(const uint32_t t) noexcept; //!< setup
             Logic(const Logic &);                      //!< copy
 
+
         public:
             virtual ~Logic() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
             virtual size_t serialize(OutputStream &fp) const;
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Logic & operator<<(Pattern * const) noexcept;
+            Logic & add(const uint8_t single);
+            Logic & add(const uint8_t lower, const uint8_t upper);
 
         private:
             Y_DISABLE_ASSIGN(Logic);

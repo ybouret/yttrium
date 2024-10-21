@@ -16,6 +16,7 @@ namespace Yttrium
         Joker(UUID,m),
         minimalCount(nmin)
         {
+            Y_Lingo_Pattern(Repeated);
         }
 
         size_t Repeated:: serialize(OutputStream &fp) const
@@ -73,6 +74,7 @@ namespace Yttrium
             assert(0==token.size);
             Token  local;
             size_t count = 0;
+            
             {
                 Token temp;
                 while(motif->takes(temp,source))
