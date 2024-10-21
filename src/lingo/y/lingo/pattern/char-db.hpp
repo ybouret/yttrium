@@ -9,6 +9,7 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        class Pattern;
         //______________________________________________________________________
         //
         //
@@ -53,7 +54,9 @@ namespace Yttrium
             bool     has(const uint8_t ibit) const noexcept; //!< check ibit
             CharDB & operator += (const CharDB &)  noexcept; //!< merge content
             size_t   size()                  const noexcept; //!< sum all active bits
-            
+            Pattern *compile() const;
+
+
 
         private:
             uint8_t words[WORDS];

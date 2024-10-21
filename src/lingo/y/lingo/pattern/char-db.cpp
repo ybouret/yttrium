@@ -103,6 +103,47 @@ namespace Yttrium
         }
 
 
+
+
+    }
+
+}
+
+
+#include "y/lingo/pattern/basic/all.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+
+        Pattern * CharDB:: compile() const
+        {
+            static const unsigned last = 256;
+
+            unsigned lower = 0;
+            while(lower<last)
+            {
+                while( !has(lower) )
+                {
+                    if(++lower>=last) goto DONE;
+                }
+
+                unsigned upper = lower;
+                while(++upper<last && has(upper) )
+                    ;
+
+                const uint8_t  lo = lower;
+                const uint8_t  up = upper-1;
+                const unsigned nn = upper-lower;
+                std::cerr << Pattern::ByteToRegExp(lo) << " -> " << Pattern::ByteToRegExp(up) << " #" << nn << std::endl;
+
+                lower = ++upper;
+            }
+        DONE:
+            return 0;
+        }
+
     }
 
 }

@@ -24,6 +24,9 @@ namespace Yttrium
             switch(uid)
             {
                     // Basic
+                case Any1:: UUID:
+                    return new Any1();
+
                 case Single::UUID:
                     return new Single( fp.readCBR<uint8_t>("Single.byte") );
 
@@ -38,7 +41,9 @@ namespace Yttrium
 
 
                     // Joker
-                case Optional::UUID: return Optional::Create( Read(fp) );
+                case Optional::UUID:
+                    return Optional::Create( Read(fp) );
+
                 case Repeated::UUID: {
                     const size_t nmin = fp.readVBR<size_t>("Repeated.minimalCount");
                     return Repeated:: Create( Read(fp), nmin );
