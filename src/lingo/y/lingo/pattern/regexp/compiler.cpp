@@ -11,6 +11,19 @@ namespace Yttrium
             
         }
 
+        RXC:: RXC(const char * const       _expr,
+                  const size_t             _size,
+                  const Dictionary * const _dict) noexcept :
+        expr(_expr),
+        curr(_expr),
+        last(_expr+_size),
+        dict(_dict),
+        depth(0)
+        {
+            assert(Good(_expr,_size));
+        }
+
+        
     }
 
 }

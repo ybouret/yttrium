@@ -10,12 +10,48 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Regular eXpression Compiler
+        //
+        //
+        //______________________________________________________________________
         class RXC
         {
         public:
-            explicit RXC();
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! initialize to persistent expression/dictionary
+            explicit RXC(const char * const       _expr,
+                         const size_t             _size,
+                         const Dictionary * const _dict) noexcept;
+
+            //! cleanup
             virtual ~RXC() noexcept;
-            
+
+            //! parse sub-expression starting at current
+            Pattern * subExpr();
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const char * const       expr;  //!< original expression
+            const char *             curr;  //!< current position
+            const char * const       last;  //!< first invalid poistion
+            const Dictionary * const dict;  //!< optional dictionary
+            int                      depth; //!< current depth
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
         };

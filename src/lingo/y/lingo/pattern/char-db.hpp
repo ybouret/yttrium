@@ -56,7 +56,7 @@ namespace Yttrium
             bool     has(const uint8_t ibit) const noexcept; //!< check ibit
             CharDB & operator += (const CharDB &)  noexcept; //!< merge content
             size_t   size()                  const noexcept; //!< sum all active bits
-            Pattern *compile() const;
+            Pattern *compile()                        const; //!< simplification to Or'd patterns
 
 
 
