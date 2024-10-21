@@ -23,6 +23,8 @@ namespace Yttrium
         depth(0)
         {
             assert(Good(_expr,_size));
+            std::cerr << "expr='" << expr << "'" << std::endl;
+            std::cerr << "size="  << _size << std::endl;
         }
 
 

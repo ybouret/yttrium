@@ -10,6 +10,7 @@ namespace Yttrium
                           const size_t             size,
                           const Dictionary * const dict)
         {
+            assert(0!=expr);
             RXC    rxc(expr,size,dict);
             return rxc.subExpr();
         }
@@ -17,6 +18,7 @@ namespace Yttrium
         Pattern * RegExp(const String     &       expr,
                          const Dictionary * const dict)
         {
+            std::cerr << "Compiling '" << expr << "'" << std::endl;
             return _RegExp(expr.c_str(), expr.size(), dict);
         }
 

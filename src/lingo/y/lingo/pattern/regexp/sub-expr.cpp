@@ -15,23 +15,21 @@ namespace Yttrium
             while(curr<last)
             {
                 const char c = *(curr++);
-
+                
                 switch(c)
                 {
 
                     default:
+                        std::cerr << "adding '" << c << "'" << std::endl;
                         motif->add(c);
                         break;
                 }
 
-
             }
 
+            std::cerr << "done" << std::endl;
 
-
-
-            if( motif->size <= 0 )
-                throw Specific::Exception(CallSign, "empty sub expression after '%s'", start);
+            if( motif->size <= 0 ) throw Specific::Exception(CallSign, "empty sub expression after '%s'", start);
 
 
             return motif.yield();
