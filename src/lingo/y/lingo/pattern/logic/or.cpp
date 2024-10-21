@@ -15,6 +15,9 @@ namespace Yttrium
 
         Or:: Or(const Or &other) : Logic(other) {}
 
+        Pattern * Or:: clone() const { return new Or(*this); }
+
+
     }
 
 }
