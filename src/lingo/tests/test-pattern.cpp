@@ -13,7 +13,7 @@ using namespace Lingo;
 namespace
 {
     static inline void process(Pattern::List     &plist,
-                               Pattern    *       pattern,
+                               Pattern    *       pattern, 
                                const char * const fileName)
     {
         const AutoPtr<const Pattern> p = pattern;
@@ -24,7 +24,8 @@ namespace
         {
             CharDB fc;
             p->query(fc);
-            (void) fc.compile();
+            const AutoPtr<const Pattern> F = fc.compile();
+            std::cerr << "firstChars=" << F->regularExpression() << std::endl;
         }
 
         {
@@ -43,6 +44,7 @@ Y_UTEST(pattern)
     Pattern::List plist;
 
     process( plist, new Any1(),                                 "any1.dat");
+    process( plist, new Void(),                                 "void.dat");
     process( plist, new Single('a'),                            "single.dat");
     process( plist, new Range('a','z'),                         "range.dat");
     process( plist, new Exclude('k'),                           "exclude.dat");

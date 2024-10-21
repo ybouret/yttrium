@@ -27,6 +27,9 @@ namespace Yttrium
                 case Any1:: UUID:
                     return new Any1();
 
+                case Void:: UUID:
+                    return new Void();
+
                 case Single::UUID:
                     return new Single( fp.readCBR<uint8_t>("Single.byte") );
 

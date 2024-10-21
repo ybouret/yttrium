@@ -4,6 +4,7 @@
 #define Y_Lingo_CharDB_Included 1
 
 #include "y/config/starting.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -40,6 +41,7 @@ namespace Yttrium
             virtual ~CharDB() noexcept;                  //!< clear
             CharDB(const CharDB &) noexcept;             //!< copy
             CharDB & operator=(const CharDB &) noexcept; //!< assign
+            Y_OSTREAM_PROTO(CharDB);                     //!< display using compile()
 
             //__________________________________________________________________
             //
@@ -55,6 +57,8 @@ namespace Yttrium
             CharDB & operator += (const CharDB &)  noexcept; //!< merge content
             size_t   size()                  const noexcept; //!< sum all active bits
             Pattern *compile() const;
+
+
 
 
 

@@ -1,7 +1,5 @@
 #include "y/lingo/pattern/char-db.hpp"
-#include "y/calculus/bit-count.hpp"
 #include <cstring>
-#include <iostream>
 
 namespace Yttrium
 {
@@ -92,12 +90,18 @@ namespace Yttrium
             return *this;
         }
 
+        static const uint8_t bitsInByte[256] =
+        {
+#           include "bits-in-byte.hxx"
+        };
+
+
         size_t CharDB:: size() const noexcept
         {
             size_t ans = 0;
             for(size_t i=0;i<WORDS;++i)
             {
-                ans += BitCount::Table[ words[i] ];
+                ans += bitsInByte[ words[i] ];
             }
             return ans;
         }
@@ -111,6 +115,9 @@ namespace Yttrium
 
 
 #include "y/lingo/pattern/basic/all.hpp"
+#include "y/lingo/pattern/logic/or.hpp"
+#include "y/system/exception.hpp"
+#include <iostream>
 
 namespace Yttrium
 {
@@ -120,28 +127,105 @@ namespace Yttrium
         Pattern * CharDB:: compile() const
         {
             static const unsigned last = 256;
+            static const char     name[] = "Lingo::CharDB.compile";
 
-            unsigned lower = 0;
-            while(lower<last)
+            //------------------------------------------------------------------
+            //
+            //
+            // trivial cases
+            //
+            //
+            //------------------------------------------------------------------
+            switch( size() )
             {
-                while( !has(lower) )
-                {
-                    if(++lower>=last) goto DONE;
-                }
-
-                unsigned upper = lower;
-                while(++upper<last && has(upper) )
-                    ;
-
-                const uint8_t  lo = lower;
-                const uint8_t  up = upper-1;
-                const unsigned nn = upper-lower;
-                std::cerr << Pattern::ByteToRegExp(lo) << " -> " << Pattern::ByteToRegExp(up) << " #" << nn << std::endl;
-
-                lower = ++upper;
+                case 0:    return new Void();
+                case last: return new Any1();
             }
-        DONE:
-            return 0;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // at leat one non trivial interval
+            //
+            //
+            //------------------------------------------------------------------
+            Pattern::List plist;
+            {
+                unsigned lower = 0;
+
+                while(lower<last)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // stop at first 1
+                    //
+                    //----------------------------------------------------------
+                    while( !has(lower) )
+                    {
+                        if(++lower>=last) goto DONE;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // look for next 0
+                    //
+                    //----------------------------------------------------------
+                    unsigned upper = lower;
+                    while(++upper<last && has(upper) )
+                        ;
+
+                    //----------------------------------------------------------
+                    //
+                    // emit
+                    //
+                    //----------------------------------------------------------
+                    {
+                        const uint8_t  lo = lower;
+                        const uint8_t  up = upper-1;
+                        const unsigned nn = upper-lower;
+                        switch(nn)
+                        {
+                            case 0:  throw Specific::Exception(name, "***empty interval!");
+                            case 1:  assert(lo==up); plist.pushTail( new Single(lo)   ); break;
+                            default: assert(lo<up);  plist.pushTail( new Range(lo,up) ); break;
+                        }
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // next search
+                    //
+                    //----------------------------------------------------------
+                    lower = ++upper;
+                }
+                DONE: ;
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            // comvert plist to pattern
+            //
+            //
+            //------------------------------------------------------------------
+            switch(plist.size)
+            {
+                case 0: throw Specific::Exception(name, "*** empty pattern list!");
+                case 1: return plist.popHead();
+                default:
+                    break;
+            }
+
+            AutoPtr<Logic> result = new Or();
+            result->swapWith(plist);
+            return result.yield();
+        }
+
+        std::ostream & operator<<(std::ostream &os, const CharDB &db)
+        {
+            const AutoPtr<const Pattern> p = db.compile();
+            return os << p->regularExpression();
         }
 
     }

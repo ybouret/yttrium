@@ -57,8 +57,10 @@ namespace Yttrium
         void  Exclude:: query(CharDB &firstChars) const
         {
             CharDB mine;
-            mine.fill();
+            mine.fill(); assert(256==mine.size());
             mine.clr(byte);
+            std::cerr << "mine.size=" << mine.size() << std::endl;
+            assert(255==mine.size());
             firstChars += mine;
         }
 
