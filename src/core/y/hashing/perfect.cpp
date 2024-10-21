@@ -175,6 +175,44 @@ namespace Yttrium
         }
 
 
+        int Perfect:: operator()(const void * const data , size_t  size) noexcept
+        {
+            assert( Good(data,size) );
+            const uint8_t * path = static_cast<const uint8_t *>( data);
+            Node *          curr = root;
+
+            while(size-- > 0)
+            {
+                const uint8_t byte = *(path++);
+                bool          flag = false;
+                Node::List   &chld = curr->chld;
+                for(Node *node=chld.head;node;node=node->next)
+                {
+                    if(byte==node->byte)
+                    {
+                        curr = chld.moveToFront(node);
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag) return -1;
+            }
+
+            assert(0!=curr);
+            return curr->hash;
+        }
+
+        int Perfect:: operator()(const Memory::ReadOnlyBuffer &  buff) noexcept
+        {
+            Perfect &self = *this;
+            return self( buff.ro_addr(), buff.measure() );
+        }
+
+        int Perfect:: operator()(const char * const text)  noexcept
+        {
+            Perfect &self = *this;
+            return self( (const void*)text, text?strlen(text):0 );
+        }
     }
 
 }
