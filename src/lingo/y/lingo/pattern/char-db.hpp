@@ -52,7 +52,8 @@ namespace Yttrium
             CharDB & clr(const uint8_t ibit)       noexcept; //!< clear ibit
             bool     has(const uint8_t ibit) const noexcept; //!< check ibit
             CharDB & operator += (const CharDB &)  noexcept; //!< merge content
-            
+            size_t   size()                  const noexcept; //!< sum all active bits
+
         private:
             uint8_t words[WORDS];
         };

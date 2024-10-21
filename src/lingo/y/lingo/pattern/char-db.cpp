@@ -1,4 +1,5 @@
 #include "y/lingo/pattern/char-db.hpp"
+#include "y/calculus/bit-count.hpp"
 #include <cstring>
 #include <iostream>
 
@@ -90,6 +91,17 @@ namespace Yttrium
             }
             return *this;
         }
+
+        size_t CharDB:: size() const noexcept
+        {
+            size_t ans = 0;
+            for(size_t i=0;i<WORDS;++i)
+            {
+                ans += BitCount::Table[ words[i] ];
+            }
+            return ans;
+        }
+
 
     }
 

@@ -28,9 +28,8 @@ Y_UTEST(makerx)
         fprintf(stdout,"\n");
     }
 
-    //optional;
-    //repeated;
-    //counting;
+    
+
 
 }
 Y_UDONE()

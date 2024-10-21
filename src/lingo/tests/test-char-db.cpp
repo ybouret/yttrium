@@ -16,8 +16,10 @@ Y_UTEST(chardb)
         fc.free();
         fc.set(i);
         Y_ASSERT(fc.has(i));
+        Y_ASSERT(1==fc.size());
         fc.clr(i);
         Y_ASSERT(!fc.has(i));
+        Y_ASSERT(0==fc.size());
     }
 
 
