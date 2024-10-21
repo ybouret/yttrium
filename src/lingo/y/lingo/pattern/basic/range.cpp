@@ -54,7 +54,6 @@ namespace Yttrium
             }
             else
             {
-                source.put(ch);
                 return false;
             }
 
