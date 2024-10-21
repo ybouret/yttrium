@@ -12,13 +12,29 @@ namespace Yttrium
             AutoPtr<Logic>     motif = new And();
             const char * const start = curr;
 
-            
+            while(curr<last)
+            {
+                const char c = *(curr++);
+
+                switch(c)
+                {
+
+                    default:
+                        motif->add(c);
+                        break;
+                }
+
+
+            }
+
+
+
 
             if( motif->size <= 0 )
                 throw Specific::Exception(CallSign, "empty sub expression after '%s'", start);
 
 
-            return 0;
+            return motif.yield();
         }
 
     }
