@@ -58,6 +58,34 @@ namespace Yttrium
             }
             return true;
         }
+
+        void Logic:: optimize()
+        {
+            Patterns store;
+            while( size> 0 )
+                store.pushTail( Optimize( popHead() ) );
+            swapWith(store);
+        }
+
+        void Logic:: noMultiple()
+        {
+            Patterns store;
+            while(size>0)
+            {
+                AutoPtr<Pattern> lhs   = popHead();
+                bool             found = false;
+                for(const Pattern *rhs = store.head; rhs; rhs=rhs->next)
+                {
+                    if( *lhs == *rhs ) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(found) continue;
+                store.pushTail( lhs.yield() );
+            }
+            swapWith(store);
+        }
     }
 
 }

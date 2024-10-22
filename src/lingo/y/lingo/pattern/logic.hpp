@@ -54,6 +54,9 @@ namespace Yttrium
             Logic & add(const uint8_t lower, const uint8_t upper); //!< add new range
             static bool HaveSameContent(const Logic &, const Logic &);
 
+            void optimize();    //!< optimize each pattern
+            void noMultiple();  //!< remove multiple pattern
+
         private:
             Y_DISABLE_ASSIGN(Logic);
         };

@@ -12,7 +12,7 @@ namespace Yttrium
         {
             assert(0!=expr);
             RXC    rxc(expr,size,dict);
-            return rxc.subExpr();
+            return Pattern::Optimize( rxc.subExpr() );
         }
 
         Pattern * RegExp(const String     &       expr,

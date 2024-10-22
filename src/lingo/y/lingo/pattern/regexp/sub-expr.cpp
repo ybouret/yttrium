@@ -53,7 +53,7 @@ namespace Yttrium
 
             return motif.yield();
         }
-        
+
     }
 
 }
