@@ -10,8 +10,31 @@ namespace Yttrium
         Pattern * Optim(Or * const p)
         {
             AutoPtr<Or> motif = p;
+
+            // propagate optimmize
             motif->optimize();
+
+            // remove duplicate
             motif->noMultiple();
+
+            // merge OR
+            {
+                Patterns store;
+                while(motif->size>0)
+                {
+                    AutoPtr<Pattern> q = motif->popHead();
+                    if( Or::UUID == q->uuid )
+                    {
+                        store.mergeTail( *(q->as<Or>()) );
+                        continue;
+                    }
+                    store.pushTail(q.yield());
+                }
+                motif->swapWith(store);
+            }
+
+            // fusion of consecutive basic...
+
             return motif.yield();
         }
 
