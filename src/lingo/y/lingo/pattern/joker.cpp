@@ -31,6 +31,17 @@ namespace Yttrium
             return *motif;
         }
 
+        void  Joker:: optimize()
+        {
+            assert(0!=motif);
+            Pattern * const result = Optimize(motif);
+            if( result != motif )
+            {
+                delete motif;
+                Coerce(motif) = result;
+            }
+        }
+
 
     }
 

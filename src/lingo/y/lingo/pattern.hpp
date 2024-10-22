@@ -92,6 +92,17 @@ namespace Yttrium
                 return static_cast<const T *>(self);
             }
 
+            //! fetch derived type
+            template <typename T> inline
+            T * as() noexcept
+            {
+                assert(T::UUID==uuid);
+                assert(0!=self);
+                return static_cast<T *>(self);
+            }
+
+
+
             static Pattern * Among(const String &);
             static Pattern * Exact(const String &);
             static Pattern * Among(const char * const);
@@ -111,14 +122,14 @@ namespace Yttrium
             Pattern       *    next; //!< for list
             Pattern       *    prev; //!< for list
         protected:
-            const void * const self; //!< store derived address
+            void * const       self; //!< store derived address
 
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
 
         //! helper to populate Pattern
-#define Y_Lingo_Pattern(TYPE) Coerce(self) = static_cast<const TYPE *>(this)
+#define Y_Lingo_Pattern(TYPE) Coerce(self) = static_cast<TYPE *>(this)
 
         //! alias
         typedef Pattern::List Patterns;
