@@ -25,6 +25,12 @@ namespace Yttrium
             motif->query(firstChars);
         }
 
+        const Pattern & Joker:: operator*() const noexcept
+        {
+            assert(0!=motif);
+            return *motif;
+        }
+
 
     }
 

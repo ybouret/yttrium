@@ -76,11 +76,7 @@ Y_UTEST(pattern)
         process( plist, p.yield(), "or.dat");
     }
 
-
-
-    // optional
-    // repeated
-    // counting
+    
     Y_SIZEOF(Any1);
     Y_SIZEOF(Void);
     Y_SIZEOF(Byte);
@@ -94,7 +90,9 @@ Y_UTEST(pattern)
     std::cerr << std::endl;
 
     Y_SIZEOF(And);
-    
+    Y_SIZEOF(Or);
+    Y_SIZEOF(None);
+
 
 
 }

@@ -42,6 +42,14 @@ namespace Yttrium
             //__________________________________________________________________
             virtual void   query(CharDB &) const; //!< [Pattern] motif->query
 
+            const Pattern & operator*() const noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         protected:
             Pattern * const motif; //!< created pattern for this joker
 

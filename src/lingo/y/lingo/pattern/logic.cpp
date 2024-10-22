@@ -21,7 +21,7 @@ namespace Yttrium
         Pattern::List(logic)
         {
         }
-        
+
         size_t Logic:: serialize(OutputStream &fp) const
         {
             size_t ans = emitUUID(fp);
@@ -44,6 +44,19 @@ namespace Yttrium
             {
                 Endl(Arrow(fp,this,node));
             }
+        }
+
+        bool Logic:: HaveSameContent(const Logic &lhs, const Logic &rhs)
+        {
+            if(lhs.size != rhs.size) return false;
+            for(const Pattern *l=lhs.head, *r=rhs.head;l;l=l->next,r=r->next)
+            {
+                assert(0!=l);
+                assert(0!=r);
+                if( !Equality(*l,*r) )
+                    return false;
+            }
+            return true;
         }
     }
 

@@ -26,6 +26,13 @@ namespace Yttrium
             Y_Lingo_Pattern(Lump);
         }
 
+        unsigned Lump:: code() const noexcept
+        {
+            const unsigned lo = lower;
+            const unsigned up = upper;
+            return (up<<8) | lo;
+        }
+
         Pattern * Lump:: clone() const { return new Lump( *this ); }
 
         size_t Lump:: serialize(OutputStream &fp) const
