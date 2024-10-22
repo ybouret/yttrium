@@ -6,8 +6,7 @@ namespace Yttrium
     {
 
 
-        static inline
-        Pattern * Optim(Or * const p)
+        static inline Pattern * Optim(Or * const p)
         {
             AutoPtr<Or> motif = p;
 
@@ -34,9 +33,39 @@ namespace Yttrium
             }
 
             // fusion of consecutive basic...
-            
             return motif.yield();
         }
+
+
+        static inline Pattern * Optim(And * const p)
+        {
+            AutoPtr<And> motif = p;
+
+            // propagate optimmize
+            motif->optimize();
+
+
+            // merge And
+            {
+                Patterns store;
+                while(motif->size>0)
+                {
+                    AutoPtr<Pattern> q = motif->popHead();
+                    if( And::UUID == q->uuid )
+                    {
+                        store.mergeTail( *(q->as<And>()) );
+                        continue;
+                    }
+                    store.pushTail(q.yield());
+                }
+                motif->swapWith(store);
+            }
+
+            return motif.yield();
+        }
+
+
+
 
         Pattern * Pattern:: Optimize(Pattern * const p)
         {
@@ -51,7 +80,9 @@ namespace Yttrium
                 case Counting::UUID: motif->as<Counting>()->optimize(); break;
 
                     // logic
-                case Or:: UUID: return Optim( motif.yield()->as<Or>() );
+                case Or::  UUID: return Optim( motif.yield()->as<Or>() );
+                case And:: UUID: return Optim( motif.yield()->as<And>() );
+
                 default:
                     break;
             }
