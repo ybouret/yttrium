@@ -25,8 +25,8 @@ namespace Yttrium
                 case Void::UUID:
                     return true;
 
-                case Byte::    UUID: return lhs.as<Byte>()->byte  == rhs.as<Byte>()->byte;
-                case Exclude:: UUID: return lhs.as<Exclude>()->byte == rhs.as<Exclude>()->byte;
+                case Byte:: UUID: return lhs.as<Byte>()->byte == rhs.as<Byte>()->byte;
+                case Excl:: UUID: return lhs.as<Excl>()->byte == rhs.as<Excl>()->byte;
             }
 
             const String l = lhs.toBinary();

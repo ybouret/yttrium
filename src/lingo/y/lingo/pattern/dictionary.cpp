@@ -15,7 +15,7 @@ namespace Yttrium
             typedef Small::BareHeavyList<const String> Labels;
             typedef Labels::NodeType                   LNode;
 
-            inline explicit Code() noexcept
+            inline explicit Code() noexcept : labels(), motifs()
             {
             }
 

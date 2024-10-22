@@ -1,5 +1,5 @@
 
-#include "y/lingo/pattern/basic/exclude.hpp"
+#include "y/lingo/pattern/basic/excl.hpp"
 #include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
@@ -7,32 +7,32 @@ namespace Yttrium
     namespace Lingo
     {
 
-        Exclude:: ~Exclude() noexcept {}
+        Excl:: ~Excl() noexcept {}
 
-        Exclude::  Exclude(const uint8_t _) noexcept :
+        Excl::  Excl(const uint8_t _) noexcept :
         Pattern(UUID),
         byte(_)
         {
-            Y_Lingo_Pattern(Exclude);
+            Y_Lingo_Pattern(Excl);
         }
 
-        Exclude:: Exclude(const Exclude &_) noexcept :
+        Excl:: Excl(const Excl &_) noexcept :
         Pattern(_),
         byte(_.byte)
         {
-            Y_Lingo_Pattern(Exclude);
+            Y_Lingo_Pattern(Excl);
         }
 
-        Pattern * Exclude:: clone() const { return new Exclude( *this ); }
+        Pattern * Excl:: clone() const { return new Excl( *this ); }
 
-        size_t Exclude:: serialize(OutputStream &fp) const
+        size_t Excl:: serialize(OutputStream &fp) const
         {
             const size_t ans = emitUUID(fp)+1;
             fp.write(byte);
             return ans;
         }
 
-        bool Exclude:: takes(Token &token, Source &source) const
+        bool Excl:: takes(Token &token, Source &source) const
         {
             assert( 0 == token.size );
             Char *ch = source.get();
@@ -56,7 +56,7 @@ namespace Yttrium
 
         }
 
-        void  Exclude:: query(CharDB &firstChars) const
+        void  Excl:: query(CharDB &firstChars) const
         {
             CharDB mine;
             mine.fill(); assert(256==mine.size());
@@ -66,7 +66,7 @@ namespace Yttrium
             firstChars += mine;
         }
 
-        String Exclude:: regularExpression() const
+        String Excl:: regularExpression() const
         {
             String ans = '[';
             ans += '^';
@@ -75,17 +75,17 @@ namespace Yttrium
             return ans;
         }
 
-        bool Exclude:: univocal() const noexcept
+        bool Excl:: univocal() const noexcept
         {
             return false;
         }
 
-        bool Exclude:: strong() const noexcept
+        bool Excl:: strong() const noexcept
         {
             return true;
         }
 
-        void Exclude:: viz(OutputStream &fp) const
+        void Excl:: viz(OutputStream &fp) const
         {
             Node(fp,this) << '[';
             Label(fp,&byte,1);

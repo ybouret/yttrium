@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Exclude : public Pattern
+        class Excl  : public Pattern
         {
         public:
             //__________________________________________________________________
@@ -36,9 +36,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Exclude(const uint8_t)   noexcept; //!< setup
-            explicit Exclude(const Exclude &) noexcept; //!< copy
-            virtual ~Exclude()                noexcept; //!< cleanup
+            explicit Excl(const uint8_t) noexcept; //!< setup
+            explicit Excl(const Excl &)  noexcept; //!< copy
+            virtual ~Excl()              noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -64,7 +64,7 @@ namespace Yttrium
             const uint8_t byte; //!< single byte to exclude
 
         private:
-            Y_DISABLE_ASSIGN(Exclude);
+            Y_DISABLE_ASSIGN(Excl);
         };
     }
 }

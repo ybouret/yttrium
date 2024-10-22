@@ -8,7 +8,7 @@
 #include "y/lingo/pattern/basic/void.hpp"
 #include "y/lingo/pattern/basic/byte.hpp"
 #include "y/lingo/pattern/basic/lump.hpp"
-#include "y/lingo/pattern/basic/exclude.hpp"
+#include "y/lingo/pattern/basic/excl.hpp"
 
 #endif
 

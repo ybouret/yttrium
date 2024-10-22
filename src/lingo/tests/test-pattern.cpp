@@ -53,7 +53,7 @@ Y_UTEST(pattern)
     process( plist, new Void(),                                 "void.dat");
     process( plist, new Byte('a'),                              "byte.dat");
     process( plist, new Lump('a','z'),                          "lump.dat");
-    process( plist, new Exclude('k'),                           "exclude.dat");
+    process( plist, new Excl('k'),                              "excl.dat");
     process( plist, Optional::Create( new Byte('1') ),          "optional.dat");
     process( plist, Repeated::Create( new Lump('a','z'),0 ),    "rep0.dat");
     process( plist, Repeated::Create( new Lump('0','9'),1 ),    "rep1.dat");
@@ -81,10 +81,11 @@ Y_UTEST(pattern)
     // optional
     // repeated
     // counting
-    
+    Y_SIZEOF(Any1);
+    Y_SIZEOF(Void);
     Y_SIZEOF(Byte);
     Y_SIZEOF(Lump);
-    Y_SIZEOF(Exclude);
+    Y_SIZEOF(Excl);
     std::cerr << std::endl;
 
     Y_SIZEOF(Optional);

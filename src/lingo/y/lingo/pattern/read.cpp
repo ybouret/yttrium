@@ -39,8 +39,8 @@ namespace Yttrium
                     return new Lump(lower,upper);
                 }
 
-                case Exclude::UUID:
-                    return new Exclude( fp.readCBR<uint8_t>("Exclude.byte") );
+                case Excl::UUID:
+                    return new Excl( fp.readCBR<uint8_t>("Excl.byte") );
 
 
                     // Joker

@@ -46,7 +46,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_ASSIGN(Dictionary);
+            Y_DISABLE_COPY_AND_ASSIGN(Dictionary);
             class Code;
             Code *code;
         };
