@@ -37,6 +37,14 @@ namespace Yttrium
             pushTail(p);
             return *this;
         }
+
+        void Logic:: vizLink(OutputStream &fp) const
+        {
+            for(const Pattern *node=head;node;node=node->next)
+            {
+                Endl(Arrow(fp,this,node));
+            }
+        }
     }
 
 }

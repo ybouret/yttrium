@@ -114,7 +114,7 @@ namespace Yttrium
             Label(fp, "&") << ",shape=house";
             Endl(fp << ']');
             
-            vizLink(fp,*this);
+            vizLink(fp);
         }
 
     }

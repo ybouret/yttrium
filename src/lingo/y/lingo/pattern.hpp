@@ -75,14 +75,15 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            friend bool operator==(const Pattern &lhs, const Pattern &rhs);          //!< test by binary representation
+            friend bool operator==(const Pattern &lhs, const Pattern &rhs);          //!< equality(lhs,rhs)
+            static bool        Equality(const Pattern &lhs, const Pattern &rhs);     //!< test equality
             size_t             emitUUID(OutputStream &fp)       const;               //!< emit UUID
             static const char *ByteToRegExp(const uint8_t byte) noexcept;            //!< byte to regular expression
             static Pattern    *Read(InputStream &);                                  //!< read serialized pattern
             static Pattern    *Optimize(Pattern * const);                            //!< optimizations
             void               graphViz(OutputStream &fp) const;                     //!< standalone GraphViz code
-            void               vizLink(OutputStream &, const Pattern::List &) const; //!< produce link to children
 
+            //! fetch derived type
             template <typename T> inline
             const T * as() const noexcept
             {
@@ -96,9 +97,9 @@ namespace Yttrium
             static Pattern * Among(const char * const);
             static Pattern * Exact(const char * const);
 
-            bool isBasic() const noexcept;
-            bool isLogic() const noexcept;
-            bool isJoker() const noexcept;
+            bool isBasic() const noexcept; //!< one of the basic pattern
+            bool isLogic() const noexcept; //!< And, Or, Node
+            bool isJoker() const noexcept; //!< Optional, Repeated, Counting
             
             //__________________________________________________________________
             //
@@ -110,14 +111,16 @@ namespace Yttrium
             Pattern       *    next; //!< for list
             Pattern       *    prev; //!< for list
         protected:
-            const void * const self;
-            
+            const void * const self; //!< store derived address
+
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
 
+        //! helper to populate Pattern
 #define Y_Lingo_Pattern(TYPE) Coerce(self) = static_cast<const TYPE *>(this)
 
+        //! alias
         typedef Pattern::List Patterns;
 
     }

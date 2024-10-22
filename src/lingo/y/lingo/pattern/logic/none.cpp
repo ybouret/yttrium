@@ -38,7 +38,7 @@ namespace Yttrium
             Label(fp, "^") << ",shape=diamond";
             Endl(fp << ']');
             
-            vizLink(fp,*this);
+            vizLink(fp);
         }
 
         bool None:: strong() const noexcept

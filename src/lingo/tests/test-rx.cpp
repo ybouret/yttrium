@@ -28,7 +28,7 @@ Y_UTEST(rx)
         {
             const AutoPtr<Pattern> p = RegExp(rx,0);
             Y_ASSERT(p.isValid());
-            //GraphViz::Vizible::DotToPng("regexp.dot",*p);
+            GraphViz::Vizible::DotToPng("regexp.dot",*p);
         }
     }
 }

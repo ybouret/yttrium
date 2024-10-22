@@ -74,7 +74,7 @@ namespace Yttrium
             Label(fp, "|") << ",shape=egg";
             Endl(fp << ']');
 
-            vizLink(fp,*this);
+            vizLink(fp);
         }
 
     }
