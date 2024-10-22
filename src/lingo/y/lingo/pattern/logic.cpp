@@ -50,7 +50,7 @@ namespace Yttrium
 }
 
 
-#include "y/lingo/pattern/basic/single.hpp"
+#include "y/lingo/pattern/basic/byte.hpp"
 #include "y/lingo/pattern/basic/range.hpp"
 
 namespace Yttrium
@@ -59,7 +59,7 @@ namespace Yttrium
     {
         Logic & Logic:: add(const uint8_t single)
         {
-            pushTail( new Single(single) );
+            pushTail( new Byte(single) );
             return *this;
         }
 

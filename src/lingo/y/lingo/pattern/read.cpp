@@ -30,8 +30,8 @@ namespace Yttrium
                 case Void:: UUID:
                     return new Void();
 
-                case Single::UUID:
-                    return new Single( fp.readCBR<uint8_t>("Single.byte") );
+                case Byte::UUID:
+                    return new Byte( fp.readCBR<uint8_t>("Byte.byte") );
 
                 case Range::UUID: {
                     const uint8_t lower = fp.readCBR<uint8_t>("Range.lower");

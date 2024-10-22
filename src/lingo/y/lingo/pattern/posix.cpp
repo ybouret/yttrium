@@ -111,8 +111,8 @@ namespace Yttrium
 
         static inline void __fill_endl( Patterns &ops )
         {
-            ops.pushTail( new Single('\n') );
-            ops.pushTail( new Single('\r') );
+            ops.pushTail( new Byte('\n') );
+            ops.pushTail( new Byte('\r') );
             ops.pushTail( Pattern::Exact("\r\n") );
         }
 

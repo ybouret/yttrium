@@ -17,7 +17,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Single : public Pattern
+        class Byte : public Pattern
         {
         public:
             //__________________________________________________________________
@@ -35,9 +35,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Single(const uint8_t)  noexcept; //!< setup
-            explicit Single(const Single &) noexcept; //!< copy
-            virtual ~Single()               noexcept; //!< cleanup
+            explicit Byte(const uint8_t)  noexcept; //!< setup
+            explicit Byte(const Byte &)   noexcept; //!< copy
+            virtual ~Byte()               noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -63,7 +63,7 @@ namespace Yttrium
             const uint8_t byte; //!< single byte recognition
 
         private:
-            Y_DISABLE_ASSIGN(Single);
+            Y_DISABLE_ASSIGN(Byte);
         };
     }
 }

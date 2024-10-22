@@ -186,7 +186,7 @@ namespace Yttrium
                         switch(nn)
                         {
                             case 0:  throw Specific::Exception(name, "***empty interval!");
-                            case 1:  assert(lo==up); plist.pushTail( new Single(lo)   ); break;
+                            case 1:  assert(lo==up); plist.pushTail( new Byte(lo)   ); break;
                             default: assert(lo<up);  plist.pushTail( new Range(lo,up) ); break;
                         }
                     }

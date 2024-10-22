@@ -7,10 +7,7 @@ namespace Yttrium
     namespace Lingo
     {
 
-        class Byte;
-        class Excl;
-        class 
-
+        
         bool operator==(const Pattern &lhs, const Pattern &rhs)
         {
             return Pattern::Equality(lhs,rhs);
@@ -28,8 +25,8 @@ namespace Yttrium
                 case Void::UUID:
                     return true;
 
-                case Single ::UUID: return lhs.as<Single>()->byte  == rhs.as<Single>()->byte;
-                case Exclude::UUID: return lhs.as<Exclude>()->byte == rhs.as<Exclude>()->byte;
+                case Byte::    UUID: return lhs.as<Byte>()->byte  == rhs.as<Byte>()->byte;
+                case Exclude:: UUID: return lhs.as<Exclude>()->byte == rhs.as<Exclude>()->byte;
             }
 
             const String l = lhs.toBinary();

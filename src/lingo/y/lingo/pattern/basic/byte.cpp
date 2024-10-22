@@ -1,4 +1,4 @@
-#include "y/lingo/pattern/basic/single.hpp"
+#include "y/lingo/pattern/basic/byte.hpp"
 #include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
@@ -6,32 +6,32 @@ namespace Yttrium
     namespace Lingo
     {
 
-        Single:: ~Single() noexcept {}
-        
-        Single::  Single(const uint8_t _) noexcept :
+        Byte:: ~Byte() noexcept {}
+
+        Byte::  Byte(const uint8_t _) noexcept :
         Pattern(UUID),
         byte(_)
         {
-            Y_Lingo_Pattern(Single);
+            Y_Lingo_Pattern(Byte);
         }
 
-        Single:: Single(const Single &_) noexcept :
+        Byte:: Byte(const Byte &_) noexcept :
         Pattern(_),
         byte(_.byte)
         {
-            Y_Lingo_Pattern(Single);
+            Y_Lingo_Pattern(Byte);
         }
 
-        Pattern * Single:: clone() const { return new Single( *this ); }
+        Pattern * Byte:: clone() const { return new Byte( *this ); }
 
-        size_t    Single:: serialize(OutputStream &fp) const
+        size_t    Byte:: serialize(OutputStream &fp) const
         {
             const size_t ans = emitUUID(fp)+1;
             fp.write(byte);
             return ans;
         }
 
-        bool Single:: takes(Token &token, Source &source) const
+        bool Byte:: takes(Token &token, Source &source) const
         {
             assert( 0 == token.size );
             Char *ch = source.get();
@@ -55,27 +55,27 @@ namespace Yttrium
 
         }
 
-        void  Single:: query( CharDB &firstChars ) const
+        void  Byte:: query( CharDB &firstChars ) const
         {
             firstChars.set(byte);
         }
 
-        String Single:: regularExpression() const
+        String Byte:: regularExpression() const
         {
             return ByteToRegExp(byte);
         }
 
-        bool Single:: univocal() const noexcept
+        bool Byte:: univocal() const noexcept
         {
             return true;
         }
 
-        bool Single:: strong() const noexcept
+        bool Byte:: strong() const noexcept
         {
             return true;
         }
 
-        void Single:: viz(OutputStream &fp) const
+        void Byte:: viz(OutputStream &fp) const
         {
             Node(fp,this) << '[';
             Label(fp,&byte,1);

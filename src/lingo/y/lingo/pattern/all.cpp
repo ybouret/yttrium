@@ -11,7 +11,7 @@ namespace Yttrium
             {
                 case Any1::    UUID:
                 case Void::    UUID:
-                case Single::  UUID:
+                case Byte::    UUID:
                 case Range::   UUID:
                 case Exclude:: UUID:
                     return true;
