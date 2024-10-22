@@ -7,8 +7,7 @@ namespace Yttrium
     namespace Lingo
     {
 
-        static const char LBRACE = '{';
-        static const char RBRACE = '}';
+
 
         Pattern * RXC:: subExpr()
         {
@@ -29,12 +28,12 @@ namespace Yttrium
                         // grouping
                         //
                         //------------------------------------------------------
-                    case '(':
+                    case LPAREN:
                         ++depth;
                         motif->pushTail( subExpr() );
                         break;
 
-                    case ')':
+                    case RPAREN:
                         if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%c' in '%s'",c,start);
                         goto END;
 
@@ -44,6 +43,20 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                     case LBRACE: addAlias(*motif); break;
+
+                        //------------------------------------------------------
+                        //
+                        // alternation
+                        //
+                        //------------------------------------------------------
+                    case ALT:
+                        if(motif->size<=0)
+                            throw Specific::Exception(CallSign,"missing expression before '%c' at '%s'",c,start);
+                        else
+                        {
+                            
+                        }
+                        break;
 
                         //------------------------------------------------------
                         //

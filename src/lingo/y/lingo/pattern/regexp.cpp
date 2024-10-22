@@ -14,9 +14,10 @@ namespace Yttrium
         {
             assert(0!=expr);
             RXC    rxc(expr,size,dict);
-            AutoPtr<Pattern> p =  Pattern::Optimize( rxc.subExpr() );
+            AutoPtr<Pattern> p =   rxc.subExpr();
             if(rxc.depth!=0) throw Specific::Exception(RXC::CallSign,"missing %d parenthese%s in '%s'",rxc.depth, Plural::s(rxc.depth),expr);
-            return p.yield();
+            GraphViz::Vizible::DotToPng("regexp-raw.dot",*p);
+            return Pattern::Optimize(p.yield());
         }
 
         Pattern * RegExp(const String     &       expr,

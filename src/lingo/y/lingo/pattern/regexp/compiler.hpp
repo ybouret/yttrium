@@ -28,6 +28,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign;
+            static const char LBRACE = '{';
+            static const char RBRACE = '}';
+            static const char LPAREN = '(';
+            static const char RPAREN = ')';
+            static const char ALT    = '|';
 
             //__________________________________________________________________
             //
