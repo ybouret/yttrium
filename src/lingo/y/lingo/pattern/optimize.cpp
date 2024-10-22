@@ -34,7 +34,7 @@ namespace Yttrium
             }
 
             // fusion of consecutive basic...
-
+            
             return motif.yield();
         }
 

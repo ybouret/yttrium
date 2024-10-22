@@ -12,12 +12,28 @@ namespace Yttrium
             AutoPtr<Logic>     motif = new And();
             const char * const start = curr;
 
+            std::cerr << "<sub>" << std::endl;
+
             while(curr<last)
             {
                 const char c = *(curr++);
                 
                 switch(c)
                 {
+
+                        //------------------------------------------------------
+                        //
+                        // grouping
+                        //
+                        //------------------------------------------------------
+                    case '(':
+                        ++depth;
+                        motif->pushTail( subExpr() );
+                        break;
+
+                    case ')':
+                        if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%c' in '%s'",c,start);
+                        goto END;
 
                         //------------------------------------------------------
                         //
@@ -45,7 +61,8 @@ namespace Yttrium
 
             }
 
-            std::cerr << "done" << std::endl;
+        END:
+            std::cerr << "<sub/>" << std::endl;
 
             if( motif->size <= 0 )
                 return new Void();

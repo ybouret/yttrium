@@ -1,5 +1,7 @@
 #include "y/lingo/pattern/regexp.hpp"
 #include "y/lingo/pattern/regexp/compiler.hpp"
+#include "y/text/plural.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -12,7 +14,9 @@ namespace Yttrium
         {
             assert(0!=expr);
             RXC    rxc(expr,size,dict);
-            return Pattern::Optimize( rxc.subExpr() );
+            AutoPtr<Pattern> p =  Pattern::Optimize( rxc.subExpr() );
+            if(rxc.depth!=0) throw Specific::Exception(RXC::CallSign,"missing %d parenthese%s in '%s'",rxc.depth, Plural::s(rxc.depth),expr);
+            return p.yield();
         }
 
         Pattern * RegExp(const String     &       expr,
