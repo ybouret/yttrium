@@ -1,6 +1,8 @@
 
 #include "y/lingo/pattern/posix.hpp"
 #include "y/lingo/pattern/all.hpp"
+#include "y/system/exception.hpp"
+
 #include <cstring>
 
 namespace Yttrium
@@ -123,15 +125,40 @@ namespace Yttrium
             return  Pattern::Optimize(p.yield());
         }
 
-#if 0
         Pattern * posix:: dot()
         {
             AutoPtr<Logic> p = new None();
             __fill_endl(*p);
             return  Pattern::Optimize(p.yield());
         }
-#endif
 
+#define Y_Lingo_Posix(NAME) if(id == #NAME) return NAME()
+
+        Pattern * posix:: named(const String &id)
+        {
+            Y_Lingo_Posix(lower);
+            Y_Lingo_Posix(upper);
+            Y_Lingo_Posix(alpha);
+            Y_Lingo_Posix(digit);
+            Y_Lingo_Posix(alnum);
+            Y_Lingo_Posix(word);
+            Y_Lingo_Posix(xdigit);
+            Y_Lingo_Posix(blank);
+            Y_Lingo_Posix(space);
+            Y_Lingo_Posix(punct);
+            Y_Lingo_Posix(core);
+            Y_Lingo_Posix(vowel);
+            Y_Lingo_Posix(consonant);
+            Y_Lingo_Posix(endl);
+            Y_Lingo_Posix(dot);
+            throw Specific::Exception("posix", "no name '%s'", id.c_str());
+        }
+
+        Pattern * posix:: named(const char * const id)
+        {
+            const String _(id);
+            return named(_);
+        }
 
     }
 }

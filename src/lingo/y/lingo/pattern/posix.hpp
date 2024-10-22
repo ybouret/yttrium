@@ -41,6 +41,8 @@ namespace Yttrium
             static Pattern *vowel();     //!< vowels
             static Pattern *consonant(); //!< consonants
 
+            static Pattern *named(const String &);
+            static Pattern *named(const char * const);
         };
     }
 }

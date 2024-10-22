@@ -41,8 +41,8 @@ namespace Yttrium
             void operator()(const String &     name, Pattern * const p); //!< insert new pattern
             void operator()(const char * const name, Pattern * const p); //!< insert new pattern
 
-            Pattern * operator()(const String &);     //!< clone named pattern
-            Pattern * operator()(const char * const); //!< cline named pattern
+            Pattern * operator()(const String &)     const; //!< clone named pattern
+            Pattern * operator()(const char * const) const; //!< cline named pattern
 
 
         private:

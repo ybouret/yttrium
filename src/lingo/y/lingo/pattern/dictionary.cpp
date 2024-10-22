@@ -78,14 +78,14 @@ namespace Yttrium
             (*this)(_,p);
         }
 
-        Pattern * Dictionary:: operator()(const String &name)
+        Pattern * Dictionary:: operator()(const String &name) const
         {
             const Pattern * const p = code->query(name);
             if(!p) throw Specific::Exception(Name, "no '%s'", name.c_str());
             return p->clone();
         }
 
-        Pattern * Dictionary:: operator()(const char * const name)
+        Pattern * Dictionary:: operator()(const char * const name) const
         {
             const String _(name);
             return (*this)(_);

@@ -11,7 +11,7 @@ Y_UTEST(rx)
     {
         const char * const rx = argv[1];
         Dictionary dict;
-        dict("INT",new Lump('0','1'));
+        dict("INT",new Lump('0','9'));
 
         {
             const AutoPtr<Pattern> p = Pattern::Exact(rx);
@@ -26,7 +26,7 @@ Y_UTEST(rx)
         }
 
         {
-            const AutoPtr<Pattern> p = RegExp(rx,0);
+            const AutoPtr<Pattern> p = RegExp(rx,&dict);
             Y_ASSERT(p.isValid());
             GraphViz::Vizible::DotToPng("regexp.dot",*p);
         }
