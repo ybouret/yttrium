@@ -29,7 +29,8 @@ namespace Yttrium
 
             std::cerr << "done" << std::endl;
 
-            if( motif->size <= 0 ) throw Specific::Exception(CallSign, "empty sub expression after '%s'", start);
+            if( motif->size <= 0 )
+                return new Void();
 
 
             return motif.yield();
