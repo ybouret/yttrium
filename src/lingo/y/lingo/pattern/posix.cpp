@@ -9,12 +9,12 @@ namespace Yttrium
     {
         Pattern * posix:: lower()
         {
-            return new Range('a','z');
+            return new Lump('a','z');
         }
 
         Pattern * posix:: upper()
         {
-            return new Range('A','Z');
+            return new Lump('A','Z');
         }
 
         Pattern * posix:: alpha()
@@ -27,7 +27,7 @@ namespace Yttrium
 
         Pattern * posix:: digit()
         {
-            return new Range('0','9');
+            return new Lump('0','9');
         }
 
         Pattern * posix:: alnum()

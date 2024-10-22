@@ -1,5 +1,5 @@
 #include "y/lingo/pattern/regexp.hpp"
-#include "y/lingo/pattern/basic/range.hpp"
+#include "y/lingo/pattern/basic/lump.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -11,7 +11,7 @@ Y_UTEST(rx)
     {
         const char * const rx = argv[1];
         Dictionary dict;
-        dict("INT",new Range('0','1'));
+        dict("INT",new Lump('0','1'));
 
         {
             const AutoPtr<Pattern> p = Pattern::Exact(rx);

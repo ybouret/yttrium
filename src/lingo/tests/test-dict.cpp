@@ -11,8 +11,8 @@ Y_UTEST(dict)
 {
 
     Dictionary dict;
-    dict("lower", new Range('a','z') );
-    dict("upper", new Range('A','Z') );
+    dict("lower", new Lump('a','z') );
+    dict("upper", new Lump('A','Z') );
 
 
     

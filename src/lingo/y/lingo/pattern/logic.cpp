@@ -51,7 +51,7 @@ namespace Yttrium
 
 
 #include "y/lingo/pattern/basic/byte.hpp"
-#include "y/lingo/pattern/basic/range.hpp"
+#include "y/lingo/pattern/basic/lump.hpp"
 
 namespace Yttrium
 {
@@ -65,7 +65,7 @@ namespace Yttrium
 
         Logic & Logic:: add(const uint8_t lower, const uint8_t upper)
         {
-            pushTail( new Range(lower,upper) );
+            pushTail( new Lump(lower,upper) );
             return *this;
         }
     }

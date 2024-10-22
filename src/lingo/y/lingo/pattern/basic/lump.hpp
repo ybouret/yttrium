@@ -14,11 +14,11 @@ namespace Yttrium
         //
         //
         //
-        //! Range of bytes
+        //! Lump of bytes
         //
         //
         //______________________________________________________________________
-        class Range : public Pattern
+        class Lump : public Pattern
         {
         public:
             //__________________________________________________________________
@@ -27,7 +27,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('R','N','G','E'); //!< alias
+            static const uint32_t UUID = Y_FOURCC('L','U','M','P'); //!< alias
 
             //__________________________________________________________________
             //
@@ -35,9 +35,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Range(uint8_t, uint8_t) noexcept; //!< setup
-            explicit Range(const Range &)    noexcept; //!< copy
-            virtual ~Range()                 noexcept; //!< cleanup
+            explicit Lump(uint8_t, uint8_t) noexcept; //!< setup
+            explicit Lump(const Lump &)    noexcept; //!< copy
+            virtual ~Lump()                 noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -64,7 +64,7 @@ namespace Yttrium
             const uint8_t upper; //!< upper value
 
         private:
-            Y_DISABLE_ASSIGN(Range);
+            Y_DISABLE_ASSIGN(Lump);
         };
     }
 }

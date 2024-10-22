@@ -52,13 +52,13 @@ Y_UTEST(pattern)
     process( plist, new Any1(),                                 "any1.dat");
     process( plist, new Void(),                                 "void.dat");
     process( plist, new Byte('a'),                              "byte.dat");
-    process( plist, new Range('a','z'),                         "range.dat");
+    process( plist, new Lump('a','z'),                          "lump.dat");
     process( plist, new Exclude('k'),                           "exclude.dat");
     process( plist, Optional::Create( new Byte('1') ),          "optional.dat");
-    process( plist, Repeated::Create( new Range('a','z'),0 ),   "rep0.dat");
-    process( plist, Repeated::Create( new Range('0','9'),1 ),   "rep1.dat");
-    process( plist, Repeated::Create( new Range('A','Z'),5 ),   "rep5.dat");
-    process( plist, Counting::Create( new Range('A','Z'),1,3 ), "counting.dat");
+    process( plist, Repeated::Create( new Lump('a','z'),0 ),    "rep0.dat");
+    process( plist, Repeated::Create( new Lump('0','9'),1 ),    "rep1.dat");
+    process( plist, Repeated::Create( new Lump('A','Z'),5 ),    "rep5.dat");
+    process( plist, Counting::Create( new Lump('A','Z'),1,3 ),  "counting.dat");
 
     {
         AutoPtr<Logic> p = new And();
@@ -83,7 +83,7 @@ Y_UTEST(pattern)
     // counting
     
     Y_SIZEOF(Byte);
-    Y_SIZEOF(Range);
+    Y_SIZEOF(Lump);
     Y_SIZEOF(Exclude);
     std::cerr << std::endl;
 

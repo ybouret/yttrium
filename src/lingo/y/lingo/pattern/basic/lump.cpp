@@ -1,5 +1,5 @@
 
-#include "y/lingo/pattern/basic/range.hpp"
+#include "y/lingo/pattern/basic/lump.hpp"
 #include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
@@ -7,28 +7,28 @@ namespace Yttrium
     namespace Lingo
     {
 
-        Range:: ~Range() noexcept {}
+        Lump:: ~Lump() noexcept {}
 
-        Range::  Range(uint8_t lo, uint8_t up) noexcept :
+        Lump::  Lump(uint8_t lo, uint8_t up) noexcept :
         Pattern(UUID),
         lower(lo),
         upper(up)
         {
-            Y_Lingo_Pattern(Range);
+            Y_Lingo_Pattern(Lump);
             if(upper<lower) CoerceSwap(lower,upper);
         }
 
-        Range:: Range(const Range &_) noexcept :
+        Lump:: Lump(const Lump &_) noexcept :
         Pattern(_),
         lower(_.lower),
         upper(_.upper)
         {
-            Y_Lingo_Pattern(Range);
+            Y_Lingo_Pattern(Lump);
         }
 
-        Pattern * Range:: clone() const { return new Range( *this ); }
+        Pattern * Lump:: clone() const { return new Lump( *this ); }
 
-        size_t Range:: serialize(OutputStream &fp) const
+        size_t Lump:: serialize(OutputStream &fp) const
         {
             const size_t ans = emitUUID(fp)+2;
             fp.write(lower);
@@ -36,7 +36,7 @@ namespace Yttrium
             return ans;
         }
 
-        bool Range:: takes(Token &token, Source &source) const
+        bool Lump:: takes(Token &token, Source &source) const
         {
             assert( 0 == token.size );
             Char *ch = source.get();
@@ -61,14 +61,14 @@ namespace Yttrium
 
         }
 
-        void  Range:: query( CharDB &firstChars ) const
+        void  Lump:: query( CharDB &firstChars ) const
         {
             const unsigned top = upper;
             for(unsigned i=lower;i<=top;++i)
                 firstChars.set(i);
         }
 
-        String Range:: regularExpression() const
+        String Lump:: regularExpression() const
         {
             String ans = '[';
             ans += ByteToRegExp(lower);
@@ -78,17 +78,17 @@ namespace Yttrium
             return ans;
         }
 
-        bool Range:: univocal() const noexcept
+        bool Lump:: univocal() const noexcept
         {
             return lower>=upper;;
         }
 
-        bool Range:: strong() const noexcept
+        bool Lump:: strong() const noexcept
         {
             return true;
         }
 
-        void Range:: viz(OutputStream &fp) const
+        void Lump:: viz(OutputStream &fp) const
         {
             Node(fp,this) << "[label=\"";
             const char text[4] = { char(lower), '-', char(upper), 0 };

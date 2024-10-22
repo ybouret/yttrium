@@ -33,10 +33,10 @@ namespace Yttrium
                 case Byte::UUID:
                     return new Byte( fp.readCBR<uint8_t>("Byte.byte") );
 
-                case Range::UUID: {
-                    const uint8_t lower = fp.readCBR<uint8_t>("Range.lower");
-                    const uint8_t upper = fp.readCBR<uint8_t>("Range.upper");
-                    return new Range(lower,upper);
+                case Lump::UUID: {
+                    const uint8_t lower = fp.readCBR<uint8_t>("Lump.lower");
+                    const uint8_t upper = fp.readCBR<uint8_t>("Lump.upper");
+                    return new Lump(lower,upper);
                 }
 
                 case Exclude::UUID:
