@@ -19,6 +19,24 @@ namespace Yttrium
                 switch(c)
                 {
 
+                        //------------------------------------------------------
+                        //
+                        // one byte joker
+                        //
+                        //------------------------------------------------------
+                    case '*':
+                    case '+':
+                    case '?':
+                    case '&':
+                        if(motif->size<=0) throw Specific::Exception(CallSign,"missing expression before '%c' after '%s'",c,start);
+                        Jokerize(*motif,c);
+                        break;
+
+                        //------------------------------------------------------
+                        //
+                        // new byte
+                        //
+                        //------------------------------------------------------
                     default:
                         std::cerr << "adding '" << c << "'" << std::endl;
                         motif->add(c);
@@ -35,7 +53,7 @@ namespace Yttrium
 
             return motif.yield();
         }
-
+        
     }
 
 }

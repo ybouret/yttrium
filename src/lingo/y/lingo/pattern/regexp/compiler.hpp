@@ -62,6 +62,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
+            static void Jokerize(Patterns &p, const char joker);
         };
     }
 }
