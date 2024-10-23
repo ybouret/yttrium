@@ -151,7 +151,7 @@ namespace Yttrium
             Y_Lingo_Posix(consonant);
             Y_Lingo_Posix(endl);
             Y_Lingo_Posix(dot);
-            throw Specific::Exception("posix", "no name '%s'", id.c_str());
+            throw Specific::Exception("posix expression", "no name '%s'", id.c_str());
         }
 
         Pattern * posix:: named(const char * const id)

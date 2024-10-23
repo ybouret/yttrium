@@ -33,7 +33,9 @@ namespace Yttrium
             static const char LPAREN = '(';     //!< alias
             static const char RPAREN = ')';     //!< alias
             static const char ALT    = '|';     //!< alias
-
+            static const char LBRACK = '[';     //!< alias
+            static const char RBRACK = ']';     //!< alias
+            
             //__________________________________________________________________
             //
             //
@@ -49,8 +51,9 @@ namespace Yttrium
             //! cleanup
             virtual ~RXC() noexcept;
 
-            //! parse sub-expression starting at current
-            Pattern * subExpr();
+
+            Pattern * subExpr(); //!< parse sub-expression starting at current
+            Pattern * subBank(); //!< parse sub-bank starting at current
 
             //__________________________________________________________________
             //
@@ -71,6 +74,7 @@ namespace Yttrium
             void        addAlias(Patterns &);             //!< {alias}
             Pattern    *subExprEsc();                     //!< escaped in subExpr
             Pattern    *hexEsc();                         //!< hexadecimal escape
+            Pattern    *getPosix();                       //!< [:named:]
         };
     }
 }

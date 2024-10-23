@@ -66,7 +66,14 @@ namespace Yttrium
                         alt->pushTail( subExpr() );     // rhs: next expression
                         return alt.yield();
                     }
-
+                        //------------------------------------------------------
+                        //
+                        // sub bank
+                        //
+                        //------------------------------------------------------
+                    case LBRACK:
+                        motif->pushTail( subBank() );
+                        break;
 
                         //------------------------------------------------------
                         //
