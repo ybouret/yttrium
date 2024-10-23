@@ -103,10 +103,10 @@ namespace Yttrium
 
 
 
-            static Pattern * Among(const String &);
-            static Pattern * Exact(const String &);
-            static Pattern * Among(const char * const);
-            static Pattern * Exact(const char * const);
+            static Pattern * Among(const String &);      //!< Or'd chars
+            static Pattern * Exact(const String &);      //!< And'd chars
+            static Pattern * Among(const char * const);  //!< alias
+            static Pattern * Exact(const char * const);  //!< alias
 
             bool isBasic() const noexcept; //!< one of the basic pattern
             bool isLogic() const noexcept; //!< And, Or, Node

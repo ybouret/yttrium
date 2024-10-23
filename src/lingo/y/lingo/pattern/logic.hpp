@@ -48,11 +48,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void    vizLink(OutputStream &)        const;          //!< produce link to children
-            Logic & operator<<(Pattern * const) noexcept;          //!< helper to push new patter
-            Logic & add(const uint8_t single);                     //!< add new single
-            Logic & add(const uint8_t lower, const uint8_t upper); //!< add new range
-            static bool HaveSameContent(const Logic &, const Logic &);
+            void    vizLink(OutputStream &)        const;              //!< produce link to children
+            Logic & operator<<(Pattern * const) noexcept;              //!< helper to push new patter
+            Logic & add(const uint8_t single);                         //!< add new single
+            Logic & add(const uint8_t lower, const uint8_t upper);     //!< add new range
+            static bool HaveSameContent(const Logic &, const Logic &); //!< patter-wise comparison
 
             void optimize();    //!< optimize each pattern
             void noMultiple();  //!< remove multiple pattern

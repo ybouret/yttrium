@@ -27,12 +27,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign;
-            static const char LBRACE = '{';
-            static const char RBRACE = '}';
-            static const char LPAREN = '(';
-            static const char RPAREN = ')';
-            static const char ALT    = '|';
+            static const char * const CallSign; //!< "Regular Expression"
+            static const char LBRACE = '{';     //!< alias
+            static const char RBRACE = '}';     //!< alias
+            static const char LPAREN = '(';     //!< alias
+            static const char RPAREN = ')';     //!< alias
+            static const char ALT    = '|';     //!< alias
 
             //__________________________________________________________________
             //

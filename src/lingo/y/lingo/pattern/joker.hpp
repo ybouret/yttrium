@@ -48,8 +48,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const Pattern & operator*() const noexcept;
-            void  optimize();
+            const Pattern & operator*() const noexcept; //!< accept internal motif
+            void  optimize();                           //!< propagate optimize to motif
 
             //__________________________________________________________________
             //
