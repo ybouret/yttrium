@@ -46,14 +46,7 @@ namespace Yttrium
         void  Joker:: ignoreCase()
         {
             assert(0!=motif);
-            Pattern * const result = IgnoreCase(motif); assert(0!=result);
-            if( result != motif )
-            {
-                std::cerr << "Changing motif for ignoreCase" << std::endl;
-                delete motif;
-                Coerce(motif) = result;
-                std::cerr << "done!" << std::endl;
-            }
+            Coerce(motif) = IgnoreCase(motif);
         }
 
 

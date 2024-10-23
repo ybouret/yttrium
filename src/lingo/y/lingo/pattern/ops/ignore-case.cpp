@@ -24,7 +24,7 @@ namespace Yttrium
         Pattern * IgnoreCaseOfBasic(const AutoPtr<Pattern> &motif)
         {
             assert(motif->isBasic());
-
+            std::cerr << "IgnoreCaseOf(" << FourCC::ToText(motif->uuid) << ")" << std::endl;
             CharDB db;
             motif->query(db);
             Probe(db,'a', 'z', int('A') - int('a') );
@@ -33,7 +33,6 @@ namespace Yttrium
         }
 
 
-#define Y_Lingo_IgnoreCase(TYPE) case TYPE:: UUID: motif->as<TYPE>()->ignoreCase(); break
 
         Pattern * Pattern:: IgnoreCase(Pattern * const p)
         {
@@ -49,13 +48,13 @@ namespace Yttrium
                 case Excl:: UUID:
                     return IgnoreCaseOfBasic(motif);
 
-                    Y_Lingo_IgnoreCase(Optional);
-                    Y_Lingo_IgnoreCase(Repeated);
-                    Y_Lingo_IgnoreCase(Counting);
+                case Optional:: UUID: motif->as<Optional>()->ignoreCase(); break;
+                case Repeated:: UUID: motif->as<Repeated>()->ignoreCase(); break;
+                case Counting:: UUID: motif->as<Counting>()->ignoreCase(); break;
 
-                    Y_Lingo_IgnoreCase(And);
-                    Y_Lingo_IgnoreCase(Or);
-                    Y_Lingo_IgnoreCase(None);
+                case And :: UUID: motif->as<And >()->ignoreCase(); break;
+                case Or  :: UUID: motif->as< Or >()->ignoreCase(); break;
+                case None:: UUID: motif->as<None>()->ignoreCase(); break;
             }
 
 
