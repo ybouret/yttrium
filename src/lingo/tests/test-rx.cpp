@@ -2,6 +2,7 @@
 #include "y/lingo/pattern/basic/lump.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
+#include "y/lingo/pattern/char-db.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -38,7 +39,11 @@ Y_UTEST(rx)
                 Y_CHECK( *reloaded == *p );
             }
 
-
+            {
+                CharDB fc;
+                p->query(fc);
+                std::cerr << "first chars = '" << fc << "'" << std::endl;
+            }
 
         }
     }

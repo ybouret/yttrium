@@ -105,7 +105,7 @@ namespace Yttrium
                 case 0: Label(fp,"*") << ",shape=triangle"; break;
                 case 1: Label(fp,"+") << ",shape=triangle"; break;
                 default: {
-                    const String text = Formatted::Get("[%u,]", unsigned(minimalCount));
+                    const String text = Formatted::Get("{%u,}", unsigned(minimalCount));
                     Label(fp,text) << ",shape=ellipse";
                 }
 

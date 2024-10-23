@@ -16,20 +16,18 @@ namespace Yttrium
             RXC    rxc(expr,size,dict);
             AutoPtr<Pattern> p =   rxc.subExpr();
             if(rxc.depth!=0) throw Specific::Exception(RXC::CallSign,"missing %d parenthese%s in '%s'",rxc.depth, Plural::s(rxc.depth),expr);
-            GraphViz::Vizible::DotToPng("regexp-raw.dot",*p);
             return Pattern::Optimize(p.yield());
         }
 
         Pattern * RegExp(const String     &       expr,
                          const Dictionary * const dict)
         {
-            std::cerr << "Compiling '" << expr << "'" << std::endl;
             return _RegExp(expr.c_str(), expr.size(), dict);
         }
 
         Pattern * RegExp(const char * const expr, const Dictionary * const dict)
         {
-            const String _(expr);
+            const  String _(expr);
             return RegExp(_,dict);
         }
 

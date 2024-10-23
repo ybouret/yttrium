@@ -12,8 +12,6 @@ namespace Yttrium
             AutoPtr<Logic>     motif = new And();
             const char * const start = curr;
 
-            std::cerr << "<sub>" << std::endl;
-
             while(curr<last)
             {
                 const char c = *(curr++);
@@ -55,7 +53,7 @@ namespace Yttrium
                         motif->pushTail( posix::dot() );
                         break;
 
-                        
+
 
                         //------------------------------------------------------
                         //
@@ -100,7 +98,6 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                     default:
-                        std::cerr << "adding '" << c << "'" << std::endl;
                         motif->add(c);
                         break;
                 }
@@ -108,7 +105,6 @@ namespace Yttrium
             }
 
         END:
-            std::cerr << "<sub/>" << std::endl;
 
             if( motif->size <= 0 )
                 return new Void();
