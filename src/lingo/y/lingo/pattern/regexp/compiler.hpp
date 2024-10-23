@@ -72,9 +72,12 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
             static void Jokerize(Patterns &, const char); //!< single char jokers
             void        addAlias(Patterns &);             //!< {alias}
+            Pattern    *escapedSeq(const char * const);   //!< build escaped sequence
             Pattern    *subExprEsc();                     //!< escaped in subExpr
+            Pattern    *subBankEsc();                     //!< escaped in subBank
             Pattern    *hexEsc();                         //!< hexadecimal escape
             Pattern    *getPosix();                       //!< [:named:]
+            uint8_t     nextByte();                       //!< to make Lump in subBank
         };
     }
 }

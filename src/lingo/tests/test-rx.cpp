@@ -30,9 +30,8 @@ Y_UTEST(rx)
             Y_ASSERT(p.isValid());
             GraphViz::Vizible::DotToPng("regexp.dot",*p);
 
-            const AutoPtr<Pattern> q = Pattern::IgnoreCase( p->clone() );
-            GraphViz::Vizible::DotToPng("regexp-ic.dot",*q);
-
+            //const AutoPtr<Pattern> q = Pattern::IgnoreCase( p->clone() );
+            //GraphViz::Vizible::DotToPng("regexp-ic.dot",*q);
         }
     }
 }

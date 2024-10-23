@@ -9,16 +9,34 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        static const char escExprChar[] = "(){}[]+*?&\\/'\"";
-        static const char escCntlChar[] = "0abfnrtv";
-        static const char escCntlCode[] = "\0\a\b\f\n\r\t\v";
+        static const char escCtlChar[] = "0abfnrtv";
+        static const char escCtlCode[] = "\0\a\b\f\n\r\t\v";
 
 
-        static inline bool isExprChar(const char c, AutoPtr<Pattern> &m )
+        static inline bool isCtlChar(const char c, AutoPtr<Pattern> &m)
         {
             assert( m.isEmpty() );
+            assert( sizeof(escCtlChar) == sizeof(escCtlCode) );
 
-            if(0!=strchr(escExprChar,c))
+            const char * const esc = strchr(escCtlChar,c);
+            if(0!=esc)
+            {
+                m = new Byte( escCtlCode[esc-escCtlChar] );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        static inline bool isEscaped(const char c, const char * const s,  AutoPtr<Pattern> &m )
+        {
+            assert( m.isEmpty() );
+            assert( 0 != s);
+
+            if(0!=strchr(s,c))
             {
                 m = new Byte(c);
                 return true;
@@ -28,31 +46,24 @@ namespace Yttrium
                 return false;
             }
         }
+    }
 
-        static inline bool isCntlChar(const char c, AutoPtr<Pattern> &m)
-        {
-            assert( m.isEmpty() );
-            assert( sizeof(escCntlChar) == sizeof(escCntlCode) );
-
-            const char * const esc = strchr(escCntlChar,c);
-            if(0!=esc)
-            {
-                m = new Byte( escCntlCode[esc-escCntlChar] );
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+}
 
 
-        Pattern * RXC:: subExprEsc()
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        
+        Pattern    * RXC:: escapedSeq(const char * const seq)
         {
             const char * const start = curr-1;
             assert('\\'==*start);
+            assert(0!=seq);
 
-            if(curr>=last) throw Specific::Exception(CallSign, "unfinished escaped sequence in sub-expression");
+            if(curr>=last) throw Specific::Exception(CallSign, "unfinished escaped sequence");
             const char       c = *(curr++);
             switch(c)
             {
@@ -62,13 +73,34 @@ namespace Yttrium
             }
 
             AutoPtr<Pattern> m = 0;
-            if(isExprChar(c,m)) { assert(m.isValid()); return m.yield(); }
-            if(isCntlChar(c,m)) { assert(m.isValid()); return m.yield(); }
+            if(isEscaped(c,seq,m)) { assert(m.isValid()); return m.yield(); }
+            if(isCtlChar(c,m))     { assert(m.isValid()); return m.yield(); }
 
-
-
-            throw Specific::Exception(CallSign, "unknow escape sequence after '%s'",start);
+            throw Specific::Exception(CallSign, "unknow escape sequence after '...%s'",start);
         }
+
+
+        Pattern * RXC:: subExprEsc()
+        {
+            return escapedSeq("(){}[]+*?&\\/'\".");
+        }
+
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+
+
+        Pattern * RXC:: subBankEsc()
+        {
+            return escapedSeq("[]-^\\/'\"");
+        }
+
 
 
         Pattern    *RXC:: hexEsc()

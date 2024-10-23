@@ -13,9 +13,10 @@ namespace Yttrium
             Pattern * const motif = p.popTail();
             switch(joker)
             {
-                case '*': p.pushTail( Repeated::Create(motif,0) ); break;
-                case '+': p.pushTail( Repeated::Create(motif,1) ); break;
-                case '?': p.pushTail( Optional::Create(motif)   ); break;
+                case '*': p.pushTail( Repeated::Create(motif,0)  ); break;
+                case '+': p.pushTail( Repeated::Create(motif,1)  ); break;
+                case '?': p.pushTail( Optional::Create(motif)    ); break;
+                case '&': p.pushTail( Pattern::IgnoreCase(motif) ); break;
                 default:
                     delete motif;
                     throw Specific::Exception(CallSign, "unexpected joker '%c'",joker);

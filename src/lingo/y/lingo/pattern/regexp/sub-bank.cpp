@@ -26,6 +26,11 @@ namespace Yttrium
                 case '^':
                     motif = new None();
                     ++curr;
+                    if(curr<last && '-' == *curr)
+                    {
+                        motif->add('-');
+                        ++curr;
+                    }
                     break;
 
                 case '-':
@@ -53,9 +58,26 @@ namespace Yttrium
                     case LBRACK:
                         motif->pushTail( subBank() );
                         break;
-                        
+
+                    case '\\':
+                        motif->pushTail( subBankEsc() );
+                        break;
+
+                    case '-':
+                        if(motif->size<=0)
+                            throw Specific::Exception(CallSign,"no char before '-' in '...%s'",start);
+
+                        if(motif->tail->uuid!=Byte::UUID)
+                            throw Specific::Exception(CallSign,"invalid char before '-' in '...%s'",start);
+                        else
+                        {
+                            const uint8_t lower = motif->tail->as<Byte>()->byte; delete motif->popTail();
+                            const uint8_t upper = nextByte();
+                            motif->add(lower,upper);
+                        }
+                        break;
+
                     default:
-                        std::cerr << "grp " << c << std::endl;
                         motif->add(c);
                         break;
                 }
@@ -95,6 +117,34 @@ namespace Yttrium
 
             const String name(start+2,(curr-start)-4);
             return posix::named(name);
+        }
+
+        uint8_t RXC:: nextByte()
+        {
+            assert(curr!=0);
+            assert('-' == curr[-1]);
+            if(curr>=last) throw Specific::Exception(CallSign,"unfinished lump");
+
+            const char c = *(curr++);
+
+            if(c == '\\') {
+                const AutoPtr<const Pattern> p = subBankEsc();
+                return p->as<Byte>()->byte;
+            }
+
+            switch(c)
+            {
+                case '[':
+                case ']':
+                    break;
+
+                default:
+                    return c;
+            }
+
+
+
+            throw Specific::Exception(CallSign,"invalid '%c' after '-'",c);
         }
 
     }

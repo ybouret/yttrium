@@ -51,6 +51,12 @@ namespace Yttrium
                         motif->pushTail( subExprEsc() );
                         break;
 
+                    case '.':
+                        motif->pushTail( posix::dot() );
+                        break;
+
+                        
+
                         //------------------------------------------------------
                         //
                         // alternation
@@ -58,7 +64,7 @@ namespace Yttrium
                         //------------------------------------------------------
                     case ALT:
                         if(motif->size<=0)
-                            throw Specific::Exception(CallSign,"missing expression before '%c' at '%s'",c,start);
+                            throw Specific::Exception(CallSign,"missing expression before '%c' in '...%s'",c,start);
 
                     {
                         AutoPtr<Logic> alt = new Or();
