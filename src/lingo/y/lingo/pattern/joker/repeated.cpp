@@ -69,6 +69,7 @@ namespace Yttrium
             return minimalCount>0;
         }
 
+        
         bool Repeated:: takes(Token &token, Source &source) const
         {
             assert(0==token.size);
