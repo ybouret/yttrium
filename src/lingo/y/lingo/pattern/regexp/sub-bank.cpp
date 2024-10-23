@@ -50,6 +50,10 @@ namespace Yttrium
                     case RBRACK:
                         goto DONE;
 
+                    case LBRACK:
+                        motif->pushTail( subBank() );
+                        break;
+                        
                     default:
                         std::cerr << "grp " << c << std::endl;
                         motif->add(c);

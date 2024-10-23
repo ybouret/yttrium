@@ -1,15 +1,23 @@
 #include "y/lingo/pattern/all.hpp"
 #include "y/system/exception.hpp"
-
+#include "y/lingo/pattern/char-db.hpp"
 namespace Yttrium
 {
     namespace Lingo
     {
 
+        //----------------------------------------------------------------------
+        //
+        //
+        // return from Or/And
+        //
+        //
+        //----------------------------------------------------------------------
         static Pattern *OptReturn(AutoPtr<Logic> &motif, const char * const which)
         {
             assert(0!=which);
-            // return
+
+            // return with single case extraction
             switch(motif->size)
             {
                 case 0: throw Specific::Exception(which,"empty content!");
@@ -20,17 +28,48 @@ namespace Yttrium
             return motif.yield();
         }
 
+        static inline
+        Pattern * FusionBasic(const Patterns &basic)
+        {
+            CharDB db;
+            for(const Pattern *p=basic.head;p;p=p->next)
+            {
+                assert(p->isBasic());
+                p->query(db);
+            }
+            return db.compile();
+        }
+
+        //----------------------------------------------------------------------
+        //
+        //
+        // Optimize Or
+        //
+        //
+        //----------------------------------------------------------------------
         static inline Pattern * Optim(Or * const p)
         {
             AutoPtr<Logic> motif = p;
 
-            // propagate optimmize
+            //------------------------------------------------------------------
+            //
+            // propagate optimize
+            //
+            //------------------------------------------------------------------
             motif->optimize();
 
+            //------------------------------------------------------------------
+            //
             // remove duplicate
+            //
+            //------------------------------------------------------------------
             motif->noMultiple();
 
+            //------------------------------------------------------------------
+            //
             // merge OR
+            //
+            //------------------------------------------------------------------
             {
                 Patterns store;
                 while(motif->size>0)
@@ -46,9 +85,38 @@ namespace Yttrium
                 motif->swapWith(store);
             }
 
+            //------------------------------------------------------------------
+            //
             // fusion of consecutive basic...
+            //
+            //------------------------------------------------------------------
+            {
+                Patterns store;
+                
+                while(motif->size>0)
+                {
+                    if(motif->head->isBasic())
+                    {
+                        Patterns basic;
+                        basic.pushTail(motif->popHead());
+                        while(motif->size>0 && motif->head->isBasic() )
+                            basic.pushTail(motif->popHead());
+                        store.pushTail( FusionBasic(basic) );
+                    }
+                    else
+                    {
+                        store.pushTail(motif->popHead());
+                    }
+                }
 
+                motif->swapWith(store);
+            }
+
+            //------------------------------------------------------------------
+            //
             // return
+            //
+            //------------------------------------------------------------------
             return OptReturn(motif,"Logic::Or");
 
         }
@@ -58,11 +126,18 @@ namespace Yttrium
         {
             AutoPtr<Logic> motif = p;
 
+            //------------------------------------------------------------------
+            //
             // propagate optimize
+            //
+            //------------------------------------------------------------------
             motif->optimize();
 
-
+            //------------------------------------------------------------------
+            //
             // merge And
+            //
+            //------------------------------------------------------------------
             {
                 Patterns store;
                 while(motif->size>0)
@@ -78,7 +153,11 @@ namespace Yttrium
                 motif->swapWith(store);
             }
 
+            //------------------------------------------------------------------
+            //
             // return
+            //
+            //------------------------------------------------------------------
             return OptReturn(motif,"Logic::And");
         }
 
