@@ -15,19 +15,51 @@ namespace Yttrium
             AutoPtr<Logic>     motif = 0;
 
             if(curr>=last) throw Specific::Exception(CallSign,"unfinished bank");
+
+
+            // dispatch according to first char
             switch(curr[0])
             {
                 case ':':
                     return getPosix();
 
+                case '^':
+                    motif = new None();
+                    ++curr;
+                    break;
+
+                case '-':
+                    motif = new Or();
+                    motif->add('-');
+                    ++curr;
+                    break;
+
                 default:
+                    motif = new Or();
                     break;
             }
 
+            assert(motif.isValid());
 
+            // fill in
+            while(curr<last)
+            {
+                const char c = *(curr++);
+                switch(c)
+                {
+                    case RBRACK:
+                        goto DONE;
 
-            throw Exception("Not Implemented");
-            return 0;
+                    default:
+                        std::cerr << "grp " << c << std::endl;
+                        motif->add(c);
+                        break;
+                }
+            }
+
+        DONE:
+            if(0==motif->size) return new Any1();
+            return motif.yield();
         }
 
         Pattern * RXC:: getPosix()
