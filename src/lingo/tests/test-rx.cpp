@@ -1,6 +1,7 @@
 #include "y/lingo/pattern/regexp.hpp"
 #include "y/lingo/pattern/basic/lump.hpp"
 #include "y/utest/run.hpp"
+#include "y/stream/libc/input.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -30,8 +31,15 @@ Y_UTEST(rx)
             Y_ASSERT(p.isValid());
             GraphViz::Vizible::DotToPng("regexp.dot",*p);
 
-            //const AutoPtr<Pattern> q = Pattern::IgnoreCase( p->clone() );
-            //GraphViz::Vizible::DotToPng("regexp-ic.dot",*q);
+            {
+                p->toBinary("regexp.dat");
+                InputFile fp("regexp.dat");
+                const AutoPtr<Pattern> reloaded = Pattern::Read(fp);
+                Y_CHECK( *reloaded == *p );
+            }
+
+
+
         }
     }
 }
