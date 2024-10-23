@@ -64,7 +64,8 @@ namespace Yttrium
             throw Specific::Exception(CallSign, "unfinished bank after '%s'",start);
 
         DONE:
-            if(0==motif->size) return new Any1();
+            if(0==motif->size)
+                return new Any1();
             return motif.yield();
         }
 
