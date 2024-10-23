@@ -6,9 +6,7 @@ namespace Yttrium
 {
     namespace Lingo
     {
-
-
-
+        
         Pattern * RXC:: subExpr()
         {
             AutoPtr<Logic>     motif = new And();
@@ -43,6 +41,15 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                     case LBRACE: addAlias(*motif); break;
+
+                        //------------------------------------------------------
+                        //
+                        // escaped sequence
+                        //
+                        //------------------------------------------------------
+                    case '\\':
+                        motif->pushTail( subExprEsc() );
+                        break;
 
                         //------------------------------------------------------
                         //
