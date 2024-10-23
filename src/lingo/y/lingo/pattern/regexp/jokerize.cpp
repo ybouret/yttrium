@@ -63,9 +63,16 @@ namespace Yttrium
             if(content.size()<=0)
                 throw Specific::Exception(CallSign, "empty braces in '%s'", expr);
 
+            //------------------------------------------------------------------
+            //
+            // analyze content
+            //
+            //------------------------------------------------------------------
             const char c = content[1];
+
             if( isalpha(c) || '_' == c)
             {
+                // assuming alias
                 if( 0 == dict ) throw Specific:: Exception(CallSign, "no dictionary for '%s'", content.c_str());
                 p.pushTail( (*dict)(content) );
                 return;
@@ -73,6 +80,7 @@ namespace Yttrium
 
             if(isdigit(c))
             {
+                // assuming joker
                 if(p.size<=0) throw Specific::Exception(CallSign, "no pattern before braces in '%s'",expr);
                 char *buffer = (char *)content.c_str();
                 char *comma  = strchr(buffer,',');
@@ -80,15 +88,28 @@ namespace Yttrium
                 {
                     // counting or repeating
                     *(comma++) = 0;
-                    const String lo = buffer;
-                    const String hi = comma;
-                    std::cerr << "lo=" << lo << " : hi=" << hi << std::endl;
-                    throw Exception("not done yet");
+                    const String lo   = buffer;
+                    const String hi   = comma;
+                    const size_t nmin = ASCII::Convert::To<size_t>(lo,"Regular Expression Min Count");
+                    if(hi.size()>0)
+                    {
+                        const size_t nmax = ASCII::Convert::To<size_t>(hi,"Regular Expression Max Count");
+                        p.pushTail( Counting::Create(p.popTail(), nmin, nmax));
+                        return;
+                    }
+                    else
+                    {
+                        p.pushTail( Repeated::Create(p.popTail(),nmin));
+                        return;
+                    }
+
+
+
                 }
                 else
                 {
                     // counting
-                    const size_t n = ASCII::Convert::To<size_t>(buffer,"Regular Expression Counting");
+                    const size_t n = ASCII::Convert::To<size_t>(content,"Regular Expression Counting");
                     p.pushTail( Counting::Create(p.popTail(), n, n));
                     return;
                 }
