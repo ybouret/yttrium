@@ -16,8 +16,13 @@ namespace Yttrium
 
             if(curr>=last) throw Specific::Exception(CallSign,"unfinished bank");
 
-
+            //------------------------------------------------------------------
+            //
+            //
             // dispatch according to first char
+            //
+            //
+            //------------------------------------------------------------------
             switch(curr[0])
             {
                 case ':':
@@ -46,7 +51,13 @@ namespace Yttrium
 
             assert(motif.isValid());
 
+            //------------------------------------------------------------------
+            //
+            //
             // fill in
+            //
+            //
+            //------------------------------------------------------------------
             while(curr<last)
             {
                 const char c = *(curr++);
@@ -91,6 +102,7 @@ namespace Yttrium
             return motif.yield();
         }
 
+        
         Pattern * RXC:: getPosix()
         {
             assert(0!=curr);
@@ -127,22 +139,19 @@ namespace Yttrium
 
             const char c = *(curr++);
 
-            if(c == '\\') {
-                const AutoPtr<const Pattern> p = subBankEsc();
-                return p->as<Byte>()->byte;
-            }
-
             switch(c)
             {
                 case '[':
                 case ']':
                     break;
 
+                case '\\': {
+                    const AutoPtr<const Pattern> p = subBankEsc();
+                    return p->as<Byte>()->byte;
+                }
                 default:
                     return c;
             }
-
-
 
             throw Specific::Exception(CallSign,"invalid '%c' after '-'",c);
         }
