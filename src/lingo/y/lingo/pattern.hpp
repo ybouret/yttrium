@@ -72,16 +72,26 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Methods
+            // Helpers
             //
             //__________________________________________________________________
             friend bool operator==(const Pattern &lhs, const Pattern &rhs);          //!< equality(lhs,rhs)
             static bool        Equality(const Pattern &lhs, const Pattern &rhs);     //!< test equality
-            size_t             emitUUID(OutputStream &fp)       const;               //!< emit UUID
+            
             static const char *ByteToRegExp(const uint8_t byte) noexcept;            //!< byte to regular expression
             static Pattern    *Read(InputStream &);                                  //!< read serialized pattern
             static Pattern    *Optimize(Pattern * const);                            //!< optimizations
-            void               graphViz(OutputStream &fp) const;                     //!< standalone GraphViz code
+            static Pattern    *IgnoreCase(Pattern * const);                          //!< make case insensitive pattern
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            size_t             emitUUID(OutputStream &fp) const; //!< emit UUID
+            void               graphViz(OutputStream &fp) const; //!< standalone GraphViz code from viz()
+
 
             //! fetch derived type
             template <typename T> inline

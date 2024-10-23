@@ -29,6 +29,10 @@ Y_UTEST(rx)
             const AutoPtr<Pattern> p = RegExp(rx,&dict);
             Y_ASSERT(p.isValid());
             GraphViz::Vizible::DotToPng("regexp.dot",*p);
+
+            const AutoPtr<Pattern> q = Pattern::IgnoreCase( p->clone() );
+            GraphViz::Vizible::DotToPng("regexp-ic.dot",*q);
+
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Yttrium
             // propagate optimize
             //
             //------------------------------------------------------------------
-            motif->optimize();
+            motif->optimizing();
 
             //------------------------------------------------------------------
             //
@@ -92,7 +92,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Patterns store;
-                
+
                 while(motif->size>0)
                 {
                     if(motif->head->isBasic())
@@ -131,7 +131,7 @@ namespace Yttrium
             // propagate optimize
             //
             //------------------------------------------------------------------
-            motif->optimize();
+            motif->optimizing();
 
             //------------------------------------------------------------------
             //
@@ -172,9 +172,9 @@ namespace Yttrium
             switch(motif->uuid)
             {
                     // joker
-                case Optional::UUID: motif->as<Optional>()->optimize(); break;
-                case Repeated::UUID: motif->as<Repeated>()->optimize(); break;
-                case Counting::UUID: motif->as<Counting>()->optimize(); break;
+                case Optional::UUID: motif->as<Optional>()->optimizing(); break;
+                case Repeated::UUID: motif->as<Repeated>()->optimizing(); break;
+                case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
                     // logic
                 case Or::  UUID: return Optim( motif.yield()->as<Or>() );

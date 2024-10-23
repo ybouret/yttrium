@@ -76,6 +76,14 @@ Y_UTEST(pattern)
         process( plist, p.yield(), "or.dat");
     }
 
+    {
+        AutoPtr<Logic> p = new None();
+        p->add('_');
+        p->add('a','z');
+        p->add('A','Z');
+        process( plist, p.yield(), "none.dat");
+    }
+
     
     Y_SIZEOF(Any1);
     Y_SIZEOF(Void);
@@ -93,7 +101,13 @@ Y_UTEST(pattern)
     Y_SIZEOF(Or);
     Y_SIZEOF(None);
 
-
+#if 0
+    const int lower2upper = int('A')-int('a');
+    for(char c='a';c<='z';++c)
+    {
+        std::cerr << c << " -> " << char(c+lower2upper) << std::endl;
+    }
+#endif
 
 }
 Y_UDONE()

@@ -49,8 +49,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const Pattern & operator*() const noexcept; //!< accept internal motif
-            void  optimize();                           //!< propagate optimize to motif
-
+            void  optimizing();                         //!< propagate optimize to motif
+            void  ignoreCase();                         //!< propagate ignore case to motif
+            
             //__________________________________________________________________
             //
             //

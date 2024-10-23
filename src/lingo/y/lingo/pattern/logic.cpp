@@ -59,11 +59,19 @@ namespace Yttrium
             return true;
         }
 
-        void Logic:: optimize()
+        void Logic:: optimizing()
         {
             Patterns store;
             while( size> 0 )
                 store.pushTail( Optimize( popHead() ) );
+            swapWith(store);
+        }
+
+        void Logic:: ignoreCase()
+        {
+            Patterns store;
+            while( size> 0 )
+                store.pushTail( IgnoreCase( popHead() ) );
             swapWith(store);
         }
 
