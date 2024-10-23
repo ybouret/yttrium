@@ -59,15 +59,18 @@ namespace Yttrium
         void Dictionary:: operator()(const String &name, Pattern * const p)
         {
             assert(0!=code);
+            assert(code->motifs.size==code->labels.size);
             code->motifs.pushTail(p);
             try
             {
                 if( code->query(name) ) throw Specific::Exception(Name,"multiple '%s'", name.c_str());
                 code->labels << name;
+                assert(code->motifs.size==code->labels.size);
             }
             catch(...)
             {
                 delete code->motifs.popTail();
+                assert(code->motifs.size==code->labels.size);
                 throw;
             }
         }

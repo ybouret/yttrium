@@ -52,11 +52,14 @@ namespace Yttrium
                     case ALT:
                         if(motif->size<=0)
                             throw Specific::Exception(CallSign,"missing expression before '%c' at '%s'",c,start);
-                        else
-                        {
-                            
-                        }
-                        break;
+
+                    {
+                        AutoPtr<Logic> alt = new Or();
+                        alt->pushTail( motif.yield() ); // lhs: current motif
+                        alt->pushTail( subExpr() );     // rhs: next expression
+                        return alt.yield();
+                    }
+
 
                         //------------------------------------------------------
                         //
