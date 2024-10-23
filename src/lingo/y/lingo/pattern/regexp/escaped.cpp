@@ -2,7 +2,7 @@
 #include "y/lingo/pattern/regexp/compiler.hpp"
 #include "y/lingo/pattern/all.hpp"
 #include "y/system/exception.hpp"
-
+#include "y/text/hexadecimal.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -54,12 +54,39 @@ namespace Yttrium
 
             if(curr>=last) throw Specific::Exception(CallSign, "unfinished escaped sequence in sub-expression");
             const char       c = *(curr++);
-            AutoPtr<Pattern> m = 0;
+            switch(c)
+            {
+                case 'x': return hexEsc();
+                default:
+                    break;
+            }
 
+            AutoPtr<Pattern> m = 0;
             if(isExprChar(c,m)) { assert(m.isValid()); return m.yield(); }
             if(isCntlChar(c,m)) { assert(m.isValid()); return m.yield(); }
 
+
+
             throw Specific::Exception(CallSign, "unknow escape sequence '\\%c...'",c);
+        }
+
+
+        Pattern    *RXC:: hexEsc()
+        {
+            assert('x' == curr[-1]);
+
+            if(curr>=last) throw Specific::Exception(CallSign, "missing first hexadecimal char");
+            const char  hiChar = *(curr++);
+            const int   hiCode = Hexadecimal::ToDecimal(hiChar);
+            if(hiCode<0) throw Specific::Exception(CallSign, "invalid first hexadecimal char '%c'", hiChar);
+
+            if(curr>=last) throw Specific::Exception(CallSign, "missing second hexadecimal char");
+            const char  loChar = *(curr++);
+            const int   loCode = Hexadecimal::ToDecimal(loChar);
+            if(loCode<0) throw Specific::Exception(CallSign, "invalid second hexadecimal char '%c'", loChar);
+
+
+            return new Byte( static_cast<uint8_t>(hiCode<<4|loCode) );
         }
     }
 

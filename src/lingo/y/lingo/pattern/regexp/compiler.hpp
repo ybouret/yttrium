@@ -51,7 +51,6 @@ namespace Yttrium
 
             //! parse sub-expression starting at current
             Pattern * subExpr();
-            Pattern * cluster();
 
             //__________________________________________________________________
             //
@@ -71,6 +70,7 @@ namespace Yttrium
             static void Jokerize(Patterns &, const char); //!< single char jokers
             void        addAlias(Patterns &);             //!< {alias}
             Pattern    *subExprEsc();                     //!< escaped in subExpr
+            Pattern    *hexEsc();                         //!< hexadecimal escape
         };
     }
 }
