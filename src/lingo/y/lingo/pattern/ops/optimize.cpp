@@ -1,14 +1,28 @@
 #include "y/lingo/pattern/all.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
     namespace Lingo
     {
 
+        static Pattern *OptReturn(AutoPtr<Logic> &motif, const char * const which)
+        {
+            assert(0!=which);
+            // return
+            switch(motif->size)
+            {
+                case 0: throw Specific::Exception(which,"empty content!");
+                case 1: return motif->popTail();
+                default:
+                    break;
+            }
+            return motif.yield();
+        }
 
         static inline Pattern * Optim(Or * const p)
         {
-            AutoPtr<Or> motif = p;
+            AutoPtr<Logic> motif = p;
 
             // propagate optimmize
             motif->optimize();
@@ -33,15 +47,18 @@ namespace Yttrium
             }
 
             // fusion of consecutive basic...
-            return motif.yield();
+
+            // return
+            return OptReturn(motif,"Logic::Or");
+
         }
 
 
         static inline Pattern * Optim(And * const p)
         {
-            AutoPtr<And> motif = p;
+            AutoPtr<Logic> motif = p;
 
-            // propagate optimmize
+            // propagate optimize
             motif->optimize();
 
 
@@ -61,7 +78,8 @@ namespace Yttrium
                 motif->swapWith(store);
             }
 
-            return motif.yield();
+            // return
+            return OptReturn(motif,"Logic::And");
         }
 
 
