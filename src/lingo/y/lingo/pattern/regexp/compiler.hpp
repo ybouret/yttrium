@@ -71,7 +71,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RXC);
             static void Jokerize(Patterns &, const char); //!< single char jokers
-            void        addAlias(Patterns &);             //!< {alias}
+            void        jkBraced(Patterns &);             //!< {alias} or counting/repeadted
             Pattern    *escapedSeq(const char * const);   //!< build escaped sequence
             Pattern    *subExprEsc();                     //!< escaped in subExpr
             Pattern    *subBankEsc();                     //!< escaped in subBank

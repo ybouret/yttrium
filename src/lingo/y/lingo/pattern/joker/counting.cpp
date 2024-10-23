@@ -114,7 +114,7 @@ namespace Yttrium
         {
             motif->viz(fp);
             Node(fp,this) << '[';
-            const String text = Formatted::Get("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount) );
+            const String text = minimalCount == maximalCount ? Formatted::Get("{%u}", unsigned(minimalCount) ) : Formatted::Get("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount) );
             Label(fp,text);
             fp << ",shape=component";
             fp << ']';

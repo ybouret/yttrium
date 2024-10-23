@@ -38,7 +38,7 @@ namespace Yttrium
                         // alias
                         //
                         //------------------------------------------------------
-                    case LBRACE: addAlias(*motif); break;
+                    case LBRACE: jkBraced(*motif); break;
 
                         //------------------------------------------------------
                         //
@@ -114,26 +114,6 @@ namespace Yttrium
         }
 
 
-        void RXC:: addAlias(Patterns &p)
-        {
-            const char * const start = curr-1;
-            const char * const init  = curr;
-            assert(*start == LBRACE);
-            // look for RBRACE
-            while(curr<last && RBRACE != *curr)
-                ++curr;
-            if(curr>=last)
-                throw Specific::Exception(CallSign, "missing '%c' after '%s'", RBRACE, start);
-
-            // extract name
-            const String name(init,curr-init);
-
-            if( 0 == dict ) throw Specific:: Exception(CallSign, "no dictionary for '%s'", name.c_str());
-            p.pushTail( (*dict)(name) );
-
-            // skip '}'
-            ++curr;
-        }
     }
 
 }
