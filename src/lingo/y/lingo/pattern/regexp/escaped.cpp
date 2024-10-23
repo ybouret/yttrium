@@ -67,7 +67,7 @@ namespace Yttrium
 
 
 
-            throw Specific::Exception(CallSign, "unknow escape sequence '\\%c...'",c);
+            throw Specific::Exception(CallSign, "unknow escape sequence after '%s'",start);
         }
 
 
