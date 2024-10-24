@@ -61,7 +61,6 @@ namespace Yttrium
             CharDB mine;
             mine.fill(); assert(256==mine.size());
             mine.clr(byte);
-            std::cerr << "mine.size=" << mine.size() << std::endl;
             assert(255==mine.size());
             firstChars += mine;
         }
