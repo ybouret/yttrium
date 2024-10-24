@@ -30,7 +30,7 @@ namespace Yttrium
         {
             assert(0!=m);
             try {
-                if(m->feeble()) throw Specific::Exception("Lingo::Repeated","pattern is not strong!");
+                if(m->feeble()) throw Specific::Exception("Lingo::MoreThan","pattern is not strong!");
                 return new MoreThan(m,nmin);
             }
             catch(...)
