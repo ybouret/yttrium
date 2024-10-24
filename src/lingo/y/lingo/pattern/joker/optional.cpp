@@ -48,7 +48,7 @@ namespace Yttrium
 
         bool Optional:: univocal() const noexcept
         {
-            return motif->univocal();;
+            return motif->univocal();
         }
 
         bool Optional:: strong() const noexcept
