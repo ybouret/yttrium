@@ -6,7 +6,10 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        Pattern:: ~Pattern() noexcept {}
+        Pattern:: ~Pattern() noexcept
+        {
+            std::cerr << "~Pattern" << std::endl;
+        }
 
         Pattern:: Pattern(const uint32_t t) noexcept :
         Quantized(),

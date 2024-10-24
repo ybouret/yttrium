@@ -15,7 +15,10 @@ namespace Yttrium
             Y_Lingo_Pattern(Or);
         }
 
-        Or:: ~Or() noexcept {}
+        Or:: ~Or() noexcept
+        {
+            std::cerr << "~Or" << std::endl;
+        }
 
         Or:: Or(const Or &other) : Logic(other)
         {

@@ -10,6 +10,7 @@ namespace Yttrium
         Joker:: ~Joker() noexcept
         {
             assert(0!=motif);
+            std::cerr << "~Joker@" << motif->callSign() << std::endl;
             delete motif;
             Coerce(motif) = 0;
         }

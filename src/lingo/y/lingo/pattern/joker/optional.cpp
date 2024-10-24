@@ -11,6 +11,7 @@ namespace Yttrium
 
         Optional:: ~Optional() noexcept
         {
+            std::cerr << "~Optional" << std::endl;
         }
 
         Optional:: Optional(Pattern *m) noexcept : Joker(UUID,m)

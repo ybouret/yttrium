@@ -8,7 +8,9 @@ namespace Yttrium
 
         Logic:: ~Logic() noexcept
         {
+            std::cerr << "~Logic#" << size << std::endl;
         }
+
 
         Logic:: Logic(const uint32_t t) noexcept :
         Pattern(t),
