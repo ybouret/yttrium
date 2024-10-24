@@ -32,6 +32,7 @@ namespace Yttrium
         static inline
         Pattern * FusionBasic(const Patterns &basic)
         {
+            std::cerr << "#consecutive basic=" << basic.size << std::endl;
             CharDB db;
             for(const Pattern *p=basic.head;p;p=p->next)
             {
@@ -99,17 +100,19 @@ namespace Yttrium
 
                 while(motif->size>0)
                 {
-                    if(motif->head->isBasic())
+                    assert(0!=motif->head);
+                    Pattern * const first = motif->popHead(); assert(0!=first);
+                    if(motif->isBasic())
                     {
                         Patterns basic;
-                        basic.pushTail(motif->popHead());
+                        basic.pushTail(first);
                         while(motif->size>0 && motif->head->isBasic() )
                             basic.pushTail(motif->popHead());
                         store.pushTail( FusionBasic(basic) );
                     }
                     else
                     {
-                        store.pushTail(motif->popHead());
+                        store.pushTail(first);
                     }
                 }
 
