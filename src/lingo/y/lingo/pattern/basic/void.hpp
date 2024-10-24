@@ -47,14 +47,15 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable] uuid
-            virtual Pattern * clone()                             const; //!< [Pattern] new Void(self)
-            virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] false
-            virtual void      query( CharDB &firstChars )         const; //!< [Pattern] free
-            virtual String    regularExpression()                 const; //!< [Pattern] ^full range
-            virtual bool      univocal()                 const noexcept; //!< true
-            virtual bool      strong()                   const noexcept; //!< true
-            virtual void      viz(OutputStream &)                 const; //!< [Pattern]
+            virtual const char * callSign()                 const noexcept; //!< [Identifiable] CallSign
+            virtual size_t       serialize(OutputStream &)           const; //!< [Serializable] uuid
+            virtual Pattern *    clone()                             const; //!< [Pattern] new Void(self)
+            virtual bool         takes(Token &token, Source &source) const; //!< [Pattern] false
+            virtual void         query( CharDB &firstChars )         const; //!< [Pattern] free
+            virtual String       regularExpression()                 const; //!< [Pattern] ^full range
+            virtual bool         univocal()                 const noexcept; //!< true
+            virtual bool         strong()                   const noexcept; //!< true
+            virtual void         viz(OutputStream &)                 const; //!< [Pattern]
 
 
         private:

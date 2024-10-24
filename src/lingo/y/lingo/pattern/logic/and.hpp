@@ -46,13 +46,14 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual Pattern *clone()                 const; //!< [Pattern] new And(self)
-            virtual bool     strong()       const noexcept; //!< [Pattern] if size>0 and all strong
-            virtual bool     univocal()     const noexcept; //!< [Pattern] false is one is feeble or not univocal
-            virtual String   regularExpression()     const; //!< [Pattern] (all)
-            virtual void     query(CharDB &fc)       const; //!< [Pattern] up to first strong
-            virtual bool     takes(Token &,Source &) const; //!< [Pattern] all are taken
-            virtual void      viz(OutputStream &)    const; //!< [Pattern]
+            virtual const char * callSign()     const noexcept; //!< [Identifiable] CallSign
+            virtual Pattern *    clone()                 const; //!< [Pattern] new And(self)
+            virtual bool         strong()       const noexcept; //!< [Pattern] if size>0 and all strong
+            virtual bool         univocal()     const noexcept; //!< [Pattern] false is one is feeble or not univocal
+            virtual String       regularExpression()     const; //!< [Pattern] (all)
+            virtual void         query(CharDB &fc)       const; //!< [Pattern] up to first strong
+            virtual bool         takes(Token &,Source &) const; //!< [Pattern] all are taken
+            virtual void         viz(OutputStream &)     const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(And);

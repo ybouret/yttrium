@@ -6,6 +6,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(And)
+
+
         And:: And() noexcept : Logic(UUID)
         {
             Y_Lingo_Pattern(And);

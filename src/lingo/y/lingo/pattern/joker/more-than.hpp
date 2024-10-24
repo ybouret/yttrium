@@ -45,13 +45,14 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual Pattern * clone()                      const; //!< [Pattern] protected clone
-            virtual bool      strong()            const noexcept; //!< [Pattern] minimalCount>0
-            virtual bool      univocal()          const noexcept; //!< [Pattern] false
-            virtual String    regularExpression()          const; //!< [Pattern] (motif)(*|+|{n,})*
-            virtual bool      takes(Token &, Source &)     const; //!< [Pattern] if found minimalCount
-            virtual size_t    serialize(OutputStream &)    const; //!< [Serializable] uuid + nmin + motif
-            virtual void      viz(OutputStream &)          const; //!< [Pattern]
+            virtual const char * callSign()          const noexcept; //!< [Identifiable] CallSign
+            virtual Pattern *    clone()                      const; //!< [Pattern] protected clone
+            virtual bool         strong()            const noexcept; //!< [Pattern] minimalCount>0
+            virtual bool         univocal()          const noexcept; //!< [Pattern] false
+            virtual String       regularExpression()          const; //!< [Pattern] (motif)(*|+|{n,})*
+            virtual bool         takes(Token &, Source &)     const; //!< [Pattern] if found minimalCount
+            virtual size_t       serialize(OutputStream &)    const; //!< [Serializable] uuid + nmin + motif
+            virtual void         viz(OutputStream &)          const; //!< [Pattern]
 
             //__________________________________________________________________
             //

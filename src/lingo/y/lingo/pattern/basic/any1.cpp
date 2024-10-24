@@ -7,6 +7,8 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Any1)
+
         Any1:: ~Any1() noexcept {}
 
         Any1::  Any1() noexcept :

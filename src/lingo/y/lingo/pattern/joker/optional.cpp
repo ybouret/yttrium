@@ -6,6 +6,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Optional)
+
+
         Optional:: ~Optional() noexcept
         {
         }

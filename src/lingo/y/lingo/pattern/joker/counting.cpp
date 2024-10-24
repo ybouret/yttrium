@@ -9,6 +9,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Counting)
+
+
         Counting:: ~Counting() noexcept
         {
         }

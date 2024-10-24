@@ -27,9 +27,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('A','N','Y','1'); //!< alias
-
-
+            static const uint32_t     UUID = Y_FOURCC('A','N','Y','1'); //!< alias
+            
             //__________________________________________________________________
             //
             //
@@ -38,7 +37,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Any1()             noexcept; //!< setup
             explicit Any1(const Any1 &) noexcept; //!< copy
-            virtual ~Any1()           noexcept; //!< cleanup
+            virtual ~Any1()             noexcept; //!< cleanup
 
             //__________________________________________________________________
             //
@@ -46,14 +45,15 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual size_t    serialize(OutputStream &)           const; //!< [Serializable] uuid
-            virtual Pattern * clone()                             const; //!< [Pattern] new Single(self)
-            virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
-            virtual void      query( CharDB &firstChars )         const; //!< [Pattern] fill
-            virtual String    regularExpression()                 const; //!< [Pattern] full lump
-            virtual bool      univocal()                 const noexcept; //!< false
-            virtual bool      strong()                   const noexcept; //!< true
-            virtual void      viz(OutputStream &)                 const; //!< [Pattern]
+            virtual const char * callSign()                 const noexcept; //!< [Identifiable] CallSign
+            virtual size_t       serialize(OutputStream &)           const; //!< [Serializable] uuid
+            virtual Pattern *    clone()                             const; //!< [Pattern] new Single(self)
+            virtual bool         takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
+            virtual void         query( CharDB &firstChars )         const; //!< [Pattern] fill
+            virtual String       regularExpression()                 const; //!< [Pattern] full lump
+            virtual bool         univocal()                 const noexcept; //!< false
+            virtual bool         strong()                   const noexcept; //!< true
+            virtual void         viz(OutputStream &)                 const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(Any1);

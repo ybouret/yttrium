@@ -6,6 +6,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Byte)
+
+
         Byte:: ~Byte() noexcept {}
 
         Byte::  Byte(const uint8_t _) noexcept :

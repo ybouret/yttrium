@@ -7,6 +7,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(None)
+
+
         None:: None() noexcept :
         Logic(UUID)
         {

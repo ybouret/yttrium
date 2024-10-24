@@ -7,6 +7,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Excl)
+
+
         Excl:: ~Excl() noexcept {}
 
         Excl::  Excl(const uint8_t _) noexcept :

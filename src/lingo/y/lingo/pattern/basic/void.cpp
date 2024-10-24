@@ -8,6 +8,9 @@ namespace Yttrium
     namespace Lingo
     {
 
+        Y_Lingo_Pattern_CallSign(Void)
+
+
         Void:: ~Void() noexcept {}
 
         Void::  Void() noexcept :

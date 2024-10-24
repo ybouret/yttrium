@@ -26,6 +26,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Pattern :
         public Quantized,
+        public Identifiable,
         public Serializable,
         public GraphViz::Vizible
         {
@@ -143,6 +144,10 @@ namespace Yttrium
 
         //! alias
         typedef Pattern::List Patterns;
+
+#define Y_Lingo_Pattern_CallSign(TYPE) const char * TYPE:: callSign() const noexcept { return #TYPE; }
+
+
 
     }
 
