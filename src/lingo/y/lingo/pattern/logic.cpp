@@ -62,8 +62,10 @@ namespace Yttrium
         void Logic:: optimizing()
         {
             Patterns store;
-            while( size> 0 )
-                store.pushTail( Optimize( popHead() ) );
+            while(size>0)
+            {
+                store.pushTail( Pattern::Optimize( popHead() ) );
+            }
             swapWith(store);
         }
 
