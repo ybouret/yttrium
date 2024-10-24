@@ -167,16 +167,16 @@ namespace Yttrium
         Pattern * Pattern:: Optimize(Pattern * const p)
         {
             assert(0!=p);
-            AutoPtr<Pattern> motif = p;
+            AutoPtr<Pattern> motif = p; assert(motif.isValid());
 
             switch(motif->uuid)
             {
-                    // joker
+                    // joker: internal transformation
                 case Optional::UUID: motif->as<Optional>()->optimizing(); break;
                 case MoreThan::UUID: motif->as<MoreThan>()->optimizing(); break;
                 case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
-                    // logic
+                    // logic: global transformation
                 case Or::  UUID: return Optim( motif.yield()->as<Or>() );
                 case And:: UUID: return Optim( motif.yield()->as<And>() );
 
@@ -184,6 +184,7 @@ namespace Yttrium
                     break;
             }
 
+            assert(motif.isValid());
             return motif.yield();
         }
     }
