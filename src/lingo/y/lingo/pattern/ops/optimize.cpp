@@ -15,6 +15,7 @@ namespace Yttrium
         //----------------------------------------------------------------------
         static Pattern *OptReturn(AutoPtr<Logic> &motif, const char * const which)
         {
+            assert(motif.isValid());
             assert(0!=which);
 
             // return with single case extraction
@@ -47,23 +48,24 @@ namespace Yttrium
         //
         //
         //----------------------------------------------------------------------
-        static inline Pattern * Optim(Or * const p)
+        static inline Pattern * Optim(Or * const p, int nesting)
         {
-            AutoPtr<Logic> motif = p;
+            assert(0!=p);
+            AutoPtr<Logic> motif = p; assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
             // propagate optimize
             //
             //------------------------------------------------------------------
-            motif->optimizing();
+            motif->optimizing(nesting); assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
             // remove duplicate
             //
             //------------------------------------------------------------------
-            motif->noMultiple();
+            motif->noMultiple(); assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
@@ -84,6 +86,7 @@ namespace Yttrium
                 }
                 motif->swapWith(store);
             }
+            assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
@@ -111,6 +114,7 @@ namespace Yttrium
 
                 motif->swapWith(store);
             }
+            assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
@@ -118,20 +122,20 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             return OptReturn(motif,"Logic::Or");
-
         }
 
 
-        static inline Pattern * Optim(And * const p)
+        static inline Pattern * Optim(And * const p, int nesting)
         {
-            AutoPtr<Logic> motif = p;
+            assert(0!=p);
+            AutoPtr<Logic> motif = p; assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
             // propagate optimize
             //
             //------------------------------------------------------------------
-            motif->optimizing();
+            motif->optimizing(nesting); assert(motif.isValid());
 
             //------------------------------------------------------------------
             //
@@ -164,27 +168,31 @@ namespace Yttrium
 
 
 
-        Pattern * Pattern:: Optimize(Pattern * const p)
+        Pattern * Pattern:: Optimize(Pattern * const p, int nesting)
         {
             assert(0!=p);
             AutoPtr<Pattern> motif = p; assert(motif.isValid());
+            Core::Indent(std::cerr,nesting) << "<enter " << motif->callSign() << ">" << std::endl;
+            ++nesting;
 
             switch(motif->uuid)
             {
                     // joker: internal transformation
-                case Optional::UUID: motif->as<Optional>()->optimizing(); break;
-                case MoreThan::UUID: motif->as<MoreThan>()->optimizing(); break;
-                case Counting::UUID: motif->as<Counting>()->optimizing(); break;
+                case Optional::UUID: motif->as<Optional>()->optimizing(nesting); break;
+                case MoreThan::UUID: motif->as<MoreThan>()->optimizing(nesting); break;
+                case Counting::UUID: motif->as<Counting>()->optimizing(nesting); break;
 
                     // logic: global transformation
-                case Or::  UUID: return Optim( motif.yield()->as<Or>() );
-                case And:: UUID: return Optim( motif.yield()->as<And>() );
+                case Or::  UUID: return Optim( motif.yield()->as<Or>(),  nesting);
+                case And:: UUID: return Optim( motif.yield()->as<And>(), nesting);
 
                 default:
                     break;
             }
+            --nesting;
 
             assert(motif.isValid());
+            Core::Indent(std::cerr,nesting) << "<leave " << motif->callSign() << ">" << std::endl;
             return motif.yield();
         }
     }

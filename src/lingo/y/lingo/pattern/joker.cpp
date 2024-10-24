@@ -33,15 +33,16 @@ namespace Yttrium
             return *motif;
         }
 
-        void  Joker:: optimizing()
+        void  Joker:: optimizing(int nesting)
         {
             assert(0!=motif);
-            Pattern * const result = Optimize(motif); assert(0!=result);
+            Pattern * const result = Optimize(motif,++nesting); assert(0!=result);
             if( result != motif )
             {
                 delete motif;
                 Coerce(motif) = result;
             }
+            assert(0!=motif);
         }
 
 
@@ -49,6 +50,7 @@ namespace Yttrium
         {
             assert(0!=motif);
             Coerce(motif) = IgnoreCase(motif);
+            assert(0!=motif);
         }
 
         void Joker:: CheckStrong(const char * const     host,

@@ -45,7 +45,7 @@ namespace Yttrium
                 case Byte:: UUID:
                 case Lump:: UUID:
                 case Excl:: UUID:
-                    return Optimize(IgnoreCaseOfBasic(motif));
+                    return  IgnoreCaseOfBasic(motif);
 
                 case Optional:: UUID: motif->as<Optional>()->ignoreCase(); break;
                 case MoreThan:: UUID: motif->as<MoreThan>()->ignoreCase(); break;
@@ -57,7 +57,7 @@ namespace Yttrium
             }
 
 
-            return Optimize(motif.yield());
+            return  motif.yield();
         }
     }
 
