@@ -55,7 +55,6 @@ Y_UTEST(pattern)
     process( plist, new Byte('a'),                              "byte.dat");
     process( plist, new Lump('a','z'),                          "lump.dat");
     process( plist, new Excl('k'),                              "excl.dat");
-    return 0;
 
     process( plist, Optional::Create( new Byte('1') ),          "optional.dat");
     process( plist, MoreThan::Create( new Lump('a','z'),0 ),    "rep0.dat");
@@ -70,6 +69,8 @@ Y_UTEST(pattern)
         p->add('A','Z');
         process( plist, p.yield(), "and.dat");
     }
+
+    return 0;
 
     {
         AutoPtr<Logic> p = new Or();

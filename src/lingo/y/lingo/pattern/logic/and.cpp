@@ -28,25 +28,36 @@ namespace Yttrium
 
         bool And:: univocal() const noexcept
         {
-            for(const Pattern *p=head;p;p=p->next)
+            if(size<=0)
             {
-                if(p->feeble() || p->multiple()) return false;
+                return true;
             }
-            return true;
+            else
+            {
+                for(const Pattern *p=head;p;p=p->next)
+                {
+                    if(p->feeble() || p->multiple()) return false;
+                }
+                return true;
+            }
         }
 
         bool And:: strong() const noexcept
         {
             if(size<=0)
-                return false;
-
-            for(const Pattern *p=head;p;p=p->next)
             {
-                if( p->feeble() )
-                    return false;
+                // degenerate
+                return true;
             }
-
-            return true;
+            else
+            {
+                for(const Pattern *p=head;p;p=p->next)
+                {
+                    if( p->strong() )
+                        return false;
+                }
+                return false;
+            }
         }
 
         String And:: regularExpression() const

@@ -88,7 +88,7 @@ namespace Yttrium
 
         bool Lump:: univocal() const noexcept
         {
-            return lower>=upper;;
+            return lower  == upper;
         }
 
         bool Lump:: strong() const noexcept
