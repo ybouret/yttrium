@@ -49,8 +49,8 @@ namespace Yttrium
             virtual size_t    serialize(OutputStream &)           const; //!< [Serializable] uuid
             virtual Pattern * clone()                             const; //!< [Pattern] new Single(self)
             virtual bool      takes(Token &token, Source &source) const; //!< [Pattern] true on single byte
-            virtual void      query( CharDB &firstChars )         const; //!< [Pattern] append byte
-            virtual String    regularExpression()                 const; //!< [Pattern] full range
+            virtual void      query( CharDB &firstChars )         const; //!< [Pattern] fill
+            virtual String    regularExpression()                 const; //!< [Pattern] full lump
             virtual bool      univocal()                 const noexcept; //!< false
             virtual bool      strong()                   const noexcept; //!< true
             virtual void      viz(OutputStream &)                 const; //!< [Pattern]

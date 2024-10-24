@@ -31,7 +31,7 @@ namespace Yttrium
                         break;
 
                     case RPAREN:
-                        if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%s' in '%s'", ASCII::Printable::Text(c),start);
+                        if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%s' in '%s'",ASCII::Printable::Text(c),start);
                         goto END;
 
                         //------------------------------------------------------
@@ -63,7 +63,7 @@ namespace Yttrium
                         //------------------------------------------------------
                     case ALT:
                         if(motif->size<=0)
-                            throw Specific::Exception(CallSign,"missing expression before '%c' in '...%s'",c,start);
+                            throw Specific::Exception(CallSign,"missing expression before '%s' in '...%s'",ASCII::Printable::Text(c),start);
 
                     {
                         AutoPtr<Logic> alt = new Or();
@@ -89,7 +89,7 @@ namespace Yttrium
                     case '+':
                     case '?':
                     case '&':
-                        if(motif->size<=0) throw Specific::Exception(CallSign,"missing expression before '%c' after '%s'",c,start);
+                        if(motif->size<=0) throw Specific::Exception(CallSign,"missing expression before '%s' after '%s'",ASCII::Printable::Text(c),start);
                         Jokerize(*motif,c);
                         break;
 
