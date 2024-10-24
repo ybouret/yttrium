@@ -33,7 +33,7 @@ namespace Yttrium
         {
             assert(0!=m);
             try {
-                if(m->feeble()) throw Specific::Exception("Lingo::MoreThan","pattern is not strong!");
+                CheckStrong(HostCallSign,m);
                 return new MoreThan(m,nmin);
             }
             catch(...)
@@ -51,13 +51,13 @@ namespace Yttrium
 
         String MoreThan:: regularExpression() const
         {
-            String ans = "(" + motif->regularExpression() + ")";
+            String ans = motif->regularExpression();
             switch(minimalCount)
             {
                 case 0: ans += '*'; break;
                 case 1: ans += '+'; break;
                 default:
-                    ans += Formatted::Get("[%u,]", unsigned(minimalCount));
+                    ans += Formatted::Get("{%u,}", unsigned(minimalCount));
             }
             return ans;
         }
@@ -69,6 +69,8 @@ namespace Yttrium
 
         bool MoreThan:: strong() const noexcept
         {
+            assert(motif);
+            assert(motif->strong());
             return minimalCount>0;
         }
 

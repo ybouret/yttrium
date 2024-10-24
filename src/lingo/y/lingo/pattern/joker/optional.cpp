@@ -22,6 +22,7 @@ namespace Yttrium
         {
             assert(0!=m);
             try {
+                CheckStrong(HostCallSign,m);
                 return new Optional(m);
             }
             catch(...)

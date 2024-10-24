@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Optional motif
+        //! Optional STRONG motif
         //
         //
         //______________________________________________________________________

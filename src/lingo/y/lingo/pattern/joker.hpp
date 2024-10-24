@@ -51,7 +51,8 @@ namespace Yttrium
             const Pattern & operator*() const noexcept; //!< accept internal motif
             void  optimizing();                         //!< propagate optimize to motif
             void  ignoreCase();                         //!< propagate ignore case to motif
-            
+
+
             //__________________________________________________________________
             //
             //
@@ -60,6 +61,10 @@ namespace Yttrium
             //__________________________________________________________________
         protected:
             Pattern * const motif; //!< created pattern for this joker
+
+
+            static void CheckStrong(const char    * const host,
+                                    const Pattern * const guest);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Joker);

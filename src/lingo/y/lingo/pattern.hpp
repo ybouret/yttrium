@@ -145,7 +145,9 @@ namespace Yttrium
         //! alias
         typedef Pattern::List Patterns;
 
-#define Y_Lingo_Pattern_CallSign(TYPE) const char * TYPE:: callSign() const noexcept { return #TYPE; }
+#define Y_Lingo_Pattern_CallSign(TYPE) \
+static const char HostCallSign[] = #TYPE; \
+const char * TYPE:: callSign() const noexcept { return HostCallSign; }
 
 
 

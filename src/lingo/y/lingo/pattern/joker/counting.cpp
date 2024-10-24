@@ -37,7 +37,7 @@ namespace Yttrium
         {
             assert(0!=m);
             try {
-                if(m->feeble()) throw Specific::Exception("Lingo::Counting","pattern is not strong!");
+                CheckStrong(HostCallSign,m);
                 return new Counting(m,nmin,nmax);
             }
             catch(...)

@@ -1,5 +1,7 @@
 
 #include "y/lingo/pattern/joker.hpp"
+#include "y/system/exception.hpp"
+
 
 namespace Yttrium
 {
@@ -49,6 +51,15 @@ namespace Yttrium
             Coerce(motif) = IgnoreCase(motif);
         }
 
+        void Joker:: CheckStrong(const char * const     host,
+                                 const Pattern * const guest)
+        {
+
+            assert(0!=host);
+            assert(0!=guest);
+            if(guest->strong()) return;
+            throw Specific::Exception(host, "guest '%s' is not strong",guest->callSign());
+        }
 
     }
 
