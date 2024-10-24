@@ -64,6 +64,7 @@ namespace Yttrium
             Patterns store;
             while(size>0)
             {
+                assert(0!=head);
                 store.pushTail( Pattern::Optimize( popHead() ) );
             }
             swapWith(store);
