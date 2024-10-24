@@ -93,7 +93,7 @@ namespace Yttrium
             // fusion of consecutive basic...
             //
             //------------------------------------------------------------------
-            if(false)
+            if(true)
             {
                 Patterns store;
 
