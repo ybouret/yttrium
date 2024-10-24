@@ -2,6 +2,7 @@
 #include "y/lingo/pattern/regexp/compiler.hpp"
 #include "y/lingo/pattern/all.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/printable.hpp"
 
 namespace Yttrium
 {
@@ -153,7 +154,7 @@ namespace Yttrium
                     return c;
             }
 
-            throw Specific::Exception(CallSign,"invalid '%c' after '-'",c);
+            throw Specific::Exception(CallSign,"invalid '%s' after '-'", ASCII::Printable::Text(c));
         }
 
     }

@@ -1,6 +1,7 @@
 #include "y/lingo/pattern/regexp/compiler.hpp"
 #include "y/lingo/pattern/joker/all.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/printable.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
                 case '&': p.pushTail( Pattern::IgnoreCase(motif) ); break;
                 default:
                     delete motif;
-                    throw Specific::Exception(CallSign, "unexpected joker '%c'",joker);
+                    throw Specific::Exception(CallSign, "unexpected joker '%s'", ASCII::Printable::Text(joker) );
             }
         }
 
@@ -29,6 +30,7 @@ namespace Yttrium
 
 
 #include "y/text/ascii/convert.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -115,7 +117,7 @@ namespace Yttrium
             }
 
 
-            throw Specific::Exception(CallSign,"invalid char '%c' in braces of '%s'",c,expr);
+            throw Specific::Exception(CallSign,"invalid char '%s' in braces of '%s'", ASCII::Printable::Text(c), expr);
         }
     }
 

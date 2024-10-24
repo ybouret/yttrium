@@ -1,6 +1,7 @@
 #include "y/lingo/pattern/regexp/compiler.hpp"
 #include "y/lingo/pattern/all.hpp"
 #include "y/system/exception.hpp"
+#include "y/text/ascii/printable.hpp"
 
 namespace Yttrium
 {
@@ -30,7 +31,7 @@ namespace Yttrium
                         break;
 
                     case RPAREN:
-                        if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%c' in '%s'",c,start);
+                        if(--depth<0) throw Specific::Exception(CallSign,"extraneous '%s' in '%s'", ASCII::Printable::Text(c),start);
                         goto END;
 
                         //------------------------------------------------------

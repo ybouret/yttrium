@@ -20,7 +20,8 @@ namespace Yttrium
         //______________________________________________________________________
         struct Printable
         {
-            static const char * const Char[256]; //!< table of substitutions
+            static const char * const Char[256];                 //!< table of substitutions
+            static const char *       Text(const char) noexcept; //!< convert char to text
         };
 
     }

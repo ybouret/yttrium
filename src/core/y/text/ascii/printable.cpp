@@ -9,6 +9,11 @@ namespace Yttrium
         {
 #include "printable.hxx"
         };
+
+        const char * Printable:: Text(const char c) noexcept
+        {
+            return Char[ static_cast<uint8_t>(c) ];
+        }
     }
 
 }

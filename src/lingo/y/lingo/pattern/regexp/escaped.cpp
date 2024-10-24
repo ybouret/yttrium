@@ -90,6 +90,8 @@ namespace Yttrium
 
 }
 
+#include "y/text/ascii/printable.hpp"
+
 namespace Yttrium
 {
     namespace Lingo
@@ -110,12 +112,12 @@ namespace Yttrium
             if(curr>=last) throw Specific::Exception(CallSign, "missing first hexadecimal char");
             const char  hiChar = *(curr++);
             const int   hiCode = Hexadecimal::ToDecimal(hiChar);
-            if(hiCode<0) throw Specific::Exception(CallSign, "invalid first hexadecimal char '%c'", hiChar);
+            if(hiCode<0) throw Specific::Exception(CallSign, "invalid first hexadecimal char '%s'", ASCII::Printable::Text(hiChar) );
 
             if(curr>=last) throw Specific::Exception(CallSign, "missing second hexadecimal char");
             const char  loChar = *(curr++);
             const int   loCode = Hexadecimal::ToDecimal(loChar);
-            if(loCode<0) throw Specific::Exception(CallSign, "invalid second hexadecimal char '%c'", loChar);
+            if(loCode<0) throw Specific::Exception(CallSign, "invalid second hexadecimal char '%s'", ASCII::Printable::Text(loChar));
 
 
             return new Byte( static_cast<uint8_t>(hiCode<<4|loCode) );
