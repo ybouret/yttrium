@@ -126,7 +126,7 @@ namespace Yttrium
 
         Pattern * CharDB:: compile() const
         {
-            static const unsigned last = 256;
+            static const unsigned last   = 256;
             static const char     name[] = "Lingo::CharDB.compile";
 
             //------------------------------------------------------------------
@@ -183,6 +183,7 @@ namespace Yttrium
                         const uint8_t  lo = lower;
                         const uint8_t  up = upper-1;
                         const unsigned nn = upper-lower;
+                        std::cerr << "lo=" << Pattern::ByteToRegExp(lo) << " -> hi=" << Pattern::ByteToRegExp(up) << std::endl;
                         switch(nn)
                         {
                             case 0:  throw Specific::Exception(name, "***empty interval!");
@@ -209,15 +210,17 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            std::cerr << "#plist=" << plist.size << std::endl;
+            
             switch(plist.size)
             {
                 case 0: throw Specific::Exception(name, "*** empty pattern list!");
-                case 1: return plist.popHead();
+                case 1: assert(0!=plist.head); return plist.popHead();
                 default:
                     break;
             }
 
-            AutoPtr<Logic> result = new Or();
+            AutoPtr<Logic> result = new Or(); assert(result.isValid());
             result->swapWith(plist);
             return result.yield();
         }

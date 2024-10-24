@@ -13,7 +13,8 @@ namespace Yttrium
         //
         //
         //----------------------------------------------------------------------
-        static Pattern *OptReturn(AutoPtr<Logic> &motif, const char * const which)
+        static Pattern *OptReturn(AutoPtr<Logic> &   motif,
+                                  const char * const which)
         {
             assert(motif.isValid());
             assert(0!=which);
@@ -36,10 +37,13 @@ namespace Yttrium
             CharDB db;
             for(const Pattern *p=basic.head;p;p=p->next)
             {
+                assert(0!=p);
                 assert(p->isBasic());
                 p->query(db);
             }
-            return db.compile();
+            std::cerr << "#db=" << db.size() << std::endl;
+            Pattern * const ans = db.compile(); assert( 0 != ans );
+            return ans;
         }
 
         //----------------------------------------------------------------------
@@ -68,6 +72,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             motif->noMultiple(); assert(motif.isValid());
 
+
             //------------------------------------------------------------------
             //
             // merge OR
@@ -77,11 +82,12 @@ namespace Yttrium
                 Patterns store;
                 while(motif->size>0)
                 {
+                    assert(0!=motif->head);
                     AutoPtr<Pattern> q = motif->popHead(); assert(q.isValid());
                     if( Or::UUID == q->uuid )
                     {
                         store.mergeTail( *(q->as<Or>()) );
-                        continue;
+                        continue; // will drop Or
                     }
                     store.pushTail(q.yield());
                 }
@@ -89,12 +95,13 @@ namespace Yttrium
             }
             assert(motif.isValid());
 
+
+
             //------------------------------------------------------------------
             //
             // fusion of consecutive basic...
             //
             //------------------------------------------------------------------
-            if(true)
             {
                 Patterns store;
 
@@ -102,13 +109,15 @@ namespace Yttrium
                 {
                     assert(0!=motif->head);
                     Pattern * const first = motif->popHead(); assert(0!=first);
-                    if(motif->isBasic())
+                    if(first->isBasic())
                     {
                         Patterns basic;
                         basic.pushTail(first);
                         while(motif->size>0 && motif->head->isBasic() )
                             basic.pushTail(motif->popHead());
+                        std::cerr << "#basic=" << basic.size << std::endl;
                         store.pushTail( FusionBasic(basic) );
+                        //store.mergeTail(basic);
                     }
                     else
                     {
@@ -176,6 +185,7 @@ namespace Yttrium
         {
             assert(0!=p);
             AutoPtr<Pattern> motif = p; assert(motif.isValid());
+            std::cerr << "Optimize " << motif->callSign() << std::endl;
 
             switch(motif->uuid)
             {
@@ -184,10 +194,8 @@ namespace Yttrium
                 case MoreThan::UUID: motif->as<MoreThan>()->optimizing(); break;
                 case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
-#if 1
                     // logic: global transformation
                 case Or::  UUID: return Optim( motif.yield()->as<Or>()  );
-#endif
                 case And:: UUID: return Optim( motif.yield()->as<And>() );
                 default:
                     break;
