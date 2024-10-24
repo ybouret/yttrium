@@ -35,8 +35,8 @@ namespace Yttrium
 
         void  Joker:: optimizing()
         {
-            std::cerr << "In Joker " << callSign() << std::endl;
             assert(0!=motif);
+            std::cerr << "In Joker " << callSign() << " of " << motif->callSign() << std::endl;
             Pattern * const result = Optimize(motif);
             assert(0!=result);
             std::cerr << "Ok " << result->callSign() << std::endl;
