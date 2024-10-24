@@ -197,6 +197,8 @@ namespace Yttrium
                     // logic: global transformation
                 case Or::  UUID: return OptimOR(  motif.yield()->as<Or>()  );
                 case And:: UUID: return OptimAND( motif.yield()->as<And>() );
+
+                    // default: untouched
                 default:
                     break;
             }
