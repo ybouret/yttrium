@@ -53,7 +53,7 @@ namespace Yttrium
         //
         //
         //----------------------------------------------------------------------
-        static inline Pattern * Optim(Or * const p)
+        static inline Pattern * OptimOR(Or * const p)
         {
             assert(0!=p);
             AutoPtr<Logic> motif = p; assert(motif.isValid());
@@ -138,7 +138,7 @@ namespace Yttrium
         }
 
 
-        static inline Pattern * Optim(And * const p)
+        static inline Pattern * OptimAND(And * const p)
         {
             assert(0!=p);
             AutoPtr<Logic> motif = p; assert(motif.isValid());
@@ -195,8 +195,8 @@ namespace Yttrium
                 case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
                     // logic: global transformation
-                case Or::  UUID: return Optim( motif.yield()->as<Or>()  );
-                case And:: UUID: return Optim( motif.yield()->as<And>() );
+                case Or::  UUID: return OptimOR(  motif.yield()->as<Or>()  );
+                case And:: UUID: return OptimAND( motif.yield()->as<And>() );
                 default:
                     break;
             }
