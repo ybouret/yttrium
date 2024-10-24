@@ -76,7 +76,7 @@ namespace Yttrium
                 Patterns store;
                 while(motif->size>0)
                 {
-                    AutoPtr<Pattern> q = motif->popHead();
+                    AutoPtr<Pattern> q = motif->popHead(); assert(q.isValid());
                     if( Or::UUID == q->uuid )
                     {
                         store.mergeTail( *(q->as<Or>()) );
@@ -93,6 +93,7 @@ namespace Yttrium
             // fusion of consecutive basic...
             //
             //------------------------------------------------------------------
+            if(false)
             {
                 Patterns store;
 
@@ -180,10 +181,11 @@ namespace Yttrium
                 case MoreThan::UUID: motif->as<MoreThan>()->optimizing(); break;
                 case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
+#if 1
                     // logic: global transformation
-                case Or::  UUID: return Optim( motif.yield()->as<Or>() );
-                case And:: UUID: return Optim( motif.yield()->as<And>());
-
+                case Or::  UUID: return Optim( motif.yield()->as<Or>()  );
+#endif
+                case And:: UUID: return Optim( motif.yield()->as<And>() );
                 default:
                     break;
             }
