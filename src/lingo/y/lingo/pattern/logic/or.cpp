@@ -26,29 +26,44 @@ namespace Yttrium
 
         bool Or:: strong() const noexcept
         {
-            return false;
+            if(size<=0)
+            {
+                return true;
+            }
+            else
+            {
+                for(const Pattern *p=head;p;p=p->next)
+                {
+                    if(p->feeble()) return false;
+                }
+                return true;
+            }
         }
 
         bool Or:: univocal() const noexcept
         {
-            return false;
+            return 1==size && head->univocal();
         }
 
         void Or:: query(CharDB &fc) const
         {
-
+            for(const Pattern *p=head;p;p=p->next)
+            {
+                p->query(fc);
+            }
         }
 
         String Or:: regularExpression() const
         {
-            String ans;
             switch(size)
             {
-                case 0: return ans;
+                case 0: return "[]";
                 case 1: return head->regularExpression();
                 default:
                     break;
             }
+            assert(size>=2);
+            String ans;
             ans += '(';
             const Pattern *node = head;
             ans += node->regularExpression();

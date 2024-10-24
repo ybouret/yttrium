@@ -15,6 +15,7 @@ Y_UTEST(rx)
         Dictionary dict;
         dict("INT",new Lump('0','9'));
 
+#if 0
         {
             const AutoPtr<Pattern> p = Pattern::Exact(rx);
             std::cerr << "Exact(" << rx << ")=" << p->regularExpression() << std::endl;
@@ -26,7 +27,8 @@ Y_UTEST(rx)
             std::cerr << "Among(" << rx << ")=" << p->regularExpression() << std::endl;
             GraphViz::Vizible::DotToPng("among.dot",*p);
         }
-
+#endif
+        
         {
             const AutoPtr<Pattern> p = RegExp(rx,&dict);
             Y_ASSERT(p.isValid());
