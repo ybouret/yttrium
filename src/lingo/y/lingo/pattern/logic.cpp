@@ -59,11 +59,11 @@ namespace Yttrium
             return true;
         }
 
-        void Logic:: optimizing(int nesting)
+        void Logic:: optimizing()
         {
             Patterns store;
             while( size> 0 )
-                store.pushTail( Optimize( popHead(),nesting) );
+                store.pushTail( Optimize( popHead() ) );
             swapWith(store);
         }
 

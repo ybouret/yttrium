@@ -81,7 +81,7 @@ namespace Yttrium
             
             static const char *ByteToRegExp(const uint8_t byte) noexcept;            //!< byte to regular expression
             static Pattern    *Read(InputStream &);                                  //!< read serialized pattern
-            static Pattern    *Optimize(Pattern * const, int nesting);               //!< optimizations
+            static Pattern    *Optimize(Pattern * const);                            //!< optimizations
             static Pattern    *IgnoreCase(Pattern * const);                          //!< make case insensitive pattern
 
             //__________________________________________________________________

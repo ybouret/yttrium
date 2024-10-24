@@ -33,15 +33,18 @@ namespace Yttrium
             return *motif;
         }
 
-        void  Joker:: optimizing(int nesting)
+        void  Joker:: optimizing()
         {
             assert(0!=motif);
-            Pattern * const result = Optimize(motif,++nesting); assert(0!=result);
+            Pattern * const result = Optimize(motif);
+            assert(0!=result);
+
             if( result != motif )
             {
                 delete motif;
                 Coerce(motif) = result;
             }
+
             assert(0!=motif);
         }
 

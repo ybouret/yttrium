@@ -18,7 +18,7 @@ namespace Yttrium
             if(rxc.depth!=0)
                 throw Specific::Exception(RXC::CallSign,"missing %d parenthese%s in '%s'",rxc.depth, Plural::s(rxc.depth),expr);
 
-            return Pattern::Optimize(p.yield(),0);
+            return Pattern::Optimize(p.yield());
         }
 
         Pattern * RegExp(const String     &       expr,
