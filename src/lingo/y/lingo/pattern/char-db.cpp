@@ -183,7 +183,6 @@ namespace Yttrium
                         const uint8_t  lo = lower;
                         const uint8_t  up = upper-1;
                         const unsigned nn = upper-lower;
-                        std::cerr << "lo=" << Pattern::ByteToRegExp(lo) << " -> hi=" << Pattern::ByteToRegExp(up) << std::endl;
                         switch(nn)
                         {
                             case 0:  throw Specific::Exception(name, "***empty interval!");
@@ -210,7 +209,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            std::cerr << "#plist=" << plist.size << std::endl;
             
             switch(plist.size)
             {
