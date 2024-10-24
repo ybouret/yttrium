@@ -2,8 +2,8 @@
 
 //! \file
 
-#ifndef Y_Lingo_Repeated_Included
-#define Y_Lingo_Repeated_Included 1
+#ifndef Y_Lingo_MoreThan_Included
+#define Y_Lingo_MoreThan_Included 1
 
 #include "y/lingo/pattern/joker.hpp"
 
@@ -15,11 +15,11 @@ namespace Yttrium
         //
         //
         //
-        //! Repeated STRONG motif
+        //! MoreThan minCount STRONG motif
         //
         //
         //______________________________________________________________________
-        class Repeated : public Joker
+        class MoreThan : public Joker
         {
         public:
             //__________________________________________________________________
@@ -36,7 +36,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            virtual ~Repeated() noexcept;                          //!< cleanup
+            virtual ~MoreThan() noexcept;                          //!< cleanup
             static Pattern * Create(Pattern *, const size_t nmin); //!< with STRONG pattern
 
             //__________________________________________________________________
@@ -62,8 +62,8 @@ namespace Yttrium
             const size_t minimalCount; //!< minimal valid count
 
         private:
-            explicit Repeated(Pattern *, const size_t) noexcept;
-            Y_DISABLE_COPY_AND_ASSIGN(Repeated);
+            explicit MoreThan(Pattern *, const size_t) noexcept;
+            Y_DISABLE_COPY_AND_ASSIGN(MoreThan);
         };
     }
 

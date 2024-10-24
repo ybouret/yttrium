@@ -55,9 +55,9 @@ Y_UTEST(pattern)
     process( plist, new Lump('a','z'),                          "lump.dat");
     process( plist, new Excl('k'),                              "excl.dat");
     process( plist, Optional::Create( new Byte('1') ),          "optional.dat");
-    process( plist, Repeated::Create( new Lump('a','z'),0 ),    "rep0.dat");
-    process( plist, Repeated::Create( new Lump('0','9'),1 ),    "rep1.dat");
-    process( plist, Repeated::Create( new Lump('A','Z'),5 ),    "rep5.dat");
+    process( plist, MoreThan::Create( new Lump('a','z'),0 ),    "rep0.dat");
+    process( plist, MoreThan::Create( new Lump('0','9'),1 ),    "rep1.dat");
+    process( plist, MoreThan::Create( new Lump('A','Z'),5 ),    "rep5.dat");
     process( plist, Counting::Create( new Lump('A','Z'),1,3 ),  "counting.dat");
 
     {
@@ -93,7 +93,7 @@ Y_UTEST(pattern)
     std::cerr << std::endl;
 
     Y_SIZEOF(Optional);
-    Y_SIZEOF(Repeated);
+    Y_SIZEOF(MoreThan);
     Y_SIZEOF(Counting);
     std::cerr << std::endl;
 

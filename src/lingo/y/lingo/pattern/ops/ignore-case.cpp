@@ -48,7 +48,7 @@ namespace Yttrium
                     return Optimize(IgnoreCaseOfBasic(motif));
 
                 case Optional:: UUID: motif->as<Optional>()->ignoreCase(); break;
-                case Repeated:: UUID: motif->as<Repeated>()->ignoreCase(); break;
+                case MoreThan:: UUID: motif->as<MoreThan>()->ignoreCase(); break;
                 case Counting:: UUID: motif->as<Counting>()->ignoreCase(); break;
 
                 case And :: UUID: motif->as<And >()->ignoreCase(); break;

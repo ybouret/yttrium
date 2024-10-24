@@ -13,8 +13,8 @@ namespace Yttrium
             Pattern * const motif = p.popTail();
             switch(joker)
             {
-                case '*': p.pushTail( Repeated::Create(motif,0)  ); break;
-                case '+': p.pushTail( Repeated::Create(motif,1)  ); break;
+                case '*': p.pushTail( MoreThan::Create(motif,0)  ); break;
+                case '+': p.pushTail( MoreThan::Create(motif,1)  ); break;
                 case '?': p.pushTail( Optional::Create(motif)    ); break;
                 case '&': p.pushTail( Pattern::IgnoreCase(motif) ); break;
                 default:
@@ -99,12 +99,11 @@ namespace Yttrium
                     }
                     else
                     {
-                        p.pushTail( Repeated::Create(p.popTail(),nmin));
+                        p.pushTail( MoreThan::Create(p.popTail(),nmin));
                         return;
                     }
 
-
-
+                    
                 }
                 else
                 {

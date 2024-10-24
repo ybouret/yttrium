@@ -1,6 +1,6 @@
 
 
-#include "y/lingo/pattern/joker/repeated.hpp"
+#include "y/lingo/pattern/joker/more-than.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium
@@ -8,30 +8,30 @@ namespace Yttrium
     namespace Lingo
     {
 
-        Repeated:: ~Repeated() noexcept
+        MoreThan:: ~MoreThan() noexcept
         {
         }
 
-        Repeated:: Repeated(Pattern *m, const size_t nmin) noexcept :
+        MoreThan:: MoreThan(Pattern *m, const size_t nmin) noexcept :
         Joker(UUID,m),
         minimalCount(nmin)
         {
-            Y_Lingo_Pattern(Repeated);
+            Y_Lingo_Pattern(MoreThan);
         }
 
-        size_t Repeated:: serialize(OutputStream &fp) const
+        size_t MoreThan:: serialize(OutputStream &fp) const
         {
             size_t ans = emitUUID(fp);
             ans += fp.emitVBR(minimalCount);
             return ans + motif->serialize(fp);
         }
 
-        Pattern * Repeated:: Create(Pattern *m, const size_t nmin)
+        Pattern * MoreThan:: Create(Pattern *m, const size_t nmin)
         {
             assert(0!=m);
             try {
                 if(m->feeble()) throw Specific::Exception("Lingo::Repeated","pattern is not strong!");
-                return new Repeated(m,nmin);
+                return new MoreThan(m,nmin);
             }
             catch(...)
             {
@@ -40,13 +40,13 @@ namespace Yttrium
             }
         }
 
-        Pattern * Repeated:: clone() const
+        Pattern * MoreThan:: clone() const
         {
             assert(0!=motif);
             return Create( motif->clone(), minimalCount );
         }
 
-        String Repeated:: regularExpression() const
+        String MoreThan:: regularExpression() const
         {
             String ans = "(" + motif->regularExpression() + ")";
             switch(minimalCount)
@@ -59,18 +59,18 @@ namespace Yttrium
             return ans;
         }
 
-        bool Repeated:: univocal() const noexcept
+        bool MoreThan:: univocal() const noexcept
         {
             return false;
         }
 
-        bool Repeated:: strong() const noexcept
+        bool MoreThan:: strong() const noexcept
         {
             return minimalCount>0;
         }
 
-        
-        bool Repeated:: takes(Token &token, Source &source) const
+
+        bool MoreThan:: takes(Token &token, Source &source) const
         {
             assert(0==token.size);
             Token  local;
@@ -97,7 +97,7 @@ namespace Yttrium
             }
         }
 
-        void Repeated:: viz(OutputStream &fp) const
+        void MoreThan:: viz(OutputStream &fp) const
         {
             motif->viz(fp);
             Node(fp,this) << '[';

@@ -173,7 +173,7 @@ namespace Yttrium
             {
                     // joker
                 case Optional::UUID: motif->as<Optional>()->optimizing(); break;
-                case Repeated::UUID: motif->as<Repeated>()->optimizing(); break;
+                case MoreThan::UUID: motif->as<MoreThan>()->optimizing(); break;
                 case Counting::UUID: motif->as<Counting>()->optimizing(); break;
 
                     // logic

@@ -47,15 +47,17 @@ namespace Yttrium
                 case Optional::UUID:
                     return Optional::Create( Read(fp) );
 
-                case Repeated::UUID: {
-                    const size_t nmin = fp.readVBR<size_t>("Repeated.minimalCount");
-                    return Repeated:: Create( Read(fp), nmin );
+                case MoreThan::UUID: {
+                    const size_t nmin = fp.readVBR<size_t>("MoreThan.minimalCount");
+                    return MoreThan:: Create( Read(fp), nmin );
                 }
+
                 case Counting::UUID: {
                     const size_t nmin = fp.readVBR<size_t>("Counting.minimalCount");
                     const size_t nmax = fp.readVBR<size_t>("Counting.maximalCount");
                     return Counting:: Create( Read(fp), nmin, nmax );
                 }
+                    
                     // Logic
                 case And::UUID:  { AutoPtr<Logic> p = new And(); return ReadLogic(p,fp); }
                 case Or::UUID:   { AutoPtr<Logic> p = new Or();  return ReadLogic(p,fp); }

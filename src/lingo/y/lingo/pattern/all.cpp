@@ -27,7 +27,7 @@ namespace Yttrium
             switch(uuid)
             {
                 case Optional:: UUID:
-                case Repeated:: UUID:
+                case MoreThan:: UUID:
                 case Counting:: UUID:
                     return true;
                 default:

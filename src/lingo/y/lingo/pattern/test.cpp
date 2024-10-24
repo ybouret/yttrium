@@ -29,9 +29,9 @@ namespace Yttrium
 
                     // joker
                 case Optional:: UUID: return Equality(**(lhs.as<Optional>()), **(lhs.as<Optional>()) );
-                case Repeated:: UUID: {
-                    const Repeated &l = *lhs.as<Repeated>();
-                    const Repeated &r = *rhs.as<Repeated>();
+                case MoreThan:: UUID: {
+                    const MoreThan &l = *lhs.as<MoreThan>();
+                    const MoreThan &r = *rhs.as<MoreThan>();
                     return (l.minimalCount==r.minimalCount && Equality(*l,*r));
                 }
                 case Counting:: UUID: {
