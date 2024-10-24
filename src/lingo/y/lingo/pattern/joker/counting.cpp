@@ -55,16 +55,14 @@ namespace Yttrium
 
         String Counting:: regularExpression() const
         {
-            String ans = "(" + motif->regularExpression() + ")";
-
-            ans += Formatted::Get("[%u,%u]", unsigned(minimalCount), unsigned(maximalCount));
-
+            String ans =  motif->regularExpression();
+            ans += (minimalCount == maximalCount) ? Formatted::Get("{%u}", unsigned(minimalCount)) : Formatted::Get("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount));
             return ans;
         }
 
         bool Counting:: univocal() const noexcept
         {
-            return minimalCount == maximalCount && motif->univocal();
+            return (minimalCount == maximalCount) && motif->univocal();
         }
 
         bool Counting:: strong() const noexcept
@@ -79,7 +77,7 @@ namespace Yttrium
             assert(0==token.size);
             Token  local;
 
-            for(size_t i=0;i<=minimalCount;++i)
+            for(size_t i=1;i<=minimalCount;++i)
             {
                 Token temp;
                 if(motif->takes(temp,source))
@@ -117,7 +115,7 @@ namespace Yttrium
         {
             motif->viz(fp);
             Node(fp,this) << '[';
-            const String text = minimalCount == maximalCount ? Formatted::Get("{%u}", unsigned(minimalCount) ) : Formatted::Get("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount) );
+            const String text = (minimalCount == maximalCount) ? Formatted::Get("{%u}", unsigned(minimalCount) ) : Formatted::Get("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount) );
             Label(fp,text);
             fp << ",shape=component";
             fp << ']';
