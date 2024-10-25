@@ -8,7 +8,6 @@ namespace Yttrium
 
         Logic:: ~Logic() noexcept
         {
-            std::cerr << "~Logic#" << size << std::endl;
         }
 
 

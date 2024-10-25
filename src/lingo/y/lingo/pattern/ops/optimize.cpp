@@ -33,7 +33,6 @@ namespace Yttrium
         static inline
         Pattern * FusionBasic(const Patterns &basic)
         {
-            std::cerr << "#consecutive basic=" << basic.size << std::endl;
             CharDB db;
             for(const Pattern *p=basic.head;p;p=p->next)
             {
@@ -41,8 +40,7 @@ namespace Yttrium
                 assert(p->isBasic());
                 p->query(db);
             }
-            std::cerr << "#db=" << db.size() << std::endl;
-            Pattern * const ans = db.compile(); assert( 0 != ans );
+            Pattern * const ans = db.compile();
             return ans;
         }
 
@@ -115,14 +113,10 @@ namespace Yttrium
                         basic.pushTail(first);
                         while(motif->size>0 && motif->head->isBasic() )
                             basic.pushTail(motif->popHead());
-                        std::cerr << "#basic=" << basic.size << std::endl;
                         store.pushTail( FusionBasic(basic) );
-                        //store.mergeTail(basic);
                     }
                     else
-                    {
                         store.pushTail(first);
-                    }
                 }
 
                 motif->swapWith(store);
@@ -185,8 +179,7 @@ namespace Yttrium
         {
             assert(0!=p);
             AutoPtr<Pattern> motif = p; assert(motif.isValid());
-            std::cerr << "Optimize " << motif->callSign() << std::endl;
-
+            
             switch(motif->uuid)
             {
                     // joker: internal transformation

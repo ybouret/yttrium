@@ -10,7 +10,6 @@ namespace Yttrium
         Joker:: ~Joker() noexcept
         {
             assert(0!=motif);
-            std::cerr << "~Joker@" << motif->callSign() << std::endl;
             delete motif;
             Coerce(motif) = 0;
         }
@@ -37,28 +36,18 @@ namespace Yttrium
         void  Joker:: optimizing()
         {
             assert(0!=motif);
-            std::cerr << "In Joker " << callSign() << " of " << motif->callSign() << std::endl;
-            Pattern * const result = Optimize(motif);
-            assert(0!=result);
-            std::cerr << "Ok " << result->callSign() << std::endl;
-            if( result != motif )
-            {
-                std::cerr << "deleting " << motif->callSign() << std::endl;
-                delete motif;
-                std::cerr << "replacing with" << result->callSign() << std::endl;
-                Coerce(motif) = result;
-                std::cerr << "replaced with " << motif->callSign() << std::endl;
-            }
-
-            assert(0!=motif);
+            Pattern * const result = Optimize( motif->clone() );
+            delete motif;
+            Coerce(motif) = result;
         }
 
 
         void  Joker:: ignoreCase()
         {
             assert(0!=motif);
-            Coerce(motif) = IgnoreCase(motif);
-            assert(0!=motif);
+            Pattern * const result = IgnoreCase( motif->clone() );
+            delete motif;
+            Coerce(motif) = result;
         }
 
         void Joker:: CheckStrong(const char * const     host,

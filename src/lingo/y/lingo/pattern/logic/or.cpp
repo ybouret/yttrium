@@ -17,7 +17,6 @@ namespace Yttrium
 
         Or:: ~Or() noexcept
         {
-            std::cerr << "~Or" << std::endl;
         }
 
         Or:: Or(const Or &other) : Logic(other)
