@@ -68,6 +68,15 @@ namespace Yttrium
             return code->get();
         }
 
+        bool Source:: getch(Token &token)
+        {
+            assert(0!=code);
+            assert(0==token.size);
+            Char * ch = code->get();
+            if(ch) { token << ch; return true; }
+            else                  return false;
+        }
+
         void Source:: put(Char *chr) noexcept
         {
             assert(0!=chr);

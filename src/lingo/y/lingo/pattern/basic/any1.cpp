@@ -33,17 +33,7 @@ namespace Yttrium
         bool Any1:: takes(Token &token, Source &source) const
         {
             assert( 0 == token.size );
-            Char *ch = source.get();
-            if(0!=ch)
-            {
-                token.pushTail(ch);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
+            return source.getch(token);
         }
 
         void  Any1:: query( CharDB &firstChars ) const

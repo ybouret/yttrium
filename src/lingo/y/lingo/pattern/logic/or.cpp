@@ -1,5 +1,6 @@
 
 #include "y/lingo/pattern/logic/or.hpp"
+#include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
 {
@@ -49,10 +50,14 @@ namespace Yttrium
 
         void Or:: query(CharDB &fc) const
         {
-            for(const Pattern *p=head;p;p=p->next)
-            {
-                p->query(fc);
-            }
+            if(size<=0)
+                // any1
+                fc.fill();
+            else
+                // all possible fc
+                for(const Pattern *p=head;p;p=p->next)
+                    p->query(fc);
+
         }
 
         String Or:: regularExpression() const
@@ -79,16 +84,41 @@ namespace Yttrium
         {
             assert(0==token.size);
 
-            return false;
+            if(size<=0)
+                return source.getch(token);
+            else
+            {
+                Token local;
+                bool  found = false;
+                for(const Pattern *p=head;p;p=p->next)
+                {
+                    if(p->takes(local,source))
+                    {
+                        found = true;
+                        if(local.size<=0)
+                        {
+                            // feeble pattern, give it another try if possible
+                            continue;
+                        }
+                        else
+                        {
+                            // not empty => success
+                            token << local;
+                            break;
+                        }
+                    }
+                }
+
+                return found;
+            }
         }
 
 
         void Or:: viz(OutputStream &fp) const
         {
             for(const Pattern *node=head;node;node=node->next)
-            {
                 node->viz(fp);
-            }
+
 
             Node(fp,this) << '[';
             Label(fp, "|") << ",shape=egg";

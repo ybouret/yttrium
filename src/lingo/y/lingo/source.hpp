@@ -48,7 +48,7 @@ namespace Yttrium
             uint8_t peek()   const noexcept;      //!< next content if ready()
             size_t  cached() const noexcept;      //!< cache size
             void    newLine()      noexcept;      //!< propagate newLine to module
-            
+            bool    getch(Token &);               //!< try to read any next char
 
 
         private:

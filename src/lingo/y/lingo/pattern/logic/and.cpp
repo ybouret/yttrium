@@ -73,6 +73,7 @@ namespace Yttrium
 
         void And:: query(CharDB &fc) const
         {
+
             for(const Pattern *p=head;p;p=p->next)
             {
                 p->query(fc);
@@ -99,6 +100,8 @@ namespace Yttrium
                     return false;
                 }
             }
+
+            // all accepted
             local.swapWith(token);
             return true;
         }
@@ -127,7 +130,7 @@ namespace Yttrium
             Node(fp,this) << '[';
             Label(fp, "&") << ",shape=house";
             Endl(fp << ']');
-            
+
             vizLink(fp);
         }
 

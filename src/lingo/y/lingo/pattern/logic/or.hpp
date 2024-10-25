@@ -15,7 +15,8 @@ namespace Yttrium
         //
         //! Or operands
         /**
-         if size == 0 then equivalent to Any1 (mutliple,strong)
+         - if size == 0 then equivalent to Any1 (mutliple,strong)
+         - stop at the first in-order operand, skipping only empty matches
          */
         //
         //

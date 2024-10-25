@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
 #include "y/lingo/pattern/char-db.hpp"
+#include "y/text/boolean.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -44,7 +45,13 @@ Y_UTEST(rx)
             {
                 CharDB fc;
                 p->query(fc);
-                std::cerr << "first chars = '" << fc << "'" << std::endl;
+                std::cerr << "\tfirst chars = '" << fc << "'" << std::endl;
+            }
+
+            {
+                std::cerr << "\tstrong      = " << BooleanTo::Text(p->strong())   << std::endl;
+                std::cerr << "\tunivocal    = " << BooleanTo::Text(p->univocal()) << std::endl;
+
             }
 
         }
