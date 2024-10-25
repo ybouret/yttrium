@@ -6,9 +6,6 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        const char Pattern:: UnivocalFn[] = "univocal()";
-        const char Pattern:: TakesFn[]    = "takes()";
-        
 
         Pattern:: ~Pattern() noexcept
         {

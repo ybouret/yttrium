@@ -24,11 +24,7 @@ namespace Yttrium
         {
         }
 
-        void Logic:: forbidden0(const char * const msg) const
-        {
-            assert(0!=msg);
-            if(size<=0) throw Specific::Exception(callSign(), "no operands in %s",msg);
-        }
+        
 
 
         size_t Logic:: serialize(OutputStream &fp) const
@@ -125,6 +121,18 @@ namespace Yttrium
         {
             if(size<=0) throw Specific::Exception(callSign(), "%sregularExpression()",msg);
             return _regexp();
+        }
+
+        bool Logic:: univocal() const
+        {
+            if(size<=0) throw Specific::Exception(callSign(), "%sunivocal()",msg);
+            return _univocal();
+        }
+
+        bool Logic:: takes(Token &token, Source &source) const
+        {
+            if(size<=0) throw Specific::Exception(callSign(), "%sunivocal()",msg);
+            return _takes(token,source);
         }
 
     }

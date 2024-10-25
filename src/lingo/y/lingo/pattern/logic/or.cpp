@@ -36,9 +36,8 @@ namespace Yttrium
             return true;
         }
 
-        bool Or:: univocal() const
+        bool Or:: _univocal() const
         {
-            forbidden0(UnivocalFn);
             return 1==size && head->univocal();
         }
 
@@ -67,11 +66,10 @@ namespace Yttrium
             }
         }
 
-        bool Or:: takes(Token &token, Source &source) const
+        bool Or:: _takes(Token &token, Source &source) const
         {
             assert(0==token.size);
-
-            forbidden0(TakesFn);
+            assert(size>0);
             Token local;
             bool  found = false;
             for(const Pattern *p=head;p;p=p->next)

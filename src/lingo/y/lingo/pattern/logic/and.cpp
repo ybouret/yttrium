@@ -26,9 +26,8 @@ namespace Yttrium
             return new And(*this);
         }
 
-        bool And:: univocal() const noexcept
+        bool And:: _univocal() const
         {
-            forbidden0(UnivocalFn);
             for(const Pattern *p=head;p;p=p->next)
             {
                 if(p->feeble() || p->multiple()) return false;
@@ -36,7 +35,7 @@ namespace Yttrium
             return true;
         }
 
-        bool And:: _strong() const 
+        bool And:: _strong() const
         {
             for(const Pattern *p=head;p;p=p->next)
             {
@@ -72,13 +71,13 @@ namespace Yttrium
                 if(p->strong())
                     return;
             }
-            
+
         }
 
-        bool And:: takes(Token &token, Source &source) const
+        bool And:: _takes(Token &token, Source &source) const
         {
             assert(0==token.size);
-            forbidden0(TakesFn);
+            assert(size>0);
             
             Token local;
             for(const Pattern *p=head;p;p=p->next)

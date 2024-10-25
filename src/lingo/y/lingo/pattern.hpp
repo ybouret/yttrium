@@ -38,8 +38,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ListOfCloneable<Pattern> List; //!< alias
-            static const char                UnivocalFn[]; //!< "univocal()"
-            static const char                TakesFn[];    //!< "takes()"
             
             //__________________________________________________________________
             //

@@ -46,15 +46,16 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char * callSign()     const noexcept; //!< [Identifiable] CallSign
             virtual Pattern *    clone()                 const; //!< [Pattern] new None(self)
-            virtual bool         univocal()     const noexcept; //!< [Pattern]
-            virtual bool         takes(Token &,Source &) const; //!< [Pattern]
             virtual void         viz(OutputStream &)     const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(None);
-            virtual void   _query(CharDB &fc) const; //!< [Logic]
-            virtual bool   _strong()          const; //!< [Logic]
-            virtual String _regexp()          const; //!< [Logic] [^catenate]
+            virtual void   _query(CharDB &fc)       const; //!< [Logic]
+            virtual bool   _strong()                const; //!< [Logic]
+            virtual String _regexp()                const; //!< [Logic] [^catenate]
+            virtual bool   _univocal()              const; //!< [Logic]
+            virtual bool   _takes(Token &,Source &) const; //!< [Logic]
+
         };
     }
 

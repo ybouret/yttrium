@@ -49,9 +49,8 @@ namespace Yttrium
             return false;
         }
 
-        bool None:: univocal() const noexcept
+        bool None:: _univocal() const
         {
-            forbidden0(UnivocalFn);
             return false;
         }
 
@@ -60,11 +59,11 @@ namespace Yttrium
             assert(size>0);
         }
 
-        bool None:: takes(Token &token, Source &source) const
+        bool None:: _takes(Token &token, Source &source) const
         {
             assert(0==token.size);
-            forbidden0(TakesFn);
-
+            assert(size>0);
+            
             return false;
         }
 
