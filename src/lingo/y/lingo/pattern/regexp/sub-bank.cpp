@@ -150,6 +150,7 @@ namespace Yttrium
                     const AutoPtr<const Pattern> p = subBankEsc();
                     return p->as<Byte>()->byte;
                 }
+
                 default:
                     return c;
             }

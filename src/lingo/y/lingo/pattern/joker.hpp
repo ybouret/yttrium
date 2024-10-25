@@ -62,7 +62,7 @@ namespace Yttrium
         protected:
             Pattern * const motif; //!< created pattern for this joker
 
-
+            //! raise error if guest is not strong
             static void CheckStrong(const char    * const host,
                                     const Pattern * const guest);
 

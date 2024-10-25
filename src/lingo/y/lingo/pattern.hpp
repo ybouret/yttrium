@@ -150,6 +150,7 @@ namespace Yttrium
         //! alias
         typedef Pattern::List Patterns;
 
+        //! helper to define callSign()
 #define Y_Lingo_Pattern_CallSign(TYPE) \
 static const char HostCallSign[] = #TYPE; \
 const char * TYPE:: callSign() const noexcept { return HostCallSign; }
