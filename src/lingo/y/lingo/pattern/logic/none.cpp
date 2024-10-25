@@ -46,22 +46,26 @@ namespace Yttrium
 
         bool None:: strong() const noexcept
         {
+            forbidden0(StrongFn);
             return false;
         }
 
         bool None:: univocal() const noexcept
         {
+            forbidden0(UnivocalFn);
             return false;
         }
 
         void None:: query(CharDB &fc) const
         {
+            forbidden0(QueryFn);
 
         }
 
         bool None:: takes(Token &token, Source &source) const
         {
             assert(0==token.size);
+            forbidden0(TakesFn);
 
             return false;
         }
