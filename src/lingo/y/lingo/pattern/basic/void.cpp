@@ -32,9 +32,9 @@ namespace Yttrium
             return emitUUID(fp);
         }
 
-        bool Void:: takes(Token & , Source & ) const
+        bool Void:: takes(Token & , Source &source) const
         {
-            return false;
+            return !source.ready();
         }
 
         void  Void:: query( CharDB &firstChars ) const
@@ -54,7 +54,7 @@ namespace Yttrium
 
         bool Void:: strong() const noexcept
         {
-            return true;
+            return false;
         }
 
         void Void:: viz(OutputStream &fp) const
