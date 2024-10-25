@@ -1,5 +1,6 @@
 
 #include "y/lingo/pattern/logic.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -22,6 +23,13 @@ namespace Yttrium
         Pattern::List(logic)
         {
         }
+
+        void Logic:: forbidden0(const char * const msg) const
+        {
+            assert(0!=msg);
+            if(size<=0) throw Specific::Exception(callSign(), "no operands in %s",msg);
+        }
+
 
         size_t Logic:: serialize(OutputStream &fp) const
         {

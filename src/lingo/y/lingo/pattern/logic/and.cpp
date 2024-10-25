@@ -28,64 +28,60 @@ namespace Yttrium
 
         bool And:: univocal() const noexcept
         {
-            if(size<=0)
+            forbidden0(UnivocalFn);
+            for(const Pattern *p=head;p;p=p->next)
             {
-                return true;
+                if(p->feeble() || p->multiple()) return false;
             }
-            else
-            {
-                for(const Pattern *p=head;p;p=p->next)
-                {
-                    if(p->feeble() || p->multiple()) return false;
-                }
-                return true;
-            }
+            return true;
         }
 
         bool And:: strong() const noexcept
         {
-            if(size<=0)
+            forbidden0(StrongFn);
+            for(const Pattern *p=head;p;p=p->next)
             {
-                // degenerate
-                return true;
+                if( !p->strong() )
+                    return false;
             }
-            else
-            {
-                for(const Pattern *p=head;p;p=p->next)
-                {
-                    if( !p->strong() )
-                        return false;
-                }
-                return true;
-            }
+            return true;
+
         }
 
         String And:: regularExpression() const
         {
-            String ans = "(";
-            for(const Pattern *p=head;p;p=p->next)
+            forbidden0(RegExpFn);
+            if(1==size)
+                return head->regularExpression();
+            else
             {
-                ans += p->regularExpression();
+                String ans = "(";
+                for(const Pattern *p=head;p;p=p->next)
+                {
+                    ans += p->regularExpression();
+                }
+                ans += ")";
+                return ans;
             }
-            ans += ")";
-            return ans;
         }
 
         void And:: query(CharDB &fc) const
         {
-
+            forbidden0(QueryFn);
             for(const Pattern *p=head;p;p=p->next)
             {
                 p->query(fc);
                 if(p->strong())
                     return;
             }
+            
         }
 
         bool And:: takes(Token &token, Source &source) const
         {
             assert(0==token.size);
-
+            forbidden0(TakesFn);
+            
             Token local;
             for(const Pattern *p=head;p;p=p->next)
             {

@@ -39,7 +39,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Void()             noexcept; //!< setup
             explicit Void(const Void &) noexcept; //!< copy
-            virtual ~Void()           noexcept; //!< cleanup
+            virtual ~Void()             noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

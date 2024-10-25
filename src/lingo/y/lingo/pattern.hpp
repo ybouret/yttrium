@@ -38,7 +38,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ListOfCloneable<Pattern> List; //!< alias
-
+            static const char                StrongFn[];   //!< "strong()"
+            static const char                UnivocalFn[]; //!< "univocal()"
+            static const char                TakesFn[];    //!< "takes()"
+            static const char                QueryFn[];    //!< "query()"
+            static const char                RegExpFn[];   //!< "regularExpression"
+            
             //__________________________________________________________________
             //
             //
@@ -63,10 +68,10 @@ namespace Yttrium
             virtual bool      takes(Token &token, Source &source)  const = 0; //!< try to take a token from source
             virtual void      query( CharDB &firstChars )          const = 0; //!< query first char for source lookup
             virtual String    regularExpression()                  const = 0; //!< return as regular expression
-            virtual bool      univocal()                  const noexcept = 0; //!< univocal result
-            bool              multiple()                  const noexcept;     //!< !univocal()
-            virtual bool      strong()                    const noexcept = 0; //!< never accepts an empty token
-            bool              feeble()                    const noexcept;     //!< !strong(), may accept an empty token
+            virtual bool      univocal()                           const = 0; //!< univocal result
+            bool              multiple()                           const;     //!< !univocal()
+            virtual bool      strong()                             const = 0; //!< never accepts an empty token
+            bool              feeble()                             const;     //!< !strong(), may accept an empty token
             virtual void      viz(OutputStream &fp)       const          = 0; //!< produce GraphViz code
 
 

@@ -6,6 +6,13 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        const char Pattern:: StrongFn[]   = "strong()";
+        const char Pattern:: UnivocalFn[] = "univocal()";
+        const char Pattern:: TakesFn[]    = "takes()";
+        const char Pattern:: QueryFn[]    = "query()";
+        const char Pattern:: RegExpFn[]   = "regularExpression()";
+
+
         Pattern:: ~Pattern() noexcept
         {
         }
@@ -39,12 +46,12 @@ namespace Yttrium
             return fp.emitCBR(uuid);
         }
 
-        bool Pattern:: multiple() const noexcept
+        bool Pattern:: multiple() const
         {
             return !univocal();
         }
 
-        bool Pattern:: feeble() const noexcept
+        bool Pattern:: feeble() const  
         {
             return !strong();
         }

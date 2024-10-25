@@ -43,7 +43,7 @@ namespace Yttrium
 
         String Any1:: regularExpression() const
         {
-            return "[\\x00-\\xff]";
+            return "[]";
         }
 
         bool Any1:: univocal() const noexcept

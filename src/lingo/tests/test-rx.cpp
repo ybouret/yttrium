@@ -29,32 +29,51 @@ Y_UTEST(rx)
             GraphViz::Vizible::DotToPng("among.dot",*p);
         }
 #endif
-        
+
+
+        const AutoPtr<Pattern> p = RegExp(rx,&dict);
+        Y_ASSERT(p.isValid());
+        GraphViz::Vizible::DotToPng("regexp.dot",*p);
+
         {
-            const AutoPtr<Pattern> p = RegExp(rx,&dict);
-            Y_ASSERT(p.isValid());
-            GraphViz::Vizible::DotToPng("regexp.dot",*p);
-
-            {
-                p->toBinary("regexp.dat");
-                InputFile fp("regexp.dat");
-                const AutoPtr<Pattern> reloaded = Pattern::Read(fp);
-                Y_CHECK( *reloaded == *p );
-            }
-
-            {
-                CharDB fc;
-                p->query(fc);
-                std::cerr << "\tfirst chars = '" << fc << "'" << std::endl;
-            }
-
-            {
-                std::cerr << "\tstrong      = " << BooleanTo::Text(p->strong())   << std::endl;
-                std::cerr << "\tunivocal    = " << BooleanTo::Text(p->univocal()) << std::endl;
-
-            }
-
+            p->toBinary("regexp.dat");
+            InputFile fp("regexp.dat");
+            const AutoPtr<Pattern> reloaded = Pattern::Read(fp);
+            Y_CHECK( *reloaded == *p );
         }
+
+        {
+            CharDB fc;
+            p->query(fc);
+            std::cerr << "\tfirst chars = '" << fc << "'" << std::endl;
+        }
+
+        {
+            std::cerr << "\tstrong      = " << BooleanTo::Text(p->strong())   << std::endl;
+            std::cerr << "\tunivocal    = " << BooleanTo::Text(p->univocal()) << std::endl;
+        }
+
+
+        if(argc>2)
+        {
+            InputFile fp(argv[2]);
+            String    line;
+            while( fp.gets(line) )
+            {
+                Source source( Module::OpenData("input",line) );
+                while(source.ready())
+                {
+                    Token token;
+                    if(p->takes(token,source))
+                    {
+                        std::cerr << "\t(+) '" << token << "'" << std::endl;
+                        source.put(token);
+                    }
+                    source.skip();
+                }
+            }
+        }
+
 
 
 

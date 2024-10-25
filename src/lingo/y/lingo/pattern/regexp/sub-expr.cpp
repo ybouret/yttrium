@@ -69,6 +69,7 @@ namespace Yttrium
                         AutoPtr<Logic> alt = new Or();
                         alt->pushTail( motif.yield() ); // lhs: current motif
                         alt->pushTail( subExpr() );     // rhs: next expression
+                        assert(alt->size>0);
                         return alt.yield();
                     }
                         //------------------------------------------------------
@@ -106,7 +107,6 @@ namespace Yttrium
             }
 
         END:
-
             if( motif->size <= 0 )
                 return new Void();
 

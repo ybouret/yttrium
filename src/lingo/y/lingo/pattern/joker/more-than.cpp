@@ -87,6 +87,7 @@ namespace Yttrium
                 {
                     ++count;
                     local << temp;
+                    assert(0==temp.size);
                 }
             }
 
