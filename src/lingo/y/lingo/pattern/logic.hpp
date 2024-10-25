@@ -41,6 +41,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual size_t serialize(OutputStream &fp) const;
+            virtual void   query(CharDB &fc)   const; //!< [Pattern] check size and _query(fc)
+            virtual bool   strong()            const; //!< [Pattern] check size and _strong()
+            virtual String regularExpression() const; //!< [Pattern] check size and _regexp()
 
             //__________________________________________________________________
             //
@@ -59,8 +62,12 @@ namespace Yttrium
             void noMultiple();                         //!< remove multiple pattern
             void forbidden0(const char * const) const; //!< throw if size == 0
 
+
         private:
             Y_DISABLE_ASSIGN(Logic);
+            virtual void   _query(CharDB &firstChars)  const = 0;
+            virtual bool   _strong()                   const = 0;
+            virtual String _regexp()                   const = 0;
         };
 
     }

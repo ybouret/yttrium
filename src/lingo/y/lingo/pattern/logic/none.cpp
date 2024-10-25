@@ -44,9 +44,8 @@ namespace Yttrium
             vizLink(fp);
         }
 
-        bool None:: strong() const noexcept
+        bool None:: _strong() const 
         {
-            forbidden0(StrongFn);
             return false;
         }
 
@@ -56,10 +55,9 @@ namespace Yttrium
             return false;
         }
 
-        void None:: query(CharDB &fc) const
+        void None:: _query(CharDB &fc) const
         {
-            forbidden0(QueryFn);
-
+            assert(size>0);
         }
 
         bool None:: takes(Token &token, Source &source) const
@@ -70,7 +68,7 @@ namespace Yttrium
             return false;
         }
 
-        String None:: regularExpression() const
+        String None:: _regexp() const
         {
             String ans = "[^";
             for(const Pattern *node=head;node;node=node->next)

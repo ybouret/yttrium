@@ -36,9 +36,8 @@ namespace Yttrium
             return true;
         }
 
-        bool And:: strong() const noexcept
+        bool And:: _strong() const 
         {
-            forbidden0(StrongFn);
             for(const Pattern *p=head;p;p=p->next)
             {
                 if( !p->strong() )
@@ -48,9 +47,8 @@ namespace Yttrium
 
         }
 
-        String And:: regularExpression() const
+        String And:: _regexp() const
         {
-            forbidden0(RegExpFn);
             if(1==size)
                 return head->regularExpression();
             else
@@ -65,9 +63,9 @@ namespace Yttrium
             }
         }
 
-        void And:: query(CharDB &fc) const
+        void And:: _query(CharDB &fc) const
         {
-            forbidden0(QueryFn);
+            assert(size>0);
             for(const Pattern *p=head;p;p=p->next)
             {
                 p->query(fc);

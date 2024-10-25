@@ -38,11 +38,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ListOfCloneable<Pattern> List; //!< alias
-            static const char                StrongFn[];   //!< "strong()"
             static const char                UnivocalFn[]; //!< "univocal()"
             static const char                TakesFn[];    //!< "takes()"
-            static const char                QueryFn[];    //!< "query()"
-            static const char                RegExpFn[];   //!< "regularExpression"
             
             //__________________________________________________________________
             //

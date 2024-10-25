@@ -49,15 +49,16 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const char * callSign()     const noexcept; //!< [Identifiable] CallSign
             virtual Pattern *    clone()                 const; //!< [Pattern] new Or(self)
-            virtual bool         strong()       const noexcept; //!< [Pattern] size <=0  of all strong
             virtual bool         univocal()     const  ; //!< [Pattern] size == 1 and univocal
-            virtual String       regularExpression()     const; //!< [Pattern] (first|second|...)
-            virtual void         query(CharDB &fc)       const; //!< [Pattern] query all
             virtual bool         takes(Token &,Source &) const; //!< [Pattern]
             virtual void         viz(OutputStream &)     const; //!< [Pattern]
 
         private:
             Y_DISABLE_ASSIGN(Or);
+            virtual void   _query(CharDB &fc) const; //!< [Logic] query all
+            virtual bool   _strong()          const; //!< [Logic] if all strong
+            virtual String _regexp()          const; //!< [Logic] alternate
+
         };
     }
 

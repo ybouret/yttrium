@@ -106,6 +106,27 @@ namespace Yttrium
             }
             swapWith(store);
         }
+
+        static const char msg[] = "empty for ";
+        
+        void Logic:: query(CharDB &firstChars)  const
+        {
+            if(size<=0) throw Specific::Exception(callSign(), "%squery()",msg);
+            _query(firstChars);
+        }
+
+        bool Logic::  strong()  const
+        {
+            if(size<=0) throw Specific::Exception(callSign(), "%sstrong()",msg);
+            return _strong();
+        }
+
+        String Logic:: regularExpression() const
+        {
+            if(size<=0) throw Specific::Exception(callSign(), "%sregularExpression()",msg);
+            return _regexp();
+        }
+
     }
 
 }

@@ -27,35 +27,32 @@ namespace Yttrium
 
         Pattern * Or:: clone() const { return new Or(*this); }
 
-        bool Or:: strong() const noexcept
+        bool Or:: _strong() const
         {
-            forbidden0(StrongFn);
             for(const Pattern *p=head;p;p=p->next)
             {
                 if(p->feeble()) return false;
             }
             return true;
-
         }
 
-        bool Or:: univocal() const  
+        bool Or:: univocal() const
         {
             forbidden0(UnivocalFn);
             return 1==size && head->univocal();
         }
 
-        void Or:: query(CharDB &fc) const
+        void Or:: _query(CharDB &fc) const
         {
-            forbidden0(QueryFn);
+            assert(size>0);
             for(const Pattern *p=head;p;p=p->next)
                 p->query(fc);
         }
 
-        String Or:: regularExpression() const
+        String Or:: _regexp() const
         {
-            forbidden0(RegExpFn);
-           if(1==size)
-               return head->regularExpression();
+            if(1==size)
+                return head->regularExpression();
             else
             {
                 assert(size>=2);
