@@ -44,7 +44,7 @@ namespace Yttrium
 
         String Void:: regularExpression() const
         {
-            return "()";
+            return "[^\\x00-\\xff]";
         }
 
         bool Void:: univocal() const noexcept
