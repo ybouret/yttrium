@@ -47,7 +47,7 @@ namespace Yttrium
 
         bool None:: _strong() const 
         {
-            return false;
+            return true;
         }
 
         bool None:: _univocal() const
@@ -68,8 +68,20 @@ namespace Yttrium
         {
             assert(0==token.size);
             assert(size>0);
-            
-            return false;
+
+            // reject all patterns
+            for(const Pattern *p=head;p;p=p->next)
+            {
+                Token local;
+                if(p->takes(local,source))
+                {
+                    source.put(local);
+                    return false;
+                }
+            }
+
+            // test single char
+            return source.getch(token);
         }
 
         String None:: _regexp() const

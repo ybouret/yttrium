@@ -50,11 +50,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(None);
-            virtual void   _query(CharDB &fc)       const; //!< [Logic]
-            virtual bool   _strong()                const; //!< [Logic]
+            virtual void   _query(CharDB &fc)       const; //!< [Logic] inverse of or'd
+            virtual bool   _strong()                const; //!< [Logic] true
             virtual String _regexp()                const; //!< [Logic] [^catenate]
-            virtual bool   _univocal()              const; //!< [Logic]
-            virtual bool   _takes(Token &,Source &) const; //!< [Logic]
+            virtual bool   _univocal()              const; //!< [Logic] false
+            virtual bool   _takes(Token &,Source &) const; //!< [Logic] first char none of the operands
 
         };
     }
