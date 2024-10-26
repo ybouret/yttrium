@@ -90,6 +90,25 @@ namespace Yttrium
             return *this;
         }
 
+        CharDB & CharDB:: operator -= (const CharDB &db)    noexcept
+        {
+            for(unsigned i=0;i<BITS;++i)
+            {
+                if(db.has(i)) clr(i);
+            }
+            return *this;
+        }
+        
+        CharDB & CharDB :: inv() noexcept
+        {
+            for(size_t i=0;i<WORDS;++i)
+            {
+                words[i] ^= 0xff;
+            }
+            return *this;
+        }
+
+
         static const uint8_t bitsInByte[256] =
         {
 #           include "bits-in-byte.hxx"

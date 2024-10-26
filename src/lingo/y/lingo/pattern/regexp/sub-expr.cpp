@@ -54,7 +54,8 @@ namespace Yttrium
                         motif->pushTail( posix::dot() );
                         break;
 
-
+                    case RBRACK:
+                        throw Specific::Exception(CallSign, "RBRACK must be escaped in '%s'", expr);
 
                         //------------------------------------------------------
                         //

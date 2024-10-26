@@ -55,6 +55,9 @@ namespace Yttrium
             CharDB & clr(const uint8_t ibit)       noexcept; //!< clear ibit
             bool     has(const uint8_t ibit) const noexcept; //!< check ibit
             CharDB & operator += (const CharDB &)  noexcept; //!< merge content
+            CharDB & operator -= (const CharDB &)  noexcept; //!< remove content
+
+            CharDB & inv()                         noexcept; //!< bit-wise inversion
             size_t   size()                  const noexcept; //!< sum all active bits
             Pattern *compile()                        const; //!< simplification to Or'd patterns
 

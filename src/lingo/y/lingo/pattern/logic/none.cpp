@@ -1,6 +1,7 @@
 
 
 #include "y/lingo/pattern/logic/none.hpp"
+#include "y/lingo/pattern/char-db.hpp"
 
 namespace Yttrium
 {
@@ -57,6 +58,10 @@ namespace Yttrium
         void None:: _query(CharDB &fc) const
         {
             assert(size>0);
+            CharDB bad;
+            for(const Pattern *p=head;p;p=p->next)
+                p->query(bad);
+            fc += bad.inv();
         }
 
         bool None:: _takes(Token &token, Source &source) const
