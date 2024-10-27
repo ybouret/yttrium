@@ -12,10 +12,11 @@ namespace Yttrium
     namespace Lingo
     {
 
-        class Unit : public Token
+        class Unit : public Context, public Token
         {
         public:
-
+            explicit Unit(const Context &);
+            
             Unit *next;
             Unit *prev;
         private:
