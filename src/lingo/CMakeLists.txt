@@ -8,6 +8,7 @@ lingo/pattern/joker
 lingo/pattern/logic
 lingo/pattern/regexp
 lingo/pattern/ops
+lingo/lexical
 )
 
 add_subdirectory(tests)
