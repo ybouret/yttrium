@@ -12,10 +12,11 @@ Y_UTEST(scanner)
     Y_SIZEOF(Lexical::Unit);
     Y_SIZEOF(Lexical::Rule);
     Y_SIZEOF(Lexical::Scanner);
-    Y_SIZEOF(Lexical::Scanner::RList);
+    Y_SIZEOF(Lexical::RList);
 
     Dictionary       dict;
     Lexical::Scanner scan("MyScanner",dict);
 
+    scan(Lexical::Rule::Create("INT", scan.compile("[:digit:]") ) );
 }
 Y_UDONE()

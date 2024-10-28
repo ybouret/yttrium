@@ -2,6 +2,7 @@
 #include "y/lingo/pattern/regexp/compiler.hpp"
 #include "y/text/plural.hpp"
 #include "y/system/exception.hpp"
+#include "y/lingo/pattern/basic/byte.hpp"
 
 namespace Yttrium
 {
@@ -34,6 +35,11 @@ namespace Yttrium
             return RegExp(_,dict);
         }
 
+        Pattern * RegExp(const char expr, const Dictionary * const )
+        {
+            return new Byte(expr);
+        }
+
     }
 }
 
@@ -47,6 +53,11 @@ namespace Yttrium
         }
 
         Pattern * Dictionary:: compile(const char * const rx)
+        {
+            return  RegExp(rx,this);
+        }
+
+        Pattern * Dictionary:: compile(const char rx)
         {
             return  RegExp(rx,this);
         }

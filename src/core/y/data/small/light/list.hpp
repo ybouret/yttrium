@@ -115,6 +115,28 @@ namespace Yttrium
                 return false;
             }
 
+            //! sequential remove
+            inline size_t no(ConstType &obj) noexcept
+            {
+                size_t    count = 0;
+                LightList store;
+                while(this->size>0)
+                {
+                    NodeType *node = this->popHead();
+                    ConstType &ref = **node;
+                    if( &ref == &obj )
+                    {
+                        proxy->destroy(node);
+                        ++count;
+                    }
+                    else
+                        store.pushTail(node);
+                }
+                this->swapWith(store);
+                return count;
+            }
+
+
             //! sequential look up of all nodes
             inline bool contains(const LightList &other) const noexcept
             {

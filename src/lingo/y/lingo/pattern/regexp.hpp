@@ -11,7 +11,7 @@ namespace Yttrium
     {
         Pattern * RegExp(const String &     expr, const Dictionary * const dict);
         Pattern * RegExp(const char * const expr, const Dictionary * const dict);
-
+        Pattern * RegExp(const char         expr, const Dictionary * const dict);
     }
 }
 

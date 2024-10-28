@@ -44,6 +44,7 @@ namespace Yttrium
 
             Pattern * compile(const String &     rx); //!< RegExp with this
             Pattern * compile(const char * const rx); //!< RegExp with this
+            Pattern * compile(const char         rx); //!< RegExp with this
 
             template <typename ID, typename RX> inline
             void operator()(const ID &id, const RX &rx)
