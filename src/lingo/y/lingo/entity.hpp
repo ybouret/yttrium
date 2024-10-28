@@ -1,7 +1,7 @@
 //! \file
+
 #ifndef Y_Lingo_Entity_Included
 #define Y_Lingo_Entity_Included 1
-
 
 #include "y/lingo/caption.hpp"
 
@@ -29,7 +29,7 @@ namespace Yttrium
             
             //! setup
             template <typename LABEL> inline
-            explicit Entity(const LABEL &id) :
+            explicit Entity(const LABEL &id, const AsCaption_ &) :
             Counted(),
             name(id)
             {}

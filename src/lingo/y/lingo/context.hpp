@@ -3,7 +3,7 @@
 #ifndef Y_Lingo_Context_Included
 #define Y_Lingo_Context_Included 1
 
-#include "y/lingo/caption.hpp"
+#include "y/lingo/entity.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Context
+        class Context : public Entity
         {
         public:
             //__________________________________________________________________
@@ -31,8 +31,10 @@ namespace Yttrium
 
             //! generic constructor
             template <typename CAPTION>
-            inline Context(const CAPTION &_, const AsCaption_ &) :
-            caption(_), line(1), column(1)
+            inline Context(const CAPTION &_, const AsCaption_ &__) :
+            Entity(_,__),
+            line(1),
+            column(1)
             {
             }
 
@@ -58,7 +60,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Caption       caption; //!< shared caption
             const unsigned long line;    //!< line number
             const unsigned long column;  //!< column number
 

@@ -5,7 +5,22 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        namespace Lexical
+        {
+            Unit:: ~Unit() noexcept {}
 
+            Unit:: Unit(const Caption &_name,
+                        const Context &_cntx) noexcept :
+            Object(),
+            Entity(_name,AsCaption),
+            Token(),
+            next(0),
+            prev(0),
+            info(_cntx)
+            {
+            }
+        }
+        
     }
 
 }

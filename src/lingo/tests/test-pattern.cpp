@@ -70,8 +70,7 @@ Y_UTEST(pattern)
         process( plist, p.yield(), "and.dat");
     }
 
-    return 0;
-
+    
     {
         AutoPtr<Logic> p = new Or();
         p->add('_');
@@ -105,13 +104,6 @@ Y_UTEST(pattern)
     Y_SIZEOF(Or);
     Y_SIZEOF(None);
 
-#if 0
-    const int lower2upper = int('A')-int('a');
-    for(char c='a';c<='z';++c)
-    {
-        std::cerr << c << " -> " << char(c+lower2upper) << std::endl;
-    }
-#endif
 
 }
 Y_UDONE()

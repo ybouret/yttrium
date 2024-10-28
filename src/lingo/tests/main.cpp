@@ -10,5 +10,6 @@ Y_UTEST_DECL(32)
     Y_UTEST(dict);
     Y_UTEST(posix);
     Y_UTEST(rx);
+    Y_UTEST(scanner);
 }
 Y_UTEST_EXEC()

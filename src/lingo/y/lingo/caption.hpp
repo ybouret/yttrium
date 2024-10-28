@@ -39,6 +39,8 @@ namespace Yttrium
             virtual ~Caption()                     noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Caption);                        //!< display
 
+            
+
         private:
             Y_DISABLE_ASSIGN(Caption);
         };

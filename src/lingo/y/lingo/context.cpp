@@ -9,7 +9,7 @@ namespace Yttrium
         Context:: ~Context() noexcept { Coerce(column)=0; Coerce(line)=0; }
 
         Context:: Context(const Context &_) noexcept :
-        caption(_.caption),
+        Entity(_),
         line(_.line),
         column(_.column)
         {
@@ -17,7 +17,7 @@ namespace Yttrium
 
         Exception & Context:: stamp(Exception &excp) const noexcept
         {
-            return excp.pre("%s:%lu:%lu: ", caption->c_str(), line, column);
+            return excp.pre("%s:%lu:%lu: ", name->c_str(), line, column);
         }
 
         void Context:: newChar() noexcept { ++Coerce(column); }

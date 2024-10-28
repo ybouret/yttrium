@@ -12,17 +12,26 @@ namespace Yttrium
     namespace Lingo
     {
 
-        class Unit : public Context, public Token
+        namespace Lexical
         {
-        public:
-            explicit Unit(const Context &);
-            
-            Unit *next;
-            Unit *prev;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Unit);
-        };
+            class Unit : public Object,  public Entity, public Token
+            {
+            public:
+                explicit Unit(const Caption &,
+                              const Context &) noexcept;
+                virtual ~Unit() noexcept;
 
+                Unit *        next;
+                Unit *        prev;
+                const Context info;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Unit);
+            };
+        }
+
+        typedef Lexical::Unit     Lexeme;
+        typedef CxxListOf<Lexeme> Lexemes;
     }
 
 }
