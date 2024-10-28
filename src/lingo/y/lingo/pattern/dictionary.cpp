@@ -77,7 +77,7 @@ namespace Yttrium
 
         static const char Name[] = "Lingo::Dictionary";
 
-        void Dictionary:: operator()(const String &name, Pattern * const p)
+        void Dictionary:: define(const String &name, Pattern * const p)
         {
             assert(0!=code);
             assert(code->motifs.size==code->labels.size);
@@ -96,10 +96,10 @@ namespace Yttrium
             }
         }
 
-        void Dictionary:: operator()(const char * const name, Pattern * const p)
+        void Dictionary:: define(const char * const name, Pattern * const p)
         {
             const String _(name);
-            (*this)(_,p);
+            define(_,p);
         }
 
         Pattern * Dictionary:: operator()(const String &name) const

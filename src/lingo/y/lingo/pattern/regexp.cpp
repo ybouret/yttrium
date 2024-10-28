@@ -36,3 +36,21 @@ namespace Yttrium
 
     }
 }
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        Pattern * Dictionary:: compile(const String &rx)
+        {
+            return  RegExp(rx,this);
+        }
+
+        Pattern * Dictionary:: compile(const char * const rx)
+        {
+            return  RegExp(rx,this);
+        }
+
+    }
+
+}

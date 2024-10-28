@@ -39,8 +39,19 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void operator()(const String &     name, Pattern * const p); //!< insert new pattern
-            void operator()(const char * const name, Pattern * const p); //!< insert new pattern
+            void define(const String &     name, Pattern * const p); //!< insert new pattern
+            void define(const char * const name, Pattern * const p); //!< insert new pattern
+
+            Pattern * compile(const String &     rx); //!< RegExp with this
+            Pattern * compile(const char * const rx); //!< RegExp with this
+
+            template <typename ID, typename RX> inline
+            void operator()(const ID &id, const RX &rx)
+            {
+                define(id,compile(rx));
+            }
+
+
 
             Pattern * operator()(const String &)     const; //!< clone named pattern
             Pattern * operator()(const char * const) const; //!< cline named pattern

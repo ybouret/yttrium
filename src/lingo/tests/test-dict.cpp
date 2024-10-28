@@ -11,8 +11,8 @@ Y_UTEST(dict)
 {
 
     Dictionary dict;
-    dict("lower", new Lump('a','z') );
-    dict("upper", new Lump('A','Z') );
+    dict.define("lower", new Lump('a','z') );
+    dict.define("upper", new Lump('A','Z') );
 
     std::cerr << "dict=" << dict << std::endl;
     {

@@ -14,7 +14,7 @@ Y_UTEST(rx)
     {
         const char * const rx = argv[1];
         Dictionary dict;
-        dict("INT",new Lump('0','9'));
+        dict("INT","[0-9]");
 
 #if 0
         {
