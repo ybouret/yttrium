@@ -10,5 +10,7 @@ using namespace Lingo;
 Y_UTEST(scanner)
 {
     Y_SIZEOF(Lexical::Unit);
+    Y_SIZEOF(Lexical::Rule);
+
 }
 Y_UDONE()

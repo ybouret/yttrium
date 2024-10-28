@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Dictionary of precompiled patterns
+        //! Dictionary of shared precompiled patterns
         //
         //
         //______________________________________________________________________
@@ -30,7 +30,8 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Dictionary();
             virtual ~Dictionary() noexcept;
-
+            explicit Dictionary(const Dictionary &) noexcept; //!< shared copy
+            Y_OSTREAM_PROTO(Dictionary);
 
             //__________________________________________________________________
             //
@@ -46,7 +47,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Dictionary);
+            Y_DISABLE_ASSIGN(Dictionary);
             class Code;
             Code *code;
         };

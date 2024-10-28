@@ -9,13 +9,16 @@ namespace Yttrium
     namespace Lingo
     {
 
-        class Dictionary:: Code : public Object
+        class Dictionary:: Code : public Object, public Counted
         {
         public:
             typedef Small::BareHeavyList<const String> Labels;
             typedef Labels::NodeType                   LNode;
 
-            inline explicit Code() noexcept : labels(), motifs()
+            inline explicit Code() noexcept :
+            Object(),
+            Counted(),
+            labels(), motifs()
             {
             }
 
@@ -45,14 +48,32 @@ namespace Yttrium
         Dictionary:: ~Dictionary() noexcept
         {
             assert(0!=code);
-            Nullify(code);
+            if(code->liberate())
+                Nullify(code);
         }
 
         Dictionary:: Dictionary() : code( new Code() )
         {
+            code->withhold();
         }
-        
 
+        Dictionary:: Dictionary(const Dictionary &dict) noexcept :
+        code( dict.code )
+        {
+            code->withhold();
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Dictionary &dict)
+        {
+            assert(0!=dict.code);
+            os << '[';
+            for(const Dictionary::Code::LNode *label = dict.code->labels.head;label;label=label->next)
+            {
+                os << " '" << **label << "'";
+            }
+            os << ' ' << ']';
+            return os;
+        }
 
         static const char Name[] = "Lingo::Dictionary";
 
