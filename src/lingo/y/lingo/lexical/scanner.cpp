@@ -34,7 +34,6 @@ namespace Yttrium
                 CharDB        cdb;
                 Rule &        ref = *rule;
                 rule->motif->query(cdb);
-                std::cerr << "firstChars of " << rule->name << " = '" << cdb << "'" << std::endl;
                 try {
 
                     // register
@@ -52,6 +51,23 @@ namespace Yttrium
                             (void) rlist[i].no(ref);
                     throw;
                 }
+            }
+
+
+            void Scanner:: run(Source        &source,
+                               AutoPtr<Unit> &unit) const
+            {
+                assert(unit.isEmpty());
+
+                if(!source.ready())
+                {
+                    std::cerr << "EOF" << std::endl;
+                    return;
+                }
+
+
+
+
             }
 
         }

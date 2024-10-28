@@ -28,10 +28,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Dictionary();
-            virtual ~Dictionary() noexcept;
+            explicit Dictionary();                            //!< setup empty
+            virtual ~Dictionary() noexcept;                   //!< cleanup
             explicit Dictionary(const Dictionary &) noexcept; //!< shared copy
-            Y_OSTREAM_PROTO(Dictionary);
+            Y_OSTREAM_PROTO(Dictionary);                      //!< display entries
 
             //__________________________________________________________________
             //
@@ -39,13 +39,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void define(const String &     name, Pattern * const p); //!< insert new pattern
-            void define(const char * const name, Pattern * const p); //!< insert new pattern
+            void define(const String &     name, Pattern * const p); //!< define new pattern
+            void define(const char * const name, Pattern * const p); //!< define new pattern
 
             Pattern * compile(const String &     rx); //!< RegExp with this
             Pattern * compile(const char * const rx); //!< RegExp with this
             Pattern * compile(const char         rx); //!< RegExp with this
 
+            //! set ID = RegExp(RX)
             template <typename ID, typename RX> inline
             void operator()(const ID &id, const RX &rx)
             {
@@ -55,7 +56,7 @@ namespace Yttrium
 
 
             Pattern * operator()(const String &)     const; //!< clone named pattern
-            Pattern * operator()(const char * const) const; //!< cline named pattern
+            Pattern * operator()(const char * const) const; //!< clone named pattern
 
 
         private:

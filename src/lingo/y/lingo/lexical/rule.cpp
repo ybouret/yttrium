@@ -1,5 +1,6 @@
 
 #include "y/lingo/lexical/rule.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -22,6 +23,11 @@ namespace Yttrium
             prev(0)
             {
 
+            }
+
+            void Rule:: ErrorFeeblePattern(const String &rid)
+            {
+                throw Specific::Exception("Lexical::Rule", "feeble pattern for '%s'", rid.c_str());
             }
 
         }

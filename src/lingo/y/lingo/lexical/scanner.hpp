@@ -17,10 +17,18 @@ namespace Yttrium
     {
         namespace Lexical
         {
-            typedef Small::BareLightList<Rule>        RList;
-            typedef RList::NodeType                   RNode;
-            typedef Memory::Wad<RList,Memory::Dyadic> RMaps;
+            typedef Small::BareLightList<Rule>        RList; //!< alias
+            typedef RList::NodeType                   RNode; //!< alias
+            typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Scanner to produce Units from a set of Rules
+            //
+            //
+            //__________________________________________________________________
             class Scanner :
             public Quantized,
             public Entity,
@@ -28,10 +36,23 @@ namespace Yttrium
             public Proxy<const Rules>
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const unsigned                     CHARS = 256; //!< alias
+                typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
 
-                static const unsigned                     CHARS = 256;
-                typedef ArkPtr<String,Scanner>            Pointer;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
+                //! setup from name and shared dictionary
                 template <typename CAPTION>
                 explicit Scanner(const CAPTION    &_name,
                                  const Dictionary &_dict) noexcept :
@@ -44,28 +65,47 @@ namespace Yttrium
                     initialize();
                 }
 
-                virtual ~Scanner() noexcept; //!< clean
+                //! cleanup
+                virtual ~Scanner() noexcept;
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! compile any expression with internal dictionary
                 template <typename RX> inline
-                Pattern * compile(const RX &rx)
-                {
+                Pattern * compile(const RX &rx) {
                     return dict.compile(rx);
                 }
 
+                //! record a new rule
                 void operator()(Rule * const rule);
 
+
+                void run(Source        &source,
+                         AutoPtr<Unit> &unit) const;
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Rules         rules;
-                RList * const rlist;
+                Rules         rules; //!< list of rules
+                RList * const rlist; //!< map of rules from their first chars
 
-                void                      initialize() noexcept;
-                 virtual ConstInterface & surrogate() const noexcept;
+                void                     initialize() noexcept;       //!< setup map
+                virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
+
             public:
-                Dictionary dict;
+                //______________________________________________________________
+                //
+                //
+                //  Members
+                //
+                //______________________________________________________________
+
+                Dictionary dict; //!< shared dictionary
             };
 
         }
