@@ -17,6 +17,8 @@ namespace Yttrium
     {
         namespace Lexical
         {
+
+
             class Rule : public Entity
             {
             protected:
@@ -26,6 +28,17 @@ namespace Yttrium
 
             public:
                 virtual ~Rule() noexcept;
+
+                template <typename NAME>
+                static Rule * Create(const NAME &name, Pattern * const motif)
+                {
+                    AutoPtr<Pattern> guard( motif ); assert(0!=motif);
+                    const Caption    label( name );
+                    Rule *rule = new Rule(label,motif);
+                    guard.relax();
+                    return rule;
+
+                }
 
                 Pattern * const motif;
                 Rule *          next;
