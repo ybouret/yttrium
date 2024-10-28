@@ -5,9 +5,9 @@
 
 #include "y/lingo/lexical/rule.hpp"
 #include "y/lingo/pattern/dictionary.hpp"
+
 #include "y/type/proxy.hpp"
 #include "y/data/small/light/list/bare.hpp"
-
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -17,9 +17,16 @@ namespace Yttrium
     {
         namespace Lexical
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions for Scanner
+            //
+            //__________________________________________________________________
             typedef Small::BareLightList<const Rule>  RList; //!< alias
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
+
 
             //__________________________________________________________________
             //
@@ -44,6 +51,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static const unsigned                     CHARS = 256; //!< alias
                 typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
+                
 
                 //______________________________________________________________
                 //
@@ -85,8 +93,8 @@ namespace Yttrium
                 void operator()(Rule * const rule);
 
 
-                void run(Source        &source,
-                         AutoPtr<Unit> &unit) const;
+                Unit * run(Source   &source,
+                           unsigned &report) const;
 
 
             private:
@@ -96,6 +104,9 @@ namespace Yttrium
                 
                 void                     initialize() noexcept;       //!< setup map
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
+
+                Unit * syntaxError(Source  &source,
+                                   unsigned &report) const;
 
             public:
                 //______________________________________________________________

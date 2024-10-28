@@ -38,7 +38,8 @@ namespace Yttrium
 
                 //! cleanup
                 virtual ~Unit() noexcept;
-
+                Y_OSTREAM_PROTO(Unit);
+                
                 //______________________________________________________________
                 //
                 //

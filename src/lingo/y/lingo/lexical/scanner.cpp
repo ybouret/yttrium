@@ -37,12 +37,12 @@ namespace Yttrium
                 rule->motif->query(cdb);
                 try {
 
-                    // register
+                    // register in lists
                     for(unsigned i=0;i<CHARS;++i)
                         if( cdb.has(i) )
                             rlist[i] << ref;
 
-                    // and finally append
+                    // and finally append to rules
                     rules.pushTail( ptr.yield() );
                 }
                 catch(...)
@@ -55,61 +55,57 @@ namespace Yttrium
             }
 
 
-            void Scanner:: run(Source        &source,
-                               AutoPtr<Unit> &unit) const
+            Unit * Scanner:: run(Source   &source,
+                                 unsigned &report) const
+
             {
-                assert(unit.isEmpty());
+                report = 0;
+                if(!source.ready()) return 0;
 
-                // check EOF
-                if(!source.ready()) {
-                    std::cerr << "EOF" << std::endl;
-                    return;
-                }
+                // get authorized list of rules from next byte
+                const RList & auth = rlist[ **source.peek() ];
 
-                // analyze next byte in source
-                const uint8_t byte = **source.peek();
-                const RList & auth = rlist[byte];
+                // find first matching rule
+                const Rule * bestRule  = 0;
+                Token        bestToken;
 
-
-                if(auth.size<=0)
-                    goto SYNTAX_ERROR; // no authorized rule
-
-
+                for(const RNode *node=auth.head;node;node=node->next)
                 {
-                    const Rule * bestRule = 0;
-                    Token        bestToken;
-                    for(const RNode *node=auth.head;node;node=node->next)
+                    const Rule &rule = **node;
+                    std::cerr << "Probing '" << rule.name << "'" << std::endl;
+                    if(rule.motif->takes(bestToken,source))
                     {
-                        const Rule &rule = **node;
-                        if(rule.motif->takes(bestToken,source)) {
-                            bestRule = & rule;
-                            break;
-                        }
+                        bestRule = &rule;
+                        std::cerr << "Accepted '" << bestToken << "'" << std::endl;
+                        break;
                     }
-
-                    if(!bestRule)
-                        goto SYNTAX_ERROR;
-
-
-                    std::cerr << "firstRule='" << bestRule->name << "'" << std::endl;
-                    throw Exception("not implemented");
                 }
 
+                if(!bestRule) return syntaxError(source,report);
+                if(bestToken.size<=0) throw Specific::Exception(name->c_str(),"corrupted rule '%s'", bestRule->name->c_str());
 
-
-                SYNTAX_ERROR:
-                {
-                    Token bad;
-                    source.guess(bad);
-                    assert(bad.size>0);
-                    assert(0!=bad.head);
-                    const String str = bad.toPrintable();
-                    Specific::Exception excp(name->c_str(),"'%s' syntax error", str.c_str());
-                    bad.head->stamp(excp);
-                    throw excp;
-                }
-
+                return 0;
             }
+
+            Unit * Scanner:: syntaxError(Source   &source,
+                                         unsigned &report) const
+            {
+                // mark report as error
+                report = 1;
+
+                // guess invalid token
+                assert(source.ready());
+                Token token;
+                if(!source.guess(token)) throw Specific::Exception(name->c_str(),"corrupted source");
+                assert(token.size>0);
+
+                // convert to unit
+                Unit * const unit =  new Unit(name,*(token.head));
+                unit->swapWith(token);
+                return unit;
+            }
+
+
 
         }
 

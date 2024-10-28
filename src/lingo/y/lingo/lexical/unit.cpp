@@ -19,6 +19,12 @@ namespace Yttrium
             info(_cntx)
             {
             }
+
+            std::ostream & operator<<(std::ostream &os, const Unit &unit)
+            {
+                os << unit.name << '=' << '\'' << unit.toPrintable() << '\'';
+                return os;
+            }
         }
         
     }

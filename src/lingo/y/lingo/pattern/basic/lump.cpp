@@ -51,7 +51,7 @@ namespace Yttrium
             if(0!=ch)
             {
                 const uint8_t data = **ch;
-                if(lower<=data && upper <=data)
+                if(lower<=data && data<=upper)
                 {
                     token.pushTail(ch);
                     return true;

@@ -91,6 +91,7 @@ namespace Yttrium
                 }
             }
 
+            
             if(count>=minimalCount)
             {
                 token.swapWith(local);
