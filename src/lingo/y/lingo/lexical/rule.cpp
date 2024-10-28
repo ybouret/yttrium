@@ -16,9 +16,11 @@ namespace Yttrium
             }
 
             Rule:: Rule(const Caption & id,
-                        Pattern * const p) noexcept :
+                        Pattern * const p,
+                        const Action   &a) noexcept :
             Entity(id,AsCaption),
             motif(p),
+            action(a),
             next(0),
             prev(0)
             {

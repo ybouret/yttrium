@@ -8,6 +8,7 @@
 
 #include "y/lingo/pattern.hpp"
 #include "y/lingo/lexical/unit.hpp"
+#include "y/lingo/lexical/action.hpp"
 
 #include "y/object.hpp"
 
@@ -38,7 +39,8 @@ namespace Yttrium
             protected:
                 //! setup rule, need to protect motif
                 explicit Rule(const Caption &,
-                              Pattern * const) noexcept;
+                              Pattern * const,
+                              const Action &) noexcept;
 
             public:
                 //! cleanup
@@ -53,12 +55,15 @@ namespace Yttrium
 
                 //! created checked rule
                 template <typename NAME>
-                static Rule * Create(const NAME &name, Pattern * const motif)
+                static Rule * Create(const NAME     &name,
+                                     Pattern * const motif,
+                                     const Action   &action)
                 {
-                    AutoPtr<Pattern> guard( motif ); assert(0!=motif);
+                    AutoPtr<Pattern> guard( motif );
                     const Caption    label( name );
+                    assert(0!=motif);
                     if( motif->feeble() ) ErrorFeeblePattern(*label);
-                    Rule *rule = new Rule(label,motif);
+                    Rule *rule = new Rule(label,motif,action);
                     guard.relax();
                     return rule;
                 }
@@ -69,9 +74,10 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Pattern * const motif; //!< triggering patern
-                Rule *          next;  //!< for list
-                Rule *          prev;  //!< for list
+                Pattern * const motif;  //!< triggering motif
+                const Action    action; //!< triggered action
+                Rule *          next;   //!< for list
+                Rule *          prev;   //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);

@@ -9,6 +9,7 @@ lingo/pattern/logic
 lingo/pattern/regexp
 lingo/pattern/ops
 lingo/lexical
+lingo/lexical/action
 )
 
 add_subdirectory(tests)
