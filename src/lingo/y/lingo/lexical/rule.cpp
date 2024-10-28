@@ -15,12 +15,12 @@ namespace Yttrium
                 Coerce(motif) = 0;
             }
 
-            Rule:: Rule(const Caption & id,
-                        Pattern * const p,
-                        const Action   &a) noexcept :
-            Entity(id,AsCaption),
-            motif(p),
-            action(a),
+            Rule:: Rule(const Caption &  _rname,
+                        Pattern * const  _motif,
+                        const Callback & _xcode) noexcept :
+            Entity(_rname,AsCaption),
+            motif(_motif),
+            xcode(_xcode),
             next(0),
             prev(0)
             {

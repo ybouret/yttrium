@@ -8,9 +8,8 @@
 
 #include "y/lingo/pattern.hpp"
 #include "y/lingo/lexical/unit.hpp"
-#include "y/lingo/lexical/action.hpp"
 
-#include "y/object.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
@@ -18,7 +17,16 @@ namespace Yttrium
     {
         namespace Lexical
         {
+            typedef unsigned                            Result;
+            typedef Functor<Result,TL1(const Token&)>   Callback;
 
+            struct Message
+            {
+                static const Result Emit    = 0x01;
+                static const Result Drop    = 0x02;
+                static const Result NewLine = 0x10;
+                static const Result Control = 0x20;
+            };
 
             //__________________________________________________________________
             //
@@ -38,9 +46,9 @@ namespace Yttrium
                 //______________________________________________________________
             protected:
                 //! setup rule, need to protect motif
-                explicit Rule(const Caption &,
-                              Pattern * const,
-                              const Action &) noexcept;
+                explicit Rule(const Caption & _rname,
+                              Pattern * const _motif,
+                              const Callback &_xcode) noexcept;
 
             public:
                 //! cleanup
@@ -54,17 +62,20 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! created checked rule
-                template <typename NAME>
-                static Rule * Create(const NAME     &name,
-                                     Pattern * const motif,
-                                     const Action   &action)
+                template <typename NAME,
+                typename HOST,
+                typename METHOD>
+                static Rule * Create(const NAME     & _rname,
+                                     Pattern * const  _motif,
+                                     HOST           &host,
+                                     METHOD          meth)
                 {
-                    AutoPtr<Pattern> guard( motif );
-                    const Caption    label( name );
-                    assert(0!=motif);
-                    if( motif->feeble() ) ErrorFeeblePattern(*label);
-                    Rule *rule = new Rule(label,motif,action);
-                    guard.relax();
+                    AutoPtr<Pattern> motif = _motif; assert(motif.isValid());
+                    const Caption    rname = _rname;
+                    const Callback   xcode(&host,meth);
+                    if(motif->feeble()) ErrorFeeblePattern(*rname);
+                    Rule * const     rule = new Rule(rname,& *motif, xcode);
+                    motif.relax();
                     return rule;
                 }
 
@@ -74,10 +85,10 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Pattern * const motif;  //!< triggering motif
-                const Action    action; //!< triggered action
-                Rule *          next;   //!< for list
-                Rule *          prev;   //!< for list
+                const Pattern  * const motif;  //!< triggering motif
+                Callback               xcode;  //!< to execute
+                Rule *                 next;   //!< for list
+                Rule *                 prev;   //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);

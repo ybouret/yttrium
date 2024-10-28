@@ -28,10 +28,16 @@ namespace Yttrium
                 return rules;
             }
 
-            void Scanner:: operator()(Rule * const rule)
+            void Scanner:: add(Rule * const rule)
             {
                 assert(0!=rule);
                 AutoPtr<Rule> ptr(rule);
+                for(const Rule *node=rules.head;node;node=node->next)
+                {
+                    if( *(node->name) == *(rule->name) )
+                        throw Specific::Exception(name->c_str(), "multiple rule '%s'", node->name->c_str() );
+                }
+                
                 CharDB        cdb;
                 Rule &        ref = *rule;
                 rule->motif->query(cdb);
@@ -57,11 +63,8 @@ namespace Yttrium
 
 
 
-            Unit * Scanner:: findError(Source   &source,
-                                       Report &report) const
+            Unit * Scanner:: findError(Source   &source) const
             {
-                // mark report as error
-                report = &error;
 
                 // guess invalid token
                 assert(source.ready());
@@ -70,7 +73,7 @@ namespace Yttrium
                 assert(token.size>0);
 
                 // convert to unit
-                Unit * const unit =  new Unit(name,*(token.head));
+                Unit * const unit =  new Unit(*this,*(token.head));
                 unit->swapWith(token);
                 return unit;
             }
@@ -83,8 +86,6 @@ namespace Yttrium
 
 }
 
-#include "y/lingo/lexical/action/emit.hpp"
-#include "y/lingo/lexical/action/drop.hpp"
 
 namespace Yttrium
 {
@@ -94,13 +95,11 @@ namespace Yttrium
         {
 
 
-            Unit * Scanner:: run(Source  &source,
-                                 Report  &report) const
+            Unit * Scanner:: run(Source  &source) const
 
             {
                 while(true)
                 {
-                    report = 0;
                     if(!source.ready()) return 0;
 
                     //--------------------------------------------------------------
@@ -137,7 +136,7 @@ namespace Yttrium
                         if(!bestRule)
                         {
                             assert(0==node);
-                            return findError(source,report);
+                            return findError(source);
                         }
 
                         assert(bestToken.size>0);
@@ -194,31 +193,7 @@ namespace Yttrium
                     // discard cached token
                     source.skip( bestToken.size );
 
-                    // select action
-                    const Action_ &action = *(bestRule->action);
 
-                    // detect newline
-                    if(action.endl) { source.newLine(); }
-
-                    // take action
-                    switch(action.uuid)
-                    {
-                        case Drop::UUID:
-                            continue;
-
-                        case Emit::UUID: {
-                            AutoPtr<Unit> unit = new Unit(bestRule->name,*(bestToken.head));
-                            unit->swapWith(bestToken);
-                            report = &action;
-                            return unit.yield();
-                        }
-
-                        default:
-                            break;
-
-                    }
-
-                    report = &action;
                     return 0;
                 }
             }

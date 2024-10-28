@@ -9,10 +9,10 @@ namespace Yttrium
         {
             Unit:: ~Unit() noexcept {}
 
-            Unit:: Unit(const Caption &_name,
+            Unit:: Unit(const Entity  &_root,
                         const Context &_cntx) noexcept :
             Object(),
-            Entity(_name,AsCaption),
+            Entity(_root),
             Token(),
             next(0),
             prev(0),

@@ -5,7 +5,6 @@
 
 #include "y/lingo/lexical/rule.hpp"
 #include "y/lingo/pattern/dictionary.hpp"
-#include "y/lingo/lexical/action/error.hpp"
 
 #include "y/type/proxy.hpp"
 #include "y/data/small/light/list/bare.hpp"
@@ -18,6 +17,10 @@ namespace Yttrium
     {
         namespace Lexical
         {
+           
+
+
+
             //__________________________________________________________________
             //
             //
@@ -27,7 +30,6 @@ namespace Yttrium
             typedef Small::BareLightList<const Rule>  RList; //!< alias
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
-            typedef const Action_ *                   Report;
 
             //__________________________________________________________________
             //
@@ -69,7 +71,6 @@ namespace Yttrium
                 RMaps(CHARS),
                 rules(),
                 rlist(lead()),
-                error(),
                 dict(_dict)
                 {
                     initialize();
@@ -92,11 +93,23 @@ namespace Yttrium
                 }
 
                 //! record a new rule
-                void operator()(Rule * const rule);
+                void add(Rule * const rule);
 
+                //! generic rule creation from regular expression
+                template <
+                typename ID,
+                typename RX,
+                typename HOST,
+                typename METH> inline
+                void operator()(const ID & id,
+                                const RX & rx,
+                                HOST     & host,
+                                METH       meth)
+                {
+                    add( Rule::Create(id, compile(rx), host, meth) );
+                }
 
-                Unit * run(Source &source,
-                           Report &report) const;
+                Unit * run(Source &source) const;
 
 
             private:
@@ -107,8 +120,7 @@ namespace Yttrium
                 void                     initialize() noexcept;       //!< setup map
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
 
-                Unit * findError(Source &source,
-                                 Report &report) const;
+                Unit * findError(Source &source) const;
 
             public:
                 //______________________________________________________________
@@ -117,7 +129,6 @@ namespace Yttrium
                 //  Members
                 //
                 //______________________________________________________________
-                const Error error; //!< report error
                 Dictionary  dict;  //!< shared dictionary
             };
 

@@ -22,7 +22,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Unit : public Object,  public Entity, public Token
+            class Unit : public Object, public Entity, public Token
             {
             public:
                 //______________________________________________________________
@@ -32,8 +32,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! setup from rule's caption and token's creation context
-                explicit Unit(const Caption &,
+                //! setup from rule and token's creation context
+                explicit Unit(const Entity  &,
                               const Context &) noexcept;
 
                 //! cleanup
