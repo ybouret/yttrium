@@ -17,6 +17,15 @@ Y_UTEST(scanner)
     Dictionary       dict;
     Lexical::Scanner scan("MyScanner",dict);
 
-    scan(Lexical::Rule::Create("INT", scan.compile("[:digit:]") ) );
+    scan(Lexical::Rule::Create("INT", scan.compile("[:digit:]+") ) );
+
+    if(argc>1)
+    {
+        Source source( Module::OpenFile(argv[1]) );
+        AutoPtr<Lexeme> unit;
+        scan.run(source,unit);
+    }
+
+
 }
 Y_UDONE()

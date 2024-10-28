@@ -1,6 +1,7 @@
 
 #include "y/lingo/lexical/scanner.hpp"
 #include "y/lingo/pattern/char-db.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -59,14 +60,54 @@ namespace Yttrium
             {
                 assert(unit.isEmpty());
 
-                if(!source.ready())
-                {
+                // check EOF
+                if(!source.ready()) {
                     std::cerr << "EOF" << std::endl;
                     return;
                 }
 
+                // analyze next byte in source
+                const uint8_t byte = source.peek();
+                const RList & auth = rlist[byte];
 
 
+                if(auth.size<=0)
+                    goto SYNTAX_ERROR; // no authorized rule
+
+
+                {
+                    const Rule * bestRule = 0;
+                    Token        bestToken;
+                    for(const RNode *node=auth.head;node;node=node->next)
+                    {
+                        const Rule &rule = **node;
+                        if(rule.motif->takes(bestToken,source)) {
+                            bestRule = & rule;
+                            break;
+                        }
+                    }
+
+                    if(!bestRule)
+                        goto SYNTAX_ERROR;
+
+
+                    std::cerr << "firstRule='" << bestRule->name << "'" << std::endl;
+                    throw Exception("not implemented");
+                }
+
+
+
+                SYNTAX_ERROR:
+                {
+                    Token bad;
+                    source.guess(bad);
+                    assert(bad.size>0);
+                    assert(0!=bad.head);
+                    const String str = bad.toPrintable();
+                    Specific::Exception excp(name->c_str(),"'%s' syntax error", str.c_str());
+                    bad.head->stamp(excp);
+                    throw excp;
+                }
 
             }
 

@@ -17,7 +17,7 @@ namespace Yttrium
     {
         namespace Lexical
         {
-            typedef Small::BareLightList<Rule>        RList; //!< alias
+            typedef Small::BareLightList<const Rule>  RList; //!< alias
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
 
@@ -93,7 +93,7 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules         rules; //!< list of rules
                 RList * const rlist; //!< map of rules from their first chars
-
+                
                 void                     initialize() noexcept;       //!< setup map
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
 
@@ -104,7 +104,6 @@ namespace Yttrium
                 //  Members
                 //
                 //______________________________________________________________
-
                 Dictionary dict; //!< shared dictionary
             };
 
