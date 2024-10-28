@@ -28,7 +28,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Rule : public Entity
+            class Rule : public Quantized, public Entity
             {
                 //______________________________________________________________
                 //

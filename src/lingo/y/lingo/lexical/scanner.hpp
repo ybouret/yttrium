@@ -5,6 +5,7 @@
 
 #include "y/lingo/lexical/rule.hpp"
 #include "y/lingo/pattern/dictionary.hpp"
+#include "y/lingo/lexical/action/error.hpp"
 
 #include "y/type/proxy.hpp"
 #include "y/data/small/light/list/bare.hpp"
@@ -26,7 +27,7 @@ namespace Yttrium
             typedef Small::BareLightList<const Rule>  RList; //!< alias
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
-
+            typedef const Action_ *                   Report;
 
             //__________________________________________________________________
             //
@@ -68,6 +69,7 @@ namespace Yttrium
                 RMaps(CHARS),
                 rules(),
                 rlist(lead()),
+                error(),
                 dict(_dict)
                 {
                     initialize();
@@ -93,20 +95,20 @@ namespace Yttrium
                 void operator()(Rule * const rule);
 
 
-                Unit * run(Source   &source,
-                           unsigned &report) const;
+                Unit * run(Source &source,
+                           Report &report) const;
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules         rules; //!< list of rules
                 RList * const rlist; //!< map of rules from their first chars
-                
+
                 void                     initialize() noexcept;       //!< setup map
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
 
-                Unit * syntaxError(Source  &source,
-                                   unsigned &report) const;
+                Unit * findError(Source &source,
+                                 Report &report) const;
 
             public:
                 //______________________________________________________________
@@ -115,7 +117,8 @@ namespace Yttrium
                 //  Members
                 //
                 //______________________________________________________________
-                Dictionary dict; //!< shared dictionary
+                const Error error; //!< report error
+                Dictionary  dict;  //!< shared dictionary
             };
 
         }

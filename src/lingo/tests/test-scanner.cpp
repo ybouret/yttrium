@@ -44,11 +44,11 @@ Y_UTEST(scanner)
 
     if(argc>1)
     {
-        Source   source( Module::OpenFile(argv[1]) );
-        unsigned report=0;
+        Source          source( Module::OpenFile(argv[1]) );
+        Lexical::Report report = 0;
         AutoPtr<Lexeme> lexeme = scan.run(source,report);
         std::cerr << lexeme << std::endl;
-        if(1==report) {
+        if(&scan.error==report) {
             assert(lexeme.isValid());
             const String bad = lexeme->toPrintable();
             Specific::Exception excp(scan.name->c_str(), "unexpected '%s'", bad.c_str());

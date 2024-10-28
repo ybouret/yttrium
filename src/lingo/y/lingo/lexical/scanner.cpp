@@ -57,11 +57,11 @@ namespace Yttrium
 
 
 
-            Unit * Scanner:: syntaxError(Source   &source,
-                                         unsigned &report) const
+            Unit * Scanner:: findError(Source   &source,
+                                       Report &report) const
             {
                 // mark report as error
-                report = 1;
+                report = &error;
 
                 // guess invalid token
                 assert(source.ready());
@@ -94,8 +94,8 @@ namespace Yttrium
         {
 
 
-            Unit * Scanner:: run(Source   &source,
-                                 unsigned &report) const
+            Unit * Scanner:: run(Source  &source,
+                                 Report  &report) const
 
             {
                 while(true)
@@ -137,7 +137,7 @@ namespace Yttrium
                         if(!bestRule)
                         {
                             assert(0==node);
-                            return syntaxError(source,report);
+                            return findError(source,report);
                         }
 
                         assert(bestToken.size>0);
@@ -195,12 +195,12 @@ namespace Yttrium
                     source.skip( bestToken.size );
 
                     // select action
-                    const Action_ &todo = *(bestRule->action);
+                    const Action_ &action = *(bestRule->action);
 
                     // detect newline
-                    if(todo.endl) { source.newLine(); }
+                    if(action.endl) { source.newLine(); }
 
-                    switch(todo.uuid)
+                    switch(action.uuid)
                     {
                         case Drop::UUID:
                             continue;

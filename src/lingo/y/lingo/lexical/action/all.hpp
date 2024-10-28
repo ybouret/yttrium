@@ -8,6 +8,7 @@
 #include "y/lingo/lexical/action/drop.hpp"
 #include "y/lingo/lexical/action/call.hpp"
 #include "y/lingo/lexical/action/back.hpp"
+#include "y/lingo/lexical/action/error.hpp"
 
 #endif
 

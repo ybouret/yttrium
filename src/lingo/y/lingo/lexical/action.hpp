@@ -37,7 +37,7 @@ namespace Yttrium
                 void * const self;
                 
             private:
-                Y_DISABLE_ASSIGN(Action_);
+                Y_DISABLE_COPY_AND_ASSIGN(Action_);
             };
 
 
