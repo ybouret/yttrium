@@ -65,24 +65,71 @@ namespace Yttrium
                 // get authorized list of rules from next byte
                 const RList & auth = rlist[ **source.peek() ];
 
-                // find first matching rule
-                const Rule * bestRule  = 0;
-                Token        bestToken;
-
-                for(const RNode *node=auth.head;node;node=node->next)
+                const Rule  * bestRule  = 0;
+                Token         bestToken;
                 {
-                    const Rule &rule = **node;
-                    std::cerr << "Probing '" << rule.name << "'" << std::endl;
-                    if(rule.motif->takes(bestToken,source))
+                    // find first matching rule
+                    RNode *node = auth.head;
+                    for(;node;node=node->next)
                     {
-                        bestRule = &rule;
-                        std::cerr << "Accepted '" << bestToken << "'" << std::endl;
-                        break;
+                        const Rule &rule = **node;
+                        std::cerr << "Probing '" << rule.name << "'" << std::endl;
+                        if( rule.motif->takes(bestToken,source) )
+                        {
+                            bestRule = &rule;
+                            if(bestToken.size<=0)
+                                throw Specific::Exception(name->c_str(),"corrupted rule '%s'", bestRule->name->c_str());
+                            break;
+                        }
                     }
+
+                    if(!bestRule)
+                    {
+                        assert(0==node);
+                        return syntaxError(source,report);
+                    }
+
+                    assert(bestToken.size>0);
+                    assert(bestRule == & **node);
+
+                    std::cerr << "found " << bestRule->name << " = '" << bestToken << "'" << std::endl;
+
+                    // find better rule
+                    source.dup(bestToken);
+                    for(node=node->next;node;node=node->next)
+                    {
+                        const Rule &rule = **node;
+                        std::cerr << "Probing '" << rule.name << "'" << std::endl;
+                        Token token;
+                        if( rule.motif->takes(token,source) )
+                        {
+                            if(token.size>bestToken.size)
+                            {
+                                // new winner
+                                bestToken.swapWith(token);
+                                bestRule = &rule;
+                                std::cerr << "new best '" << bestToken << "'" << std::endl;
+                                source.dup(bestToken);
+                            }
+                            else
+                            {
+                                // too late
+                                std::cerr << "too late '" << token << "'" << std::endl;
+                                source.put(token);
+                            }
+                        }
+                        else
+                        {
+                            // source is unchanged
+                            assert(0==token.size);
+                        }
+                    }
+
+                    // ok
+                    source.skip( bestToken.size );
+
                 }
 
-                if(!bestRule) return syntaxError(source,report);
-                if(bestToken.size<=0) throw Specific::Exception(name->c_str(),"corrupted rule '%s'", bestRule->name->c_str());
 
                 return 0;
             }

@@ -18,7 +18,9 @@ Y_UTEST(scanner)
     Dictionary       dict;
     Lexical::Scanner scan("MyScanner",dict);
 
+    scan(Lexical::Rule::Create("FLT", scan.compile("[:digit:]+f")) );
     scan(Lexical::Rule::Create("INT", scan.compile("[:digit:]+") ) );
+    scan(Lexical::Rule::Create("HEX", scan.compile("0x[:xdigit:]+") ) );
 
     for(const Lexical::Rule *rule=scan->head;rule;rule=rule->next)
     {
@@ -42,7 +44,7 @@ Y_UTEST(scanner)
         }
         else
         {
-            
+
         }
     }
 
