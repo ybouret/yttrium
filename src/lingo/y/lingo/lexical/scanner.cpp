@@ -67,7 +67,7 @@ namespace Yttrium
                 }
 
                 // analyze next byte in source
-                const uint8_t byte = source.peek();
+                const uint8_t byte = **source.peek();
                 const RList & auth = rlist[byte];
 
 

@@ -96,12 +96,16 @@ namespace Yttrium
             return code->ready();
         }
 
-        uint8_t Source:: peek() const noexcept
+
+
+        const Char * Source:: peek() const noexcept
         {
             assert(0!=code);
             assert(code->cache.size>0);
-            return **(code->cache.head);
+            assert(0!=code->cache.head);
+            return code->cache.head;
         }
+
 
         size_t Source:: cached() const noexcept
         {
@@ -151,40 +155,27 @@ namespace Yttrium
         bool Source:: guess(Token &token)
         {
             token.release();
-            while(true)
+
+            if(getch(token))
             {
-                Char *ch = get();
-                if(!ch) break;
-                if(isBlank(ch))
+                if(isBlank(token.tail))
                 {
-                    delete ch;
-                    continue;
+                    return true; // rejected blank
                 }
                 else
                 {
-                    token.pushTail(ch);
-                    break;
+                    while(ready() && isBlank( peek() ) )
+                        token << get();
+                    return true;
                 }
             }
-
-            while(true)
+            else
             {
-                Char *ch = get();
-                if(!ch) break;
-                if(isBlank(ch))
-                {
-                    put(ch);
-                    break;
-                }
-                else
-                {
-                    token.pushTail(ch);
-                    continue;
-                }
+                assert(0==token.size);
+                return false;
             }
 
             
-            return token.size > 0;
         }
 
         
