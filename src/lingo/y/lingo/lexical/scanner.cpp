@@ -200,6 +200,7 @@ namespace Yttrium
                     // detect newline
                     if(action.endl) { source.newLine(); }
 
+                    // take action
                     switch(action.uuid)
                     {
                         case Drop::UUID:
@@ -207,14 +208,17 @@ namespace Yttrium
 
                         case Emit::UUID: {
                             AutoPtr<Unit> unit = new Unit(bestRule->name,*(bestToken.head));
-                            
+                            unit->swapWith(bestToken);
+                            report = &action;
+                            return unit.yield();
                         }
 
+                        default:
+                            break;
 
                     }
 
-
-
+                    report = &action;
                     return 0;
                 }
             }
