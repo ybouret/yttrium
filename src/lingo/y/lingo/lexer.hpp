@@ -31,6 +31,8 @@ namespace Yttrium
 
             virtual ~Lexer() noexcept;
 
+            Scanner & operator[](const int);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             ScanSet scanners;
