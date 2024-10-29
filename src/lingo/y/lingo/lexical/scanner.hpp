@@ -8,6 +8,7 @@
 
 #include "y/type/proxy.hpp"
 #include "y/data/small/light/list/bare.hpp"
+#include "y/data/small/heavy/list/solo.hpp"
 #include "y/memory/wad.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -27,9 +28,41 @@ namespace Yttrium
             // Definitions for Scanner
             //
             //__________________________________________________________________
-            typedef Small::BareLightList<const Rule>  RList; //!< alias
+            typedef Small::BareLightList<Rule>        RList; //!< list of reference to rules
             typedef RList::NodeType                   RNode; //!< alias
-            typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< alias
+            typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
+
+            class Guess
+            {
+            public:
+                typedef Small::SoloHeavyList<const Guess>  List; //!< list of reference to rules
+
+                Guess(const Rule &r, const Token &t) noexcept :
+                rule(r),
+                score(t.size)
+                {
+                }
+
+                Guess(const Guess &_) noexcept : rule(_.rule), score(_.score) {}
+                ~Guess() noexcept {}
+
+                const Rule & rule;
+                const size_t score;
+            private:
+                Y_DISABLE_ASSIGN(Guess);
+            };
+
+            class GList : public Guess::List
+            {
+            public:
+                explicit GList() noexcept : Guess::List() {}
+                virtual ~GList() noexcept {}
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(GList);
+            };
+
+
 
             //__________________________________________________________________
             //
@@ -76,8 +109,8 @@ namespace Yttrium
                                  const Dictionary &_dict) noexcept :
                 Entity(_name,AsCaption),
                 RMaps(CHARS),
-                rules(),
                 rlist(lead()),
+                rules(),
                 dict(_dict)
                 {
                     initialize();
@@ -117,7 +150,7 @@ namespace Yttrium
                 }
 
                 Unit * run(Source &source,
-                           Result &result) const;
+                           Result &result);
 
                 //! convert token to named unit
                 Unit * produce(Token &) const;
@@ -176,8 +209,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Rules         rules; //!< list of rules
                 RList * const rlist; //!< map of rules from their first chars
+                GList         glist; //!< list of possible guess
+                Rules         rules; //!< list of rules
 
                 void                     initialize() noexcept;       //!< setup map
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules

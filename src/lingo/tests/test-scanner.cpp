@@ -16,7 +16,7 @@ Y_UTEST(scanner)
     Y_SIZEOF(Lexical::Rule);
     Y_SIZEOF(Lexical::Scanner);
     Y_SIZEOF(Lexical::RList);
-    Y_SIZEOF(Lexical::Outcome);;
+    Y_SIZEOF(Lexical::Outcome);
 
 
 

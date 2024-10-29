@@ -77,7 +77,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const Pattern  * const motif;  //!< triggering motif
-                mutable Callback       xcode;  //!< to execute
+                Callback               xcode;  //!< to execute
                 Rule *                 next;   //!< for list
                 Rule *                 prev;   //!< for list
 

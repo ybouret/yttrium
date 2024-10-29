@@ -31,6 +31,7 @@ namespace Yttrium
             void Scanner:: add(Rule * const rule)
             {
                 assert(0!=rule);
+                glist.free();
                 AutoPtr<Rule> ptr(rule);
                 for(const Rule *node=rules.head;node;node=node->next)
                 {
@@ -46,7 +47,8 @@ namespace Yttrium
                     // register in lists
                     for(unsigned i=0;i<CHARS;++i)
                         if( cdb.has(i) )
-                            rlist[i] << ref;
+                            glist.proxy->ensure( (rlist[i] << ref).size);
+
 
                     // and finally append to rules
                     rules.pushTail( ptr.yield() );
@@ -99,12 +101,13 @@ namespace Yttrium
         {
 
 
-            Unit * Scanner:: run(Source  &source, Result &result) const
+            Unit * Scanner:: run(Source  &source, Result &result)
 
             {
                 while(true)
                 {
                     result = Regular;
+                    glist.free();
                     if(!source.ready())
                         return 0; // 0+regular => EOF
 
@@ -118,7 +121,7 @@ namespace Yttrium
                     assert(source.ready());
                     assert(0!=source.peek());
                     const RList & auth     = rlist[ **source.peek() ];
-                    const Rule  * bestRule = 0;
+                    Rule  *       bestRule = 0;
                     Token         bestToken;
                     {
                         //------------------------------------------------------
@@ -129,7 +132,7 @@ namespace Yttrium
                         RNode *node = auth.head;
                         for(;node;node=node->next)
                         {
-                            const Rule &rule = **node;
+                            Rule &rule = **node;
                             std::cerr << "probe '" << rule.name << "'" << std::endl;
                             if( rule.motif->takes(bestToken,source) )
                             {
@@ -159,7 +162,7 @@ namespace Yttrium
                         source.dup(bestToken); // reset source for next trials
                         for(node=node->next;node;node=node->next)
                         {
-                            const Rule &rule = **node;
+                            Rule &rule = **node;
                             std::cerr << "Probing '" << rule.name << "'" << std::endl;
                             Token token;
                             if( rule.motif->takes(token,source) )
