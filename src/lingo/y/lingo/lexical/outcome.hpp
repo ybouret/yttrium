@@ -13,22 +13,40 @@ namespace Yttrium
         namespace Lexical
         {
 
-            
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Outcome from Scanner run
+            //
+            //
+            //__________________________________________________________________
             class Outcome
             {
             public:
-
-                const Unit::Type type;
-                const Unit::Spot spot;
-                const union {
-                    Unit::RegularInfo regular;
-                    Unit::ControlInfo control;
-                } args;
-
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 Outcome(const Unit::Feat,const Unit::Spot) noexcept; //!< regular outcome
                 Outcome(const Unit::Spot)                  noexcept; //!< control outcome
                 Outcome(const Outcome &)                   noexcept; //!< copy
                 ~Outcome()                                 noexcept; //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Unit::Type type; //!< type
+                const Unit::Spot spot; //!< spot
+                const union {
+                    Unit::RegularInfo regular;
+                    Unit::ControlInfo control;
+                } args;                //!< args
 
             private:
                 Y_DISABLE_ASSIGN(Outcome);

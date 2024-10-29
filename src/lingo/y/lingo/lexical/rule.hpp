@@ -17,6 +17,12 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Generic Outcome returning callback to execute for best pattern
+            //
+            //__________________________________________________________________
             typedef Functor<Outcome,TL1(const Token&)>   Callback;
             
             //__________________________________________________________________

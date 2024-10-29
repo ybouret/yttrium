@@ -23,28 +23,40 @@ namespace Yttrium
             class Unit : public Object, public Entity, public Token
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+
+                //! possible types for rule/outcome
                 enum Type
                 {
-                    Regular,
-                    Control
+                    Regular, //!< regular lexeme
+                    Control  //!< control lexeme
                 };
 
+                //! possible spots for rule/outcome
                 enum Spot
                 {
-                    Bulk,
-                    Endl
+                    Bulk, //!< default spot
+                    Endl  //!< must propagate newLine to source
                 };
 
+                //! possible feats for regular lexemes
                 enum Feat
                 {
-                    Emit,
-                    Drop
+                    Emit, //!< is emitted
+                    Drop  //!< is silently discardes
                 };
 
+                //! info for regular lexeme
                 struct RegularInfo {
-                    Feat feat;
+                    Feat feat; //!< emit/drop
                 };
 
+                //! info for control lexeme
                 struct ControlInfo {
                     
                 };
@@ -61,10 +73,10 @@ namespace Yttrium
                 explicit Unit(const Entity  &,
                               const Context &) noexcept;
 
-                //! cleanup
-                virtual ~Unit() noexcept;
-                Y_OSTREAM_PROTO(Unit);
-                
+
+                virtual ~Unit() noexcept; //!< cleanup
+                Y_OSTREAM_PROTO(Unit);    //!< display
+
                 //______________________________________________________________
                 //
                 //

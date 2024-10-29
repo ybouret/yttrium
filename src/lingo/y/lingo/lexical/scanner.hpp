@@ -56,11 +56,12 @@ namespace Yttrium
                 static const unsigned                     CHARS = 256; //!< alias
                 typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
 
+                //! one run possible result
                 enum Result
                 {
-                    Regular,
-                    Control,
-                    Failure
+                    Regular, //!< found a Regular, emitted Unit
+                    Control, //!< found a Control unit for Lexer
+                    Failure  //!< syntax error
                 };
 
 
@@ -117,18 +118,23 @@ namespace Yttrium
                     add( Rule::Create(id, compile(rx), host, meth) );
                 }
 
+                //! run over possible rules
+                /**
+                 - result = Regular:
+                 -- Unit =  0 => EOF
+                 -- Unit != 0 => Lexeme
+                 - result = Control: Lexer is changed
+                 - result = Failure: Unit is collected for Syntax Error
+                 */
                 Unit * run(Source &source,
                            Result &result);
 
                 //! convert token to named unit
                 Unit * produce(Token &) const;
 
-                template <Unit::Feat feat,Unit::Spot spot> inline
-                Outcome summon(const Token &) const noexcept {
-                    return Outcome(feat,spot);
-                }
 
 
+                //! assign the proper built-in method for UUID='EXPR'
                 template <
                 typename   UUID,
                 typename   EXPR,
@@ -157,7 +163,7 @@ namespace Yttrium
                     call<UUID,EXPR,Unit::Drop,Unit::Bulk>(uuid,expr);
                 }
 
-                //! endl
+                //! endl with optional emit
                 template <typename UUID, typename EXPR> inline
                 void endl(const UUID & uuid,
                           const EXPR & expr,
@@ -184,6 +190,11 @@ namespace Yttrium
                 virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
 
                 Unit * findError(Source &source) const;
+
+                template <Unit::Feat feat,Unit::Spot spot> inline
+                Outcome summon(const Token &) const noexcept {
+                    return Outcome(feat,spot);
+                }
 
             public:
                 //______________________________________________________________
