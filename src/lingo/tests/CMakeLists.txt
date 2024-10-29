@@ -16,5 +16,4 @@ add_test(dict    test-lingo dict)
 add_test(posix   test-lingo posix)
 add_test(rx      test-lingo rx)
 add_test(scanner test-lingo scanner)
-
-
+add_test(lexer   test-lingo lexer)

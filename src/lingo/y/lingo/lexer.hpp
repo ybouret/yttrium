@@ -35,6 +35,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             ScanSet scanners;
 
+            void initialize();
+            
         };
 
     }
