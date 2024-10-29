@@ -164,7 +164,7 @@ namespace Yttrium
                 }
                 else
                 {
-                    while(ready() && isBlank( peek() ) )
+                    while(ready() && !isBlank( peek() ) )
                         token << get();
                     return true;
                 }
