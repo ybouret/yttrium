@@ -45,32 +45,39 @@ Y_UTEST(scanner)
     {
         Source                   source( Module::OpenFile(argv[1]) );
         Lexical::Scanner::Result result = Lexical::Scanner::Regular;
+
+        bool            done   = false;
         AutoPtr<Lexeme> lexeme = scan.run(source,result);
-        switch(result)
+
+        while(!done)
         {
-            case Lexical::Scanner::Regular:
-                if(lexeme.isValid())
-                {
-                    std::cerr << "Regular " << lexeme << std::endl;
-                }
-                else
-                {
-                    std::cerr << "EOF" << std::endl;
-                }
-                break;
-
-            case Lexical::Scanner::Control:
-                Y_ASSERT(lexeme.isEmpty());
-                std::cerr << "Control" << std::endl;
-                break;
-
-            case Lexical::Scanner::Failure:
+            switch(result)
             {
-                Y_ASSERT(lexeme.isValid());
-                const String bad = lexeme->toPrintable();
-                Specific::Exception excp(scan.name->c_str(), "unexpected '%s'", bad.c_str());
-                lexeme->info.stamp(excp);
-                throw excp;
+                case Lexical::Scanner::Regular:
+                    if(lexeme.isValid())
+                    {
+                        std::cerr << "Regular " << lexeme << std::endl;
+                    }
+                    else
+                    {
+                        std::cerr << "EOF" << std::endl;
+                        done = true;
+                    }
+                    break;
+
+                case Lexical::Scanner::Control:
+                    Y_ASSERT(lexeme.isEmpty());
+                    std::cerr << "Control" << std::endl;
+                    break;
+
+                case Lexical::Scanner::Failure:
+                {
+                    Y_ASSERT(lexeme.isValid());
+                    const String bad = lexeme->toPrintable();
+                    Specific::Exception excp(scan.name->c_str(), "unexpected '%s'", bad.c_str());
+                    lexeme->info.stamp(excp);
+                    throw excp;
+                }
             }
         }
 

@@ -119,6 +119,9 @@ namespace Yttrium
                 Unit * run(Source &source,
                            Result &result) const;
 
+                //! convert token to named unit
+                Unit * produce(Token &) const;
+
                 template <Unit::Feat feat,Unit::Spot spot> inline
                 Outcome summon(const Token &) const noexcept {
                     return Outcome(feat,spot);

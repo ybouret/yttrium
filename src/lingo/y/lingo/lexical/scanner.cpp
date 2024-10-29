@@ -61,7 +61,13 @@ namespace Yttrium
             }
 
 
-
+            Unit * Scanner:: produce(Token &token) const
+            {
+                assert(token.size>0);
+                Unit * const unit =  new Unit(*this,*(token.head));
+                unit->swapWith(token);
+                return unit;
+            }
 
             Unit * Scanner:: findError(Source   &source) const
             {
@@ -73,9 +79,7 @@ namespace Yttrium
                 assert(token.size>0);
 
                 // convert to unit
-                Unit * const unit =  new Unit(*this,*(token.head));
-                unit->swapWith(token);
-                return unit;
+                return produce(token);
             }
 
 
