@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Lingo_Lexical_Unit_Included

@@ -7,10 +7,8 @@
 #define Y_Lingo_Lexical_Rule_Included 1
 
 #include "y/lingo/pattern.hpp"
-#include "y/lingo/lexical/unit.hpp"
-
+#include "y/lingo/lexical/outcome.hpp"
 #include "y/functor.hpp"
-#include <cstring>
 
 namespace Yttrium
 {
@@ -19,58 +17,8 @@ namespace Yttrium
         namespace Lexical
         {
 
-            class Outcome
-            {
-            public:
-
-                const Unit::Type type;
-                const Unit::Spot spot;
-                const union {
-                    Unit::RegularInfo regular;
-                    Unit::ControlInfo control;
-                } args;
-
-                //! regular outcome
-                Outcome(const Unit::Feat _feat, const Unit::Spot _spot) noexcept :
-                type(Unit::Regular),
-                spot(_spot),
-                args()
-                {
-                    Coerce(args.regular.feat) = _feat;
-                }
-
-                //! control outcome
-                Outcome(const Unit::Spot _spot) noexcept :
-                type(Unit::Control),
-                spot(_spot),
-                args()
-                {
-
-                }
-
-                ~Outcome() noexcept
-                {
-                }
-
-                Outcome(const Outcome &_) noexcept :
-                type(_.type),
-                spot(_.spot),
-                args()
-                {
-                    memcpy((void*)&args,&_.args,sizeof(args));
-                }
-
-            private:
-                Y_DISABLE_ASSIGN(Outcome);
-            };
-
-
             typedef Functor<Outcome,TL1(const Token&)>   Callback;
-
-
-
             
-
             //__________________________________________________________________
             //
             //
