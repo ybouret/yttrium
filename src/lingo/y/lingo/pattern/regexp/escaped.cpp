@@ -100,7 +100,7 @@ namespace Yttrium
 
         Pattern * RXC:: subBankEsc()
         {
-            return escapedSeq("[]-^\\/'\"");
+            return escapedSeq("[]()-^\\/'\"");
         }
 
 

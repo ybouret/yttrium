@@ -17,7 +17,7 @@ namespace Yttrium
     {
         namespace Lexical
         {
-           
+
 
 
 
@@ -54,7 +54,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static const unsigned                     CHARS = 256; //!< alias
                 typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
-                
+
 
                 //______________________________________________________________
                 //
@@ -101,15 +101,66 @@ namespace Yttrium
                 typename RX,
                 typename HOST,
                 typename METH> inline
-                void operator()(const ID & id,
-                                const RX & rx,
-                                HOST     & host,
-                                METH       meth)
+                void on(const ID & id,
+                        const RX & rx,
+                        HOST     & host,
+                        METH       meth)
                 {
                     add( Rule::Create(id, compile(rx), host, meth) );
                 }
 
                 Unit * run(Source &source) const;
+
+                template <Unit::Feat feat,Unit::Spot spot> inline
+                Outcome summon(const Token &) const noexcept {
+                    return Outcome(feat,spot);
+                }
+
+
+                template <
+                typename   UUID,
+                typename   EXPR,
+                Unit::Feat FEAT,
+                Unit::Spot SPOT
+                > inline
+                void call(const UUID &uuid,
+                          const EXPR &expr)
+                {
+                    on(uuid,expr,*this, & Scanner:: summon<FEAT,SPOT>);
+                }
+
+                //! bulk emit
+                template <typename UUID, typename EXPR> inline
+                void emit(const UUID &     uuid,
+                          const EXPR &     expr)
+                {
+                    call<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
+                }
+
+                //! bulk drop
+                template <typename UUID, typename EXPR> inline
+                void drop(const UUID &     uuid,
+                          const EXPR &     expr )
+                {
+                    call<UUID,EXPR,Unit::Drop,Unit::Bulk>(uuid,expr);
+                }
+
+                //! endl
+                template <typename UUID, typename EXPR> inline
+                void endl(const UUID & uuid,
+                          const EXPR & expr,
+                          Unit::Feat   feat = Unit::Drop)
+                {
+                    switch(feat)
+                    {
+                        case Unit::Drop: call<UUID,EXPR,Unit::Drop,Unit::Endl>(uuid,expr); break;
+                        case Unit::Emit: call<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
+                    }
+                }
+
+
+
+
 
 
             private:

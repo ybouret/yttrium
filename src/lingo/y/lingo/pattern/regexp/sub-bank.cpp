@@ -75,6 +75,11 @@ namespace Yttrium
                         motif->pushTail( subBankEsc() );
                         break;
 
+                    case LPAREN:
+                        ++depth;
+                        motif->pushTail( subExpr() );
+                        break;
+
                     case '-':
                         if(motif->size<=0)
                             throw Specific::Exception(CallSign,"no char before '-' in '...%s'",start);

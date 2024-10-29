@@ -25,6 +25,34 @@ namespace Yttrium
             class Unit : public Object, public Entity, public Token
             {
             public:
+                enum Type
+                {
+                    Regular,
+                    Control
+                };
+
+                enum Spot
+                {
+                    Bulk,
+                    Endl
+                };
+
+                enum Feat
+                {
+                    Emit,
+                    Drop
+                };
+
+                struct RegularInfo {
+                    Spot spot;
+                    Feat feat;
+                };
+
+                struct ControlInfo {
+                    Spot spot;
+                };
+
+
                 //______________________________________________________________
                 //
                 //

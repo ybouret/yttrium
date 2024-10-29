@@ -10,6 +10,7 @@
 #include "y/lingo/lexical/unit.hpp"
 
 #include "y/functor.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -17,16 +18,59 @@ namespace Yttrium
     {
         namespace Lexical
         {
-            typedef unsigned                            Result;
-            typedef Functor<Result,TL1(const Token&)>   Callback;
 
-            struct Message
+            class Outcome
             {
-                static const Result Emit    = 0x01;
-                static const Result Drop    = 0x02;
-                static const Result NewLine = 0x10;
-                static const Result Control = 0x20;
+            public:
+
+                const Unit::Type type;
+                const union {
+                    Unit::RegularInfo regular;
+                    Unit::ControlInfo control;
+                } args;
+
+                //! regular outcome
+                Outcome(const Unit::Feat feat, const Unit::Spot spot) noexcept :
+                type(Unit::Regular),
+                args()
+                {
+                    Coerce(args.regular.feat) = feat;
+                    Coerce(args.regular.spot) = spot;
+                }
+
+                //! control outcome
+                Outcome(const Unit::Spot spot) noexcept :
+                type(Unit::Control),
+                args()
+                {
+                    Coerce(args.control.spot) = spot;
+                }
+
+                virtual ~Outcome() noexcept
+                {
+                }
+
+                Outcome(const Outcome &_) noexcept :
+                type(_.type),
+                args()
+                {
+                    memcpy((void*)&args,&_.args,sizeof(args));
+                }
+
+                Outcome & operator=( const Outcome &_ ) noexcept
+                {
+                    Coerce(type) = _.type;
+                    memmove((void*)&args,&_.args,sizeof(args));
+                    return *this;
+                }
             };
+
+
+            typedef Functor<Outcome,TL1(const Token&)>   Callback;
+
+
+
+            
 
             //__________________________________________________________________
             //
