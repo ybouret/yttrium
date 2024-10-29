@@ -55,6 +55,13 @@ namespace Yttrium
                 static const unsigned                     CHARS = 256; //!< alias
                 typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
 
+                enum Result
+                {
+                    Regular,
+                    Control,
+                    Failure
+                };
+
 
                 //______________________________________________________________
                 //
@@ -109,7 +116,8 @@ namespace Yttrium
                     add( Rule::Create(id, compile(rx), host, meth) );
                 }
 
-                Unit * run(Source &source) const;
+                Unit * run(Source &source,
+                           Result &result) const;
 
                 template <Unit::Feat feat,Unit::Spot spot> inline
                 Outcome summon(const Token &) const noexcept {

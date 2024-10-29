@@ -24,45 +24,44 @@ namespace Yttrium
             public:
 
                 const Unit::Type type;
+                const Unit::Spot spot;
                 const union {
                     Unit::RegularInfo regular;
                     Unit::ControlInfo control;
                 } args;
 
                 //! regular outcome
-                Outcome(const Unit::Feat feat, const Unit::Spot spot) noexcept :
+                Outcome(const Unit::Feat _feat, const Unit::Spot _spot) noexcept :
                 type(Unit::Regular),
+                spot(_spot),
                 args()
                 {
-                    Coerce(args.regular.feat) = feat;
-                    Coerce(args.regular.spot) = spot;
+                    Coerce(args.regular.feat) = _feat;
                 }
 
                 //! control outcome
-                Outcome(const Unit::Spot spot) noexcept :
+                Outcome(const Unit::Spot _spot) noexcept :
                 type(Unit::Control),
+                spot(_spot),
                 args()
                 {
-                    Coerce(args.control.spot) = spot;
+
                 }
 
-                virtual ~Outcome() noexcept
+                ~Outcome() noexcept
                 {
                 }
 
                 Outcome(const Outcome &_) noexcept :
                 type(_.type),
+                spot(_.spot),
                 args()
                 {
                     memcpy((void*)&args,&_.args,sizeof(args));
                 }
 
-                Outcome & operator=( const Outcome &_ ) noexcept
-                {
-                    Coerce(type) = _.type;
-                    memmove((void*)&args,&_.args,sizeof(args));
-                    return *this;
-                }
+            private:
+                Y_DISABLE_ASSIGN(Outcome);
             };
 
 
@@ -114,8 +113,8 @@ namespace Yttrium
                                      HOST           &host,
                                      METHOD          meth)
                 {
-                    AutoPtr<Pattern> motif = _motif; assert(motif.isValid());
-                    const Caption    rname = _rname;
+                    AutoPtr<Pattern> motif(_motif); assert(motif.isValid());
+                    const Caption    rname(_rname);
                     const Callback   xcode(&host,meth);
                     if(motif->feeble()) ErrorFeeblePattern(*rname);
                     Rule * const     rule = new Rule(rname,& *motif, xcode);
@@ -130,7 +129,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const Pattern  * const motif;  //!< triggering motif
-                Callback               xcode;  //!< to execute
+                mutable Callback       xcode;  //!< to execute
                 Rule *                 next;   //!< for list
                 Rule *                 prev;   //!< for list
 

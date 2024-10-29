@@ -37,7 +37,7 @@ namespace Yttrium
                     if( *(node->name) == *(rule->name) )
                         throw Specific::Exception(name->c_str(), "multiple rule '%s'", node->name->c_str() );
                 }
-                
+
                 CharDB        cdb;
                 Rule &        ref = *rule;
                 rule->motif->query(cdb);
@@ -78,7 +78,7 @@ namespace Yttrium
                 return unit;
             }
 
-            
+
 
         }
 
@@ -95,30 +95,30 @@ namespace Yttrium
         {
 
 
-            Unit * Scanner:: run(Source  &source) const
+            Unit * Scanner:: run(Source  &source, Result &result) const
 
             {
                 while(true)
                 {
-                    if(!source.ready()) return 0;
+                    result = Regular;
+                    if(!source.ready()) return 0; // 0+regular <=> EOF
 
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     //
                     //
                     // get authorized list of rules from next byte
                     //
                     //
-                    //--------------------------------------------------------------
-                    const RList & auth = rlist[ **source.peek() ];
-
-                    const Rule  * bestRule  = 0;
+                    //----------------------------------------------------------
+                    const RList & auth     = rlist[ **source.peek() ];
+                    const Rule  * bestRule = 0;
                     Token         bestToken;
                     {
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         //
                         // find first matching rule
                         //
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         RNode *node = auth.head;
                         for(;node;node=node->next)
                         {
@@ -133,23 +133,24 @@ namespace Yttrium
                             }
                         }
 
-                        if(!bestRule)
-                        {
+                        if(!bestRule) {
                             assert(0==node);
-                            return findError(source);
+                            result = Failure;
+                            return findError(source); // unit+failure => syntax error
                         }
 
                         assert(bestToken.size>0);
                         assert(bestRule == & **node);
 
-                        std::cerr << "found " << bestRule->name << " = '" << bestToken << "'" << std::endl;
+                        std::cerr << "found " << bestRule->name << " = '" << bestToken.toPrintable() << "'" << std::endl;
 
-                        //----------------------------------------------------------
+                        //------------------------------------------------------
                         //
                         // find better rule ?
                         //
-                        //----------------------------------------------------------
-                        source.dup(bestToken);
+                        //------------------------------------------------------
+
+                        source.dup(bestToken); // reset source
                         for(node=node->next;node;node=node->next)
                         {
                             const Rule &rule = **node;
@@ -182,19 +183,58 @@ namespace Yttrium
                         }
                     }
 
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
                     //
                     //
                     // process rule
                     //
                     //
-                    //--------------------------------------------------------------
+                    //----------------------------------------------------------
 
+                    //----------------------------------------------------------
                     // discard cached token
+                    //----------------------------------------------------------
                     source.skip( bestToken.size );
 
+                    //----------------------------------------------------------
+                    // execute rule code
+                    //----------------------------------------------------------
+                    const Outcome outcome = bestRule->xcode(bestToken);
 
-                    return 0;
+                    //----------------------------------------------------------
+                    // check spot
+                    //----------------------------------------------------------
+                    switch(outcome.spot)
+                    {
+                        case Unit::Endl: source.newLine(); break;
+                        case Unit::Bulk: break;
+                    }
+
+                    //----------------------------------------------------------
+                    // check type
+                    //----------------------------------------------------------
+                    switch(outcome.type)
+                    {
+                        case Unit::Control:
+                            result = Control;
+                            return 0;   // 0+control => affect lexer
+
+                        case Unit::Regular:
+                            switch(outcome.args.regular.feat)
+                            {
+                                case Unit::Drop: continue; // silently drop token
+                                case Unit::Emit: break;    // token->unit
+                            }
+                    }
+
+                    //----------------------------------------------------------
+                    // create and return unit
+                    //----------------------------------------------------------
+                    assert(Unit::Regular== outcome.type);
+                    assert(Unit::Emit   == outcome.args.regular.feat);
+                    AutoPtr<Unit> unit = new Unit(*bestRule,*bestToken.head);
+                    unit->swapWith(bestToken);
+                    return unit.yield();
                 }
             }
 

@@ -44,12 +44,11 @@ namespace Yttrium
                 };
 
                 struct RegularInfo {
-                    Spot spot;
                     Feat feat;
                 };
 
                 struct ControlInfo {
-                    Spot spot;
+                    
                 };
 
 
