@@ -227,7 +227,7 @@ namespace Yttrium
                     {
                         case Unit::Control:
                             result = Control;
-                            return 0;   // 0+control => affect lexer
+                            return 0;   // 0+control => affect Lexer
 
                         case Unit::Regular:
                             switch(outcome.args.regular.feat)

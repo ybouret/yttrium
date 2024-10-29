@@ -16,6 +16,8 @@ namespace Yttrium
 
         class CharDB;
 
+#define Y_Lingo_Pattern_Args Token &token, Source &source
+
         //______________________________________________________________________
         //
         //
@@ -59,8 +61,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual Pattern * clone() const = 0; //!< full clone
-            virtual bool      takes(Token &token, Source &source)  const = 0; //!< try to take a token from source
+            virtual Pattern * clone()                              const = 0; //!< full clone
+            virtual bool      takes(Y_Lingo_Pattern_Args)          const = 0; //!< try to take a token from source
             virtual void      query( CharDB &firstChars )          const = 0; //!< query first char for source lookup
             virtual String    regularExpression()                  const = 0; //!< return as regular expression
             virtual bool      univocal()                           const = 0; //!< univocal result

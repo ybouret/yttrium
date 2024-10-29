@@ -50,7 +50,7 @@ namespace Yttrium
             virtual bool         strong()            const noexcept; //!< [Pattern] false
             virtual bool         univocal()          const noexcept; //!< [Pattern] motif->univocal()
             virtual String       regularExpression()          const; //!< [Pattern] motif?
-            virtual bool         takes(Token &, Source &)     const; //!< [Pattern] always true
+            virtual bool         takes(Y_Lingo_Pattern_Args)  const; //!< [Pattern] always true
             virtual size_t       serialize(OutputStream &)    const; //!< uuid + motif
             virtual void         viz(OutputStream &)          const; //!< [Pattern]
 

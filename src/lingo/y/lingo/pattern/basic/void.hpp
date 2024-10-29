@@ -50,7 +50,7 @@ namespace Yttrium
             virtual const char * callSign()                 const noexcept; //!< [Identifiable] CallSign
             virtual size_t       serialize(OutputStream &)           const; //!< [Serializable] uuid
             virtual Pattern *    clone()                             const; //!< [Pattern] new Void(self)
-            virtual bool         takes(Token &token, Source &source) const; //!< [Pattern] false BUT end of source
+            virtual bool         takes(Y_Lingo_Pattern_Args)         const; //!< [Pattern] false BUT end of source
             virtual void         query( CharDB &firstChars )         const; //!< [Pattern] free
             virtual String       regularExpression()                 const; //!< [Pattern] ^full range
             virtual bool         univocal()                 const noexcept; //!< true

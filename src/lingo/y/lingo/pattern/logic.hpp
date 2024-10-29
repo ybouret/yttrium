@@ -41,11 +41,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual size_t serialize(OutputStream &fp) const;
-            virtual void   query(CharDB &fc)        const; //!< [Pattern] check size and _query(fc)
-            virtual bool   strong()                 const; //!< [Pattern] check size and _strong()
-            virtual String regularExpression()      const; //!< [Pattern] check size and _regexp()
-            virtual bool   univocal()               const; //!< [Pattern] check size and _univocal()
-            virtual bool   takes(Token &, Source &) const; //!< [Pattern] check size and _takes()
+            virtual void   query(CharDB &fc)           const; //!< [Pattern] check size and _query(fc)
+            virtual bool   strong()                    const; //!< [Pattern] check size and _strong()
+            virtual String regularExpression()         const; //!< [Pattern] check size and _regexp()
+            virtual bool   univocal()                  const; //!< [Pattern] check size and _univocal()
+            virtual bool   takes(Y_Lingo_Pattern_Args) const; //!< [Pattern] check size and _takes()
             //__________________________________________________________________
             //
             //
@@ -65,11 +65,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Logic);
-            virtual void   _query(CharDB &firstChars)  const = 0;
-            virtual bool   _strong()                   const = 0;
-            virtual String _regexp()                   const = 0;
-            virtual bool   _univocal()                 const = 0;
-            virtual bool   _takes(Token &, Source &)   const = 0;;
+            virtual void   _query(CharDB &firstChars)   const = 0;
+            virtual bool   _strong()                    const = 0;
+            virtual String _regexp()                    const = 0;
+            virtual bool   _univocal()                  const = 0;
+            virtual bool   _takes(Y_Lingo_Pattern_Args) const = 0;
         };
 
     }

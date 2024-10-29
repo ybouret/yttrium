@@ -53,11 +53,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Or);
-            virtual void   _query(CharDB &fc)       const; //!< [Logic] query all
-            virtual bool   _strong()                const; //!< [Logic] if all strong
-            virtual String _regexp()                const; //!< [Logic] alternate
-            virtual bool   _univocal()              const; //!< [Logic] size == 1 and univocal
-            virtual bool   _takes(Token &,Source &) const; //!< [Logic] first one, try further if feeble
+            virtual void   _query(CharDB &fc)           const; //!< [Logic] query all
+            virtual bool   _strong()                    const; //!< [Logic] if all strong
+            virtual String _regexp()                    const; //!< [Logic] alternate
+            virtual bool   _univocal()                  const; //!< [Logic] size == 1 and univocal
+            virtual bool   _takes(Y_Lingo_Pattern_Args) const; //!< [Logic] first one, try further if feeble
 
         };
     }
