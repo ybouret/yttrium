@@ -31,7 +31,6 @@ namespace Yttrium
             void Scanner:: add(Rule * const rule)
             {
                 assert(0!=rule);
-                glist.free();
                 AutoPtr<Rule> ptr(rule);
                 for(const Rule *node=rules.head;node;node=node->next)
                 {
@@ -47,7 +46,7 @@ namespace Yttrium
                     // register in lists
                     for(unsigned i=0;i<CHARS;++i)
                         if( cdb.has(i) )
-                            glist.proxy->ensure( (rlist[i] << ref).size);
+                            rlist[i] << ref;
 
 
                     // and finally append to rules
@@ -107,7 +106,6 @@ namespace Yttrium
                 while(true)
                 {
                     result = Regular;
-                    glist.free();
                     if(!source.ready())
                         return 0; // 0+regular => EOF
 
