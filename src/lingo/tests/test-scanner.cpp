@@ -26,6 +26,8 @@ Y_UTEST(scanner)
 
 
     scan.emit("FLT",   "[:digit:]+f");
+    scan.emit("DIGIT", "[:digit:]");
+    scan.emit("HEX",   "0x[:xdigit:]+");
     scan.endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
     scan.drop("BLANK", "[:blank:]");
     
@@ -47,10 +49,10 @@ Y_UTEST(scanner)
         Lexical::Scanner::Result result = Lexical::Scanner::Regular;
 
         bool            done   = false;
-        AutoPtr<Lexeme> lexeme = scan.run(source,result);
 
         while(!done)
         {
+            AutoPtr<Lexeme> lexeme = scan.run(source,result);
             switch(result)
             {
                 case Lexical::Scanner::Regular:
@@ -73,7 +75,7 @@ Y_UTEST(scanner)
                 case Lexical::Scanner::Failure:
                 {
                     Y_ASSERT(lexeme.isValid());
-                    const String bad = lexeme->toPrintable();
+                    const String        bad = lexeme->toPrintable();
                     Specific::Exception excp(scan.name->c_str(), "unexpected '%s'", bad.c_str());
                     lexeme->info.stamp(excp);
                     throw excp;

@@ -105,7 +105,8 @@ namespace Yttrium
                 while(true)
                 {
                     result = Regular;
-                    if(!source.ready()) return 0; // 0+regular <=> EOF
+                    if(!source.ready())
+                        return 0; // 0+regular => EOF
 
                     //----------------------------------------------------------
                     //
@@ -114,6 +115,8 @@ namespace Yttrium
                     //
                     //
                     //----------------------------------------------------------
+                    assert(source.ready());
+                    assert(0!=source.peek());
                     const RList & auth     = rlist[ **source.peek() ];
                     const Rule  * bestRule = 0;
                     Token         bestToken;
@@ -127,7 +130,7 @@ namespace Yttrium
                         for(;node;node=node->next)
                         {
                             const Rule &rule = **node;
-                            std::cerr << "Probing '" << rule.name << "'" << std::endl;
+                            std::cerr << "probe '" << rule.name << "'" << std::endl;
                             if( rule.motif->takes(bestToken,source) )
                             {
                                 bestRule = &rule;
@@ -138,14 +141,13 @@ namespace Yttrium
                         }
 
                         if(!bestRule) {
-                            assert(0==node);
-                            result = Failure;
+                            assert(0==node);          // tried all possibilities
+                            result = Failure;         // fill in result
                             return findError(source); // unit+failure => syntax error
                         }
 
                         assert(bestToken.size>0);
                         assert(bestRule == & **node);
-
                         std::cerr << "found " << bestRule->name << " = '" << bestToken.toPrintable() << "'" << std::endl;
 
                         //------------------------------------------------------
@@ -154,7 +156,7 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
 
-                        source.dup(bestToken); // reset source
+                        source.dup(bestToken); // reset source for next trials
                         for(node=node->next;node;node=node->next)
                         {
                             const Rule &rule = **node;
@@ -181,7 +183,7 @@ namespace Yttrium
                             }
                             else
                             {
-                                // source is unchanged
+                                // source is unchanged, ready for next trial
                                 assert(0==token.size);
                             }
                         }
@@ -198,6 +200,9 @@ namespace Yttrium
                     //----------------------------------------------------------
                     // discard cached token
                     //----------------------------------------------------------
+                    assert(bestToken.size>0);
+                    assert(source.cached()>=bestToken.size);
+                    
                     source.skip( bestToken.size );
 
                     //----------------------------------------------------------
