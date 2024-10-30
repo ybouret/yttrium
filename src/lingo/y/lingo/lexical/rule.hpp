@@ -58,6 +58,23 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! create from rule caption, motif and callback
+                static Rule * Create(const Caption    & rname,
+                                     AutoPtr<Pattern> & motif,
+                                     const Callback   & xcode);
+
+                //! create from COMMAND
+                template <typename NAME, typename COMMAND>
+                static Rule * Create(const NAME &     _rname,
+                                     Pattern * const  _motif,
+                                     const COMMAND &  _xcode)
+                {
+                    AutoPtr<Pattern> motif(_motif); assert(motif.isValid());
+                    const Caption    rname(_rname);
+                    const Callback   xcode(_xcode);
+                    return Create(rname,motif,xcode);
+                }
+
                 //! created checked rule
                 template <typename NAME,
                 typename HOST,
@@ -70,10 +87,7 @@ namespace Yttrium
                     AutoPtr<Pattern> motif(_motif); assert(motif.isValid());
                     const Caption    rname(_rname);
                     const Callback   xcode(&host,meth);
-                    if(motif->feeble()) ErrorFeeblePattern(*rname);
-                    Rule * const     rule = new Rule(rname,& *motif, xcode);
-                    motif.relax();
-                    return rule;
+                    return Create(rname,motif,xcode);
                 }
 
                 //______________________________________________________________

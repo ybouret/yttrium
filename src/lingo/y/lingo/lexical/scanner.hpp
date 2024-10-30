@@ -31,7 +31,9 @@ namespace Yttrium
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
 
-            
+            typedef Functor<void,TL1(const Token&)>   Instruction;
+
+
             //__________________________________________________________________
             //
             //
@@ -141,7 +143,7 @@ namespace Yttrium
                 Unit::Feat FEAT,
                 Unit::Spot SPOT
                 > inline
-                void call(const UUID &uuid,
+                void fn(const UUID &uuid,
                           const EXPR &expr)
                 {
                     on(uuid,expr,*this, & Scanner:: summon<FEAT,SPOT>);
@@ -152,7 +154,7 @@ namespace Yttrium
                 void emit(const UUID &     uuid,
                           const EXPR &     expr)
                 {
-                    call<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
+                    fn<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
                 }
 
                 //! bulk drop
@@ -160,7 +162,7 @@ namespace Yttrium
                 void drop(const UUID &     uuid,
                           const EXPR &     expr )
                 {
-                    call<UUID,EXPR,Unit::Drop,Unit::Bulk>(uuid,expr);
+                    fn<UUID,EXPR,Unit::Drop,Unit::Bulk>(uuid,expr);
                 }
 
                 //! endl with optional emit
@@ -171,11 +173,23 @@ namespace Yttrium
                 {
                     switch(feat)
                     {
-                        case Unit::Drop: call<UUID,EXPR,Unit::Drop,Unit::Endl>(uuid,expr); break;
-                        case Unit::Emit: call<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
+                        case Unit::Drop: fn<UUID,EXPR,Unit::Drop,Unit::Endl>(uuid,expr); break;
+                        case Unit::Emit: fn<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
                     }
                 }
 
+                template <typename GOAL, typename UUID, typename EXPR>
+                void call(const GOAL & goal,
+                          const UUID & uuid,
+                          const EXPR & expr,
+                          Unit::Spot   spot = Unit::Bulk)
+                {
+                    const Caption _goal(goal);
+                    const Callback xcode( makeCall(_goal) );
+
+                }
+
+                Callback makeCall(const Caption &);
 
 
 

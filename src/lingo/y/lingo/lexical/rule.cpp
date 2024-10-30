@@ -32,6 +32,16 @@ namespace Yttrium
                 throw Specific::Exception("Lexical::Rule", "feeble pattern for '%s'", rid.c_str());
             }
 
+            Rule * Rule:: Create(const Caption    & rname,
+                                 AutoPtr<Pattern> & motif,
+                                 const Callback   & xcode)
+            {
+                if(motif->feeble()) ErrorFeeblePattern(*rname);
+                Rule * const rule = new Rule(rname,& *motif, xcode);
+                motif.relax();
+                return rule;
+            }
+
         }
 
     }
