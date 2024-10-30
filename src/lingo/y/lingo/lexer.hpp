@@ -6,6 +6,7 @@
 
 #include "y/lingo/lexical/scanner.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/data/small/light/list/solo.hpp"
 
 namespace Yttrium
 {
@@ -29,9 +30,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Lexical::Scanner          Scanner;
-            typedef Scanner::Pointer          ScanPtr;
-            typedef SuffixSet<String,ScanPtr> ScanSet;
+            typedef Lexical::Scanner              Scanner; //!< alias
+            typedef Scanner::Pointer              ScanPtr; //!< alias
+            typedef SuffixSet<String,ScanPtr>     ScanSet; //!< alias
+            typedef Small::SoloLightList<Scanner> History; //!< alias
 
             //__________________________________________________________________
             //
@@ -45,6 +47,9 @@ namespace Yttrium
             Lexer(const CAPTION &lxid) :
             Dictionary(),
             Scanner(lxid,*this),
+            scanner(this),
+            lexemes(),
+            history(),
             scanners()
             {
                 initialize();
@@ -68,15 +73,20 @@ namespace Yttrium
                 return query(label);
             }
 
+            void restart() noexcept;
+            
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
-            ScanSet scanners;
+            Scanner *scanner;  //!< active scanner
+            Lexemes  lexemes;  //!< cache of scanned lexemes
+            History  history;  //!< for scanner call/back
+            ScanSet  scanners; //!< existing scanners
 
-            void     initialize();
-            void     mustInsert(const ScanPtr &);
-            Scanner &query(const Caption &);
+            void     initialize();                //!< record this into scanner
+            void     mustInsert(const ScanPtr &); //!< must insert new scanner
+            Scanner &query(const Caption &);      //!< query/create named scanner
 
         };
 

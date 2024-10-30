@@ -37,6 +37,13 @@ namespace Yttrium
             mustInsert(ps);
             return *ps;
         }
+
+        void Lexer:: restart() noexcept
+        {
+            lexemes.release();
+            history.free();
+            scanner = this;
+        }
     }
 
 }
