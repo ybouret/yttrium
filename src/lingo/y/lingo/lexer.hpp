@@ -74,7 +74,9 @@ namespace Yttrium
             }
 
             void restart() noexcept;
-            
+
+            void call(const Caption &);
+            void back();
 
 
         private:
