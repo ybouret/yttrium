@@ -8,6 +8,6 @@ using namespace Lingo;
 Y_UTEST(lexer)
 {
     Lexer lexer("MyLexer");
-    
+    std::cerr << "using " << lexer.name << std::endl;
 }
 Y_UDONE()
