@@ -25,18 +25,7 @@ namespace Yttrium
                 throw Specific::Exception(name->c_str(),"unexpected multiple '%s'", ps->name->c_str());
         }
 
-
-        Lexical::Scanner & Lexer:: query(const Caption &label)
-        {
-            {
-                ScanPtr *pps = scanners.search( *label );
-                if(0!=pps) return **pps;
-            }
-            
-            ScanPtr ps = new Scanner(label,*this);
-            mustInsert(ps);
-            return *ps;
-        }
+        
 
         void Lexer:: restart() noexcept
         {

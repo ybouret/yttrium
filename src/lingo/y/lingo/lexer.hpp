@@ -64,17 +64,16 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            //! query/create named scanner
-            template <typename UUID> inline
-            Scanner & operator[](const UUID &uuid)
-            {
-                const Caption label(uuid);
-                return query(label);
+            template <typename SCANNER>
+            SCANNER & decl(SCANNER * const scan) {
+                assert(0!=scan);
+                const ScanPtr ps( scan );
+                mustInsert(ps);
+                return *scan;
             }
 
-            void restart() noexcept;
 
+            void restart() noexcept;
             void call(const Caption &);
             void back();
 
@@ -88,8 +87,7 @@ namespace Yttrium
 
             void     initialize();                //!< record this into scanner
             void     mustInsert(const ScanPtr &); //!< must insert new scanner
-            Scanner &query(const Caption &);      //!< query/create named scanner
-
+            
         };
 
     }
