@@ -64,6 +64,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! declare a newly created scanner
             template <typename SCANNER>
             SCANNER & decl(SCANNER * const scan) {
                 assert(0!=scan);
@@ -72,9 +74,13 @@ namespace Yttrium
                 return *scan;
             }
 
-
+            //! release lexemes, free history, scanner to this
             void restart() noexcept;
+
+            //! change scanner by its names
             void call(const Caption &);
+
+            //! back from current scanner
             void back();
 
 

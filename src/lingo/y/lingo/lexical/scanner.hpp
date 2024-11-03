@@ -29,7 +29,7 @@ namespace Yttrium
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
 
-            typedef Functor<void,TL1(const Token&)>   Hook;;
+            typedef Functor<void,TL1(const Token&)>   Hook; //!< function called during Control unit
 
 
             //__________________________________________________________________
@@ -176,6 +176,16 @@ namespace Yttrium
                     }
                 }
 
+                //! generic call function to another scanner
+                /**
+                 \param lexer holding scanners
+                 \param goal  name of the target scanner
+                 \param uuid  name of the rule
+                 \param expr  triggering expression
+                 \param host  host   for Hook
+                 \param meth  method for Hook
+                 \param spot  Bulk/Endl to control Source/Module
+                 */
                 template <
                 typename GOAL,
                 typename UUID,
@@ -198,11 +208,13 @@ namespace Yttrium
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
+                //! create a call from lexer's current scanner to goal
                 Callback makeCall(Lexer         &  lexer,
                                   const Caption &  goal,
                                   const Hook    &  hook,
                                   const Unit::Spot spot);
 
+                //! coming back from lexer's current scanner to caller
                 Callback makeBack(Lexer         &  lexer,
                                   const Hook    &  hook,
                                   const Unit::Spot spot);
