@@ -56,6 +56,7 @@ namespace Yttrium
         {
             namespace
             {
+                //!
                 class Event
                 {
                 public:
@@ -82,8 +83,6 @@ namespace Yttrium
                     Lexer &          self;
                     Hook             hook;
                     const Unit::Spot spot;
-
-
 
                 private:
                     Y_DISABLE_ASSIGN(Event);
@@ -118,7 +117,7 @@ namespace Yttrium
                         return Outcome(spot);     // return control outcome wit spot
                     }
 
-                    const Caption uuid;
+                    const Caption uuid; // subscanner to call
 
                 private:
                     Y_DISABLE_ASSIGN(CallEvent);
