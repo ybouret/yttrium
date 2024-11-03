@@ -15,11 +15,9 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        class Lexer;
         namespace Lexical
         {
-
-
-
 
             //__________________________________________________________________
             //
@@ -31,7 +29,7 @@ namespace Yttrium
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
 
-            typedef Functor<void,TL1(const Token&)>   Instruction;
+            typedef Functor<void,TL1(const Token&)>   Hook;;
 
 
             //__________________________________________________________________
@@ -178,21 +176,36 @@ namespace Yttrium
                     }
                 }
 
-                template <typename GOAL, typename UUID, typename EXPR>
-                void call(const GOAL & goal,
+                template <
+                typename GOAL,
+                typename UUID,
+                typename EXPR,
+                typename HOST,
+                typename METH>
+                void call(Lexer      & lexer,
+                          const GOAL & goal,
                           const UUID & uuid,
                           const EXPR & expr,
+                          HOST       & host,
+                          METH       & meth,
                           Unit::Spot   spot = Unit::Bulk)
                 {
-                    const Caption _goal(goal);
-                    const Callback xcode( makeCall(_goal) );
-
+                    const Caption    _goal(goal);
+                    const Hook       _hook(host,meth);
+                    const Callback   xcode = makeCall(lexer,_goal,_hook,spot);
+                    AutoPtr<Pattern> motif = compile(expr);
+                    const Caption    rname = uuid;
+                    add( Rule::Create(rname, motif, xcode) );
                 }
 
-                Callback makeCall(const Caption &);
+                Callback makeCall(Lexer         &  lexer,
+                                  const Caption &  goal,
+                                  const Hook    &  hook,
+                                  const Unit::Spot spot);
 
-
-
+                Callback makeBack(Lexer         &  lexer,
+                                  const Hook    &  hook,
+                                  const Unit::Spot spot);
 
 
             private:

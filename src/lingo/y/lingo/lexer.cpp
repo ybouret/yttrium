@@ -52,6 +52,90 @@ namespace Yttrium
             scanner = & history.pullTail();
         }
 
+        namespace Lexical
+        {
+            namespace
+            {
+                class Event
+                {
+                public:
+
+                    inline explicit Event(Lexer &            lx,
+                                   const Hook &       hk,
+                                   const Unit::Spot & sp) :
+                    self(lx),
+                    hook(hk),
+                    spot(sp)
+                    {
+                    }
+
+                    inline explicit Event(const Event & _) :
+                    self(_.self),
+                    hook(_.hook),
+                    spot(_.spot)
+                    {
+                    }
+
+
+                    inline virtual ~Event() noexcept {}
+
+                    Lexer &          self;
+                    Hook             hook;
+                    const Unit::Spot spot;
+
+
+
+                private:
+                    Y_DISABLE_ASSIGN(Event);
+                };
+
+                class CallEvent : public Event
+                {
+                public:
+                    inline explicit CallEvent(const Caption &    id,
+                                              Lexer &            lx,
+                                              const Hook &       hk,
+                                              const Unit::Spot & sp) :
+                    Event(lx,hk,sp),
+                    uuid(id)
+                    {
+                    }
+
+                    inline explicit CallEvent(const CallEvent &_) :
+                    Event(_),
+                    uuid(_.uuid)
+                    {
+                    }
+
+                    inline virtual ~CallEvent() noexcept
+                    {
+                    }
+
+                    inline Outcome operator()(const Token &token)
+                    {
+                        hook(token);              // execute hook
+                        self.call(uuid);          // call other scanner
+                        return Outcome(spot);     // return control outcome wit spot
+                    }
+
+                    const Caption uuid;
+
+                private:
+                    Y_DISABLE_ASSIGN(CallEvent);
+                };
+
+            }
+
+            Callback Scanner:: makeCall(Lexer         &  lexer,
+                                        const Caption &  goal,
+                                        const Hook    &  hook,
+                                        const Unit::Spot spot)
+            {
+                const CallEvent event(goal,lexer,hook,spot);
+                return Callback(event);
+            }
+        }
+
     }
 
 }

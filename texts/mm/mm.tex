@@ -1,0 +1,109 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+
+  	 
+\begin{document}
+
+\section{Fully Reversible}
+
+\subsection{Equations}
+
+\begin{equation}
+	E + S \xrightleftharpoons[k_d]{k_f} ES 
+	\xrightleftharpoons[k_r]{k_p} P + E
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	v_f & =  & k_f [E][S] \\
+	v_d & =  & k_d [ES]   \\
+	v_p & =  & k_p [ES]   \\
+	v_r & =  & k_r [P][E]  \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+  \partial_t [E]  & = & v_d - v_f + v_p - v_r\\
+  \partial_t [S]  & = & v_d - v_f = \partial_t [E]\\
+  \partial_t [ES] & = & v_f - v_d - v_p + v_r\\ 
+  \partial_t [P]  & = & v_p - v_r\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+	\partial_t 
+	\begin{bmatrix}
+		[E]  \\
+		[S]  \\
+		[ES] \\
+		[P]  \\
+	\end{bmatrix}
+	=	
+	\partial_t \vec C = 
+	\begin{bmatrix}
+	-1 &  1 &  1 & -1 \\
+	-1 &  1 &  0 &  0 \\
+	 1 & -1 & -1 &  1 \\
+	 0 &  0 &  1 & -1 \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		v_f\\
+		v_d\\
+		v_p\\
+		v_r\\
+	\end{bmatrix}
+\end{equation}
+
+rank=2
+
+\subsection{Conservations}
+\begin{equation}
+	\partial_t ( [E] + [ES] ) = 0 \implies E_0 = [E] + [ES]
+\end{equation}
+
+\begin{equation}
+	\partial_t ( [S] + [ES] + [P]) = 0 \implies S_0 = [S] + [ES] + [P]
+\end{equation}
+
+\subsection{Steady States}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	k_f [E]_\star[S]\star & = & k_d [ES]_\star\\
+	k_p [ES]_\star        & = & k_r [P]_\star[E]_\star \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+	K_1 = \dfrac{k_d}{k_f} \;\;\;\; K_2 = \dfrac{k_r}{k_p}\\
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ 		~[ES]_\star & = & \dfrac{[E]_\star[S]_\star}{K_1} \\
+		\\
+		~[E]_\star  & = & \dfrac{E_0K_1}{ [S]_\star + K_1} \\
+		\\
+		~[P]_\star  & = & \dfrac{[S]_\star}{K_1K_2}\\
+		\\
+		S_0 & = & \dfrac{E_0 [S]_\star]}{[S]_\star+K_1} + \dfrac{[S]_\star}{K_1K_2} + [S]_\star
+\end{array}
+\right.
+\end{equation}
+
+\end{document}
