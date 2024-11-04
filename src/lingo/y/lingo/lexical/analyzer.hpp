@@ -53,9 +53,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! generic call function to another scanner
+                //! generic call function to another lexer's analyzer
                 /**
-                 \param lexer holding scanners
                  \param goal  name of the target scanner
                  \param uuid  name of the rule
                  \param expr  triggering expression
@@ -69,8 +68,7 @@ namespace Yttrium
                 typename EXPR,
                 typename HOST,
                 typename METH>
-                void _call(Lexer      & lexer,
-                           const GOAL & goal,
+                void _call(const GOAL & goal,
                            const UUID & uuid,
                            const EXPR & expr,
                            HOST       & host,
@@ -79,13 +77,13 @@ namespace Yttrium
                 {
                     const Caption    _goal(goal);
                     const Hook       _hook(host,meth);
-                    const Callback   xcode = makeCall(lexer,_goal,_hook,spot);
+                    const Callback   xcode = makeCall(_goal,_hook,spot);
                     AutoPtr<Pattern> motif = compile(expr);
                     const Caption    rname = uuid;
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
-                //! generic back function from current scanner
+                //! generic back function from current analyzer
                 /**
                  \param lexer holding scanners
                  \param uuid  name of the rule
@@ -99,15 +97,14 @@ namespace Yttrium
                 typename EXPR,
                 typename HOST,
                 typename METH>
-                void _back(Lexer      & lexer,
-                           const UUID & uuid,
+                void _back(const UUID & uuid,
                            const EXPR & expr,
                            HOST       & host,
                            METH       & meth,
                            Unit::Spot   spot)
                 {
                     const Hook       _hook(host,meth);
-                    const Callback   xcode = makeBack(lexer,_hook,spot);
+                    const Callback   xcode = makeBack(_hook,spot);
                     AutoPtr<Pattern> motif = compile(expr);
                     const Caption    rname = uuid;
                     add( Rule::Create(rname, motif, xcode) );
@@ -127,14 +124,12 @@ namespace Yttrium
 
 
                 //! create a call from lexer's current scanner to goal
-                Callback makeCall(Lexer         &  lexer,
-                                  const Caption &  goal,
+                Callback makeCall(const Caption &  goal,
                                   const Hook    &  hook,
                                   const Unit::Spot spot);
 
                 //! coming back from lexer's current scanner to caller
-                Callback makeBack(Lexer         &  lexer,
-                                  const Hook    &  hook,
+                Callback makeBack(const Hook    &  hook,
                                   const Unit::Spot spot);
 
             };

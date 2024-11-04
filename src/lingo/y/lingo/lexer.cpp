@@ -226,17 +226,15 @@ namespace Yttrium
 
             }
 
-            Callback Analyzer:: makeCall(Lexer         &  lexer,
-                                        const Caption &  goal,
-                                        const Hook    &  hook,
-                                        const Unit::Spot spot)
+            Callback Analyzer:: makeCall(const Caption &  goal,
+                                         const Hook    &  hook,
+                                         const Unit::Spot spot)
             {
                 const CallEvent event(goal,lexer,hook,spot);
                 return Callback(event);
             }
 
-            Callback Analyzer:: makeBack(Lexer         &  lexer,
-                                         const Hook    &  hook,
+            Callback Analyzer:: makeBack(const Hook    &  hook,
                                          const Unit::Spot spot)
             {
                 const BackEvent event(lexer,hook,spot);
