@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
+#include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -16,8 +17,6 @@ namespace {
 
         explicit MyLexer() : Lexer("MyLexer"), com()
         {
-
-            
 
             emit("INT",   "[:digit:]+");
             emit("HEX",   "0x[:xdigit:]+");
@@ -39,6 +38,10 @@ namespace {
 
             const AddOn &cppComment = plug<Lexical::SingleLineComment>("C++Comment","//");
             std::cerr << "defining " << cppComment.name << std::endl;
+
+            const AddOn &cComment   = plug<Lexical::C_Comment>("C_Comment");
+            std::cerr << "defining " << cComment.name << std::endl;
+
 
 
             endl("[:endl:]", Lexical::Unit::Drop);

@@ -103,6 +103,32 @@ namespace Yttrium
                         lexeme->info.stamp(excp);
                         throw excp;
                     }
+                }
+
+                assert( Lexical::Regular == result );
+                assert( 0!=analyzer );
+                if(lexeme.isEmpty() )
+                {
+                    // we reached EOF
+                    assert( !source.ready() );
+                    const String &       uuid    = *(analyzer->name);
+                    const AddOn::Handle *ppAddOn = addOns.search(uuid);
+                    if(ppAddOn)
+                    {
+                        const AddOn &addOn = **ppAddOn;
+                        switch(addOn.policy)
+                        {
+                            case Lexical::AddOn::RejectEndOfSource: {
+                                const String descr = "in " + uuid + " of " + *name;
+                                Specific::Exception excp(descr.c_str(),"unexpected end of source");
+                                source->stamp(excp);
+                                throw excp;
+                            }
+                            case Lexical::AddOn::AcceptEndOfSource:
+                                break;
+
+                        }
+                    }
 
                 }
 

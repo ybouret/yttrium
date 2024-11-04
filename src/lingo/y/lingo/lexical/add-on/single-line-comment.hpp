@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Lingo_Lexical_SingleLineComment_Included
@@ -39,12 +38,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! triggered by enterExpr, back on new line, drop dot. //______________________________________________________________
-                //
-                //
-                // Members
-                //
-                //______________________________________________________________
+                //! triggered by enterExpr, back on new line, drop dot.
                 template <
                 typename LABEL,
                 typename ENTER
@@ -61,7 +55,7 @@ namespace Yttrium
                 {
                     setup();
                 }
-                
+
                 //! cleanup
                 virtual ~SingleLineComment() noexcept;
 
@@ -70,7 +64,14 @@ namespace Yttrium
                 void setup();
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //
             //! helper to created Lexical::NAMEComment
+            //
+            //
+            //__________________________________________________________________
 #define Y_Lingo_Lexical_SingleLineComment(NAME,EXPR)  \
 /**/  class NAME##Comment : public SingleLineComment  \
 /**/    {                                             \
@@ -82,6 +83,14 @@ namespace Yttrium
 /**/      Y_DISABLE_COPY_AND_ASSIGN(NAME##Comment);   \
 /**/     }
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            // some examples/utils
+            //
+            //
+            //__________________________________________________________________
             Y_Lingo_Lexical_SingleLineComment(Shell,     '#');    //!< Shell style comment
             Y_Lingo_Lexical_SingleLineComment(CPlusPlus, "//");   //!< C++ comment
             Y_Lingo_Lexical_SingleLineComment(Lua,       "--");   //!< Lua comment

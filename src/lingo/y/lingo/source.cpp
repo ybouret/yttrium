@@ -34,11 +34,8 @@ namespace Yttrium
                 return true;
             }
 
-
-
             AutoPtr<Module> handle;
             Token           cache;
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
@@ -61,6 +58,12 @@ namespace Yttrium
             Nullify(code);
         }
 
+
+        const Context * Source:: operator->() const noexcept
+        {
+            assert(0!=code);
+            return & *(code->handle);
+        }
 
         Char * Source:: get()
         {
