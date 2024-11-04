@@ -197,7 +197,7 @@ namespace Yttrium
 
             Analyzer:: Analyzer( Lexer &lx, const String &     id) : Scanner(id,lx), lexer(lx) {}
             Analyzer:: Analyzer( Lexer &lx, const char * const id) : Scanner(id,lx), lexer(lx) {}
-
+            Analyzer:: Analyzer( Lexer &lx, const Caption &    id) : Scanner(id,lx), lexer(lx) {}
         }
 
     }

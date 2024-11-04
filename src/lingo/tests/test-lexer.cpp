@@ -1,6 +1,7 @@
 #include "y/lingo/lexer.hpp"
 #include "y/utest/run.hpp"
 
+#include "y/lingo/lexical/add-on/single-line-comment.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -24,14 +25,17 @@ namespace {
             Analyzer &comment = decl( new Analyzer(*this,"comment") );
 
             call(comment.name,
-                 comment.name,
-                 '#',
+                 '$',
                  *this,
                  &MyLexer::commentEnter,
                  Lexical::Unit::Bulk);
 
             comment.on("dot", "[:dot:]", *this, & MyLexer::commentStore);
             comment.back("back", "[:endl:]", *this, &MyLexer::commentLeave, Lexical::Unit::Endl);
+
+
+            const AddOn &shellComment = plug<Lexical::ShellComment>("ShellComment");
+            std::cerr << "defining " << shellComment.name << std::endl;
 
             endl("[:endl:]", Lexical::Unit::Drop);
             drop("[:blank:]");

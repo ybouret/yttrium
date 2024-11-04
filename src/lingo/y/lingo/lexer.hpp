@@ -4,7 +4,7 @@
 #ifndef Y_Lingo_Lexer_Included
 #define Y_Lingo_Lexer_Included 1
 
-#include "y/lingo/lexical/analyzer.hpp"
+#include "y/lingo/lexical/add-on.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/data/small/light/list/solo.hpp"
 
@@ -31,8 +31,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Lexical::Analyzer                   Analyzer; //!< alias
+            typedef Lexical::AddOn                      AddOn;    //!< alias
             typedef SuffixSet<String,Analyzer::Pointer> Database; //!< alias
             typedef Small::SoloLightList<Analyzer>      History;  //!< alias
+            typedef SuffixSet<String,AddOn::Handle>     AddOns;   //!< alias
 
             //__________________________________________________________________
             //
@@ -49,7 +51,8 @@ namespace Yttrium
             analyzer(this),
             lexemes(),
             history(),
-            analyzers()
+            analyzers(),
+            addOns()
             {
                 initialize();
             }
@@ -74,8 +77,22 @@ namespace Yttrium
                 return *newAnalyzer;
             }
 
-            
+            template <typename ADD_ON>
+            ADD_ON & plug(const String &uuid)
+            {
+                ADD_ON * const addOn = new ADD_ON(*this,uuid);
+                mustRecord(addOn);
+                return *addOn;
+            }
 
+            template <typename ADD_ON>
+            ADD_ON & plug(const char * const uuid)
+            {
+                const String _(uuid);
+                return plug<ADD_ON>(_);
+            }
+
+            
 
 
             //! release lexemes, free history, scanner to this
@@ -98,10 +115,11 @@ namespace Yttrium
             Lexemes   lexemes;   //!< cache of scanned lexemes
             History   history;   //!< for scanner call/back
             Database  analyzers; //!< existing analyzers
+            AddOns    addOns;    //!< existing addons
 
             void     initialize();                          //!< record this into scanner
             void     mustInsert(const Analyzer::Pointer &); //!< must insert new analyzer
-
+            void     mustRecord(AddOn * const);
         };
 
     }

@@ -22,9 +22,28 @@ namespace Yttrium
         void Lexer:: mustInsert(const Analyzer::Pointer &ps)
         {
             if(!analyzers.insert(ps))
-                throw Specific::Exception(name->c_str(),"unexpected multiple '%s'", ps->name->c_str());
+                throw Specific::Exception(name->c_str(),"inserting multiple analyzer '%s'", ps->name->c_str());
         }
 
+        void  Lexer:: mustRecord(AddOn * const super)
+        {
+            assert(0!=super);
+            const String &uuid = *(super->name);
+            {
+                const Analyzer::Pointer _(super);
+                mustInsert(_);
+            }
+            try {
+                const AddOn::Handle _(super);
+                if(!addOns.insert(_))
+                    throw Specific::Exception(name->c_str(),"inserint multiple AddOn '%s'", _->name->c_str());
+            }
+            catch(...)
+            {
+                (void) analyzers.remove(uuid);
+                throw;
+            }
+        }
 
 
         void Lexer:: restart() noexcept
