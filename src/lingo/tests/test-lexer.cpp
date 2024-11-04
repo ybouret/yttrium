@@ -15,6 +15,9 @@ namespace {
 
         explicit MyLexer() : Lexer("MyLexer")
         {
+
+            Analyzer &comment = decl( new Analyzer(*this,"comment") );
+
         }
 
         virtual ~MyLexer() noexcept

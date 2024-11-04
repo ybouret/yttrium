@@ -240,6 +240,10 @@ namespace Yttrium
                 const BackEvent event(lexer,hook,spot);
                 return Callback(event);
             }
+
+            Analyzer:: Analyzer( Lexer &lx, const String &     id) : Scanner(id,lx), lexer(lx) {}
+            Analyzer:: Analyzer( Lexer &lx, const char * const id) : Scanner(id,lx), lexer(lx) {}
+
         }
 
     }

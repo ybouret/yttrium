@@ -42,6 +42,8 @@ namespace Yttrium
                 {
                 }
 
+                explicit Analyzer(Lexer &, const String     &);
+                explicit Analyzer(Lexer &, const char * const);
                 virtual ~Analyzer() noexcept;
 
 
