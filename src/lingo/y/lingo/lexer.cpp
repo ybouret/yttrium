@@ -119,7 +119,7 @@ namespace Yttrium
                         switch(addOn.policy)
                         {
                             case Lexical::AddOn::RejectEndOfSource: {
-                                const String descr = "in " + uuid + " of " + *name;
+                                const String descr = "in " + uuid + " of " + *(addOn.lexer.name);
                                 Specific::Exception excp(descr.c_str(),"unexpected end of source");
                                 source->stamp(excp);
                                 throw excp;
