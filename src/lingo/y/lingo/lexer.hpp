@@ -4,7 +4,7 @@
 #ifndef Y_Lingo_Lexer_Included
 #define Y_Lingo_Lexer_Included 1
 
-#include "y/lingo/lexical/scanner.hpp"
+#include "y/lingo/lexical/analyzer.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/data/small/light/list/solo.hpp"
 
@@ -21,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Lexer : public Dictionary, public Lexical::Scanner
+        class Lexer : public Dictionary, public Lexical::Analyzer
         {
         public:
             //__________________________________________________________________
@@ -30,10 +30,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Lexical::Scanner              Scanner; //!< alias
-            typedef Scanner::Pointer              ScanPtr; //!< alias
-            typedef SuffixSet<String,ScanPtr>     ScanSet; //!< alias
-            typedef Small::SoloLightList<Scanner> History; //!< alias
+            typedef Lexical::Analyzer                   Analyzer; //!< alias
+            typedef SuffixSet<String,Analyzer::Pointer> Database; //!< alias
+            typedef Small::SoloLightList<Analyzer>      History;  //!< alias
 
             //__________________________________________________________________
             //
@@ -46,11 +45,11 @@ namespace Yttrium
             template <typename CAPTION> inline
             Lexer(const CAPTION &lxid) :
             Dictionary(),
-            Scanner(lxid,*this),
-            scanner(this),
+            Analyzer(lxid,*this,*this),
+            analyzer(this),
             lexemes(),
             history(),
-            scanners()
+            analyzers()
             {
                 initialize();
             }
@@ -65,19 +64,21 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! declare a newly created scanner
-            template <typename SCANNER>
-            SCANNER & decl(SCANNER * const scan) {
-                assert(0!=scan);
-                const ScanPtr ps( scan );
-                mustInsert(ps);
-                return *scan;
+
+            //! declare a newly created analyzer
+            template <typename ANALYZER>
+            ANALYZER & decl(ANALYZER * const newAnalyzer) {
+                assert(0!=newAnalyzer);
+                const Analyzer::Pointer _( newAnalyzer );
+                mustInsert(_);
+                return *newAnalyzer;
             }
+
 
             //! release lexemes, free history, scanner to this
             void restart() noexcept;
 
-            //! change scanner by its names
+            //! change scanner by its name
             void call(const Caption &);
 
             //! back from current scanner
@@ -86,14 +87,14 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
-            Scanner *scanner;  //!< active scanner
-            Lexemes  lexemes;  //!< cache of scanned lexemes
-            History  history;  //!< for scanner call/back
-            ScanSet  scanners; //!< existing scanners
+            Analyzer *analyzer;  //!< active analyzer
+            Lexemes   lexemes;   //!< cache of scanned lexemes
+            History   history;   //!< for scanner call/back
+            Database  analyzers; //!< existing analyzers
 
-            void     initialize();                //!< record this into scanner
-            void     mustInsert(const ScanPtr &); //!< must insert new scanner
-            
+            void     initialize();                          //!< record this into scanner
+            void     mustInsert(const Analyzer::Pointer &); //!< must insert new analyzer
+
         };
 
     }

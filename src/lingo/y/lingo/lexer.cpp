@@ -8,20 +8,20 @@ namespace Yttrium
     {
         Lexer:: ~Lexer() noexcept
         {
-            scanners.release();
+            analyzers.release();
             (void)liberate();
         }
 
         void Lexer:: initialize()
         {
             withhold();
-            const ScanPtr ps = this;
+            const Analyzer::Pointer ps = this;
             mustInsert(ps);
         }
 
-        void Lexer:: mustInsert(const ScanPtr &ps)
+        void Lexer:: mustInsert(const Analyzer::Pointer &ps)
         {
-            if(!scanners.insert(ps))
+            if(!analyzers.insert(ps))
                 throw Specific::Exception(name->c_str(),"unexpected multiple '%s'", ps->name->c_str());
         }
 
@@ -31,25 +31,25 @@ namespace Yttrium
         {
             lexemes.release();
             history.free();
-            scanner = this;
+            analyzer = this;
         }
 
         void Lexer:: call(const Caption &label)
         {
-            assert(0!=scanner);
-            ScanPtr *pps = scanners.search( *label );
+            assert(0!=analyzer);
+            Analyzer::Pointer *pps = analyzers.search( *label );
             if(0==pps)
-                throw Specific::Exception(name->c_str(),"no [%s] to be called from [%s]", label->c_str(), scanner->name->c_str());
+                throw Specific::Exception(name->c_str(),"no [%s] to be called from [%s]", label->c_str(), analyzer->name->c_str());
 
-            history << *scanner;
-            scanner = & **pps;
+            history << *analyzer;
+            analyzer = & **pps;
         }
 
         void Lexer:: back()
         {
-            assert(0!=scanner);
-            if(history.size<=0) throw Specific::Exception(name->c_str(),"cannot go back from [%s]", scanner->name->c_str() );
-            scanner = & history.pullTail();
+            assert(0!=analyzer);
+            if(history.size<=0) throw Specific::Exception(name->c_str(),"cannot go back from [%s]", analyzer->name->c_str() );
+            analyzer = & history.pullTail();
         }
 
         namespace Lexical
@@ -226,7 +226,7 @@ namespace Yttrium
 
             }
 
-            Callback Scanner:: makeCall(Lexer         &  lexer,
+            Callback Analyzer:: makeCall(Lexer         &  lexer,
                                         const Caption &  goal,
                                         const Hook    &  hook,
                                         const Unit::Spot spot)
@@ -235,9 +235,9 @@ namespace Yttrium
                 return Callback(event);
             }
 
-            Callback makeBack(Lexer         &  lexer,
-                              const Hook    &  hook,
-                              const Unit::Spot spot)
+            Callback Analyzer:: makeBack(Lexer         &  lexer,
+                                         const Hook    &  hook,
+                                         const Unit::Spot spot)
             {
                 const BackEvent event(lexer,hook,spot);
                 return Callback(event);

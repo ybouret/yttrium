@@ -15,7 +15,6 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        class Lexer;
         namespace Lexical
         {
 
@@ -28,9 +27,6 @@ namespace Yttrium
             typedef Small::BareLightList<Rule>        RList; //!< list of reference to rules
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
-
-            typedef Functor<void,TL1(const Token&)>   Hook; //!< function called during Control unit
-
 
             //__________________________________________________________________
             //
@@ -54,7 +50,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const unsigned                     CHARS = 256; //!< alias
-                typedef ArkPtr<String,Scanner>            Pointer;     //!< alias
 
                 //! one run possible result
                 enum Result
@@ -176,66 +171,6 @@ namespace Yttrium
                     }
                 }
 
-                //! generic call function to another scanner
-                /**
-                 \param lexer holding scanners
-                 \param goal  name of the target scanner
-                 \param uuid  name of the rule
-                 \param expr  triggering expression
-                 \param host  host   for Hook
-                 \param meth  method for Hook
-                 \param spot  Bulk/Endl to control Source/Module
-                 */
-                template <
-                typename GOAL,
-                typename UUID,
-                typename EXPR,
-                typename HOST,
-                typename METH>
-                void call(Lexer      & lexer,
-                          const GOAL & goal,
-                          const UUID & uuid,
-                          const EXPR & expr,
-                          HOST       & host,
-                          METH       & meth,
-                          Unit::Spot   spot)
-                {
-                    const Caption    _goal(goal);
-                    const Hook       _hook(host,meth);
-                    const Callback   xcode = makeCall(lexer,_goal,_hook,spot);
-                    AutoPtr<Pattern> motif = compile(expr);
-                    const Caption    rname = uuid;
-                    add( Rule::Create(rname, motif, xcode) );
-                }
-
-                //! generic back function from current scanner
-                /**
-                 \param lexer holding scanners
-                 \param uuid  name of the rule
-                 \param expr  triggering expression
-                 \param host  host   for Hook
-                 \param meth  method for Hook
-                 \param spot  Bulk/Endl to control Source/Module
-                 */
-                template <
-                typename UUID,
-                typename EXPR,
-                typename HOST,
-                typename METH>
-                void back(Lexer      & lexer,
-                          const UUID & uuid,
-                          const EXPR & expr,
-                          HOST       & host,
-                          METH       & meth,
-                          Unit::Spot   spot)
-                {
-                    const Hook       _hook(host,meth);
-                    const Callback   xcode = makeBack(lexer,_hook,spot);
-                    AutoPtr<Pattern> motif = compile(expr);
-                    const Caption    rname = uuid;
-                    add( Rule::Create(rname, motif, xcode) );
-                }
-
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
@@ -251,17 +186,6 @@ namespace Yttrium
                 Outcome summon(const Token &) const noexcept {
                     return Outcome(feat,spot);
                 }
-
-                //! create a call from lexer's current scanner to goal
-                Callback makeCall(Lexer         &  lexer,
-                                  const Caption &  goal,
-                                  const Hook    &  hook,
-                                  const Unit::Spot spot);
-
-                //! coming back from lexer's current scanner to caller
-                Callback makeBack(Lexer         &  lexer,
-                                  const Hook    &  hook,
-                                  const Unit::Spot spot);
 
             public:
                 //______________________________________________________________
