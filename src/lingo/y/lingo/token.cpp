@@ -52,6 +52,13 @@ namespace Yttrium
             return *this;
         }
 
+        Token & Token:: operator +=(const Token &token)
+        {
+            Token cpy(token);
+            mergeTail(cpy);
+            return *this;
+        }
+
         Token & Token:: operator<<(Char * const ch) noexcept
         {
             assert(0!=ch);

@@ -43,6 +43,7 @@ namespace Yttrium
             String toPrintable() const;                                     //!< convert to printable string
             Token & operator<<(Token &);                                    //!< merge back content
             Token & operator<<(Char * const ch) noexcept;                   //!< helper
+            Token & operator+=(const Token &);                              //!< merge back a copy
         private:
             Y_DISABLE_ASSIGN(Token);
         };

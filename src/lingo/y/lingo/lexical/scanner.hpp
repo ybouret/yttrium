@@ -152,6 +152,14 @@ namespace Yttrium
                     fn<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
                 }
 
+                //! bulk emit with uuid==expr
+                template <typename EXPR> inline
+                void emit(const EXPR &expr)
+                {
+                    emit(expr,expr);
+                }
+
+
                 //! bulk drop
                 template <typename UUID, typename EXPR> inline
                 void drop(const UUID &     uuid,

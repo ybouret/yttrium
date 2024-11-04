@@ -149,7 +149,7 @@ namespace Yttrium
 
                         assert(bestToken.size>0);
                         assert(bestRule == & **node);
-                        std::cerr << name << ".found " << bestRule->name << " = '" << bestToken.toPrintable() << "'" << std::endl;
+                        std::cerr << name << ".found '" << bestRule->name << "' = '" << bestToken.toPrintable() << "'" << std::endl;
 
                         //------------------------------------------------------
                         //

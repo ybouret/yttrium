@@ -30,7 +30,8 @@ namespace {
                  &MyLexer::commentEnter,
                  Lexical::Unit::Bulk);
 
-            comment.drop("[:dot:]");
+            comment.on("dot", "[:dot:]", *this, & MyLexer::commentStore);
+            comment.back("back", "[:endl:]", *this, &MyLexer::commentLeave, Lexical::Unit::Endl);
 
             endl("[:endl:]", Lexical::Unit::Drop);
             drop("[:blank:]");
@@ -43,8 +44,27 @@ namespace {
 
         void commentEnter(const Token &token)
         {
-
+            std::cerr << "<comment>" << std::endl;
+            com.release();
+            com += token;
         }
+
+        Lexical::Outcome commentStore(const Token &token)
+        {
+            com += token;
+            return Lexical::Outcome(Lexeme::Drop,Lexeme::Bulk);
+        }
+
+
+
+        void commentLeave(const Token &token)
+        {
+            com += token;
+            std::cerr << "\t[" << com.toPrintable() << "]" << std::endl;
+            std::cerr << "<comment/>" << std::endl;
+        }
+
+        Token com;
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MyLexer);
