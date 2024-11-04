@@ -13,12 +13,38 @@ namespace Yttrium
 
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Single Line Comment, returning on new line
+            //
+            //
+            //__________________________________________________________________
             class SingleLineComment : public AddOn
             {
             public:
-                static const char * const EndlExpr;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const EndlExpr; //!< "[:endl:]"
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! triggered by enterExpr, back on new line, drop dot. //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
                 template <
                 typename LABEL,
                 typename ENTER
@@ -36,7 +62,7 @@ namespace Yttrium
                     setup();
                 }
                 
-
+                //! cleanup
                 virtual ~SingleLineComment() noexcept;
 
             private:
@@ -44,7 +70,7 @@ namespace Yttrium
                 void setup();
             };
 
-
+            //! helper to created Lexical::NAMEComment
 #define Y_Lingo_Lexical_SingleLineComment(NAME,EXPR)  \
 /**/  class NAME##Comment : public SingleLineComment  \
 /**/    {                                             \
@@ -56,7 +82,9 @@ namespace Yttrium
 /**/      Y_DISABLE_COPY_AND_ASSIGN(NAME##Comment);   \
 /**/     }
 
-            Y_Lingo_Lexical_SingleLineComment(Shell, '#');
+            Y_Lingo_Lexical_SingleLineComment(Shell,     '#');    //!< Shell style comment
+            Y_Lingo_Lexical_SingleLineComment(CPlusPlus, "//");   //!< C++ comment
+            Y_Lingo_Lexical_SingleLineComment(Lua,       "--");   //!< Lua comment
 
         }
 

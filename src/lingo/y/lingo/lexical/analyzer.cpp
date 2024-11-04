@@ -11,8 +11,8 @@ namespace Yttrium
             {
             }
 
-            
-            
+            const char * const Analyzer::Back = "back";
+
 
         }
     }

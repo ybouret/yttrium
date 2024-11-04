@@ -8,7 +8,6 @@ namespace Yttrium
         namespace Lexical
         {
 
-            const char * const AddOn:: BackLabel = "back";
             
             AddOn:: ~AddOn() noexcept
             {

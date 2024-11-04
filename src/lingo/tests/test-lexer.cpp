@@ -14,7 +14,7 @@ namespace {
     {
     public:
 
-        explicit MyLexer() : Lexer("MyLexer")
+        explicit MyLexer() : Lexer("MyLexer"), com()
         {
 
             
@@ -31,11 +31,15 @@ namespace {
                  Lexical::Unit::Bulk);
 
             comment.on("dot", "[:dot:]", *this, & MyLexer::commentStore);
-            comment.back("back", "[:endl:]", *this, &MyLexer::commentLeave, Lexical::Unit::Endl);
+            comment.back("[:endl:]", *this, &MyLexer::commentLeave, Lexical::Unit::Endl);
 
 
             const AddOn &shellComment = plug<Lexical::ShellComment>("ShellComment");
             std::cerr << "defining " << shellComment.name << std::endl;
+
+            const AddOn &cppComment = plug<Lexical::SingleLineComment>("C++Comment","//");
+            std::cerr << "defining " << cppComment.name << std::endl;
+
 
             endl("[:endl:]", Lexical::Unit::Drop);
             drop("[:blank:]");

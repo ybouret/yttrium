@@ -77,6 +77,8 @@ namespace Yttrium
                 return *newAnalyzer;
             }
 
+
+            //! declare an AddOn = analyzer + code
             template <typename ADD_ON>
             ADD_ON & plug(const String &uuid)
             {
@@ -85,6 +87,7 @@ namespace Yttrium
                 return *addOn;
             }
 
+            //! alias
             template <typename ADD_ON>
             ADD_ON & plug(const char * const uuid)
             {
@@ -92,7 +95,25 @@ namespace Yttrium
                 return plug<ADD_ON>(_);
             }
 
+            //! declare 1-arg AddOn
+            template <typename ADD_ON, typename ARG1>
+            ADD_ON & plug(const String &uuid, const ARG1 &arg1)
+            {
+                ADD_ON * const addOn = new ADD_ON(*this,uuid,arg1);
+                mustRecord(addOn);
+                return *addOn;
+            }
+
+            //! alias
+            template <typename ADD_ON, typename ARG1>
+            ADD_ON & plug(const char * const uuid, const ARG1 &arg1)
+            {
+                const String _(uuid);
+                return plug<ADD_ON>(_,arg1);
+            }
+
             
+
 
 
             //! release lexemes, free history, scanner to this

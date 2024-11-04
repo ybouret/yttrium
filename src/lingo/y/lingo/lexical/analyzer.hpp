@@ -15,6 +15,14 @@ namespace Yttrium
         {
             typedef Functor<void,TL1(const Token&)>   Hook; //!< function called during Control unit
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! an Analyzer is a Scanner attached to a Lexer
+            //
+            //
+            //__________________________________________________________________
             class Analyzer : public Scanner
             {
             public:
@@ -25,6 +33,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef ArkPtr<String,Analyzer> Pointer;     //!< alias
+                static const char * const       Back;        //!< "back"
 
                 //______________________________________________________________
                 //
@@ -41,10 +50,10 @@ namespace Yttrium
                 {
                 }
 
-                explicit Analyzer(Lexer &, const String     &);
-                explicit Analyzer(Lexer &, const char * const);
-                explicit Analyzer(Lexer &, const Caption &);
-                virtual ~Analyzer() noexcept;
+                explicit Analyzer(Lexer &, const String     &); //!< setup
+                explicit Analyzer(Lexer &, const char * const); //!< setup
+                explicit Analyzer(Lexer &, const Caption    &); //!< setup
+                virtual ~Analyzer() noexcept;                   //!< cleanup
 
 
                 //______________________________________________________________
@@ -80,22 +89,18 @@ namespace Yttrium
                     add( Rule::Create(_goal, motif, xcode) );
                 }
 
-                //! generic back function from current analyzer
+                //! generic "back" function from current analyzer
                 /**
-                 \param lexer holding scanners
-                 \param uuid  name of the rule
                  \param expr  triggering expression
                  \param host  host   for Hook
                  \param meth  method for Hook
                  \param spot  Bulk/Endl to control Source/Module
                  */
                 template <
-                typename UUID,
                 typename EXPR,
                 typename HOST,
                 typename METH>
-                void back(const UUID & uuid,
-                          const EXPR & expr,
+                void back(const EXPR & expr,
                           HOST       & host,
                           METH         meth,
                           Unit::Spot   spot)
@@ -103,7 +108,7 @@ namespace Yttrium
                     const Hook       _hook(&host,meth);
                     const Callback   xcode( makeBack(_hook,spot) );
                     AutoPtr<Pattern> motif( compile(expr) );
-                    const Caption    rname( uuid );
+                    const Caption    rname( Back);
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
@@ -121,7 +126,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Lexer &lexer;
+                Lexer &lexer; //!< parent lexer where AddOn is recorded
                 
 
             private:

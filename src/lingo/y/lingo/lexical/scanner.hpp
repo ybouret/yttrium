@@ -60,8 +60,6 @@ namespace Yttrium
                 static const unsigned                     CHARS = 256; //!< alias
 
 
-
-
                 //______________________________________________________________
                 //
                 //

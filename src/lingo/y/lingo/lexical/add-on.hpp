@@ -14,22 +14,50 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! an AddOn is a standalone, specialized Analyzer
+            //
+            //
+            //__________________________________________________________________
             class AddOn : public Analyzer
             {
             public:
-                typedef ArkPtr<String,const AddOn> Handle;
-                static const char * const BackLabel;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef ArkPtr<String,const AddOn> Handle; //!< alias
 
+                //! behavior when EOF is reached
                 enum EndOfSourcePolicy
                 {
-                    AcceptEndOfSource,
-                    RejectEndOfSource
+                    AcceptEndOfSource, //!< accept early EOF
+                    RejectEndOfSource  //!< reject
                 };
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~AddOn() noexcept; //!< cleanup
 
-                virtual ~AddOn() noexcept;
 
-
+                //! generic setup
+                /**
+                 \param rootLexer parent lexer
+                 \param addOnUUID name of the AddOn to make the rule
+                 \param enterExpr triggering expression
+                 \param leaveExpr end of AddOn expression
+                 \param leaveSpot Bulk/Endl to forward to Source/Module
+                 \param eosPolicy behavior if EOF is reached before returning
+                 */
                 template <
                 typename LABEL,
                 typename ENTER,
@@ -48,7 +76,7 @@ namespace Yttrium
                     // and back from this
                     //
                     //----------------------------------------------------------
-                    back(BackLabel,leaveExpr, *this, & AddOn::onLeave, leaveSpot);
+                    back(leaveExpr, *this, & AddOn::onLeave, leaveSpot);
 
 
                     //----------------------------------------------------------
@@ -59,10 +87,22 @@ namespace Yttrium
                     const Hook       hook(this, & AddOn::onEnter);
                     const Callback   xcode = makeCall(name,hook,Unit::Bulk);
                     AutoPtr<Pattern> motif = compile(enterExpr);
+
+                    //----------------------------------------------------------
+                    //
+                    // create call for lexer
+                    //
+                    //----------------------------------------------------------
                     trigger(rootLexer,Rule::Create(name,motif,xcode));
                 }
 
-                const EndOfSourcePolicy policy;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const EndOfSourcePolicy policy; //!< fixed EOF policy
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AddOn);
