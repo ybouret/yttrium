@@ -57,6 +57,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComment);
                 void setup();
+                virtual void enter(const Token&); //!< do nothing
+                virtual void leave(const Token&); //!< do nothing
             };
 
             //__________________________________________________________________
@@ -79,8 +81,8 @@ namespace Yttrium
 /**/     }
 
 
-            Y_Lingo_Lexical_MultiLinesComment(C_, "/\\*","\\*/");
-
+            Y_Lingo_Lexical_MultiLinesComment(C_, "/\\*","\\*/");   //!< C style comment
+            Y_Lingo_Lexical_MultiLinesComment(XML_, "<!--", "-->"); //!< XML style comment
         }
 
     }

@@ -21,6 +21,13 @@ namespace Yttrium
                 endl("[:endl:]",Unit::Drop);
             }
 
+            void MultiLinesComment:: enter(const Token &)
+            {
+            }
+
+            void MultiLinesComment:: leave(const Token &)
+            {
+            }
         }
 
     }

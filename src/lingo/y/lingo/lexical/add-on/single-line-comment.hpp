@@ -62,6 +62,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SingleLineComment);
                 void setup();
+                virtual void enter(const Token&); //!< do nothing
+                virtual void leave(const Token&); //!< do nothing
             };
 
             //__________________________________________________________________

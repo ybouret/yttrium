@@ -20,6 +20,15 @@ namespace Yttrium
                 drop("[:dot:]");
             }
 
+            void SingleLineComment:: enter(const Token &)
+            {
+            }
+
+            void SingleLineComment:: leave(const Token &)
+            {
+            }
+
+
         }
 
     }
