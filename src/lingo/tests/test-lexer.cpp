@@ -30,7 +30,8 @@ namespace {
                  &MyLexer::commentEnter,
                  Lexical::Unit::Bulk);
 
-            
+            comment.drop("dot","[:dot:]");
+
             endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
             drop("BLANK", "[:blank:]");
         }
