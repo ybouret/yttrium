@@ -60,8 +60,6 @@ namespace {
 
             // manual definition
             Analyzer &comment = decl( new Analyzer(*this,"comment") );
-
-
             call(comment.name,
                  '$',
                  *this,
@@ -107,8 +105,7 @@ namespace {
             return Lexical::Outcome(Lexeme::Drop,Lexeme::Bulk);
         }
 
-
-
+        
         void commentLeave(const Token &token)
         {
             com += token;
