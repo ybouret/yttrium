@@ -74,6 +74,9 @@ namespace Yttrium
                 return *newAnalyzer;
             }
 
+            
+
+
 
             //! release lexemes, free history, scanner to this
             void restart() noexcept;
@@ -83,10 +86,10 @@ namespace Yttrium
 
 
             //! manually change analyzer by its name
-            void call(const Caption &);
+            void performCall(const Caption &);
 
             //! manually back from current analyzer
-            void back();
+            void performBack();
 
 
         private:

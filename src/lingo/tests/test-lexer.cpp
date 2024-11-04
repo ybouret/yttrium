@@ -17,15 +17,30 @@ namespace {
         {
 
             
-            //Analyzer &comment = decl( new Analyzer(*this,"comment") );
 
             emit("INT",   "[:digit:]+");
             emit("HEX",   "0x[:xdigit:]+");
+
+            Analyzer &comment = decl( new Analyzer(*this,"comment") );
+
+            call(comment.name,
+                 comment.name,
+                 '#',
+                 *this,
+                 &MyLexer::commentEnter,
+                 Lexical::Unit::Bulk);
+
+            
             endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
             drop("BLANK", "[:blank:]");
         }
 
         virtual ~MyLexer() noexcept
+        {
+
+        }
+
+        void commentEnter(const Token &token)
         {
 
         }

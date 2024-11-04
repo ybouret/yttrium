@@ -47,7 +47,6 @@ namespace Yttrium
                 virtual ~Analyzer() noexcept;
 
 
-            protected:
                 //______________________________________________________________
                 //
                 //
@@ -70,18 +69,18 @@ namespace Yttrium
                 typename EXPR,
                 typename HOST,
                 typename METH>
-                void _call(const GOAL & goal,
+                void  call(const GOAL & goal,
                            const UUID & uuid,
                            const EXPR & expr,
                            HOST       & host,
-                           METH       & meth,
+                           METH         meth,
                            Unit::Spot   spot)
                 {
                     const Caption    _goal(goal);
-                    const Hook       _hook(host,meth);
-                    const Callback   xcode = makeCall(_goal,_hook,spot);
-                    AutoPtr<Pattern> motif = compile(expr);
-                    const Caption    rname = uuid;
+                    const Hook       _hook(&host,meth);
+                    const Callback   xcode( makeCall(_goal,_hook,spot) );
+                    AutoPtr<Pattern> motif( compile(expr) );
+                    const Caption    rname( uuid );
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
@@ -99,20 +98,20 @@ namespace Yttrium
                 typename EXPR,
                 typename HOST,
                 typename METH>
-                void _back(const UUID & uuid,
-                           const EXPR & expr,
-                           HOST       & host,
-                           METH       & meth,
-                           Unit::Spot   spot)
+                void back(const UUID & uuid,
+                          const EXPR & expr,
+                          HOST       & host,
+                          METH         meth,
+                          Unit::Spot   spot)
                 {
-                    const Hook       _hook(host,meth);
-                    const Callback   xcode = makeBack(_hook,spot);
-                    AutoPtr<Pattern> motif = compile(expr);
-                    const Caption    rname = uuid;
+                    const Hook       _hook(&host,meth);
+                    const Callback   xcode( makeBack(_hook,spot) );
+                    AutoPtr<Pattern> motif( compile(expr) );
+                    const Caption    rname( uuid );
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
-
+            protected:
                 //______________________________________________________________
                 //
                 //

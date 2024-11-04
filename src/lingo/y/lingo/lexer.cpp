@@ -34,7 +34,7 @@ namespace Yttrium
             analyzer = this;
         }
 
-        void Lexer:: call(const Caption &label)
+        void Lexer:: performCall(const Caption &label)
         {
             assert(0!=analyzer);
             Analyzer::Pointer *pps = analyzers.search( *label );
@@ -45,7 +45,7 @@ namespace Yttrium
             analyzer = & **pps;
         }
 
-        void Lexer:: back()
+        void Lexer:: performBack()
         {
             assert(0!=analyzer);
             if(history.size<=0) throw Specific::Exception(name->c_str(),"cannot go back from [%s]", analyzer->name->c_str() );

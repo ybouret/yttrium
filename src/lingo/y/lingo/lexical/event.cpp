@@ -109,7 +109,7 @@ namespace Yttrium
                     inline Outcome operator()(const Token &token)
                     {
                         hook(token);              // execute hook
-                        self.call(uuid);          // call other scanner
+                        self.performCall(uuid);          // call other scanner
                         return Outcome(spot);     // return control outcome wit spot
                     }
 
@@ -168,7 +168,7 @@ namespace Yttrium
                     inline Outcome operator()(const Token &token)
                     {
                         hook(token);          // execute hook
-                        self.back();        // back from this lexer
+                        self.performBack();        // back from this lexer
                         return Outcome(spot); // return control outcome wit spot
                     }
 
