@@ -16,8 +16,13 @@ namespace {
         explicit MyLexer() : Lexer("MyLexer")
         {
 
-            Analyzer &comment = decl( new Analyzer(*this,"comment") );
+            
+            //Analyzer &comment = decl( new Analyzer(*this,"comment") );
 
+            emit("INT",   "[:digit:]+");
+            emit("HEX",   "0x[:xdigit]+");
+            endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
+            drop("BLANK", "[:blank:]");
         }
 
         virtual ~MyLexer() noexcept
