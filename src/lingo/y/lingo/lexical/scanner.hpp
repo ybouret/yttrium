@@ -113,6 +113,18 @@ namespace Yttrium
                     add( Rule::Create(id, compile(rx), host, meth) );
                 }
 
+                //! generic rule creation from regular expression = id
+                template <
+                typename RX,
+                typename HOST,
+                typename METH> inline
+                void on(const RX & rx,
+                        HOST     & host,
+                        METH       meth)
+                {
+                    add( Rule::Create(rx, compile(rx), host, meth) );
+                }
+
                 //! run over possible rules
                 /**
                  - result = Regular:

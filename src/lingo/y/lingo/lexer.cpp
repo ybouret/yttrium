@@ -71,6 +71,11 @@ namespace Yttrium
             analyzer = & history.pullTail();
         }
 
+        void Lexer:: put(Lexeme * const lexeme)
+        {
+            assert(0!=lexeme);
+            lexemes.pushHead(lexeme);
+        }
 
         Lexeme * Lexer:: get(Source &source)
         {

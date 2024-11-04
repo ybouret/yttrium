@@ -87,7 +87,7 @@ namespace Yttrium
                 return *addOn;
             }
 
-            //! alias
+            //! declare an AddOn alias
             template <typename ADD_ON>
             ADD_ON & plug(const char * const uuid)
             {
@@ -104,7 +104,7 @@ namespace Yttrium
                 return *addOn;
             }
 
-            //! alias
+            //! declare 1-arg AddOn alias
             template <typename ADD_ON, typename ARG1>
             ADD_ON & plug(const char * const uuid, const ARG1 &arg1)
             {
@@ -112,16 +112,30 @@ namespace Yttrium
                 return plug<ADD_ON>(_,arg1);
             }
 
-            
+            //! declare 2-args AddOn
+            template <typename ADD_ON, typename ARG1, typename ARG2>
+            ADD_ON & plug(const String &uuid, const ARG1 &arg1, const ARG2 &arg2)
+            {
+                ADD_ON * const addOn = new ADD_ON(*this,uuid,arg1,arg2);
+                mustRecord(addOn);
+                return *addOn;
+            }
 
+            //! declare 2-args AddOn alias
+            template <typename ADD_ON, typename ARG1, typename ARG2>
+            ADD_ON & plug(const char * const uuid, const ARG1 &arg1, const ARG2 &arg2)
+            {
+                const String _(uuid);
+                return plug<ADD_ON>(_,arg1,arg2);
+            }
 
 
             //! release lexemes, free history, scanner to this
             void restart() noexcept;
 
-            //! get next lexeme
-            Lexeme * get(Source &source);
 
+            Lexeme * get(Source &source); //!< get next regular lexeme
+            void     put(Lexeme * const); //!< store in cache
 
             //! manually change analyzer by its name
             void performCall(const Caption &);

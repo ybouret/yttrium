@@ -10,6 +10,43 @@ using namespace Lingo;
 
 namespace {
 
+    class Verbatim : public Lexical::AddOn
+    {
+    public:
+        template <typename LABEL> inline
+        explicit Verbatim(Lexer &       rootLexer,
+                          const LABEL & addOnUUID) :
+        Lexical::AddOn(rootLexer,addOnUUID,"<v>","</v>",Lexeme::Bulk,RejectEndOfSource),
+        content()
+        {
+            on("[:dot:]",  *this, & Verbatim::store<Lexeme::Bulk> );
+            on("[:endl:]", *this, & Verbatim::store<Lexeme::Endl> );
+        }
+
+        virtual ~Verbatim() {}
+
+
+        Token content;
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Verbatim);
+        virtual void enter(const Token &) noexcept
+        {
+            content.release();
+        }
+
+        virtual void leave(const Token &) noexcept
+        {
+            lexer.put( produce(content) );
+        }
+
+        template <Lexeme::Spot SPOT>
+        Lexical::Outcome store(const Token &token)
+        {
+            content += token;
+            return Lexical::Outcome(Lexeme::Drop,SPOT);
+        }
+
+    };
 
     class MyLexer : public Lexer
     {
@@ -21,7 +58,9 @@ namespace {
             emit("INT",   "[:digit:]+");
             emit("HEX",   "0x[:xdigit:]+");
 
+            // manual definition
             Analyzer &comment = decl( new Analyzer(*this,"comment") );
+
 
             call(comment.name,
                  '$',
@@ -42,6 +81,8 @@ namespace {
             const AddOn &cComment   = plug<Lexical::C_Comment>("C_Comment");
             std::cerr << "defining " << cComment.name << std::endl;
 
+            (void)plug<Verbatim>("verbatim");
+            (void)plug<Lexical::MultiLinesComment>("XML_Comment","<!--","-->");
 
 
             endl("[:endl:]", Lexical::Unit::Drop);

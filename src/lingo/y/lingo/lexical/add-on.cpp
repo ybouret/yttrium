@@ -15,12 +15,12 @@ namespace Yttrium
 
             void AddOn:: onLeave(const Token &token)
             {
-                enter(token);
+                leave(token);
             }
 
             void AddOn:: onEnter(const Token &token)
             {
-                leave(token);
+                enter(token);
             }
 
         }
