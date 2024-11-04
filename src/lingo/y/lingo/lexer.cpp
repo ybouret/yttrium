@@ -52,200 +52,43 @@ namespace Yttrium
             analyzer = & history.pullTail();
         }
 
-        namespace Lexical
+
+        Lexeme * Lexer:: get(Source &source)
         {
-            namespace
+            assert(0!=analyzer);
+            if(lexemes.size>0)
             {
-                //______________________________________________________________
-                //
-                //
-                //
-                //! base class to Call/Back
-                //
-                //
-                //______________________________________________________________
-                class Event
-                {
-                public:
-                    //__________________________________________________________
-                    //
-                    //
-                    // C++
-                    //
-                    //__________________________________________________________
-
-                    //! setup
-                    inline explicit Event(Lexer &            lx,
-                                          const Hook &       hk,
-                                          const Unit::Spot & sp) :
-                    self(lx),
-                    hook(hk),
-                    spot(sp)
-                    {
-                    }
-
-                    //! copy for functor
-                    inline explicit Event(const Event & _) :
-                    self(_.self),
-                    hook(_.hook),
-                    spot(_.spot)
-                    {
-                    }
-
-
-                    //! cleanup
-                    inline virtual ~Event() noexcept {}
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // Members
-                    //
-                    //__________________________________________________________
-                    Lexer &          self; //!< used lexer
-                    Hook             hook; //!< event hook
-                    const Unit::Spot spot; //!< event spot
-
-                private:
-                    Y_DISABLE_ASSIGN(Event);
-                };
-
-                //______________________________________________________________
-                //
-                //
-                //
-                // Calling a named scanner
-                //
-                //
-                //______________________________________________________________
-                class CallEvent : public Event
-                {
-                public:
-                    //__________________________________________________________
-                    //
-                    //
-                    // C++
-                    //
-                    //__________________________________________________________
-                    inline explicit CallEvent(const Caption &    id,
-                                              Lexer &            lx,
-                                              const Hook &       hk,
-                                              const Unit::Spot & sp) :
-                    Event(lx,hk,sp),
-                    uuid(id)
-                    {
-                    }
-
-                    inline explicit CallEvent(const CallEvent &_) :
-                    Event(_),
-                    uuid(_.uuid)
-                    {
-                    }
-
-                    inline virtual ~CallEvent() noexcept
-                    {
-                    }
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // Methods
-                    //
-                    //__________________________________________________________
-                    inline Outcome operator()(const Token &token)
-                    {
-                        hook(token);              // execute hook
-                        self.call(uuid);          // call other scanner
-                        return Outcome(spot);     // return control outcome wit spot
-                    }
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // Members
-                    //
-                    //__________________________________________________________
-                    const Caption uuid; //!< subscanner to call
-
-                private:
-                    Y_DISABLE_ASSIGN(CallEvent);
-                };
-
-
-                //______________________________________________________________
-                //
-                //
-                //
-                // Back from a  scanner
-                //
-                //
-                //______________________________________________________________
-                class BackEvent : public Event
-                {
-                public:
-                    //__________________________________________________________
-                    //
-                    //
-                    // C++
-                    //
-                    //__________________________________________________________
-                    inline explicit BackEvent( Lexer &            lx,
-                                              const Hook &       hk,
-                                              const Unit::Spot & sp) :
-                    Event(lx,hk,sp)
-                    {
-                    }
-
-                    inline explicit BackEvent(const BackEvent &_) :
-                    Event(_)
-                    {
-                    }
-
-                    inline virtual ~BackEvent() noexcept
-                    {
-                    }
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // Methods
-                    //
-                    //__________________________________________________________
-                    inline Outcome operator()(const Token &token)
-                    {
-                        hook(token);          // execute hook
-                        self.back();        // back from this lexer
-                        return Outcome(spot); // return control outcome wit spot
-                    }
-
-
-
-                private:
-                    Y_DISABLE_ASSIGN(CallEvent);
-                };
-
+                return lexemes.popHead();
             }
-
-            Callback Analyzer:: makeCall(const Caption &  goal,
-                                         const Hook    &  hook,
-                                         const Unit::Spot spot)
+            else
             {
-                const CallEvent event(goal,lexer,hook,spot);
-                return Callback(event);
+                Lexical::Result result = Lexical::Failure;
+                AutoPtr<Lexeme> lexeme = analyzer->run(source,result);
+
+                switch(result)
+                {
+                    case Lexical::Regular:
+                        break; // will emit lexeme, NULL => EOF
+
+                    case Lexical::Control:
+                        if(lexeme.isValid()) throw Specific::Exception(analyzer->name->c_str(), "forbidden Control lexeme");
+                        throw Exception("Control lexeme not implemented");
+                        break;
+
+                    case Lexical::Failure:
+                        if(lexeme.isEmpty()) throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
+                    {
+                        const String        bad = lexeme->toPrintable();
+                        Specific::Exception excp(analyzer->name->c_str(), "unexpected '%s'", bad.c_str());
+                        lexeme->info.stamp(excp);
+                        throw excp;
+                    }
+
+                }
+
+                return lexeme.yield();
             }
-
-            Callback Analyzer:: makeBack(const Hook    &  hook,
-                                         const Unit::Spot spot)
-            {
-                const BackEvent event(lexer,hook,spot);
-                return Callback(event);
-            }
-
-            Analyzer:: Analyzer( Lexer &lx, const String &     id) : Scanner(id,lx), lexer(lx) {}
-            Analyzer:: Analyzer( Lexer &lx, const char * const id) : Scanner(id,lx), lexer(lx) {}
-
         }
-
     }
 
 }

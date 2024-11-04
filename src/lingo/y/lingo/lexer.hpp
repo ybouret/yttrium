@@ -78,10 +78,14 @@ namespace Yttrium
             //! release lexemes, free history, scanner to this
             void restart() noexcept;
 
-            //! change scanner by its name
+            //! get next lexeme
+            Lexeme * get(Source &source);
+
+
+            //! manually change analyzer by its name
             void call(const Caption &);
 
-            //! back from current scanner
+            //! manually back from current analyzer
             void back();
 
 

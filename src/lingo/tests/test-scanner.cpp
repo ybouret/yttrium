@@ -45,8 +45,8 @@ Y_UTEST(scanner)
 
     if(argc>1)
     {
-        Source                   source( Module::OpenFile(argv[1]) );
-        Lexical::Scanner::Result result = Lexical::Scanner::Regular;
+        Source          source( Module::OpenFile(argv[1]) );
+        Lexical::Result result = Lexical::Regular;
 
         bool            done   = false;
 
@@ -55,7 +55,7 @@ Y_UTEST(scanner)
             AutoPtr<Lexeme> lexeme = scan.run(source,result);
             switch(result)
             {
-                case Lexical::Scanner::Regular:
+                case Lexical::Regular:
                     if(lexeme.isValid())
                     {
                         std::cerr << "Regular " << lexeme << std::endl;
@@ -67,12 +67,12 @@ Y_UTEST(scanner)
                     }
                     break;
 
-                case Lexical::Scanner::Control:
+                case Lexical::Control:
                     Y_ASSERT(lexeme.isEmpty());
                     std::cerr << "Control" << std::endl;
                     break;
 
-                case Lexical::Scanner::Failure:
+                case Lexical::Failure:
                 {
                     Y_ASSERT(lexeme.isValid());
                     const String        bad = lexeme->toPrintable();

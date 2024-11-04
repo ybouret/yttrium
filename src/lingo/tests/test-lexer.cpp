@@ -20,7 +20,7 @@ namespace {
             //Analyzer &comment = decl( new Analyzer(*this,"comment") );
 
             emit("INT",   "[:digit:]+");
-            emit("HEX",   "0x[:xdigit]+");
+            emit("HEX",   "0x[:xdigit:]+");
             endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
             drop("BLANK", "[:blank:]");
         }
@@ -40,5 +40,21 @@ Y_UTEST(lexer)
 {
     MyLexer lexer;
     std::cerr << "using " << lexer.name << std::endl;
+
+    if(argc>1)
+    {
+        Source source( Module::OpenFile(argv[1]) );
+
+        AutoPtr<Lexeme> lexeme = 0;
+
+        while( (lexeme = lexer.get(source) ).isValid() )
+        {
+            std::cerr << lexeme << std::endl;
+        }
+
+
+    }
+
+
 }
 Y_UDONE()

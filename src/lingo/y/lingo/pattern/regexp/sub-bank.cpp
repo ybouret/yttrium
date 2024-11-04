@@ -125,7 +125,7 @@ namespace Yttrium
                         goto FOUND_NEXT_COLON;
 
                 }
-                throw Specific::Exception(CallSign,"missing next ':' in posix bank'");
+                throw Specific::Exception(CallSign,"missing next ':' in posix bank of '%s'",expr);
 
             FOUND_NEXT_COLON:
                 // check following is RBRACK

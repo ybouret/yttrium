@@ -28,6 +28,14 @@ namespace Yttrium
             typedef RList::NodeType                   RNode; //!< alias
             typedef Memory::Wad<RList,Memory::Dyadic> RMaps; //!< memory for byte-indexed lists
 
+            //! one run possible result
+            enum Result
+            {
+                Regular, //!< found a Regular, emitted Unit
+                Control, //!< found a Control unit for Lexer
+                Failure  //!< syntax error
+            };
+
             //__________________________________________________________________
             //
             //
@@ -51,13 +59,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static const unsigned                     CHARS = 256; //!< alias
 
-                //! one run possible result
-                enum Result
-                {
-                    Regular, //!< found a Regular, emitted Unit
-                    Control, //!< found a Control unit for Lexer
-                    Failure  //!< syntax error
-                };
+
 
 
                 //______________________________________________________________
