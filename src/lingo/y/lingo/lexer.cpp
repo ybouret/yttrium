@@ -55,6 +55,7 @@ namespace Yttrium
 
         Lexeme * Lexer:: get(Source &source)
         {
+        GET:
             assert(0!=analyzer);
             if(lexemes.size>0)
             {
@@ -72,8 +73,8 @@ namespace Yttrium
 
                     case Lexical::Control:
                         if(lexeme.isValid()) throw Specific::Exception(analyzer->name->c_str(), "forbidden Control lexeme");
-                        throw Exception("Control lexeme not implemented");
-                        break;
+                        //throw Exception("Control lexeme not implemented");
+                        goto GET;
 
                     case Lexical::Failure:
                         if(lexeme.isEmpty()) throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
