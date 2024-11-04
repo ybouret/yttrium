@@ -160,11 +160,19 @@ namespace Yttrium
                     fn<UUID,EXPR,Unit::Drop,Unit::Bulk>(uuid,expr);
                 }
 
+                //! bulk drop with uuid==expr
+                template <typename EXPR> inline
+                void drop(const EXPR &expr)
+                {
+                    drop(expr,expr);
+                }
+
+
                 //! endl with optional emit
                 template <typename UUID, typename EXPR> inline
                 void endl(const UUID & uuid,
                           const EXPR & expr,
-                          Unit::Feat   feat = Unit::Drop)
+                          Unit::Feat   feat)
                 {
                     switch(feat)
                     {
@@ -172,6 +180,15 @@ namespace Yttrium
                         case Unit::Emit: fn<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
                     }
                 }
+
+                //! endl with optional emit
+                template <typename EXPR> inline
+                void endl(const EXPR & expr,
+                          Unit::Feat   feat)
+                {
+                    endl(expr,expr,feat);
+                }
+
 
 
             private:

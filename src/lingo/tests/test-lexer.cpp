@@ -30,10 +30,10 @@ namespace {
                  &MyLexer::commentEnter,
                  Lexical::Unit::Bulk);
 
-            comment.drop("dot","[:dot:]");
+            comment.drop("[:dot:]");
 
-            endl("ENDL",  "[:endl:]", Lexical::Unit::Drop);
-            drop("BLANK", "[:blank:]");
+            endl("[:endl:]", Lexical::Unit::Drop);
+            drop("[:blank:]");
         }
 
         virtual ~MyLexer() noexcept
