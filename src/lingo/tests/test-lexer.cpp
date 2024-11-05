@@ -4,6 +4,11 @@
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
 
+
+#include "y/lingo/lexical/add-on/jstring.hpp"
+#include "y/lingo/lexical/add-on/rstring.hpp"
+#include "y/lingo/lexical/add-on/bstring.hpp"
+
 using namespace Yttrium;
 using namespace Lingo;
 
@@ -82,6 +87,10 @@ namespace {
             (void)plug<Verbatim>("verbatim");
             (void)plug<Lexical::MultiLinesComment>("XML_Comment","<!--","-->");
 
+            plug<Lexical::JString>("jstring");
+            plug<Lexical::RString>("rstring");
+            plug<Lexical::BString>("bstring");
+
 
             endl("[:endl:]", Lexical::Unit::Drop);
             drop("[:blank:]");
@@ -123,6 +132,14 @@ namespace {
 
 Y_UTEST(lexer)
 {
+    Y_SIZEOF(Lexical::CPlusPlusComment);
+    Y_SIZEOF(Lexical::ShellComment);
+    Y_SIZEOF(Lexical::C_Comment);
+    Y_SIZEOF(Lexical::XML_Comment);
+    Y_SIZEOF(Lexical::JString);
+    Y_SIZEOF(Lexical::RString);
+    Y_SIZEOF(Lexical::BString);
+
     MyLexer lexer;
     std::cerr << "using " << lexer.name << std::endl;
 
