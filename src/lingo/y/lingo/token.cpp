@@ -66,6 +66,12 @@ namespace Yttrium
             return *this;
         }
 
+        Token & Token:: operator+=(const Char  &ch)
+        {
+            pushTail( new Char(ch) );
+            return *this;
+        }
+
     }
 
 }

@@ -41,11 +41,15 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(String_);
-                virtual void enter(const Token &);
-                virtual void leave(const Token &);
-                void         setup(const char enterChar, const char leaveChar);
+                virtual void enter(const Token &); //!< clear content, append token
+                virtual void leave(const Token &); //!< append token, produce unit
+                void         setup(const char enterChar, const char leaveChar); //!< setup
 
-                Outcome onCore(const Token &);
+                Outcome onCore(const Token &);   //!< direct add
+                Outcome onEscRaw(const Token &); //!< '\\' + char => add char
+                Outcome onEscCtl(const Token &); //!< '\\' + char => coding char
+
+
             };
         }
 

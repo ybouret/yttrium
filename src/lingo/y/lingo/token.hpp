@@ -44,6 +44,7 @@ namespace Yttrium
             Token & operator<<(Token &);                                    //!< merge back content
             Token & operator<<(Char * const ch) noexcept;                   //!< helper
             Token & operator+=(const Token &);                              //!< merge back a copy
+            Token & operator+=(const Char  &);                              //!< push back a copy
         private:
             Y_DISABLE_ASSIGN(Token);
         };

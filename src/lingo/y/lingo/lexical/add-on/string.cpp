@@ -1,6 +1,8 @@
 
 #include "y/lingo/lexical/add-on/string.hpp"
 #include "y/lingo/pattern/all.hpp"
+#include "y/text/ascii/printable.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -18,6 +20,10 @@ namespace Yttrium
                 content.release();
                 content += token;
             }
+
+            static const char   Cntl[] = "abrntvf0";
+            static const char   Code[] = "\a\b\r\n\t\v\f\0";
+            //static const size_t nCtl   = sizeof(Cntl)/sizeof(Cntl[0]) - 1;
 
             void String_:: setup(const char enterChar, const char leaveChar)
             {
@@ -48,12 +54,65 @@ namespace Yttrium
                     }
                 }
 
-                
+
+                //--------------------------------------------------------------
+                //
+                // Escape Raw
+                //
+                //--------------------------------------------------------------
+                {
+                    String raw;
+                    raw += '\\';
+                    raw += enterChar;
+                    raw += leaveChar;
+                    Logic *          p     = new And();
+                    AutoPtr<Pattern> motif = p;
+                    p->add('\\');
+                    p->pushTail( Pattern::Among(raw) );
+                    const Caption    rname("escRaw");
+                    const Callback   xcode(this, & String_:: onEscRaw);
+                    add( Rule::Create(rname, motif, xcode) );
+                }
+
+                //--------------------------------------------------------------
+                //
+                // Escaped Control
+                //
+                //--------------------------------------------------------------
+                {
+                    Logic *          p     = new And();
+                    AutoPtr<Pattern> motif = p;
+                    p->add('\\');
+                    p->pushTail( Pattern::Among(Cntl) );
+                    const Caption    rname("escCtl");
+                    const Callback   xcode(this, & String_:: onEscCtl);
+                    add( Rule::Create(rname, motif, xcode) );
+                }
+
             }
 
             Outcome String_:: onCore(const Token &token)
             {
                 content += token;
+                return Outcome(Unit::Drop, Unit::Bulk);
+            }
+
+            Outcome String_:: onEscRaw(const Token &esc)
+            {
+                assert(2==esc.size);
+                content += *esc.tail;
+                return Outcome(Unit::Drop, Unit::Bulk);
+            }
+
+            Outcome String_:: onEscCtl(const Token &esc)
+            {
+                assert(2==esc.size);
+                assert(sizeof(Cntl) == sizeof(Code));
+                const char         c = **esc.tail;             // get char
+                const char * const s = strchr(Cntl, c);        // find it in Cntl
+                if(0==s) throw Specific::Exception(name->c_str(),"unexpected control escape char '%s'", ASCII::Printable::Text(c));
+                const char         k = Code[s-Cntl];           // translate
+                **content.pushTail( new Char(*esc.tail) ) = k; // duplicate Char and change its content
                 return Outcome(Unit::Drop, Unit::Bulk);
             }
         }
