@@ -10,6 +10,7 @@ lingo/pattern/regexp
 lingo/pattern/ops
 lingo/lexical
 lingo/lexical/add-on
+lingo/syntax
 )
 
 add_subdirectory(tests)

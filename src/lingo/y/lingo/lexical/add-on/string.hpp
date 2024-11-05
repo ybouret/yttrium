@@ -69,7 +69,7 @@ namespace Yttrium
                 Outcome onEscRaw(const Token &); //!< '\\' + char => add char
                 Outcome onEscCtl(const Token &); //!< '\\' + char => coding char
                 Outcome onEscHex(const Token &); //!< '\\' + 'x' + 'hi' + 'lo' => 0xhilo
-
+                Outcome onEscErr(const Token &); //!< escape sequence error
             };
         }
 
