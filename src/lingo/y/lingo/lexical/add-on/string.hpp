@@ -48,7 +48,7 @@ namespace Yttrium
                 Outcome onCore(const Token &);   //!< direct add
                 Outcome onEscRaw(const Token &); //!< '\\' + char => add char
                 Outcome onEscCtl(const Token &); //!< '\\' + char => coding char
-
+                Outcome onEscHex(const Token &); //!< '\\' + 'x' + 'hi' + 'lo' => 0xhilo
 
             };
         }

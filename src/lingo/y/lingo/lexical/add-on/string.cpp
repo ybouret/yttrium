@@ -91,6 +91,15 @@ namespace Yttrium
                     add( Rule::Create(rname, motif, xcode) );
                 }
 
+                //--------------------------------------------------------------
+                //
+                // Escaped Control
+                //
+                //--------------------------------------------------------------
+                {
+                    on("escHex", "\\\\x[:xdigit:][:xdigit:]", *this, & String_ :: onEscHex );
+                }
+
             }
 
             Outcome String_:: onCore(const Token &token)
@@ -115,6 +124,13 @@ namespace Yttrium
                 if(0==s) throw Specific::Exception(name->c_str(),"unexpected control escape char '%s'", ASCII::Printable::Text(c));
                 const char         k = Code[s-Cntl];           // translate
                 **content.pushTail( new Char(*esc.tail) ) = k; // duplicate Char and change its content
+                return Outcome(Unit::Drop, Unit::Bulk);
+            }
+
+            Outcome String_:: onEscHex(const Token &esc)
+            {
+                assert(4==esc.size);
+                std::cerr << "hex=" << esc.toPrintable() << std::endl;
                 return Outcome(Unit::Drop, Unit::Bulk);
             }
         }
