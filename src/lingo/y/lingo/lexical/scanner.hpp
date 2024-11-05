@@ -18,6 +18,31 @@ namespace Yttrium
         namespace Lexical
         {
 
+            class Rejected
+            {
+            public:
+                Rejected() noexcept : r(0), n(0) {}
+                Rejected(const Rule * _r, const size_t _n) noexcept : r(_r), n(_n) {}
+                Rejected(const Rejected & _) noexcept : r(_.r), n(_.n) {}
+
+                Rejected & operator=(const Rejected &_) noexcept
+                {
+                    Coerce(r) = _.r;
+                    Coerce(n) = _.n;
+                    return *this;
+                }
+
+                Rejected & operator<<(const Rejected &_) noexcept
+                {
+                    return (_.n > n) ? ( *this = _ ) : *this;
+                }
+
+
+                const Rule * const r;
+                const size_t       n;
+
+            };
+
             //__________________________________________________________________
             //
             //

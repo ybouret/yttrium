@@ -11,7 +11,17 @@
   	 
 \begin{document}
 
+\section{Preamble}
+
+\begin{itemize}
+	\item enzyme definition and role
+	\item $k_{obs}$ in function of diffusion time and conversion time
+	\item Intermédiaire Réactionnel / Etat de transition
+\end{itemize}
+
 \section{Fully Reversible}
+
+
 
 \subsection{Equations}
 
@@ -105,5 +115,73 @@ rank=2
 \end{array}
 \right.
 \end{equation}
+
+\subsection{Catalytic Irreversible}
+
+\begin{itemize}
+	\item $v_r\equiv 0$
+	\item no steady state
+	\item no equilibrium
+	%\item $[S]+[P]\gg[E],[ES]$
+\end{itemize}
+
+\begin{equation}
+	E + S \xrightleftharpoons[k_d]{k_f} ES 
+	\xrightleftharpoons[0]{k_p} P + E
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+  \partial_t [E]  & = & v_d - v_f + v_p \\
+  \partial_t [S]  & = & v_d - v_f \\
+  \partial_t [ES] & = & v_f - v_d - v_p \\ 
+  \partial_t [P]  & = & v_p \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ E_0 & = & [E] + [ES]\\
+ S_0 & = & [S] + [ES] + [P] \\ %\simeq [S]+[P]\\
+ \end{array}
+ \right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\partial_t [ES] & = & k_f [S] [E] - (k_d+k_p) [ES]\\
+                & = & k_f [S] (E_0-[ES]) - (k_d+k_p) [ES]\\
+                & = & k_f [S] E_0 - (k_f [S] + (k_d+k_p)) [ES]\\
+                \\
+\partial_t [S] & = & k_d[ES] - k_f [S][E] \\
+               & = & k_d[ES] - k_f [S](E_0 - [ES])\\
+               & = & (k_d+k_f[S])[ES] - k_f[S]E_0 \\
+\end{array}
+\right.
+\end{equation}
+
+\begin{itemize}
+	\item S is consumed $\implies \partial_t [S] < 0 \implies [S]$ decreasing
+	\item $\partial_t [ES]_0 = k_f E_0 S_0 > 0$
+	\item $\partial_t [ES]_\infty \simeq - (k_d+k_p) [ES]_\infty$: there exist a moment when it's negative
+	\item There is at least one moment when $\partial_t [ES]=0$, existence.
+\end{itemize}
+
+\begin{equation}
+	K_M = \dfrac{k_d+k_p}{k_f}
+\end{equation}
+
+\begin{equation}
+	\partial_t [ES] = k_f( [S]E_0 - ([S]+K_M) [ES] )
+\end{equation}
+
+\begin{equation}
+	[ES] \simeq E_0 \dfrac{[S]}{[S]+K_M}
+\end{equation}
+
 
 \end{document}
