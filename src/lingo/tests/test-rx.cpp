@@ -64,7 +64,7 @@ Y_UTEST(rx)
                 while(source.ready())
                 {
                     Token token;
-                    if(p->takes(token,source))
+                    if(p->takes(token,source,0))
                     {
                         std::cerr << "\t(+) '" << token << "'" << std::endl;
                         source.put(token);

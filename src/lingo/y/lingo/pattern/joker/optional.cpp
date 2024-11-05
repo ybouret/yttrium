@@ -60,10 +60,10 @@ namespace Yttrium
             return false;
         }
 
-        bool Optional:: takes(Token &token, Source &source) const
+        bool Optional:: takes(Y_Lingo_Pattern_Args) const
         {
             assert(0==token.size);
-            (void) motif->takes(token,source);
+            (void) motif->takes(token,source,0);
             return true;
         }
 

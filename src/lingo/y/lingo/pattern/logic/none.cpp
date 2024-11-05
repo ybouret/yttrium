@@ -64,7 +64,7 @@ namespace Yttrium
             fc += bad.inv();
         }
 
-        bool None:: _takes(Token &token, Source &source) const
+        bool None:: _takes(Y_Lingo_Pattern_Args) const
         {
             assert(0==token.size);
             assert(size>0);
@@ -73,7 +73,7 @@ namespace Yttrium
             for(const Pattern *p=head;p;p=p->next)
             {
                 Token local;
-                if(p->takes(local,source))
+                if(p->takes(local,source,0))
                 {
                     source.put(local);
                     return false;

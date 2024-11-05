@@ -72,7 +72,7 @@ namespace Yttrium
             return minimalCount > 0;
         }
 
-        bool Counting:: takes(Token &token, Source &source) const
+        bool Counting:: takes(Y_Lingo_Pattern_Args) const
         {
             assert(0==token.size);
             Token  local;
@@ -80,7 +80,7 @@ namespace Yttrium
             for(size_t i=1;i<=minimalCount;++i)
             {
                 Token temp;
-                if(motif->takes(temp,source))
+                if(motif->takes(temp,source,0))
                 {
                     local << temp;
                 }
@@ -95,7 +95,7 @@ namespace Yttrium
             for(size_t i=minimalCount;i<=maximalCount;++i)
             {
                 Token temp;
-                if(motif->takes(temp,source))
+                if(motif->takes(temp,source,0))
                 {
                     local << temp;
                     continue;

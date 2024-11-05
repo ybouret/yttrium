@@ -131,8 +131,7 @@ namespace Yttrium
                         for(;node;node=node->next)
                         {
                             Rule &rule = **node;
-                            //std::cerr << name << ".probe '" << rule.name << "'" << std::endl;
-                            if( rule.motif->takes(bestToken,source) )
+                            if( rule.motif->takes(bestToken,source,0) )
                             {
                                 bestRule = &rule;
                                 if(bestToken.size<=0)
@@ -149,7 +148,6 @@ namespace Yttrium
 
                         assert(bestToken.size>0);
                         assert(bestRule == & **node);
-                        //std::cerr << name << ".found '" << bestRule->name << "' = '" << bestToken.toPrintable() << "'" << std::endl;
 
                         //------------------------------------------------------
                         //
@@ -161,16 +159,14 @@ namespace Yttrium
                         for(node=node->next;node;node=node->next)
                         {
                             Rule &rule = **node;
-                            //std::cerr << name << ".probe '" << rule.name << "'" << std::endl;
                             Token token;
-                            if( rule.motif->takes(token,source) )
+                            if( rule.motif->takes(token,source,0) )
                             {
                                 if(token.size>bestToken.size)
                                 {
                                     // new winner
                                     bestToken.swapWith(token);
                                     bestRule = &rule;
-                                    //std::cerr << name << ".new best '" << bestToken << "'" << std::endl;
                                     source.dup(bestToken);
                                 }
                                 else
@@ -178,7 +174,6 @@ namespace Yttrium
                                     // too late
                                     if(token.size<=0)
                                         throw Specific::Exception(name->c_str(),"corrupted rule '%s'", rule.name->c_str());
-                                    //std::cerr << name << ".too late '" << token << "'" << std::endl;
                                     source.put(token);
                                 }
                             }

@@ -75,7 +75,7 @@ namespace Yttrium
         }
 
 
-        bool MoreThan:: takes(Token &token, Source &source) const
+        bool MoreThan:: takes(Y_Lingo_Pattern_Args) const
         {
             assert(0==token.size);
             Token  local;
@@ -83,7 +83,7 @@ namespace Yttrium
 
             {
                 Token temp;
-                while(motif->takes(temp,source))
+                while(motif->takes(temp,source,0))
                 {
                     ++count;
                     local << temp;

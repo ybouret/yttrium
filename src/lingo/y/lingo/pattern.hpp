@@ -22,7 +22,7 @@ namespace Yttrium
         //! Arguments for Pattern takes(...)
         //
         //______________________________________________________________________
-#define Y_Lingo_Pattern_Args Token &token, Source &source
+#define Y_Lingo_Pattern_Args Token &token, Source &source, void *
 
         //______________________________________________________________________
         //

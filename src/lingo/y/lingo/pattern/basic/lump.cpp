@@ -44,7 +44,7 @@ namespace Yttrium
             return ans;
         }
 
-        bool Lump:: takes(Token &token, Source &source) const
+        bool Lump:: takes(Y_Lingo_Pattern_Args) const
         {
             assert( 0 == token.size );
             Char *ch = source.get();

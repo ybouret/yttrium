@@ -66,7 +66,7 @@ namespace Yttrium
             }
         }
 
-        bool Or:: _takes(Token &token, Source &source) const
+        bool Or:: _takes(Y_Lingo_Pattern_Args) const
         {
             assert(0==token.size);
             assert(size>0);
@@ -74,7 +74,7 @@ namespace Yttrium
             bool  found = false;
             for(const Pattern *p=head;p;p=p->next)
             {
-                if(p->takes(local,source))
+                if(p->takes(local,source,0))
                 {
                     found = true;
                     if(local.size<=0)

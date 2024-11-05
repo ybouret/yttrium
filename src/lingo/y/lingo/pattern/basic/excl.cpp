@@ -35,7 +35,7 @@ namespace Yttrium
             return ans;
         }
 
-        bool Excl:: takes(Token &token, Source &source) const
+        bool Excl:: takes(Y_Lingo_Pattern_Args) const
         {
             assert( 0 == token.size );
             Char *ch = source.get();

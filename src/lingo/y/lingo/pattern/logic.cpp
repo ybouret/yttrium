@@ -129,10 +129,10 @@ namespace Yttrium
             return _univocal();
         }
 
-        bool Logic:: takes(Token &token, Source &source) const
+        bool Logic:: takes(Y_Lingo_Pattern_Args) const
         {
             if(size<=0) throw Specific::Exception(callSign(), "%sunivocal()",msg);
-            return _takes(token,source);
+            return _takes(token,source,0);
         }
 
     }

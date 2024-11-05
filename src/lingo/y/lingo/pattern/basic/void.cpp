@@ -32,8 +32,9 @@ namespace Yttrium
             return emitUUID(fp);
         }
 
-        bool Void:: takes(Token & , Source &source) const
+        bool Void:: takes(Y_Lingo_Pattern_Args) const
         {
+            (void)token;
             return !source.ready();
         }
 
