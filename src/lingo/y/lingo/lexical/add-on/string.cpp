@@ -1,8 +1,10 @@
 
 #include "y/lingo/lexical/add-on/string.hpp"
 #include "y/lingo/pattern/all.hpp"
+
 #include "y/text/ascii/printable.hpp"
 #include "y/system/exception.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
