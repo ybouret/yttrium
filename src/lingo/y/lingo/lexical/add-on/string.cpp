@@ -3,6 +3,7 @@
 #include "y/lingo/pattern/all.hpp"
 
 #include "y/text/ascii/printable.hpp"
+#include "y/text/hexadecimal.hpp"
 #include "y/system/exception.hpp"
 #include <cstring>
 
@@ -123,7 +124,7 @@ namespace Yttrium
                 const char * const s = strchr(Cntl, c);        // find it in Cntl
                 if(0==s) throw Specific::Exception(name->c_str(),"unexpected control escape char '%s'", ASCII::Printable::Text(c));
                 const char         k = Code[s-Cntl];           // translate
-                **content.pushTail( new Char(*esc.tail) ) = k; // duplicate Char and change its content
+                **content.pushTail( new Char(*esc.head) ) = k; // duplicate Char and change its content
                 return Outcome(Unit::Drop, Unit::Bulk);
             }
 
@@ -131,6 +132,10 @@ namespace Yttrium
             {
                 assert(4==esc.size);
                 std::cerr << "hex=" << esc.toPrintable() << std::endl;
+                const int  lo = Hexadecimal::ToDecimal( **(esc.tail) );
+                const int  hi = Hexadecimal::ToDecimal( **(esc.tail->prev) );
+                const char ch = char( (hi<<4) | lo );
+                **content.pushTail( new Char(*esc.head) ) = ch;
                 return Outcome(Unit::Drop, Unit::Bulk);
             }
         }
