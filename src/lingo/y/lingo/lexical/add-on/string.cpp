@@ -120,20 +120,18 @@ namespace Yttrium
             {
                 assert(2==esc.size);
                 assert(sizeof(Cntl) == sizeof(Code));
-                const char         c = **esc.tail;             // get char
-                const char * const s = strchr(Cntl, c);        // find it in Cntl
-                if(0==s) throw Specific::Exception(name->c_str(),"unexpected control escape char '%s'", ASCII::Printable::Text(c));
-                const char         k = Code[s-Cntl];           // translate
-                **content.pushTail( new Char(*esc.head) ) = k; // duplicate Char and change its content
+                const char         c = **esc.tail;                    // get char
+                const char * const s = strchr(Cntl, c); assert(0!=s); // find it in Cntl
+                const char         k = Code[s-Cntl];                  // translate
+                **content.pushTail( new Char(*esc.head) ) = k;        // duplicate Char and change its content
                 return Outcome(Unit::Drop, Unit::Bulk);
             }
 
             Outcome String_:: onEscHex(const Token &esc)
             {
                 assert(4==esc.size);
-                std::cerr << "hex=" << esc.toPrintable() << std::endl;
-                const int  lo = Hexadecimal::ToDecimal( **(esc.tail) );
-                const int  hi = Hexadecimal::ToDecimal( **(esc.tail->prev) );
+                const int  lo = Hexadecimal::ToDecimal( **(esc.tail)       ); assert(lo>=0);
+                const int  hi = Hexadecimal::ToDecimal( **(esc.tail->prev) ); assert(hi>=0);
                 const char ch = char( (hi<<4) | lo );
                 **content.pushTail( new Char(*esc.head) ) = ch;
                 return Outcome(Unit::Drop, Unit::Bulk);

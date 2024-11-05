@@ -15,17 +15,26 @@ namespace Yttrium
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Bracket String
+            //
+            //
+            //__________________________________________________________________
             class BString : public String_
             {
             public:
-                template <
-                typename LABEL> inline
+                //! setup
+                template <typename LABEL> inline
                 explicit BString(Lexer       & rootLexer,
                                  const LABEL & addOnUUID) :
                 String_(rootLexer,addOnUUID,'<','>')
                 {
                 }
 
+                //! cleanup
                 virtual ~BString() noexcept;
 
             private:

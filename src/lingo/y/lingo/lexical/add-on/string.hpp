@@ -12,13 +12,28 @@ namespace Yttrium
 
         namespace Lexical
         {
-            
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Common class for Strings
+            //
+            //
+            //__________________________________________________________________
             class String_ : public AddOn
             {
             public:
-                virtual ~String_() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                virtual ~String_() noexcept; //!< cleanup
 
             protected:
+
+                //! setup from delimiters
                 template <
                 typename LABEL> inline
                 explicit String_(Lexer       & rootLexer,
@@ -36,8 +51,13 @@ namespace Yttrium
                     setup(enterChar,leaveChar);
                 }
 
-
-                Token content;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Token content; //!< store content
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(String_);

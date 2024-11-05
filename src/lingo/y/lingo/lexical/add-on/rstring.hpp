@@ -13,18 +13,26 @@ namespace Yttrium
 
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Single Quoted String
+            //
+            //
+            //__________________________________________________________________
             class RString : public String_
             {
             public:
-                template <
-                typename LABEL> inline
+                //! setup
+                template <typename LABEL> inline
                 explicit RString(Lexer       & rootLexer,
                                  const LABEL & addOnUUID) :
                 String_(rootLexer,addOnUUID,'\'','\'')
                 {
                 }
 
+                //! cleanup
                 virtual ~RString() noexcept;
 
             private:

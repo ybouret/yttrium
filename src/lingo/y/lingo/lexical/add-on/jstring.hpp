@@ -12,18 +12,26 @@ namespace Yttrium
 
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Double Quoted String
+            //
+            //
+            //__________________________________________________________________
             class JString : public String_
             {
             public:
-                template <
-                typename LABEL> inline
-                explicit JString(Lexer       & rootLexer,
-                const LABEL & addOnUUID) :
+                //! setup
+                template <typename LABEL> inline
+                explicit JString(Lexer &        rootLexer,
+                                 const LABEL & addOnUUID) :
                 String_(rootLexer,addOnUUID,'"','"')
                 {
                 }
-                
+
+                //! cleanup
                 virtual ~JString() noexcept;
 
             private:
