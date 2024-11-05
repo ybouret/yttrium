@@ -72,14 +72,21 @@ namespace Yttrium
 
             Unit * Scanner:: findError(Source   &source) const
             {
-
+                //--------------------------------------------------------------
+                //
                 // guess invalid token
+                //
+                //--------------------------------------------------------------
                 assert(source.ready());
                 Token token;
                 if(!source.guess(token)) throw Specific::Exception(name->c_str(),"corrupted source");
                 assert(token.size>0);
 
+                //--------------------------------------------------------------
+                //
                 // convert to unit
+                //
+                //--------------------------------------------------------------
                 return produce(token);
             }
 
