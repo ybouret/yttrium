@@ -33,6 +33,7 @@ namespace Yttrium
                       RejectEndOfSource),
                 content()
                 {
+                    setup(enterChar,leaveChar);
                 }
 
 
@@ -42,6 +43,9 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(String_);
                 virtual void enter(const Token &);
                 virtual void leave(const Token &);
+                void         setup(const char enterChar, const char leaveChar);
+
+                Outcome onCore(const Token &);
             };
         }
 
