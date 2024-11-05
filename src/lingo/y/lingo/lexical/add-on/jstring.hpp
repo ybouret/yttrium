@@ -25,7 +25,7 @@ namespace Yttrium
             public:
                 //! setup
                 template <typename LABEL> inline
-                explicit JString(Lexer &        rootLexer,
+                explicit JString(Lexer &       rootLexer,
                                  const LABEL & addOnUUID) :
                 String_(rootLexer,addOnUUID,'"','"')
                 {
