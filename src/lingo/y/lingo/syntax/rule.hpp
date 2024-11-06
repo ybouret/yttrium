@@ -11,6 +11,11 @@ namespace Yttrium
     {
         namespace Syntax
         {
+
+#define Y_Lingo_Syntax_Rule(TYPE) Coerce(self) = static_cast<TYPE *>(this)
+
+#define Y_Lingo_Syntax_Args Lexer &lexer, Source &source, XNode * &tree
+
             class Rule : public Entity, public GraphViz::Vizible
             {
             protected:
@@ -28,7 +33,10 @@ namespace Yttrium
                 virtual ~Rule() noexcept;
 
                 // Interface
-                virtual void viz(OutputStream &fp) const = 0;
+                virtual void viz(OutputStream &fp)        const = 0;
+                virtual bool accepts(Y_Lingo_Syntax_Args) const = 0;
+                virtual bool robust() const noexcept = 0;
+                bool         flimsy() const noexcept;
 
                 // Methods
                 void        graphViz(OutputStream &fp) const;

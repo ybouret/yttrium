@@ -23,6 +23,7 @@ namespace Yttrium
                 Rule(_name,_uuid),
                 rule(_rule)
                 {
+                    checkRobustness();
                 }
 
             public:
@@ -32,6 +33,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
+                void checkRobustness() const;
             };
         }
 

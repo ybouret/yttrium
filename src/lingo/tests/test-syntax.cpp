@@ -28,6 +28,20 @@ namespace Yttrium
 
                 virtual void viz(OutputStream &) const {}
 
+                virtual bool accepts(Y_Lingo_Syntax_Args) const
+                {
+                    (void)lexer;
+                    (void)source;
+                    (void)tree;
+                    return false;
+                }
+
+                bool robust() const noexcept
+                {
+                    return true;
+                }
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sim);
             };

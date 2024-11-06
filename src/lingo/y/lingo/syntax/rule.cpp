@@ -20,6 +20,10 @@ namespace Yttrium
                 Leave(fp);
             }
 
+            bool Rule:: flimsy() const noexcept
+            {
+                return !robust();
+            }
 
         }
 

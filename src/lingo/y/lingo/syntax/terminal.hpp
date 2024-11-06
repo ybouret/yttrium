@@ -40,13 +40,15 @@ namespace Yttrium
                 kind(_kind),
                 role(_role)
                 {
+                    Y_Lingo_Syntax_Rule(Terminal);
                 }
 
                 virtual ~Terminal() noexcept;
 
 
-                virtual void viz(OutputStream &fp) const;
-
+                virtual void viz(OutputStream &fp)        const;
+                virtual bool accepts(Y_Lingo_Syntax_Args) const;
+                virtual bool robust() const noexcept; //!< true
 
                 const Kind kind;
                 const Role role;

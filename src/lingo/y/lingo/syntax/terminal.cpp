@@ -45,6 +45,25 @@ namespace Yttrium
                 }
                 Endl(fp << '\"' << ']');
             }
+
+
+            bool Terminal:: accepts(Y_Lingo_Syntax_Args) const
+            {
+                Lexeme * const lexeme = lexer.get(source);
+                if(0==lexeme) return false; // EOF
+                if( *(lexeme->name) != *name ) {
+                    lexer.put(lexeme);
+                    return false;
+                }
+                XNode::Grow(tree, XNode::CreateFrom(*this,lexeme) );
+                return true;
+            }
+
+            bool Terminal:: robust() const noexcept
+            {
+                return true;
+            }
+
         }
     }
 }
