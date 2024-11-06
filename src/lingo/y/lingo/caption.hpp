@@ -34,7 +34,7 @@ namespace Yttrium
             explicit Caption(const String &);                //!< setup from string
             explicit Caption(const char * const);            //!< setup from text
             explicit Caption(const char);                    //!< setup from uniq char
-            explicit Caption(const Caption &)      noexcept; //!< safe copy
+            Caption(const Caption &)               noexcept; //!< safe copy
             explicit Caption(const String * const) noexcept; //!< safe assign
             virtual ~Caption()                     noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Caption);                        //!< display

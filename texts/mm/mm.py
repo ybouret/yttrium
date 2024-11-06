@@ -6,7 +6,7 @@ def evolution(t, z, k_f, k_d, k_p, k_r):
     """
     definition of evolution
         # t : time, unsused but necessary for ODE
-        # z : [x,y] vector, initial conditions
+        # z : [E,S,ES,P] vector, in phase space
         # k_f, k_d, k_p, k_r
     """
     # getting variables
@@ -34,7 +34,7 @@ C_0 = [E_0,S_0,0,0]
 k_f = 3
 k_d = 1
 k_p = 4
-k_r = 1
+k_r = 0.1
 
 # using SciPy Initial Value Problem solver
 tmax = 5

@@ -1,8 +1,8 @@
 
-#include "y/lingo/syntax/terminal.hpp"
-#include "y/lingo/syntax/internal.hpp"
+#include "y/lingo/syntax/rules.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -72,10 +72,16 @@ Y_UTEST(syntax)
 
     AutoPtr<Syntax::XNode>  xnode = Syntax::XNode::CreateFrom(sim);
 
+    Syntax::Option opt(t1);
+    {
+        OutputFile fp("opt.dot");
+        fp << "digraph G{\n";
+        t1.viz(fp);
+        opt.viz(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("opt.dot",false);
 
-    Y_SIZEOF(Syntax::XNode);
-    Y_SIZEOF(Syntax::XNode::List);
-    Y_SIZEOF(Syntax::XList);
 
 }
 Y_UDONE()
