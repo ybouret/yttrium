@@ -9,15 +9,14 @@ namespace Yttrium
         {
 
           
-
-            void    XNode:: _zero() noexcept
+            void    XNode:: zero() noexcept
             {
                 memset(wksp,0,sizeof(wksp));
                 assert(0==unit);
             }
 
 
-            XList & XNode:: _list() const noexcept
+            XList & XNode:: list() const noexcept
             {
                 assert(Internal==type);
                 const void *  addr = Memory::OutOfReach::Addr(wksp);

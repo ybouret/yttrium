@@ -31,6 +31,9 @@ namespace Yttrium
 
                 virtual ~XNode() noexcept;
 
+
+                static void BackToLexer(Lexer &, XNode * const) noexcept;
+
                 const Rule & rule; //!< creating rule
                 const Type   type; //!< from rule/constructor
                 XNode *      sire; //!< for tree
@@ -46,9 +49,9 @@ namespace Yttrium
                     Lexeme * unit;
                     void   * wksp[ Y_WORDS_FOR(List) ];
                 };
-                void    _zero() noexcept;
+                void    zero() noexcept;
 
-                XList & _list() const noexcept;
+                XList & list() const noexcept;
 
 
                 //! make a terminal

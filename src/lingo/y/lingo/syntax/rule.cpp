@@ -45,7 +45,7 @@ namespace Yttrium
             {
                 assert(0!=_unit);
                 assert(Terminal==rule.typeOfNode());
-                _zero();
+                zero();
                 unit = _unit;
             }
 
@@ -58,8 +58,8 @@ namespace Yttrium
             prev(0)
             {
                 assert(Internal==rule.typeOfNode());
-                _zero();
-                new( & _list() ) XList();
+                zero();
+                new( & list() ) XList();
             }
         }
 

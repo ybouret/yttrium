@@ -17,6 +17,7 @@ namespace Yttrium
             public:
                 explicit XList() noexcept;
                 virtual ~XList() noexcept;
+                void     backToLexer(Lexer &) noexcept;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(XList);
