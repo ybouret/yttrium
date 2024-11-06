@@ -12,7 +12,6 @@ namespace Yttrium
         namespace Syntax
         {
             class Rule;
-
             class XList;
 
             class XNode : public Object, public GraphViz::Vizible
@@ -45,9 +44,12 @@ namespace Yttrium
                 union
                 {
                     Lexeme * unit;
-                    XList  * list;
                     void   * wksp[ Y_WORDS_FOR(List) ];
                 };
+                void    _zero() noexcept;
+
+                XList & _list() const noexcept;
+
 
                 //! make a terminal
                 explicit XNode(const Rule &   _rule,
@@ -56,19 +58,10 @@ namespace Yttrium
                 //! make an internal
                 explicit XNode(const Rule &   _rule) noexcept;
 
-                
 
             };
 
-            class XList : public XNode::List
-            {
-            public:
-                explicit XList() noexcept;
-                virtual ~XList() noexcept;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(XList);
-            };
+        
         }
     }
 }

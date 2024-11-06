@@ -7,6 +7,36 @@
 using namespace Yttrium;
 using namespace Lingo;
 
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+
+            class Sim : public Internal
+            {
+            public:
+                static const uint32_t UUID = Y_FOURCC('N', 'O', 'N', 'E');
+
+                template <typename NAME>
+                explicit Sim(const NAME & _name) : Internal(_name,UUID)
+                {
+                }
+
+                virtual ~Sim() noexcept {}
+
+                virtual void viz(OutputStream &) const {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Sim);
+            };
+
+        }
+
+    }
+
+}
 
 Y_UTEST(syntax)
 {
@@ -24,7 +54,10 @@ Y_UTEST(syntax)
     GraphViz::Vizible::DotToPng("uni-div.dot",t4);
 
 
-    //Syntax::Internal sim("SIM");
+    Syntax::Sim sim("SIM");
+
+    AutoPtr<Syntax::XNode>  xnode = Syntax::XNode::CreateFrom(sim);
+
 
     Y_SIZEOF(Syntax::XNode);
     Y_SIZEOF(Syntax::XNode::List);

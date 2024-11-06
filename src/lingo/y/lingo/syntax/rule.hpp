@@ -3,7 +3,7 @@
 #ifndef Y_Lingo_Syntax_Rule_Included
 #define Y_Lingo_Syntax_Rule_Included 1
 
-#include "y/lingo/syntax/xnode.hpp"
+#include "y/lingo/syntax/xlist.hpp"
 
 namespace Yttrium
 {

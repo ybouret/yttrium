@@ -28,6 +28,7 @@ namespace Yttrium
 
 
 #include <cstring>
+
 namespace Yttrium
 {
     namespace Lingo
@@ -44,11 +45,11 @@ namespace Yttrium
             {
                 assert(0!=_unit);
                 assert(Terminal==rule.typeOfNode());
-                memset(wksp,0,sizeof(wksp));
+                _zero();
                 unit = _unit;
             }
 
-            XNode:: XNode(const Rule   & _rule) noexcept:
+            XNode:: XNode(const Rule & _rule) noexcept:
             Object(),
             rule(_rule),
             type(Internal),
@@ -57,6 +58,8 @@ namespace Yttrium
             prev(0)
             {
                 assert(Internal==rule.typeOfNode());
+                _zero();
+                new( & _list() ) XList();
             }
         }
 

@@ -8,8 +8,21 @@ namespace Yttrium
         namespace Syntax
         {
 
-            XNode:: ~XNode() noexcept
+          
+
+            void    XNode:: _zero() noexcept
             {
+                memset(wksp,0,sizeof(wksp));
+                assert(0==unit);
+            }
+
+
+            XList & XNode:: _list() const noexcept
+            {
+                assert(Internal==type);
+                const void *  addr = Memory::OutOfReach::Addr(wksp);
+                const XList & xref = *static_cast<const XList *>(addr);
+                return Coerce(xref);
             }
 
 
