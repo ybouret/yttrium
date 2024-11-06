@@ -19,12 +19,7 @@ namespace Yttrium
                 static const uint32_t UUID = Y_FOURCC('X','O','P','T');
                 static const char     Suffix = '?';
 
-                explicit Option(const Rule & _rule) :
-                Wildcard( NameFor(_rule), UUID, _rule)
-                {
-                }
-
-
+                explicit Option(const Rule &);
                 virtual ~Option() noexcept;
 
 

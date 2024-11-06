@@ -34,6 +34,12 @@ namespace Yttrium
                 const String s = *r.name + Suffix;
                 return Caption(s);
             }
+
+            Option:: Option(const Rule & _rule) :
+            Wildcard( NameFor(_rule), UUID, _rule)
+            {
+            }
+
         }
 
     }

@@ -19,11 +19,9 @@ namespace Yttrium
             public:
                 static const uint32_t UUID = Y_FOURCC('X','R','E','P');
 
-                template <typename NAME> inline
-                explicit Repeat(const NAME & _name,
-                                const Rule & _rule,
+                explicit Repeat(const Rule & _rule,
                                 const size_t  nmin) :
-                Wildcard(_name, UUID, _rule),
+                Wildcard(NameFor(_rule,nmin), UUID, _rule),
                 atLeast(nmin)
                 {
                 }
@@ -35,6 +33,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeat);
+                static Caption NameFor(const Rule &, const size_t);
             };
 
         }
