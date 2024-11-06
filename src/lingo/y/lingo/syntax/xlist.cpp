@@ -54,6 +54,22 @@ namespace Yttrium
                 delete node;
             }
 
+
+            void XNode:: Grow(XNode * &tree, XNode * const node) noexcept
+            {
+                assert(0!=node);
+                if(0==tree)
+                {
+                    tree = node;
+                    node->sire = 0;
+                }
+                else
+                {
+                    assert(Internal==tree->type);
+                    tree->list().pushTail(node)->sire = tree;
+                }
+            }
+
         }
 
     }

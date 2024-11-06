@@ -33,6 +33,12 @@ namespace Yttrium
 
 
                 static void BackToLexer(Lexer &, XNode * const) noexcept;
+                static void Grow(XNode * &tree, XNode * const node) noexcept;
+
+                Lexeme &       lexeme() noexcept;
+                const Lexeme & lexeme() const noexcept;
+                XList        & branch() noexcept;
+                const XList  & branch() const noexcept;
 
                 const Rule & rule; //!< creating rule
                 const Type   type; //!< from rule/constructor
@@ -50,7 +56,6 @@ namespace Yttrium
                     void   * wksp[ Y_WORDS_FOR(List) ];
                 };
                 void    zero() noexcept;
-
                 XList & list() const noexcept;
 
 

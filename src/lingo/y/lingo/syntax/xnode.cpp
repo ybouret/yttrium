@@ -1,5 +1,6 @@
 
 #include "y/lingo/syntax/xnode.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -45,7 +46,31 @@ namespace Yttrium
             }
 
             
+            Lexeme & XNode:: lexeme() noexcept
+            {
+                assert(Terminal==type);
+                assert(0!=unit);
+                return *unit;
+            }
 
+            const Lexeme & XNode:: lexeme() const noexcept
+            {
+                assert(Terminal==type);
+                assert(0!=unit);
+                return *unit;
+            }
+
+            XList & XNode:: branch() noexcept
+            {
+                assert(Internal==type);
+                return list();
+            }
+
+            const XList & XNode:: branch() const noexcept
+            {
+                assert(Internal==type);
+                return list();
+            }
         }
 
     }

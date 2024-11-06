@@ -27,7 +27,6 @@ namespace Yttrium
 }
 
 
-#include <cstring>
 
 namespace Yttrium
 {
