@@ -17,3 +17,5 @@ add_test(posix   test-lingo posix)
 add_test(rx      test-lingo rx)
 add_test(scanner test-lingo scanner)
 add_test(lexer   test-lingo lexer)
+add_test(syntax  test-lingo syntax)
+

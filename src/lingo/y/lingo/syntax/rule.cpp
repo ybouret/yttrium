@@ -11,7 +11,14 @@ namespace Yttrium
             Rule:: ~Rule() noexcept
             {
             }
-            
+
+
+            void Rule:: graphViz(OutputStream &fp) const
+            {
+                Enter(fp, "G");
+                viz(fp);
+                Leave(fp);
+            }
         }
 
     }
