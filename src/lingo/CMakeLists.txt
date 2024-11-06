@@ -12,6 +12,7 @@ lingo/lexical
 lingo/lexical/add-on
 lingo/syntax
 lingo/syntax/internal
+lingo/syntax/internal/wildcard
 )
 
 add_subdirectory(tests)
