@@ -11,6 +11,7 @@ lingo/pattern/ops
 lingo/lexical
 lingo/lexical/add-on
 lingo/syntax
+lingo/syntax/internal
 )
 
 add_subdirectory(tests)

@@ -1,5 +1,6 @@
 
 #include "y/lingo/syntax/terminal.hpp"
+#include "y/lingo/syntax/internal.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -21,6 +22,13 @@ Y_UTEST(syntax)
 
     Syntax::Terminal t4(";",Syntax::Terminal::Univocal,Syntax::Terminal::Dividing);
     GraphViz::Vizible::DotToPng("uni-div.dot",t4);
+
+
+    //Syntax::Internal sim("SIM");
+
+    Y_SIZEOF(Syntax::XNode);
+    Y_SIZEOF(Syntax::XNode::List);
+    Y_SIZEOF(Syntax::XList);
 
 }
 Y_UDONE()

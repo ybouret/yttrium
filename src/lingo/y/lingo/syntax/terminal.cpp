@@ -10,6 +10,23 @@ namespace Yttrium
 
             Terminal:: ~Terminal() noexcept {}
 
+
+            bool Rule:: isTerminal() const noexcept
+            {
+                return Terminal::UUID == uuid;
+            }
+
+            bool Rule:: isInternal() const noexcept
+            {
+                return Terminal::UUID != uuid;
+            }
+
+            XNode::Type Rule:: typeOfNode() const noexcept
+            {
+                return Terminal::UUID == uuid ? XNode::Terminal : XNode::Internal;
+            }
+
+
             void Terminal:: viz(OutputStream &fp) const
             {
                 Node(fp,this) << '[';

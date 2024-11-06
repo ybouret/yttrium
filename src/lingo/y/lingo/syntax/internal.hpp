@@ -26,7 +26,18 @@ namespace Yttrium
             
             class Internal : public Rule
             {
+            public:
+                static const uint32_t Simulated = Y_FOURCC('N','O','N','E');
+
+                template <typename NAME>
+                explicit Internal(const NAME & _name) :
+                Rule(_name,Simulated)
+                {
+                }
+                
+
             protected:
+                
                 template <typename NAME>
                 explicit Internal(const NAME &   _name,
                                   const uint32_t _uuid) :

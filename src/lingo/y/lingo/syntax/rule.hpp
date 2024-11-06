@@ -3,7 +3,7 @@
 #ifndef Y_Lingo_Syntax_Rule_Included
 #define Y_Lingo_Syntax_Rule_Included 1
 
-#include "y/lingo/lexer.hpp"
+#include "y/lingo/syntax/xnode.hpp"
 
 namespace Yttrium
 {
@@ -31,11 +31,12 @@ namespace Yttrium
                 virtual void viz(OutputStream &fp) const = 0;
 
                 // Methods
-                void graphViz(OutputStream &fp) const;
-
+                void        graphViz(OutputStream &fp) const;
+                bool        isInternal() const noexcept;
+                bool        isTerminal() const noexcept;
+                XNode::Type typeOfNode() const noexcept;
 
                 // Members
-
             public:
                 const uint32_t uuid;
 
