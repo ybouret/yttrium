@@ -39,6 +39,7 @@ namespace Yttrium
             Option:: Option(const Rule & _rule) :
             Wildcard( NameFor(_rule), UUID, _rule)
             {
+                Y_Lingo_Syntax_Rule(Option);
             }
 
         }

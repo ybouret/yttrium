@@ -14,10 +14,11 @@ namespace Yttrium
 
 
             Repeat:: Repeat(const Rule & _rule,
-                   const size_t  nmin) :
+                            const size_t  nmin) :
             Wildcard(NameFor(_rule,nmin), UUID, _rule),
             atLeast(nmin)
             {
+                Y_Lingo_Syntax_Rule(Repeat);
             }
 
             Caption Repeat:: NameFor(const Rule &r, const size_t n)

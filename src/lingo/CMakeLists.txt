@@ -11,8 +11,10 @@ lingo/pattern/ops
 lingo/lexical
 lingo/lexical/add-on
 lingo/syntax
+lingo/syntax/rule
 lingo/syntax/internal
 lingo/syntax/internal/wildcard
+lingo/syntax/internal/compound
 )
 
 add_subdirectory(tests)

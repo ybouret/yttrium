@@ -6,6 +6,7 @@
 
 #include "y/lingo/syntax/terminal.hpp"
 #include "y/lingo/syntax/internal/wildcards.hpp"
+#include "y/lingo/syntax/internal/compounds.hpp"
 
 
 #endif

@@ -82,6 +82,18 @@ namespace Yttrium
                 bool        isTerminal()      const noexcept; //!< uuid == Terminal::UUID
                 XNode::Type typeOfNode()      const noexcept; //!< depends on uuid
 
+                template <typename RULE> inline
+                RULE * as() noexcept {
+                    assert(RULE::UUID==uuid);
+                    return static_cast<RULE *>(self);
+                }
+
+                template <typename RULE> inline
+                const RULE * as() const noexcept {
+                    assert(RULE::UUID==uuid);
+                    return static_cast<const RULE *>(self);
+                }
+
                 //______________________________________________________________
                 //
                 //

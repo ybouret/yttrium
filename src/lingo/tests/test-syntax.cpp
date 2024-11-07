@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/lingo/syntax/rule/visited.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -112,6 +113,13 @@ Y_UTEST(syntax)
     }
     GraphViz::Vizible::RenderPNG("repN.dot",false);
 
+
+    Syntax::Aggregate agg("agg");
+    
+
+    Syntax::Visit visit;;
+    visit(t1);
+    visit(opt);
 
 }
 Y_UDONE()

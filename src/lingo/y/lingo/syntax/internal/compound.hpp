@@ -1,7 +1,8 @@
+
 //! \file
 
-#ifndef Y_Lingo_Syntax_Wildcard_Included
-#define Y_Lingo_Syntax_Wildcard_Included 1
+#ifndef Y_Lingo_Syntax_Compound_Included
+#define Y_Lingo_Syntax_Compound_Included 1
 
 #include "y/lingo/syntax/internal.hpp"
 
@@ -11,15 +12,19 @@ namespace Yttrium
     {
         namespace Syntax
         {
+
+            typedef Small::BareLightList<const Rule> Manifest;
+            typedef Manifest::NodeType               RNode;
+
             //__________________________________________________________________
             //
             //
             //
-            //! Wildcard using an existing ROBUST rule
+            //! Compound
             //
             //
             //__________________________________________________________________
-            class Wildcard : public Internal
+            class Compound : public Internal, public Proxy<const Manifest>
             {
             protected:
                 //______________________________________________________________
@@ -30,29 +35,38 @@ namespace Yttrium
                 //______________________________________________________________
                 //! setup with name, uuid and existing rule
                 template <typename NAME> inline
-                explicit Wildcard(const NAME   & _name,
-                                  const uint32_t _uuid,
-                                  const Rule   & _rule) :
-                Internal(_name,_uuid),
-                rule(_rule)
+                explicit Compound(const NAME   & _name,
+                                  const uint32_t _uuid ) :
+                Internal(_name,_uuid)
                 {
-                    checkRobustness();
                 }
 
+
+
             public:
-                virtual ~Wildcard() noexcept;
+                virtual ~Compound() noexcept; //!< cleanup
 
                 //______________________________________________________________
                 //
                 //
-                // Members
+                // Methods
                 //
                 //______________________________________________________________
-                const Rule & rule; //!< existing ROBUST rule
+
+                //! add existing rule to manifest
+                void add(const Rule &);
+
+                Compound & operator<<(const Rule &);
+                
+
+            protected:
+                virtual void vizLink(OutputStream &) const;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
-                void checkRobustness() const;
+                Y_DISABLE_COPY_AND_ASSIGN(Compound);
+                Manifest manifest;
+                virtual ConstInterface & surrogate() const noexcept;
+
             };
         }
 
@@ -61,5 +75,3 @@ namespace Yttrium
 }
 
 #endif
-
-
