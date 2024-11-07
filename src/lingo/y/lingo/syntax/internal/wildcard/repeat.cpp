@@ -49,13 +49,36 @@ namespace Yttrium
             bool Repeat:: accepts(Y_Lingo_Syntax_Args) const
             {
 
+                // initializing
                 XNode         *localTree = XNode::CreateFrom(*this);
                 AutoPtr<XNode> guardTree = localTree;
                 size_t         count     = 0;
+
+                // accepting rule in local tree
                 while( rule.accepts(lexer, source, localTree) ) {
+                    assert(localTree->isWellFormed());
                     ++count;
                 }
-                return false;
+
+                if( count < atLeast )
+                {
+                    // return localTree to lexer
+                    XNode::BackToLexer(lexer, guardTree.yield() );
+                    return false;
+                }
+                else
+                {
+                    if(0==tree) {
+                        // ill-formed grammar but produce something
+                        tree = guardTree.yield();
+                    }
+                    else {
+                        // steal content from localTree
+                        assert(XNode::Internal==tree->type);
+                        tree->fusion( localTree->branch() );
+                    }
+                    return true;
+                }
             }
         }
 
