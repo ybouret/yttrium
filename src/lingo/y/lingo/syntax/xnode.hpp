@@ -13,40 +13,85 @@ namespace Yttrium
         {
             class Rule;
             class XList;
+            class Terminal;
+            class Internal;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Node holding result of Rule acceptance
+            //
+            //
+            //__________________________________________________________________
             class XNode : public Object, public GraphViz::Vizible
             {
             public:
-                typedef CxxListOf<XNode> List;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<XNode> List; //!< alias
 
+                //! type of Node
                 enum Type
                 {
-                    Terminal,
-                    Internal
+                    Terminal, //!< holds a  Lexeme
+                    Internal  //!< holds an XList
                 };
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
-                static XNode * CreateFrom(const Rule &, Lexeme * const);
-                static XNode * CreateFrom(const Rule &);
+                //! create from Syntax::Terminal rule + lexeme
+                static XNode * CreateFrom(const Syntax::Terminal &, Lexeme * const);
 
+                //! create from Syntax::Internal rule
+                static XNode * CreateFrom(const Syntax::Internal &);
+
+                //! cleanup
                 virtual ~XNode() noexcept;
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! returning to lexer a rejected Xnode
                 static void BackToLexer(Lexer &, XNode * const) noexcept;
+
+                //! Grow tree with a newly created node
                 static void Grow(XNode * &tree, XNode * const node) noexcept;
 
-                Lexeme &       lexeme() noexcept;
-                const Lexeme & lexeme() const noexcept;
-                XList        & branch() noexcept;
-                const XList  & branch() const noexcept;
+                //! full consistency check, mostly for debug
+                bool isWellFormed() const;
 
+                Lexeme &       lexeme()       noexcept; //!< access lexeme if Terminal
+                const Lexeme & lexeme() const noexcept; //!< access lexeme if Terminal
+                XList        & branch()       noexcept; //!< access XList if Internal
+                const XList  & branch() const noexcept; //!< access XList if Internal
+                void           fusion(XNode * const) noexcept; //!< take ownership of a node
+                void           fusion(XList &)       noexcept; //!< take ownership of a list
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
                 const Rule & rule; //!< creating rule
                 const Type   type; //!< from rule/constructor
                 XNode *      sire; //!< for tree
                 XNode *      next; //!< for list
                 XNode *      prev; //!< for list
-
-                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(XNode);
@@ -60,11 +105,11 @@ namespace Yttrium
 
 
                 //! make a terminal
-                explicit XNode(const Rule &   _rule,
+                explicit XNode(const Syntax::Terminal &   _rule,
                                Lexeme * const _unit) noexcept;
 
                 //! make an internal
-                explicit XNode(const Rule &   _rule) noexcept;
+                explicit XNode(const Syntax::Internal &   _rule) noexcept;
 
 
             };

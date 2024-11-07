@@ -13,21 +13,47 @@ namespace Yttrium
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Rule is an Option
+            //
+            //
+            //__________________________________________________________________
             class Option : public Wildcard
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('X','O','P','T');
-                static const char     Suffix = '?';
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const uint32_t UUID = Y_FOURCC('X','O','P','T'); //!< identifier
+                static const char     Suffix = '?';                     //!< for naming
 
-                explicit Option(const Rule &);
-                virtual ~Option() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                explicit Option(const Rule &); //!< setup with rule.name + suffix
+                virtual ~Option() noexcept;    //!< cleanup
 
 
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual void viz(OutputStream &fp) const;        //!< this + arrow to rule
+                virtual bool robust()     const noexcept;        //!< false
+                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< true, rule content or nothing
 
-                virtual void viz(OutputStream &fp) const;
-                virtual bool robust()     const noexcept;
-                virtual bool accepts(Y_Lingo_Syntax_Args) const;
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Option);
                 static Caption NameFor(const Rule &);

@@ -56,6 +56,7 @@ namespace Yttrium
                     return false;
                 }
                 XNode::Grow(tree, XNode::CreateFrom(*this,lexeme) );
+                assert(tree->isWellFormed());
                 return true;
             }
 
@@ -66,5 +67,30 @@ namespace Yttrium
 
         }
     }
+}
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+            XNode:: XNode(const Syntax::Terminal & _rule, Lexeme * const _unit) noexcept:
+            Object(),
+            rule(_rule),
+            type(Terminal),
+            sire(0),
+            next(0),
+            prev(0)
+            {
+                assert(0!=_unit);
+                assert(Terminal==rule.typeOfNode());
+                zero();
+                unit = _unit;
+            }
+        }
+
+    }
+
 }
 

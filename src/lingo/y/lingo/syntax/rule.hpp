@@ -11,14 +11,41 @@ namespace Yttrium
     {
         namespace Syntax
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //! helper to define the 'self' in constructors
+            //
+            //__________________________________________________________________
 #define Y_Lingo_Syntax_Rule(TYPE) Coerce(self) = static_cast<TYPE *>(this)
 
+            //__________________________________________________________________
+            //
+            //
+            //! arguments to accept
+            //
+            //__________________________________________________________________
 #define Y_Lingo_Syntax_Args Lexer &lexer, Source &source, XNode * &tree
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Rule interface
+            //
+            //
+            //__________________________________________________________________
             class Rule : public Entity, public GraphViz::Vizible
             {
             protected:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup with name and uuid
                 template <typename NAME> inline
                 explicit Rule(const NAME &   _name,
                               const uint32_t _uuid):
@@ -30,34 +57,59 @@ namespace Yttrium
                 }
 
             public:
+                //! cleanup
                 virtual ~Rule() noexcept;
 
+                //______________________________________________________________
+                //
+                //
                 // Interface
-                virtual void viz(OutputStream &fp)        const = 0;
-                virtual bool accepts(Y_Lingo_Syntax_Args) const = 0;
-                virtual bool robust() const noexcept = 0;
-                bool         flimsy() const noexcept;
+                //
+                //______________________________________________________________
+                virtual void viz(OutputStream &fp)        const = 0; //!< GraphViz code
+                virtual bool accepts(Y_Lingo_Syntax_Args) const = 0; //!< accepts lexer/source
+                virtual bool robust()            const noexcept = 0; //!< accepted is never empty
+                bool         flimsy()            const noexcept;     //!< !robust()
 
+                //______________________________________________________________
+                //
+                //
                 // Methods
-                void        graphViz(OutputStream &fp) const;
-                bool        isInternal() const noexcept;
-                bool        isTerminal() const noexcept;
-                XNode::Type typeOfNode() const noexcept;
+                //
+                //______________________________________________________________
+                void        graphViz(OutputStream &fp) const; //!< standalone GrapViz, to debug
+                bool        isInternal()      const noexcept; //!< uuid != Terminal::UUID
+                bool        isTerminal()      const noexcept; //!< uuid == Terminal::UUID
+                XNode::Type typeOfNode()      const noexcept; //!< depends on uuid
 
+                //______________________________________________________________
+                //
+                //
                 // Members
+                //
+                //______________________________________________________________
             public:
-                const uint32_t uuid;
+                const uint32_t uuid; //!< identifier
 
             protected:
-                void * const   self;
+                void * const   self; //!< pointer to derived class
             public:
-                Rule *         next;
-                Rule *         prev;
+                Rule *         next; //!< for list
+                Rule *         prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
             };
 
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! List of rules for grammar
+            //
+            //
+            //__________________________________________________________________
             typedef CxxListOf<Rule> Rules;
         }
     }

@@ -25,6 +25,7 @@ namespace Yttrium
 
             bool Option:: accepts(Y_Lingo_Syntax_Args) const
             {
+                // pass directly arguments to rule
                 (void) rule.accepts(lexer,source,tree);
                 return true;
             }

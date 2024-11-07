@@ -12,12 +12,21 @@ namespace Yttrium
     {
         namespace Syntax
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! List of XNodes
+            //
+            //
+            //__________________________________________________________________
             class XList : public XNode::List
             {
             public:
-                explicit XList() noexcept;
-                virtual ~XList() noexcept;
-                void     backToLexer(Lexer &) noexcept;
+                explicit XList() noexcept;               //!< setup
+                virtual ~XList() noexcept;               //!< cleanup
+                void     backToLexer(Lexer &)  noexcept; //!< send content back to lexer
+                void     append(XNode * const) noexcept; //!< pushTail and link
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(XList);

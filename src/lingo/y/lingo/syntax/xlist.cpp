@@ -55,20 +55,68 @@ namespace Yttrium
             }
 
 
+            void XNode:: fusion(XNode * const node) noexcept
+            {
+                assert(0==node);
+                assert(Internal==type);
+                list().pushTail(node)->sire = this;
+            }
+
+
+            void XNode:: fusion(XList &other) noexcept
+            {
+                assert(Internal==type);
+                while(other.size>0) fusion(other.popHead());
+            }
+
+
+
             void XNode:: Grow(XNode * &tree, XNode * const node) noexcept
             {
                 assert(0!=node);
                 if(0==tree)
                 {
-                    tree = node;
+                    tree       = node;
                     node->sire = 0;
                 }
                 else
                 {
                     assert(Internal==tree->type);
-                    tree->list().pushTail(node)->sire = tree;
+                    tree->fusion(node);
                 }
             }
+
+            bool XNode:: isWellFormed() const
+            {
+                switch(type)
+                {
+                    case Terminal:
+                        if(0!=sire)
+                        {
+                            if(Internal!=sire->type) {
+                                std::cerr << "node's sire is not Internal!!" << std::endl;
+                                return false;
+                            }
+
+                            if(!sire->list().owns(this)) {
+                                std::cerr << "node's sire is not node's owner!!" << std::endl;
+                                return false;
+                            }
+
+                        }
+                        break;
+
+                    case Internal:
+                        for(const XNode *node = list().head;node;node=node->next)
+                        {
+                            if(node->isWellFormed()) return false;
+                        }
+                        break;
+                }
+
+                return true;
+            }
+
 
         }
 

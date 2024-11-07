@@ -12,10 +12,24 @@ namespace Yttrium
     {
         namespace Syntax
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Wildcard using an existing ROBUST rule
+            //
+            //
+            //__________________________________________________________________
             class Wildcard : public Internal
             {
             protected:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                //! setup with name, uuid and existing rule
                 template <typename NAME> inline
                 explicit Wildcard(const NAME   & _name,
                                   const uint32_t _uuid,
@@ -29,7 +43,13 @@ namespace Yttrium
             public:
                 virtual ~Wildcard() noexcept;
 
-                const Rule & rule;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Rule & rule; //!< existing ROBUST rule
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wildcard);

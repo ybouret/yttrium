@@ -14,24 +14,49 @@ namespace Yttrium
         namespace Syntax
         {
 
-            
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Terminal rule matching lexemes
+            //
+            //
+            //__________________________________________________________________
             class Terminal : public Rule
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! Standard or Univocal termainl
                 enum Kind
                 {
-                    Standard,
-                    Univocal
+                    Standard, //!< may take multiple form
+                    Univocal  //!< may take only one form, expandable content
                 };
 
+                //! Semantic of Dividing
                 enum Role
                 {
-                    Semantic,
-                    Dividing
+                    Semantic, //!< keep in AST
+                    Dividing  //!< remove from AST
                 };
 
+                //! identifier
                 static const uint32_t UUID = Y_FOURCC('T','E','R','M');
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup and qualifu
                 template <typename NAME> inline
                 explicit Terminal(const NAME & _name,
                                   const Kind   _kind,
@@ -43,15 +68,27 @@ namespace Yttrium
                     Y_Lingo_Syntax_Rule(Terminal);
                 }
 
+                //! cleanup
                 virtual ~Terminal() noexcept;
 
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual void viz(OutputStream &fp)        const; //!< emit code
+                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< accept matching name lexeme
+                virtual bool robust()            const noexcept; //!< true
 
-                virtual void viz(OutputStream &fp)        const;
-                virtual bool accepts(Y_Lingo_Syntax_Args) const;
-                virtual bool robust() const noexcept; //!< true
-
-                const Kind kind;
-                const Role role;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Kind kind; //!< manage content
+                const Role role; //!< manage AST
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

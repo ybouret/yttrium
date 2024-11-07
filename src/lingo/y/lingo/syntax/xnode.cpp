@@ -26,7 +26,7 @@ namespace Yttrium
             }
 
 
-            XNode * XNode:: CreateFrom(const Rule &rule, Lexeme * const unit)
+            XNode * XNode:: CreateFrom(const Syntax::Terminal &rule, Lexeme * const unit)
             {
                 assert(0!=unit);
                 try {
@@ -40,7 +40,7 @@ namespace Yttrium
             }
 
 
-            XNode * XNode:: CreateFrom(const Rule &rule)
+            XNode * XNode:: CreateFrom(const Syntax::Internal &rule)
             {
                 return new XNode(rule);
             }
@@ -71,6 +71,10 @@ namespace Yttrium
                 assert(Internal==type);
                 return list();
             }
+
+
+          
+
         }
 
     }

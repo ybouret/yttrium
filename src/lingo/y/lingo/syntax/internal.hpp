@@ -23,11 +23,27 @@ namespace Yttrium
             Aggregate;
             Alternate;
 #endif
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Internal rule to build more complex motifs
+            //
+            //
+            //__________________________________________________________________
             class Internal : public Rule
             {
 
             protected:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup with name and uuid
                 template <typename NAME>
                 explicit Internal(const NAME &   _name,
                                   const uint32_t _uuid) :
@@ -36,6 +52,7 @@ namespace Yttrium
                 }
 
             public:
+                //! cleanup
                 virtual ~Internal() noexcept;
 
             private:
