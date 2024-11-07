@@ -82,6 +82,36 @@ Y_UTEST(syntax)
     }
     GraphViz::Vizible::RenderPNG("opt.dot",false);
 
+    Syntax::Repeat rep0(t1,0);
+    {
+        OutputFile fp("rep0.dot");
+        fp << "digraph G{\n";
+        t1.viz(fp);
+        rep0.viz(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("rep0.dot",false);
+
+    Syntax::Repeat rep1(t1,1);
+    {
+        OutputFile fp("rep1.dot");
+        fp << "digraph G{\n";
+        t1.viz(fp);
+        rep1.viz(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("rep1.dot",false);
+
+    Syntax::Repeat repN(t1,4);
+    {
+        OutputFile fp("repN.dot");
+        fp << "digraph G{\n";
+        t1.viz(fp);
+        repN.viz(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("repN.dot",false);
+
 
 }
 Y_UDONE()
