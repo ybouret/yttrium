@@ -52,6 +52,19 @@ namespace Yttrium
                 rules.moveToFront( &Coerce(rule) );
             }
 
+            void Grammar:: no(const String &ruleName) noexcept
+            {
+                assert(!locked);
+                Rules store;
+                while(rules.size>0)
+                {
+                    AutoPtr<Rule> rule = rules.popHead();
+                    if( ruleName != *(rule->name) ) store.pushTail( rule.yield() );
+                }
+                rules.swapWith(store);
+            }
+
+
 
             void Grammar:: validate()
             {
@@ -121,6 +134,12 @@ namespace Yttrium
                 return decl( new Repeat(other,n) );
             }
 
+
+            const Rule & Grammar:: opt(const Rule &other)
+            {
+                if( !rules.owns(&other) ) throw Specific::Exception(name->c_str(),"unknown rule '%s' as option", other.name->c_str() );
+                return decl( new Option(other) );
+            }
         }
 
     }

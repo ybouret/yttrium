@@ -29,10 +29,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Aggregate Agg;
-                typedef Alternate Alt;
-                typedef Option    Opt;
-                typedef Repeat    Rep;
+                typedef Aggregate Agg; //!< alias
+                typedef Alternate Alt; //!< alias
 
                 //______________________________________________________________
                 //
@@ -61,13 +59,14 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void         add(Rule * const  rule); //!< add a new rule
-                const Rule & top() const;             //!< query top rule
-                void         top(const Rule &);       //!< set top rule
-                void         validate();
-                const Rule & operator[](const String &)     const;
-                const Rule & operator[](const char * const) const;
+                void         add(Rule * const  rule);              //!< add a new rule
+                const Rule & top() const;                          //!< query top rule
+                void         top(const Rule &);                    //!< set top rule
+                void         validate();                           //!< not empty, all connected => locked
+                const Rule & operator[](const String &)     const; //!< access by name
+                const Rule & operator[](const char * const) const; //!< access by nmae
 
+                //! helper to declare any derived Rule
                 template <typename RULE> inline
                 RULE & decl( RULE * const rule )
                 {
@@ -77,11 +76,21 @@ namespace Yttrium
                 }
 
 
-                const Rule &zom(const Rule & );
-                const Rule &oom(const Rule & );
-                const Rule &rep(const Rule &, const size_t);
+                void        no(const String &) noexcept;     //!< remove rule from unlocked grammar
+                const Rule &zom(const Rule & );              //!< zero or more rule
+                const Rule &oom(const Rule & );              //!< one or more rule
+                const Rule &rep(const Rule &, const size_t); //!< repeat rule at least some times
+                const Rule &opt(const Rule &);               //!< rule as option
 
-                
+                //! helper to declare terminal
+                template <typename NAME> inline
+                const Rule & term_(const NAME &           _name,
+                                   const Terminal::Kind   _kind,
+                                   const Terminal::Role   _role)
+                {
+                    return decl( new Terminal(_name,_kind,_role) );
+                }
+
 
 
             private:
