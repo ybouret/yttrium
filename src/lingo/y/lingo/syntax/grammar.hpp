@@ -26,6 +26,8 @@ namespace Yttrium
 
                 virtual ~Grammar() noexcept;
 
+                void add(Rule * const  rule);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules rules;
