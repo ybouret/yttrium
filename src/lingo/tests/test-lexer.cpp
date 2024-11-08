@@ -28,7 +28,7 @@ namespace {
             on("[:endl:]", *this, & Verbatim::store<Lexeme::Endl> );
         }
 
-        virtual ~Verbatim() {}
+        virtual ~Verbatim() noexcept {}
 
 
         Token content;
