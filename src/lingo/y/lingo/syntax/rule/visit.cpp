@@ -1,5 +1,5 @@
 
-#include "y/lingo/syntax/rule/visited.hpp"
+#include "y/lingo/syntax/rule/visit.hpp"
 #include "y/lingo/syntax/rules.hpp"
 #include "y/system/exception.hpp"
 
@@ -16,6 +16,10 @@ namespace Yttrium
             {
             }
 
+            Visit:: Visit(const Rule &rule) : AddressBook()
+            {
+                (*this)(rule);
+            }
 
             Visit:: ~Visit() noexcept
             {

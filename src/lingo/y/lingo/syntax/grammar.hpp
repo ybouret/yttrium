@@ -29,6 +29,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
+                typedef Aggregate Agg;
+                typedef Alternate Alt;
+                typedef Option    Opt;
+                typedef Repeat    Rep;
 
                 //______________________________________________________________
                 //
@@ -49,6 +53,8 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Grammar() noexcept;
 
+
+
                 //______________________________________________________________
                 //
                 //
@@ -58,6 +64,25 @@ namespace Yttrium
                 void         add(Rule * const  rule); //!< add a new rule
                 const Rule & top() const;             //!< query top rule
                 void         top(const Rule &);       //!< set top rule
+                void         validate();
+                const Rule & operator[](const String &)     const;
+                const Rule & operator[](const char * const) const;
+
+                template <typename RULE> inline
+                RULE & decl( RULE * const rule )
+                {
+                    assert(0!=rule);
+                    add(rule);
+                    return *rule;
+                }
+
+
+                const Rule &zom(const Rule & );
+                const Rule &oom(const Rule & );
+                const Rule &rep(const Rule &, const size_t);
+
+                
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);

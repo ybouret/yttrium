@@ -1,6 +1,7 @@
 
 #include "y/lingo/syntax/grammar.hpp"
 #include "y/system/exception.hpp"
+#include "y/lingo/syntax/rule/visit.hpp"
 
 namespace Yttrium
 {
@@ -52,6 +53,73 @@ namespace Yttrium
             }
 
 
+            void Grammar:: validate()
+            {
+                Coerce(locked) = false;
+
+                if(rules.size<=0) throw Specific::Exception(name->c_str(), "no rule in validate()");
+
+                const Rule & primary = *rules.head;
+                {
+                    const Visit visited(primary);
+                    Manifest    orphans;
+                    for(const Rule *node=primary.next;node;node=node->next)
+                    {
+                        const Rule &rule = *node;
+                        if(!visited.has(rule)) orphans << rule;
+                    }
+
+                    if(orphans.size)
+                    {
+                        String res;
+                        for(const RNode *rn=orphans.head;rn;rn=rn->next) {
+                            res += ' ';
+                            res += *(**rn).name;
+                        }
+                        throw Specific::Exception(name->c_str(),"orphaned%s",res.c_str());
+                    }
+
+                }
+
+                Coerce(locked) = true;
+
+            }
+
+            const Rule & Grammar:: operator[](const String &id) const
+            {
+
+                for(const Rule *rule=rules.head;rule;rule=rule->next)
+                {
+                    const Rule &r = *rule;
+                    if(id==*r.name) return r;
+                }
+                throw Specific::Exception(name->c_str(), "unknown rule '%s'", id.c_str());
+            }
+
+            const Rule & Grammar:: operator[](const char * const id) const
+            {
+                const String _(id);
+                return (*this)[_];
+            }
+
+
+            const Rule & Grammar:: zom(const Rule &other)
+            {
+                if( !rules.owns(&other) ) throw Specific::Exception(name->c_str(),"unknown rule '%s' in zero-or-more", other.name->c_str());
+                return decl( new Repeat(other,0) );
+            }
+
+            const Rule & Grammar:: oom(const Rule &other)
+            {
+                if( !rules.owns(&other) ) throw Specific::Exception(name->c_str(),"unknown rule '%s' in one-or-more", other.name->c_str());
+                return decl( new Repeat(other,1) );
+            }
+
+            const Rule & Grammar:: rep(const Rule &other, const size_t n)
+            {
+                if( !rules.owns(&other) ) throw Specific::Exception(name->c_str(),"unknown rule '%s' in repeat>=%u", other.name->c_str(), unsigned(n));
+                return decl( new Repeat(other,n) );
+            }
 
         }
 

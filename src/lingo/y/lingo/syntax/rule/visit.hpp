@@ -31,8 +31,9 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Visit();           //!< setup empty
-                virtual ~Visit() noexcept;  //!< cleanup
+                explicit Visit();             //!< setup empty
+                explicit Visit(const Rule &); //!< setup with rules
+                virtual ~Visit() noexcept;    //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -41,7 +42,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! recursive visti
+                //! recursive visit
                 void operator()(const Rule &);
 
 

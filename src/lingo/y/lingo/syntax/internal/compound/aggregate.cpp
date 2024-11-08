@@ -1,7 +1,5 @@
 
 #include "y/lingo/syntax/internal/compound/aggregate.hpp"
-#include "y/system/exception.hpp"
-#include "y/lingo/syntax/rule/visited.hpp"
 
 namespace Yttrium
 {
@@ -28,13 +26,7 @@ namespace Yttrium
                 vizLink(fp);
             }
 
-            bool Aggregate:: robust() const  
-            {
-                checkNotEmpty("Aggregate::robust()",name->c_str());
 
-
-                throw Exception("todo");
-            }
 
             bool Aggregate:: accepts(Y_Lingo_Syntax_Args) const
             {
@@ -76,8 +68,46 @@ namespace Yttrium
                 assert(tree->isWellFormed());
                 return true;
             }
+
         }
 
     }
 
 }
+
+#include "y/lingo/syntax/rule/visit.hpp"
+#include "y/system/exception.hpp"
+//#include "y/lingo/syntax/rules.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+
+
+            bool Aggregate:: robust() const
+            {
+                static const char fn[] = "Aggregate::robust()";
+                checkNotEmpty(fn,name->c_str());
+
+                const Rule & self = *this;
+                for(const RNode *node=manifest.head;node;node=node->next)
+                {
+                    const Rule & rule = **node;
+                    {
+                        const Visit  visited(rule);
+                        if( visited.has(self) )
+                            throw Specific::Exception(fn, "early recursive '%s' in '%s' during look up", self.name->c_str(), rule.name->c_str());
+                    }
+                    if( rule.robust() ) return true;
+                }
+                return false;
+            }
+
+        }
+    }
+}
+
+
