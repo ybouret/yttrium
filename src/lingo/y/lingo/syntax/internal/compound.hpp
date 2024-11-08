@@ -12,9 +12,14 @@ namespace Yttrium
     {
         namespace Syntax
         {
-
-            typedef Small::BareLightList<const Rule> Manifest;
-            typedef Manifest::NodeType               RNode;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions for Compound
+            //
+            //__________________________________________________________________
+            typedef Small::BareLightList<const Rule> Manifest; //!< alias
+            typedef Manifest::NodeType               RNode;    //!< alias
 
             //__________________________________________________________________
             //
@@ -57,11 +62,15 @@ namespace Yttrium
                 //! add existing rule to manifest
                 void add(const Rule &);
 
+                //! alias to add()
                 Compound & operator<<(const Rule &);
                 
 
             protected:
+                //! arrows to manifest, numbered if more than one
                 void vizLink(OutputStream &) const;
+
+                //! check that rule 'id' is not empty in calling 'fn'
                 void checkNotEmpty(const char * const fn,
                                    const char * const id) const;
 

@@ -14,14 +14,34 @@ namespace Yttrium
         namespace Syntax
         {
             
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Probing visited rules from one rule
+            //
+            //
+            //__________________________________________________________________
             class Visit  : public AddressBook
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Visit();           //!< setup empty
+                virtual ~Visit() noexcept;  //!< cleanup
 
-                explicit Visit();
-                virtual ~Visit() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! recursive visti
                 void operator()(const Rule &);
 
 

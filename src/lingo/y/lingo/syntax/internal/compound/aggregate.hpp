@@ -11,12 +11,33 @@ namespace Yttrium
     {
         namespace Syntax
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Aggregate of existing rules
+            //
+            //
+            //__________________________________________________________________
             class Aggregate : public Compound
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('X', 'A', 'G', 'G');
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const uint32_t UUID = Y_FOURCC('X', 'A', 'G', 'G'); //!< identifier
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup with name
                 template <typename NAME> inline
                 explicit Aggregate(const NAME & _name) :
                 Compound(_name,UUID)
@@ -24,11 +45,24 @@ namespace Yttrium
                     Y_Lingo_Syntax_Rule(Aggregate);
                 }
 
+                //! cleanup
                 virtual ~Aggregate() noexcept;
 
-                Aggregate & operator += (const Rule &);
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                Aggregate & operator += (const Rule &); //!< alias to add()
 
-                //! at lease one is robust
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                //! at lease one is robust, checking redundancy
                 virtual bool robust()                     const;
                 virtual void viz(OutputStream &fp)        const; //!< emit this then link
                 virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< must accept all

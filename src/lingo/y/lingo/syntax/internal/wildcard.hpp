@@ -22,7 +22,7 @@ namespace Yttrium
             class Wildcard : public Internal
             {
             protected:
-                static const char Constructor[];
+                static const char Constructor[]; //!< "constructor"
 
                 //______________________________________________________________
                 //
@@ -42,6 +42,7 @@ namespace Yttrium
                 }
 
             public:
+                //! cleanup
                 virtual ~Wildcard() noexcept;
 
                 //______________________________________________________________
