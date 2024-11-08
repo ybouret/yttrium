@@ -29,7 +29,9 @@ namespace Yttrium
                 virtual ~Alternate() noexcept;
 
                 Alternate & operator |= (const Rule &);
-
+                virtual void viz(OutputStream &fp)        const; //!< GraphViz code
+                virtual bool robust()            const noexcept; //!< true if one is robust
+                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< first non trivial
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

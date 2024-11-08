@@ -62,9 +62,16 @@ namespace Yttrium
             protected:
                 virtual void vizLink(OutputStream &) const;
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Manifest manifest; //!< list of existing rules
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
-                Manifest manifest;
                 virtual ConstInterface & surrogate() const noexcept;
 
             };

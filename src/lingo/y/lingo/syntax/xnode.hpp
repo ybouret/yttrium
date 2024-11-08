@@ -24,7 +24,10 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class XNode : public Object, public GraphViz::Vizible
+            class XNode :
+            public Object,
+            public Serializable,
+            public GraphViz::Vizible
             {
             public:
                 //______________________________________________________________
@@ -61,6 +64,14 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual size_t serialize(OutputStream &) const; //! [Serializable]
+
+                //______________________________________________________________
+                //
+                //
                 // Methods
                 //
                 //______________________________________________________________
@@ -73,6 +84,8 @@ namespace Yttrium
 
                 //! full consistency check, mostly for debug
                 bool isWellFormed() const;
+
+
 
                 Lexeme &       lexeme()       noexcept; //!< access lexeme if Terminal
                 const Lexeme & lexeme() const noexcept; //!< access lexeme if Terminal
