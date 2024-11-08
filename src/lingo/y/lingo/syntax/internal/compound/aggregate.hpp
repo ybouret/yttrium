@@ -28,9 +28,10 @@ namespace Yttrium
 
                 Aggregate & operator += (const Rule &);
 
-                virtual void viz(OutputStream &fp)        const;
-                virtual bool robust()            const noexcept;
-                virtual bool accepts(Y_Lingo_Syntax_Args) const;
+                //! at lease one is robust
+                virtual bool robust()                     const;
+                virtual void viz(OutputStream &fp)        const; //!< emit this then link
+                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< must accept all
 
 
             private:

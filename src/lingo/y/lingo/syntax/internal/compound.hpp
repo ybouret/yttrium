@@ -37,7 +37,8 @@ namespace Yttrium
                 template <typename NAME> inline
                 explicit Compound(const NAME   & _name,
                                   const uint32_t _uuid ) :
-                Internal(_name,_uuid)
+                Internal(_name,_uuid),
+                manifest()
                 {
                 }
 
@@ -60,7 +61,9 @@ namespace Yttrium
                 
 
             protected:
-                virtual void vizLink(OutputStream &) const;
+                void vizLink(OutputStream &) const;
+                void checkNotEmpty(const char * const fn,
+                                   const char * const id) const;
 
                 //______________________________________________________________
                 //

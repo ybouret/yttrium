@@ -68,8 +68,8 @@ namespace Yttrium
                 //______________________________________________________________
                 virtual void viz(OutputStream &fp)        const = 0; //!< GraphViz code
                 virtual bool accepts(Y_Lingo_Syntax_Args) const = 0; //!< accepts lexer/source
-                virtual bool robust()            const noexcept = 0; //!< accepted is never empty
-                bool         flimsy()            const noexcept;     //!< !robust()
+                virtual bool robust()                     const = 0; //!< accepted is never empty
+                bool         flimsy()                     const;     //!< !robust()
 
                 //______________________________________________________________
                 //

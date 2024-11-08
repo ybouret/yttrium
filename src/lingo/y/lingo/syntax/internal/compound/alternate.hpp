@@ -30,7 +30,7 @@ namespace Yttrium
 
                 Alternate & operator |= (const Rule &);
                 virtual void viz(OutputStream &fp)        const; //!< GraphViz code
-                virtual bool robust()            const noexcept; //!< true if one is robust
+                virtual bool robust()                     const; //!< false is one is flimsy
                 virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< first non trivial
 
             private:

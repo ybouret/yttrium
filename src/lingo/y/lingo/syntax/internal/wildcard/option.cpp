@@ -11,7 +11,7 @@ namespace Yttrium
             {
             }
 
-            bool Option:: robust() const noexcept { return false; }
+            bool Option:: robust() const   { return false; }
 
             void Option:: viz(OutputStream &fp) const
             {

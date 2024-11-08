@@ -22,6 +22,8 @@ namespace Yttrium
             class Wildcard : public Internal
             {
             protected:
+                static const char Constructor[];
+
                 //______________________________________________________________
                 //
                 //
@@ -36,7 +38,7 @@ namespace Yttrium
                 Internal(_name,_uuid),
                 rule(_rule)
                 {
-                    checkRobustness();
+                    checkRobustness(Constructor);
                 }
 
             public:
@@ -52,7 +54,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
-                void checkRobustness() const;
+                
+            protected:
+                void checkRobustness(const char * const) const; //!< check robustness
             };
         }
 

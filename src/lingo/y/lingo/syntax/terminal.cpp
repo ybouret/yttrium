@@ -60,7 +60,7 @@ namespace Yttrium
                 return true;
             }
 
-            bool Terminal:: robust() const noexcept
+            bool Terminal:: robust() const
             {
                 return true;
             }

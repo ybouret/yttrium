@@ -119,7 +119,7 @@ namespace Yttrium
 
                 //! make a terminal
                 explicit XNode(const Syntax::Terminal &   _rule,
-                               Lexeme * const _unit) noexcept;
+                               Lexeme * const             _unit) noexcept;
 
                 //! make an internal
                 explicit XNode(const Syntax::Internal &   _rule) noexcept;

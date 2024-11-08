@@ -1,5 +1,6 @@
 
 #include "y/lingo/syntax/internal/compound.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -45,6 +46,18 @@ namespace Yttrium
                 }
 
             }
+
+
+            void Compound:: checkNotEmpty(const char * const fn,
+                                          const char * const id) const
+            {
+                assert(0!=fn);
+                assert(0!=id);
+                if(manifest.size<=0)
+                    throw Specific::Exception(fn,"empty '%s'",id);
+            }
+
+
         }
 
     }

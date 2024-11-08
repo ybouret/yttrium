@@ -35,7 +35,7 @@ namespace Yttrium
             }
 
 
-            bool Repeat:: robust() const noexcept { return atLeast>0; }
+            bool Repeat:: robust() const { return atLeast>0; }
 
             void Repeat:: viz(OutputStream &fp) const
             {
@@ -49,7 +49,7 @@ namespace Yttrium
 
             bool Repeat:: accepts(Y_Lingo_Syntax_Args) const
             {
-
+                // checkRobustness("accepts()");
                 // initializing
                 XNode         *localTree = XNode::CreateFrom(*this);
                 AutoPtr<XNode> guardTree = localTree;
