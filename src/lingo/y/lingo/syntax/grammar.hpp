@@ -13,9 +13,32 @@ namespace Yttrium
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Grammar is a list of rule
+            //
+            //
+            //__________________________________________________________________
             class Grammar : public Entity, public Proxy<const Rules>
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup empty with given name
                 template <typename NAME> inline
                 explicit Grammar(const NAME & _name) :
                 Entity(_name,AsCaption),
@@ -24,16 +47,26 @@ namespace Yttrium
                 {
                 }
 
+                //! cleanup
                 virtual ~Grammar() noexcept;
 
-                void add(Rule * const  rule);
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void         add(Rule * const  rule); //!< add a new rule
+                const Rule & top() const;             //!< query top rule
+                void         top(const Rule &);       //!< set top rule
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules rules;
                 virtual ConstInterface & surrogate() const noexcept;
+                
             public:
-                const bool  locked;
+                const bool  locked; //!< status
             };
 
         }

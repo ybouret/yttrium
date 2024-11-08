@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Lingo_Syntax_Internal_Included
@@ -13,17 +11,6 @@ namespace Yttrium
     {
         namespace Syntax
         {
-#if 0
-            Wildcard;
-            Compound;
-
-            Option;
-            Repeat;
-
-            Aggregate;
-            Alternate;
-#endif
-
             //__________________________________________________________________
             //
             //
