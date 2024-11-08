@@ -57,6 +57,28 @@ namespace Yttrium
                     throw Specific::Exception(fn,"empty '%s'",id);
             }
 
+            String Compound:: MakeNameFor(const Manifest &list,
+                                          const char      sep)
+            {
+                switch(list.size)
+                {
+                    case 0: return String();
+                    case 1: return *(**(list.head)).name;
+                    default:
+                        break;
+                }
+                String ans  = '(';
+                {
+                    const RNode *node = list.head;
+                    ans += *(**node).name;
+                    for(node=node->next;node;node=node->next)
+                    {
+                        ans += sep;
+                        ans += *(**node).name;
+                    }
+                }
+                return ans += ')';
+            }
 
         }
 

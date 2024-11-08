@@ -65,6 +65,7 @@ namespace Yttrium
                 //! alias to add()
                 Compound & operator<<(const Rule &);
                 
+                static String MakeNameFor(const Manifest &, const char);
 
             protected:
                 //! arrows to manifest, numbered if more than one

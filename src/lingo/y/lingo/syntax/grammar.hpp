@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Lingo_Syntax_Grammar_Included

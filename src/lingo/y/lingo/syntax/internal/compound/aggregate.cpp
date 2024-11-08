@@ -1,6 +1,7 @@
 
 #include "y/lingo/syntax/internal/compound/aggregate.hpp"
-#include "y/exception.hpp"
+#include "y/system/exception.hpp"
+#include "y/lingo/syntax/rule/visited.hpp"
 
 namespace Yttrium
 {
@@ -30,6 +31,7 @@ namespace Yttrium
             bool Aggregate:: robust() const  
             {
                 checkNotEmpty("Aggregate::robust()",name->c_str());
+
 
                 throw Exception("todo");
             }
