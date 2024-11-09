@@ -68,13 +68,14 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 virtual size_t serialize(OutputStream &) const; //! [Serializable]
-
                 //______________________________________________________________
                 //
                 //
                 // Methods
                 //
                 //______________________________________________________________
+                void           viz(OutputStream &)       const; //!< write graphviz code
+
 
                 //! returning to lexer a rejected Xnode
                 static void BackToLexer(Lexer &, XNode * const) noexcept;
@@ -87,12 +88,13 @@ namespace Yttrium
 
 
 
-                Lexeme &       lexeme()       noexcept; //!< access lexeme if Terminal
-                const Lexeme & lexeme() const noexcept; //!< access lexeme if Terminal
-                XList        & branch()       noexcept; //!< access XList if Internal
-                const XList  & branch() const noexcept; //!< access XList if Internal
+                Lexeme &       lexeme()              noexcept; //!< access lexeme if Terminal
+                const Lexeme & lexeme()        const noexcept; //!< access lexeme if Terminal
+                XList        & branch()              noexcept; //!< access XList if Internal
+                const XList  & branch()        const noexcept; //!< access XList if Internal
                 void           fusion(XNode * const) noexcept; //!< take ownership of a node
                 void           fusion(XList &)       noexcept; //!< take ownership of a list
+                const String  &name()          const noexcept; //!< rule name
 
                 //______________________________________________________________
                 //
@@ -124,7 +126,8 @@ namespace Yttrium
                 //! make an internal
                 explicit XNode(const Syntax::Internal &   _rule) noexcept;
 
-
+                void vizTerminal(OutputStream &) const;
+                void vizInternal(OutputStream &) const;
             };
 
         
