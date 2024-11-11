@@ -17,11 +17,16 @@ namespace Yttrium
                 return *this;
             }
 
+            const char * Aggregate:: vizShape() const noexcept
+            {
+                return "house";
+            }
+
             void Aggregate:: viz(OutputStream &fp) const
             {
                 Node(fp,this) << "[";
                 Label(fp, *name);
-                fp << ",shape=house";
+                emitShape(fp);
                 Endl(fp << "]");
                 vizLink(fp);
             }

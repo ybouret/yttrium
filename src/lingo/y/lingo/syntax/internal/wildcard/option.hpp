@@ -50,9 +50,10 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void viz(OutputStream &fp)        const; //!< this + arrow to rule
-                virtual bool robust()                     const; //!< false
-                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< true, rule content or nothing
+                virtual void         viz(OutputStream &fp)        const; //!< this + arrow to rule
+                virtual bool         robust()                     const; //!< false
+                virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< true, rule content or nothing
+                virtual const char * vizShape()          const noexcept; //!< box
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Option);

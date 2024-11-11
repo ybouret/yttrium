@@ -26,12 +26,17 @@ namespace Yttrium
                 return Terminal::UUID == uuid ? XNode::Terminal : XNode::Internal;
             }
 
+            const char * Terminal:: vizShape() const noexcept
+            {
+                return "box";
+            }
 
             void Terminal:: viz(OutputStream &fp) const
             {
                 Node(fp,this) << '[';
                 Label(fp,*name);
-                fp << "shape=box,style=\"filled";
+                emitShape(fp);
+                fp << "style=\"filled";
                 switch(kind)
                 {
                     case Univocal: fp << ",bold"; break;
@@ -43,6 +48,7 @@ namespace Yttrium
                     case Semantic: break;
                     case Dividing: fp << ",dashed"; break;
                 }
+
                 Endl(fp << '\"' << ']');
             }
 

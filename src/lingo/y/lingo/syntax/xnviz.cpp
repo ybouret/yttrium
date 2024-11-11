@@ -45,8 +45,11 @@ namespace Yttrium
                     fp << "\"";
                 }
 
+                // modify shape
+                rule.emitShape(fp);
+
                 // modify style
-                fp << "shape=box,style=\"filled";
+                fp << ",style=\"filled";
 
                 fp << "\"";
                 Endl(fp << ']');
@@ -63,6 +66,7 @@ namespace Yttrium
                 // emit this
                 Node(fp,this) << '[';
                 Label(fp,name());
+                rule.emitShape(fp);
 
                 // modify according to UUID
                 switch(rule.uuid)

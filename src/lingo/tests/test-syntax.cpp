@@ -42,6 +42,10 @@ namespace Yttrium
                     return true;
                 }
 
+                virtual const char * vizShape() const noexcept
+                {
+                    return "oval";
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sim);

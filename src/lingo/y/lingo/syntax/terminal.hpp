@@ -77,10 +77,11 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void viz(OutputStream &fp)        const; //!< emit code
-                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< accept matching name lexeme
-                virtual bool robust()                     const; //!< true
-
+                virtual void         viz(OutputStream &fp)        const; //!< emit code
+                virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< accept matching name lexeme
+                virtual bool         robust()                     const; //!< true
+                virtual const char * vizShape()          const noexcept; //!< box
+                
                 //______________________________________________________________
                 //
                 //

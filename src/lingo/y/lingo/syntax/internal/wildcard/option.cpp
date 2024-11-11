@@ -13,11 +13,16 @@ namespace Yttrium
 
             bool Option:: robust() const   { return false; }
 
+            const char * Option:: vizShape() const noexcept
+            {
+                return "diamond";
+            }
+
             void Option:: viz(OutputStream &fp) const
             {
                 Node(fp,this) << "[";
                 Label(fp,*name);
-                fp << ",shape=diamond";
+                emitShape(fp);
                 Endl(fp << "]");
                 Endl(Arrow(fp,this, &rule));
             }

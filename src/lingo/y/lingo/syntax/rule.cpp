@@ -53,6 +53,11 @@ namespace Yttrium
 
                 return ans;
             }
+
+            void Rule:: emitShape(OutputStream &fp) const
+            {
+                fp << ",shape=" << vizShape();
+            }
         }
 
     }

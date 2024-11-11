@@ -66,10 +66,11 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void viz(OutputStream &fp)        const = 0; //!< GraphViz code
-                virtual bool accepts(Y_Lingo_Syntax_Args) const = 0; //!< accepts lexer/source
-                virtual bool robust()                     const = 0; //!< accepted is never empty
-                bool         flimsy()                     const;     //!< !robust()
+                virtual void         viz(OutputStream &fp)        const = 0; //!< GraphViz code
+                virtual const char * vizShape()          const noexcept = 0; //!< shape
+                virtual bool         accepts(Y_Lingo_Syntax_Args) const = 0; //!< accepts lexer/source
+                virtual bool         robust()                     const = 0; //!< accepted is never empty
+                bool                 flimsy()                     const;     //!< !robust()
 
                 //______________________________________________________________
                 //
@@ -81,6 +82,7 @@ namespace Yttrium
                 bool        isInternal()      const noexcept; //!< uuid != Terminal::UUID
                 bool        isTerminal()      const noexcept; //!< uuid == Terminal::UUID
                 XNode::Type typeOfNode()      const noexcept; //!< depends on uuid
+                void        emitShape(OutputStream &)  const; //!< ",shape=" << vizShape()
 
                 //! conversion to derived class
                 template <typename RULE> inline

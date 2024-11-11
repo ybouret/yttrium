@@ -63,9 +63,10 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 //! at lease one is robust, checking redundancy
-                virtual bool robust()                     const;
-                virtual void viz(OutputStream &fp)        const; //!< emit this then link
-                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< must accept all
+                virtual bool         robust()                     const;
+                virtual void         viz(OutputStream &fp)        const; //!< emit this then link
+                virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< must accept all
+                virtual const char * vizShape()          const noexcept; //!< box
 
 
             private:
