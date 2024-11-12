@@ -91,6 +91,8 @@ namespace Yttrium
                     return decl( new Terminal(_name,_kind,_role) );
                 }
 
+                void render() const;
+
                 //______________________________________________________________
                 //
                 //

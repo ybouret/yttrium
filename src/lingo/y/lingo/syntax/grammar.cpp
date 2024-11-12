@@ -140,8 +140,39 @@ namespace Yttrium
                 if( !rules.owns(&other) ) throw Specific::Exception(name->c_str(),"unknown rule '%s' as option", other.name->c_str() );
                 return decl( new Option(other) );
             }
+
         }
 
     }
 
 }
+
+#include "y/stream/libc/output.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+
+            void Grammar:: render() const
+            {
+                const String dotFile = *name + ".dot";
+                {
+                    OutputFile fp(dotFile);
+                    GraphViz::Vizible::Enter(fp, "G");
+                    for(const Rule *rule=rules.head;rule;rule=rule->next)
+                    {
+                        rule->vizCode(fp);
+                    }
+                    GraphViz::Vizible::Leave(fp);
+                }
+                GraphViz::Vizible::RenderPNG(dotFile,false);
+            }
+        }
+
+    }
+
+}
+
