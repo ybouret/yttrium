@@ -56,7 +56,7 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
-                // Methods
+                // Methods to construct grammar
                 //
                 //______________________________________________________________
                 void         add(Rule * const  rule);              //!< add a new rule
@@ -90,6 +90,14 @@ namespace Yttrium
                 {
                     return decl( new Terminal(_name,_kind,_role) );
                 }
+
+                //______________________________________________________________
+                //
+                //
+                // running grammar
+                //
+                //______________________________________________________________
+                XNode * accept(Lexer &lexer, Source &source);
 
 
 

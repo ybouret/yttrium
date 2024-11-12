@@ -78,8 +78,9 @@ namespace Yttrium
                 // Methods for GraphViz
                 //
                 //______________________________________________________________
-                void vizArrow(OutputStream &, const Rule &) const;
+                void vizArrow(OutputStream &, const Rule &) const; //!< make a simple arroe
 
+                //! make optionally numbered arrows
                 template <typename LIST> inline
                 void vizArrows(OutputStream &fp, const LIST &rules) const
                 {
@@ -93,13 +94,11 @@ namespace Yttrium
                     for(const typename LIST::NodeType *node = rules.head;node;node=node->next,++i)
                     {
                         Arrow(fp,this,&**node) << '[';
-                        const String txt = Formatted::Get("%u",i);
-                        Label(fp,txt);
-                        Endl(fp<<']');
+                        Endl( fp("%u",i) << ']' );
                     }
                 }
 
-                void vizCode(OutputStream &fp) const; //!< GraphViz code
+                void vizCode(OutputStream &fp) const; //!< produce from vizMark and vizLink GraphViz code
 
 
 
