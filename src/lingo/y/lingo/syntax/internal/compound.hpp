@@ -55,6 +55,14 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual void vizLink(OutputStream &fp) const;
+
+                //______________________________________________________________
+                //
+                //
                 // Methods
                 //
                 //______________________________________________________________
@@ -69,8 +77,7 @@ namespace Yttrium
                 static String MakeNameFor(const Manifest &, const char);
 
             protected:
-                //! arrows to manifest, numbered if more than one
-                void vizLink(OutputStream &) const;
+                
 
                 //! check that rule 'id' is not empty in calling 'fn'
                 void checkNotEmpty(const char * const fn,

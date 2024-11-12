@@ -16,7 +16,7 @@ namespace Yttrium
             void Rule:: graphViz(OutputStream &fp) const
             {
                 Enter(fp, "G");
-                viz(fp);
+                vizCode(fp);
                 Leave(fp);
             }
 
@@ -54,10 +54,25 @@ namespace Yttrium
                 return ans;
             }
 
-            void Rule:: emitShape(OutputStream &fp) const
+            void Rule:: vizCode(OutputStream &fp) const
             {
-                fp << ",shape=" << vizShape();
+                Node(fp,this) << '[';
+                Label(fp,*name);
+                vizMark(fp);
+                Endl(fp << ']');
+                vizLink(fp);
             }
+
+            void Rule:: vizLink(OutputStream &) const
+            {
+
+            }
+
+            void Rule:: vizArrow(OutputStream &fp, const Rule &r) const
+            {
+                Endl(Arrow(fp,this,&r));
+            }
+
         }
 
     }

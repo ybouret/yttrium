@@ -37,20 +37,11 @@ namespace Yttrium
 
             bool Repeat:: robust() const { return atLeast>0; }
 
-            const char * Repeat:: vizShape() const noexcept
+            void Repeat:: vizMark(OutputStream &fp) const
             {
-                return "component";
+                fp << ",shape=component";
             }
-
-            void Repeat:: viz(OutputStream &fp) const
-            {
-                Node(fp,this) << "[";
-                Label(fp,*name);
-                emitShape(fp);
-                Endl(fp << "]");
-                Endl(Arrow(fp,this, &rule));
-            }
-
+            
 
             bool Repeat:: accepts(Y_Lingo_Syntax_Args) const
             {

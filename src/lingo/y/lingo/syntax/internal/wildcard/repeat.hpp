@@ -50,10 +50,9 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void         viz(OutputStream &fp)        const; //!< this + arrow to rule
-                virtual bool         robust()                     const; //!< atLeast>0
-                virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< true, rule content or nothing
-                virtual const char * vizShape()          const noexcept; //!< box
+                virtual bool robust()                     const; //!< atLeast>0
+                virtual bool accepts(Y_Lingo_Syntax_Args) const; //!< true, rule content or nothing
+                virtual void vizMark(OutputStream &)      const; //!< depending on atLeast
 
                 //______________________________________________________________
                 //

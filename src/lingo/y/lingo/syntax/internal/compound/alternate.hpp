@@ -63,10 +63,9 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void         viz(OutputStream &fp)        const; //!< GraphViz code
                 virtual bool         robust()                     const; //!< false is one is flimsy
                 virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< first non trivial
-                virtual const char * vizShape()          const noexcept; //!< box
+                virtual void         vizMark(OutputStream &)      const; //!< for graphViz
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);

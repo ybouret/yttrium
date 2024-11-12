@@ -23,6 +23,11 @@ namespace Yttrium
                     throw Specific::Exception( name->c_str(), "<%s> is not robust in %s", rule.name->c_str(), fn);
             }
 
+            void Wildcard:: vizLink(OutputStream &fp) const
+            {
+                vizArrow(fp,rule);
+            }
+
         }
 
     }

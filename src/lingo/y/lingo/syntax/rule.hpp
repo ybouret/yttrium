@@ -66,11 +66,42 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void         viz(OutputStream &fp)        const = 0; //!< GraphViz code
-                virtual const char * vizShape()          const noexcept = 0; //!< shape
                 virtual bool         accepts(Y_Lingo_Syntax_Args) const = 0; //!< accepts lexer/source
                 virtual bool         robust()                     const = 0; //!< accepted is never empty
                 bool                 flimsy()                     const;     //!< !robust()
+                virtual void         vizMark(OutputStream &)      const = 0; //!< after label in node modified
+                virtual void         vizLink(OutputStream &)      const;     //!< default : do nothing
+
+                //______________________________________________________________
+                //
+                //
+                // Methods for GraphViz
+                //
+                //______________________________________________________________
+                void vizArrow(OutputStream &, const Rule &) const;
+
+                template <typename LIST> inline
+                void vizArrows(OutputStream &fp, const LIST &rules) const
+                {
+                    switch(rules.size) {
+                        case 0: return;
+                        case 1: vizArrow(fp, **(rules.head) ); return;
+                        default:
+                            break;
+                    }
+                    unsigned i = 1;
+                    for(const typename LIST::NodeType *node = rules.head;node;node=node->next,++i)
+                    {
+                        Arrow(fp,this,&**node) << '[';
+                        const String txt = Formatted::Get("%u",i);
+                        Label(fp,txt);
+                        Endl(fp<<']');
+                    }
+                }
+
+                void vizCode(OutputStream &fp) const; //!< GraphViz code
+
+
 
                 //______________________________________________________________
                 //
@@ -82,7 +113,6 @@ namespace Yttrium
                 bool        isInternal()      const noexcept; //!< uuid != Terminal::UUID
                 bool        isTerminal()      const noexcept; //!< uuid == Terminal::UUID
                 XNode::Type typeOfNode()      const noexcept; //!< depends on uuid
-                void        emitShape(OutputStream &)  const; //!< ",shape=" << vizShape()
 
                 //! conversion to derived class
                 template <typename RULE> inline

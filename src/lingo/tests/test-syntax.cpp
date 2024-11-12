@@ -42,9 +42,9 @@ namespace Yttrium
                     return true;
                 }
 
-                virtual const char * vizShape() const noexcept
+                virtual void vizMark(OutputStream &fp) const
                 {
-                    return "oval";
+                    Label(fp,*name) << ",shape=oval";
                 }
 
             private:
@@ -81,8 +81,8 @@ Y_UTEST(syntax)
     {
         OutputFile fp("opt.dot");
         fp << "digraph G{\n";
-        t1.viz(fp);
-        opt.viz(fp);
+        t1.vizCode(fp);
+        opt.vizCode(fp);
         fp << "}\n";
     }
     GraphViz::Vizible::RenderPNG("opt.dot",false);
@@ -91,8 +91,8 @@ Y_UTEST(syntax)
     {
         OutputFile fp("rep0.dot");
         fp << "digraph G{\n";
-        t1.viz(fp);
-        rep0.viz(fp);
+        t1.vizCode(fp);
+        rep0.vizCode(fp);
         fp << "}\n";
     }
     GraphViz::Vizible::RenderPNG("rep0.dot",false);
@@ -101,8 +101,8 @@ Y_UTEST(syntax)
     {
         OutputFile fp("rep1.dot");
         fp << "digraph G{\n";
-        t1.viz(fp);
-        rep1.viz(fp);
+        t1.vizCode(fp);
+        rep1.vizCode(fp);
         fp << "}\n";
     }
     GraphViz::Vizible::RenderPNG("rep1.dot",false);
@@ -111,8 +111,8 @@ Y_UTEST(syntax)
     {
         OutputFile fp("repN.dot");
         fp << "digraph G{\n";
-        t1.viz(fp);
-        repN.viz(fp);
+        t1.vizCode(fp);
+        repN.vizCode(fp);
         fp << "}\n";
     }
     GraphViz::Vizible::RenderPNG("repN.dot",false);

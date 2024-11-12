@@ -13,19 +13,12 @@ namespace Yttrium
 
             bool Option:: robust() const   { return false; }
 
-            const char * Option:: vizShape() const noexcept
+
+            void Option:: vizMark(OutputStream &fp) const
             {
-                return "diamond";
+               fp << ",shape=diamond";
             }
 
-            void Option:: viz(OutputStream &fp) const
-            {
-                Node(fp,this) << "[";
-                Label(fp,*name);
-                emitShape(fp);
-                Endl(fp << "]");
-                Endl(Arrow(fp,this, &rule));
-            }
 
 
             bool Option:: accepts(Y_Lingo_Syntax_Args) const

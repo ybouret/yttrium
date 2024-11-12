@@ -17,20 +17,12 @@ namespace Yttrium
                 return *this;
             }
 
-
-            const char * Alternate:: vizShape() const noexcept
+            void Alternate:: vizMark(OutputStream &fp) const
             {
-                return "egg";
+                fp << ",shape=egg";
             }
 
-            void Alternate:: viz(OutputStream &fp) const
-            {
-                Node(fp,this) << "[";
-                Label(fp, *name);
-                emitShape(fp);
-                Endl(fp << "]");
-                vizLink(fp);
-            }
+            
 
             bool Alternate:: robust() const
             {

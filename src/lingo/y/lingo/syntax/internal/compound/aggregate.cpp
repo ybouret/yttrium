@@ -17,20 +17,10 @@ namespace Yttrium
                 return *this;
             }
 
-            const char * Aggregate:: vizShape() const noexcept
+            void Aggregate:: vizMark(OutputStream &fp) const
             {
-                return "house";
+                fp << ",shape=house";
             }
-
-            void Aggregate:: viz(OutputStream &fp) const
-            {
-                Node(fp,this) << "[";
-                Label(fp, *name);
-                emitShape(fp);
-                Endl(fp << "]");
-                vizLink(fp);
-            }
-
 
 
             bool Aggregate:: accepts(Y_Lingo_Syntax_Args) const

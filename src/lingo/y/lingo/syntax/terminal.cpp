@@ -26,20 +26,13 @@ namespace Yttrium
                 return Terminal::UUID == uuid ? XNode::Terminal : XNode::Internal;
             }
 
-            const char * Terminal:: vizShape() const noexcept
+            void Terminal:: vizMark(OutputStream &fp) const
             {
-                return "box";
-            }
-
-            void Terminal:: viz(OutputStream &fp) const
-            {
-                Node(fp,this) << '[';
-                Label(fp,*name);
-                emitShape(fp);
-                fp << "style=\"filled";
+                fp << ",shape=box";
+                fp << ",style=\"filled";
                 switch(kind)
                 {
-                    case Univocal: fp << ",bold"; break;
+                    case Univocal: fp << ",rounded"; break;
                     case Standard: break;
                 }
 
@@ -48,10 +41,8 @@ namespace Yttrium
                     case Semantic: break;
                     case Dividing: fp << ",dashed"; break;
                 }
-
-                Endl(fp << '\"' << ']');
+                fp << "\"";
             }
-
 
             bool Terminal:: accepts(Y_Lingo_Syntax_Args) const
             {

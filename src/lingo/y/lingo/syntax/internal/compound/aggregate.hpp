@@ -63,11 +63,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 //! at lease one is robust, checking redundancy
-                virtual bool         robust()                     const;
-                virtual void         viz(OutputStream &fp)        const; //!< emit this then link
+                virtual bool         robust()                     const; 
                 virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< must accept all
-                virtual const char * vizShape()          const noexcept; //!< box
-
+                virtual void         vizMark(OutputStream &)      const; //!< graphViz code
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

@@ -45,6 +45,9 @@ namespace Yttrium
                 //! cleanup
                 virtual ~Wildcard() noexcept;
 
+
+                virtual void vizLink(OutputStream &fp) const;
+
                 //______________________________________________________________
                 //
                 //

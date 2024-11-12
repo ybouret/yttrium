@@ -26,25 +26,7 @@ namespace Yttrium
 
             void Compound:: vizLink(OutputStream &fp) const
             {
-                switch(manifest.size)
-                {
-                    case 0: return;
-                    case 1:
-                        Endl(Arrow(fp,this,&**manifest.head));
-                        return;
-                    default:
-                        break;
-                }
-
-                unsigned i = 1;
-                for(const RNode *node = manifest.head;node;node=node->next,++i)
-                {
-                    Arrow(fp,this,&**manifest.head) << '[';
-                    const String txt = Formatted::Get("%u",i);
-                    Label(fp,txt);
-                    Endl(fp<<']');
-                }
-
+                vizArrows(fp,manifest);
             }
 
 
