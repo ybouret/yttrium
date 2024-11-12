@@ -45,11 +45,7 @@ namespace Yttrium
                     fp << "\"";
                 }
 
-                // modify shape
-                //rule.emitShape(fp);
-
-                // modify style
-                fp << ",style=\"filled";
+                term.vizMark(fp);
 
                 fp << "\"";
                 Endl(fp << ']');
@@ -66,15 +62,7 @@ namespace Yttrium
                 // emit this
                 Node(fp,this) << '[';
                 Label(fp,name());
-                //rule.emitShape(fp);
-
-                // modify according to UUID
-                switch(rule.uuid)
-                {
-                    default:
-                        throw Specific::Exception("XNode::vizInternal","unexpected internal '%s'", name().c_str());
-                }
-
+                rule.vizMark(fp);
                 Endl(fp<<']');
 
                 // link to list with numbering if necessary

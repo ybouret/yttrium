@@ -119,8 +119,30 @@ Y_UTEST(syntax)
 
 
     Syntax::Aggregate agg("agg");
-    Syntax::Alternate alt("alt");
+    agg += t1;
+    agg += t2;
+    {
+        OutputFile fp("agg.dot");
+        fp << "digraph G{\n";
+        t1.vizCode(fp);
+        t2.vizCode(fp);
+        agg.vizCode(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("agg.dot",false);
 
+    Syntax::Alternate alt("alt");
+    alt |= t1;
+    alt |= t2;
+    {
+        OutputFile fp("alt.dot");
+        fp << "digraph G{\n";
+        t1.vizCode(fp);
+        t2.vizCode(fp);
+        alt.vizCode(fp);
+        fp << "}\n";
+    }
+    GraphViz::Vizible::RenderPNG("alt.dot",false);
 
     Syntax::Visit visit;
     visit(t1);
