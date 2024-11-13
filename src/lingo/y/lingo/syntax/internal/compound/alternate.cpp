@@ -13,7 +13,7 @@ namespace Yttrium
 
             Alternate & Alternate:: operator |= (const Rule &rule)
             {
-                add(rule);
+                *this << rule;
                 return *this;
             }
 
@@ -22,7 +22,10 @@ namespace Yttrium
                 fp << ",shape=egg";
             }
 
-            
+            void Alternate:: acknowledge() noexcept
+            {
+                manifest.noMultiple();
+            }
 
             bool Alternate:: robust() const
             {

@@ -107,7 +107,6 @@ namespace Yttrium
                     if(id==*r.name) return rule;
                 }
                 return 0;
-                //throw Specific::Exception(name->c_str(), "unknown rule '%s'", id.c_str());
             }
 
             const Rule *Grammar:: query(const char * const id) const
@@ -142,6 +141,33 @@ namespace Yttrium
                 return decl( new Option(other) );
             }
 
+
+            const Rule & Grammar:: pick(const Rule &a, const Rule &b)
+            {
+                Manifest tmp;
+                tmp << a << b;
+                return pick(tmp);
+            }
+
+            const Rule & Grammar:: pick(const Rule &a, const Rule &b, const Rule &c)
+            {
+                Manifest tmp;
+                tmp << a << b << c;
+                return pick(tmp);
+            }
+
+            const Rule & Grammar:: pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d)
+            {
+                Manifest tmp;
+                tmp << a << b << c << d;
+                return pick(tmp);
+            }
+
+            const Rule & Grammar:: pick(const Manifest &tmp)
+            {
+                const String uid = Compound::MakeNameFor(tmp, '|');
+                return alt(uid) << tmp;
+            }
         }
 
     }

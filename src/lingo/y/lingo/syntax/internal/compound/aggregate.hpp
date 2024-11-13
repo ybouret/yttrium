@@ -29,6 +29,12 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const uint32_t UUID = Y_FOURCC('X', 'A', 'G', 'G'); //!< identifier
+                enum Type
+                {
+                    Definite, //!< definite name
+                    Grouping, //!< only to group, always merge
+                    NoSingle  //!< definite but merge if remaining only one AST
+                };
 
                 //______________________________________________________________
                 //
@@ -39,8 +45,10 @@ namespace Yttrium
 
                 //! setup with name
                 template <typename NAME> inline
-                explicit Aggregate(const NAME & _name) :
-                Compound(_name,UUID)
+                explicit Aggregate(const NAME & _name,
+                                   const Type   _type) :
+                Compound(_name,UUID),
+                type(_type)
                 {
                     Y_Lingo_Syntax_Rule(Aggregate);
                 }
@@ -67,8 +75,18 @@ namespace Yttrium
                 virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< must accept all
                 virtual void         vizMark(OutputStream &)      const; //!< graphViz code
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Type type; //!< acts on AST
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
+                virtual void acknowledge() noexcept;
+                
             };
 
 

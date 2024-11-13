@@ -94,6 +94,32 @@ namespace Yttrium
                     return decl( new Terminal(_name,_kind,_role) );
                 }
 
+                //! helper to declare a definite aggregate (permanent)
+                template <typename NAME> inline
+                Agg & agg(const NAME & _name) {
+                    return decl( new Aggregate(_name,Aggregate::Definite) );
+                }
+
+                //! grouping only, won't appear in AST
+                template <typename NAME> inline
+                Agg & grp(const NAME & _name) {
+                    return decl( new Aggregate(_name,Aggregate::Grouping) );
+                }
+
+                //! no single aggregate, merge content if only one member
+                template <typename NAME> inline
+                Agg & act(const NAME & _name) {
+                    return decl( new Aggregate(_name,Aggregate::NoSingle) );
+                }
+
+                template <typename NAME> inline
+                Alt & alt(const NAME & _name) {
+                    return decl( new Alternate(_name) );
+                }
+                const Rule &pick(const Rule &a, const Rule &b);
+                const Rule &pick(const Rule &a, const Rule &b, const Rule &c);
+                const Rule &pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d);
+                const Rule &pick(const Manifest &);
 
                 //! render grammar
                 void render() const;

@@ -14,13 +14,19 @@ namespace Yttrium
 
             Compound::ConstInterface & Compound:: surrogate() const noexcept { return manifest; }
 
-            void Compound:: add(const Rule &rule) {
-                manifest << rule;
+         
+            Compound & Compound:: operator<<(const Manifest &man)
+            {
+                manifest << man;
+                acknowledge();
+                return *this;
             }
+
 
             Compound & Compound:: operator<<(const Rule &rule)
             {
-                add(rule);
+                manifest << rule;
+                acknowledge();
                 return *this;
             }
 

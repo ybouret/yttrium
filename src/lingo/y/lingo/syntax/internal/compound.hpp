@@ -67,11 +67,10 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! add existing rule to manifest
-                void add(const Rule &);
 
-                //! alias to add()
-                Compound & operator<<(const Rule &);
+
+                Compound & operator<<(const Rule     &);
+                Compound & operator<<(const Manifest &);
 
                 //! make name for manifest with given separator
                 static String MakeNameFor(const Manifest &, const char);
@@ -94,7 +93,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 virtual ConstInterface & surrogate() const noexcept;
-
+                virtual void             acknowledge() noexcept = 0;
             };
         }
 

@@ -118,7 +118,8 @@ Y_UTEST(syntax)
     GraphViz::Vizible::RenderPNG("repN.dot",false);
 
 
-    Syntax::Aggregate agg("agg");
+    Syntax::Aggregate agg("agg",Syntax::Aggregate::Definite);
+
     agg += t1;
     agg += t2;
     {

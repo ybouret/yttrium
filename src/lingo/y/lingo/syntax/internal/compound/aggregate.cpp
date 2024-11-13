@@ -13,7 +13,7 @@ namespace Yttrium
             
             Aggregate & Aggregate:: operator += (const Rule &rule)
             {
-                add(rule);
+                *this << rule;
                 return *this;
             }
 
@@ -22,6 +22,10 @@ namespace Yttrium
                 fp << ",shape=house";
             }
 
+            void Aggregate:: acknowledge() noexcept
+            {
+                // do nothing
+            }
 
             bool Aggregate:: accepts(Y_Lingo_Syntax_Args) const
             {
