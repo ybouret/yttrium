@@ -91,6 +91,7 @@ namespace Yttrium
                 assert(Terminal==type);
                 lexeme().appendTo(excp,rule.as<Syntax::Terminal>()->kind == Syntax::Terminal::Univocal);
             }
+            
         }
 
     }

@@ -106,6 +106,7 @@ namespace Yttrium
                 //______________________________________________________________
                 XNode * accept(Lexer &lexer, Source &source);
 
+                void tryAppendTo(Exception &excp, const Lexeme * const) const;
 
 
             private:

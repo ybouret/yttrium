@@ -27,6 +27,27 @@ namespace Yttrium {
 
             }
 
+            void Grammar:: tryAppendTo(Exception &excp, const Lexeme * const next) const
+            {
+                const Caption &     label = next->name;
+                const Rule * const  rule  = query( *label );
+                if(!rule)
+                {
+                    excp.add("not registered '%s'", label->c_str());
+                    return;
+                }
+
+                if(!rule->isTerminal())
+                {
+                    excp.add("terminal '%s' with internal '%s'", label->c_str(), rule->name->c_str());
+                }
+
+                next->appendTo(excp,rule->as<Terminal>()->kind == Terminal::Univocal );
+
+
+            }
+
+
             XNode * Grammar:: accepted(XNode *const node, Lexer &lexer, Source &source)
             {
                 assert(0!=node);
@@ -36,21 +57,8 @@ namespace Yttrium {
                 if(0!=next)
                 {
                     // unexpected/extraneous
-                    const Caption &     label = next->name;
-                    const Rule * const  rule  = query( *label );
                     Specific::Exception excp(name->c_str(),"extraneous ");
-                    if(!rule)
-                    {
-                        excp.add("not registered '%s'", label->c_str());
-                        goto AFTER;
-                    }
-                    if(!rule->isTerminal())
-                    {
-                        excp.add("terminal '%s' with internal '%s'", label->c_str(), rule->name->c_str());
-                        goto AFTER;
-                    }
-                    next->appendTo(excp,rule->as<Terminal>()->kind == Terminal::Univocal );
-                AFTER:
+                    tryAppendTo(excp, next);
                     if(last.type==XNode::Terminal)
                     {
                         excp.add(" after ");
@@ -63,7 +71,16 @@ namespace Yttrium {
 
             void Grammar:: rejected(Lexer &lexer, Source &source)
             {
-                
+                const Lexeme * const next = lexer.peek(source);
+                if(0==next)
+                {
+                    throw Specific::Exception(name->c_str(),"does not accept empty source");
+                }
+
+                Specific::Exception excp(name->c_str(),"cannot start with ");
+                tryAppendTo(excp, next);
+                throw excp;
+
             }
         }
     }
