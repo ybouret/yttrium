@@ -86,8 +86,7 @@ namespace Yttrium
                 //! full consistency check, mostly for debug
                 bool isWellFormed() const;
 
-
-
+                
                 Lexeme &       lexeme()              noexcept; //!< access lexeme if Terminal
                 const Lexeme & lexeme()        const noexcept; //!< access lexeme if Terminal
                 XList        & branch()              noexcept; //!< access XList if Internal
@@ -95,6 +94,8 @@ namespace Yttrium
                 void           fusion(XNode * const) noexcept; //!< take ownership of a node
                 void           fusion(XList &)       noexcept; //!< take ownership of a list
                 const String  &name()          const noexcept; //!< rule name
+                const XNode   &last()          const noexcept; //!< last from this position
+                void appendTo(Exception &)     const noexcept; //!< if lexeme is Terminal
 
                 //______________________________________________________________
                 //

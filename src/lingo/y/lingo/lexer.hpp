@@ -134,8 +134,9 @@ namespace Yttrium
             void restart() noexcept;
 
 
-            Lexeme * get(Source &source); //!< get next regular lexeme
-            void     put(Lexeme * const); //!< store in cache
+            Lexeme *      get(Source &source);  //!< get next regular lexeme
+            void          put(Lexeme * const);  //!< store in cache
+            const Lexeme *peek(Source &source); //!< cached/try to get
 
             //! manually change analyzer by its name
             void performCall(const Caption &);

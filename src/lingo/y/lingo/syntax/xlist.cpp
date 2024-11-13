@@ -70,6 +70,17 @@ namespace Yttrium
             }
 
 
+            const XNode   & XNode:: last() const noexcept
+            {
+                switch(type)
+                {
+                    case Terminal: return *this;
+                    case Internal: break;
+                }
+                return branch().tail->last();
+            }
+
+          
 
             void XNode:: Grow(XNode * &tree, XNode * const node) noexcept
             {

@@ -85,6 +85,12 @@ namespace Yttrium
                 zero();
                 unit = _unit;
             }
+
+            void XNode:: appendTo(Exception &excp) const noexcept
+            {
+                assert(Terminal==type);
+                lexeme().appendTo(excp,rule.as<Syntax::Terminal>()->kind == Syntax::Terminal::Univocal);
+            }
         }
 
     }

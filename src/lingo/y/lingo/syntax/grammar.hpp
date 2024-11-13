@@ -63,8 +63,11 @@ namespace Yttrium
                 const Rule & top() const;                          //!< query top rule
                 void         top(const Rule &);                    //!< set top rule
                 void         validate();                           //!< not empty, all connected => locked
-                const Rule & operator[](const String &)     const; //!< access by name
-                const Rule & operator[](const char * const) const; //!< access by nmae
+                const Rule * query(const String &) const noexcept;
+                const Rule * query(const char * const)      const;
+
+                //const Rule & operator[](const String &)     const; //!< access by name
+                //const Rule & operator[](const char * const) const; //!< access by nmae
 
                 //! helper to declare any derived Rule
                 template <typename RULE> inline
@@ -109,7 +112,10 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules rules;
                 virtual ConstInterface & surrogate() const noexcept;
-                
+
+                XNode * accepted(XNode * const, Lexer &, Source &);
+                void    rejected(Lexer &, Source &);
+
             public:
                 const bool  locked; //!< status
             };

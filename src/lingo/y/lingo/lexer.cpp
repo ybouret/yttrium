@@ -97,14 +97,13 @@ namespace Yttrium
 
                     case Lexical::Control:
                         if(lexeme.isValid()) throw Specific::Exception(analyzer->name->c_str(), "forbidden Control lexeme");
-                        //throw Exception("Control lexeme not implemented");
                         goto GET;
 
                     case Lexical::Failure:
                         if(lexeme.isEmpty()) throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
                     {
                         const String        bad = lexeme->toPrintable();
-                        Specific::Exception excp(analyzer->name->c_str(), "unexpected '%s'", bad.c_str());
+                        Specific::Exception excp(analyzer->name->c_str(), "syntax error '%s'", bad.c_str());
                         lexeme->info.stamp(excp);
                         throw excp;
                     }
@@ -138,6 +137,19 @@ namespace Yttrium
                 }
 
                 return lexeme.yield();
+            }
+        }
+
+
+        const Lexeme * Lexer:: peek(Source &source)
+        {
+            if(lexemes.size>0)
+                return lexemes.head;
+            else
+            {
+                Lexeme * const lexeme = get(source);
+                if(lexeme) lexemes.pushTail(lexeme);
+                return lexeme;
             }
         }
     }

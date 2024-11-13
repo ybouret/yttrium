@@ -15,14 +15,17 @@ namespace Yttrium
     {
 
         class CharDB;
-        
+
+        namespace Lexical { class Rule; }
+
+
         //______________________________________________________________________
         //
         //
         //! Arguments for Pattern takes(...)
         //
         //______________________________________________________________________
-#define Y_Lingo_Pattern_Args Token &token, Source &source, void *
+#define Y_Lingo_Pattern_Args Token &token, Source &source, void * const
 
         //______________________________________________________________________
         //

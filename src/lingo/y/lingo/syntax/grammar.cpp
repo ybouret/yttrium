@@ -98,21 +98,22 @@ namespace Yttrium
 
             }
 
-            const Rule & Grammar:: operator[](const String &id) const
+            const Rule * Grammar:: query(const String &id) const noexcept
             {
 
                 for(const Rule *rule=rules.head;rule;rule=rule->next)
                 {
                     const Rule &r = *rule;
-                    if(id==*r.name) return r;
+                    if(id==*r.name) return rule;
                 }
-                throw Specific::Exception(name->c_str(), "unknown rule '%s'", id.c_str());
+                return 0;
+                //throw Specific::Exception(name->c_str(), "unknown rule '%s'", id.c_str());
             }
 
-            const Rule & Grammar:: operator[](const char * const id) const
+            const Rule *Grammar:: query(const char * const id) const
             {
                 const String _(id);
-                return (*this)[_];
+                return query(_);
             }
 
 
