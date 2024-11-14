@@ -102,7 +102,7 @@ namespace Yttrium
                     for(const typename LIST::NodeType *node = rules.head;node;node=node->next,++i)
                     {
                         Arrow(fp,this,&**node) << '[';
-                        Endl( fp("%u",i) << ']' );
+                        Endl( fp("label=\"%u\"",i) << ']' );
                     }
                 }
 

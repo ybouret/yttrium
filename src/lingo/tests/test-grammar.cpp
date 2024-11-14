@@ -15,6 +15,7 @@ namespace
         explicit MyLexer() : Lexer("MyLexer")
         {
             emit("INT", "[:digit:]+");
+            emit(';');
             drop("[:blank:]");
             endl("[:endl:]", Lexeme::Drop );
         }
@@ -31,7 +32,10 @@ namespace
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
-            term_("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
+            Agg & STATEMENT = agg("STATEMENT");
+            const Rule & INT = term_("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
+            const Rule & SEP = term_(";",   Syntax::Terminal::Univocal,  Syntax::Terminal::Dividing);
+            STATEMENT << INT << SEP;
         }
 
         virtual ~MyGrammar() noexcept
@@ -57,7 +61,7 @@ Y_UTEST(grammar)
         if(xnode.isValid())
         {
             GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
-            
+
         }
         else
         {
