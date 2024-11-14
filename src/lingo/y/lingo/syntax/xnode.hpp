@@ -75,7 +75,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 void           viz(OutputStream &)       const; //!< write graphviz code
-
+                void           graphViz(OutputStream &)  const; //!< write standalone graphvix code
 
                 //! returning to lexer a rejected Xnode
                 static void BackToLexer(Lexer &, XNode * const) noexcept;

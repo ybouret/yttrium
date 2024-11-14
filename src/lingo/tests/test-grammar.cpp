@@ -56,11 +56,8 @@ Y_UTEST(grammar)
 
         if(xnode.isValid())
         {
-            std::cerr << "found tree" << std::endl;
-            {
-                OutputFile fp("xnode.dot");
-                xnode->viz(fp);
-            }
+            GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
+            
         }
         else
         {

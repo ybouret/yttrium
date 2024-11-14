@@ -24,6 +24,13 @@ namespace Yttrium
 
             }
 
+            void XNode:: graphViz(OutputStream &fp)  const
+            {
+                Enter(fp,"G");
+                viz(fp);
+                Leave(fp);
+            }
+
             void XNode:: vizTerminal(OutputStream &fp) const
             {
                 Node(fp,this) << '[';
@@ -47,7 +54,6 @@ namespace Yttrium
 
                 term.vizMark(fp);
 
-                fp << "\"";
                 Endl(fp << ']');
             }
 
