@@ -41,18 +41,19 @@ namespace Yttrium
             {
                 fp << ",shape=component";
             }
-            
+
 
             bool Repeat:: accepts(Y_Lingo_Syntax_Args) const
             {
-                // checkRobustness("accepts()");
                 // initializing
+                Y_Lingo_Syntax_Rule_Emit(depth,"[Repeat '" << name << "']");
                 XNode         *localTree = XNode::CreateFrom(*this);
                 AutoPtr<XNode> guardTree = localTree;
+                const size_t   ruleDepth = depth+1;
                 size_t         count     = 0;
 
                 // accepting rule in local tree
-                while( rule.accepts(lexer, source, localTree) ) {
+                while( rule.accepts(lexer, source, localTree, ruleDepth) ) {
                     assert(localTree->isWellFormed());
                     ++count;
                 }

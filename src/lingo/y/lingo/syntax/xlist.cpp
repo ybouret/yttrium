@@ -8,12 +8,10 @@ namespace Yttrium
         {
             XList:: ~XList() noexcept
             {
-                std::cerr << "~XList" << std::endl;
             }
 
             XList:: XList() noexcept
             {
-                std::cerr << "XList" << std::endl;
             }
 
             void XList:: backToLexer(Lexer &lexer) noexcept
@@ -57,7 +55,7 @@ namespace Yttrium
 
             void XNode:: fusion(XNode * const node) noexcept
             {
-                assert(0==node);
+                assert(0!=node);
                 assert(Internal==type);
                 list().pushTail(node)->sire = this;
             }
@@ -72,12 +70,21 @@ namespace Yttrium
 
             const XNode   & XNode:: last() const noexcept
             {
+                //std::cerr << "last for '" << name() << "'" << std::endl;
                 switch(type)
                 {
                     case Terminal: return *this;
                     case Internal: break;
                 }
-                return branch().tail->last();
+                const XList &self = branch();
+                if(self.size)
+                {
+                    return branch().tail->last();
+                }
+                else
+                {
+                    return *this;
+                }
             }
 
             const Lexeme  * XNode:: lastLexeme() const noexcept
@@ -88,7 +95,7 @@ namespace Yttrium
                 // then go back to top
                 switch(bottom.type)
                 {
-                    case Terminal: return & lexeme();
+                    case Terminal: return & bottom.lexeme();
                     case Internal: break;
                 }
 
@@ -145,7 +152,7 @@ namespace Yttrium
                     case Internal:
                         for(const XNode *node = list().head;node;node=node->next)
                         {
-                            if(node->isWellFormed()) return false;
+                            if(!node->isWellFormed()) return false;
                         }
                         break;
                 }

@@ -8,6 +8,8 @@ namespace Yttrium
         namespace Syntax
         {
 
+            bool Rule:: Trace = false;
+
             Rule:: ~Rule() noexcept
             {
             }

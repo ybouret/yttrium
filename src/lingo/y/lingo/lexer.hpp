@@ -136,6 +136,7 @@ namespace Yttrium
 
             Lexeme *      get(Source &  source, const Lexeme * const last); //!< get next regular lexeme
             const Lexeme *peek(Source & source, const Lexeme * const last); //!< cached/try to get
+            const Lexeme *tail()        const noexcept; //!< last in cache
             void          put(Lexeme * const) noexcept; //!< store in cache
             const char *  here()        const noexcept; //!< analyzer->name->c_str()
 

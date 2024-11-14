@@ -20,7 +20,10 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Unit : public Object, public Entity, public Token
+            class Unit :
+            public Object,
+            public Entity,
+            public Token
             {
             public:
                 //______________________________________________________________

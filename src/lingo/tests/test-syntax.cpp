@@ -34,6 +34,7 @@ namespace Yttrium
                     (void)lexer;
                     (void)source;
                     (void)tree;
+                    (void)depth;
                     return false;
                 }
 

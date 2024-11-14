@@ -46,12 +46,21 @@ namespace Yttrium
 
             bool Terminal:: accepts(Y_Lingo_Syntax_Args) const
             {
+                Y_Lingo_Syntax_Rule_Emit(depth,"[Terminal '" << name << "']");
                 Lexeme * const lexeme = lexer.get(source,0);
-                if(0==lexeme) return false; // EOF
+                if(0==lexeme)
+                {
+                    Y_Lingo_Syntax_Rule_Emit(depth,"|_<EOF>");
+                    return false; // EOF
+                }
+
                 if( *(lexeme->name) != *name ) {
                     lexer.put(lexeme);
+                    Y_Lingo_Syntax_Rule_Emit(depth,"|_<reject " << *lexeme << ">");
                     return false;
                 }
+
+                Y_Lingo_Syntax_Rule_Emit(depth,"|_<accept " << *lexeme << ">");
                 XNode::Grow(tree, XNode::CreateFrom(*this,lexeme) );
                 assert(tree->isWellFormed());
                 return true;

@@ -24,7 +24,9 @@ namespace Yttrium
             bool Option:: accepts(Y_Lingo_Syntax_Args) const
             {
                 // pass directly arguments to rule
-                (void) rule.accepts(lexer,source,tree);
+                Y_Lingo_Syntax_Rule_Emit(depth,"[Option '" << name << "']");
+                const size_t ruleDepth = depth+1;
+                (void) rule.accepts(lexer,source,tree,ruleDepth);
                 return true;
             }
 

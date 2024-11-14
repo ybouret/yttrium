@@ -37,15 +37,18 @@ namespace Yttrium
             bool Alternate:: accepts(Y_Lingo_Syntax_Args) const
             {
                 assert(manifest.size>0);
+                Y_Lingo_Syntax_Rule_Emit(depth, "[Alternate '" << name << "']");
+                
+                bool         foundRule = false;
+                const size_t ruleDepth = depth+1;
 
-                bool found = false;
                 for(const RNode *node=manifest.head;node;node=node->next)
                 {
                     const Rule &rule = **node;
                     XNode      *temp = 0;
-                    if( rule.accepts(lexer, source, temp) )
+                    if( rule.accepts(lexer, source, temp, ruleDepth) )
                     {
-                        found = true;
+                        foundRule = true;
                         if(0!=temp)
                         {
                             XNode::Grow(tree,temp);
@@ -56,7 +59,7 @@ namespace Yttrium
                     assert(0==temp);
                 }
 
-                return found;
+                return foundRule;
             }
 
         }

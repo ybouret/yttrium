@@ -34,7 +34,8 @@ namespace Yttrium
             bool Aggregate:: accepts(Y_Lingo_Syntax_Args) const
             {
                 assert(manifest.size>0);
-
+                Y_Lingo_Syntax_Rule_Emit(depth, "[Aggregate '" << name << "']");
+                
                 //--------------------------------------------------------------
                 //
                 //
@@ -44,11 +45,12 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 XNode *        localTree = XNode::CreateFrom(*this);
                 AutoPtr<XNode> guardTree = localTree;
-
+                const size_t   ruleDepth = depth+1;
+                
                 for(const RNode *node=manifest.head;node;node=node->next)
                 {
                     const Rule &rule = **node;
-                    if(rule.accepts(lexer,source,localTree)) continue;
+                    if(rule.accepts(lexer,source,localTree,ruleDepth)) continue;
 
                     //----------------------------------------------------------
                     //

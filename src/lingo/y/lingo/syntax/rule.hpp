@@ -25,7 +25,9 @@ namespace Yttrium
             //! arguments to accept
             //
             //__________________________________________________________________
-#define Y_Lingo_Syntax_Args Lexer &lexer, Source &source, XNode * &tree
+#define Y_Lingo_Syntax_Args Lexer &lexer, Source &source, XNode * &tree, const size_t depth
+
+#define Y_Lingo_Syntax_Rule_Emit(DEPTH,MSG) do { if(Syntax::Rule::Trace) { Core::Indent(std::cerr,(DEPTH)) << MSG << std::endl; } } while(false)
 
             //__________________________________________________________________
             //
@@ -45,6 +47,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef CxxListOf<Rule> List;
+                static bool             Trace; //!< default to false
 
                 //______________________________________________________________
                 //
@@ -98,6 +101,7 @@ namespace Yttrium
                         default:
                             break;
                     }
+
                     unsigned i = 1;
                     for(const typename LIST::NodeType *node = rules.head;node;node=node->next,++i)
                     {

@@ -36,6 +36,8 @@ namespace
             const Rule & INT = term_("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
             const Rule & SEP = term_(";",   Syntax::Terminal::Univocal,  Syntax::Terminal::Dividing);
             STATEMENT << INT << SEP;
+            top( zom(STATEMENT) );
+            validate();
         }
 
         virtual ~MyGrammar() noexcept
@@ -49,6 +51,7 @@ namespace
 
 Y_UTEST(grammar)
 {
+    Syntax::Rule::Trace = true;
     MyGrammar G;
     MyLexer   L;
 

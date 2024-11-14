@@ -15,14 +15,14 @@ namespace Yttrium {
 
                 const Rule &primary = *(rules.head);
                 XNode *     tree    = 0;
-                if(primary.accepts(lexer,source,tree) )
+                if(primary.accepts(lexer,source,tree,0) )
                 {
                     return accepted(tree,lexer,source);
                 }
                 else
                 {
                     assert(0==tree);
-                    rejected(lexer,source);
+                    rejected(lexer);
                     return tree;
                 }
 
@@ -45,7 +45,7 @@ namespace Yttrium {
             }
 
 
-            XNode * Grammar:: accepted(XNode *const node, Lexer &lexer, Source &source)
+            XNode * Grammar:: accepted(XNode * const node, Lexer &lexer, Source &source)
             {
                 assert(0!=node);
                 AutoPtr<XNode> guard(node);
@@ -54,25 +54,38 @@ namespace Yttrium {
                 if(0!=next)
                 {
                     // unexpected/extraneous
-                    Specific::Exception excp(name->c_str(),"extraneous ");
-                    tryAppendTo(excp, "terminal", next);
-                    if(last)
+                    Specific::Exception excp(name->c_str(),"unexpected");
+                    tryAppendTo(excp, "", next);
+                    if(0!=last)
                     {
                         tryAppendTo(excp, " after",last);
                     }
+                    next->info.stamp(excp);
                     throw excp;
                 }
                 return guard.yield();
             }
 
-            void Grammar:: rejected(Lexer &lexer, Source &source)
+            void Grammar:: rejected(const Lexer &lexer)
             {
-                const Lexeme * const next = lexer.peek(source,0);
-                if(0==next)
+                const Lexeme * const curr = lexer.tail();
+                if(0==curr)
                     throw Specific::Exception(name->c_str(),"does not accept empty source");
-                Specific::Exception excp(name->c_str(),"cannot start with ");
-                tryAppendTo(excp, "terminal", next);
-                throw excp;
+
+                const Lexeme * const prev = curr->prev;
+                if(0==curr->prev)
+                {
+                    Specific::Exception excp(name->c_str(),"cannot start with");
+                    tryAppendTo(excp, " ", curr);
+                    throw excp;
+                }
+                else
+                {
+                    Specific::Exception excp(name->c_str(),"invalid");
+                    tryAppendTo(excp, " ", curr);
+                    tryAppendTo(excp, " after", prev);
+                    throw excp;
+                }
 
             }
         }

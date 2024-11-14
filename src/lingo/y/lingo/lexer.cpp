@@ -169,6 +169,11 @@ namespace Yttrium
                 return lexeme;
             }
         }
+
+        const Lexeme * Lexer:: tail() const noexcept
+        {
+            return lexemes.tail;
+        }
     }
 
 }

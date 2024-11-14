@@ -141,7 +141,7 @@ namespace Yttrium
                 virtual ConstInterface & surrogate() const noexcept;
 
                 XNode * accepted(XNode * const, Lexer &, Source &);
-                void    rejected(Lexer &, Source &);
+                void    rejected(const Lexer &);
 
             public:
                 const bool  locked; //!< status

@@ -97,7 +97,7 @@ namespace Yttrium
                 const XNode   &last()                 const noexcept; //!< last from this position
                 const Lexeme  *lastLexeme()           const noexcept; //!< previous from last()
                 void           appendTo(Exception &) const noexcept; //!< if lexeme is Terminal
-
+                
                 //______________________________________________________________
                 //
                 //
