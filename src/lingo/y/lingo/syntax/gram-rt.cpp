@@ -46,7 +46,7 @@ namespace Yttrium {
                 assert(0!=node);
                 AutoPtr<XNode> guard(node);
                 const XNode  &       last = node->last();
-                const Lexeme * const next = lexer.peek(source);
+                const Lexeme * const next = lexer.peek(source,0);
                 if(0!=next)
                 {
                     // unexpected/extraneous
@@ -64,7 +64,7 @@ namespace Yttrium {
 
             void Grammar:: rejected(Lexer &lexer, Source &source)
             {
-                const Lexeme * const next = lexer.peek(source);
+                const Lexeme * const next = lexer.peek(source,0);
                 if(0==next)
                 {
                     throw Specific::Exception(name->c_str(),"does not accept empty source");

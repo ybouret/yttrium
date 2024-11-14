@@ -46,7 +46,7 @@ namespace Yttrium
 
             bool Terminal:: accepts(Y_Lingo_Syntax_Args) const
             {
-                Lexeme * const lexeme = lexer.get(source);
+                Lexeme * const lexeme = lexer.get(source,0);
                 if(0==lexeme) return false; // EOF
                 if( *(lexeme->name) != *name ) {
                     lexer.put(lexeme);

@@ -149,7 +149,7 @@ Y_UTEST(lexer)
 
         AutoPtr<Lexeme> lexeme = 0;
 
-        while( (lexeme = lexer.get(source) ).isValid() )
+        while( (lexeme = lexer.get(source,0) ).isValid() )
         {
             std::cerr << lexeme << std::endl;
         }

@@ -134,9 +134,10 @@ namespace Yttrium
             void restart() noexcept;
 
 
-            Lexeme *      get(Source &source);  //!< get next regular lexeme
-            void          put(Lexeme * const);  //!< store in cache
-            const Lexeme *peek(Source &source); //!< cached/try to get
+            Lexeme *      get(Source &  source, const Lexeme * const last); //!< get next regular lexeme
+            const Lexeme *peek(Source & source, const Lexeme * const last); //!< cached/try to get
+            void          put(Lexeme * const)                     noexcept; //!< store in cache
+            const char *  here()                            const noexcept; //!< analyzer->name->c_str()
 
             //! manually change analyzer by its name
             void performCall(const Caption &);
@@ -156,6 +157,7 @@ namespace Yttrium
             void     initialize();                          //!< record this into scanner
             void     mustInsert(const Analyzer::Pointer &); //!< must insert new analyzer
             void     mustRecord(AddOn * const);
+            void     syntaxError(const AutoPtr<Lexeme> &lexeme) const;
         };
 
     }

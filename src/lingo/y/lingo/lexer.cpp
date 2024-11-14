@@ -71,13 +71,19 @@ namespace Yttrium
             analyzer = & history.pullTail();
         }
 
-        void Lexer:: put(Lexeme * const lexeme)
+        void Lexer:: put(Lexeme * const lexeme) noexcept
         {
             assert(0!=lexeme);
             lexemes.pushHead(lexeme);
         }
 
-        Lexeme * Lexer:: get(Source &source)
+        const char * Lexer:: here() const noexcept
+        {
+            assert(0!=analyzer);
+            return analyzer->name->c_str();
+        }
+
+        Lexeme * Lexer:: get(Source &source, const Lexeme * const last)
         {
         GET:
             assert(0!=analyzer);
@@ -96,19 +102,12 @@ namespace Yttrium
                         break; // will emit lexeme, NULL => EOF
 
                     case Lexical::Control:
-                        if(lexeme.isValid()) throw Specific::Exception(analyzer->name->c_str(), "forbidden Control lexeme");
+                        if(lexeme.isValid()) throw Specific::Exception(here(), "forbidden Control lexeme");
                         goto GET;
 
                     case Lexical::Failure:
-                        if(lexeme.isEmpty())
-                            throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
-                    {
-                        std::cerr << "lexemes in cache: " << lexemes.size << std::endl;
-                        const String        bad = lexeme->toPrintable();
-                        Specific::Exception excp(analyzer->name->c_str(), "syntax error '%s'", bad.c_str());
-                        lexeme->info.stamp(excp);
-                        throw excp;
-                    }
+                        if(lexeme.isEmpty()) throw Specific::Exception(here(), "failure without found reason");
+                        syntaxError(lexeme);
                 }
 
                 assert( Lexical::Regular == result );
@@ -142,14 +141,22 @@ namespace Yttrium
             }
         }
 
+        void Lexer:: syntaxError(const AutoPtr<Lexeme> &lexeme) const
+        {
+            assert(lexeme.isValid());
+            const String        bad = lexeme->toPrintable();
+            Specific::Exception excp(here(), "syntax error '%s'", bad.c_str());
+            lexeme->info.stamp(excp);
+            throw excp;
+        }
 
-        const Lexeme * Lexer:: peek(Source &source)
+        const Lexeme * Lexer:: peek(Source &source, const Lexeme * const last)
         {
             if(lexemes.size>0)
                 return lexemes.head;
             else
             {
-                Lexeme * const lexeme = get(source);
+                Lexeme * const lexeme = get(source,last);
                 if(lexeme) lexemes.pushTail(lexeme);
                 return lexeme;
             }
