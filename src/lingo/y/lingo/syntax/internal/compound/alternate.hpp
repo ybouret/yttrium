@@ -69,7 +69,6 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Alternate);
-                virtual void acknowledge() noexcept;
             };
 
 

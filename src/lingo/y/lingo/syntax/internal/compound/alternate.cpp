@@ -22,10 +22,7 @@ namespace Yttrium
                 fp << ",shape=egg";
             }
 
-            void Alternate:: acknowledge() noexcept
-            {
-                manifest.noMultiple();
-            }
+            
 
             bool Alternate:: robust() const
             {

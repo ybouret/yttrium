@@ -36,7 +36,7 @@ namespace Yttrium
             try {
                 const AddOn::Handle _(super);
                 if(!addOns.insert(_))
-                    throw Specific::Exception(name->c_str(),"inserint multiple AddOn '%s'", _->name->c_str());
+                    throw Specific::Exception(name->c_str(),"inserting multiple AddOn<%s>", _->name->c_str());
             }
             catch(...)
             {

@@ -29,22 +29,14 @@ namespace Yttrium {
 
             void Grammar:: tryAppendTo(Exception &excp, const Lexeme * const next) const
             {
-                const Caption &     label = next->name;
-                const Rule * const  rule  = query( *label );
-                if(!rule)
+                const Caption &         label = next->name;
+                const Terminal * const  term  = rules.queryTerminal( label );
+                if(!term)
                 {
-                    excp.add("not registered '%s'", label->c_str());
+                    excp.add("no terminal '%s'", label->c_str());
                     return;
                 }
-
-                if(!rule->isTerminal())
-                {
-                    excp.add("terminal '%s' with internal '%s'", label->c_str(), rule->name->c_str());
-                }
-
-                next->appendTo(excp,rule->as<Terminal>()->kind == Terminal::Univocal );
-
-
+                next->appendTo(excp,term->kind == Terminal::Univocal );
             }
 
 

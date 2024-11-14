@@ -63,12 +63,7 @@ namespace Yttrium
                 const Rule & top() const;                          //!< query top rule
                 void         top(const Rule &);                    //!< set top rule
                 void         validate();                           //!< not empty, all connected => locked
-                const Rule * query(const String &) const noexcept;
-                const Rule * query(const char * const)      const;
-
-                //const Rule & operator[](const String &)     const; //!< access by name
-                //const Rule & operator[](const char * const) const; //!< access by nmae
-
+                
                 //! helper to declare any derived Rule
                 template <typename RULE> inline
                 RULE & decl( RULE * const rule )
@@ -106,7 +101,7 @@ namespace Yttrium
                     return decl( new Aggregate(_name,Aggregate::Grouping) );
                 }
 
-                //! no single aggregate, merge content if only one member
+                //! acting aggregate, no single:  merge content if only one member
                 template <typename NAME> inline
                 Agg & act(const NAME & _name) {
                     return decl( new Aggregate(_name,Aggregate::NoSingle) );

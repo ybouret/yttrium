@@ -83,6 +83,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! append description to exception
                 void appendTo(Exception &, const bool univocal) const noexcept;
 
                 //______________________________________________________________

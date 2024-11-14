@@ -18,7 +18,6 @@ namespace Yttrium
             Compound & Compound:: operator<<(const Manifest &man)
             {
                 manifest << man;
-                acknowledge();
                 return *this;
             }
 
@@ -26,7 +25,6 @@ namespace Yttrium
             Compound & Compound:: operator<<(const Rule &rule)
             {
                 manifest << rule;
-                acknowledge();
                 return *this;
             }
 

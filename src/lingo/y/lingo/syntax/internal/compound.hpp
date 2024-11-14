@@ -67,8 +67,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-
-
                 Compound & operator<<(const Rule     &);
                 Compound & operator<<(const Manifest &);
 
@@ -93,7 +91,6 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 virtual ConstInterface & surrogate() const noexcept;
-                virtual void             acknowledge() noexcept = 0;
             };
         }
 

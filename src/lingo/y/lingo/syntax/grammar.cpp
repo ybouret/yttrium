@@ -98,22 +98,7 @@ namespace Yttrium
 
             }
 
-            const Rule * Grammar:: query(const String &id) const noexcept
-            {
-
-                for(const Rule *rule=rules.head;rule;rule=rule->next)
-                {
-                    const Rule &r = *rule;
-                    if(id==*r.name) return rule;
-                }
-                return 0;
-            }
-
-            const Rule *Grammar:: query(const char * const id) const
-            {
-                const String _(id);
-                return query(_);
-            }
+            
 
 
             const Rule & Grammar:: zom(const Rule &other)

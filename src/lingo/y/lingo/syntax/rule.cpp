@@ -81,3 +81,52 @@ namespace Yttrium
 }
 
 
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+
+            Rules:: ~Rules() noexcept
+            {
+            }
+
+            Rules:: Rules() noexcept
+            {
+            }
+
+            const Rule * Rules:: query(const Caption &rid) const noexcept
+            {
+                const String &lhs = *rid;
+                for(const Rule *rule=head;rule;rule=rule->next)
+                {
+                    const String &rhs = *(rule->name);
+                    if(lhs==rhs) return rule;
+                }
+                return 0;
+            }
+
+            const Rule * Rules:: query(const String &lhs) const noexcept
+            {
+                for(const Rule *rule=head;rule;rule=rule->next)
+                {
+                    const String &rhs = *(rule->name);
+                    if(lhs==rhs) return rule;
+                }
+                return 0;
+            }
+
+            const Rule * Rules:: query(const char * const lhs) const noexcept
+            {
+                for(const Rule *rule=head;rule;rule=rule->next)
+                {
+                    const String &rhs = *(rule->name);
+                    if(lhs==rhs) return rule;
+                }
+                return 0;
+            }
+        }
+
+    }
+}

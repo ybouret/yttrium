@@ -37,14 +37,22 @@ namespace Yttrium
             //__________________________________________________________________
             class Rule : public Entity, public GraphViz::Vizible
             {
-            protected:
+            public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<Rule> List;
+
                 //______________________________________________________________
                 //
                 //
                 // C++
                 //
                 //______________________________________________________________
-
+            protected:
                 //! setup with name and uuid
                 template <typename NAME> inline
                 explicit Rule(const NAME &   _name,
@@ -156,7 +164,26 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            typedef CxxListOf<Rule> Rules;
+            class Rules : public Rule::List
+            {
+            public:
+                explicit Rules() noexcept;
+                virtual ~Rules() noexcept;
+
+                const Rule * query(const Caption &)    const noexcept;
+                const Rule * query(const String  &)    const noexcept;
+                const Rule * query(const char * const) const noexcept;
+
+                template <typename UID> inline
+                const Terminal * queryTerminal(const UID &uid) const noexcept {
+                    const Rule * rule = query(uid);
+                    if(!rule || ! rule->isTerminal() ) return 0;
+                    return rule->as<Terminal>();
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Rules);
+            };
         }
     }
 }

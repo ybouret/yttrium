@@ -20,13 +20,17 @@ namespace Yttrium
             void Aggregate:: vizMark(OutputStream &fp) const
             {
                 fp << ",shape=house";
+                fp << ",style=\"";
+                switch(type)
+                {
+                    case Definite: fp << "filled"; break;
+                    case Grouping: fp << "dashed"; break;
+                    case NoSingle: fp << "filled,rounded"; break;
+                }
+                fp << "\"";
             }
 
-            void Aggregate:: acknowledge() noexcept
-            {
-                // do nothing
-            }
-
+            
             bool Aggregate:: accepts(Y_Lingo_Syntax_Args) const
             {
                 assert(manifest.size>0);
@@ -76,7 +80,6 @@ namespace Yttrium
 
 #include "y/lingo/syntax/rule/visit.hpp"
 #include "y/system/exception.hpp"
-//#include "y/lingo/syntax/rules.hpp"
 
 namespace Yttrium
 {
