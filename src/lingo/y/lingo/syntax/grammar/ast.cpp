@@ -123,6 +123,8 @@ namespace Yttrium {
                     case XNode::Internal: return InternalAST(tree);
                     case XNode::Terminal: return TerminalAST(tree);
                 }
+                // never get here
+                return tree;
             }
 
         }
