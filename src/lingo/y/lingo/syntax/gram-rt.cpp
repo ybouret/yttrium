@@ -66,10 +66,7 @@ namespace Yttrium {
             {
                 const Lexeme * const next = lexer.peek(source,0);
                 if(0==next)
-                {
                     throw Specific::Exception(name->c_str(),"does not accept empty source");
-                }
-
                 Specific::Exception excp(name->c_str(),"cannot start with ");
                 tryAppendTo(excp, next);
                 throw excp;
