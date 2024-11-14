@@ -1,4 +1,4 @@
-#include "y/lingo/syntax/grammar.hpp"
+#include "y/lingo/syntax/rules.hpp"
 
 namespace Yttrium {
 
@@ -10,44 +10,92 @@ namespace Yttrium {
 
             namespace
             {
+
+
+
                 static inline
-                XList & applyAST( XList &list ) noexcept
+                XNode * InternalAST(XNode * const tree) noexcept
                 {
+                    assert(0!=tree);
+                    XList &list = tree->branch();
                     XList temp;
                     while(list.size>0)
                     {
+                        //------------------------------------------------------
+                        //
+                        //
                         // recursive transformation
+                        //
+                        //
+                        //------------------------------------------------------
                         AutoPtr<XNode> node = XNode::AST( list.popHead() );
 
+                        //------------------------------------------------------
+                        //
+                        //
                         // post process fetched node
+                        //
+                        //------------------------------------------------------
+
                         switch(node->type)
                         {
+                                //----------------------------------------------
+                                //
+                                // post-process Terminal
+                                //
+                                //----------------------------------------------
                             case XNode:: Terminal:
                                 switch(node->rule.as<Terminal>()->role)
                                 {
                                     case Syntax::Terminal::Semantic:
                                         break;
                                     case Syntax::Terminal::Dividing:
-                                        continue;
+                                        continue; // will erase node
                                 } break;
 
+                                //----------------------------------------------
+                                //
+                                // post-process internal
+                                //
+                                //----------------------------------------------
                             case XNode::Internal:
+                                switch(node->rule.uuid)
+                                {
+                                    case Aggregate::UUID:
+                                        switch(node->rule.as<Aggregate>()->type)
+                                        {
+                                            case Aggregate::Definite:
+                                                break;
 
+                                            case Aggregate::Grouping:
+                                                tree->fusion(node->branch());
+                                                assert(tree->isWellFormed());
+                                                continue; // will erase node
+
+                                            case Aggregate::NoSingle:
+                                                if(1==node->branch().size)
+                                                {
+                                                    tree->fusion(node->branch());
+                                                    assert(tree->isWellFormed());
+                                                    continue;
+                                                }
+                                                else
+                                                    break; // stay this way
+
+                                        }
+                                        break;
+
+                                    default: // other internal...
+                                        break;
+                                }
                                 break;
 
                         }
                         temp.pushTail(node.yield());
                     }
                     list.swapWith(temp);
-                    return list;
-                }
 
-                static inline
-                XNode * InternalAST(XNode * const tree) noexcept
-                {
-                    assert(0!=tree);
-                    XList &list = applyAST( tree->branch() );
-                    
+                    assert(tree->isWellFormed());
                     return tree;
                 }
 
