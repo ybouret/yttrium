@@ -157,7 +157,8 @@ namespace Yttrium
             void     initialize();                          //!< record this into scanner
             void     mustInsert(const Analyzer::Pointer &); //!< must insert new analyzer
             void     mustRecord(AddOn * const);
-            void     syntaxError(const AutoPtr<Lexeme> &lexeme) const;
+            void     syntaxError(const AutoPtr<Lexeme> &lexeme,
+                                 const Lexeme * const   last) const;
         };
 
     }

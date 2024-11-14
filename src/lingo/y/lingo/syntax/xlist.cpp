@@ -80,7 +80,32 @@ namespace Yttrium
                 return branch().tail->last();
             }
 
-          
+            const Lexeme  * XNode:: lastLexeme() const noexcept
+            {
+                // goto bottom
+                const XNode &bottom = last();
+
+                // then go back to top
+                switch(bottom.type)
+                {
+                    case Terminal: return & lexeme();
+                    case Internal: break;
+                }
+
+                // going back branch
+                for(const XNode *node=bottom.branch().tail;node;node=node->prev)
+                {
+                    const Lexeme * const lexeme = node->lastLexeme();
+                    if(lexeme) return lexeme;
+                }
+
+                // go up if possible
+                if(bottom.sire) return bottom.sire->lastLexeme();
+
+                return 0;
+            }
+
+
 
             void XNode:: Grow(XNode * &tree, XNode * const node) noexcept
             {

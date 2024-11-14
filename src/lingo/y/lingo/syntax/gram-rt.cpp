@@ -28,16 +28,20 @@ namespace Yttrium {
 
             }
 
-            void Grammar:: tryAppendTo(Exception &excp, const Lexeme * const next) const
+            void Grammar:: tryAppendTo(Exception &          excp,
+                                       const char   * const prefix,
+                                       const Lexeme * const lexeme) const
             {
-                const Caption &         label = next->name;
+                assert(0!=prefix);
+                const Caption &         label = lexeme->name;
                 const Terminal * const  term  = rules.queryTerminal( label );
                 if(!term)
                 {
-                    excp.add("no terminal '%s'", label->c_str());
+                    excp.add("unknown terminal '%s'", label->c_str());
                     return;
                 }
-                next->appendTo(excp, term->kind == Terminal::Univocal );
+                excp.add("%s ",prefix);
+                lexeme->appendTo(excp, term->kind == Terminal::Univocal );
             }
 
 
@@ -45,17 +49,16 @@ namespace Yttrium {
             {
                 assert(0!=node);
                 AutoPtr<XNode> guard(node);
-                const XNode  &       last = node->last();
-                const Lexeme * const next = lexer.peek(source,0);
+                const Lexeme * const last = node->lastLexeme();
+                const Lexeme * const next = lexer.peek(source,last);
                 if(0!=next)
                 {
                     // unexpected/extraneous
                     Specific::Exception excp(name->c_str(),"extraneous ");
-                    tryAppendTo(excp, next);
-                    if(last.type==XNode::Terminal)
+                    tryAppendTo(excp, "terminal", next);
+                    if(last)
                     {
-                        excp.add(" after ");
-                        last.appendTo(excp);
+                        tryAppendTo(excp, " after",last);
                     }
                     throw excp;
                 }
@@ -68,7 +71,7 @@ namespace Yttrium {
                 if(0==next)
                     throw Specific::Exception(name->c_str(),"does not accept empty source");
                 Specific::Exception excp(name->c_str(),"cannot start with ");
-                tryAppendTo(excp, next);
+                tryAppendTo(excp, "terminal", next);
                 throw excp;
 
             }

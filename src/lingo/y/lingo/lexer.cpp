@@ -107,7 +107,7 @@ namespace Yttrium
 
                     case Lexical::Failure:
                         if(lexeme.isEmpty()) throw Specific::Exception(here(), "failure without found reason");
-                        syntaxError(lexeme);
+                        syntaxError(lexeme,last);
                 }
 
                 assert( Lexical::Regular == result );
@@ -141,17 +141,25 @@ namespace Yttrium
             }
         }
 
-        void Lexer:: syntaxError(const AutoPtr<Lexeme> &lexeme) const
+        void Lexer:: syntaxError(const AutoPtr<Lexeme> &lexeme,
+                                 const Lexeme * const   last) const
         {
             assert(lexeme.isValid());
             const String        bad = lexeme->toPrintable();
             Specific::Exception excp(here(), "syntax error '%s'", bad.c_str());
             lexeme->info.stamp(excp);
+            if(last) {
+                const String after = " after '" + last->toPrintable() + "'";
+                excp.add("%s",after.c_str());
+            }
             throw excp;
         }
 
         const Lexeme * Lexer:: peek(Source &source, const Lexeme * const last)
         {
+           // std::cerr << "peek after last ";
+            //if(last) std::cerr << *last << std::endl; else std::cerr << "(nil)" << std::endl;
+
             if(lexemes.size>0)
                 return lexemes.head;
             else
