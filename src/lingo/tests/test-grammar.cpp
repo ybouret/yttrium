@@ -2,6 +2,8 @@
 #include "y/lingo/syntax/grammar.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/lingo/lexical/add-on/single-line-comment.hpp"
+#include "y/lingo/lexical/add-on/jstring.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -16,6 +18,10 @@ namespace
         {
             emit("INT", "[:digit:]+");
             emit(';');
+
+            (void)lexer.plug<Lexical::ShellComment>("ShellComment");
+            (void)lexer.plug<Lexical::JString>("STRING");
+
             drop("[:blank:]");
             endl("[:endl:]", Lexeme::Drop );
         }
@@ -36,7 +42,12 @@ namespace
             const Rule & INT = term_("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
             const Rule & SEP = term_(";",   Syntax::Terminal::Univocal,  Syntax::Terminal::Dividing);
             STATEMENT << INT << SEP;
-            top( zom(STATEMENT) );
+
+            Agg & TEXT       = act("TEXT");
+            TEXT << term_("STRING",Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
+            TEXT << SEP;
+
+            top( zom(pick(STATEMENT,TEXT) ) );
             validate();
         }
 
@@ -49,11 +60,16 @@ namespace
     };
 }
 
+#include "y/vfs/local/fs.hpp"
+
 Y_UTEST(grammar)
 {
     Syntax::Rule::Trace = true;
+    LocalFS::Instance().tryRemoveFile("xnode-raw.png");
+    LocalFS::Instance().tryRemoveFile("xnode-raw.png");
     MyGrammar G;
     MyLexer   L;
+
 
     G.render();
     if(argc>1)
@@ -63,8 +79,9 @@ Y_UTEST(grammar)
 
         if(xnode.isValid())
         {
-            GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
-
+            GraphViz::Vizible::DotToPng("xnode-raw.dot", *xnode);
+            xnode = Syntax::XNode::AST( xnode.yield() );
+            GraphViz::Vizible::DotToPng("xnode-ast.dot", *xnode);
         }
         else
         {

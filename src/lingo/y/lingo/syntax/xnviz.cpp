@@ -41,13 +41,10 @@ namespace Yttrium
                 {
                     fp << "label=\"";
                     Text(fp, name() );
-                    switch(term.kind)
                     {
-                        case Syntax::Terminal::Univocal: break;
-                        case Syntax::Terminal::Standard: {
-                            const String &info = lexeme().toString();
+                        const String &info = lexeme().toString();
+                        if(info.size()>0)
                             Text(fp << "='",info) << "'";
-                        } break;
                     }
                     fp << "\"";
                 }

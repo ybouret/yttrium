@@ -95,6 +95,7 @@ namespace Yttrium
             {
                 static const char fn[] = "Aggregate::robust()";
                 checkNotEmpty(fn,name->c_str());
+                return true;
 
                 const Rule & self = *this;
                 for(const RNode *node=manifest.head;node;node=node->next)

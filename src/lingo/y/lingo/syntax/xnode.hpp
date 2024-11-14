@@ -87,17 +87,18 @@ namespace Yttrium
                 bool isWellFormed() const;
 
                 
-                Lexeme &       lexeme()              noexcept; //!< access lexeme if Terminal
-                const Lexeme & lexeme()        const noexcept; //!< access lexeme if Terminal
-                XList        & branch()              noexcept; //!< access XList if Internal
-                const XList  & branch()        const noexcept; //!< access XList if Internal
-                void           fusion(XNode * const) noexcept; //!< take ownership of a node
-                void           fusion(XList &)       noexcept; //!< take ownership of a list
-                const String  &name()          const noexcept; //!< rule name
-                const XNode   &last()                 const noexcept; //!< last from this position
-                const Lexeme  *lastLexeme()           const noexcept; //!< previous from last()
-                void           appendTo(Exception &) const noexcept; //!< if lexeme is Terminal
-                
+                Lexeme &        lexeme()              noexcept; //!< access lexeme if Terminal
+                const Lexeme &  lexeme()        const noexcept; //!< access lexeme if Terminal
+                XList        &  branch()              noexcept; //!< access XList if Internal
+                const XList  &  branch()        const noexcept; //!< access XList if Internal
+                void            fusion(XNode * const) noexcept; //!< take ownership of a node
+                void            fusion(XList &)       noexcept; //!< take ownership of a list
+                const String  & name()          const noexcept; //!< rule name
+                const XNode   & last()                 const noexcept; //!< last from this position
+                const Lexeme  * lastLexeme()           const noexcept; //!< previous from last()
+                void            appendTo(Exception &)  const noexcept; //!< if lexeme is Terminal
+                static XNode  * AST(XNode * const)           noexcept;
+
                 //______________________________________________________________
                 //
                 //

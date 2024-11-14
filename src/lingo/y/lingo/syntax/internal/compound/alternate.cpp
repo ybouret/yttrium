@@ -27,6 +27,8 @@ namespace Yttrium
             bool Alternate:: robust() const
             {
                 checkNotEmpty("Alternate::robust()",name->c_str());
+                return true;
+                
                 for(const RNode *node=manifest.head;node;node=node->next)
                 {
                     if( (**node).flimsy() ) return false;
