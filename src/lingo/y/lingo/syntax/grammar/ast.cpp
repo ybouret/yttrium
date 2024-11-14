@@ -77,10 +77,10 @@ namespace Yttrium {
                                                 {
                                                     tree->fusion(node->branch());
                                                     assert(tree->isWellFormed());
-                                                    continue;
+                                                    continue; // will erase node
                                                 }
                                                 else
-                                                    break; // stay this way
+                                                    break;    // stay this way
 
                                         }
                                         break;
@@ -91,6 +91,7 @@ namespace Yttrium {
                                 break;
 
                         }
+                        
                         temp.pushTail(node.yield());
                     }
                     list.swapWith(temp);
