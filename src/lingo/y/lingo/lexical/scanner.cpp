@@ -28,7 +28,7 @@ namespace Yttrium
                 return rules;
             }
 
-            void Scanner:: add(Rule * const rule)
+            const Rule & Scanner:: add(Rule * const rule)
             {
                 assert(0!=rule);
                 AutoPtr<Rule> ptr(rule);
@@ -50,7 +50,7 @@ namespace Yttrium
 
 
                     // and finally append to rules
-                    rules.pushTail( ptr.yield() );
+                    return *rules.pushTail( ptr.yield() );
                 }
                 catch(...)
                 {

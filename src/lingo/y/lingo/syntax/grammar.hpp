@@ -29,10 +29,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Aggregate    Agg; //!< alias
-                typedef Alternate    Alt; //!< alias
-                typedef Syntax::Rule Rule; //!< alias
-
+                typedef Aggregate     Agg; //!< alias
+                typedef Alternate     Alt; //!< alias
+                typedef Syntax::Rule  Rule; //!< alias
+                typedef Syntax::XNode XNode; //!< alias
                 //______________________________________________________________
                 //
                 //

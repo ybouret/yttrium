@@ -20,4 +20,6 @@ add_test(scanner  test-lingo scanner)
 add_test(lexer    test-lingo lexer)
 add_test(syntax   test-lingo syntax)
 add_test(grammar  test-lingo grammar)
+add_test(parser   test-lingo parser)
+
 

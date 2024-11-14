@@ -99,7 +99,7 @@ namespace Yttrium
                 }
 
                 //! record a new rule
-                void add(Rule * const rule);
+                const Rule & add(Rule * const rule);
 
                 //! generic rule creation from regular expression
                 template <
@@ -107,12 +107,12 @@ namespace Yttrium
                 typename RX,
                 typename HOST,
                 typename METH> inline
-                void on(const ID & id,
-                        const RX & rx,
-                        HOST     & host,
-                        METH       meth)
+                const Rule & on(const ID & id,
+                                const RX & rx,
+                                HOST     & host,
+                                METH       meth)
                 {
-                    add( Rule::Create(id, compile(rx), host, meth) );
+                    return add( Rule::Create(id, compile(rx), host, meth) );
                 }
 
                 //! generic rule creation from regular expression = id
@@ -120,11 +120,11 @@ namespace Yttrium
                 typename RX,
                 typename HOST,
                 typename METH> inline
-                void on(const RX & rx,
-                        HOST     & host,
-                        METH       meth)
+                const Rule & on(const RX & rx,
+                                HOST     & host,
+                                METH       meth)
                 {
-                    add( Rule::Create(rx, compile(rx), host, meth) );
+                    return add( Rule::Create(rx, compile(rx), host, meth) );
                 }
 
                 //! run over possible rules
@@ -150,25 +150,25 @@ namespace Yttrium
                 Unit::Feat FEAT,
                 Unit::Spot SPOT
                 > inline
-                void fn(const UUID &uuid,
-                        const EXPR &expr)
+                const Rule & fn(const UUID &uuid,
+                                const EXPR &expr)
                 {
-                    on(uuid,expr,*this, & Scanner:: summon<FEAT,SPOT>);
+                    return on(uuid,expr,*this, & Scanner:: summon<FEAT,SPOT>);
                 }
 
                 //! bulk emit
                 template <typename UUID, typename EXPR> inline
-                void emit(const UUID &     uuid,
-                          const EXPR &     expr)
+                const Rule & emit(const UUID &     uuid,
+                                  const EXPR &     expr)
                 {
-                    fn<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
+                    return fn<UUID,EXPR,Unit::Emit,Unit::Bulk>(uuid,expr);
                 }
 
                 //! bulk emit with uuid==expr
                 template <typename EXPR> inline
-                void emit(const EXPR &expr)
+                const Rule & emit(const EXPR &expr)
                 {
-                    emit(expr,expr);
+                    return emit(expr,expr);
                 }
 
 
@@ -190,23 +190,26 @@ namespace Yttrium
 
                 //! endl with optional emit
                 template <typename UUID, typename EXPR> inline
-                void endl(const UUID & uuid,
-                          const EXPR & expr,
-                          Unit::Feat   feat)
+                const Rule & endl(const UUID & uuid,
+                                  const EXPR & expr,
+                                  Unit::Feat   feat)
                 {
+                    const Rule * res = 0;
                     switch(feat)
                     {
-                        case Unit::Drop: fn<UUID,EXPR,Unit::Drop,Unit::Endl>(uuid,expr); break;
-                        case Unit::Emit: fn<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
+                        case Unit::Drop: res = & fn<UUID,EXPR,Unit::Drop,Unit::Endl>(uuid,expr); break;
+                        case Unit::Emit: res = & fn<UUID,EXPR,Unit::Emit,Unit::Endl>(uuid,expr); break;
                     }
+                    assert(0!=res);
+                    return *res;
                 }
 
                 //! endl with optional emit
                 template <typename EXPR> inline
-                void endl(const EXPR & expr,
-                          Unit::Feat   feat)
+                const Rule & endl(const EXPR & expr,
+                                  Unit::Feat   feat)
                 {
-                    endl(expr,expr,feat);
+                    return endl(expr,expr,feat);
                 }
 
 
