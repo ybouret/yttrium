@@ -17,6 +17,7 @@ namespace Yttrium {
                 XNode *     tree    = 0;
                 if(primary.accepts(lexer,source,tree,0) )
                 {
+                    if(0==tree) throw Specific::Exception(name->c_str(), "accepted a NULL tree");
                     return accepted(tree,lexer,source);
                 }
                 else
@@ -48,7 +49,7 @@ namespace Yttrium {
             XNode * Grammar:: accepted(XNode * const node, Lexer &lexer, Source &source)
             {
                 assert(0!=node);
-                AutoPtr<XNode> guard(node);
+                AutoPtr<XNode>       keep = node;
                 const Lexeme * const last = node->lastLexeme();
                 const Lexeme * const next = lexer.peek(source,last);
                 if(0!=next)
@@ -63,7 +64,7 @@ namespace Yttrium {
                     next->info.stamp(excp);
                     throw excp;
                 }
-                return guard.yield();
+                return keep.yield();
             }
 
             void Grammar:: rejected(const Lexer &lexer)
@@ -77,6 +78,7 @@ namespace Yttrium {
                 {
                     Specific::Exception excp(name->c_str(),"cannot start with");
                     tryAppendTo(excp, " ", curr);
+                    curr->info.stamp(excp);
                     throw excp;
                 }
                 else
@@ -84,6 +86,7 @@ namespace Yttrium {
                     Specific::Exception excp(name->c_str(),"invalid");
                     tryAppendTo(excp, " ", curr);
                     tryAppendTo(excp, " after", prev);
+                    curr->info.stamp(excp);
                     throw excp;
                 }
 
