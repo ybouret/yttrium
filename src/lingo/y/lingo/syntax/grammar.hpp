@@ -125,6 +125,8 @@ namespace Yttrium
                 // running grammar
                 //
                 //______________________________________________________________
+
+                //! produce XNode from current lexer state and given source
                 XNode * accept(Lexer &lexer, Source &source);
 
                 void tryAppendTo(Exception &excp, const Lexeme * const) const;

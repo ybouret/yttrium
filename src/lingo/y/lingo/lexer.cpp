@@ -100,8 +100,10 @@ namespace Yttrium
                         goto GET;
 
                     case Lexical::Failure:
-                        if(lexeme.isEmpty()) throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
+                        if(lexeme.isEmpty())
+                            throw Specific::Exception(analyzer->name->c_str(), "failure without found reason");
                     {
+                        std::cerr << "lexemes in cache: " << lexemes.size << std::endl;
                         const String        bad = lexeme->toPrintable();
                         Specific::Exception excp(analyzer->name->c_str(), "syntax error '%s'", bad.c_str());
                         lexeme->info.stamp(excp);

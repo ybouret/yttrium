@@ -10,12 +10,13 @@ namespace Yttrium {
         {
             XNode * Grammar:: accept(Lexer &lexer, Source &source)
             {
-                if(rules.size<=0) throw Specific::Exception(name->c_str(),"emtpy grammar");
+                if(rules.size<=0)
+                    throw Specific::Exception(name->c_str(),"emtpy grammar");
+
                 const Rule &primary = *(rules.head);
                 XNode *     tree    = 0;
                 if(primary.accepts(lexer,source,tree) )
                 {
-                    
                     return accepted(tree,lexer,source);
                 }
                 else
@@ -36,7 +37,7 @@ namespace Yttrium {
                     excp.add("no terminal '%s'", label->c_str());
                     return;
                 }
-                next->appendTo(excp,term->kind == Terminal::Univocal );
+                next->appendTo(excp, term->kind == Terminal::Univocal );
             }
 
 
