@@ -47,17 +47,17 @@ namespace Yttrium
 {
     namespace Lingo
     {
-        Pattern * Dictionary:: compile(const String &rx)
+        Pattern * Dictionary:: compile(const String &rx) const
         {
             return  RegExp(rx,this);
         }
 
-        Pattern * Dictionary:: compile(const char * const rx)
+        Pattern * Dictionary:: compile(const char * const rx) const
         {
             return  RegExp(rx,this);
         }
 
-        Pattern * Dictionary:: compile(const char rx)
+        Pattern * Dictionary:: compile(const char rx) const
         {
             return  RegExp(rx,this);
         }

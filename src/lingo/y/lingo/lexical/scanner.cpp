@@ -62,6 +62,13 @@ namespace Yttrium
             }
 
 
+            void Scanner:: cut(const Rule & rule) noexcept
+            {
+                assert(rules.owns(&rule));
+                for(unsigned i=0;i<CHARS;++i) rlist[i].no(rule);
+                delete rules.pop( & Coerce(rule) );
+            }
+
             Unit * Scanner:: produce(Token &token) const
             {
                 assert(token.size>0);

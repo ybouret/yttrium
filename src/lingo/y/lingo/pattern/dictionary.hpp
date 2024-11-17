@@ -42,9 +42,9 @@ namespace Yttrium
             void define(const String &     name, Pattern * const p); //!< define new pattern
             void define(const char * const name, Pattern * const p); //!< define new pattern
 
-            Pattern * compile(const String &     rx); //!< RegExp with this
-            Pattern * compile(const char * const rx); //!< RegExp with this
-            Pattern * compile(const char         rx); //!< RegExp with this
+            Pattern * compile(const String &     rx) const; //!< RegExp with this
+            Pattern * compile(const char * const rx) const; //!< RegExp with this
+            Pattern * compile(const char         rx) const; //!< RegExp with this
 
             //! set ID = RegExp(RX)
             template <typename ID, typename RX> inline

@@ -94,12 +94,14 @@ namespace Yttrium
 
                 //! compile any expression with internal dictionary
                 template <typename RX> inline
-                Pattern * compile(const RX &rx) {
+                Pattern * compile(const RX &rx) const {
                     return dict.compile(rx);
                 }
 
-                //! record a new rule
-                const Rule & add(Rule * const rule);
+
+                const Rule & add(Rule * const rule);          //!< record a new rule
+                void         cut(const Rule & rule) noexcept; //!< remove an existing rule
+
 
                 //! generic rule creation from regular expression
                 template <

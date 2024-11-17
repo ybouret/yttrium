@@ -75,7 +75,6 @@ namespace Yttrium
                 }
 
 
-                void        no(const String &) noexcept;     //!< remove rule from unlocked grammar
                 const Rule &zom(const Rule & );              //!< zero or more rule
                 const Rule &oom(const Rule & );              //!< one or more rule
                 const Rule &rep(const Rule &, const size_t); //!< repeat rule at least some times
@@ -83,9 +82,9 @@ namespace Yttrium
 
                 //! helper to declare terminal
                 template <typename NAME> inline
-                const Rule & term_(const NAME &           _name,
-                                   const Terminal::Kind   _kind,
-                                   const Terminal::Role   _role)
+                const Rule & term__(const NAME &           _name,
+                                    const Terminal::Kind   _kind,
+                                    const Terminal::Role   _role)
                 {
                     return decl( new Terminal(_name,_kind,_role) );
                 }
@@ -136,7 +135,9 @@ namespace Yttrium
                                  const char * const   prefix,
                                  const Lexeme * const lexeme) const;
 
-
+            protected:
+                void        no(const String &) noexcept;     //!< remove rule from unlocked grammar
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules rules;

@@ -14,6 +14,8 @@ namespace Yttrium
         class Parser : public Syntax::Grammar
         {
         public:
+            typedef Syntax::Terminal Term;
+
             template <typename NAME> inline
             explicit Parser(const NAME & _name) :
             Syntax::Grammar(_name),
@@ -23,12 +25,24 @@ namespace Yttrium
 
             virtual ~Parser() noexcept;
 
-            template <typename ID,typename RX> inline
-            const Rule & term(const ID & id, const RX &rx)
+            template <typename UUID,typename EXPR,Term::Role ROLE> inline
+            const Rule & term_(const UUID & uuid,
+                               const EXPR & expr)
             {
-                Syntax::Terminal::Kind kind = Syntax::Terminal::Standard;
-                lexer.emit(id,rx).motif;
+                const Lexical::Rule &rule = lexer.emit(uuid,expr);
+                const Term::Kind     kind = rule.motif->univocal() ? Term::Univocal : Term::Standard;
+                const Caption       &r_id = rule.name;
+                try {
+                    return term__(r_id,kind,ROLE);
+                }
+                catch(...)
+                {
+                    lexer.cut(rule);
+                    throw;
+                }
             }
+
+            
 
 
             XNode * operator()(Source &source);

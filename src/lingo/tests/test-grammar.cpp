@@ -39,12 +39,12 @@ namespace
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
             Agg & STATEMENT = agg("STATEMENT");
-            const Rule & INT = term_("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
-            const Rule & SEP = term_(";",   Syntax::Terminal::Univocal,  Syntax::Terminal::Dividing);
+            const Rule & INT = term__("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
+            const Rule & SEP = term__(";",   Syntax::Terminal::Univocal,  Syntax::Terminal::Dividing);
             STATEMENT << INT << SEP;
 
             Agg & TEXT       = act("TEXT");
-            TEXT << term_("STRING",Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
+            TEXT << term__("STRING",Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);
             TEXT << SEP;
 
             top( zom(pick(STATEMENT,TEXT) ) );
