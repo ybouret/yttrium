@@ -24,7 +24,7 @@ namespace Yttrium
             //__________________________________________________________________
             enum TranslatorPolicy
             {
-                Inflexible, //!< will raise an error upon an unknown name
+                Restricted, //!< will raise an error upon an unknown name
                 Permissive  //!< will skip any unknown name
             };
 
@@ -62,7 +62,7 @@ namespace Yttrium
                 tmap(),
                 imap(),
                 deep(0),
-                policy(Inflexible),
+                policy(Restricted),
                 verbose(false)
                 {
                 }
@@ -145,7 +145,7 @@ namespace Yttrium
 
             public:
                 const size_t     deep;    //!< current depth
-                TranslatorPolicy policy;  //!< policy, default is Inflexible
+                TranslatorPolicy policy;  //!< policy, default is Restricted
                 bool             verbose; //!< verbosity, default is false
             };
 

@@ -59,7 +59,7 @@ namespace Yttrium
                 switch(policy)
                 {
                     case Permissive: break;
-                    case Inflexible: throw Specific::Exception(name->c_str(), "missing %s('%s')",where,label->c_str());
+                    case Restricted: throw Specific::Exception(name->c_str(), "missing %s('%s')",where,label->c_str());
                 }
             }
 
