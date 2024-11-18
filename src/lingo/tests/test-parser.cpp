@@ -110,11 +110,14 @@ Y_UTEST(parser)
         AutoPtr<Syntax::XNode> xnode = J( Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
         xnode->toBinary("xnode.dat");
+
+        if(true)
         {
             Source src( Module::OpenFile("xnode.dat") );
             AutoPtr<Syntax::XNode> reloaded = J.reload(src);
         }
 
+        std::cerr << "Compiling..." << std::endl;
         JCompiler tr;
         tr.verbose = true;
         tr.policy  = Syntax::Permissive;
