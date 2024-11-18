@@ -20,6 +20,10 @@ add_test(scanner  test-lingo scanner)
 add_test(lexer    test-lingo lexer)
 add_test(syntax   test-lingo syntax)
 add_test(grammar  test-lingo grammar)
-add_test(parser   test-lingo parser)
+add_test(parser   test-lingo parser ${DATA}/db.js)
+add_test(parser1   test-lingo parser ${DATA}/sample1.js)
+add_test(parser2   test-lingo parser ${DATA}/sample2.js)
+add_test(parser3   test-lingo parser ${DATA}/sample3.js)
+add_test(parser4   test-lingo parser ${DATA}/sample4.js)
 
 
