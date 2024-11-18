@@ -1,6 +1,7 @@
 
 #include "y/lingo/syntax/translator.hpp"
 #include "y/lingo/syntax/xlist.hpp"
+#include "y/system/exception.hpp"
 
 
 namespace Yttrium
@@ -18,6 +19,7 @@ namespace Yttrium
             tmap(),
             imap(),
             deep(0),
+            policy(Inflexible),
             verbose(false)
             {
 
@@ -60,6 +62,15 @@ namespace Yttrium
                 return Core::Indent(std::cerr << "|_",deep,'_');
             }
 
+            void Translator:: onNotFound(const String &     name,
+                                         const char * const text) const
+            {
+                switch(policy)
+                {
+                    case Permissive: break;
+                    case Inflexible: throw Specific::Exception(name.c_str(), "missing On%s()",text);
+                }
+            }
 
             void Translator:: onTerminal(const String &name, const Lexeme &unit)
             {
@@ -69,6 +80,13 @@ namespace Yttrium
                     if(unit.size)  os << '=' << unit.toPrintable();
                     os << std::endl;
                 }
+
+                OnTerminal * const proc = tmap.search(name);
+                if(0!=proc)
+                    (*proc)(unit);
+                else
+                    onNotFound(name, "Terminal");
+
             }
 
 
@@ -76,14 +94,15 @@ namespace Yttrium
             {
                 ++Coerce(deep);
                 for(const XNode *node=chld.head;node;node=node->next)
-                {
                     walk(node);
-                }
                 --Coerce(deep);
-                if(verbose)
-                {
-                    indent() << "call " << '[' << name << ']' << '/' << chld.size << std::endl;
-                }
+
+                if(verbose) indent() << "call " << '[' << name << ']' << '/' << chld.size << std::endl;
+                OnInternal * const proc = imap.search(name);
+                if(0!=proc)
+                    (*proc)(chld.size);
+                else
+                    onNotFound(name, "Internal");
             }
 
 

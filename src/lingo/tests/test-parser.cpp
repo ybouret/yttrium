@@ -88,6 +88,7 @@ Y_UTEST(parser)
 
         Syntax::Translator tr;
         tr.verbose = true;
+        tr.policy  = Syntax::Permissive;
         tr(*xnode);
     }
 }
