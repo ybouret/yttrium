@@ -16,17 +16,17 @@ namespace
         explicit JParser() : Parser("JSON")
         {
 
-            Alt      & JSON  = alt(name);
-            Alt      & VALUE = alt("VALUE");
-
-            VALUE <<  plug<Lexical::JString>("String") << term("Number", "[:digit:]+");
+            Alt        & JSON   = alt(name);
+            Alt        & VALUE  = alt("VALUE");
+            const Rule & STRING = plug<Lexical::JString>("String");
+            VALUE << STRING << term("Number", "[:digit:]+");
 
             Alt & ARRAY = alt("Array");
             {
                 Agg        & HeavyArray = agg("HeavyArray");
                 HeavyArray << '[';
                 HeavyArray << VALUE;
-                HeavyArray << zom( cat( mark(','), VALUE) );
+                HeavyArray << zom( cat( get(','), VALUE) );
                 HeavyArray << ']';
                 ARRAY << HeavyArray;
                 ARRAY << (agg("EmptyArray") << '[' << ']');
@@ -35,8 +35,16 @@ namespace
 
             Alt & OBJECT = alt("Object");
             {
+                Agg & HeavyObject = agg("HeavyObject");
+                HeavyObject << '{';
+                const Rule & PAIR = agg("Pair") << STRING << ':' << VALUE;
+                HeavyObject << PAIR;
+                HeavyObject << zom( cat( get(','), PAIR) );
+                HeavyObject << '}';
+
                 OBJECT << (agg("EmptyObject") << '{' << '}');
             }
+            
             // finish top-level
             JSON << ARRAY;
             JSON << OBJECT;

@@ -99,7 +99,7 @@ namespace Yttrium
 
                 //! helper to declare terminal
                 template <typename NAME> inline
-                const Rule & term__(const NAME &           _name,
+                const Terminal & term__(const NAME &           _name,
                                     const Terminal::Kind   _kind,
                                     const Terminal::Role   _role)
                 {

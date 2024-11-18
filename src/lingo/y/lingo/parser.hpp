@@ -95,15 +95,15 @@ namespace Yttrium
 
 
             template <typename ADD_ON> inline
-            const Rule & plug(const String &uuid) {
-                const Rule &            xrule   = term__(uuid,Terminal::Standard,Terminal::Semantic);
+            const Terminal & plug(const String &uuid) {
+                const Terminal & xrule   = term__(uuid,Terminal::Standard,Terminal::Semantic);
                 try { (void) lexer.plug<ADD_ON>(uuid); }
                 catch(...) { no(uuid); throw; }
                 return xrule;
             }
 
             template <typename ADD_ON> inline
-            const Rule & plug(const char * const uuid) {
+            const Terminal & plug(const char * const uuid) {
                 const String _(uuid); return plug<ADD_ON>(_);
             }
 
