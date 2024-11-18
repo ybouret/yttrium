@@ -2,8 +2,9 @@
 #include "y/lingo/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
-#include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/jstring.hpp"
+
+#include "y/lingo/syntax/translator.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -84,6 +85,10 @@ Y_UTEST(parser)
             Source src( Module::OpenFile("xnode.dat") );
             AutoPtr<Syntax::XNode> reloaded = J.reload(src);
         }
+
+        Syntax::Translator tr;
+        tr.verbose = true;
+        tr(*xnode);
     }
 }
 Y_UDONE()
