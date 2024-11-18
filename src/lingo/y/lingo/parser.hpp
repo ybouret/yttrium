@@ -108,6 +108,17 @@ namespace Yttrium
                 const String _(uuid); return plug<ADD_ON>(_);
             }
 
+            template <typename UUID,typename EXPR> inline
+            const Terminal & endl(const UUID & uuid, const EXPR &expr)
+            {
+                const Lexical::Rule &rule = lexer.endl(uuid,expr,Lexeme::Emit);
+                const Terminal::Kind kind = rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
+                const Caption       &r_id = rule.name;
+                try { return term__(r_id,kind,Terminal::Semantic); }
+                catch(...) { lexer.cut(rule); throw; }
+            }
+
+
 
             const Rule & get(const String &expr);       //!< on-the-fly semantic term=expr
             const Rule & get(const char * const expr);  //!< on-the-fly semantic term=expr

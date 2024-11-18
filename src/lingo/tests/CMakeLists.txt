@@ -25,5 +25,5 @@ add_test(parser1   test-lingo parser ${DATA}/sample1.js)
 add_test(parser2   test-lingo parser ${DATA}/sample2.js)
 add_test(parser3   test-lingo parser ${DATA}/sample3.js)
 add_test(parser4   test-lingo parser ${DATA}/sample4.js)
-
+add_test(parser-nl test-lingo parser_nl)
 
