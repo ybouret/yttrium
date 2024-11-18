@@ -19,10 +19,9 @@ namespace
             Alt      & JSON  = alt(name);
             Alt      & VALUE = alt("VALUE");
 
-            VALUE << term("Number", "[:digit:]+") << "null" << "true" << "false";
+            VALUE <<  plug<Lexical::JString>("String") << term("Number", "[:digit:]+");
 
-            Alt & ARRAY = alt("array");
-
+            Alt & ARRAY = alt("Array");
             {
                 Agg        & HeavyArray = agg("HeavyArray");
                 HeavyArray << '[';
@@ -32,13 +31,17 @@ namespace
                 ARRAY << HeavyArray;
                 ARRAY << (agg("EmptyArray") << '[' << ']');
             }
-
-
             VALUE << ARRAY;
 
+            Alt & OBJECT = alt("Object");
+            {
+                OBJECT << (agg("EmptyObject") << '{' << '}');
+            }
             // finish top-level
             JSON << ARRAY;
+            JSON << OBJECT;
 
+            VALUE << "null" << "true" << "false";
             render();
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]", Lexeme::Drop);

@@ -79,6 +79,7 @@ namespace Yttrium
                     return *rule;
                 }
 
+                //! get rule by name
                 template <typename UUID> inline
                 const Rule & operator[](const UUID &uuid) const
                 {
@@ -134,18 +135,20 @@ namespace Yttrium
                 const Rule &pick(const Rule &a, const Rule &b, const Rule &c);                //!< (a|b|c)
                 const Rule &pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (a|b|c|d)
 
-                const Rule &cat(const Manifest &);                                           //!< aggregate of manifest with at least two members
+                const Rule &cat(const Manifest &);                                           //!< grouping of manifest with at least two members
                 const Rule &cat(const Rule &a, const Rule &b);                               //!< (ab)
                 const Rule &cat(const Rule &a, const Rule &b, const Rule &c);                //!< (abc)
                 const Rule &cat(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (abcd)
 
 
+                //! create/query a semantic/dividing terminal on the fly
                 template <typename EXPR> inline
                 const Rule & get(const EXPR &expr) {
                     if(0==parser) { const Caption request(expr); noParserFor(request);}
                     return get_(expr);
                 }
 
+                //! syntactic helper for grammar design
                 template <typename EXPR> inline
                 Grammar & operator<<(const EXPR &expr)
                 {
@@ -167,11 +170,16 @@ namespace Yttrium
                 //! produce XNode from current lexer state and given source
                 XNode * accept(Lexer &lexer, Source &source);
 
-                
+
+                //! reload a serialized node
+                XNode * reload(InputStream &) const;
+
                 //! helper to human readable exception
                 void tryAppendTo(Exception           &excp,
                                  const char * const   prefix,
                                  const Lexeme * const lexeme) const;
+
+
 
             protected:
                 void        no(const String &) noexcept;     //!< remove rule from unlocked grammar
