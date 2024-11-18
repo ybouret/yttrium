@@ -16,10 +16,9 @@ namespace
         explicit JParser() : Parser("JSON")
         {
 
-            Agg & JSON = agg(name);
+            //Agg & JSON = agg(name);
+            //Alt & VALUE = alt("VALUE");
 
-            Alt & VALUE = alt("VALUE");
-            
 
 
             render();

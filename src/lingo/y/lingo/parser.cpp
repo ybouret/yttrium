@@ -19,6 +19,28 @@ namespace Yttrium
             return XNode::AST(cst);
         }
 
+
+        const Syntax::Rule & Parser:: getSemantic(const String &expr)
+        {
+            {
+                const Rule * const rule = (*this)->query(expr);
+                if(0!=rule) return *rule;
+            }
+            return term(expr);
+        }
+
+        const Syntax::Rule & Parser:: getDividing(const char c)
+        {
+            {
+                const Rule * const rule = (*this)->query(c);
+                if(0!=rule) return *rule;
+            }
+            return mark(c);
+        }
+
+
+
+
     }
 
 }

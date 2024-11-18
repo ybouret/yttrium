@@ -9,6 +9,9 @@ namespace Yttrium
 {
     namespace Lingo
     {
+
+        class Parser;
+
         namespace Syntax
         {
 
@@ -42,9 +45,10 @@ namespace Yttrium
 
                 //! setup empty with given name
                 template <typename NAME> inline
-                explicit Grammar(const NAME & _name) :
+                explicit Grammar(const NAME & _name, Parser * const _host = 0) :
                 Entity(_name,AsCaption),
                 rules(),
+                parser(_host),
                 locked(false)
                 {
                 }
@@ -129,6 +133,11 @@ namespace Yttrium
                 const Rule &pick(const Rule &a, const Rule &b, const Rule &c);                //!< (a|b|c)
                 const Rule &pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (a|b|c|d)
 
+                const Rule &cat(const Manifest &);                                           //!< aggregate of manifest with at least two members
+                const Rule &cat(const Rule &a, const Rule &b);                               //!< (ab)
+                const Rule &cat(const Rule &a, const Rule &b, const Rule &c);                //!< (abc)
+                const Rule &cat(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (abcd)
+
                 //! render grammar
                 void render() const;
 
@@ -153,12 +162,14 @@ namespace Yttrium
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
-                Rules rules;
+                Rules          rules;
+                Parser * const parser;
+
                 virtual ConstInterface & surrogate() const noexcept; //!< [Proxy]
                 XNode * accepted(XNode * const, Lexer &, Source &);  //!< post-process tree
                 void    rejected(const Lexer &);                     //!< guess what went wrong
                 void    throwMissing(const Caption &) const;         //!< throw missing
-                
+
             public:
                 const bool  locked; //!< status
             };

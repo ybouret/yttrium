@@ -39,7 +39,7 @@ namespace Yttrium
             //! setup with name
             template <typename NAME> inline
             explicit Parser(const NAME & _name) :
-            Syntax::Grammar(_name),
+            Syntax::Grammar(_name,this),
             lexer(name)
             {
             }
@@ -76,7 +76,7 @@ namespace Yttrium
             //! create a semantic terminal
             template <typename EXPR> inline
             const Rule & term(const EXPR &expr) {
-                term(expr,expr);
+                return term(expr,expr);
             }
 
             //! create a dividing terminal
@@ -90,10 +90,11 @@ namespace Yttrium
             //! create a dividing terminal
             template <typename EXPR> inline
             const Rule & mark(const EXPR &expr) {
-                mark(expr,expr);
+                return mark(expr,expr);
             }
 
-            
+            const Rule & getSemantic(const String &);
+            const Rule & getDividing(const char);
 
             //! restart lexer and process source
             XNode * operator()(Source &source);
@@ -108,6 +109,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+
+
+
         };
 
     }
