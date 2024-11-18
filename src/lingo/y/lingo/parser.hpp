@@ -93,7 +93,7 @@ namespace Yttrium
                 return mark(expr,expr);
             }
 
-
+            //! make a terminal 'uuid' from an AddOn
             template <typename ADD_ON> inline
             const Terminal & plug(const String &uuid) {
                 const Terminal & xrule   = term__(uuid,Terminal::Standard,Terminal::Semantic);
@@ -102,6 +102,7 @@ namespace Yttrium
                 return xrule;
             }
 
+            //! make a terminal 'uuid' from an AddOn
             template <typename ADD_ON> inline
             const Terminal & plug(const char * const uuid) {
                 const String _(uuid); return plug<ADD_ON>(_);

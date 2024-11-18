@@ -42,9 +42,11 @@ namespace
                 HeavyObject << zom( cat( get(','), PAIR) );
                 HeavyObject << '}';
 
+                OBJECT << HeavyObject;
                 OBJECT << (agg("EmptyObject") << '{' << '}');
             }
-            
+            VALUE << OBJECT;
+
             // finish top-level
             JSON << ARRAY;
             JSON << OBJECT;
@@ -53,6 +55,8 @@ namespace
             render();
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]", Lexeme::Drop);
+
+            validate();
         }
 
         virtual ~JParser() noexcept
