@@ -8,9 +8,26 @@ namespace Yttrium
     {
         namespace Syntax
         {
-            XNode * Grammar:: reload(InputStream &) const
+            static inline
+            XNode * reloadTerminal(const Terminal &rule,
+                                   InputStream    &fp)
             {
-                return 0;
+                
+            }
+
+
+            XNode * Grammar:: reload(InputStream &fp) const
+            {
+                const Grammar &self     = *this;
+                const String   ruleName = String::ReadFrom(fp);
+                const Rule    &rule     = self[ruleName];
+                if(rule.isTerminal()) {
+                    return reloadTerminal( *rule.as<Terminal>(), fp);
+                }
+                else
+                {
+
+                }
             }
         }
 
