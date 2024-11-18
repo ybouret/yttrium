@@ -26,7 +26,7 @@ namespace
             lexer.drop("[:blank:]");
 
             render();
-
+            validate();
         }
 
         virtual ~ParserNL() noexcept
@@ -50,6 +50,12 @@ Y_UTEST(parser_nl)
         AutoPtr<Syntax::XNode> xnode = P( Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
         xnode->toBinary("xnode.dat");
+
+        if(false)
+        {
+            Source src( Module::OpenFile("xnode.dat") );
+            AutoPtr<Syntax::XNode> reloaded = P.reload(src);
+        }
     }
 
 }

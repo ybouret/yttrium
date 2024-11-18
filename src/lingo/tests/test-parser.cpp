@@ -111,7 +111,6 @@ Y_UTEST(parser)
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
         xnode->toBinary("xnode.dat");
 
-        if(true)
         {
             Source src( Module::OpenFile("xnode.dat") );
             AutoPtr<Syntax::XNode> reloaded = J.reload(src);
