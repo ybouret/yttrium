@@ -28,6 +28,18 @@ namespace Yttrium
                 return rules;
             }
 
+            void Scanner:: expunge_(const Rule &rule) const noexcept
+            {
+                for(unsigned i=0;i<CHARS;++i) rlist[i].no(rule);
+            }
+
+            void Scanner:: indorse_(Rule &rule, const CharDB &cdb)
+            {
+                for(unsigned i=0;i<CHARS;++i)
+                    if( cdb.has(i) )
+                        rlist[i] << rule;
+            }
+
             const Rule & Scanner:: add(Rule * const rule)
             {
                 assert(0!=rule);
@@ -41,31 +53,19 @@ namespace Yttrium
                 CharDB        cdb;
                 Rule &        ref = *rule;
                 rule->motif->query(cdb);
+
                 try {
-
-                    // register in lists
-                    for(unsigned i=0;i<CHARS;++i)
-                        if( cdb.has(i) )
-                            rlist[i] << ref;
-
-
-                    // and finally append to rules
+                    indorse_(ref,cdb);
                     return *rules.pushTail( ptr.yield() );
                 }
-                catch(...)
-                {
-                    for(unsigned i=0;i<CHARS;++i)
-                        if( cdb.has(i) )
-                            (void) rlist[i].no(ref);
-                    throw;
-                }
+                catch(...) { expunge_(ref); throw; }
             }
 
 
             void Scanner:: cut(const Rule & rule) noexcept
             {
                 assert(rules.owns(&rule));
-                for(unsigned i=0;i<CHARS;++i) rlist[i].no(rule);
+                expunge_(rule);
                 delete rules.pop( & Coerce(rule) );
             }
 

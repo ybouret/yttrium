@@ -221,11 +221,13 @@ namespace Yttrium
                 RList * const rlist; //!< map of rules from their first chars
                 Rules         rules; //!< list of rules
 
-                void                     initialize() noexcept;       //!< setup map
-                virtual ConstInterface & surrogate() const noexcept;  //!< [Proxy] rules
+                void                     initialize()           noexcept;       //!< setup map
+                virtual ConstInterface & surrogate()            const noexcept; //!< [Proxy] rules
+                Unit *                   findError(Source &source)       const; //!< try to extract faulty unit
+                void                     expunge_(const Rule &) const noexcept; //!< remove from maps
+                void                     indorse_(Rule &, const CharDB &);      //!< indorse rule in maps
 
-                Unit * findError(Source &source) const;
-
+                //! generic call
                 template <Unit::Feat feat,Unit::Spot spot> inline
                 Outcome summon(const Token &) const noexcept {
                     return Outcome(feat,spot);

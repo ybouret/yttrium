@@ -32,9 +32,7 @@ namespace Yttrium
                 const Lexical::Rule &rule = lexer.emit(uuid,expr);
                 const Term::Kind     kind = rule.motif->univocal() ? Term::Univocal : Term::Standard;
                 const Caption       &r_id = rule.name;
-                try {
-                    return term__(r_id,kind,ROLE);
-                }
+                try { return term__(r_id,kind,ROLE); }
                 catch(...)
                 {
                     lexer.cut(rule);
