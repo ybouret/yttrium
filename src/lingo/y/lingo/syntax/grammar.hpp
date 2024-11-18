@@ -172,7 +172,7 @@ namespace Yttrium
 
 
                 //! reload a serialized node
-                XNode * reload(InputStream &) const;
+                XNode * reload(Source &) const;
 
                 //! helper to human readable exception
                 void tryAppendTo(Exception           &excp,

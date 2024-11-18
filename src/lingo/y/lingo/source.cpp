@@ -8,6 +8,12 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        const char * const Source:: CallSign = "Lingo::Source";
+
+        const char * Source:: callSign() const noexcept
+        {
+            return CallSign;
+        }
 
         class Source::Code : public Object
         {
@@ -181,7 +187,27 @@ namespace Yttrium
             
         }
 
-        
+
+        bool Source:: query(char &c)
+        {
+            Char *ch = get();
+            if(0==ch) {
+                return false;
+            }
+            else
+            {
+                c = char(**ch);
+                delete ch;
+                return true;
+            }
+        }
+
+
+        void Source:: store(const char)  
+        {
+            throw Specific::Exception(CallSign, "forbidden store()!!");
+        }
+
     }
 
 }

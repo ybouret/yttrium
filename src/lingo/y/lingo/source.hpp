@@ -19,9 +19,17 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Source
+        class Source : public InputStream
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Lingo::Source"
+
             //__________________________________________________________________
             //
             //
@@ -30,6 +38,16 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Source(Module *);  //!< setup from module
             virtual ~Source() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const char * callSign() const noexcept; //!< [Identifiable] CallSign
+            virtual bool         query(char &);             //!< [Identifiable] extract from get()
+            virtual void         store(const char);         //!< not allowed!
 
             //__________________________________________________________________
             //

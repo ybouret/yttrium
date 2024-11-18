@@ -81,7 +81,7 @@ namespace Yttrium
         T readVBR(const char *ctx=0)
         {
             static const uint64_t m64 = IntegerFor<T>::Maximum;
-            const uint64_t        u64  = read64(ctx);
+            const uint64_t        u64 = read64(ctx);
             if(u64>m64) overflowing(ctx);
             return T(u64);
         }

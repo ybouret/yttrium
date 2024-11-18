@@ -79,6 +79,11 @@ Y_UTEST(parser)
     {
         AutoPtr<Syntax::XNode> xnode = J( Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
+        xnode->toBinary("xnode.dat");
+        {
+            Source src( Module::OpenFile("xnode.dat") );
+            AutoPtr<Syntax::XNode> reloaded = J.reload(src);
+        }
     }
 }
 Y_UDONE()
