@@ -19,7 +19,6 @@ namespace Yttrium
         //______________________________________________________________________
         typedef ArkPtr<String,const String> Caption_;
 
-
         //______________________________________________________________________
         //
         //
@@ -28,7 +27,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Caption : public Caption_
+        class Caption : public Caption_, public Memory::ReadOnlyBuffer
         {
         public:
             explicit Caption(const String &);                //!< setup from string
@@ -39,7 +38,8 @@ namespace Yttrium
             virtual ~Caption()                     noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Caption);                        //!< display
 
-            
+            virtual const void * ro_addr() const noexcept;
+            virtual size_t       measure() const noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Caption);

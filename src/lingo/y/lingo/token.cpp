@@ -46,7 +46,7 @@ namespace Yttrium
             return res;
         }
 
-        Token & Token:: operator<<(  Token &token)
+        Token & Token:: operator<<(Token &token)
         {
             mergeTail(token);
             return *this;

@@ -1,6 +1,7 @@
 
 #include "y/lingo/syntax/translator.hpp"
 #include "y/lingo/syntax/xlist.hpp"
+#include "y/lingo/syntax/rule.hpp"
 #include "y/system/exception.hpp"
 
 
@@ -15,16 +16,7 @@ namespace Yttrium
             {
             }
 
-            Translator:: Translator() :
-            tmap(),
-            imap(),
-            deep(0),
-            policy(Inflexible),
-            verbose(false)
-            {
-
-            }
-
+            
             void Translator:: init()
             {
 
@@ -51,9 +43,8 @@ namespace Yttrium
                 assert(0!=node);
                 switch(node->type)
                 {
-                    case XNode::Terminal: onTerminal(node->name(),node->lexeme()); break;
-
-                    case XNode::Internal: onInternal(node->name(),node->branch()); break;
+                    case XNode::Terminal: pushTerminal(node->rule.name,node->lexeme()); break;
+                    case XNode::Internal: callInternal(node->rule.name,node->branch()); break;
                 }
             }
 
@@ -62,50 +53,62 @@ namespace Yttrium
                 return Core::Indent(std::cerr << "|_",deep,'_');
             }
 
-            void Translator:: onNotFound(const String &     name,
-                                         const char * const text) const
+            void Translator:: onNotFound(const Caption &    label,
+                                         const char * const where) const
             {
                 switch(policy)
                 {
                     case Permissive: break;
-                    case Inflexible: throw Specific::Exception(name.c_str(), "missing On%s()",text);
+                    case Inflexible: throw Specific::Exception(name->c_str(), "missing %s('%s')",where,label->c_str());
                 }
             }
 
-            void Translator:: onTerminal(const String &name, const Lexeme &unit)
+            void Translator:: pushTerminal(const Caption &tlabel, const Lexeme &lexeme)
             {
                 if(verbose)
                 {
-                    std::ostream & os = indent()  << "push " << '[' << name << ']';
-                    if(unit.size)  os << '=' << unit.toPrintable();
+                    std::ostream & os = indent()  << "push " << '[' << tlabel << ']';
+                    if(lexeme.size>0)  os << '=' << lexeme.toPrintable();
                     os << std::endl;
                 }
 
-                OnTerminal * const proc = tmap.search(name);
+                OnTerminal * const proc = tmap.search(tlabel);
                 if(0!=proc)
-                    (*proc)(unit);
+                    (*proc)(lexeme);
                 else
-                    onNotFound(name, "Terminal");
+                    onNotFound(tlabel, "pushTerminal");
 
             }
 
 
-            void Translator:: onInternal(const String &name, const XList &chld)
+            void Translator:: callInternal(const Caption &ilabel, const XList &branch)
             {
                 ++Coerce(deep);
-                for(const XNode *node=chld.head;node;node=node->next)
+                for(const XNode *node=branch.head;node;node=node->next)
                     walk(node);
                 --Coerce(deep);
 
-                if(verbose) indent() << "call " << '[' << name << ']' << '/' << chld.size << std::endl;
-                OnInternal * const proc = imap.search(name);
+                if(verbose) indent() << "call " << '[' << ilabel << ']' << '/' << branch.size << std::endl;
+                OnInternal * const proc = imap.search(ilabel);
                 if(0!=proc)
-                    (*proc)(chld.size);
+                    (*proc)(branch.size);
                 else
-                    onNotFound(name, "Internal");
+                    onNotFound(name, "callInternal");
             }
 
+            void Translator:: on(const Caption    & label,
+                                 const OnTerminal & tproc)
+            {
+                if( !tmap.insert(label,tproc) )
+                    throw Specific::Exception(name->c_str(),"multiple OnTerminal('%s')", label->c_str() );
+            }
 
+            void Translator:: on(const Caption    & label,
+                                 const OnInternal & iproc)
+            {
+                if( !imap.insert(label,iproc) )
+                    throw Specific::Exception(name->c_str(),"multiple OnInternal('%s')", label->c_str() );
+            }
         }
 
     }

@@ -36,7 +36,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Translator
+            class Translator : public Entity
             {
             public:
                 //______________________________________________________________
@@ -45,8 +45,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef SuffixMap<const String,OnTerminal> OnTerminalMap; //!< alias
-                typedef SuffixMap<const String,OnInternal> OnInternalMap; //!< alias
+                typedef SuffixMap<const Caption,OnTerminal> OnTerminalMap; //!< alias
+                typedef SuffixMap<const Caption,OnInternal> OnInternalMap; //!< alias
 
                 //______________________________________________________________
                 //
@@ -54,7 +54,19 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Translator();            //!< setup empty, inflexible, not verbose
+
+                //! setup
+                template <typename NAME> inline
+                explicit Translator(const NAME & _name) :
+                Entity(_name,AsCaption),
+                tmap(),
+                imap(),
+                deep(0),
+                policy(Inflexible),
+                verbose(false)
+                {
+                }
+                
                 virtual ~Translator() noexcept;   //!< cleanup
 
                 //______________________________________________________________
@@ -64,7 +76,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 virtual void init(); //!< initialize, default is do-nothing for standalone
-                virtual void quit(); //!< quit, default is do-nothing for standaloen
+                virtual void quit(); //!< quit, default is do-nothing for standalone
 
                 //______________________________________________________________
                 //
@@ -75,18 +87,56 @@ namespace Yttrium
                 void operator()(const XNode &root); //!< walk down root
                 std::ostream & indent() const;      //!< indent w.r.t depth
 
+
+                void on(const Caption    & label,
+                        const OnTerminal & tproc);
+
+                void on(const Caption    & label,
+                        const OnInternal & iproc);
+
+                template <
+                typename NAME,
+                typename HOST,
+                typename METH> inline
+                void onTerminal(const NAME & _name,
+                                HOST &       _host,
+                                METH         _meth)
+                {
+                    const Caption    label(_name);
+                    const OnTerminal tproc( &_host, _meth );
+                    on(label,tproc);
+                }
+
+                template <
+                typename NAME,
+                typename HOST,
+                typename METH> inline
+                void onInternal(const NAME & _name,
+                                HOST &       _host,
+                                METH         _meth)
+                {
+                    const Caption    label(_name);
+                    const OnInternal iproc( &_host, _meth );
+                    on(label,iproc);
+                }
+
+
+
+                void printTerminal(const Lexeme &) const;
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
                 void walk(const XNode * const);
 
-                void onNotFound(const String &     name,
-                                const char * const text) const;
+                void onNotFound(const Caption &    label,
+                                const char * const where) const;
 
-                void onTerminal(const String &name,
-                                const Lexeme &unit);
+                void pushTerminal(const Caption &tlabel,
+                                  const Lexeme  &lexeme);
 
-                void onInternal(const String &name,
-                                const XList  &chld);
+                void callInternal(const Caption &ilabel,
+                                  const XList   &branch);
 
                 OnTerminalMap tmap; //!< terminal map
                 OnInternalMap imap; //!< internal map
@@ -96,6 +146,11 @@ namespace Yttrium
                 TranslatorPolicy policy;  //!< policy, default is Inflexible
                 bool             verbose; //!< verbosity, default is false
             };
+
+#define Y_Lingo_OnTerminal(TYPE,NAME) do { onTerminal(#NAME, *this, & TYPE:: on##NAME); } while(false)
+#define Y_Lingo_OnInternal(TYPE,NAME) do { onInternal(#NAME, *this, & TYPE:: on##NAME); } while(false)
+
+
         }
     }
 }

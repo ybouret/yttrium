@@ -8,15 +8,18 @@ namespace Yttrium
 
         Y_SHALLOW_IMPL(AsCaption);
         
-        Caption:: Caption(const String &_) : Caption_( new String(_) )
+        Caption:: Caption(const String &_) :
+        Caption_( new String(_) ), Memory::ReadOnlyBuffer()
         {
         }
 
-        Caption:: Caption(const char * const _) : Caption_( new String(_) )
+        Caption:: Caption(const char * const _) :
+        Caption_( new String(_) ), Memory::ReadOnlyBuffer()
         {
         }
 
-        Caption:: Caption(const char _) : Caption_( new String(_) )
+        Caption:: Caption(const char _) :
+        Caption_( new String(_) ), Memory::ReadOnlyBuffer()
         {
         }
 
@@ -24,12 +27,14 @@ namespace Yttrium
         {
         }
 
-        Caption:: Caption(const Caption &_) noexcept : Caption_(_) {}
+        Caption:: Caption(const Caption &_) noexcept :
+        Caption_(_), Memory::ReadOnlyBuffer()
+        {}
 
 
 
         Caption:: Caption(const String * const _) noexcept :
-        Caption_(_)
+        Caption_(_), Memory::ReadOnlyBuffer()
         {}
 
 
@@ -38,6 +43,14 @@ namespace Yttrium
             return os << *_;
         }
 
-        
+        const void * Caption:: ro_addr() const noexcept
+        {
+            return (*this)->c_str();
+        }
+
+        size_t Caption:: measure() const noexcept
+        {
+            return (*this)->size();
+        }
     }
 }

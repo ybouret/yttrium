@@ -69,6 +69,35 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(JParser);
     };
+
+    class JCompiler : public Syntax::Translator
+    {
+    public:
+
+        explicit JCompiler() : Syntax::Translator("JSON")
+        {
+            Y_Lingo_OnTerminal(JCompiler,String);
+            Y_Lingo_OnInternal(JCompiler,Pair);
+        }
+
+        virtual ~JCompiler() noexcept
+        {
+
+        }
+
+        void onString(const Lexeme &lexeme)
+        {
+            indent()  << "\tFound String = '" << lexeme.toPrintable() << "'" << std::endl;
+        }
+
+        void onPair(const size_t n)
+        {
+            indent() << "\tFound Pair #" << n << std::endl;
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(JCompiler);
+    };
 }
 
 
@@ -86,7 +115,7 @@ Y_UTEST(parser)
             AutoPtr<Syntax::XNode> reloaded = J.reload(src);
         }
 
-        Syntax::Translator tr;
+        JCompiler tr;
         tr.verbose = true;
         tr.policy  = Syntax::Permissive;
         tr(*xnode);
