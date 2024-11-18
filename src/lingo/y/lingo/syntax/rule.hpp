@@ -27,6 +27,12 @@ namespace Yttrium
             //__________________________________________________________________
 #define Y_Lingo_Syntax_Args Lexer &lexer, Source &source, XNode * &tree, const size_t depth
 
+            //__________________________________________________________________
+            //
+            //
+            //! helper to trace lexical processing
+            //
+            //__________________________________________________________________
 #define Y_Lingo_Syntax_Rule_Emit(DEPTH,MSG) do { if(Syntax::Rule::Trace) { Core::Indent(std::cerr,(DEPTH)) << MSG << std::endl; } } while(false)
 
             //__________________________________________________________________
@@ -46,7 +52,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxListOf<Rule> List;
+                typedef CxxListOf<Rule> List;  //!< alias
                 static bool             Trace; //!< default to false
 
                 //______________________________________________________________
@@ -171,13 +177,27 @@ namespace Yttrium
             class Rules : public Rule::List
             {
             public:
-                explicit Rules() noexcept;
-                virtual ~Rules() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Rules() noexcept; //!< setup
+                virtual ~Rules() noexcept; //!< cleanup
 
-                const Rule * query(const Caption &)    const noexcept;
-                const Rule * query(const String  &)    const noexcept;
-                const Rule * query(const char * const) const noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                const Rule * query(const Caption &)    const noexcept; //!< query by name
+                const Rule * query(const String  &)    const noexcept; //!< query by name
+                const Rule * query(const char * const) const noexcept; //!< query by name
 
+
+                //! query a terminal
                 template <typename UID> inline
                 const Terminal * queryTerminal(const UID &uid) const noexcept {
                     const Rule * rule = query(uid);

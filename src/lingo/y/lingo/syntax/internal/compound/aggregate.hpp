@@ -29,6 +29,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const uint32_t UUID = Y_FOURCC('X', 'A', 'G', 'G'); //!< identifier
+
+                //! semantic type
                 enum Type
                 {
                     Definite, //!< definite name

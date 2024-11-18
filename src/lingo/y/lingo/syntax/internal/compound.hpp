@@ -67,8 +67,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                Compound & operator<<(const Rule     &);
-                Compound & operator<<(const Manifest &);
+                Compound & operator<<(const Rule     &); //!< add a rule
+                Compound & operator<<(const Manifest &); //!< add a whole manifest
 
                 //! make name for manifest with given separator
                 static String MakeNameFor(const Manifest &, const char);

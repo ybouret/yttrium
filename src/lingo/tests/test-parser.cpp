@@ -10,12 +10,35 @@ using namespace Lingo;
 
 namespace
 {
+    class JParser : public Parser
+    {
+    public:
+        explicit JParser() : Parser("JSON")
+        {
 
+            Agg & JSON = agg(name);
+
+            render();
+            lexer.drop("[:blank:]");
+            lexer.endl("[:endl:]", Lexeme::Drop);
+        }
+
+        virtual ~JParser() noexcept
+        {
+
+        }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(JParser);
+    };
 }
 
 
 Y_UTEST(parser)
 {
+
+    JParser J;
 }
 Y_UDONE()
 

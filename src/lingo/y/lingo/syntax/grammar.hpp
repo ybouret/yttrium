@@ -29,9 +29,9 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Aggregate     Agg; //!< alias
-                typedef Alternate     Alt; //!< alias
-                typedef Syntax::Rule  Rule; //!< alias
+                typedef Aggregate     Agg;   //!< alias
+                typedef Alternate     Alt;   //!< alias
+                typedef Syntax::Rule  Rule;  //!< alias
                 typedef Syntax::XNode XNode; //!< alias
                 //______________________________________________________________
                 //
@@ -74,6 +74,17 @@ namespace Yttrium
                     return *rule;
                 }
 
+                template <typename UUID> inline
+                const Rule & operator[](const UUID &uuid) const
+                {
+                    const Rule * const rule = rules.query(uuid);
+                    if(0==rule) {
+                        const Caption ruleName(uuid);
+                        throwMissing(ruleName);
+                    }
+                    return *rule;
+                }
+
 
                 const Rule &zom(const Rule & );              //!< zero or more rule
                 const Rule &oom(const Rule & );              //!< one or more rule
@@ -107,14 +118,16 @@ namespace Yttrium
                     return decl( new Aggregate(_name,Aggregate::NoSingle) );
                 }
 
+                //! named altermation
                 template <typename NAME> inline
                 Alt & alt(const NAME & _name) {
                     return decl( new Alternate(_name) );
                 }
-                const Rule &pick(const Rule &a, const Rule &b);
-                const Rule &pick(const Rule &a, const Rule &b, const Rule &c);
-                const Rule &pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d);
-                const Rule &pick(const Manifest &);
+
+                const Rule &pick(const Manifest &);                                           //!< alternation of manifest with at least two members
+                const Rule &pick(const Rule &a, const Rule &b);                               //!< (a|b)
+                const Rule &pick(const Rule &a, const Rule &b, const Rule &c);                //!< (a|b|c)
+                const Rule &pick(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (a|b|c|d)
 
                 //! render grammar
                 void render() const;
@@ -130,7 +143,7 @@ namespace Yttrium
                 XNode * accept(Lexer &lexer, Source &source);
 
                 
-
+                //! helper to human readable exception
                 void tryAppendTo(Exception           &excp,
                                  const char * const   prefix,
                                  const Lexeme * const lexeme) const;
@@ -141,11 +154,11 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules rules;
-                virtual ConstInterface & surrogate() const noexcept;
-
-                XNode * accepted(XNode * const, Lexer &, Source &);
-                void    rejected(const Lexer &);
-
+                virtual ConstInterface & surrogate() const noexcept; //!< [Proxy]
+                XNode * accepted(XNode * const, Lexer &, Source &);  //!< post-process tree
+                void    rejected(const Lexer &);                     //!< guess what went wrong
+                void    throwMissing(const Caption &) const;         //!< throw missing
+                
             public:
                 const bool  locked; //!< status
             };

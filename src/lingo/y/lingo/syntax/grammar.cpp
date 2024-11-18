@@ -23,20 +23,41 @@ namespace Yttrium
 
             void Grammar:: add(Rule *const rule)
             {
-                // check no multiple name
+                //--------------------------------------------------------------
+                //
+                // protect
+                //
+                //--------------------------------------------------------------
                 assert(0!=rule);
-                AutoPtr<Rule> pRule = rule; assert( pRule.isValid() );
-                const String &rid   = *(rule->name);
-                if(locked) throw Specific::Exception(name->c_str(), "locked, trying to add '%s'", rid.c_str());
+                AutoPtr<Rule> ptr = rule; assert( ptr.isValid() );
 
-                for(const Rule *mine=rules.head;mine;mine=mine->next)
+                //--------------------------------------------------------------
+                //
+                // check unique name
+                //
+                //--------------------------------------------------------------
                 {
-                    const String &mid = *(mine->name);
-                    if(mid==rid) throw Specific::Exception(name->c_str(),"multiple rule '%s'", rid.c_str());
+                    const String &rid = *(rule->name);
+                    if(locked) throw Specific::Exception(name->c_str(), "locked, trying to add '%s'", rid.c_str());
+
+                    for(const Rule *mine=rules.head;mine;mine=mine->next)
+                    {
+                        const String &mid = *(mine->name);
+                        if(mid==rid) throw Specific::Exception(name->c_str(),"multiple rule '%s'", rid.c_str());
+                    }
                 }
 
+                //--------------------------------------------------------------
+                //
                 // append
-                rules.pushTail( pRule.yield() );
+                //
+                //--------------------------------------------------------------
+                rules.pushTail( ptr.yield() );
+            }
+
+            void Grammar:: throwMissing(const Caption &ruleName) const
+            {
+                throw Specific:: Exception(name->c_str(), "no Syntax::Rule '%s'", ruleName->c_str() );
             }
 
             const Rule & Grammar:: top() const

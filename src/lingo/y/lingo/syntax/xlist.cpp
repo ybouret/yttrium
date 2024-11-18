@@ -92,7 +92,7 @@ namespace Yttrium
                 // goto bottom
                 const XNode &bottom = last();
 
-                // then go back to top
+                // then go back to top, intercepting terminal
                 switch(bottom.type)
                 {
                     case Terminal: return & bottom.lexeme();
@@ -109,6 +109,7 @@ namespace Yttrium
                 // go up if possible
                 if(bottom.sire) return bottom.sire->lastLexeme();
 
+                // nope...
                 return 0;
             }
 
