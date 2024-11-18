@@ -39,10 +39,10 @@ namespace Yttrium
         {
             for(const Pattern *p=head;p;p=p->next)
             {
-                if( !p->strong() )
-                    return false;
+                if( p->strong() )
+                    return true;
             }
-            return true;
+            return false;
 
         }
 

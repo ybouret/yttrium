@@ -76,7 +76,7 @@ namespace Yttrium
                 if(0!=proc)
                     (*proc)(lexeme);
                 else
-                    onNotFound(tlabel, "pushTerminal");
+                    onNotFound(tlabel, "push Terminal");
 
             }
 
@@ -93,7 +93,7 @@ namespace Yttrium
                 if(0!=proc)
                     (*proc)(branch.size);
                 else
-                    onNotFound(name, "callInternal");
+                    onNotFound(ilabel, "call to Internal");
             }
 
             void Translator:: on(const Caption    & label,
