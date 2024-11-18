@@ -73,6 +73,12 @@ namespace Yttrium
                 return term_<UUID,EXPR,Terminal::Semantic>(uuid,expr);
             }
 
+            //! create a semantic terminal
+            template <typename EXPR> inline
+            const Rule & term(const EXPR &expr) {
+                term(expr,expr);
+            }
+
             //! create a dividing terminal
             template <typename UUID,typename EXPR> inline
             const Rule & mark(const UUID & uuid,
@@ -81,6 +87,13 @@ namespace Yttrium
                 return term_<UUID,EXPR,Terminal::Dividing>(uuid,expr);
             }
 
+            //! create a dividing terminal
+            template <typename EXPR> inline
+            const Rule & mark(const EXPR &expr) {
+                mark(expr,expr);
+            }
+
+            
 
             //! restart lexer and process source
             XNode * operator()(Source &source);

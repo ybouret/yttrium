@@ -18,6 +18,10 @@ namespace
 
             Agg & JSON = agg(name);
 
+            Alt & VALUE = alt("VALUE");
+            
+
+
             render();
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]", Lexeme::Drop);
