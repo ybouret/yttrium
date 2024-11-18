@@ -66,6 +66,11 @@ namespace Yttrium
                 return ans += ')';
             }
 
+
+            void Compound:: noGrammarFor(const Caption &id) const
+            {
+                throw Specific::Exception(name->c_str(), "no grammar for '%s'", id->c_str());
+            }
         }
 
     }
@@ -73,3 +78,4 @@ namespace Yttrium
 }
 
 
+ 

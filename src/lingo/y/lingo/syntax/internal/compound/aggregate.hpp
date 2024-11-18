@@ -47,9 +47,10 @@ namespace Yttrium
 
                 //! setup with name
                 template <typename NAME> inline
-                explicit Aggregate(const NAME & _name,
-                                   const Type   _type) :
-                Compound(_name,UUID),
+                explicit Aggregate(const NAME &    _name,
+                                   const Type      _type,
+                                   Grammar * const _host) :
+                Compound(_name,UUID,_host),
                 type(_type)
                 {
                     Y_Lingo_Syntax_Rule(Aggregate);

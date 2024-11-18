@@ -36,7 +36,7 @@ namespace
     class MyGrammar : public Syntax::Grammar
     {
     public:
-        explicit MyGrammar() : Syntax::Grammar("MyGrammar")
+        explicit MyGrammar() : Syntax::Grammar("MyGrammar",0)
         {
             Agg & STATEMENT = agg("STATEMENT");
             const Rule & INT = term__("INT", Syntax::Terminal::Standard,  Syntax::Terminal::Semantic);

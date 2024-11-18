@@ -16,9 +16,11 @@ namespace
         explicit JParser() : Parser("JSON")
         {
 
-            //Agg & JSON = agg(name);
-            //Alt & VALUE = alt("VALUE");
+            Agg & JSON  = agg(name);
+            Alt & VALUE = alt("VALUE");
 
+            VALUE << "null" << "true" << "false" << term("Number", "[:digit:]+");
+            
 
 
             render();

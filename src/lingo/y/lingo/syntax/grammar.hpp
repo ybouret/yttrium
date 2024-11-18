@@ -45,7 +45,8 @@ namespace Yttrium
 
                 //! setup empty with given name
                 template <typename NAME> inline
-                explicit Grammar(const NAME & _name, Parser * const _host = 0) :
+                explicit Grammar(const NAME &   _name,
+                                 Parser * const _host) :
                 Entity(_name,AsCaption),
                 rules(),
                 parser(_host),
@@ -107,25 +108,25 @@ namespace Yttrium
                 //! helper to declare a definite aggregate (permanent)
                 template <typename NAME> inline
                 Agg & agg(const NAME & _name) {
-                    return decl( new Aggregate(_name,Aggregate::Definite) );
+                    return decl( new Aggregate(_name,Aggregate::Definite,this) );
                 }
 
                 //! grouping only, won't appear in AST
                 template <typename NAME> inline
                 Agg & grp(const NAME & _name) {
-                    return decl( new Aggregate(_name,Aggregate::Grouping) );
+                    return decl( new Aggregate(_name,Aggregate::Grouping,this) );
                 }
 
                 //! acting aggregate, no single:  merge content if only one member
                 template <typename NAME> inline
                 Agg & act(const NAME & _name) {
-                    return decl( new Aggregate(_name,Aggregate::NoSingle) );
+                    return decl( new Aggregate(_name,Aggregate::NoSingle,this) );
                 }
 
                 //! named altermation
                 template <typename NAME> inline
                 Alt & alt(const NAME & _name) {
-                    return decl( new Alternate(_name) );
+                    return decl( new Alternate(_name,this) );
                 }
 
                 const Rule &pick(const Manifest &);                                           //!< alternation of manifest with at least two members
@@ -141,9 +142,17 @@ namespace Yttrium
 
                 template <typename EXPR> inline
                 const Rule & get(const EXPR &expr) {
-                    if(0==parser) { const Caption request(expr); notHostedFor(request);}
+                    if(0==parser) { const Caption request(expr); noParserFor(request);}
                     return get_(expr);
                 }
+
+                template <typename EXPR> inline
+                Grammar & operator<<(const EXPR &expr)
+                {
+                    (void) get(expr);
+                    return *this;
+                }
+
 
                 //! render grammar
                 void render() const;
@@ -176,7 +185,7 @@ namespace Yttrium
                 XNode * accepted(XNode * const, Lexer &, Source &);  //!< post-process tree
                 void    rejected(const Lexer &);                     //!< guess what went wrong
                 void    throwMissing(const Caption &) const;         //!< throw missing
-                void    notHostedFor(const Caption &)  const;
+                void    noParserFor(const Caption &)  const;
 
                 const Rule & get_(const String &);        //!< to parser
                 const Rule & get_(const char * const);    //!< to parser

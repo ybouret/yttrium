@@ -59,11 +59,7 @@ namespace Yttrium
             {
                 throw Specific:: Exception(name->c_str(), "no Syntax::Rule '%s'", ruleName->c_str() );
             }
-
             
-
-          
-
 
             void Grammar:: validate()
             {

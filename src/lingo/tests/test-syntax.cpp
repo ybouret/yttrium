@@ -119,7 +119,7 @@ Y_UTEST(syntax)
     GraphViz::Vizible::RenderPNG("repN.dot",false);
 
 
-    Syntax::Aggregate agg("agg",Syntax::Aggregate::Definite);
+    Syntax::Aggregate agg("agg",Syntax::Aggregate::Definite,0);
 
     agg += t1;
     agg += t2;
@@ -133,7 +133,7 @@ Y_UTEST(syntax)
     }
     GraphViz::Vizible::RenderPNG("agg.dot",false);
 
-    Syntax::Alternate alt("alt");
+    Syntax::Alternate alt("alt",0);
     alt |= t1;
     alt |= t2;
     {

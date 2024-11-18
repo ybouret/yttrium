@@ -154,8 +154,6 @@ namespace Yttrium
 
 }
 
-#include "y/lingo/parser.hpp"
-
 
 namespace Yttrium
 {
@@ -163,6 +161,40 @@ namespace Yttrium
     {
         namespace Syntax
         {
+            const Rule & Compound:: get_(const String &expr) {
+                assert(0!=grammar);
+                return grammar->get(expr);
+            }
+
+            const Rule & Compound:: get_(const char * const expr) {
+                assert(0!=grammar);
+                return grammar->get(expr);
+            }
+
+            const Rule & Compound:: get_(const char expr) {
+                assert(0!=grammar);
+                return grammar->get(expr);
+            }
+
+        }
+
+    }
+
+}
+
+#include "y/lingo/parser.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+            void Grammar:: noParserFor(const Caption &id) const
+            {
+                throw Specific::Exception(name->c_str(), "no host parser for '%s'", id->c_str());
+            }
+
             const Rule & Grammar:: get_(const String &expr) {
                 assert(0!=parser);
                 return parser->get(expr);

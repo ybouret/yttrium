@@ -12,6 +12,9 @@ namespace Yttrium
     {
         namespace Syntax
         {
+
+            class Grammar;
+
             //__________________________________________________________________
             //
             //
@@ -40,10 +43,12 @@ namespace Yttrium
                 //______________________________________________________________
                 //! setup with name, uuid and existing rule
                 template <typename NAME> inline
-                explicit Compound(const NAME   & _name,
-                                  const uint32_t _uuid ) :
+                explicit Compound(const NAME   &  _name,
+                                  const uint32_t  _uuid,
+                                  Grammar * const _host) :
                 Internal(_name,_uuid),
-                manifest()
+                manifest( ),
+                grammar(_host)
                 {
                 }
 
@@ -70,6 +75,15 @@ namespace Yttrium
                 Compound & operator<<(const Rule     &); //!< add a rule
                 Compound & operator<<(const Manifest &); //!< add a whole manifest
 
+                template <typename EXPR> inline
+                Compound & operator<<(const EXPR &expr)
+                {
+                    if(!grammar) { const Caption request(expr); noGrammarFor(request); }
+                    manifest << get_(expr);
+                    return *this;
+                }
+
+
                 //! make name for manifest with given separator
                 static String MakeNameFor(const Manifest &, const char);
 
@@ -86,11 +100,17 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                Manifest manifest; //!< list of existing rules
+                Manifest        manifest; //!< list of existing rules
+                Grammar * const grammar;  //!< host grammar
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 virtual ConstInterface & surrogate() const noexcept;
+                void                     noGrammarFor(const Caption &) const;
+                const Rule & get_(const String &);        //!< to grammar
+                const Rule & get_(const char * const);    //!< to grammar
+                const Rule & get_(const char);            //!< to grammar
+
             };
         }
 

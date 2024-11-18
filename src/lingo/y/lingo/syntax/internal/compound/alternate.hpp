@@ -40,8 +40,9 @@ namespace Yttrium
 
                 //! setup with name
                 template <typename NAME> inline
-                explicit Alternate(const NAME & _name) :
-                Compound(_name,UUID)
+                explicit Alternate(const NAME &    _name,
+                                   Grammar * const _host) :
+                Compound(_name,UUID,_host)
                 {
                     Y_Lingo_Syntax_Rule(Alternate);
                 }
