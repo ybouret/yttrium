@@ -87,13 +87,15 @@ namespace Yttrium
                 void operator()(const XNode &root); //!< walk down root
                 std::ostream & indent() const;      //!< indent w.r.t depth
 
-
+                //! register procedure for terminal
                 void on(const Caption    & label,
                         const OnTerminal & tproc);
 
+                //! register procedure for internal
                 void on(const Caption    & label,
                         const OnInternal & iproc);
 
+                //! helper to declare terminal procedure
                 template <
                 typename NAME,
                 typename HOST,
@@ -107,6 +109,7 @@ namespace Yttrium
                     on(label,tproc);
                 }
 
+                //! helper to declare internal procedure
                 template <
                 typename NAME,
                 typename HOST,
@@ -122,7 +125,6 @@ namespace Yttrium
 
 
 
-                void printTerminal(const Lexeme &) const;
 
 
             private:
@@ -147,7 +149,10 @@ namespace Yttrium
                 bool             verbose; //!< verbosity, default is false
             };
 
+            //! helper to build translator
 #define Y_Lingo_OnTerminal(TYPE,NAME) do { onTerminal(#NAME, *this, & TYPE:: on##NAME); } while(false)
+
+            //! helper to build translator
 #define Y_Lingo_OnInternal(TYPE,NAME) do { onInternal(#NAME, *this, & TYPE:: on##NAME); } while(false)
 
 
