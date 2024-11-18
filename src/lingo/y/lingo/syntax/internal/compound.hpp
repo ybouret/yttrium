@@ -72,17 +72,11 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                Compound & operator<<(const Rule     &); //!< add a rule
-                Compound & operator<<(const Manifest &); //!< add a whole manifest
-
-                template <typename EXPR> inline
-                Compound & operator<<(const EXPR &expr)
-                {
-                    if(!grammar) { const Caption request(expr); noGrammarFor(request); }
-                    manifest << get_(expr);
-                    return *this;
-                }
-
+                Compound & operator<<(const Rule     &);         //!< add a rule
+                Compound & operator<<(const Manifest &);         //!< add a whole manifest
+                Compound & operator<<(const String &      expr); //!< with hosted grammar/parser
+                Compound & operator<<(const char * const  expr); //!< with hosted grammar/parser
+                Compound & operator<<(const char          expr); //!< with hosted grammar/parser
 
                 //! make name for manifest with given separator
                 static String MakeNameFor(const Manifest &, const char);
@@ -107,9 +101,6 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 virtual ConstInterface & surrogate() const noexcept;
                 void                     noGrammarFor(const Caption &) const;
-                const Rule & get_(const String &);        //!< to grammar
-                const Rule & get_(const char * const);    //!< to grammar
-                const Rule & get_(const char);            //!< to grammar
 
             };
         }

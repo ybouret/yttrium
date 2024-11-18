@@ -44,7 +44,13 @@ namespace Yttrium
             return mark(c);
         }
 
-
+        
+        Syntax::XNode * Parser:: operator()(Module * const m)
+        {
+            assert(0!=m);
+            Source source(m);
+            return  (*this)(source);
+        }
 
 
     }

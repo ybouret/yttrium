@@ -161,20 +161,29 @@ namespace Yttrium
     {
         namespace Syntax
         {
-            const Rule & Compound:: get_(const String &expr) {
-                assert(0!=grammar);
-                return grammar->get(expr);
+            Compound & Compound:: operator<<(const String & expr)
+            {
+                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
+                manifest << grammar->get(expr);
+                return *this;
             }
 
-            const Rule & Compound:: get_(const char * const expr) {
-                assert(0!=grammar);
-                return grammar->get(expr);
+            Compound & Compound:: operator<<(const char * const expr)
+            {
+                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
+                manifest << grammar->get(expr);
+                return *this;
             }
 
-            const Rule & Compound:: get_(const char expr) {
-                assert(0!=grammar);
-                return grammar->get(expr);
+
+            Compound & Compound:: operator<<(const char  expr)
+            {
+                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
+                manifest << grammar->get(expr);
+                return *this;
             }
+
+
 
         }
 

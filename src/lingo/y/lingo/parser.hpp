@@ -97,8 +97,11 @@ namespace Yttrium
             const Rule & get(const char * const expr);  //!< on-the-fly semantic term=expr
             const Rule & get(const char);               //!< on-the-fly dividing char
 
+            //! restart lexer and process module
+            XNode * operator()(Module * const);
+
             //! restart lexer and process source
-            XNode * operator()(Source &source);
+            XNode * operator()(Source &);
 
             //__________________________________________________________________
             //

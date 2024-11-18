@@ -16,12 +16,28 @@ namespace
         explicit JParser() : Parser("JSON")
         {
 
-            Agg & JSON  = agg(name);
-            Alt & VALUE = alt("VALUE");
+            Alt      & JSON  = alt(name);
+            Alt      & VALUE = alt("VALUE");
 
-            VALUE << "null" << "true" << "false" << term("Number", "[:digit:]+");
-            
+            VALUE << term("Number", "[:digit:]+") << "null" << "true" << "false";
 
+            Alt & ARRAY = alt("array");
+
+            {
+                Agg        & HeavyArray = agg("HeavyArray");
+                HeavyArray << '[';
+                HeavyArray << VALUE;
+                
+                HeavyArray << ']';
+                ARRAY << HeavyArray;
+                ARRAY << (agg("EmptyArray") << '[' << ']');
+            }
+
+
+            VALUE << ARRAY;
+
+            // finish top-level
+            JSON << ARRAY;
 
             render();
             lexer.drop("[:blank:]");
@@ -44,6 +60,11 @@ Y_UTEST(parser)
 {
 
     JParser J;
+    if(argc>1)
+    {
+        AutoPtr<Syntax::XNode> xnode = J( Module::OpenFile(argv[1]) );
+        GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
+    }
 }
 Y_UDONE()
 
