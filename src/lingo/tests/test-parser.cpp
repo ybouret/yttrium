@@ -27,7 +27,7 @@ namespace
                 Agg        & HeavyArray = agg("HeavyArray");
                 HeavyArray << '[';
                 HeavyArray << VALUE;
-                
+                HeavyArray << zom( cat( mark(','), VALUE) );
                 HeavyArray << ']';
                 ARRAY << HeavyArray;
                 ARRAY << (agg("EmptyArray") << '[' << ']');
