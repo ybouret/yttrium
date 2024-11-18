@@ -20,7 +20,7 @@ namespace Yttrium
         }
 
 
-        const Syntax::Rule & Parser:: getSemantic(const String &expr)
+        const Syntax::Rule & Parser:: get(const String &expr)
         {
             {
                 const Rule * const rule = (*this)->query(expr);
@@ -29,7 +29,13 @@ namespace Yttrium
             return term(expr);
         }
 
-        const Syntax::Rule & Parser:: getDividing(const char c)
+        const Syntax::Rule & Parser:: get(const char * const expr)
+        {
+            const String _(expr);
+            return get(_);
+        }
+
+        const Syntax::Rule & Parser:: get(const char c)
         {
             {
                 const Rule * const rule = (*this)->query(c);

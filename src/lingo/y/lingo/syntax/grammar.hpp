@@ -138,6 +138,13 @@ namespace Yttrium
                 const Rule &cat(const Rule &a, const Rule &b, const Rule &c);                //!< (abc)
                 const Rule &cat(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (abcd)
 
+
+                template <typename EXPR> inline
+                const Rule & get(const EXPR &expr) {
+                    if(0==parser) { const Caption request(expr); notHostedFor(request);}
+                    return get_(expr);
+                }
+
                 //! render grammar
                 void render() const;
 
@@ -169,6 +176,12 @@ namespace Yttrium
                 XNode * accepted(XNode * const, Lexer &, Source &);  //!< post-process tree
                 void    rejected(const Lexer &);                     //!< guess what went wrong
                 void    throwMissing(const Caption &) const;         //!< throw missing
+                void    notHostedFor(const Caption &)  const;
+
+                const Rule & get_(const String &);        //!< to parser
+                const Rule & get_(const char * const);    //!< to parser
+                const Rule & get_(const char);            //!< to parser
+
 
             public:
                 const bool  locked; //!< status

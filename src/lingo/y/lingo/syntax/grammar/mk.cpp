@@ -154,3 +154,33 @@ namespace Yttrium
 
 }
 
+#include "y/lingo/parser.hpp"
+
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+            const Rule & Grammar:: get_(const String &expr) {
+                assert(0!=parser);
+                return parser->get(expr);
+            }
+            
+            const Rule & Grammar:: get_(const char * const expr) {
+                assert(0!=parser);
+                return parser->get(expr);
+            }
+
+            const Rule & Grammar:: get_(const char expr) {
+                assert(0!=parser);
+                return parser->get(expr);
+            }
+        }
+
+    }
+
+}
+
+
