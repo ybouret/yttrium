@@ -144,7 +144,7 @@ namespace Yttrium
             const Rule & Grammar:: cat(const Manifest &tmp)
             {
                 const String uid = Compound::MakeNameFor(tmp, ' ');
-                return agg(uid) << tmp;
+                return grp(uid) << tmp;
             }
 
 
