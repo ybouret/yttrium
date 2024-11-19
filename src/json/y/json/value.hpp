@@ -154,8 +154,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Pair(const String &); //!< setup
+            explicit Pair(const String &); //!< setup with null value
             virtual ~Pair() noexcept;      //!< cleanup
+            Y_OSTREAM_PROTO(Pair);
 
             //__________________________________________________________________
             //

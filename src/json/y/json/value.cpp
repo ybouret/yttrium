@@ -230,7 +230,11 @@ namespace Yttrium
             return k;
         }
 
-
+        std::ostream & operator<<(std::ostream &os, const Pair &p)
+        {
+            os << p.key() << ':' << p.v;
+            return os;
+        }
 
     }
 

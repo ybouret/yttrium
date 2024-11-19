@@ -5,7 +5,7 @@
 #include "y/lingo/syntax/translator.hpp"
 #include "y/text/ascii/convert.hpp"
 #include "y/quantized.hpp"
-
+#include "y/system/exception.hpp"
 #include "y/utest/run.hpp"
 
 namespace Yttrium
@@ -109,6 +109,7 @@ namespace Yttrium
 
                     Y_JSON_Internal(EmptyObject);
                     Y_JSON_Internal(Pair);
+                    Y_JSON_Internal(HeavyObject);
 
                 }
 
@@ -154,18 +155,20 @@ namespace Yttrium
                 void onHeavyArray(const size_t n)
                 {
                     assert(n>0);
-                    assert(n>=values.size());
-                    const Value nil;
+                    assert(n<=values.size());
                     Value       v(AsArray);
-                    Array &      a = v.as<Array>();
-                    const size_t m = values.size();
-                    for(size_t i=1+m-n;i<=m;++i)
                     {
-                        a << nil;
-                        a.tail().swapWith(values[i]);
+                        Array &      a = v.as<Array>();
+                        const size_t m = values.size();
+                        for(size_t i=1+m-n;i<=m;++i)
+                        {
+                            a << nil;
+                            a.tail().swapWith(values[i]);
+                        }
+                        for(size_t i=n;i>0;--i) values.popTail();
                     }
-                    for(size_t i=n;i>0;--i) values.popTail();
-                    std::cerr << "a=" << a << std::endl;
+                    values << nil;
+                    values.tail().swapWith(v);
                 }
 
                 void onPair(const size_t)
@@ -178,6 +181,28 @@ namespace Yttrium
                     pairs << p;
                 }
 
+                void onHeavyObject(const size_t n)
+                {
+                    assert(n>0);
+                    assert(n<=pairs.size());
+
+                    Value        v(AsObject);
+                    {
+                        Object &     o = v.as<Object>();
+                        const size_t m = pairs.size();
+                        for(size_t i=1+m-n;i<=m;++i)
+                        {
+                            const SharedPair &p =pairs[i];
+                            if(!o.insert(p))
+                                throw Specific::Exception(name->c_str(),"multiple key='%s",p.key().c_str());
+                        }
+                        for(size_t i=n;i>0;--i) pairs.popTail();
+                    }
+                    values << nil;
+                    values.tail().swapWith(v);
+                }
+
+                const Value nil;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(JLinker);
             };
@@ -207,9 +232,9 @@ namespace Yttrium
         Compiler:: Compiler() :
         code( new Code() )
         {
-            Y_SIZEOF(Code);
-            Y_SIZEOF(JParser);
-            Y_SIZEOF(JLinker);
+            //Y_SIZEOF(Code);
+            //Y_SIZEOF(JParser);
+            //Y_SIZEOF(JLinker);
         }
 
         Compiler:: ~Compiler() noexcept
@@ -227,9 +252,7 @@ namespace Yttrium
             GraphViz::Vizible::DotToPng("json-ast.dot", *xtree);
 
             link.verbose = true;
-            //code->linker.policy  = Syntax::Permissive;
             link( *xtree );
-
         }
 
     }
