@@ -23,7 +23,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Grammar : public Entity, public Proxy<const Rules>
+            class Grammar :  public Quantized, public Entity, public Proxy<const Rules>
             {
             public:
                 //______________________________________________________________
@@ -192,8 +192,8 @@ namespace Yttrium
                 virtual ConstInterface & surrogate() const noexcept; //!< [Proxy]
                 XNode * accepted(XNode * const, Lexer &, Source &);  //!< post-process tree
                 void    rejected(const Lexer &);                     //!< guess what went wrong
-                void    throwMissing(const Caption &) const;         //!< throw missing
-                void    noParserFor(const Caption &)  const;
+                void    throwMissing(const Caption &) const;         //!< throw missing rule
+                void    noParserFor(const Caption &)  const;         //!< throw when parser==NULL
 
                 const Rule & get_(const String &);        //!< to parser
                 const Rule & get_(const char * const);    //!< to parser

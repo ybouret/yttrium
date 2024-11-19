@@ -45,8 +45,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef SuffixMap<const Caption,OnTerminal> OnTerminalMap; //!< alias
-                typedef SuffixMap<const Caption,OnInternal> OnInternalMap; //!< alias
+                typedef SuffixMap<const Caption,OnTerminal> OnTerminalMap_; //!< alias
+                typedef SuffixMap<const Caption,OnInternal> OnInternalMap_; //!< alias
+                Y_Derived(OnTerminalMap,Quantized,Standard);
+                Y_Derived(OnInternalMap,Quantized,Standard);
 
                 //______________________________________________________________
                 //
@@ -59,8 +61,8 @@ namespace Yttrium
                 template <typename NAME> inline
                 explicit Translator(const NAME & _name) :
                 Entity(_name,AsCaption),
-                tmap(),
-                imap(),
+                tmap( new OnTerminalMap() ),
+                imap( new OnInternalMap() ),
                 deep(0),
                 policy(Restricted),
                 verbose(false)
@@ -140,8 +142,8 @@ namespace Yttrium
                 void callInternal(const Caption &ilabel,
                                   const XList   &branch);
 
-                OnTerminalMap tmap; //!< terminal map
-                OnInternalMap imap; //!< internal map
+                AutoPtr<OnTerminalMap> tmap; //!< terminal map
+                AutoPtr<OnInternalMap> imap; //!< internal map
 
             public:
                 const size_t     deep;    //!< current depth

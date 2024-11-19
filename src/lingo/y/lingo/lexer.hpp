@@ -7,6 +7,7 @@
 #include "y/lingo/lexical/add-on.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/data/small/light/list/solo.hpp"
+#include "y/type/derived.hpp"
 
 namespace Yttrium
 {
@@ -30,11 +31,18 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Lexical::Analyzer                   Analyzer; //!< alias
-            typedef Lexical::AddOn                      AddOn;    //!< alias
-            typedef SuffixSet<String,Analyzer::Pointer> Database; //!< alias
-            typedef Small::SoloLightList<Analyzer>      History;  //!< alias
-            typedef SuffixSet<String,AddOn::Handle>     AddOns;   //!< alias
+            typedef Lexical::Analyzer                   Analyzer;  //!< alias
+            typedef Lexical::AddOn                      AddOn;     //!< alias
+            typedef SuffixSet<String,Analyzer::Pointer> Database_; //!< alias
+            typedef Small::SoloLightList<Analyzer>      History_;   //!< alias
+            typedef SuffixSet<String,AddOn::Handle>     AddOns_;   //!< alias
+
+            Y_Derived(Database, Quantized, Standard);
+            Y_Derived(AddOns,   Quantized, Standard);
+            Y_Derived(History,  Quantized, NoExcept);
+
+
+
 
             //__________________________________________________________________
             //
@@ -50,9 +58,9 @@ namespace Yttrium
             Analyzer(lxid,*this,*this),
             analyzer(this),
             lexemes(),
-            history(),
-            analyzers(),
-            addOns()
+            history(   new History()  ),
+            analyzers( new Database() ),
+            addOns(    new AddOns()   )
             {
                 initialize();
             }
@@ -149,11 +157,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
-            Analyzer *analyzer;  //!< active analyzer
-            Lexemes   lexemes;   //!< cache of scanned lexemes
-            History   history;   //!< for scanner call/back
-            Database  analyzers; //!< existing analyzers
-            AddOns    addOns;    //!< existing addons
+            Analyzer *         analyzer;  //!< active analyzer
+            Lexemes            lexemes;   //!< cache of scanned lexemes
+            AutoPtr<History>   history;   //!< for scanner call/back
+            AutoPtr<Database>  analyzers; //!< existing analyzers
+            AutoPtr<AddOns>    addOns;    //!< existing addons
 
             void     initialize();                          //!< record this into scanner
             void     mustInsert(const Analyzer::Pointer &); //!< must insert new analyzer

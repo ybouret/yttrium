@@ -8,7 +8,7 @@ namespace Yttrium
     {
         Lexer:: ~Lexer() noexcept
         {
-            analyzers.release();
+            analyzers->release();
             (void)liberate();
         }
 
@@ -21,7 +21,7 @@ namespace Yttrium
 
         void Lexer:: mustInsert(const Analyzer::Pointer &ps)
         {
-            if(!analyzers.insert(ps))
+            if(!analyzers->insert(ps))
                 throw Specific::Exception(name->c_str(),"inserting multiple analyzer '%s'", ps->name->c_str());
         }
 
@@ -35,12 +35,12 @@ namespace Yttrium
             }
             try {
                 const AddOn::Handle _(super);
-                if(!addOns.insert(_))
+                if(!addOns->insert(_))
                     throw Specific::Exception(name->c_str(),"inserting multiple AddOn<%s>", _->name->c_str());
             }
             catch(...)
             {
-                (void) analyzers.remove(uuid);
+                (void) analyzers->remove(uuid);
                 throw;
             }
         }
@@ -49,26 +49,26 @@ namespace Yttrium
         void Lexer:: restart() noexcept
         {
             lexemes.release();
-            history.free();
+            history->free();
             analyzer = this;
         }
 
         void Lexer:: performCall(const Caption &label)
         {
             assert(0!=analyzer);
-            Analyzer::Pointer *pps = analyzers.search( *label );
+            Analyzer::Pointer *pps = analyzers->search( *label );
             if(0==pps)
                 throw Specific::Exception(name->c_str(),"no [%s] to be called from [%s]", label->c_str(), analyzer->name->c_str());
 
-            history << *analyzer;
+            *history << *analyzer;
             analyzer = & **pps;
         }
 
         void Lexer:: performBack()
         {
             assert(0!=analyzer);
-            if(history.size<=0) throw Specific::Exception(name->c_str(),"cannot go back from [%s]", analyzer->name->c_str() );
-            analyzer = & history.pullTail();
+            if(history->size<=0) throw Specific::Exception(name->c_str(),"cannot go back from [%s]", analyzer->name->c_str() );
+            analyzer = & history->pullTail();
         }
 
         void Lexer:: put(Lexeme * const lexeme) noexcept
@@ -117,7 +117,7 @@ namespace Yttrium
                     // we reached EOF
                     assert( !source.ready() );
                     const String &       uuid    = *(analyzer->name);
-                    const AddOn::Handle *ppAddOn = addOns.search(uuid);
+                    const AddOn::Handle *ppAddOn = addOns->search(uuid);
                     if(ppAddOn)
                     {
                         const AddOn &addOn = **ppAddOn;

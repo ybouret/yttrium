@@ -72,7 +72,7 @@ namespace Yttrium
                     os << std::endl;
                 }
 
-                OnTerminal * const proc = tmap.search(tlabel);
+                OnTerminal * const proc = tmap->search(tlabel);
                 if(0!=proc)
                     (*proc)(lexeme);
                 else
@@ -89,7 +89,7 @@ namespace Yttrium
                 --Coerce(deep);
 
                 if(verbose) indent() << "call " << '[' << ilabel << ']' << '/' << branch.size << std::endl;
-                OnInternal * const proc = imap.search(ilabel);
+                OnInternal * const proc = imap->search(ilabel);
                 if(0!=proc)
                     (*proc)(branch.size);
                 else
@@ -99,14 +99,14 @@ namespace Yttrium
             void Translator:: on(const Caption    & label,
                                  const OnTerminal & tproc)
             {
-                if( !tmap.insert(label,tproc) )
+                if( !tmap->insert(label,tproc) )
                     throw Specific::Exception(name->c_str(),"multiple OnTerminal('%s')", label->c_str() );
             }
 
             void Translator:: on(const Caption    & label,
                                  const OnInternal & iproc)
             {
-                if( !imap.insert(label,iproc) )
+                if( !imap->insert(label,iproc) )
                     throw Specific::Exception(name->c_str(),"multiple OnInternal('%s')", label->c_str() );
             }
         }

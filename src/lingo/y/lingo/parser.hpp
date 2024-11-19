@@ -133,6 +133,7 @@ namespace Yttrium
             //! restart lexer and process source
             XNode * operator()(Source &);
 
+
             //__________________________________________________________________
             //
             //
@@ -143,8 +144,6 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
-
-
 
         };
 

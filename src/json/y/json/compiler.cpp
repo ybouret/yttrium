@@ -4,8 +4,9 @@
 #include "y/lingo/parser.hpp"
 #include "y/lingo/syntax/translator.hpp"
 #include "y/text/ascii/convert.hpp"
-#include "y/oversized.hpp"
 #include "y/quantized.hpp"
+
+#include "y/utest/run.hpp"
 
 namespace Yttrium
 {
@@ -16,47 +17,51 @@ namespace Yttrium
 
         namespace
         {
-            class JParser : public  Parser
+            class JParser : public Parser
             {
             public:
                 explicit JParser() : Parser("JSON")
                 {
-                    Alt        & JSON   = alt(name);
-                    Alt        & VALUE  = alt("Value");
-                    const Rule & STRING = plug<Lexical::JString>("String");
-                    const Rule & COMMA  = mark(',');
-                    VALUE << STRING << term("Number", "[-+]?[:digit:]+([.][:digit:]+)?([eEdD][-+]?[:digit:]+)?");
-
-                    Alt & ARRAY = alt("Array");
-                    {
-                        Agg        & HeavyArray = agg("HeavyArray");
-                        HeavyArray << '[';
-                        HeavyArray << VALUE;
-                        HeavyArray << zom( cat(COMMA,VALUE) );
-                        HeavyArray << ']';
-                        ARRAY << HeavyArray;
-                        ARRAY << (agg("EmptyArray") << '[' << ']');
-                    }
-                    VALUE << ARRAY;
-
+                    Alt & JSON   = alt(name);
+                    Alt & ARRAY  = alt("Array");
                     Alt & OBJECT = alt("Object");
-                    {
-                        Agg & HeavyObject = agg("HeavyObject");
-                        HeavyObject << '{';
-                        const Rule & PAIR = agg("Pair") << STRING << ':' << VALUE;
-                        HeavyObject << PAIR;
-                        HeavyObject << zom( cat(COMMA,PAIR) );
-                        HeavyObject << '}';
 
-                        OBJECT << HeavyObject;
-                        OBJECT << (agg("EmptyObject") << '{' << '}');
-                    }
-                    VALUE << OBJECT;
-                    VALUE <<  "true" << "false" << "null";
-
-                    // finish top-level
                     JSON << ARRAY;
                     JSON << OBJECT;
+
+                    {
+                        Alt &        VALUE  = alt("Value");
+                        const Rule & STRING = plug<Lexical::JString>("String"); // needed for Pair
+                        const Rule & COMMA  = mark(',');                        // needed for Array/Object
+
+                        VALUE << STRING << term("Number", "[-+]?[:digit:]+([.][:digit:]+)?([eEdD][-+]?[:digit:]+)?");
+
+                        {
+                            Agg        & HeavyArray = agg("HeavyArray");
+                            HeavyArray << '[';
+                            HeavyArray << VALUE;
+                            HeavyArray << zom( cat(COMMA,VALUE) );
+                            HeavyArray << ']';
+                            ARRAY << HeavyArray;
+                            ARRAY << (agg("EmptyArray") << '[' << ']');
+                        }
+                        VALUE << ARRAY;
+
+                        {
+                            Agg & HeavyObject = agg("HeavyObject");
+                            HeavyObject << '{';
+                            const Rule & PAIR = agg("Pair") << STRING << ':' << VALUE;
+                            HeavyObject << PAIR;
+                            HeavyObject << zom( cat(COMMA,PAIR) );
+                            HeavyObject << '}';
+
+                            OBJECT << HeavyObject;
+                            OBJECT << (agg("EmptyObject") << '{' << '}');
+                        }
+                        VALUE << OBJECT;
+                        VALUE <<  "true" << "false" << "null";
+                    }
+
 
 
                     lexer.drop("[:blank:]");
@@ -179,10 +184,10 @@ namespace Yttrium
         }
 
 
-        class Compiler :: Code : public Oversized
+        class Compiler :: Code : public Yttrium::Object
         {
         public:
-            explicit Code() : parser(), linker(parser.name)
+            explicit Code() : parser( new JParser() ), linker( new JLinker(parser->name) )
             {
             }
 
@@ -191,8 +196,8 @@ namespace Yttrium
             {
             }
 
-            JParser parser;
-            JLinker linker;
+            AutoPtr<JParser> parser;
+            AutoPtr<JLinker> linker;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -202,7 +207,9 @@ namespace Yttrium
         Compiler:: Compiler() :
         code( new Code() )
         {
-            std:: cerr << "sizeof(Code) = " << sizeof(Code) << std::endl;
+            Y_SIZEOF(Code);
+            Y_SIZEOF(JParser);
+            Y_SIZEOF(JLinker);
         }
 
         Compiler:: ~Compiler() noexcept
@@ -214,12 +221,14 @@ namespace Yttrium
         void Compiler:: load(Value &jv, Lingo::Module * const jm)
         {
             jv.nullify();
-            AutoPtr<Syntax::XNode> tree = code->parser(jm);
-            GraphViz::Vizible::DotToPng("json-ast.dot", *tree);
+            JParser &              parse = *(code->parser);
+            JLinker &              link  = *(code->linker);
+            AutoPtr<Syntax::XNode> xtree = parse(jm);
+            GraphViz::Vizible::DotToPng("json-ast.dot", *xtree);
 
-            code->linker.verbose = true;
+            link.verbose = true;
             //code->linker.policy  = Syntax::Permissive;
-            code->linker( *tree );
+            link( *xtree );
 
         }
 
