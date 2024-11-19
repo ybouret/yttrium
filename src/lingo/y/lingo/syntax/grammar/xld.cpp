@@ -33,6 +33,18 @@ namespace Yttrium
 
 
             static inline
+            XNode * reloadedWith(const size_t     size,
+                                 AutoPtr<XNode> & node,
+                                 Source &         source,
+                                 const Grammar &  grammar)
+            {
+                XList             &target = node->branch();
+                for(size_t i=1;i<=size;++i)
+                    target.pushTail( grammar.reload(source) );
+                return node.yield();
+            }
+
+            static inline
             XNode * reloadInternal(const Internal &rule,
                                    Source         &source,
                                    const Grammar  &grammar)
@@ -40,31 +52,39 @@ namespace Yttrium
                 AutoPtr<XNode>     node  = XNode::CreateFrom(rule);
                 const char * const name  = rule.name->c_str();
                 const size_t       size  = source.readVBR<size_t>(name);
-                XList             &target = node->branch();
-
-                for(size_t i=1;i<=size;++i)
-                    target.pushTail( grammar.reload(source) );
-                
-                return node.yield();
+                return reloadedWith(size, node, source, grammar);
             }
 
+            static inline
+            XNode * reloadRepeat(const Repeat  &rule,
+                                 Source        &source,
+                                 const Grammar &grammar)
+            {
+                AutoPtr<XNode>     node = XNode::CreateFrom(rule);
+                const size_t       nrep = source.readVBR<size_t>("Repeat.atLeast");
+                if(nrep<rule.atLeast)
+                    throw Specific::Exception(grammar.name->c_str(), "bad count for '%s'", rule.name->c_str());
+                return reloadedWith(nrep, node, source, grammar);
+            }
 
             XNode * Grammar:: reload(Source &source) const
             {
                 const Grammar &self = *this;  if(!source.ready()) throw Specific::Exception(self.name->c_str(),"EOF in reload()");
-                const Char     here = *source.peek();
-                const String   name = String::ReadFrom(source);
-                const Rule    &rule = self[name];
+                const Char     here = *source.peek();           // copy of location
+                const String   name = String::ReadFrom(source); // read name
+                const Rule    &rule = self[name];               // get rule by name
+                const uint32_t uuid = rule.uuid;
 
-                switch(rule.uuid)
+                switch(uuid)
                 {
                     case Terminal::UUID:  return reloadTerminal( *rule.as<Terminal>(),  source, *this, here);
                     case Aggregate::UUID: return reloadInternal( *rule.as<Aggregate>(), source, *this);
+                    case Repeat::UUID:    return reloadRepeat(   *rule.as<Repeat>(),    source, *this);
                     default:
                         break;
                 }
 
-                throw Specific::Exception(name.c_str(), "reload of rule is not implemented");
+                throw Specific::Exception(name.c_str(), "reload of rule uuid='%s' is not implemented", FourCC::ToText(uuid) );
             }
         }
 

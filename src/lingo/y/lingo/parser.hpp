@@ -108,6 +108,7 @@ namespace Yttrium
                 const String _(uuid); return plug<ADD_ON>(_);
             }
 
+            //! create an emitted end-line terminal
             template <typename UUID,typename EXPR> inline
             const Terminal & endl(const UUID & uuid, const EXPR &expr)
             {

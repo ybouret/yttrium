@@ -24,7 +24,7 @@ namespace Yttrium
                     Alt        & JSON   = alt(name);
                     Alt        & VALUE  = alt("Value");
                     const Rule & STRING = plug<Lexical::JString>("String");
-                    const Rule & COMMA = mark(',');
+                    const Rule & COMMA  = mark(',');
                     VALUE << STRING << term("Number", "[-+]?[:digit:]+([.][:digit:]+)?([eEdD][-+]?[:digit:]+)?");
 
                     Alt & ARRAY = alt("Array");
@@ -32,7 +32,7 @@ namespace Yttrium
                         Agg        & HeavyArray = agg("HeavyArray");
                         HeavyArray << '[';
                         HeavyArray << VALUE;
-                        HeavyArray << zom( cat( COMMA, VALUE) );
+                        HeavyArray << zom( cat(COMMA,VALUE) );
                         HeavyArray << ']';
                         ARRAY << HeavyArray;
                         ARRAY << (agg("EmptyArray") << '[' << ']');
@@ -45,7 +45,7 @@ namespace Yttrium
                         HeavyObject << '{';
                         const Rule & PAIR = agg("Pair") << STRING << ':' << VALUE;
                         HeavyObject << PAIR;
-                        HeavyObject << zom( cat( COMMA, PAIR) );
+                        HeavyObject << zom( cat(COMMA,PAIR) );
                         HeavyObject << '}';
 
                         OBJECT << HeavyObject;

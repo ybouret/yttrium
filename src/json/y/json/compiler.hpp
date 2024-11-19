@@ -10,13 +10,33 @@ namespace Yttrium
 {
     namespace JSON
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Compile module into Value
+        //
+        //
+        //______________________________________________________________________
         class Compiler
         {
         public:
-            explicit Compiler();
-            virtual ~Compiler() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Compiler();          //!< setup parser+linker
+            virtual ~Compiler() noexcept; //!< cleanup
 
-            void load(Value &jv, Lingo::Module * const);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void load(Value &jv, Lingo::Module * const); //!< load into jv
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);

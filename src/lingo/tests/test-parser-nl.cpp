@@ -51,7 +51,7 @@ Y_UTEST(parser_nl)
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
         xnode->toBinary("xnode.dat");
 
-        if(false)
+        if(true)
         {
             Source src( Module::OpenFile("xnode.dat") );
             AutoPtr<Syntax::XNode> reloaded = P.reload(src);
