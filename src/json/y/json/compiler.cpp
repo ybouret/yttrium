@@ -6,7 +6,6 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/quantized.hpp"
 #include "y/system/exception.hpp"
-#include "y/utest/run.hpp"
 
 namespace Yttrium
 {
@@ -134,8 +133,9 @@ namespace Yttrium
                 void onString(const Lexeme &lx)
                 {
                     const String s = lx.toString(1,1);
-                    const Value  v= s;
-                    values << v;
+                    Value        v = s;
+                    values << nil;
+                    values.tail().swapWith(v);
 
                 }
 
@@ -231,11 +231,10 @@ namespace Yttrium
 
 
         Compiler:: Compiler() :
-        code( new Code() )
+        code( new Code() ),
+        verbose(code->linker->verbose)
         {
-            //Y_SIZEOF(Code);
-            //Y_SIZEOF(JParser);
-            //Y_SIZEOF(JLinker);
+
         }
 
         Compiler:: ~Compiler() noexcept
@@ -252,7 +251,7 @@ namespace Yttrium
             AutoPtr<Syntax::XNode> xtree = parse(jm);
             GraphViz::Vizible::DotToPng("json-ast.dot", *xtree);
 
-            link.verbose = true;
+            //link.verbose = true;
             link( *xtree );
         }
 

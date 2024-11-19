@@ -42,6 +42,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             class Code;
             Code *code;
+        public:
+            bool & verbose;
         };
     }
 }
