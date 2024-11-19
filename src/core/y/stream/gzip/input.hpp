@@ -37,7 +37,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit InputFile(const char *fileName);               //!< open file
+            explicit InputFile(const char * const fileName);        //!< open file
             explicit InputFile(const Core::String<char> &fileName); //!< open file
             virtual ~InputFile() noexcept;                          //!< cleanup
 

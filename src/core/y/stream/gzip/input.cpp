@@ -61,10 +61,17 @@ namespace Yttrium
 
 
 
-        InputFile:: InputFile(const char *fileName) :
+        InputFile:: InputFile(const char * const fileName) :
         code( new Code(fileName) )
         {
         }
+
+
+        InputFile:: InputFile(const String &fileName) :
+        code( new Code(fileName.c_str()) )
+        {
+        }
+
 
         InputFile:: ~InputFile() noexcept
         {

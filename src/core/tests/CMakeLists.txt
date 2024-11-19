@@ -220,6 +220,7 @@ add_test(io:xmlog       test-core io_xmlog)
 add_test(io:bits        test-core io_bits)
 add_test(io:disk       test-core io_disk)
 add_test(io:pstream     test-core io_pstream)
+add_test(io:input-data  test-core io_input_data)
 
 #fft
 add_test(fft:xbr  test-core fft_xbr)

@@ -99,6 +99,16 @@ namespace Yttrium
         buffer.prune();
     }
 
+    bool InputFile:: probe(void * const addr, const size_t size)
+    {
+        assert(Good(addr,size));
+        char * p = static_cast<char *>(addr);
+        for(size_t i=size;i>0;--i)
+        {
+            if( !query( *(p++) ) )  return false;
+        }
+        return true;
+    }
 
 
 

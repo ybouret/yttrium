@@ -64,6 +64,14 @@ namespace Yttrium
         //
         //______________________________________________________________________
         void         gc()     noexcept; //!< prune buffer
+        bool         probe(void * const addr, const size_t size);
+
+        template <typename FILENAME> static inline
+        bool Probe(const FILENAME &fileName, void * const addr, const size_t size) {
+            InputFile _(fileName);
+            return _.probe(addr,size);
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(InputFile);
