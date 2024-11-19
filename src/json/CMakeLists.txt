@@ -1,4 +1,4 @@
-include_directories(. ../core ../jive ../lingo)
+include_directories(. ../core ../lingo)
 
 Y_CreateLibrary(y-json
 json

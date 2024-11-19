@@ -96,7 +96,8 @@ namespace Yttrium
                 explicit JLinker(const Caption &label) :
                 Syntax::Translator(label),
                 values(),
-                pairs()
+                pairs(),
+                nil()
                 {
                     Y_JSON_Terminal(String);
                     Y_JSON_Terminal(Number);
