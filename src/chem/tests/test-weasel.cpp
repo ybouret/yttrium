@@ -7,6 +7,12 @@ using namespace Chemical;
 
 Y_UTEST(weasel)
 {
+    Library lib;
+    std::cerr << lib << std::endl;
+
+    const Species &h = lib("H^+",1);
+    std::cerr << h << std::endl;
+
     Weasel &weasel = Weasel::Instance();
     std::cerr << weasel.callSign() << std::endl;
 }

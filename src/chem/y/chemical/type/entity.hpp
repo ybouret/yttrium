@@ -11,21 +11,51 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! indexing level
+        //
+        //
+        //______________________________________________________________________
         enum Level
         {
-            TopLevel = 0,
-            SubLevel = 1,
-            AuxLevel = 2,
+            TopLevel = 0, //!< in Library
+            SubLevel = 1, //!< in Cluster
+            AuxLevel = 2, //!< in a group
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! named entity
+        //
+        //
+        //______________________________________________________________________
         class Entity :
         public Object,
         public Counted,
         public GraphViz::Vizible
         {
         public:
-            static const size_t LEVELS = AuxLevel;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t LEVELS = AuxLevel+1; //!< number of levels
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! initialize with name and top-level index
             template <typename NAME> inline
             explicit Entity(const NAME & _name,
                             const size_t _indx) :
@@ -35,16 +65,29 @@ namespace Yttrium
             name(_name),
             indx()
             {
+                assert(_indx>0);
                 setup(_indx);
             }
 
-            virtual ~Entity() noexcept;
-            Y_OSTREAM_PROTO(Entity);
+            virtual ~Entity() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Entity);    //!< display
 
-            const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key() const noexcept; //!< name
 
-            const String name;
-            const size_t indx[LEVELS];
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String name;         //!< name
+            const size_t indx[LEVELS]; //!< indices
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entity);

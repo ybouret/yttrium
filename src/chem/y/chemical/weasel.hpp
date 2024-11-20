@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Weasel_Included
 #define Y_Chemical_Weasel_Included 1
 
-#include "y/chemical/species.hpp"
+#include "y/chemical/library.hpp"
 #include "y/lingo/caption.hpp"
 #include "y/singleton.hpp"
 
@@ -13,15 +13,35 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Weasel is Equilibria And Species Elementary Language
+        //
+        //
+        //______________________________________________________________________
         class Weasel : public Singleton<Weasel>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 30;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign;                                 //!< "Weasel"
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 30; //!< alias
             class Parser;
 
-            const Lingo::Caption caption;
-            
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Lingo::Caption caption; //!< shared caption
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             friend class Singleton<Weasel>;
