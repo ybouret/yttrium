@@ -1,15 +1,18 @@
-#include "y/chemical/weasel.hpp"
+#include "y/chemical/weasel/parser.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        class Weasel::Parser
+        Weasel:: Parser:: ~Parser() noexcept
         {
-        public:
+        }
 
-        private:
-        };
+        Weasel:: Parser:: Parser(const Lingo::Caption &caption) : Lingo::Parser(caption)
+        {
+            lexer.drop("[:blank:]");
+            lexer.endl("[:endl:]",Lingo::Lexeme::Drop);
+        }
 
     }
 

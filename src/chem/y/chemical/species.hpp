@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Species_Included
 #define Y_Chemical_Species_Included 1
 
-#include "y/chemical/entity.hpp"
+#include "y/chemical/type/entity.hpp"
 
 namespace Yttrium
 {
