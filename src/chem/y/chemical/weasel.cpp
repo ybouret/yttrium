@@ -1,5 +1,6 @@
 #include "y/chemical/weasel/parser.hpp"
 #include "y/utest/run.hpp"
+#include <cstring>
 
 namespace Yttrium
 {

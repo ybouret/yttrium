@@ -1,5 +1,6 @@
 #include "y/chemical/library.hpp"
 #include "y/system/exception.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -11,7 +12,8 @@ namespace Yttrium
 
         Library:: Library() :
         Assembly(),
-        Proxy<const SpeciesSet>()
+        Proxy<const SpeciesSet>(),
+        species()
         {
 
         }
@@ -20,10 +22,31 @@ namespace Yttrium
         {
             return species;
         }
-        
+
+
+
         std::ostream & operator<<(std::ostream &os, const Library &lib)
         {
-            return os << lib.species;
+            const SpeciesSet &species = lib.species;
+            if(species.size()<=0)
+            {
+                return os << "{}";
+            }
+            else
+            {
+                os << '{' << std::endl;
+                for(SpeciesSet::ConstIterator it=species.begin();it!=species.end();++it)
+                {
+                    const Species &sp = **it;
+                    os << "\t" << Justify(sp.name,lib.maxNameSize);
+                    os << " | z=" << std::setw(3) << sp.z;
+                    os << " | indx=";
+                    Core::Display(os, sp.indx, Species::LEVELS);
+                    os << std::endl;
+                }
+                os << '}';
+                return os;
+            }
         }
 
         const Species & Library:: operator()(const String &sid, const int z)
@@ -42,6 +65,8 @@ namespace Yttrium
             const Species::Handle sh( new Species(sid,z,species.size()+1) );
             if(!species.insert(sh))
                 throw Specific::Exception(sid.c_str(),"unexpected failure to insert into Library");
+
+            enroll(*sh);
             return *sh;
         }
 

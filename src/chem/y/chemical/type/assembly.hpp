@@ -40,18 +40,18 @@ namespace Yttrium
             //__________________________________________________________________
             void enroll(const Entity &) noexcept;
 
-            //! os << justified((*curr).name); proc(os,*curr)
+            //! os << justified((**curr).name); proc(os,**curr)
             template <typename ITERATOR, typename PROC> inline
             void forEach(ITERATOR            curr,
                          size_t              size,
                          PROC &              proc,
                          std::ostream &      os,
-                         const Justify::Type just)
+                         const Justify::Type just) const
             {
                 while(size-- > 0)
                 {
-                    os << Justify((*curr).name,maxNameSize,just);
-                    proc(os,*curr);
+                    os << Justify((**curr).name,maxNameSize,just);
+                    proc(os,**curr);
                     os << std::endl;
                     ++curr;
                 }

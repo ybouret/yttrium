@@ -11,7 +11,13 @@ Y_UTEST(weasel)
     std::cerr << lib << std::endl;
 
     const Species &h = lib("H^+",1);
-    std::cerr << h << std::endl;
+    const Species &w = lib("HO^-",-1);
+
+    std::cerr << h   << std::endl;
+    std::cerr << w   << std::endl;
+    std::cerr << lib << std::endl;
+
+    return 0;
 
     Weasel &weasel = Weasel::Instance();
     std::cerr << weasel.callSign() << std::endl;
