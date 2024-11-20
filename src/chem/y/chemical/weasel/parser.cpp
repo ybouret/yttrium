@@ -12,12 +12,9 @@ namespace Yttrium
         {
 
             Alt &        WEASEL = alt(name);
-            Alt &        ATOM   = alt("ATOM");
-            Compound &   ADD    = agg("ADD") << ATOM << zom(ATOM);
-            const Rule & GRP    = agg("GRP") << '(' <<  ADD << ')';
-            ATOM << term("ID","[:alpha:]+") << GRP;
+            const Rule & SYMBOL = term("SYMBOL","[:alpha:][[:word:]\\(\\)]*(^)?");
 
-            WEASEL << ADD;
+            WEASEL << zom(SYMBOL);
 
             render();
             validate();

@@ -68,6 +68,7 @@ namespace Yttrium
             assert(0!=m);
             assert(0!=compiler);
             AutoPtr<Lingo::Syntax::XNode> tree = compiler->parser(m);
+            GraphViz::Vizible::DotToPng("wtree.dot", *tree);
         }
 
     }
