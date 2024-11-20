@@ -58,6 +58,13 @@ namespace Yttrium
                 }
             }
 
+            bool Visit:: Found(const Rule &root, const Rule &rule)
+            {
+                const Visit visit(rule);
+                return visit.has(root);
+            }
+
+
 
         }
 

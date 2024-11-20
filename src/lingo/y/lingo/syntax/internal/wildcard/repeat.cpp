@@ -35,7 +35,7 @@ namespace Yttrium
             }
 
 
-            bool Repeat:: robust() const { return atLeast>0; }
+            bool Repeat:: robust() const { return (atLeast>0) && rule.robust(); }
 
             void Repeat:: vizMark(OutputStream &fp) const
             {

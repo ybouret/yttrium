@@ -45,6 +45,8 @@ namespace Yttrium
                 //! recursive visit
                 void operator()(const Rule &);
 
+                static bool Found(const Rule &root, const Rule &rule);
+
 
             private:
                 Y_DISABLE_ASSIGN(Visit);
