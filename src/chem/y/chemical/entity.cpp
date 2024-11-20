@@ -14,6 +14,17 @@ namespace Yttrium
             return name;
         }
 
+
+        void Entity:: setup(const size_t _indx) noexcept
+        {
+            for(size_t i=0;i<LEVELS;++i) Coerce(indx[i]) = _indx;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Entity &entity)
+        {
+            return os << entity.name;
+        }
+
     }
 
 }
