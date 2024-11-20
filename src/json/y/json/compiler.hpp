@@ -43,7 +43,7 @@ namespace Yttrium
             class Code;
             Code *code;
         public:
-            bool & verbose;
+            bool & verbose; //!< reference to internal verbosity flag
         };
     }
 }

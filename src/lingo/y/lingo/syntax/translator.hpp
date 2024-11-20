@@ -47,8 +47,8 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef SuffixMap<const Caption,OnTerminal> OnTerminalMap_; //!< alias
                 typedef SuffixMap<const Caption,OnInternal> OnInternalMap_; //!< alias
-                Y_Derived(OnTerminalMap,Quantized,Standard);
-                Y_Derived(OnInternalMap,Quantized,Standard);
+                Y_Derived(OnTerminalMap,Quantized,Standard);                //!< alias
+                Y_Derived(OnInternalMap,Quantized,Standard);                //!< alias
 
                 //______________________________________________________________
                 //
@@ -124,9 +124,6 @@ namespace Yttrium
                     const OnInternal iproc( &_host, _meth );
                     on(label,iproc);
                 }
-
-
-
 
 
             private:

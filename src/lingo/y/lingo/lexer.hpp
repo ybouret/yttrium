@@ -37,9 +37,9 @@ namespace Yttrium
             typedef Small::SoloLightList<Analyzer>      History_;   //!< alias
             typedef SuffixSet<String,AddOn::Handle>     AddOns_;   //!< alias
 
-            Y_Derived(Database, Quantized, Standard);
-            Y_Derived(AddOns,   Quantized, Standard);
-            Y_Derived(History,  Quantized, NoExcept);
+            Y_Derived(Database, Quantized, Standard); //!< alias
+            Y_Derived(AddOns,   Quantized, Standard); //!< alias
+            Y_Derived(History,  Quantized, NoExcept); //!< alias
 
 
 

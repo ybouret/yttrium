@@ -5,9 +5,11 @@
 
 #include "y/config/starting.hpp"
 
-#define Y_Derived_Standard
-#define Y_Derived_NoExcept noexcept
 
+#define Y_Derived_Standard          //!< helper to declare standard constructor
+#define Y_Derived_NoExcept noexcept //!< helper to declare noexcept constructor
+
+//! class CLASS : public BASE, public CLASS_
 #define Y_Derived(CLASS,BASE,KIND)                   \
 /**/  class CLASS : public BASE, public CLASS##_ {   \
 /**/    public:                                      \

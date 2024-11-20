@@ -64,8 +64,12 @@ namespace Yttrium
         //
         //______________________________________________________________________
         void         gc()     noexcept; //!< prune buffer
-        bool         probe(void * const addr, const size_t size);
 
+
+        //! try to probe addr[size]
+        bool probe(void * const addr, const size_t size);
+
+        //! extract addr[size] of information from fileName
         template <typename FILENAME> static inline
         bool Probe(const FILENAME &fileName, void * const addr, const size_t size) {
             InputFile _(fileName);
