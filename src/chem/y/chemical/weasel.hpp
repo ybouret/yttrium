@@ -5,7 +5,7 @@
 #define Y_Chemical_Weasel_Included 1
 
 #include "y/chemical/library.hpp"
-#include "y/lingo/caption.hpp"
+#include "y/lingo/module.hpp"
 #include "y/singleton.hpp"
 
 namespace Yttrium
@@ -33,6 +33,17 @@ namespace Yttrium
             static const char * const      CallSign;                                 //!< "Weasel"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 30; //!< alias
             class Parser;
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            void operator()(Lingo::Module * const);
+
+
 
             //__________________________________________________________________
             //

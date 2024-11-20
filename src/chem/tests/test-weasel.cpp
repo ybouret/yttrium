@@ -17,9 +17,12 @@ Y_UTEST(weasel)
     std::cerr << w   << std::endl;
     std::cerr << lib << std::endl;
 
-    return 0;
-
+    
     Weasel &weasel = Weasel::Instance();
     std::cerr << weasel.callSign() << std::endl;
+    if(argc>1)
+    {
+        weasel( Lingo::Module::OpenFile(argv[1]) );
+    }
 }
 Y_UDONE()

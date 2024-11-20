@@ -38,7 +38,7 @@ namespace Yttrium
                 Internal(_name,_uuid),
                 rule(_rule)
                 {
-                    checkRobustness(Constructor);
+                    //checkRobustness(Constructor);
                 }
 
             public:

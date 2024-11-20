@@ -41,8 +41,6 @@ namespace Yttrium
         Singleton<Weasel>(),
         caption( CallSign )
         {
-            Y_SIZEOF(Weasel::Parser);
-            Y_USHOW(sizeof(compiler_));
             assert(0==compiler);
             try {
                 zeroCompiler();
@@ -52,6 +50,7 @@ namespace Yttrium
             {
                 compiler = 0;
                 zeroCompiler();
+                throw;
             }
         }
 
@@ -61,6 +60,14 @@ namespace Yttrium
             Destruct(compiler);
             compiler=0;
             zeroCompiler();
+        }
+
+
+        void Weasel:: operator()(Lingo::Module * const m)
+        {
+            assert(0!=m);
+            assert(0!=compiler);
+            AutoPtr<Lingo::Syntax::XNode> tree = compiler->parser(m);
         }
 
     }

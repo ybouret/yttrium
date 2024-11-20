@@ -67,6 +67,7 @@ namespace Yttrium
 
                 if(rules.size<=0) throw Specific::Exception(name->c_str(), "no rule in validate()");
 
+                
                 const Rule & primary = *rules.head;
                 {
                     const Visit visited(primary);
