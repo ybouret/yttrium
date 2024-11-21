@@ -39,6 +39,7 @@ namespace Yttrium
 
         Weasel:: Weasel() :
         Singleton<Weasel>(),
+        luaVM( new Lua::State() ),
         caption( CallSign )
         {
             assert(0==compiler);

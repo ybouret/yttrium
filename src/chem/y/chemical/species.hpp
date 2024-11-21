@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Species : public Entity
+        class Species : public Entity, public Serializable
         {
         public:
             //__________________________________________________________________
@@ -29,6 +29,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef ArkPtr<const String,const Species> Handle; //!< alias
+            static const char * const  CallSign; //!< "Chemical::Species"
 
             //__________________________________________________________________
             //
@@ -49,6 +50,23 @@ namespace Yttrium
 
             //! cleanup
             virtual ~Species() noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual size_t serialize(OutputStream &) const; //!< [Serializable] name+charge, no index
+
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+            static Species * Read(InputStream &, const size_t _indx);
+
 
             //__________________________________________________________________
             //

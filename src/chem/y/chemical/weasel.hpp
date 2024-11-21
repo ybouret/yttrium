@@ -7,6 +7,7 @@
 #include "y/chemical/library.hpp"
 #include "y/lingo/module.hpp"
 #include "y/singleton.hpp"
+#include "y/lua++/state.hpp"
 
 namespace Yttrium
 {
@@ -51,6 +52,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+            Lua::VM              luaVM;   //!< shared VM
             const Lingo::Caption caption; //!< shared caption
 
         private:
