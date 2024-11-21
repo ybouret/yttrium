@@ -64,7 +64,7 @@ namespace Yttrium
 
 
                     lexer.drop("[:blank:]");
-                    lexer.endl("[:endl:]", Lexeme::Drop);
+                    lexer.endl("[:endl:]",Drop);
 
                     render();
                     validate();

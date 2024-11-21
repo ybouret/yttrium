@@ -27,7 +27,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Syntax::Terminal Terminal; //!< alias
+            typedef Syntax::Terminal  Terminal; //!< alias
+            typedef Lexeme::Feat      Feat;
+            static const Feat         Drop = Lexeme::Drop;
+            static const Feat         Emit = Lexeme::Emit;
 
             //__________________________________________________________________
             //
@@ -112,7 +115,7 @@ namespace Yttrium
             template <typename UUID,typename EXPR> inline
             const Terminal & endl(const UUID & uuid, const EXPR &expr)
             {
-                const Lexical::Rule &rule = lexer.endl(uuid,expr,Lexeme::Emit);
+                const Lexical::Rule &rule = lexer.endl(uuid,expr,Emit);
                 const Terminal::Kind kind = rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
                 const Caption       &r_id = rule.name;
                 try { return term__(r_id,kind,Terminal::Semantic); }
