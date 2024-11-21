@@ -18,7 +18,7 @@ void doFind(VFS &            fs,
 {
     VFS::Entries entries;
     std::cerr << "\tmatching " << VFS::Entry::PartText(part) << std::endl;
-    VirtualFileSystem::Find(fs, entries, dirName, matches, how, part);
+    VirtualFileSystem::_Find(fs, entries, dirName, matches, how, part);
     for(const VFS::Entry *ep=entries.head;ep;ep=ep->next)
     {
         std::cerr << "\t\t" << *ep << std::endl;
@@ -45,9 +45,9 @@ Y_UTEST(vfs)
     if(argc>1)
     {
         Matching     matches = argv[1];
-        VFS::Entries entries;
         if(argc>2)
         {
+
             const String dirName = argv[2];
             std::cerr << "Matching::Exactly" << std::endl;
             doFindAll(fs, dirName, matches, Matching::Exactly);
@@ -55,6 +55,10 @@ Y_UTEST(vfs)
             std::cerr << std::endl;
             std::cerr << "Matching::Somehow" << std::endl;
             doFindAll(fs, dirName, matches, Matching::Somehow);
+
+            std::cerr << std::endl;
+            std::cerr << "With extension:" << std::endl;
+            VirtualFileSystem::ForEach(fs,argv[2], argv[1], Matching::Exactly, VFS::Entry::Ext, VirtualFileSystem::Display);
         }
 
     }
