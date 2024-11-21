@@ -175,8 +175,13 @@ namespace Yttrium
                 void onPair(const size_t)
                 {
                     assert(values.size()>=2);
-                    Value        v; v.swapWith(values.tail());   values.popTail();
-                    const String k = values.tail().as<String>(); values.popTail();
+                    Value        v;
+                    v.swapWith(values.tail());
+                    values.popTail();
+
+                    const String k = values.tail().as<String>();
+                    values.popTail();
+
                     SharedPair   p = new Pair(k);
                     p->v.swapWith(v);
                     pairs << p;

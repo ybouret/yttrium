@@ -18,5 +18,6 @@ Y_UTEST_DECL(32)
     Y_UTEST(parser);
     Y_UTEST(parser_nl);
     Y_UTEST(types);
+    Y_UTEST(eval);
 }
 Y_UTEST_EXEC()

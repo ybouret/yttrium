@@ -27,5 +27,6 @@ add_test(parser3   test-lingo parser ${DATA}/sample3.js)
 add_test(parser4   test-lingo parser ${DATA}/sample4.js)
 add_test(parser-nl test-lingo parser_nl)
 add_test(types     test-lingo types)
+add_test(eval      test-lingo eval)
 
 

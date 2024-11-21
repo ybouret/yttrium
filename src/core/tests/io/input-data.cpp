@@ -106,7 +106,7 @@ namespace Yttrium
     class MagicInputFactory : public Proxy<const InputStreamFormat::List>
     {
     public:
-        explicit MagicInputFactory() : crew() {
+        explicit MagicInputFactory() : crew(), fallback() {
 
         }
 
@@ -138,8 +138,6 @@ namespace Yttrium
     };
 
 
-
-
 }
 
 Y_UTEST(io_input_data)
@@ -150,9 +148,6 @@ Y_UTEST(io_input_data)
 
     if(argc>1)
     {
-
-
-
 
 
     }

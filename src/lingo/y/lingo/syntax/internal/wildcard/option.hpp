@@ -30,7 +30,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const uint32_t UUID = Y_FOURCC('X','O','P','T'); //!< identifier
+                static const uint32_t UUID   = Y_FOURCC('X','O','P','T'); //!< identifier
                 static const char     Suffix = '?';                     //!< for naming
 
                 //______________________________________________________________
@@ -39,7 +39,6 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-
                 explicit Option(const Rule &); //!< setup with rule.name + suffix
                 virtual ~Option() noexcept;    //!< cleanup
 
