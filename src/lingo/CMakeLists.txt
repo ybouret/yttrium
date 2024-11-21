@@ -16,6 +16,7 @@ lingo/syntax/internal
 lingo/syntax/internal/wildcard
 lingo/syntax/internal/compound
 lingo/syntax/grammar
+lingo/vfs
 )
 
 add_subdirectory(tests)

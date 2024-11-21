@@ -108,6 +108,22 @@ namespace Yttrium
         throw Specific::Exception(CallSign,"corrupted VFS::Entry::Part value");
     }
 
+#define Y_VFS_ENTRY_PART(NAME) case NAME: return #NAME
+
+    const char * VFS::Entry:: PartText(const Part part) noexcept
+    {
+        switch(part)
+        {
+                Y_VFS_ENTRY_PART(Path);
+                Y_VFS_ENTRY_PART(PathWE);
+                Y_VFS_ENTRY_PART(Base);
+                Y_VFS_ENTRY_PART(BaseWE);
+                Y_VFS_ENTRY_PART(Ext);
+        }
+        // never get here
+        return Core::Unknown;
+    }
+
     std::ostream & operator<<(std::ostream &os, const VFS::Entry &ep)
     {
         os << '[';

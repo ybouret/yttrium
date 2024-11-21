@@ -108,6 +108,7 @@ namespace Yttrium
             };
 
             static const char * const CallSign; //!< "VFS::Entry"
+            static const char * PartText(const Part) noexcept; //!< human readable part name
 
             //__________________________________________________________________
             //
