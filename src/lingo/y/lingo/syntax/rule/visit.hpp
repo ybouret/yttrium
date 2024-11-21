@@ -45,6 +45,7 @@ namespace Yttrium
                 //! recursive visit
                 void operator()(const Rule &);
 
+                //! detect if root is found somewhere in rule
                 static bool Found(const Rule &root, const Rule &rule);
 
 

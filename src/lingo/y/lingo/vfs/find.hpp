@@ -10,17 +10,34 @@ namespace Yttrium
 {
     namespace Lingo
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! VFS functions
+        //
+        //
+        //______________________________________________________________________
         struct VirtualFileSystem
         {
+            //__________________________________________________________________
+            //
+            //
             //! append entries
+            //
+            //______________________________________________________________________
             static   void _Find(VFS                   &fileSys,
                                 VFS::Entries          &entries,
                                 const String          &dirName,
                                 Matching              &matches,
                                 const Matching::Method how,
                                 const VFS::Entry::Part part);
-
+            //__________________________________________________________________
+            //
+            //
             //! append entries
+            //
+            //__________________________________________________________________
             static   void _Find(VFS                &   fileSys,
                                 VFS::Entries       &   entries,
                                 const char * const     dirName,
@@ -28,6 +45,12 @@ namespace Yttrium
                                 const Matching::Method how,
                                 const VFS::Entry::Part part);
 
+            //__________________________________________________________________
+            //
+            //
+            //! generic call
+            //
+            //__________________________________________________________________
             template <
             typename DIRECTORY,
             typename EXPRESSION
@@ -43,11 +66,12 @@ namespace Yttrium
                 return _Find(fileSys,entries,dirName,matches,how,part);
             }
 
-            static void Display(VFS &, const VFS::Entry &ep);
-            static void TryRemove(VFS &fs, const VFS::Entry &ep);
-
-            
-
+            //__________________________________________________________________
+            //
+            //
+            //! apply procedure to each matching entry
+            //
+            //__________________________________________________________________
             template <
             typename DIRECTORY,
             typename EXPRESSION,
@@ -67,6 +91,8 @@ namespace Yttrium
 
             }
 
+            static void Display(VFS &, const VFS::Entry &ep);      //!< mostly to debug
+            static void TryRemove(VFS &fs, const VFS::Entry &ep);  //!< try remove if regular files
 
 
         };

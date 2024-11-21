@@ -38,6 +38,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! update maxNameSize
             void enroll(const Entity &) noexcept;
 
             //! os << justified((**curr).name); proc(os,**curr)

@@ -27,10 +27,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Syntax::Terminal  Terminal; //!< alias
-            typedef Lexeme::Feat      Feat;
-            static const Feat         Drop = Lexeme::Drop;
-            static const Feat         Emit = Lexeme::Emit;
+            typedef Syntax::Terminal  Terminal;             //!< alias
+            typedef Lexeme::Feat      Feat;                 //!< alias
+            static const Feat         Drop = Lexeme::Drop;  //!< alias
+            static const Feat         Emit = Lexeme::Emit;  //!< alias
 
             //__________________________________________________________________
             //

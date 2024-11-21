@@ -21,10 +21,18 @@ namespace Yttrium
         class Matching : public Token
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+
+            //! method selector
             enum Method
             {
-                Exactly,
-                Somehow
+                Exactly, //!< will use exactly
+                Somehow  //!< will use somehow
             };
 
             //__________________________________________________________________
@@ -67,6 +75,7 @@ namespace Yttrium
                 return somehow_( Module::OpenData(name,data) );
             }
 
+            //! generic match with method selector
             template <typename NAME, typename DATA> inline
             bool operator()(const Method how, const NAME &name, const DATA &data)
             {
