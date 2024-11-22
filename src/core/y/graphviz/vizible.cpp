@@ -184,6 +184,17 @@ namespace Yttrium
         void Vizible:: RenderPNG(const String &dotFile, const bool keepDot)
         {
             String pngFile = VFS::ChangedExtension("png", dotFile);
+            for(size_t i=pngFile.size();i>0;--i)
+            {
+                switch( pngFile[i] )
+                {
+                    case ':':
+                        pngFile[i] = '_';
+                        break;
+                    default:
+                        break;
+                }
+            }
             Render(pngFile,dotFile,keepDot);
         }
     }

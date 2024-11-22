@@ -27,10 +27,12 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Syntax::Terminal  Terminal;             //!< alias
-            typedef Lexeme::Feat      Feat;                 //!< alias
-            static const Feat         Drop = Lexeme::Drop;  //!< alias
-            static const Feat         Emit = Lexeme::Emit;  //!< alias
+            typedef Syntax::Terminal    Terminal;                      //!< alias
+            typedef Lexeme::Feat        Feat;                          //!< alias
+            static const Feat           Drop     = Lexeme::Drop;       //!< alias
+            static const Feat           Emit     = Lexeme::Emit;       //!< alias
+            static const Terminal::Role Semantic = Terminal::Semantic; //!< alias
+            static const Terminal::Role Dividing = Terminal::Dividing; //!< alias
 
             //__________________________________________________________________
             //
@@ -73,7 +75,7 @@ namespace Yttrium
             const Rule & term(const UUID & uuid,
                               const EXPR & expr)
             {
-                return term_<UUID,EXPR,Terminal::Semantic>(uuid,expr);
+                return term_<UUID,EXPR,Semantic>(uuid,expr);
             }
 
             //! create a semantic terminal
@@ -87,7 +89,7 @@ namespace Yttrium
             const Rule & mark(const UUID & uuid,
                               const EXPR & expr)
             {
-                return term_<UUID,EXPR,Terminal::Dividing>(uuid,expr);
+                return term_<UUID,EXPR,Dividing>(uuid,expr);
             }
 
             //! create a dividing terminal
@@ -99,7 +101,7 @@ namespace Yttrium
             //! make a terminal 'uuid' from an AddOn
             template <typename ADD_ON> inline
             const Terminal & plug(const String &uuid) {
-                const Terminal & xrule   = term__(uuid,Terminal::Standard,Terminal::Semantic);
+                const Terminal & xrule   = term__(uuid,Terminal::Standard,Semantic);
                 try { (void) lexer.plug<ADD_ON>(uuid); }
                 catch(...) { no(uuid); throw; }
                 return xrule;
@@ -118,8 +120,15 @@ namespace Yttrium
                 const Lexical::Rule &rule = lexer.endl(uuid,expr,Emit);
                 const Terminal::Kind kind = rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
                 const Caption       &r_id = rule.name;
-                try { return term__(r_id,kind,Terminal::Semantic); }
+                try { return term__(r_id,kind,Semantic); }
                 catch(...) { lexer.cut(rule); throw; }
+            }
+
+            //! create an emittend end-line with name=expr
+            template <typename EXPR> inline
+            const Terminal & endl(const EXPR &expr)
+            {
+                return endl(expr,expr);
             }
 
 

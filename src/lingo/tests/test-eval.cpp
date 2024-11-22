@@ -23,10 +23,10 @@ namespace Yttrium
             Agg & Pow   = act("Pow");
             Alt & Atom  = alt("Atom");
 
-            const Rule & MINUS = term('-');
-            const Rule & PLUS  = term('+');
-            const Rule & DIV   = term('/');
-            const Rule & MUL   = term('*');
+            const Rule & MINUS  = term('-');
+            const Rule & PLUS   = term('+');
+            const Rule & DIV    = term('/');
+            const Rule & MUL    = term('*');
             const Rule & LPAREN = mark('(');
             const Rule & RPAREN = mark(')');
 
