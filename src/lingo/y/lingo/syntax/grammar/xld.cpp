@@ -1,6 +1,9 @@
 
 #include "y/lingo/syntax/grammar.hpp"
 #include "y/system/exception.hpp"
+#include "y/stream/io/variable-info.hpp"
+
+
 
 namespace Yttrium
 {
