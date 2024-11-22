@@ -14,11 +14,11 @@ namespace Yttrium
             Agg        &WEASEL = agg("WEASEL");
 
             Agg  & ADD   = agg("ADD");
-            Agg  & POW   = agg("POW");
+            Agg  & POW   = act("POW");
             Alt  & ATOM  = alt("ATOM");
             ADD << POW << zom(POW);
-            POW << ATOM << opt( term("COEF","[:digit:]+" ) );
-            ATOM << term("ID","[:alpha:]") << parens(ADD);
+            POW << ATOM << opt( cat(get('_'), term("COEF","[:digit:]+" )) );
+            ATOM << term("ID","[:upper:][:lower:]*") << parens(ADD);
 
 #if 0
             const Rule &COEF   = term("COEF","[:digit:]+");
