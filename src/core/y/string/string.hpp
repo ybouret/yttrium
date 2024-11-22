@@ -194,8 +194,8 @@ namespace Yttrium
             void           swapWith(String &s)    noexcept; //!< no-throw swap
             const String & key()            const noexcept; //!< self-keyed
 
-            virtual size_t serialize(OutputStream &) const; //!< size+data
-            static  String ReadFrom(InputStream&);          //!< from serialize
+            virtual size_t serialize(OutputStream &) const;           //!< size+data
+            static  String ReadFrom(InputStream&,const char * const); //!< from serialize
 
         private:
             class Code;

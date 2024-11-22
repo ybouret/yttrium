@@ -70,9 +70,9 @@ namespace Yttrium
             XNode * Grammar:: reload(Source &source) const
             {
                 const Grammar &self = *this;  if(!source.ready()) throw Specific::Exception(self.name->c_str(),"EOF in reload()");
-                const Char     here = *source.peek();           // copy of location
-                const String   name = String::ReadFrom(source); // read name
-                const Rule    &rule = self[name];               // get rule by name
+                const Char     here = *source.peek();                       // copy of location
+                const String   name = String::ReadFrom(source,"Rule.name"); // read name
+                const Rule    &rule = self[name];                           // get rule by name
                 const uint32_t uuid = rule.uuid;
 
                 switch(uuid)

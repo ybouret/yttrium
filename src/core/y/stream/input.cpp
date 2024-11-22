@@ -13,9 +13,11 @@ namespace Yttrium
     InputStream:: InputStream() noexcept : Stream() {}
     
 
+    const char  InputStream:: DefaultVariableName[] = "variable";
+    
     const char *InputStream:: From(const char * const ctx) noexcept
     {
-        return 0!=ctx ? ctx : "variable";
+        return 0!=ctx ? ctx : DefaultVariableName;
     }
 
 
