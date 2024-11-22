@@ -33,6 +33,9 @@ namespace Yttrium
             static const Feat           Emit     = Lexeme::Emit;       //!< alias
             static const Terminal::Role Semantic = Terminal::Semantic; //!< alias
             static const Terminal::Role Dividing = Terminal::Dividing; //!< alias
+            static const Terminal::Kind Univocal = Terminal::Univocal; //!< alias
+            static const Terminal::Kind Standard = Terminal::Standard; //!< alias
+
 
             //__________________________________________________________________
             //
@@ -64,7 +67,7 @@ namespace Yttrium
                                const EXPR & expr)
             {
                 const Lexical::Rule &rule = lexer.emit(uuid,expr);
-                const Terminal::Kind kind = rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
+                const Terminal::Kind kind = rule.motif->univocal() ? Univocal : Standard;
                 const Caption       &r_id = rule.name;
                 try { return term__(r_id,kind,ROLE); }
                 catch(...) { lexer.cut(rule); throw; }
@@ -101,7 +104,7 @@ namespace Yttrium
             //! make a terminal 'uuid' from an AddOn
             template <typename ADD_ON> inline
             const Terminal & plug(const String &uuid) {
-                const Terminal & xrule   = term__(uuid,Terminal::Standard,Semantic);
+                const Terminal & xrule   = term__(uuid,Standard,Semantic);
                 try { (void) lexer.plug<ADD_ON>(uuid); }
                 catch(...) { no(uuid); throw; }
                 return xrule;
@@ -115,20 +118,20 @@ namespace Yttrium
 
             //! create an emitted end-line terminal
             template <typename UUID,typename EXPR> inline
-            const Terminal & endl(const UUID & uuid, const EXPR &expr)
+            const Terminal & endl(const UUID & uuid, const EXPR &expr, const Terminal::Role role)
             {
                 const Lexical::Rule &rule = lexer.endl(uuid,expr,Emit);
                 const Terminal::Kind kind = rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
                 const Caption       &r_id = rule.name;
-                try { return term__(r_id,kind,Semantic); }
+                try { return term__(r_id,kind,role); }
                 catch(...) { lexer.cut(rule); throw; }
             }
 
             //! create an emittend end-line with name=expr
             template <typename EXPR> inline
-            const Terminal & endl(const EXPR &expr)
+            const Terminal & endl(const EXPR &expr, const Terminal::Role role)
             {
-                return endl(expr,expr);
+                return endl(expr,expr,role);
             }
 
 

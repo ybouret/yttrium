@@ -30,7 +30,7 @@ Y_UTEST(weasel)
     }
 
     Weasel &weasel = Weasel::Instance();
-    std::cerr << weasel.callSign() << std::endl;
+    std::cerr << weasel.callSign() << " is ready" << std::endl;
     if(argc>1)
     {
         weasel( Lingo::Module::OpenFile(argv[1]) );
