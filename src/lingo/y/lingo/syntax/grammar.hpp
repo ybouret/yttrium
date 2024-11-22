@@ -161,7 +161,7 @@ namespace Yttrium
                 //! helper: (sep rule)*
                 template <typename EXPR> inline
                 const Rule & extra(const EXPR &sep, const Rule &rule) {
-                    return zom( cat( get(sep) ), rule );
+                    return zom( cat( get(sep), rule ) );
                 }
 
 

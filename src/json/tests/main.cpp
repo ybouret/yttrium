@@ -6,7 +6,7 @@ using namespace Yttrium;
 Y_Program()
 {
 
-    JSON::Compiler json;
+    JSON::Compiler json; json.verbose = true;
     JSON::Value    jv;
 
     if(argc>1)
