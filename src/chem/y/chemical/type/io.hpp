@@ -10,7 +10,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef IO::VariableInfo<256> VarInfo;
+
+        typedef IO::VariableInfo<256> VarInfo; //!< alias
 
     }
 }

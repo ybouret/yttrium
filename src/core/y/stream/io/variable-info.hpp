@@ -15,19 +15,38 @@ namespace Yttrium
     namespace IO
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Operations on Variable Info
+        //
+        //
+        //______________________________________________________________________
         class _VariableInfo
         {
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         public:
-            virtual ~_VariableInfo() noexcept;
+            virtual ~_VariableInfo() noexcept; //!< cleanup
 
         protected:
+            //! setup from user data
             explicit _VariableInfo(char * const _info,
                                    const size_t _size) noexcept;
 
+            //__________________________________________________________________
+            //
+            //
             // Methods
-            void format(const char * const fmt, void * const ptr) noexcept;
-            void assign(const _VariableInfo &) noexcept;
+            //
+            //__________________________________________________________________
+            void format(const char * const fmt, void * const ptr) noexcept; //!< format using C_Format::Buffer
+            void assign(const _VariableInfo &) noexcept;                    //!< assign (with truncation) other
 
         public:
             //! reformat
@@ -41,55 +60,89 @@ namespace Yttrium
             void clear() noexcept;
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Variable Info local Storage
+        //
+        //
+        //______________________________________________________________________
         template <const size_t SIZE>
         class _VariableData
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         public:
             inline virtual ~_VariableData() noexcept {}
 
         protected:
             inline explicit _VariableData() noexcept : _info() {}
 
-            char _info[SIZE];
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            char _info[SIZE]; //!< effective data
         private:
             Y_DISABLE_COPY_AND_ASSIGN(_VariableData);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Variable Info 
+        //
+        //
+        //______________________________________________________________________
         template <const size_t SIZE>
         class VariableInfo : public _VariableData<SIZE>, public _VariableInfo
         {
         public:
-            typedef _VariableData<SIZE> Data;
-            typedef _VariableInfo       Info;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef _VariableData<SIZE> Data; //!< alias
+            typedef _VariableInfo       Info; //!< alias
             using Data::_info;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup emtpy
             inline explicit VariableInfo() noexcept  : Data(), Info(_info,SIZE) {}
+
+            //! clenaup
             inline virtual ~VariableInfo() noexcept {}
 
+            //! copy
             inline VariableInfo(const VariableInfo &other) noexcept : Data(), Info(_info,SIZE)
             {
                 assign(other);
             }
 
+            //! assign
             inline VariableInfo & operator=(const VariableInfo &other)
             {
                 assign(other);
                 return *this;
             }
 
-            inline explicit VariableInfo(const char * const fmt,...) noexcept Y_PRINTF_CHECK(2,3):
-            Data(), Info(_info,SIZE)
-            {
-                assert(0!=fmt);
-                va_list ap;
-                va_start(ap,fmt);
-                format(fmt,&ap);
-                va_end(ap);
-            }
-
-            //! access to precomputed value
-            inline const char * operator*() const noexcept { return _info; }
-
+            
 
         };
 

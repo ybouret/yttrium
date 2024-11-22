@@ -672,13 +672,12 @@ namespace Yttrium
         String<CH> String<CH>:: ReadFrom(InputStream &fp, const char * const varName)
         {
             const char * const name = fp.From(varName);
-            const VarInfo      nameSize("%s.size",name);
-            const size_t       nc = fp.readVBR<size_t>(*nameSize);
+            VarInfo            info;
+            const size_t       nc = fp.readVBR<size_t>(info("%s.size",name) );
             String<CH>         res(nc,AsCapacity,false);
             for(size_t i=0;i<nc;++i)
             {
-                const VarInfo nameChar("%s.char[%u/%u]",name, unsigned(i+1), unsigned(nc));
-                res << fp.readCBR<CH>(*nameChar);
+                res << fp.readCBR<CH>( info("%s.char[%u/%u]",name, unsigned(i+1), unsigned(nc)) );
             }
             return res;
         }

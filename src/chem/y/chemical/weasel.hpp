@@ -42,6 +42,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! parser/linked
             void operator()(Lingo::Module * const);
 
 

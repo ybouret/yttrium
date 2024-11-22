@@ -11,7 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef int16_t Charge;
+        typedef int16_t Charge; //!< algebraic, fixed-size charge (for IO)
 
         //______________________________________________________________________
         //
@@ -67,6 +67,8 @@ namespace Yttrium
             // Method
             //
             //__________________________________________________________________
+
+            //! read from serialized with imposed top-level index
             static Species * Read(InputStream &, const size_t _indx);
 
 

@@ -42,8 +42,8 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            typedef SpeciesSet::ConstIterator ConstIterator;
-            static const char * const         CallSign;
+            typedef SpeciesSet::ConstIterator ConstIterator; //!< alias
+            static const char * const         CallSign;      //!< "Chemical::Library"
 
             //__________________________________________________________________
             //

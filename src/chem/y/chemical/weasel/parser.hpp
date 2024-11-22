@@ -13,11 +13,19 @@ namespace Yttrium
     {
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Parser of Weasel
+        //
+        //
+        //______________________________________________________________________
         class Weasel:: Parser : public Lingo::Parser
         {
         public:
-            explicit Parser(const Lingo::Caption &);
-            virtual ~Parser() noexcept;
+            explicit Parser(const Lingo::Caption &); //!< setup
+            virtual ~Parser() noexcept;              //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);

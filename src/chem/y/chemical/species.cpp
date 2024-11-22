@@ -27,7 +27,7 @@ namespace Yttrium
         {
             VarInfo       info;
             const String _name = String::ReadFrom(fp,info("%s[%u].name",CallSign,unsigned(_indx)) );
-            const int    _z    = fp.readCBR<Charge>(info("%s.z",_name.c_str()));
+            const Charge _z    = fp.readCBR<Charge>(info("%s.z",_name.c_str()));
             return new Species(_name,_z,_indx);
         }
 
