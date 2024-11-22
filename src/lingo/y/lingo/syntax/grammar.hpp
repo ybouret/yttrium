@@ -143,7 +143,7 @@ namespace Yttrium
                 const Rule &cat(const Rule &a, const Rule &b, const Rule &c, const Rule &d); //!< (abcd)
 
 
-                //! create/query a semantic/dividing terminal on the fly
+                //! create/query a  dividing terminal on the fly
                 template <typename EXPR> inline
                 const Rule & get(const EXPR &expr) {
                     if(0==parser) { const Caption request(expr); noParserFor(request);}
@@ -157,6 +157,17 @@ namespace Yttrium
                     (void) get(expr);
                     return *this;
                 }
+
+                //! helper: (sep rule)*
+                template <typename EXPR> inline
+                const Rule & extra(const EXPR &sep, const Rule &rule) {
+                    return zom( cat( get(sep) ), rule );
+                }
+
+
+                //! helper: '(' + rule +  ')';
+                const Rule & parens(const Rule &rule);
+
 
 
                 //! render grammar

@@ -202,7 +202,7 @@ namespace Yttrium
                 const Rule * query(const Caption &)    const noexcept; //!< query by name
                 const Rule * query(const String  &)    const noexcept; //!< query by name
                 const Rule * query(const char * const) const noexcept; //!< query by name
-
+                const Rule * query(const char)         const noexcept; //!< query by name
 
                 //! query a terminal
                 template <typename UID> inline

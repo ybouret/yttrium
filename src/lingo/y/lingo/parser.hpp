@@ -123,11 +123,17 @@ namespace Yttrium
             }
 
 
-
-            const Rule & get(const String &expr);       //!< on-the-fly semantic term=expr
-            const Rule & get(const char * const expr);  //!< on-the-fly semantic term=expr
-            const Rule & get(const char);               //!< on-the-fly dividing char
-
+            //! on-the-fly create/query dividing
+            template <typename EXPR> inline
+            const Rule & get(const EXPR &expr)
+            {
+                {
+                    const Grammar &    self = *this;
+                    const Rule * const rule = self->query(expr);
+                    if(0!=rule) return *rule;
+                }
+                return mark(expr);
+            }
             
 
             //! restart lexer and process module

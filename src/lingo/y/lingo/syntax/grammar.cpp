@@ -91,7 +91,6 @@ namespace Yttrium
                 }
 
                 Coerce(locked) = true;
-
             }
 
 

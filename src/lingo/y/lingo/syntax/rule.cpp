@@ -128,6 +128,17 @@ namespace Yttrium
                 }
                 return 0;
             }
+
+            const Rule * Rules:: query(const char lhs) const noexcept
+            {
+                for(const Rule *rule=head;rule;rule=rule->next)
+                {
+                    const String &rhs = *(rule->name);
+                    if(lhs==rhs) return rule;
+                }
+                return 0;
+            }
+
         }
 
     }

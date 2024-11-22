@@ -41,8 +41,8 @@ namespace Yttrium
                 //______________________________________________________________
                 explicit Option(const Rule &); //!< setup with rule.name + suffix
                 virtual ~Option() noexcept;    //!< cleanup
-
-
+                
+                
                 //______________________________________________________________
                 //
                 //

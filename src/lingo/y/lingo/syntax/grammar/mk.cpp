@@ -208,7 +208,7 @@ namespace Yttrium
                 assert(0!=parser);
                 return parser->get(expr);
             }
-            
+
             const Rule & Grammar:: get_(const char * const expr) {
                 assert(0!=parser);
                 return parser->get(expr);
@@ -218,6 +218,15 @@ namespace Yttrium
                 assert(0!=parser);
                 return parser->get(expr);
             }
+
+            const Rule & Grammar:: parens(const Rule &rule)
+            {
+                const Rule &LPAREN = get('(');
+                const Rule &RPAREN = get(')');
+
+                return cat(LPAREN,rule,RPAREN);
+            }
+
         }
 
     }
