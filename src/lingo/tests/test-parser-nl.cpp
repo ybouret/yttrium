@@ -20,7 +20,7 @@ namespace
 
             Alt        &DATA = alt("DATA");
             const Rule &INT = term("INT","[:digit:]+");
-            const Rule &NL  = endl("NL","[:endl:]");
+            const Rule &NL  = endl("NL","[:endl:]",Semantic);
             DATA << zom( pick(INT,NL) );
 
             lexer.drop("[:blank:]");
