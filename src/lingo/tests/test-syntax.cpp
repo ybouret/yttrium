@@ -21,7 +21,7 @@ namespace Yttrium
                 static const uint32_t UUID = Y_FOURCC('N', 'O', 'N', 'E');
 
                 template <typename NAME>
-                explicit Sim(const NAME & _name) : Internal(_name,UUID)
+                explicit Sim(const NAME & _name) : Internal(_name,UUID,0)
                 {
                 }
 
@@ -61,16 +61,16 @@ namespace Yttrium
 Y_UTEST(syntax)
 {
 
-    Syntax::Terminal t1("INT",Syntax::Terminal::Standard,Syntax::Terminal::Semantic);
+    Syntax::Terminal t1("INT",Syntax::Terminal::Standard,Syntax::Terminal::Semantic,0);
     GraphViz::Vizible::DotToPng("std-sem.dot",t1);
 
-    Syntax::Terminal t2(":",Syntax::Terminal::Univocal,Syntax::Terminal::Semantic);
+    Syntax::Terminal t2(":",Syntax::Terminal::Univocal,Syntax::Terminal::Semantic,0);
     GraphViz::Vizible::DotToPng("uni-sem.dot",t2);
 
-    Syntax::Terminal t3("SEP",Syntax::Terminal::Standard,Syntax::Terminal::Dividing);
+    Syntax::Terminal t3("SEP",Syntax::Terminal::Standard,Syntax::Terminal::Dividing,0);
     GraphViz::Vizible::DotToPng("std-div.dot",t3);
 
-    Syntax::Terminal t4(";",Syntax::Terminal::Univocal,Syntax::Terminal::Dividing);
+    Syntax::Terminal t4(";",Syntax::Terminal::Univocal,Syntax::Terminal::Dividing,0);
     GraphViz::Vizible::DotToPng("uni-div.dot",t4);
 
 

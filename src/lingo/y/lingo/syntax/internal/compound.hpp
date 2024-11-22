@@ -13,8 +13,7 @@ namespace Yttrium
         namespace Syntax
         {
 
-            class Grammar;
-
+            
             //__________________________________________________________________
             //
             //
@@ -46,9 +45,8 @@ namespace Yttrium
                 explicit Compound(const NAME   &  _name,
                                   const uint32_t  _uuid,
                                   Grammar * const _host) :
-                Internal(_name,_uuid),
-                manifest( ),
-                grammar(_host)
+                Internal(_name,_uuid,_host),
+                manifest()
                 {
                 }
 
@@ -95,8 +93,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 Manifest        manifest; //!< list of existing rules
-                Grammar * const grammar;  //!< host grammar
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 virtual ConstInterface & surrogate() const noexcept;

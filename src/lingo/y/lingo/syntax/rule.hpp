@@ -11,6 +11,9 @@ namespace Yttrium
     {
         namespace Syntax
         {
+
+            class Grammar;
+
             //__________________________________________________________________
             //
             //
@@ -64,12 +67,16 @@ namespace Yttrium
             protected:
                 //! setup with name and uuid
                 template <typename NAME> inline
-                explicit Rule(const NAME &   _name,
-                              const uint32_t _uuid):
+                explicit Rule(const NAME &    _name,
+                              const uint32_t  _uuid,
+                              Grammar * const _host):
                 Entity(_name,AsCaption),
                 GraphViz::Vizible(),
                 uuid(_uuid),
-                self(0), next(0), prev(0)
+                host(_host),
+                self(0),
+                next(0),
+                prev(0)
                 {
                 }
 
@@ -153,13 +160,13 @@ namespace Yttrium
                 //
                 //______________________________________________________________
             public:
-                const uint32_t uuid; //!< identifier
-
+                const uint32_t  uuid; //!< identifier
+                Grammar * const host; //!< possible host
             protected:
-                void * const   self; //!< pointer to derived class
+                void * const    self; //!< pointer to derived class
             public:
-                Rule *         next; //!< for list
-                Rule *         prev; //!< for list
+                Rule *          next; //!< for list
+                Rule *          prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);

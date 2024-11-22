@@ -163,23 +163,23 @@ namespace Yttrium
         {
             Compound & Compound:: operator<<(const String & expr)
             {
-                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
-                manifest << grammar->get(expr);
+                if(!host) { const Caption request(expr); noGrammarFor(request); }
+                manifest << host->get(expr);
                 return *this;
             }
 
             Compound & Compound:: operator<<(const char * const expr)
             {
-                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
-                manifest << grammar->get(expr);
+                if(!host) { const Caption request(expr); noGrammarFor(request); }
+                manifest << host->get(expr);
                 return *this;
             }
 
 
             Compound & Compound:: operator<<(const char  expr)
             {
-                if(!grammar) { const Caption request(expr); noGrammarFor(request); }
-                manifest << grammar->get(expr);
+                if(!host) { const Caption request(expr); noGrammarFor(request); }
+                manifest << host->get(expr);
                 return *this;
             }
 

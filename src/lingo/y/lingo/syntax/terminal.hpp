@@ -56,12 +56,13 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! setup and qualifu
+                //! setup and qualify
                 template <typename NAME> inline
-                explicit Terminal(const NAME & _name,
-                                  const Kind   _kind,
-                                  const Role   _role) :
-                Rule(_name,UUID),
+                explicit Terminal(const NAME &    _name,
+                                  const Kind      _kind,
+                                  const Role      _role,
+                                  Grammar * const _host) :
+                Rule(_name,UUID,_host),
                 kind(_kind),
                 role(_role)
                 {

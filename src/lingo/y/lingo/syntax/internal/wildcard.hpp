@@ -34,7 +34,7 @@ namespace Yttrium
                 explicit Wildcard(const NAME   & _name,
                                   const uint32_t _uuid,
                                   const Rule   & _rule) :
-                Internal(_name,_uuid),
+                Internal(_name,_uuid,_rule.host),
                 rule(_rule)
                 {
                 }

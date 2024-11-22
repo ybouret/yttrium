@@ -71,7 +71,7 @@ namespace Yttrium
                 const Rule & top() const;                          //!< query top rule
                 void         top(const Rule &);                    //!< set top rule
                 void         validate();                           //!< not empty, all connected => locked
-                
+
                 //! helper to declare any derived Rule
                 template <typename RULE> inline
                 RULE & decl( RULE * const rule )
@@ -102,10 +102,10 @@ namespace Yttrium
                 //! helper to declare terminal
                 template <typename NAME> inline
                 const Terminal & term__(const NAME &           _name,
-                                    const Terminal::Kind   _kind,
-                                    const Terminal::Role   _role)
+                                        const Terminal::Kind   _kind,
+                                        const Terminal::Role   _role)
                 {
-                    return decl( new Terminal(_name,_kind,_role) );
+                    return decl( new Terminal(_name,_kind,_role,this) );
                 }
 
                 //! helper to declare a definite aggregate (permanent)
@@ -185,7 +185,7 @@ namespace Yttrium
 
             protected:
                 void        no(const String &) noexcept;     //!< remove rule from unlocked grammar
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Rules          rules;

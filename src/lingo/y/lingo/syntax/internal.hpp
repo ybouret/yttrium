@@ -32,9 +32,10 @@ namespace Yttrium
 
                 //! setup with name and uuid
                 template <typename NAME>
-                explicit Internal(const NAME &   _name,
-                                  const uint32_t _uuid) :
-                Rule(_name,_uuid)
+                explicit Internal(const NAME &    _name,
+                                  const uint32_t  _uuid,
+                                  Grammar * const _host) :
+                Rule(_name,_uuid,_host)
                 {
                 }
 
