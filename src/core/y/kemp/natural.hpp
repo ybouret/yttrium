@@ -124,7 +124,7 @@ Y_Kemp_Natural_Binary_Decl(OP)
             //
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const;
-            static  Natural      ReadFrom(InputStream &);         //!< read from stream
+            static  Natural      ReadFrom(InputStream &, const char * const name); //!< read from stream
             virtual const char * callSign()       const noexcept;
 
             //__________________________________________________________________

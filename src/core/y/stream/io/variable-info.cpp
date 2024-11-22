@@ -7,16 +7,16 @@ namespace Yttrium
     namespace IO
     {
 
-        void VariableInfo_:: clear() noexcept
+        void _VariableInfo:: clear() noexcept
         {
             memset(info,0,size);
         }
 
-        VariableInfo_:: ~VariableInfo_() noexcept
+        _VariableInfo:: ~_VariableInfo() noexcept
         {
         }
 
-        VariableInfo_:: VariableInfo_(char * const _info,
+        _VariableInfo:: _VariableInfo(char * const _info,
                                       const size_t _size) noexcept :
         info(_info),
         size(_size)
@@ -26,12 +26,12 @@ namespace Yttrium
             clear();
         }
 
-       void VariableInfo_:: format(const char * const fmt, void * const ptr) noexcept
+       void _VariableInfo:: format(const char * const fmt, void * const ptr) noexcept
         {
             C_Format::Buffer(info,size,fmt,ptr);
         }
 
-        const char * VariableInfo_:: operator()(const char * const fmt,...) noexcept
+        const char * _VariableInfo:: operator()(const char * const fmt,...) noexcept
         {
             va_list ap;
             va_start(ap,fmt);
@@ -40,7 +40,7 @@ namespace Yttrium
             return info;
         }
 
-        void VariableInfo_:: assign(const VariableInfo_ &other) noexcept
+        void _VariableInfo:: assign(const _VariableInfo &other) noexcept
         {
             if(other.size<=size)
             {

@@ -9,7 +9,7 @@ using namespace Chemical;
 Y_UTEST(weasel)
 {
     Library lib;
-    std::cerr << lib << std::endl;r
+    std::cerr << lib << std::endl;
 
     const Species &h = lib("H^+",1);
     const Species &w = lib("HO^-",-1);

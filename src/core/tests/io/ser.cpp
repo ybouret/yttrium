@@ -39,11 +39,11 @@ Y_UTEST(io_ser)
         InputFile fp("ser.dat");
         const String S = String::ReadFrom(fp,"string");
         std::cerr << "S = " << S << std::endl;
-        const apn    N = apn::ReadFrom(fp);
+        const apn    N = apn::ReadFrom(fp,"natural");
         std::cerr << "N = " << N << std::endl;
-        const apz    Z = apz::ReadFrom(fp);
+        const apz    Z = apz::ReadFrom(fp,"integer");
         std::cerr << "Z = " << Z << std::endl;
-        const apq    Q = apq::ReadFrom(fp);
+        const apq    Q = apq::ReadFrom(fp,"rational");
         std::cerr << "Q = " << Q << std::endl;
         Y_CHECK(s==S);
         Y_CHECK(n==N);

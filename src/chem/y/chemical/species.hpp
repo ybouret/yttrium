@@ -11,6 +11,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        typedef int16_t Charge;
+
         //______________________________________________________________________
         //
         //
@@ -74,7 +76,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const int z; //!< algebraic charge
+            const Charge z; //!< algebraic charge
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

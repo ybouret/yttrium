@@ -14,51 +14,53 @@ namespace Yttrium
 
     namespace IO
     {
-        class VariableInfo_
+
+        class _VariableInfo
         {
 
         public:
-            virtual ~VariableInfo_() noexcept;
+            virtual ~_VariableInfo() noexcept;
 
         protected:
-            explicit VariableInfo_(char * const _info,
+            explicit _VariableInfo(char * const _info,
                                    const size_t _size) noexcept;
 
             // Methods
             void format(const char * const fmt, void * const ptr) noexcept;
-            void assign(const VariableInfo_ &) noexcept;
+            void assign(const _VariableInfo &) noexcept;
 
         public:
+            //! reformat
             const char * operator()(const char * const fmt,...) noexcept Y_PRINTF_CHECK(2,3);
 
 
         private:
             char * const info;
             const size_t size;
-            Y_DISABLE_COPY_AND_ASSIGN(VariableInfo_);
+            Y_DISABLE_COPY_AND_ASSIGN(_VariableInfo);
             void clear() noexcept;
         };
 
         template <const size_t SIZE>
-        class VariableData
+        class _VariableData
         {
         public:
-            inline virtual ~VariableData() noexcept {}
+            inline virtual ~_VariableData() noexcept {}
 
         protected:
-            inline explicit VariableData() noexcept : _info() {}
+            inline explicit _VariableData() noexcept : _info() {}
 
             char _info[SIZE];
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(VariableData);
+            Y_DISABLE_COPY_AND_ASSIGN(_VariableData);
         };
 
         template <const size_t SIZE>
-        class VariableInfo : public VariableData<SIZE>, public VariableInfo_
+        class VariableInfo : public _VariableData<SIZE>, public _VariableInfo
         {
         public:
-            typedef VariableData<SIZE> Data;
-            typedef VariableInfo_      Info;
+            typedef _VariableData<SIZE> Data;
+            typedef _VariableInfo       Info;
             using Data::_info;
 
             inline explicit VariableInfo() noexcept  : Data(), Info(_info,SIZE) {}

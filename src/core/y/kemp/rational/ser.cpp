@@ -1,4 +1,5 @@
 #include "y/kemp/rational.hpp"
+#include "y/stream/io/variable-info.hpp"
 
 namespace Yttrium
 {
@@ -10,10 +11,12 @@ namespace Yttrium
             return nw + denom.serialize(os);
         }
 
-        Rational Rational:: ReadFrom(InputStream &fp)
+        Rational Rational:: ReadFrom(InputStream &fp, const char *name)
         {
-            const Integer num = Integer::ReadFrom(fp);
-            const Natural den = Natural::ReadFrom(fp);
+            if(!name) name = CallSign;
+            IO::VariableInfo<256> info;
+            const Integer num = Integer::ReadFrom(fp, info("%s.numerator",name)   );
+            const Natural den = Natural::ReadFrom(fp, info("%s.denominator",name) );
             return Rational(num,den);
         }
 

@@ -3,6 +3,7 @@
 #include "y/stream/output.hpp"
 #include "y/stream/input.hpp"
 #include "y/system/exception.hpp"
+#include "y/stream/io/variable-info.hpp"
 
 namespace Yttrium
 {
@@ -23,10 +24,12 @@ namespace Yttrium
             return 1+n.serialize(fp);
         }
 
-        Integer Integer:: ReadFrom(InputStream &fp)
+        Integer Integer:: ReadFrom(InputStream &fp, const char *name)
         {
-            const uint8_t mark = fp.readCBR<uint8_t>("sign");
-            SignType      s    = __Zero__;
+            if(!name) name = CallSign;
+            IO::VariableInfo<256> info;
+            const uint8_t         mark = fp.readCBR<uint8_t>( info("%s.sign",name) );
+            SignType              s    = __Zero__;
             switch(mark)
             {
                 case NegativeMark: s = Negative; break;
@@ -35,7 +38,8 @@ namespace Yttrium
                 default:
                     throw Specific::Exception(CallSign, "unknown sign mark 0x%02x",mark);
             }
-            const Natural n = Natural::ReadFrom(fp);
+
+            const Natural n = Natural::ReadFrom(fp,info("%s.natural",name));
             return Integer(s,n);
         }
 
