@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Type_Defs_Included
 #define Y_Chemical_Type_Defs_Included 1
 
-#include "y/xreal.hpp"
+#include "y/mkl/xreal.hpp"
 
 namespace Yttrium
 {

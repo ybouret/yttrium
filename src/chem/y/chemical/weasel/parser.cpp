@@ -11,16 +11,18 @@ namespace Yttrium
         Weasel:: Parser:: Parser(const Lingo::Caption &caption) : Lingo::Parser(caption)
         {
 
+#if 0
             Alt &        WEASEL = alt(name);
             const Rule & SYMBOL = term("SYMBOL","[:alpha:][[:word:]\\(\\)]*(^)?");
 
             WEASEL << zom(SYMBOL);
 
             render();
-            validate();
-            
+            //validate();
+
             lexer.drop("[:blank:]");
             lexer.endl("[:endl:]",Lingo::Lexeme::Drop);
+#endif
         }
 
     }

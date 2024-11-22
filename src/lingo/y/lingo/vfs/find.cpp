@@ -21,7 +21,6 @@ namespace Yttrium
                 AutoPtr<VFS::Entry> ep = scan->get();   if(ep.isEmpty()) break;
                 const String        es = ep->pry(part);
                 if(!matches(how,p_id,es)) continue;
-                //std::cerr << " (+) " << ep << std::endl;
                 entries.pushTail(ep.yield());
             }
         }
@@ -42,10 +41,25 @@ namespace Yttrium
             std::cerr << ep << std::endl;
         }
 
-        void VirtualFileSystem:: TryRemove(VFS &fs, const VFS::Entry &ep)
+        void VirtualFileSystem:: TryRemoveFile(VFS &fs, const VFS::Entry &ep)
         {
             if(!ep.isReg()) return;
             fs.tryRemoveFile(ep.path);
+        }
+
+    }
+}
+
+#include "y/vfs/local/fs.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        VFS & LocalFileSystem:: Get()
+        {
+            static VFS & vfs = LocalFS:: Instance();
+            return vfs;
         }
 
     }

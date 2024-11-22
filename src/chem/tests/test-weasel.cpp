@@ -2,6 +2,7 @@
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
+#include "y/chemical/type/defs.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -11,7 +12,7 @@ Y_UTEST(weasel)
     Library lib;
     std::cerr << lib << std::endl;
 
-    const Species &h = lib("H^+",1);
+    const Species &h = lib("H^+",  1);
     const Species &w = lib("HO^-",-1);
 
     std::cerr << h   << std::endl;

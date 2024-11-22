@@ -20,6 +20,7 @@ namespace Yttrium
         //______________________________________________________________________
         struct VirtualFileSystem
         {
+
             //__________________________________________________________________
             //
             //
@@ -91,11 +92,45 @@ namespace Yttrium
 
             }
 
-            static void Display(VFS &, const VFS::Entry &ep);      //!< mostly to debug
-            static void TryRemove(VFS &fs, const VFS::Entry &ep);  //!< try remove if regular files
+            static void Display(VFS &, const VFS::Entry &ep);          //!< mostly to debug
+            static void TryRemoveFile(VFS &fs, const VFS::Entry &ep);  //!< try remove if regular files
+
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! LocalFS functions
+        //
+        //
+        //______________________________________________________________________
+        struct LocalFileSystem
+        {
+            static VFS & Get(); //!< get local fs
+
+            //! removing files with exact match of a given part
+            template <VFS::Entry::Part PART>
+            struct TryRemove
+            {
+                //! remove file with exact matching expression in directory
+                template <
+                typename DIRECTORY,
+                typename EXPRESSION
+                > static inline
+                void In(const DIRECTORY  &dirName,
+                        const EXPRESSION &regExpr)
+                {
+                    VirtualFileSystem:: ForEach(Get(), dirName, regExpr, Matching::Exactly, PART, VirtualFileSystem::TryRemoveFile);
+                }
+            };
+
+            typedef TryRemove<VFS::Entry::Ext>    TryRemoveExtension; //!< alias
+            typedef TryRemove<VFS::Entry::BaseWE> TryRemoveRootName;  //!< alias
 
 
         };
+
     }
 }
 

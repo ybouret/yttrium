@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        const char * const Weasel:: CallSign = "Weasel";
+        const char * const Weasel:: CallSign = "Chemical::Weasel";
 
 
         namespace
