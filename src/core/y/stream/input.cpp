@@ -159,7 +159,7 @@ namespace Yttrium
         IO::Chars temp;
         if( gets(temp) )
         {
-            const size_t n = temp.size;
+            const size_t       n = temp.size;
             Core::String<char> s(n,AsCapacity,true);
             for(size_t i=n;i>0;--i)
             {
