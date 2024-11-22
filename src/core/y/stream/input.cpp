@@ -13,9 +13,9 @@ namespace Yttrium
     InputStream:: InputStream() noexcept : Stream() {}
     
 
-    const char *InputStream:: From(const char *ctx) noexcept
+    const char *InputStream:: From(const char * const ctx) noexcept
     {
-        return ctx ? ctx : Core::Unknown;
+        return 0!=ctx ? ctx : "variable";
     }
 
 
@@ -144,7 +144,7 @@ namespace Yttrium
 
 namespace Yttrium
 {
-    uint64_t InputStream:: read64(const char *ctx)
+    uint64_t InputStream:: read64(const char * const ctx)
     {
         return IO::Pack64::Read(*this,ctx);
     }

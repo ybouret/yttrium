@@ -47,7 +47,7 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        static const char *From(const char *ctx) noexcept; //!< ctx/Unknown
+        static const char *From(const char * const ctx) noexcept; //!< ctx/"variable"
 
         size_t fetch(void *, const size_t); //!< query block of memory
         size_t fetch(uint8_t  &);           //!< try to read 1 byte
@@ -61,7 +61,7 @@ namespace Yttrium
         //! read any Constant Byte Rate integer
         //______________________________________________________________________
         template <typename T> inline
-        T readCBR(const char *ctx=0)
+        T readCBR(const char *ctx)
         {
             union
             {
@@ -78,7 +78,7 @@ namespace Yttrium
         //! read any Variable Byte Rate integer
         //______________________________________________________________________
         template <typename T> inline
-        T readVBR(const char *ctx=0)
+        T readVBR(const char *ctx)
         {
             static const uint64_t m64 = IntegerFor<T>::Maximum;
             const uint64_t        u64 = read64(ctx);
@@ -110,9 +110,9 @@ namespace Yttrium
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(InputStream);
-        void missingBytes(const size_t, const char *) const;
-        void overflowing(const char *) const;
-        uint64_t read64(const char *ctx);
+        void     missingBytes(const size_t, const char * const) const;
+        void     overflowing(const char * const) const;
+        uint64_t read64(const char *const tx);
     };
 }
 

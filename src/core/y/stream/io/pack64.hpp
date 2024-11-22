@@ -28,8 +28,8 @@ namespace Yttrium
             ~Pack64() noexcept;                 //!< cleanup
 
 
-            static size_t   Emit(OutputStream &, const uint64_t);  //!< pack an emit, return written bytes
-            static uint64_t Read(InputStream  &, const char *ctx); //!< return unpacked value
+            static size_t   Emit(OutputStream &, const uint64_t);         //!< pack an emit, return written bytes
+            static uint64_t Read(InputStream  &, const char * const ctx); //!< return unpacked value
 
             const uint16_t size;      //!< encoded (2 bytes)
             const uint8_t  data[14];  //!< data : need 9 bytes, rounded to 14 => sizeof(Pack64) = 16

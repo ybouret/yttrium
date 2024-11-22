@@ -97,7 +97,7 @@ namespace Yttrium
     {
 
 
-        uint64_t Pack64:: Read(InputStream &os, const char *ctx)
+        uint64_t Pack64:: Read(InputStream &os, const char * const ctx)
         {
             uint64_t qw   = 0;
             uint8_t  code = 0;
