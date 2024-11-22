@@ -14,7 +14,7 @@ namespace Yttrium
 {
 
 
-    const char * const InputFile::CallSign = ":InputFile";
+    const char * const InputFile::CallSign = "InputFile";
 
     const char * InputFile:: callSign() const noexcept { return CallSign; }
 

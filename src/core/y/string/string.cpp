@@ -5,6 +5,7 @@
 #include "y/memory/wad.hpp"
 #include "y/type/utils.hpp"
 #include "y/text/ops.hpp"
+#include "y/stream/io/variable-info.hpp"
 #include <cstring>
 
 #include "y/random/bits.hpp"
@@ -30,20 +31,7 @@ namespace Yttrium
         template <>
         const char * String<uint32_t>:: callSign() const noexcept { return "String32"; }
 
-        static const size_t INFO_SIZE = 256;
-
-        static inline
-        const char * MakeInfo(char * const       info,
-                              const char * const name,
-                              const char * const data) noexcept
-        {
-            assert(0!=name);
-            assert(0!=data);
-            memset(info,0,INFO_SIZE);
-            strncpy(info,name,INFO_SIZE);
-            strncat(info,data,INFO_SIZE);
-            return info;
-        }
+        typedef IO::VariableInfo<256> VarInfo;
 
     }
 

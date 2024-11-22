@@ -671,14 +671,14 @@ namespace Yttrium
         template <>
         String<CH> String<CH>:: ReadFrom(InputStream &fp, const char * const varName)
         {
-            char               info[256] = { 0 };
             const char * const name = fp.From(varName);
-            const size_t       nc = fp.readVBR<size_t>(MakeInfo(info,name,".size"));
+            const VarInfo      nameSize("%s.size",name);
+            const size_t       nc = fp.readVBR<size_t>(*nameSize);
             String<CH>         res(nc,AsCapacity,false);
-            const char * const ctx = MakeInfo(info,name,".char");
             for(size_t i=0;i<nc;++i)
             {
-                res << fp.readCBR<CH>(ctx);
+                const VarInfo nameChar("%s.char[%u/%u]",name, unsigned(i+1), unsigned(nc));
+                res << fp.readCBR<CH>(*nameChar);
             }
             return res;
         }

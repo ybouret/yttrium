@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_Chemical_Types_Included
-#define Y_Chemical_Types_Included 1
+#ifndef Y_Chemical_Type_Defs_Included
+#define Y_Chemical_Type_Defs_Included 1
 
 #include "y/xreal.hpp"
 

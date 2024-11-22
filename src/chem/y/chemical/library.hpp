@@ -31,9 +31,20 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Library : public Assembly, public Proxy<const SpeciesSet>
+        class Library : public Proxy<const SpeciesSet>,
+        public Assembly,
+        public Serializable
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef SpeciesSet::ConstIterator ConstIterator;
+            static const char * const         CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -43,13 +54,23 @@ namespace Yttrium
             explicit Library();          //!< setup empty
             virtual ~Library() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Library);    //!< display
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // Interfacer
+            //
+            //__________________________________________________________________
+            virtual size_t serialize(OutputStream &) const; //!< [Serializable] write species
+
             //__________________________________________________________________
             //
             //
             // Methods
             //
             //__________________________________________________________________
+            void           load(InputStream &); //!< if empty, from serialized
+
 
             //! on-the-fly query/get species
             const Species & operator()(const String &sid, const int z);
@@ -60,6 +81,7 @@ namespace Yttrium
 
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual ConstInterface & surrogate() const noexcept;
+            const Species &          mustInsert(Species * const);
         };
     }
 

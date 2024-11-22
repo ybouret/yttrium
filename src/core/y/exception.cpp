@@ -6,6 +6,8 @@
 #include <cstdarg>
 #include <cstdio>
 
+#include "y/text/c-format.hpp"
+
 namespace Yttrium
 {
 
@@ -28,18 +30,19 @@ namespace Yttrium
     }
 
 
-    void Exception:: format(const char *fmt, void *ptr) noexcept
+    void Exception:: format(const char * const fmt, void * const ptr) noexcept
     {
         assert(0!=ptr);
-        va_list &ap = *static_cast<va_list *>(ptr);
-        vsnprintf(story, sizeof(story)-1,fmt,ap);
+        C_Format::Buffer(story,sizeof(story),fmt,ptr);
+        //va_list &ap = *static_cast<va_list *>(ptr);
+        //vsnprintf(story, sizeof(story)-1,fmt,ap);
     }
 
     Exception:: Exception(const char *fmt,...) noexcept:
     std::exception(),
     story()
     {
-        reset();
+        //reset();
         assert(0!=fmt);
         va_list ap;
         va_start(ap,fmt);

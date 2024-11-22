@@ -56,7 +56,7 @@ namespace Yttrium
         void                display(const size_t indent=0) const;            //!< display to std::cerr
 
     protected:
-        void format(const char *fmt, void *ptr) noexcept; //!< format with va_list
+        void format(const char * const fmt, void * const ptr) noexcept; //!< format with va_list
 
     private:
         Y_DISABLE_ASSIGN(Exception);

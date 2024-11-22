@@ -6,13 +6,17 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Library::CallSign = "Chemical::Library";
+
         Library:: ~Library() noexcept
         {
         }
 
         Library:: Library() :
-        Assembly(),
         Proxy<const SpeciesSet>(),
+        Assembly(),
+        Serializable(),
         species()
         {
 
@@ -35,7 +39,7 @@ namespace Yttrium
             else
             {
                 os << '{' << std::endl;
-                for(SpeciesSet::ConstIterator it=species.begin();it!=species.end();++it)
+                for(Library::ConstIterator it=species.begin();it!=species.end();++it)
                 {
                     const Species &sp = **it;
                     os << "\t" << Justify(sp.name,lib.maxNameSize);
@@ -62,14 +66,67 @@ namespace Yttrium
                 assert(0==pps);
             }
 
-            const Species::Handle sh( new Species(sid,z,species.size()+1) );
-            if(!species.insert(sh))
-                throw Specific::Exception(sid.c_str(),"unexpected failure to insert into Library");
+            return mustInsert( new Species(sid,z,species.size()+1) );
 
+        }
+
+        const Species & Library:: mustInsert(Species * const sp)
+        {
+            assert(0!=sp);
+            const Species::Handle sh( sp );
+
+            // check correct
+            const size_t expected = species.size()+1;
+            const size_t topLevel = sh->indx[TopLevel];
+            if(topLevel != expected )
+                throw Specific::Exception(sp->name.c_str(), "invalid species top-level index=%u instead of %u", unsigned(topLevel), unsigned(expected) );
+
+            // try to insert
+            if(!species.insert(sh))
+                throw Specific::Exception(sp->name.c_str(),"unexpected failure to insert into %s",CallSign);
+
+            // update
             enroll(*sh);
             return *sh;
         }
 
+
+    }
+
+}
+
+#include "y/chemical/type/io.hpp"
+#include "y/stream/input.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        size_t Library:: serialize(OutputStream &fp) const
+        {
+            const size_t nsp = species.size();
+            size_t       res = fp.emitVBR(nsp);
+            
+            for(ConstIterator it=species.begin();it!=species.end();++it) {
+                const Species &sp = **it;
+                res += sp.serialize(fp);
+            }
+
+            return res;
+        }
+
+
+        void Library:: load(InputStream &fp)
+        {
+            if(species.size()>0) throw Specific::Exception(CallSign,"must be empty to be loaded");
+            VarInfo      info;
+            const size_t nsp = fp.readVBR<size_t>( info("%s.species",CallSign) );
+            for(size_t i=1;i<=nsp;++i)
+            {
+                (void) mustInsert( Species::Read(fp,i) );
+            }
+        }
     }
 
 }
