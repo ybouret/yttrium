@@ -94,6 +94,15 @@ namespace Yttrium
             }
 
 
+            void Grammar:: getTerminals(Terminals &terminals) const
+            {
+                for(const Rule *rule=rules.head;rule;rule=rule->next)
+                {
+                    if(rule->isTerminal()) terminals << *rule->as<Terminal>();
+                }
+            }
+
+
         }
 
     }

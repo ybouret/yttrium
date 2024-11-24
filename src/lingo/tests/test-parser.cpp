@@ -105,6 +105,10 @@ Y_UTEST(parser)
 {
 
     JParser J;
+    Syntax::Terminals terminals;
+    J.getTerminals(terminals);
+    std::cerr << J.name << ".terminals=" << terminals <<std::endl;
+
     if(argc>1)
     {
         AutoPtr<Syntax::XNode> xnode = J( Module::OpenFile(argv[1]) );

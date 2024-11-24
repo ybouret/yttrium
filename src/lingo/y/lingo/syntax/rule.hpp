@@ -83,7 +83,7 @@ namespace Yttrium
             public:
                 //! cleanup
                 virtual ~Rule() noexcept;
-
+                
                 //______________________________________________________________
                 //
                 //

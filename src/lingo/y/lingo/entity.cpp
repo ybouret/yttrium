@@ -18,6 +18,13 @@ namespace Yttrium
         Counted(),
         name(other.name)
         {
+
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Entity &ent)
+        {
+            os << ent.name;
+            return os;
         }
     }
 

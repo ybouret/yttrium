@@ -36,7 +36,8 @@ namespace Yttrium
 
             Entity(const Entity &) noexcept; //!< copy
             virtual ~Entity()      noexcept; //!< cleanup
-
+            Y_OSTREAM_PROTO(Entity);
+            
             //__________________________________________________________________
             //
             //

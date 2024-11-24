@@ -15,6 +15,9 @@ namespace Yttrium
         namespace Syntax
         {
 
+            typedef Small::SoloLightList<const Terminal> Terminals;
+            typedef Small::SoloLightList<const Internal> Internals;
+
             //__________________________________________________________________
             //
             //
@@ -32,8 +35,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Aggregate     Agg;   //!< alias
-                typedef Alternate     Alt;   //!< alias
+                typedef Aggregate       Agg;   //!< alias
+                typedef Alternate        Alt;   //!< alias
                 typedef Syntax::Compound Compound;   //!< alias
 
                 typedef Syntax::Rule  Rule;  //!< alias
@@ -164,10 +167,11 @@ namespace Yttrium
                     return zom( cat( get(sep), rule ) );
                 }
 
-
                 //! helper: '(' + rule +  ')';
                 const Rule & parens(const Rule &rule);
 
+                void getTerminals(Terminals &) const;
+                
 
 
                 //! render grammar
