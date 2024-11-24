@@ -16,15 +16,22 @@ namespace Yttrium
 
             Agg        &WEASEL   = agg("WEASEL");
 
-            const Rule & ELEMENT = term("ELEMENT","[:upper:][:lower:]*");
-            const Rule & INTEGER = term("INTEGER","[:digit:]+");
-            Compound   & STOCHIO = act("STOCHIO");
-            Compound   & SPECIES = agg("SPECIES");
-            Compound   & CONTENT = alt("CONTENT");
-            
-            SPECIES << STOCHIO << zom(STOCHIO);
-            STOCHIO << CONTENT << opt(INTEGER);
+            const Rule & ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
+            const Rule & INTEGER  = term("INTEGER","[:digit:]+");
+            const Rule & OPT_INT  = opt(INTEGER);
+            Compound   & STOCHIO  = act("STOCHIO");
+            Compound   & SPECIES  = agg("SPECIES");
+            Compound   & CONTENT  = alt("CONTENT");
+            const Rule & POSITIVE = term('+');
+            const Rule & NEGATIVE = term('-');
+            const Rule & SIGN     = alt("SIGN") << POSITIVE << NEGATIVE;
+            const Rule & Z        = agg("Z") << '^' << OPT_INT << SIGN;
+
+            SPECIES << STOCHIO <<    zom(STOCHIO);
+            STOCHIO << CONTENT <<       (OPT_INT);
             CONTENT << ELEMENT << parens(SPECIES);
+            SPECIES << opt(Z);
+
 
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
