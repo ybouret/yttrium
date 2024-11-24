@@ -50,6 +50,8 @@ namespace Yttrium {
             {
                 assert(0!=node);
                 AutoPtr<XNode>       keep = node;
+                GraphViz::Vizible::DotToPng("raw-tree.dot", *keep);
+
                 const Lexeme * const last = node->lastLexeme();
                 const Lexeme * const next = lexer.peek(source,last);
                 if(0!=next)

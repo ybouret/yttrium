@@ -25,7 +25,7 @@ namespace Yttrium
             ADD << MUL << zom(MUL);
             MUL << ATOM << opt(INTEGER);
             ATOM << ELEMENT << parens(ADD);
-
+            //ATOM << ELEMENT << cat( term('('), ADD, term(')') );
 
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);

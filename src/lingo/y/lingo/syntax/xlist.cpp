@@ -64,7 +64,7 @@ namespace Yttrium
             void XNode:: fusion(XList &other) noexcept
             {
                 assert(Internal==type);
-                while(other.size>0) fusion(other.popHead());
+                while(other.size>0) fusion( other.popHead() );
             }
 
 
@@ -89,7 +89,7 @@ namespace Yttrium
 
             const Lexeme  * XNode:: lastLexeme() const noexcept
             {
-                // goto bottom
+                // go to bottom
                 const XNode &bottom = last();
 
                 // then go back to top, intercepting terminal
