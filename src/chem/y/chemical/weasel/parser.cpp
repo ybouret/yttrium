@@ -16,16 +16,15 @@ namespace Yttrium
 
             Agg        &WEASEL   = agg("WEASEL");
 
-            const Rule &ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
-            const Rule &INTEGER  = term("INTEGER","[:digit:]+");
-
-            Compound  & ADD  = agg("ADD");
-            Compound  & MUL  = agg("MUL");
-            Compound  & ATOM = alt("ATOM");
-            ADD << MUL << zom(MUL);
-            MUL << ATOM << opt(INTEGER);
-            ATOM << ELEMENT << parens(ADD);
-            //ATOM << ELEMENT << cat( term('('), ADD, term(')') );
+            const Rule & ELEMENT = term("ELEMENT","[:upper:][:lower:]*");
+            const Rule & INTEGER = term("INTEGER","[:digit:]+");
+            Compound   & STOCHIO = act("STOCHIO");
+            Compound   & SPECIES = agg("SPECIES");
+            Compound   & CONTENT = alt("CONTENT");
+            
+            SPECIES << STOCHIO << zom(STOCHIO);
+            STOCHIO << CONTENT << opt(INTEGER);
+            CONTENT << ELEMENT << parens(SPECIES);
 
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
@@ -33,8 +32,8 @@ namespace Yttrium
             const Rule & SPACES  = oom(SPACE);
             const Rule & WHITE   = opt(SPACES);
 
-            const Rule & SPECIES = agg("SPECIES") << WHITE << ADD << WHITE;
-            WEASEL << zom(SPECIES);
+            const Rule & DECL = agg("DECL") << WHITE << SPECIES << WHITE;
+            WEASEL << zom(DECL);
 
             lexer.plug<Lingo::Lexical::C_Comment>("C_Comment");
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");

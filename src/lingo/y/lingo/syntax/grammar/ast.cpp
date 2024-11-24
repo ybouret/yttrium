@@ -12,13 +12,19 @@ namespace Yttrium {
             {
 
 
+                static inline
+                void sendTo(XList &temp, AutoPtr<XNode> &node, XNode * const sire)
+                {
+                    XList &source = node->branch();
+                    while(source.size>0) temp.pushTail( source.popHead() )->sire = sire;
+                }
 
                 static inline
                 XNode * InternalAST(XNode * const tree) noexcept
                 {
                     assert(0!=tree);
                     XList &list = tree->branch();
-                    XList temp;
+                    XList  temp;
                     while(list.size>0)
                     {
                         //------------------------------------------------------
@@ -68,15 +74,15 @@ namespace Yttrium {
                                                 break;
 
                                             case Aggregate::Grouping:
-                                                tree->fusion(node->branch());
-                                                assert(tree->isWellFormed());
+                                                //tree->fusion(node->branch());
+                                                sendTo(temp,node,tree);
                                                 continue; // will erase node
 
                                             case Aggregate::NoSingle:
                                                 if(1==node->branch().size)
                                                 {
-                                                    tree->fusion(node->branch());
-                                                    assert(tree->isWellFormed());
+                                                    //tree->fusion(node->branch());
+                                                    sendTo(temp,node,tree);
                                                     continue; // will erase node
                                                 }
                                                 else
