@@ -1,4 +1,7 @@
 #include "y/chemical/weasel/parser.hpp"
+#include "y/lingo/lexical/add-on/single-line-comment.hpp"
+#include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
+
 
 namespace Yttrium
 {
@@ -11,25 +14,19 @@ namespace Yttrium
         Weasel:: Parser:: Parser(const Lingo::Caption &caption) : Lingo::Parser(caption)
         {
 
-            Agg        &WEASEL = agg("WEASEL");
+            Agg        &WEASEL   = agg("WEASEL");
 
-            Agg  & ADD   = agg("ADD");
-            Agg  & POW   = act("POW");
-            Alt  & ATOM  = alt("ATOM");
-            ADD << POW << zom(POW);
-            POW << ATOM << opt( cat(get('_'), term("COEF","[:digit:]+" )) );
-            ATOM << term("ID","[:upper:][:lower:]*") << parens(ADD);
+            const Rule &ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
+            const Rule &INTEGER  = term("INTEGER","[:digit:]+");
 
-#if 0
-            const Rule &COEF   = term("COEF","[:digit:]+");
-            Compound   &ATOM   = alt("ATOM") << term("name","[:alpha:]+");
-            Compound   &BODY   = agg("BODY") << ATOM << zom(ATOM);
-            ATOM << parens(BODY);
+            Compound  & ADD  = agg("ADD");
+            Compound  & MUL  = agg("MUL");
+            Compound  & ATOM = alt("ATOM");
+            ADD << MUL << zom(MUL);
+            MUL << ATOM << opt(INTEGER);
+            ATOM << ELEMENT << parens(ADD);
 
 
-
-            WEASEL << zom(SPECIES);
-#endif
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
             const Rule & SPACE   = alt("SPACE") << BLANK << ENDL;
@@ -38,20 +35,13 @@ namespace Yttrium
 
             const Rule & SPECIES = agg("SPECIES") << WHITE << ADD << WHITE;
             WEASEL << zom(SPECIES);
-            render();
 
-#if 0
-            Alt &        WEASEL = alt(name);
-            const Rule & SYMBOL = term("SYMBOL","[:alpha:][[:word:]\\(\\)]*(^)?");
-
-            WEASEL << zom(SYMBOL);
+            lexer.plug<Lingo::Lexical::C_Comment>("C_Comment");
+            lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 
             render();
-            //validate();
 
-            lexer.drop("[:blank:]");
-            lexer.endl("[:endl:]",Lingo::Lexeme::Drop);
-#endif
+#
         }
 
     }
