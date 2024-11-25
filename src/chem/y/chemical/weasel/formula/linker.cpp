@@ -15,6 +15,9 @@ namespace Yttrium
 
         Formula:: Linker:: Linker(const Weasel::Parser &parser) :
         Lingo::Syntax::Translator(parser.FORMULA.name),
+        elements(),
+        integers(),
+        zcharges(),
         z(0)
         {
             Y_Lingo_OnTerminal(Linker,ELEMENT);
