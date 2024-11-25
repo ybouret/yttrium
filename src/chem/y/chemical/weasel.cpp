@@ -19,8 +19,8 @@ namespace Yttrium
             {
             public:
                 inline Compiler(const Lingo::Caption &caption) :
-                parser(caption),
-                formulaLinker(parser)
+                genericParser(caption),
+                formulaLinker(genericParser)
                 {
                 }
 
@@ -28,9 +28,9 @@ namespace Yttrium
                 {
                 }
 
-                Weasel::Parser  parser;
+                Weasel::Parser  genericParser;
                 Formula::Linker formulaLinker;
-                
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
@@ -64,7 +64,7 @@ namespace Yttrium
                 throw;
             }
 
-            compiler->parser.printRules();
+            compiler->genericParser.printRules();
 
         }
 
@@ -83,7 +83,7 @@ namespace Yttrium
         {
             assert(0!=m);
             assert(0!=compiler);
-            AutoPtr<XNode> tree = compiler->parser(m);
+            AutoPtr<XNode> tree = compiler->genericParser(m);
             GraphViz::Vizible::DotToPng("wtree.dot", *tree);
             return tree.yield();
         }
@@ -92,20 +92,42 @@ namespace Yttrium
 
             static const char fn[] = Y_Chemical_Weasel "::parseFormula";
             assert(0!=compiler);
-
-            const String & FORMULA = *(compiler->parser).FORMULA.name;
+            const Parser & parser  = compiler->genericParser;
+            const String & FORMULA = *parser.FORMULA.name;
             AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(FORMULA, expr) );
 
-            assert( tree->name() == *(compiler->parser).WEASEL.name );
+            assert( tree->name() == *parser.WEASEL.name );
             assert( tree->type   == XNode::Internal);
 
-            XList &        list = tree->branch(); if(list.size!=1) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
+            XList &        list = tree->branch(); if( list.size != 1  ) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
             XNode * const  node = list.head;
             const String & uuid = node->name();   if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
 
+            // return extracted node
             return list.pop(node);
         }
 
+        XNode * Weasel:: parseFormula(const char * const expr)
+        {
+            const String _(expr);
+            return parseFormula(_);
+        }
+
+        void Weasel:: buildFormula(Formula &formula)
+        {
+            assert(0!=compiler);
+            Formula::Linker &linker = compiler->formulaLinker;
+            linker.policy  = Lingo::Syntax::Permissive;
+            linker.verbose = true;
+
+            // link formula
+            linker(*formula.xnode);
+
+            // fetch info
+            Coerce( *(formula.title) ) = linker.elements.tail();
+            Coerce(   formula.z      ) = linker.z;
+            
+        }
 
     }
 

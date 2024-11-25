@@ -1,5 +1,5 @@
 
-#include "y/chemical/formula.hpp"
+#include "y/chemical/weasel.hpp"
 #include "y/lingo/syntax/xlist.hpp"
 #include <iomanip>
 
@@ -13,50 +13,42 @@ namespace Yttrium
 
         }
 
-        Formula:: Formula(XNode * const node) noexcept :
-        text( new String() ),
-        code(node)
+
+        static inline
+        void _build(Formula &formula)
         {
-            assert(!code.isEmpty());
-            walk(node,0);
-            std::cerr << "text=" << text << std::endl;
+            static Weasel &weasel = Weasel::Instance();
+            weasel.buildFormula(formula);
+
+            std::cerr << "title='" << formula.title << "'" << std::endl;
+            std::cerr << "    z="  << formula.z     << std::endl;
         }
 
-        Formula::ConstInterface & Formula:: surrogate() const noexcept
+        Formula:: Formula(XNode * const _xnode)   :
+        title( new String() ),
+        xnode( _xnode ),
+        z(0)
         {
-            assert( code.isValid() );
-            return *code;
+            _build(*this);
         }
 
-        void Formula:: add(const Lingo::Lexeme &lexeme)
+        
+
+        Formula:: Formula(const String &expr) :
+        title( new String() ),
+        xnode( Weasel::Instance().parseFormula(expr) ),
+        z(0)
         {
-            const String rhs = lexeme.toString();
-            Coerce( *text ) << rhs;
+            _build(*this);
         }
 
 
-        void Formula:: walk(const XNode * const xnode,
-                            unsigned            level)
+        Formula:: Formula(const char * const expr) :
+        title( new String() ),
+        xnode( Weasel::Instance().parseFormula(expr) ),
+        z(0)
         {
-            assert(0!=xnode);
-            const String & uuid = xnode->name();
-            switch(xnode->type)
-            {
-                case XNode:: Terminal:
-                    Core::Indent(std::cerr << "terminal@" << std::setw(3) << level << "| ",level) << xnode->lexeme() << std::endl;
-                    add(xnode->lexeme());
-                    break;
-
-                case XNode:: Internal:
-                    Core::Indent(std::cerr << "internal@" << std::setw(3) << level << "| ",level)  << xnode->name() << std::endl;
-                    
-                    ++level;
-                    for(const XNode *node=xnode->branch().head;node;node=node->next)
-                    {
-                        walk(node,level);
-                    }
-                    break;
-            }
+            _build(*this);
         }
 
 

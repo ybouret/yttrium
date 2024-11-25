@@ -45,7 +45,8 @@ namespace Yttrium
             
             XNode * parse(Lingo::Module * const);
             XNode * parseFormula(const String &);
-
+            XNode * parseFormula(const char * const);
+            void    buildFormula(Formula &formula);
 
 
             //__________________________________________________________________

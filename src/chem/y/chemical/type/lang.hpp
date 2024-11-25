@@ -12,7 +12,7 @@ namespace Yttrium
     {
         typedef Lingo::Syntax::XNode XNode;
         typedef Lingo::Syntax::XList XList;
-        typedef Lingo::Caption       Label;
+        typedef Lingo::Caption       Title;
     }
 
 }

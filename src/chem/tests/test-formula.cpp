@@ -17,8 +17,7 @@ Y_UTEST(formula)
     std::cerr << weasel.callSign() << " is ready" << std::endl;
     if(argc>1)
     {
-        const String  expr = argv[1];
-        const Formula formula( weasel.parseFormula(expr) );
+        const Formula formula( argv[1] );
     }
 
 

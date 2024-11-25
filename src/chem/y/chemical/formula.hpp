@@ -5,6 +5,7 @@
 #define Y_Chemical_Formula_Included 1
 
 #include "y/chemical/type/lang.hpp"
+#include "y/chemical/type/memory.hpp"
 
 namespace Yttrium
 {
@@ -12,25 +13,24 @@ namespace Yttrium
     {
 
 
-        class Formula : public Proxy<const XNode>
+        class Formula
         {
         public:
             class Linker;
             
-            explicit Formula(XNode * const node) noexcept;
+            explicit Formula(XNode * const _xnode);
+            explicit Formula(const String &expr);
+            explicit Formula(const char * const expr);
+            
             virtual ~Formula() noexcept;
 
-            const Label          text;
+            const Title          title;
+            const AutoPtr<XNode> xnode;
+            const int            z;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Formula);
-            const AutoPtr<XNode> code;
-            virtual ConstInterface & surrogate() const noexcept;
-
-            void walk(const XNode * const xnode,
-                      unsigned            level);
-
-            void add(const Lingo::Lexeme &);
-            void add(const char);
+            
         };
 
     }
