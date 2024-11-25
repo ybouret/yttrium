@@ -15,7 +15,8 @@ namespace Yttrium
         class Formula : public Proxy<const XNode>
         {
         public:
-
+            class Linker;
+            
             explicit Formula(XNode * const node) noexcept;
             virtual ~Formula() noexcept;
 

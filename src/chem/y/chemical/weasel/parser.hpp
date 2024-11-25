@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Weasel_Parser_Included
@@ -26,9 +25,10 @@ namespace Yttrium
             explicit Parser(const Lingo::Caption &); //!< setup
             virtual ~Parser() noexcept;              //!< cleanup
 
+
             Compound &WEASEL;
             Compound &FORMULA;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
         };

@@ -47,14 +47,15 @@ namespace Yttrium
             XNode * parseFormula(const String &);
 
 
+
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            Lua::VM              luaVM;   //!< shared VM
-            const Lingo::Caption caption; //!< shared caption
+            Lua::VM                luaVM;   //!< shared VM
+            const Lingo::Caption   caption; //!< shared caption
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);

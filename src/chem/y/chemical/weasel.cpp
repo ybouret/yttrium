@@ -1,4 +1,4 @@
-#include "y/chemical/weasel/parser.hpp"
+#include "y/chemical/weasel/formula/linker.hpp"
 #include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
 
@@ -19,7 +19,8 @@ namespace Yttrium
             {
             public:
                 inline Compiler(const Lingo::Caption &caption) :
-                parser(caption)
+                parser(caption),
+                formulaLinker(parser)
                 {
                 }
 
@@ -27,8 +28,10 @@ namespace Yttrium
                 {
                 }
 
-                Weasel::Parser parser;
+                Weasel::Parser  parser;
+                Formula::Linker formulaLinker;
                 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             };
@@ -40,6 +43,9 @@ namespace Yttrium
                 memset(compiler_,0,sizeof(compiler_));
             }
         }
+
+
+
 
         Weasel:: Weasel() :
         Singleton<Weasel>(),

@@ -4,6 +4,7 @@ Y_CreateLibrary(y-chem
 chemical
 chemical/type
 chemical/weasel
+chemical/weasel/formula
 )
 
 add_subdirectory(tests)

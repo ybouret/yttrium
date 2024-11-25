@@ -43,12 +43,13 @@ namespace Yttrium
             switch(xnode->type)
             {
                 case XNode:: Terminal:
-                    Core::Indent(std::cerr << std::setw(3) << level << "| term ",level) << xnode->lexeme() << std::endl;
+                    Core::Indent(std::cerr << "terminal@" << std::setw(3) << level << "| ",level) << xnode->lexeme() << std::endl;
                     add(xnode->lexeme());
                     break;
 
                 case XNode:: Internal:
-                    Core::Indent(std::cerr << std::setw(3) << level << "| intr ",level) << xnode->name() << std::endl;
+                    Core::Indent(std::cerr << "internal@" << std::setw(3) << level << "| ",level)  << xnode->name() << std::endl;
+                    
                     ++level;
                     for(const XNode *node=xnode->branch().head;node;node=node->next)
                     {
