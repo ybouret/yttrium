@@ -91,14 +91,12 @@ namespace Yttrium
             AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(FORMULA, expr) );
 
             assert( tree->name() == *(compiler->parser).WEASEL.name );
-            assert( tree->type == XNode::Internal);
+            assert( tree->type   == XNode::Internal);
 
-            XList &list = tree->branch();
-            if(list.size!=1) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
+            XList &        list = tree->branch(); if(list.size!=1) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
             XNode * const  node = list.head;
-            const String & uuid = node->name();
-            if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
-            
+            const String & uuid = node->name();   if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
+
             return list.pop(node);
         }
 
