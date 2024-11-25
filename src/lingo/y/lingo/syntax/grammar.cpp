@@ -108,6 +108,28 @@ namespace Yttrium
             }
 
 
+            void Grammar:: getInternals(Internals &internals) const
+            {
+                for(const Rule *rule=rules.head;rule;rule=rule->next)
+                {
+                    if( Aggregate::UUID == rule->uuid )
+                    {
+                        const Aggregate &a = *rule->as<Aggregate>();
+                        switch(a.type)
+                        {
+                            case Aggregate::Definite:
+                            case Aggregate::NoSingle:
+                                internals << a;
+                                break;
+                            case Aggregate::Grouping:
+                                break;
+                        }
+
+                    }
+                }
+            }
+
+
         }
 
     }

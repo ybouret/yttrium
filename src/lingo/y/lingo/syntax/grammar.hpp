@@ -171,7 +171,8 @@ namespace Yttrium
                 const Rule & parens(const Rule &rule);
 
                 void getTerminals(Terminals &) const;
-                
+                void getInternals(Internals &) const;
+
 
 
                 //! render grammar

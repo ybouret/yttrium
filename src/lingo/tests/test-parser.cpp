@@ -106,8 +106,13 @@ Y_UTEST(parser)
 
     JParser J;
     Syntax::Terminals terminals;
+    Syntax::Internals internals;
+
     J.getTerminals(terminals);
+    J.getInternals(internals);
+
     std::cerr << J.name << ".terminals=" << terminals <<std::endl;
+    std::cerr << J.name << ".internals=" << internals <<std::endl;
 
     if(argc>1)
     {
