@@ -98,7 +98,12 @@ namespace Yttrium
             {
                 for(const Rule *rule=rules.head;rule;rule=rule->next)
                 {
-                    if(rule->isTerminal()) terminals << *rule->as<Terminal>();
+                    if(rule->isTerminal())
+                    {
+                        const Terminal &term = *rule->as<Terminal>();
+                        if(term.role==Terminal::Semantic)
+                            terminals << term;
+                    }
                 }
             }
 

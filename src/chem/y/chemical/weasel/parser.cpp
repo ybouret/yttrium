@@ -14,34 +14,43 @@ namespace Yttrium
         Weasel:: Parser:: Parser(const Lingo::Caption &caption) : Lingo::Parser(caption)
         {
 
-            Agg        &WEASEL   = agg("WEASEL");
-
-            const Rule & ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
-            const Rule & INTEGER  = term("INTEGER","[:digit:]+");
-            const Rule & OPT_INT  = opt(INTEGER);
-            Compound   & STOCHIO  = act("STOCHIO");
-            Compound   & SPECIES  = agg("SPECIES");
-            Compound   & CONTENT  = alt("CONTENT");
-            const Rule & POSITIVE = term('+');
-            const Rule & NEGATIVE = term('-');
-            const Rule & SIGN     = alt("SIGN") << POSITIVE << NEGATIVE;
-            const Rule & Z        = agg("Z") << '^' << OPT_INT << SIGN;
-
-            SPECIES << STOCHIO <<    zom(STOCHIO);
-            STOCHIO << CONTENT <<       (OPT_INT);
-            CONTENT << ELEMENT << parens(SPECIES);
-            SPECIES << opt(Z);
+            // top-level rule
+            Compound   &WEASEL   = agg("WEASEL");
 
 
+            // handling whitespace
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
             const Rule & SPACE   = alt("SPACE") << BLANK << ENDL;
             const Rule & SPACES  = oom(SPACE);
             const Rule & WHITE   = opt(SPACES);
 
-            const Rule & DECL = agg("DECL") << WHITE << SPECIES << WHITE;
-            WEASEL << zom(DECL);
+            // building recursive formula
+            const Rule & ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
+            const Rule & INTEGER  = term("INTEGER","[:digit:]+");
+            const Rule & OPT_INT  = opt(INTEGER);
+            Compound   & STOCHIO  = act("STOCHIO");
+            Compound   & FORMULA  = agg("FORMULA");
+            Compound   & CONTENT  = alt("CONTENT");
+            const Rule & POSITIVE = term('+');
+            const Rule & NEGATIVE = term('-');
+            const Rule & SIGN     = alt("SIGN") << POSITIVE << NEGATIVE;
+            const Rule & Z        = agg("Z") << '^' << OPT_INT << SIGN;
 
+            FORMULA << STOCHIO <<    zom(STOCHIO);
+            STOCHIO << CONTENT <<       (OPT_INT);
+            CONTENT << ELEMENT << parens(FORMULA);
+            FORMULA << opt(Z);
+
+            // declaring statements
+            Compound & STATEMENT = alt("STATEMENT");
+            STATEMENT << FORMULA;
+
+
+            WEASEL << zom( cat(WHITE,STATEMENT,WHITE) );
+
+
+            // lexer only: comments
             lexer.plug<Lingo::Lexical::C_Comment>("C_Comment");
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 

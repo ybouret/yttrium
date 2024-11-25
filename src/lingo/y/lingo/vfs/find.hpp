@@ -94,7 +94,6 @@ namespace Yttrium
 
             static void Display(VFS &, const VFS::Entry &ep);          //!< mostly to debug
             static void TryRemoveFile(VFS &fs, const VFS::Entry &ep);  //!< try remove if regular files
-
         };
 
         //______________________________________________________________________

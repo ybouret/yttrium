@@ -23,7 +23,8 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Entity &ent)
         {
-            os << ent.name;
+            static const char quote = '\'';
+            os << quote << ent.name << quote;
             return os;
         }
     }

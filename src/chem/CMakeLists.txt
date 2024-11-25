@@ -2,7 +2,7 @@ include_directories(. ../core ../mkl ../lingo ../lua++ ..)
 
 Y_CreateLibrary(y-chem
 chemical
-chemical/type
+#chemical/type
 chemical/weasel
 )
 

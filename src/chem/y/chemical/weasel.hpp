@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Weasel_Included
 #define Y_Chemical_Weasel_Included 1
 
-#include "y/chemical/library.hpp"
+#include "y/chemical/species.hpp"
 #include "y/lingo/module.hpp"
 #include "y/singleton.hpp"
 #include "y/lua++/state.hpp"

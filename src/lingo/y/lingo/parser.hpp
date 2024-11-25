@@ -135,18 +135,13 @@ namespace Yttrium
             }
 
 
-            //! on-the-fly create/query dividing
-            template <typename EXPR> inline
-            const Rule & get(const EXPR &expr)
-            {
-                {
-                    const Grammar &    self = *this;
-                    const Rule * const rule = self->query(expr);
-                    if(0!=rule) return *rule;
-                }
-                return mark(expr);
-            }
-            
+          
+            const Rule & get(const String &     expr); //!< on-the-fly create/query semantic
+            const Rule & get(const char * const expr); //!< on-the-fly create/query semantic
+            const Rule & get(const char         expr); //!< on-the-fly create/query dividing
+
+
+
 
             //! restart lexer and process module
             XNode * operator()(Module * const);
