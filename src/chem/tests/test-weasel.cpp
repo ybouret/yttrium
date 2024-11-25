@@ -18,7 +18,6 @@ Y_UTEST(weasel)
         delete weasel.parse( Lingo::Module::OpenFile(argv[1]) );
     }
 
-    //delete weasel.parseFormula("NaCl Cu");
-
+    
 }
 Y_UDONE()

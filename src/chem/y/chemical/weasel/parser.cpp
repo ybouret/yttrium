@@ -18,15 +18,26 @@ namespace Yttrium
         WEASEL(  agg("WEASEL")   ), // top-level rule
         FORMULA( agg("FORMULA")  )
         {
-            
+            //------------------------------------------------------------------
+            //
+            //
             // handling whitespace
+            //
+            //
+            //------------------------------------------------------------------
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
             const Rule & SPACE   = alt("SPACE") << BLANK << ENDL;
             const Rule & SPACES  = oom(SPACE);
             const Rule & WHITE   = opt(SPACES);
 
+            //------------------------------------------------------------------
+            //
+            //
             // building recursive formula
+            //
+            //
+            //------------------------------------------------------------------
             const Rule & ELEMENT  = term("ELEMENT","[:upper:][:lower:]*");
             const Rule & INTEGER  = term("INTEGER","[:digit:]+");
             const Rule & OPT_INT  = opt(INTEGER);
@@ -42,12 +53,32 @@ namespace Yttrium
             CONTENT << ELEMENT << parens(FORMULA);
             FORMULA << opt(Z);
 
+
+            //------------------------------------------------------------------
+            //
+            //
+            // building Equilibrium
+            //
+            //
+            //------------------------------------------------------------------
+            //          ELEMENT
+            const Rule &EQLABEL     = term("EQLABEL","[:word:]+");
+            Agg        &EQUILIBRIUM = agg("EQUILIBRIUM");
+            EQUILIBRIUM << pick(EQLABEL,ELEMENT) << WHITE << ':';
+
+
+            //------------------------------------------------------------------
+            //
+            //
             // declaring statements
+            //
+            //
+            //------------------------------------------------------------------
             Compound & STATEMENT = alt("STATEMENT");
-            STATEMENT << FORMULA;
+            STATEMENT <<  EQUILIBRIUM << FORMULA;
 
-
-            WEASEL << zom( cat(WHITE,STATEMENT,WHITE) );
+            const Rule &SEP = opt( get(';') );
+            WEASEL << zom( cat(WHITE,STATEMENT,WHITE,SEP) );
 
 
             // lexer only: comments
@@ -55,7 +86,7 @@ namespace Yttrium
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 
             render();
-
+            Rule::Trace = true;
         }
 
 
