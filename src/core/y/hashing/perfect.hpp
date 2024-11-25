@@ -68,6 +68,10 @@ namespace Yttrium
             class Node;
             Node *root;
         };
+
+        //! helper to create from static table
+#define Y_Hashing_Perfect_Table(NAME) NAME, sizeof(NAME)/sizeof(NAME[0])
+
     }
 }
 

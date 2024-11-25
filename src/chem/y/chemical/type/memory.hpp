@@ -11,7 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Memory::Dyadic MemoryModel;
+        typedef Memory::Dyadic MemoryModel; //!< alias
         
     }
 

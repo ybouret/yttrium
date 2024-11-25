@@ -83,7 +83,8 @@ namespace Yttrium
         {
             assert(0!=m);
             assert(0!=compiler);
-            AutoPtr<XNode> tree = compiler->genericParser(m);
+            Parser       & parser = compiler->genericParser;
+            AutoPtr<XNode> tree   = parser.postProcess( parser(m) );
             GraphViz::Vizible::DotToPng("wtree.dot", *tree);
             return tree.yield();
         }
@@ -121,7 +122,7 @@ namespace Yttrium
             linker.verbose = true;
 
             // link formula
-            linker(*formula.xnode);
+            linker(*formula.xcode);
 
             // fetch info
             Coerce( *(formula.title) ) = linker.elements.tail();

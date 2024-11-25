@@ -83,6 +83,7 @@ namespace Yttrium
         {
             XNode:: XNode(const Syntax::Terminal & _rule, Lexeme * const _unit) noexcept:
             Object(),
+            Counted(),
             rule(_rule),
             type(Terminal),
             sire(0),

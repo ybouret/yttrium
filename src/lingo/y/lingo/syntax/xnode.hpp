@@ -26,6 +26,7 @@ namespace Yttrium
             //__________________________________________________________________
             class XNode :
             public Object,
+            public Counted,
             public Serializable,
             public GraphViz::Vizible
             {

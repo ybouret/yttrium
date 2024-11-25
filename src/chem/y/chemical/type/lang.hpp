@@ -10,9 +10,10 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef Lingo::Syntax::XNode XNode;
-        typedef Lingo::Syntax::XList XList;
-        typedef Lingo::Caption       Title;
+        typedef Lingo::Syntax::XNode XNode; //!< alias
+        typedef Lingo::Syntax::XList XList; //!< alias
+        typedef Lingo::Caption       Title; //!< alias
+
     }
 
 }

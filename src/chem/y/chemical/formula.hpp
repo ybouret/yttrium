@@ -13,24 +13,52 @@ namespace Yttrium
     {
 
 
+        typedef ArcPtr<const XNode> XCode;
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for XNode to String conversion
+        //
+        //
+        //______________________________________________________________________
         class Formula
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
             class Linker;
-            
-            explicit Formula(XNode * const _xnode);
-            explicit Formula(const String &expr);
-            explicit Formula(const char * const expr);
-            
-            virtual ~Formula() noexcept;
 
-            const Title          title;
-            const AutoPtr<XNode> xnode;
-            const int            z;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Formula(const XCode  &code);    //!< create from parsed XNode
+            explicit Formula(const String &expr);      //!< create from expression
+            explicit Formula(const char * const expr); //!< create from expression
+            virtual ~Formula() noexcept;               //!< cleanup
+            Formula(const Formula &_) noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Title      title; //!< shared name
+            const XCode      xcode; //!< internal representation
+            const int        z;     //!< algebraic charge
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Formula);
-            
+            Y_DISABLE_ASSIGN(Formula);
+
         };
 
     }

@@ -15,8 +15,8 @@ namespace Yttrium
         namespace Syntax
         {
 
-            typedef Small::SoloLightList<const Terminal> Terminals;
-            typedef Small::SoloLightList<const Internal> Internals;
+            typedef Small::SoloLightList<const Terminal> Terminals; //!< alias
+            typedef Small::SoloLightList<const Internal> Internals; //!< alias
 
             //__________________________________________________________________
             //
@@ -170,10 +170,10 @@ namespace Yttrium
                 //! helper: '(' + rule +  ')';
                 const Rule & parens(const Rule &rule);
 
-                void getTerminals(Terminals &) const;
-                void getInternals(Internals &) const;
-                void fetchRules(Terminals &, Internals &) const;
-                void printRules() const;
+                void getTerminals(Terminals &)            const; //!< scan terminals
+                void getInternals(Internals &)            const; //!< scan internals
+                void fetchRules(Terminals &, Internals &) const; //!< scan both
+                void printRules()                         const; //!< print
 
                 //! render grammar
                 void render() const;
@@ -229,3 +229,4 @@ namespace Yttrium
 }
 
 #endif
+

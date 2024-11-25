@@ -24,9 +24,9 @@ namespace Yttrium
             std::cerr << "    z="  << formula.z     << std::endl;
         }
 
-        Formula:: Formula(XNode * const _xnode)   :
+        Formula:: Formula(const XCode &code)   :
         title( new String() ),
-        xnode( _xnode ),
+        xcode( code  ),
         z(0)
         {
             _build(*this);
@@ -36,7 +36,7 @@ namespace Yttrium
 
         Formula:: Formula(const String &expr) :
         title( new String() ),
-        xnode( Weasel::Instance().parseFormula(expr) ),
+        xcode( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
             _build(*this);
@@ -45,10 +45,19 @@ namespace Yttrium
 
         Formula:: Formula(const char * const expr) :
         title( new String() ),
-        xnode( Weasel::Instance().parseFormula(expr) ),
+        xcode( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
             _build(*this);
+        }
+
+
+        Formula:: Formula(const Formula &_) noexcept :
+        title( _.title ),
+        xcode( _.xcode ),
+        z(     _.z     )
+        {
+
         }
 
 
