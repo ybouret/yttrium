@@ -99,7 +99,7 @@ namespace Yttrium
             const String & uuid = node->name();
             if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
             
-            return tree.yield();
+            return list.pop(node);
         }
 
 

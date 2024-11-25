@@ -18,13 +18,13 @@ namespace Yttrium
 
             explicit Formula(XNode * const node) noexcept;
             virtual ~Formula() noexcept;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Formula);
             const AutoPtr<XNode> code;
             virtual ConstInterface & surrogate() const noexcept;
-            void walk(XNode * const xnode,
-                      int           level);
+            void walk(const XNode * const xnode,
+                      unsigned            level);
         };
 
     }
