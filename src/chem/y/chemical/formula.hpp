@@ -4,14 +4,13 @@
 #ifndef Y_Chemical_Formula_Included
 #define Y_Chemical_Formula_Included 1
 
-#include "y/lingo/syntax/xnode.hpp"
+#include "y/chemical/type/lang.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        typedef Lingo::Syntax::XNode XNode;
 
         class Formula : public Proxy<const XNode>
         {
@@ -24,6 +23,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Formula);
             const AutoPtr<XNode> code;
             virtual ConstInterface & surrogate() const noexcept;
+            void walk(XNode * const xnode,
+                      int           level);
         };
 
     }

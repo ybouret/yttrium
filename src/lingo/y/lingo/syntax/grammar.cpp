@@ -129,6 +129,20 @@ namespace Yttrium
                 }
             }
 
+            void Grammar:: fetchRules(Terminals &t, Internals &i) const
+            {
+                getTerminals(t);
+                getInternals(i);
+            }
+
+            void Grammar:: printRules() const
+            {
+                Terminals t;
+                Internals i;
+                fetchRules(t,i);
+                std::cerr << name << ".terminals=" << t << std::endl;
+                std::cerr << name << ".internals=" << i << std::endl;
+            }
 
         }
 

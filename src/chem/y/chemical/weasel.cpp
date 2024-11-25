@@ -1,12 +1,16 @@
 #include "y/chemical/weasel/parser.hpp"
 #include "y/utest/run.hpp"
+#include "y/system/exception.hpp"
+
 #include <cstring>
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        const char * const Weasel:: CallSign = "Chemical::Weasel";
+#define Y_Chemical_Weasel "Chemical::Weasel"
+
+        const char * const Weasel:: CallSign = Y_Chemical_Weasel;
 
 
         namespace
@@ -53,6 +57,9 @@ namespace Yttrium
                 zeroCompiler();
                 throw;
             }
+
+            compiler->parser.printRules();
+
         }
 
         Weasel:: ~Weasel() noexcept
@@ -64,13 +71,37 @@ namespace Yttrium
         }
 
 
-        void Weasel:: operator()(Lingo::Module * const m)
+        
+
+        XNode * Weasel:: parse(Lingo::Module * const m)
         {
             assert(0!=m);
             assert(0!=compiler);
-            AutoPtr<Lingo::Syntax::XNode> tree = compiler->parser(m);
+            AutoPtr<XNode> tree = compiler->parser(m);
             GraphViz::Vizible::DotToPng("wtree.dot", *tree);
+            return tree.yield();
         }
+
+        XNode * Weasel:: parseFormula(const String &expr) {
+
+            static const char fn[] = Y_Chemical_Weasel "::parseFormula";
+            assert(0!=compiler);
+
+            const String & FORMULA = *(compiler->parser).FORMULA.name;
+            AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(FORMULA, expr) );
+
+            assert( tree->name() == *(compiler->parser).WEASEL.name );
+            assert( tree->type == XNode::Internal);
+
+            XList &list = tree->branch();
+            if(list.size!=1) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
+            XNode * const  node = list.head;
+            const String & uuid = node->name();
+            if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
+            
+            return tree.yield();
+        }
+
 
     }
 

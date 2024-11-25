@@ -1,5 +1,7 @@
 
+
 #include "y/chemical/weasel.hpp"
+#include "y/chemical/formula.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
 
@@ -8,17 +10,17 @@ using namespace Chemical;
 
 
 
-Y_UTEST(weasel)
+Y_UTEST(formula)
 {
-    
+
     Weasel &weasel = Weasel::Instance();
     std::cerr << weasel.callSign() << " is ready" << std::endl;
     if(argc>1)
     {
-        delete weasel.parse( Lingo::Module::OpenFile(argv[1]) );
+        const String  expr = argv[1];
+        const Formula formula( weasel.parseFormula(expr) );
     }
 
-    //delete weasel.parseFormula("NaCl Cu");
 
 }
 Y_UDONE()

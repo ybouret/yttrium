@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Weasel_Included
 #define Y_Chemical_Weasel_Included 1
 
-#include "y/chemical/species.hpp"
+#include "y/chemical/formula.hpp"
 #include "y/lingo/module.hpp"
 #include "y/singleton.hpp"
 #include "y/lua++/state.hpp"
@@ -42,9 +42,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! parser/linked
-            void operator()(Lingo::Module * const);
-
+            
+            XNode * parse(Lingo::Module * const);
+            XNode * parseFormula(const String &);
 
 
             //__________________________________________________________________

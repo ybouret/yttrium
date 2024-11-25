@@ -8,5 +8,6 @@ set( DATA ${HERE}/../../../var)
 enable_testing()
 
 add_test(weasel test-weasel weasel)
+add_test(formula test-weasel formula)
 
 

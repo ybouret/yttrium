@@ -11,13 +11,14 @@ namespace Yttrium
         {
         }
 
-        Weasel:: Parser:: Parser(const Lingo::Caption &caption) : Lingo::Parser(caption)
+
+
+        Weasel:: Parser:: Parser(const Lingo::Caption &caption) :
+        Lingo::Parser(caption),
+        WEASEL(  agg("WEASEL")   ), // top-level rule
+        FORMULA( agg("FORMULA")  )
         {
-
-            // top-level rule
-            Compound   &WEASEL   = agg("WEASEL");
-
-
+            
             // handling whitespace
             const Rule & BLANK   = mark("[:blank:]");
             const Rule & ENDL    = endl("[:endl:]",Dividing);
@@ -30,7 +31,6 @@ namespace Yttrium
             const Rule & INTEGER  = term("INTEGER","[:digit:]+");
             const Rule & OPT_INT  = opt(INTEGER);
             Compound   & STOCHIO  = act("STOCHIO");
-            Compound   & FORMULA  = agg("FORMULA");
             Compound   & CONTENT  = alt("CONTENT");
             const Rule & POSITIVE = term('+');
             const Rule & NEGATIVE = term('-');
@@ -57,6 +57,9 @@ namespace Yttrium
             render();
 
         }
+
+
+        
 
     }
 

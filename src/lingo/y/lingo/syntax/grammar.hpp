@@ -35,8 +35,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef Aggregate       Agg;   //!< alias
-                typedef Alternate        Alt;   //!< alias
+                typedef Aggregate        Agg;        //!< alias
+                typedef Alternate        Alt;        //!< alias
                 typedef Syntax::Compound Compound;   //!< alias
 
                 typedef Syntax::Rule  Rule;  //!< alias
@@ -172,8 +172,8 @@ namespace Yttrium
 
                 void getTerminals(Terminals &) const;
                 void getInternals(Internals &) const;
-
-
+                void fetchRules(Terminals &, Internals &) const;
+                void printRules() const;
 
                 //! render grammar
                 void render() const;
