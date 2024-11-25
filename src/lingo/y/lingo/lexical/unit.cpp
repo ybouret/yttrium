@@ -23,7 +23,8 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Unit &unit)
             {
-                os << unit.name << '=' << '\'' << unit.toPrintable() << '\'';
+                os << unit.name;
+                if(unit.size>0) os << '=' << '\'' << unit.toPrintable() << '\'';
                 return os;
             }
 
