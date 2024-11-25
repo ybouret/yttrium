@@ -33,6 +33,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const      CallSign;                                 //!< "Weasel"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 30; //!< alias
+            static const char * const      EqSep; //!< "<=>"
             class Parser;
 
             //__________________________________________________________________

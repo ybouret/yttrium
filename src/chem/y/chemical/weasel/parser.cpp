@@ -61,10 +61,16 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            //          ELEMENT
-            const Rule &EQLABEL     = term("EQLABEL","[:word:]+");
+            const Rule &EQ          = term("EQ","@[:word:]+");
             Agg        &EQUILIBRIUM = agg("EQUILIBRIUM");
-            EQUILIBRIUM << pick(EQLABEL,ELEMENT) << WHITE << ':';
+            EQUILIBRIUM << EQ << WHITE << ':';
+            Compound   &ACTOR  = agg("ACTOR")  << WHITE << OPT_INT << WHITE << FORMULA;
+            Compound   &ACTORS = grp("ACTORS") << ACTOR << zom( cat(WHITE,POSITIVE,ACTOR) );
+            const Rule &ACTORX = opt(ACTORS);
+            EQUILIBRIUM << (agg("REAC") << ACTORX);
+            EQUILIBRIUM << WHITE << mark( Weasel::EqSep );
+            EQUILIBRIUM << WHITE << (agg("PROD") << ACTORX);
+
 
 
             //------------------------------------------------------------------
@@ -78,7 +84,7 @@ namespace Yttrium
             STATEMENT <<  EQUILIBRIUM << FORMULA;
 
             const Rule &SEP = opt( get(';') );
-            WEASEL << zom( cat(WHITE,STATEMENT,WHITE,SEP) );
+            WEASEL << zom( cat(WHITE,STATEMENT,WHITE,SEP) ) << WHITE;
 
 
             // lexer only: comments
@@ -86,7 +92,7 @@ namespace Yttrium
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 
             render();
-            Rule::Trace = true;
+            //Rule::Trace = true;
         }
 
 
