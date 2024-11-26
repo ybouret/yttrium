@@ -40,8 +40,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Formula(const XCode  &code);    //!< create from parsed XNode
-            explicit Formula(const String &expr);      //!< create from expression
+            explicit Formula(const XCode  &     code); //!< create from parsed XNode
+            explicit Formula(const String &     expr); //!< create from expression
             explicit Formula(const char * const expr); //!< create from expression
             virtual ~Formula() noexcept;               //!< cleanup
             Formula(const Formula &_) noexcept;
