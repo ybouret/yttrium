@@ -15,21 +15,47 @@ namespace Yttrium
         class Company : public Entity, public Actor::List, public Assembly
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Company() noexcept;
             virtual ~Company() noexcept;
             Company(const Company &);
 
             virtual const String & key() const noexcept;
 
-            const Actor & recruit(Actor * const);
-            bool          lookFor(const Species &) const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const Actor & recruit(Actor * const);                  //!< recruit and update name
+            bool          lookFor(const Species &) const noexcept; //!< look for species
 
-            const String  name;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String  name; //!< pre-computed
 
         private:
             Y_DISABLE_ASSIGN(Company);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Actors = Proxy to const Company
+        //
+        //
+        //______________________________________________________________________
         class Actors : public Proxy<const Company>
         {
         public:

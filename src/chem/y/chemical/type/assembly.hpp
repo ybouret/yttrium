@@ -12,16 +12,36 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Helper to format assembly of entities
+        //
+        //
+        //______________________________________________________________________
         class Assembly
         {
         public:
-            explicit Assembly() noexcept;
-            virtual ~Assembly() noexcept;
-            Assembly(const Assembly &_) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Assembly()         noexcept; //!< setup
+            virtual ~Assembly()         noexcept; //!< cleanup
+            Assembly(const Assembly &_) noexcept; //!< copy
 
-            void enroll(const Entity &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void enroll(const Entity &) noexcept; //!< check maxKeySize
 
+            //! recompute upon deletion/error
             template <typename LIST> inline
             void recompute(const LIST &list) noexcept
             {
@@ -34,7 +54,7 @@ namespace Yttrium
 
             }
 
-
+            //! helper to format an entity key among this assembly
             template <typename OSTREAM> inline
             OSTREAM & print(OSTREAM            &os,
                             const char * const  pfx,
@@ -49,7 +69,13 @@ namespace Yttrium
                 return os << jst;
             }
 
-            const size_t maxKeySize;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t maxKeySize; //!< max of entities key size
         private:
             Y_DISABLE_ASSIGN(Assembly);
         };

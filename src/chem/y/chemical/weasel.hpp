@@ -45,10 +45,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             
-            XNode * parse(Lingo::Module * const);
-            XNode * parseFormula(const String &);
-            XNode * parseFormula(const char * const);
-            void    buildFormula(Formula &formula);
+            XNode * parse(Lingo::Module * const);     //!< parse a full module
+            XNode * parseFormula(const String &);     //!< parse a string to FORMULA
+            XNode * parseFormula(const char * const); //!< parse text to FORMULA
+            void    buildFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
 
 
             //__________________________________________________________________

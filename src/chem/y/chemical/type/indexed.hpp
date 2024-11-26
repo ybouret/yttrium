@@ -9,25 +9,56 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //! different levels of indexing
+        //
+        //______________________________________________________________________
         enum Level
         {
-            TopLevel,
-            SubLevel,
-            AuxLevel
+            TopLevel, //!< global index
+            SubLevel, //!< index within cluster
+            AuxLevel  //!< index within auxiliary  structures
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Indexed entity
+        //
+        //
+        //______________________________________________________________________
         class Indexed : public Entity
         {
         public:
-            static const size_t Levels = AuxLevel + 1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t Levels = AuxLevel + 1; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             explicit Indexed(const size_t topIndex) noexcept; //!< topIndex>0
             virtual ~Indexed()                      noexcept; //!< cleanup
 
 
-
-            const size_t indx[Levels];
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t indx[Levels]; //!< relative indices
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Indexed);
