@@ -10,14 +10,12 @@ namespace Yttrium
         {
         }
 
-        Entity:: Entity(const size_t topLevelIndex) noexcept :
-        Object(),
-        Counted(),
-        indx()
+        Entity:: Entity() noexcept : Object()
         {
-            assert(topLevelIndex>0);
-            for(size_t i=0;i<Levels;++i) Coerce(indx[i]) = topLevelIndex;
         }
+        
+
+      
 
         std::ostream & operator<<( std::ostream &os, const Entity &entity)
         {

@@ -7,8 +7,9 @@ set( DATA ${HERE}/../../../var)
 
 enable_testing()
 
-add_test(weasel test-weasel weasel)
-add_test(formula test-weasel formula)
-add_test(library test-weasel library)
+add_test(weasel  test-chem weasel)
+add_test(formula test-chem formula)
+add_test(library test-chem library)
+add_test(eq      test-chem eq)
 
 

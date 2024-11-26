@@ -48,7 +48,7 @@ namespace Yttrium
                 lib->print(os, "\t", sp, "", Justify::Left);
                 os << " | z=" << std::setw(3) << sp.z;
                 os << " | indx=";
-                Core::Display(os,sp.indx,Entity::Levels);
+                Core::Display(os,sp.indx,Indexed::Levels);
                 os <<  std::endl;
             }
             os << '}';

@@ -4,7 +4,8 @@
 #ifndef Y_Chemical_Species_Included
 #define Y_Chemical_Species_Included 1
 
-#include "y/chemical/type/entity.hpp"
+#include "y/chemical/type/indexed.hpp"
+#include "y/chemical/type/defs.hpp"
 #include "y/chemical/formula.hpp"
 #include "y/ptr/ark.hpp"
 #include "y/associative/suffix/set.hpp"
@@ -22,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Species : public Entity, public Formula
+        class Species : public Indexed, public Counted, public Formula
         {
         public:
             //__________________________________________________________________
@@ -45,7 +46,7 @@ namespace Yttrium
             //! build with XCode, Formula, string...
             template <typename DATA> inline
             Species(const DATA &data, const size_t topIndex) :
-            Entity(topIndex),
+            Indexed(topIndex),
             Formula(data)
             {
 

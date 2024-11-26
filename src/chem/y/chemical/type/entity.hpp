@@ -11,31 +11,22 @@ namespace Yttrium
     namespace Chemical
     {
 
-        enum Level
-        {
-            TopLevel,
-            SubLevel,
-            AuxLevel
-        };
-
-        class Entity : public Object, public Counted
+        class Entity : public Object
         {
         public:
-            static const size_t Levels = AuxLevel + 1;
-
-
-            explicit Entity(const size_t topIndex) noexcept; //!< topIndex>0
+            explicit Entity() noexcept; //!< topIndex>0
             virtual ~Entity()                      noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Entity);
 
             virtual const String & key() const noexcept = 0;
 
-
-            const size_t indx[Levels];
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entity);
         };
+
+       
+
+
 
     }
 
