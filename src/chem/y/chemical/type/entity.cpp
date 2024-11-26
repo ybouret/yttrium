@@ -18,6 +18,11 @@ namespace Yttrium
             assert(topLevelIndex>0);
             for(size_t i=0;i<Levels;++i) Coerce(indx[i]) = topLevelIndex;
         }
+
+        std::ostream & operator<<( std::ostream &os, const Entity &entity)
+        {
+            return os << entity.key();
+        }
     }
 
 }

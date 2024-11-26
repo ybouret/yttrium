@@ -1,0 +1,20 @@
+#include "y/chemical/type/assembly.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Assembly::  Assembly() noexcept : maxKeySize(0) {}
+        Assembly:: ~Assembly() noexcept {}
+
+
+        void Assembly:: enroll(const Entity &entity) noexcept
+        {
+            const size_t tmp = entity.key().size();
+            if(tmp>maxKeySize) Coerce(maxKeySize) = tmp;
+        }
+
+    }
+
+}
+

@@ -9,5 +9,6 @@ enable_testing()
 
 add_test(weasel test-weasel weasel)
 add_test(formula test-weasel formula)
+add_test(library test-weasel library)
 
 

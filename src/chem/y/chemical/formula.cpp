@@ -25,7 +25,8 @@ namespace Yttrium
         }
 
         Formula:: Formula(const XTree &code)   :
-        name(),
+        uuid( new String() ),
+        name( *uuid ),
         tree(code),
         z(0)
         {
@@ -35,7 +36,8 @@ namespace Yttrium
         
 
         Formula:: Formula(const String &expr) :
-        name(),
+        uuid( new String() ),
+        name(*uuid),
         tree( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
@@ -44,7 +46,8 @@ namespace Yttrium
 
 
         Formula:: Formula(const char * const expr) :
-        name(),
+        uuid( new String() ),
+        name( *uuid ),
         tree( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
@@ -52,7 +55,13 @@ namespace Yttrium
         }
 
 
-        
+        Formula:: Formula(const Formula &_) noexcept :
+        uuid( _.uuid ),
+        name( * uuid ),
+        tree( _.tree ),
+        z( _.z )
+        {
+        }
 
 
     }

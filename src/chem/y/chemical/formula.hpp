@@ -43,20 +43,22 @@ namespace Yttrium
             explicit Formula(const XTree  &     code); //!< create from parsed XNode
             explicit Formula(const String &     expr); //!< create from expression
             explicit Formula(const char * const expr); //!< create from expression
-            virtual ~Formula() noexcept;               //!< cleanup
-            
+            virtual ~Formula()       noexcept;         //!< cleanup
+            Formula(const Formula &) noexcept;
+
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            const String     name;  //!< shared name
-            const XTree      tree; //!< internal representation
-            const int        z;     //!< algebraic charge
+            const XName   uuid;  //!< unique ID
+            const String &name;  //!< *uuid
+            const XTree   tree;  //!< internal representation
+            const int     z;     //!< algebraic charge
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Formula);
+            Y_DISABLE_ASSIGN(Formula);
 
         };
 

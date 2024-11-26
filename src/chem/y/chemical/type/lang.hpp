@@ -12,7 +12,7 @@ namespace Yttrium
     {
         typedef Lingo::Syntax::XNode XNode; //!< alias
         typedef Lingo::Syntax::XList XList; //!< alias
-        typedef Lingo::Caption       Title; //!< alias
+        typedef Lingo::Caption       XName; //!< alias
 
     }
 

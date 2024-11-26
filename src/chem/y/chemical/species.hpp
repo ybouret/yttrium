@@ -7,6 +7,7 @@
 #include "y/chemical/type/entity.hpp"
 #include "y/chemical/formula.hpp"
 #include "y/ptr/ark.hpp"
+#include "y/associative/suffix/set.hpp"
 
 namespace Yttrium
 {
@@ -30,8 +31,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef ArkPtr<const String,const Species> Handle; //!< alias
-            static const char * const  CallSign; //!< "Chemical::Species"
+            typedef ArkPtr<const String,const Species>   Handle;   //!< alias
+            typedef SuffixSet<const String,const Handle> Set;      //!< alias
+            static const char * const                    CallSign; //!< "Chemical::Species"
 
             //__________________________________________________________________
             //
@@ -40,6 +42,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //! build with XCode, Formula, string...
             template <typename DATA> inline
             Species(const DATA &data, const size_t topIndex) :
             Entity(topIndex),

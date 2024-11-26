@@ -60,8 +60,8 @@ namespace Yttrium
             const size_t space = width-size;
             switch(type)
             {
-                case Left:  epilog = space; break;
-                case Right: prolog = space; break;
+                case Left:   epilog = space; break;
+                case Right:  prolog = space; break;
                 case Center: prolog = space/2; epilog = space-prolog; break;
             }
         }

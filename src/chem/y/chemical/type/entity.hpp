@@ -26,6 +26,7 @@ namespace Yttrium
 
             explicit Entity(const size_t topIndex) noexcept; //!< topIndex>0
             virtual ~Entity()                      noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Entity);
 
             virtual const String & key() const noexcept = 0;
 
