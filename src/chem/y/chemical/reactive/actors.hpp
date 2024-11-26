@@ -16,7 +16,7 @@ namespace Yttrium
         public:
             explicit Company() noexcept;
             virtual ~Company() noexcept;
-
+            Company(const Company &);
 
             virtual const String & key() const noexcept;
 
@@ -27,7 +27,7 @@ namespace Yttrium
             const String name;
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Company);
+            Y_DISABLE_ASSIGN(Company);
         };
 
         class Actors : public Proxy<const Company>
@@ -35,13 +35,14 @@ namespace Yttrium
         public:
             explicit Actors() noexcept;
             virtual ~Actors() noexcept;
+            Actors(const Actors &);
             Y_OSTREAM_PROTO(Actors);
 
             void operator()(const Species &);
             void operator()(const unsigned, const Species &);
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actors);
+            Y_DISABLE_ASSIGN(Actors);
             virtual ConstInterface & surrogate() const noexcept;
 
             Company company;

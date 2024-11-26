@@ -21,6 +21,7 @@ namespace Yttrium
             explicit Actor(const unsigned, const Species &);
             explicit Actor(const Species &);
             virtual ~Actor() noexcept;
+            Actor(const Actor &);
 
             virtual const String & key() const noexcept;
 
@@ -33,7 +34,7 @@ namespace Yttrium
             const String   name;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actor);
+            Y_DISABLE_ASSIGN(Actor);
         };
 
     }

@@ -4,7 +4,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Assembly::  Assembly() noexcept : maxKeySize(0) {}
+        Assembly::  Assembly()                  noexcept : maxKeySize(0)            {}
+        Assembly::  Assembly(const Assembly &_) noexcept : maxKeySize(_.maxKeySize) {}
         Assembly:: ~Assembly() noexcept {}
 
 

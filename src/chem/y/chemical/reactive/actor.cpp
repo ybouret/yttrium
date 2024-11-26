@@ -40,6 +40,19 @@ namespace Yttrium
             return name;
         }
 
+        Actor:: Actor(const Actor &_) :
+        nu(_.nu),
+        sp(_.sp),
+        xn(_.xn),
+        n1(_.n1),
+        next(0),
+        prev(0),
+        name(_.name)
+        {
+        }
+        
+
+
     }
 
 }

@@ -26,5 +26,8 @@ Y_UTEST(eq)
 
     std::cerr << actors << std::endl;
 
+    const Actors other = actors;
+
+    std::cerr << other << std::endl;
 }
 Y_UDONE()

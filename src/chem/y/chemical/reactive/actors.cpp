@@ -12,11 +12,19 @@ namespace Yttrium
         Company:: Company() noexcept :
         Entity(),
         Actor::List(),
-        Assembly()
+        Assembly(),
+        name()
         {
             
         }
 
+        Company:: Company(const Company &_) :
+        Entity(),
+        Actor::List(_),
+        Assembly(_),
+        name(_.name)
+        {
+        }
 
         bool Company:: lookFor(const Species &sp) const noexcept
         {
@@ -49,6 +57,7 @@ namespace Yttrium
 
 
 
+
     }
 
 }
@@ -57,7 +66,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Actors:: Actors() noexcept
+        Actors:: Actors() noexcept : Proxy<const Company>(), company()
+        {
+        }
+
+        Actors:: Actors(const Actors &_)  : Proxy<const Company>(), company(_.company)
         {
         }
 
@@ -85,6 +98,8 @@ namespace Yttrium
         {
             return os << (actors->name);
         }
+
+
     }
 
 }

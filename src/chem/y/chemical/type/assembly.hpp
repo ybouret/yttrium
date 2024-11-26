@@ -18,6 +18,7 @@ namespace Yttrium
         public:
             explicit Assembly() noexcept;
             virtual ~Assembly() noexcept;
+            Assembly(const Assembly &_) noexcept;
 
             void enroll(const Entity &) noexcept;
 
@@ -37,7 +38,7 @@ namespace Yttrium
 
             const size_t maxKeySize;
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Assembly);
+            Y_DISABLE_ASSIGN(Assembly);
         };
 
     }
