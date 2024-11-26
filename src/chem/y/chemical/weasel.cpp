@@ -11,8 +11,8 @@ namespace Yttrium
 #define Y_Chemical_Weasel "Chemical::Weasel"
 
         const char * const Weasel:: CallSign = Y_Chemical_Weasel;
-        const char * const Weasel:: EqSep    = "<=>";
-        
+        const char * const Weasel:: SYMBOL   = "<=>";
+
         namespace
         {
             class Compiler

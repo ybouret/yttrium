@@ -29,6 +29,10 @@ namespace Yttrium
             virtual const String & key() const noexcept;
 
             void operator()(const Acting role, const unsigned nu, const Species &sp);
+            void operator()(const Acting role, const Species &sp);
+
+            std::ostream & print(std::ostream &) const;
+
 
             const String name;
             const Actors reac;

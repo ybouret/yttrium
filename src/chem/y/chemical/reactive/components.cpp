@@ -11,7 +11,7 @@ namespace Yttrium
 
         Components:: ConstInterface & Components:: surrogate() const noexcept { return cmdb; }
 
-        
+
         const String & Components:: key() const noexcept
         {
             return name;
@@ -58,6 +58,34 @@ namespace Yttrium
             }
 
         }
+
+        void Components:: operator()(const Acting role, const Species &sp)
+        {
+            (*this)(role,1,sp);
+        }
+
+
+
+    }
+
+}
+
+#include "y/chemical/weasel.hpp"
+
+namespace Yttrium
+{
+
+    namespace Chemical
+    {
+
+        std::ostream & Components:: print(std::ostream &os) const
+        {
+
+            os << name << Weasel::COLON << reac << ' ' << Weasel::SYMBOL  << ' ' << prod;
+
+            return os;
+        }
+
 
     }
 

@@ -76,14 +76,14 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const Rule &EQ          = term("EQ","@[:word:]+");
-            EQUILIBRIUM << EQ << WHITE << ':';
+            EQUILIBRIUM << EQ << WHITE << COLON;
             Compound   &ACTOR  = agg("ACTOR")  << WHITE << OPT_INT << WHITE << FORMULA;
             Compound   &ACTORS = grp("ACTORS") << ACTOR << zom( cat(WHITE,POSITIVE,ACTOR) );
             const Rule &ACTORX = opt(ACTORS);
             EQUILIBRIUM << (agg("REAC") << ACTORX);
-            EQUILIBRIUM << WHITE << mark( Weasel::EqSep );
+            EQUILIBRIUM << WHITE << mark( SYMBOL );
             EQUILIBRIUM << WHITE << (agg("PROD") << ACTORX);
-            EQUILIBRIUM << WHITE << ':';
+            EQUILIBRIUM << WHITE << COLON;
             EQUILIBRIUM << WHITE << plug<Lingo::Lexical::RString>("K");
 
 
