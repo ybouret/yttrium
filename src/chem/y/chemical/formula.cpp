@@ -20,13 +20,13 @@ namespace Yttrium
             static Weasel &weasel = Weasel::Instance();
             weasel.buildFormula(formula);
 
-            std::cerr << "title='" << formula.title << "'" << std::endl;
-            std::cerr << "    z="  << formula.z     << std::endl;
+            std::cerr << "name ='" << formula.name  << "'" << std::endl;
+            std::cerr << "   z ="  << formula.z     << std::endl;
         }
 
-        Formula:: Formula(const XCode &code)   :
-        title( new String() ),
-        xcode( code  ),
+        Formula:: Formula(const XTree &code)   :
+        name(),
+        tree(code),
         z(0)
         {
             _build(*this);
@@ -35,8 +35,8 @@ namespace Yttrium
         
 
         Formula:: Formula(const String &expr) :
-        title( new String() ),
-        xcode( Weasel::Instance().parseFormula(expr) ),
+        name(),
+        tree( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
             _build(*this);
@@ -44,21 +44,15 @@ namespace Yttrium
 
 
         Formula:: Formula(const char * const expr) :
-        title( new String() ),
-        xcode( Weasel::Instance().parseFormula(expr) ),
+        name(),
+        tree( Weasel::Instance().parseFormula(expr) ),
         z(0)
         {
             _build(*this);
         }
 
 
-        Formula:: Formula(const Formula &_) noexcept :
-        title( _.title ),
-        xcode( _.xcode ),
-        z(     _.z     )
-        {
-
-        }
+        
 
 
     }

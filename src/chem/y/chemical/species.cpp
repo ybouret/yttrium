@@ -16,7 +16,10 @@ namespace Yttrium
 
         const char * const Species:: CallSign = "Chemical::Species";
         
-        
+        const String & Species:: key() const noexcept
+        {
+            return name;
+        }
 
     }
 

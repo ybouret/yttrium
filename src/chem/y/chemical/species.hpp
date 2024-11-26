@@ -4,15 +4,14 @@
 #ifndef Y_Chemical_Species_Included
 #define Y_Chemical_Species_Included 1
 
-#include "y/lingo/syntax/xnode.hpp"
+#include "y/chemical/type/entity.hpp"
+#include "y/chemical/formula.hpp"
 #include "y/ptr/ark.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-
 
         //______________________________________________________________________
         //
@@ -22,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Species  
+        class Species : public Entity, public Formula
         {
         public:
             //__________________________________________________________________
@@ -41,11 +40,25 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            template <typename DATA> inline
+            Species(const DATA &data, const size_t topIndex) :
+            Entity(topIndex),
+            Formula(data)
+            {
+
+            }
 
             //! cleanup
             virtual ~Species() noexcept;
 
-            
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const String & key() const noexcept;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

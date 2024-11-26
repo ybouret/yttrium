@@ -13,7 +13,7 @@ namespace Yttrium
     {
 
 
-        typedef ArcPtr<const XNode> XCode;
+        typedef ArcPtr<const XNode> XTree;
 
         //______________________________________________________________________
         //
@@ -40,24 +40,23 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Formula(const XCode  &     code); //!< create from parsed XNode
+            explicit Formula(const XTree  &     code); //!< create from parsed XNode
             explicit Formula(const String &     expr); //!< create from expression
             explicit Formula(const char * const expr); //!< create from expression
             virtual ~Formula() noexcept;               //!< cleanup
-            Formula(const Formula &_) noexcept;
-
+            
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            const Title      title; //!< shared name
-            const XCode      xcode; //!< internal representation
+            const String     name;  //!< shared name
+            const XTree      tree; //!< internal representation
             const int        z;     //!< algebraic charge
 
         private:
-            Y_DISABLE_ASSIGN(Formula);
+            Y_DISABLE_COPY_AND_ASSIGN(Formula);
 
         };
 

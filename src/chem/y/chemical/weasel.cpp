@@ -122,12 +122,14 @@ namespace Yttrium
             linker.verbose = true;
 
             // link formula
-            linker(*formula.xcode);
+            linker(*formula.tree);
 
-            // fetch info
-            Coerce( *(formula.title) ) = linker.elements.tail();
-            Coerce(   formula.z      ) = linker.z;
-            
+            // fetch compiled nfo
+            Coerce( formula.name ).swapWith(linker.elements.tail());
+            Coerce( formula.z    ) = linker.z;
+
+            // cleanup
+            linker.clear();
         }
 
     }
