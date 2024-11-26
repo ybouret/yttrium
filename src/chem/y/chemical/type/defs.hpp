@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
         typedef double        real_t;
-        typedef XReal<real_t> xreal;
+        typedef XReal<real_t> xReal;
         
 
     }

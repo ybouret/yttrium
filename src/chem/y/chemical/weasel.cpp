@@ -118,8 +118,8 @@ namespace Yttrium
         {
             assert(0!=compiler);
             Formula::Linker &linker = compiler->formulaLinker;
-            linker.policy  = Lingo::Syntax::Permissive;
-            linker.verbose = true;
+            //linker.policy  = Lingo::Syntax::Permissive;
+            //linker.verbose = true;
 
             // link formula
             linker(*formula.tree);

@@ -13,6 +13,7 @@ namespace Yttrium
 
 
         Actor:: Actor(const unsigned _nu, const Species & _sp) :
+        Entity(),
         nu(_nu),
         sp(_sp),
         xn(nu),
@@ -25,6 +26,7 @@ namespace Yttrium
         }
 
         Actor:: Actor(const Species & _sp) :
+        Entity(),
         nu(1),
         sp(_sp),
         xn(1),
@@ -41,6 +43,7 @@ namespace Yttrium
         }
 
         Actor:: Actor(const Actor &_) :
+        Entity(),
         nu(_.nu),
         sp(_.sp),
         xn(_.xn),
@@ -50,7 +53,7 @@ namespace Yttrium
         name(_.name)
         {
         }
-        
+
 
 
     }

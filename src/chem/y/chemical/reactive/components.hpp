@@ -14,12 +14,12 @@ namespace Yttrium
 
         typedef SuffixSet<const String, const Component> Compendium;
 
-        class Components : public Entity, public Counted, Proxy<const Compendium>
+        class Components : public Entity,  Proxy<const Compendium>
         {
         public:
             template <typename NAME> inline
             explicit Components(const NAME &_name) :
-            Entity(), Counted(), Proxy<const Compendium>(),
+            Entity(),  Proxy<const Compendium>(),
             name(_name), reac(), prod(), cmdb()
             {
             }
@@ -43,7 +43,7 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             Compendium cmdb;
 
-            Actors & actorsPlaying(const Acting) noexcept;
+            Actors & actorsPlaying(const Acting);
 
         };
 

@@ -17,13 +17,14 @@ namespace Yttrium
             return name;
         }
 
-        Actors & Components:: actorsPlaying(const Acting role) noexcept
+        Actors & Components:: actorsPlaying(const Acting role)
         {
             switch(role)
             {
                 case Reactant: return Coerce(reac);
                 case Product:  return Coerce(prod);
             }
+            throw Libc::Exception(EINVAL, "never get here");
             // never get here
         }
 
@@ -52,8 +53,9 @@ namespace Yttrium
             }
             catch(...)
             {
-                delete actors.company.popTail();
-                actors.company.recompute(actors.company);
+                Company &company = actors.company;
+                delete company.popTail();
+                company.recompute(company);
                 throw;
             }
 
