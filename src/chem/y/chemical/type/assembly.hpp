@@ -22,6 +22,19 @@ namespace Yttrium
 
             void enroll(const Entity &) noexcept;
 
+            template <typename LIST> inline
+            void recompute(const LIST &list) noexcept
+            {
+                Coerce(maxKeySize) = 0;
+                for(const typename LIST::NodeType *node=list.head;node;node=node->next)
+                {
+                    const Entity &entity = *node;
+                    enroll( entity );
+                }
+
+            }
+
+
             template <typename OSTREAM> inline
             OSTREAM & print(OSTREAM            &os,
                             const char * const  pfx,

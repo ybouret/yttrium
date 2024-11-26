@@ -1,5 +1,5 @@
 #include "y/chemical/library.hpp"
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/components.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -19,15 +19,22 @@ Y_UTEST(eq)
 
     std::cerr << "lib=" << lib << std::endl;
 
-    Actors actors;
+    {
+        Actors actors;
 
-    actors(h);
-    actors(2,w);
+        actors(h);
+        actors(2,w);
 
-    std::cerr << actors << std::endl;
+        std::cerr << actors << std::endl;
 
-    const Actors other = actors;
+        const Actors other = actors;
 
-    std::cerr << other << std::endl;
+        std::cerr << other << std::endl;
+    }
+
+    Components water("water");
+    
+
+
 }
 Y_UDONE()

@@ -12,11 +12,15 @@ namespace Yttrium
     namespace Chemical
     {
 
+       
         class Actor : public Entity
         {
         public:
             static const char * const CallSign;
             typedef CxxListOf<Actor> List;
+
+
+
 
             explicit Actor(const unsigned, const Species &);
             explicit Actor(const Species &);

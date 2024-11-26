@@ -10,19 +10,13 @@ namespace Yttrium
         Company:: ~Company() noexcept {}
 
         Company:: Company() noexcept :
-        Entity(),
-        Actor::List(),
-        Assembly(),
-        name()
+        Entity(), Actor::List(), Assembly(), name()
         {
             
         }
 
         Company:: Company(const Company &_) :
-        Entity(),
-        Actor::List(_),
-        Assembly(_),
-        name(_.name)
+        Entity(), Actor::List(_), Assembly(_), name(_.name)
         {
         }
 
@@ -36,7 +30,7 @@ namespace Yttrium
         }
 
 
-        void Company:: recruit(Actor * const actor)
+        const Actor & Company:: recruit(Actor * const actor)
         {
             assert(0!=actor);
             assert(!lookFor(actor->sp));
@@ -48,6 +42,7 @@ namespace Yttrium
                 Coerce(name).swapWith(newName);
             }
             enroll( *pushTail( guard.yield() ) );
+            return *actor;
         }
 
         const String & Company:: key() const noexcept
@@ -81,17 +76,17 @@ namespace Yttrium
 
         Actors::ConstInterface & Actors::surrogate() const noexcept { return company; }
 
-        void Actors:: operator()(const Species &sp)
+        const Actor & Actors:: operator()(const Species &sp)
         {
             assert(!company.lookFor(sp));
-            company.recruit( new Actor(sp) );
+            return company.recruit( new Actor(sp) );
         }
 
-        void Actors:: operator()(const unsigned nu, const Species &sp)
+        const Actor & Actors:: operator()(const unsigned nu, const Species &sp)
         {
             assert(!company.lookFor(sp));
             assert(nu>0);
-            company.recruit( new Actor(nu,sp) );
+            return company.recruit( new Actor(nu,sp) );
         }
 
         std::ostream &   operator<<(std::ostream &os, const Actors &actors)

@@ -1,0 +1,65 @@
+#include "y/chemical/reactive/components.hpp"
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Components:: ~Components() noexcept
+        {
+        }
+
+        Components:: ConstInterface & Components:: surrogate() const noexcept { return cmdb; }
+
+        
+        const String & Components:: key() const noexcept
+        {
+            return name;
+        }
+
+        Actors & Components:: actorsPlaying(const Acting role) noexcept
+        {
+            switch(role)
+            {
+                case Reactant: return Coerce(reac);
+                case Product:  return Coerce(prod);
+            }
+            // never get here
+        }
+
+        void Components:: operator()(const Acting role, const unsigned nu, const Species &sp)
+        {
+            const String &sid = sp.name;
+
+            // check coef
+            if(nu<=0) throw Specific::Exception(name.c_str(), "null stoichiometry for '%s'", sid.c_str());
+
+            // check that species is not used
+            {
+                const Component * const cm = cmdb.search(sid);
+                if(0!=cm)
+                    throw Specific::Exception(name.c_str(), "already used as %s %s", cm->actor.name.c_str(), cm->side());
+            }
+
+            Actors &      actors = actorsPlaying(role);
+            const Actor & actor  = actors(nu,sp);
+
+            // safe insertion
+            try {
+                const Component cm(actor,role);
+                if(!cmdb.insert(cm))
+                    throw Specific::Exception(name.c_str(),"couldn't insert %s %s", cm.actor.name.c_str(), cm.side());
+            }
+            catch(...)
+            {
+                delete actors.company.popTail();
+                actors.company.recompute(actors.company);
+                throw;
+            }
+
+        }
+
+    }
+
+}
+
