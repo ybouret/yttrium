@@ -16,7 +16,8 @@ Y_UTEST(library)
     const Species &h = lib("H^+");
     const Species &w = lib("HO^-");
 
-    std::cerr << h << std::endl;
+    std::cerr << "h=" << h << std::endl;
+    std::cerr << "w=" << w << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
 
