@@ -18,7 +18,7 @@ namespace Yttrium
         void _build(Formula &formula)
         {
             static Weasel &weasel = Weasel::Instance();
-            weasel.buildFormula(formula);
+            weasel.setupFormula(formula);
 
             std::cerr << "name ='" << formula.name  << "'" << std::endl;
             std::cerr << "   z ="  << formula.z     << std::endl;

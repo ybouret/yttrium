@@ -11,11 +11,12 @@ using namespace Chemical;
 Y_UTEST(weasel)
 {
     
-    Weasel &weasel = Weasel::Instance();
+    Weasel   &weasel = Weasel::Instance();
+    Library   lib;
     std::cerr << weasel.callSign() << " is ready" << std::endl;
     if(argc>1)
     {
-        delete weasel.parse( Lingo::Module::OpenFile(argv[1]) );
+       weasel(lib,Lingo::Module::OpenFile(argv[1]) );
     }
 
     

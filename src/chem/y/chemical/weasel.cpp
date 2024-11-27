@@ -114,26 +114,38 @@ namespace Yttrium
             return parseFormula(_);
         }
 
-        void Weasel:: buildFormula(Formula &formula)
+        void Weasel:: setupFormula(Formula &formula)
         {
             assert(0!=compiler);
             Formula::Linker &linker = compiler->formulaLinker;
             //linker.policy  = Lingo::Syntax::Permissive;
             //linker.verbose = true;
 
-            // link formula
+            //------------------------------------------------------------------
+            //
+            // apply linker to Formula tree
+            //
+            //------------------------------------------------------------------
             linker(*formula.tree);
 
-            // fetch compiled nfo
+            //------------------------------------------------------------------
+            //
+            // fetch compiled info
+            //
+            //------------------------------------------------------------------
             Coerce( formula.name ).swapWith(linker.elements.tail());
             Coerce( formula.z    ) = linker.z;
 
+            //------------------------------------------------------------------
+            //
             // cleanup
+            //
+            //------------------------------------------------------------------
             linker.clear();
         }
 
 
-        void Weasel:: operator()(Library & lib,
+        void Weasel:: operator()(Library &             lib,
                                  Lingo::Module * const m)
         {
             //------------------------------------------------------------------
@@ -148,9 +160,19 @@ namespace Yttrium
             assert( *(compiler->genericParser.WEASEL.name) == root->name());
             assert( XNode::Internal == root->type );
 
+            //------------------------------------------------------------------
+            //
+            // parse module
+            //
+            //------------------------------------------------------------------
+            XList &list = root->branch();
+            while(list.size>0)
+            {
+                const XTree tree = list.popHead();
+                std::cerr << "compiling '" << tree->name() << "'" << std::endl;
+            }
 
         }
-
     }
 
 }
