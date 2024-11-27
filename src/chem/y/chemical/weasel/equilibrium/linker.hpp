@@ -9,7 +9,7 @@
 #include "y/chemical/weasel/parser.hpp"
 
 #include "y/lingo/syntax/translator.hpp"
-//#include "y/sequence/vector.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -22,14 +22,37 @@ namespace Yttrium
             explicit Linker(const Weasel::Parser &);
             virtual ~Linker() noexcept;
 
-            void preProcess(XTree &tree, Library &lib);
+            void process(XTree &tree, Library &lib);
 
+            String                         eqName;
+            String                         spName;
+            unsigned                       stoich;
+            Actor::List                    actors;
+            Actor::List                    reac;
+            Actor::List                    prod;
+            String                         Kstr;
+            Library *                      theLib;
             const Lingo::Syntax::Terminal  SPECIES;
-            const Hashing::Perfect        &actors;
+            const Hashing::Perfect        &hashAct;
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Linker);
             void replaceFormulae(XNode &parent, Library &lib);
+            void preProcess(XTree &tree, Library &lib);
+
+            virtual void init();
+            virtual void quit();
+            void clear() noexcept;
+
+            void onEQ(const Lexeme &);
+            void onSPECIES(const Lexeme &);
+            void onINTEGER(const Lexeme &);
+            void onACTOR(const size_t);
+            void onREAC(const size_t);
+            void onPROD(const size_t);
+            void onK(const Lexeme &);
         };
     }
 

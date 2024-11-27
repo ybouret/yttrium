@@ -43,6 +43,8 @@ namespace Yttrium
             virtual ~Actor() noexcept;                       //!< cleanup
             Actor(const Actor &);                            //!< duplicate
 
+            const Actor & operator*() const noexcept { return *this; }
+
             //__________________________________________________________________
             //
             //
@@ -50,6 +52,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             virtual const String & key() const noexcept; //!< name
+            
 
             //__________________________________________________________________
             //

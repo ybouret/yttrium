@@ -193,8 +193,7 @@ namespace Yttrium
                     case Y_Chemical_EQUILIBRIUM:
                         compiler->ldEquilibrium.policy  = Lingo::Syntax::Permissive;
                         compiler->ldEquilibrium.verbose = true;
-                        compiler->ldEquilibrium.preProcess(tree,lib);
-                        compiler->ldEquilibrium(*tree);
+                        compiler->ldEquilibrium.process(tree,lib);
                         break;
 
                     default:
