@@ -18,15 +18,10 @@ namespace Yttrium
         void Reactor:: mustInsert(const Equilibrium::Handle &handle)
         {
             if( !insert(handle) ) throw Specific::Exception( Equilibria::CallSign, "multiple '%s'", handle->name.c_str());
-
-            /*
-             enroll( *handle );
-             Coerce(reac).enroll( *(handle->reac) );
-             Coerce(prod).enroll( *(handle->prod) );
-             */
+            enroll( *handle );
         }
 
-        void Reactor:: updateFragment() noexcept
+        void Reactor:: update() noexcept
         {
             for(Iterator it=begin();it!=end();++it)
                 enroll(**it);
@@ -82,7 +77,7 @@ namespace Yttrium
 
         void Equilibria:: update() noexcept
         {
-            reactor.updateFragment();
+            reactor.update();
         }
 
 
@@ -90,4 +85,3 @@ namespace Yttrium
 
 }
 
-#

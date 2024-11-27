@@ -11,18 +11,41 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! internal class for equilibria
+        //
+        //
+        //______________________________________________________________________
         class Reactor : public Equilibrium::Set, public Fragment
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Reactor();
             virtual ~Reactor() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
             // Interface
-            virtual void updateFragment() noexcept; //!< update with set
+            //
+            //__________________________________________________________________
+            virtual void update() noexcept; //!< [Fragment] update with set
 
-            // Methods
-            void         mustInsert(const Equilibrium::Handle &);
+            //__________________________________________________________________
+            //
+            //
+            // methods
+            //
+            //__________________________________________________________________
+            void         mustInsert(const Equilibrium::Handle &); //!< insert/enroll
 
 
         private:
@@ -30,20 +53,42 @@ namespace Yttrium
         };
 
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! database of equilibria
+        //
+        //
+        //______________________________________________________________________
         class Equilibria : public Proxy<const Reactor>
         {
         public:
             static const char * const      CallSign;      //!< "Chemical::Equilibria"
             typedef Reactor::ConstIterator ConstIterator; //!< alias
 
-            explicit Equilibria();
-            virtual ~Equilibria() noexcept;
-            Y_OSTREAM_PROTO(Equilibria);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equilibria();          //!< create empty
+            virtual ~Equilibria() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Equilibria);    //!< display
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! declare a new equilibrium
             void decl( Equilibrium * const );
 
 
+            //! helper to declare a derived equilibrium
             template <typename EQTYPE> inline
             EQTYPE & operator()(EQTYPE * const eq)
             {
@@ -51,6 +96,7 @@ namespace Yttrium
                 return *eq;
             }
 
+            //! updateFragment()
             void update() noexcept;
 
         private:

@@ -5,28 +5,54 @@
 #ifndef Y_Chemical_Equilibrium_Linker_Included
 #define Y_Chemical_Equilibrium_Linker_Included 1
 
-#include "y/chemical/reactive/equilibria.hpp"
-#include "y/chemical/weasel/parser.hpp"
-
+#include "y/chemical/weasel/formula/to-species.hpp"
 #include "y/lingo/syntax/translator.hpp"
-#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
+      
+
+        //______________________________________________________________________
+        //
+        //
+        //
         //! convert EQUILIBRIUM tree into equilibrium
+        //
+        //
+        //______________________________________________________________________
         class Equilibrium:: Linker :  protected Lingo::Syntax::Translator
         {
         public:
-            explicit Linker(const Weasel::Parser &);
-            virtual ~Linker() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Linker(const Weasel::Parser &); //!< setup
+            virtual ~Linker() noexcept;              //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            //! process EQUILIBRIUM to create a new equilibrium
             void process(XTree   &   tree,
                          Library &   lib,
                          Equilibria &eqs);
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+        private:
             String                         eqName;
             String                         spName;
             unsigned                       stoich;
@@ -36,13 +62,10 @@ namespace Yttrium
             String                         Kstr;
             Library *                      theLib;
             Equilibria *                   theEqs;
-            const Lingo::Syntax::Terminal  SPECIES;
-            const Hashing::Perfect        &hashAct;
+            const FormulaToSpecies         preProcess;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Linker);
-            void replaceFormulae(XNode &parent, Library &lib);
-            void preProcess(XTree &tree, Library &lib);
 
             virtual void init();
             virtual void quit();

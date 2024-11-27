@@ -10,19 +10,47 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! helper to display components assembly
+        //
+        //
+        //______________________________________________________________________
         class Fragment : public Proxy<const Assembly>
         {
         public:
-            explicit Fragment() noexcept;
-            virtual ~Fragment() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Fragment() noexcept; //!< setup
+            virtual ~Fragment() noexcept; //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void update() noexcept = 0; //!< update all post-construction
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! update all assemblies
             void enroll(const Components &);
 
             //! print name:reac<=>prod:
             std::ostream & print(std::ostream &os, const Components &) const;
 
-            virtual void updateFragment() noexcept = 0;
 
 
         private:

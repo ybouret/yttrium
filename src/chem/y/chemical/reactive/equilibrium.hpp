@@ -27,8 +27,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Linker;
-            typedef ArkPtr<const String,const Equilibrium> Handle;
-            typedef SuffixSet<const String,const Handle>   Set;
+            typedef ArkPtr<const String,const Equilibrium> Handle; //!< alias
+            typedef SuffixSet<const String,const Handle>   Set;    //!< lais
 
             //__________________________________________________________________
             //

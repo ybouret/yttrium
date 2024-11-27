@@ -38,7 +38,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef Compendium::ConstIterator ConstIterator;
+            typedef Compendium::ConstIterator ConstIterator; //!< alias
 
             //__________________________________________________________________
             //

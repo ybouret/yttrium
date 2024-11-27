@@ -43,7 +43,6 @@ namespace Yttrium
             virtual ~Actor() noexcept;                       //!< cleanup
             Actor(const Actor &);                            //!< duplicate
 
-            const Actor & operator*() const noexcept { return *this; }
 
             //__________________________________________________________________
             //
@@ -57,7 +56,19 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Memebers
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! helper to Actor::List display
+            const Actor & operator*() const noexcept { return *this; }
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
             //
             //__________________________________________________________________
             const unsigned nu;   //!< stoichio>0

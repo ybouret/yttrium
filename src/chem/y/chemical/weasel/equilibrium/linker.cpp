@@ -27,8 +27,7 @@ namespace Yttrium
         Kstr(),
         theLib(0),
         theEqs(0),
-        SPECIES("SPECIES", Lingo::Syntax::Terminal::Standard, Lingo::Syntax::Terminal::Semantic, 0),
-        hashAct(parser.actors)
+        preProcess(parser)
         {
             Y_Lingo_OnTerminal(Linker,EQ);
             Y_Lingo_OnTerminal(Linker,SPECIES);
@@ -175,6 +174,7 @@ namespace Yttrium
             self(*tree);
         }
 
+#if 0
         void Equilibrium:: Linker:: preProcess(XTree &tree, Library &lib)
         {
             assert(*name == tree->name() );
@@ -240,6 +240,7 @@ namespace Yttrium
             }
 
         }
+#endif
 
 
     }

@@ -13,8 +13,8 @@ namespace Yttrium
     {
 
 
-#define Y_Weasel_REAC 0
-#define Y_Weasel_PROD 1
+#define Y_Weasel_REAC 0 //!< hash value
+#define Y_Weasel_PROD 1 //!< hash value
         
         //______________________________________________________________________
         //

@@ -49,6 +49,7 @@ namespace Yttrium
             XNode * parseFormula(const char * const); //!< parse text to FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
 
+            //! parse species and equilibria
             void operator()(Library &             lib,
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
