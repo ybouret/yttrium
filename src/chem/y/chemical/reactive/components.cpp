@@ -1,5 +1,6 @@
 #include "y/chemical/reactive/components.hpp"
 #include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -24,7 +25,7 @@ namespace Yttrium
                 case Reactant: return Coerce(reac);
                 case Product:  return Coerce(prod);
             }
-            throw Libc::Exception(EINVAL, "never get here");
+            throw Libc::Exception(EINVAL, "invalid Chemical::Role!!");
             // never get here
         }
 
