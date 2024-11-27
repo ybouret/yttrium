@@ -85,7 +85,8 @@ namespace Yttrium
             EQUILIBRIUM << WHITE << plug<Lingo::Lexical::RString>("K");
 
 
-            // RX ?
+            const Rule &SEARCH = term("SEARCH","%[:core:]+");
+
 
 
             //------------------------------------------------------------------
@@ -96,7 +97,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Compound & STATEMENT = alt("STATEMENT");
-            STATEMENT <<  EQUILIBRIUM << FORMULA;
+            STATEMENT <<  FORMULA << EQUILIBRIUM << SEARCH;
 
             const Rule &SEP = opt( get(';') );
             WEASEL << zom( cat(WHITE,STATEMENT,WHITE,SEP) ) << WHITE;

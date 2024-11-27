@@ -68,7 +68,7 @@ namespace Yttrium
             os << '{' << std::endl;
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
-                db.print(os, **it) << std::endl;
+                db.print(os << '\t' << '@', **it) << std::endl;
             }
             os << '}';
             return os;
