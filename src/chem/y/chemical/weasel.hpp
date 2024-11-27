@@ -44,15 +44,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-            
             XNode * parse(Lingo::Module * const);     //!< parse a full module
             XNode * parseFormula(const String &);     //!< parse a string to FORMULA
             XNode * parseFormula(const char * const); //!< parse text to FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
-            
-            void operator()(Library &lib,
-                            Lingo::Module *const);
+
+            void operator()(Library &             lib,
+                            Equilibria &          eqs,
+                            Lingo::Module * const inp);
 
 
             //__________________________________________________________________

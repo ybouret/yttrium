@@ -39,8 +39,9 @@ namespace Yttrium
         protected:
             //! setup with name
             template <typename NAME> inline
-            explicit Equilibrium(const NAME & _name) :
-            Components(_name),
+            explicit Equilibrium(const NAME & _name,
+                                 const size_t _indx) :
+            Components(_name,_indx),
             Counted()
             {
             }
@@ -76,8 +77,10 @@ namespace Yttrium
 
             //! setup with name and constant constant
             template <typename NAME> inline
-            explicit ConstEquilibrium(const NAME & _name, const xReal _value) :
-            Equilibrium(_name),
+            explicit ConstEquilibrium(const NAME & _name,
+                                      const size_t _indx,
+                                      const xReal  _value) :
+            Equilibrium(_name,_indx),
             value(_value)
             {
             }

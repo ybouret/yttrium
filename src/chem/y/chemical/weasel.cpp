@@ -90,7 +90,7 @@ namespace Yttrium
         }
 
 
-        
+
 
         XNode * Weasel:: parse(Lingo::Module * const m)
         {
@@ -131,7 +131,7 @@ namespace Yttrium
         {
             assert(0!=compiler);
             Formula::Linker &linker = compiler->formulaLinker;
-            
+
             //------------------------------------------------------------------
             //
             // apply linker to Formula tree
@@ -156,17 +156,18 @@ namespace Yttrium
         }
 
 
-        
+
 
         void Weasel:: operator()(Library &             lib,
-                                 Lingo::Module * const m)
+                                 Equilibria &          eqs,
+                                 Lingo::Module * const inp)
         {
             //------------------------------------------------------------------
             //
             // parse module
             //
             //------------------------------------------------------------------
-            AutoPtr<XNode> root = parse(m);
+            AutoPtr<XNode> root = parse(inp);
 
             assert( root.isValid() );
             assert(0!=compiler);
@@ -181,9 +182,8 @@ namespace Yttrium
             XList &list = root->branch();
             while(list.size>0)
             {
-                  XTree       tree     = list.popHead();
+                XTree         tree     = list.popHead();
                 const String &treeName = tree->name();
-                std::cerr << "compiling '" << treeName << "'" << std::endl;
                 switch(compiler->treeNameIndex(treeName))
                 {
                     case Y_Chemical_FORMULA:
@@ -191,9 +191,7 @@ namespace Yttrium
                         break;
 
                     case Y_Chemical_EQUILIBRIUM:
-                        //compiler->ldEquilibrium.policy  = Lingo::Syntax::Permissive;
-                        //compiler->ldEquilibrium.verbose = true;
-                        compiler->ldEquilibrium.process(tree,lib);
+                        compiler->ldEquilibrium.process(tree,lib,eqs);
                         break;
 
                     default:
@@ -201,6 +199,12 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            // update for format
+            //
+            //------------------------------------------------------------------
+            eqs.update();
         }
     }
 

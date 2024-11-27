@@ -20,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Company : public Entity, public Actor::List, public Assembly
+        class Company : public Entity, public Actor::List 
         {
         public:
             //__________________________________________________________________

@@ -43,6 +43,15 @@ namespace Yttrium
 
             
 
+            template <typename OSTREAM> inline
+            OSTREAM & print(OSTREAM &           os,
+                            const Entity &      entity,
+                            const Justify::Type jtype) const
+            {
+                os << Justify(entity.key(),maxKeySize,jtype);
+                return os;
+            }
+
             //! helper to format an entity key among this assembly
             template <typename OSTREAM> inline
             OSTREAM & print(OSTREAM            &os,

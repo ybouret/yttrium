@@ -32,7 +32,7 @@ Y_UTEST(eq)
         std::cerr << other << std::endl;
     }
 
-    Components water("water");
+    Components water("water",1);
 
     water.print(std::cerr) << std::endl;
     water(Product,h);

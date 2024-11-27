@@ -5,7 +5,7 @@
 #ifndef Y_Chemical_Equilibrium_Linker_Included
 #define Y_Chemical_Equilibrium_Linker_Included 1
 
-#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/reactive/equilibria.hpp"
 #include "y/chemical/weasel/parser.hpp"
 
 #include "y/lingo/syntax/translator.hpp"
@@ -23,7 +23,9 @@ namespace Yttrium
             explicit Linker(const Weasel::Parser &);
             virtual ~Linker() noexcept;
 
-            void process(XTree &tree, Library &lib);
+            void process(XTree   &   tree,
+                         Library &   lib,
+                         Equilibria &eqs);
 
             String                         eqName;
             String                         spName;
@@ -33,6 +35,7 @@ namespace Yttrium
             Actor::List                    prod;
             String                         Kstr;
             Library *                      theLib;
+            Equilibria *                   theEqs;
             const Lingo::Syntax::Terminal  SPECIES;
             const Hashing::Perfect        &hashAct;
 
@@ -43,7 +46,7 @@ namespace Yttrium
 
             virtual void init();
             virtual void quit();
-            void clear() noexcept;
+            void         clear() noexcept;
 
             void onEQ(const Lexeme &);
             void onSPECIES(const Lexeme &);
@@ -53,6 +56,8 @@ namespace Yttrium
             void onPROD(const size_t);
             void onK(const Lexeme &);
             void onEQUILIBRIUM(const size_t);
+
+            Equilibrium & newEquilibrium(); //!< based on Kstr
 
         };
     }

@@ -4,6 +4,8 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/temporary.hpp"
+#include "y/container/algo/crop.hpp"
+#include <cctype>
 
 namespace Yttrium
 {
@@ -24,6 +26,7 @@ namespace Yttrium
         prod(),
         Kstr(),
         theLib(0),
+        theEqs(0),
         SPECIES("SPECIES", Lingo::Syntax::Terminal::Standard, Lingo::Syntax::Terminal::Semantic, 0),
         hashAct(parser.actors)
         {
@@ -107,6 +110,8 @@ namespace Yttrium
             prod.swapWith(actors);
         }
 
+
+
         void Equilibrium:: Linker:: onEQUILIBRIUM(const size_t
 #ifndef NDEBUG
                                                   n
@@ -114,6 +119,23 @@ namespace Yttrium
         )
         {
             assert(4==n);
+            assert(0!=theEqs);
+
+            Algo::Crop(Kstr,isblank);
+
+            std::cerr << "Ready to create Equilibrium:" << std::endl;
+            std::cerr << "name : "  << eqName << std::endl;
+            std::cerr << "reac : "  << reac   << std::endl;
+            std::cerr << "prod : "  << prod   << std::endl;
+            std::cerr << "K    : '" << Kstr   << "'" << std::endl;
+
+            if(Kstr.size()<=0)
+                throw Specific::Exception(eqName.c_str(),"empty constant");
+
+            Equilibrium &eq = newEquilibrium();
+
+            for(const Actor *a=reac.head;a;a=a->next) eq(Reactant,a->nu,a->sp);
+            for(const Actor *a=prod.head;a;a=a->next) eq(Product, a->nu,a->sp);
 
         }
 
@@ -140,12 +162,16 @@ namespace Yttrium
         }
 
 
-        void Equilibrium:: Linker:: process(XTree &tree, Library &lib)
+        void Equilibrium:: Linker:: process(XTree      & tree,
+                                            Library    & lib,
+                                            Equilibria & eqs)
         {
             Lingo::Syntax::Translator &self = *this;
             theLib = 0;
+            theEqs = 0;
             preProcess(tree,lib);
-            const Temporary<Library *> tmpLib(theLib,&lib);
+            const Temporary<Library *>    tmpLib(theLib,&lib);
+            const Temporary<Equilibria *> tmpEqs(theEqs,&eqs);
             self(*tree);
         }
 
@@ -220,4 +246,64 @@ namespace Yttrium
 
 }
 
+#include "y/lua++/function.hpp"
 
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+
+        namespace {
+
+            class LuaEquilibrium : public Equilibrium
+            {
+            public:
+                inline virtual ~LuaEquilibrium() noexcept {}
+
+                inline explicit LuaEquilibrium(const String &_name,
+                                               const size_t  _indx,
+                                               const Lua::VM & lvm,
+                                               const String    kid) :
+                Equilibrium(_name,_indx),
+                kfn(lvm,kid)
+                {}
+
+
+                mutable Lua::Function<real_t> kfn;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibrium);
+                inline virtual xReal getK(xReal t) const
+                {
+                    return kfn(t);
+                }
+            };
+        }
+
+
+        Equilibrium & Equilibrium::Linker:: newEquilibrium()
+        {
+            static Lua::VM &  lvm = Weasel::Instance().luaVM;
+            assert( Kstr.size() > 0 );
+            assert( 0 != theEqs );
+            Equilibria &eqs = *theEqs;
+
+            const size_t idx = eqs->size()+1;
+            if( isdigit(Kstr[1]) )
+            {
+                // assume constant
+                const xReal value = lvm->eval<real_t>(Kstr);
+                return eqs( new ConstEquilibrium(eqName,idx,value) );
+            }
+            else
+            {
+                // assume name of a function
+                return eqs( new LuaEquilibrium(eqName,idx,lvm,Kstr) );
+            }
+        }
+    }
+
+}

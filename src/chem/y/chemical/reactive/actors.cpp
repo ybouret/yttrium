@@ -10,13 +10,13 @@ namespace Yttrium
         Company:: ~Company() noexcept {}
 
         Company:: Company() noexcept :
-        Entity(), Actor::List(), Assembly(), name()
+        Entity(), Actor::List(), name()
         {
             
         }
 
         Company:: Company(const Company &_) :
-        Entity(), Actor::List(_), Assembly(_), name(_.name)
+        Entity(), Actor::List(_),name(_.name)
         {
         }
 
@@ -34,6 +34,9 @@ namespace Yttrium
         {
             assert(0!=actor);
             assert(!lookFor(actor->sp));
+
+            //std::cerr << "recruiting " << *actor  << " in '" << name << "' (size=" << size << ")" << std::endl;
+
             AutoPtr<Actor> guard(actor);
             {
                 String newName = name;
@@ -41,8 +44,7 @@ namespace Yttrium
                 newName += actor->name;
                 Coerce(name).swapWith(newName);
             }
-            enroll( *pushTail( guard.yield() ) );
-            return *actor;
+            return * pushTail( guard.yield() );
         }
 
         const String & Company:: key() const noexcept
@@ -53,7 +55,6 @@ namespace Yttrium
         void Company:: xch(Company &_) noexcept
         {
             swapWith(_);
-            CoerceSwap(maxKeySize,_.maxKeySize);
             Coerce(name).swapWith(Coerce(_.name));
         }
 

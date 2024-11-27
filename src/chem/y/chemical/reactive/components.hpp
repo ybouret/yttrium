@@ -29,9 +29,17 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components : public Entity,  Proxy<const Compendium>
+        class Components : public Indexed,  Proxy<const Compendium>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Compendium::ConstIterator ConstIterator;
+
             //__________________________________________________________________
             //
             //
@@ -41,9 +49,14 @@ namespace Yttrium
 
             //! create empty
             template <typename NAME> inline
-            explicit Components(const NAME &_name) :
-            Entity(),  Proxy<const Compendium>(),
-            name(_name), reac(), prod(), cmdb()
+            explicit Components(const NAME & _name,
+                                const size_t _indx) :
+            Indexed(_indx),
+            Proxy<const Compendium>(),
+            name(_name),
+            reac(),
+            prod(),
+            cmdb()
             {
             }
 
@@ -84,7 +97,6 @@ namespace Yttrium
             const String name; //!< unique name
             const Actors reac; //!< reactants
             const Actors prod; //!< products
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             virtual ConstInterface & surrogate() const noexcept;
