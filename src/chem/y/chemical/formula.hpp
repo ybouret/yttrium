@@ -12,7 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //! formula representation as tree
         typedef ArcPtr<const XNode> XTree;
 
         //______________________________________________________________________
@@ -29,7 +29,7 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // Definition
+            // Definitions
             //
             //__________________________________________________________________
             class Linker;
@@ -44,7 +44,7 @@ namespace Yttrium
             explicit Formula(const String &     expr); //!< create from expression
             explicit Formula(const char * const expr); //!< create from expression
             virtual ~Formula()       noexcept;         //!< cleanup
-            Formula(const Formula &) noexcept;
+            Formula(const Formula &) noexcept;         //!< duplicate
 
             //__________________________________________________________________
             //

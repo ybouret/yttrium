@@ -9,13 +9,33 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! An equilibrium is a set of components with a constant
+        //
+        //
+        //______________________________________________________________________
         class Equilibrium : public Components, public Counted
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
         public:
             class Linker;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
+            //! setup with name
             template <typename NAME> inline
             explicit Equilibrium(const NAME & _name) :
             Components(_name),
@@ -24,19 +44,35 @@ namespace Yttrium
             }
 
         public:
+            //! cleanup
             virtual ~Equilibrium() noexcept;
 
-
-            xReal K(xReal t) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            xReal K(xReal t) const; //!< get positive constant at time t
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             virtual xReal getK(xReal) const = 0;
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Failsafe constant equilibrium
+        //
+        //
+        //______________________________________________________________________
         class ConstEquilibrium : public Equilibrium
         {
         public:
+
+            //! setup with name and constant constant
             template <typename NAME> inline
             explicit ConstEquilibrium(const NAME & _name, const xReal _value) :
             Equilibrium(_name),
@@ -44,6 +80,7 @@ namespace Yttrium
             {
             }
 
+            //! cleanup
             virtual ~ConstEquilibrium() noexcept;
 
         private:

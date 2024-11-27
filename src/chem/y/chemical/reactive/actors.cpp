@@ -50,7 +50,12 @@ namespace Yttrium
             return name;
         }
 
-
+        void Company:: xch(Company &_) noexcept
+        {
+            swapWith(_);
+            CoerceSwap(maxKeySize,_.maxKeySize);
+            Coerce(name).swapWith(Coerce(_.name));
+        }
 
 
     }

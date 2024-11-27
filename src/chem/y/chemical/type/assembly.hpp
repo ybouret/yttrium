@@ -41,18 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
             void enroll(const Entity &) noexcept; //!< check maxKeySize
 
-            //! recompute upon deletion/error
-            template <typename LIST> inline
-            void recompute(const LIST &list) noexcept
-            {
-                Coerce(maxKeySize) = 0;
-                for(const typename LIST::NodeType *node=list.head;node;node=node->next)
-                {
-                    const Entity &entity = *node;
-                    enroll( entity );
-                }
-
-            }
+            
 
             //! helper to format an entity key among this assembly
             template <typename OSTREAM> inline

@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        const char * ActingToText(const Acting role) noexcept
+        const char * RoleToText(const Role role) noexcept
         {
             switch(role)
             {
@@ -28,7 +28,7 @@ namespace Yttrium
         }
 
         Component:: Component(const Actor & _actor,
-                              const Acting  _role) noexcept :
+                              const Role    _role) noexcept :
         actor(_actor),
         role(_role)
         {
@@ -41,7 +41,7 @@ namespace Yttrium
 
         const char *   Component:: side() const noexcept
         {
-            return ActingToText(role);
+            return RoleToText(role);
         }
 
         

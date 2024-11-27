@@ -11,7 +11,15 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of actors and matching assembly
+        //
+        //
+        //______________________________________________________________________
         class Company : public Entity, public Actor::List, public Assembly
         {
         public:
@@ -21,11 +29,17 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Company() noexcept;
-            virtual ~Company() noexcept;
-            Company(const Company &);
+            explicit Company() noexcept; //!< setup emptu
+            virtual ~Company() noexcept; //!< cleanup
+            Company(const Company &);    //!< duplicate
 
-            virtual const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const String & key() const noexcept; //!< [Entity] name
 
             //__________________________________________________________________
             //
@@ -35,6 +49,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & recruit(Actor * const);                  //!< recruit and update name
             bool          lookFor(const Species &) const noexcept; //!< look for species
+            void          xch(Company &)                 noexcept; //!< exchange all
 
             //__________________________________________________________________
             //
@@ -59,14 +74,26 @@ namespace Yttrium
         class Actors : public Proxy<const Company>
         {
         public:
-            explicit Actors() noexcept;
-            virtual ~Actors() noexcept;
-            Actors(const Actors &);
-            Y_OSTREAM_PROTO(Actors);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Actors() noexcept; //!< setup
+            virtual ~Actors() noexcept; //!< cleanup
+            Actors(const Actors &);     //!< duplicate
+            Y_OSTREAM_PROTO(Actors);    //!< display name
 
-            const Actor & operator()(const Species &);
-            const Actor & operator()(const unsigned, const Species &);
-            
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const Actor & operator()(const Species &);                 //!< register with coeff=1
+            const Actor & operator()(const unsigned, const Species &); //!< register
+
 
         private:
             Y_DISABLE_ASSIGN(Actors);

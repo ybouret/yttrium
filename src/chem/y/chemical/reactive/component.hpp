@@ -10,27 +10,62 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        enum Acting
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! kind of component
+        //
+        //
+        //______________________________________________________________________
+        enum Role
         {
-            Reactant,
-            Product
+            Reactant, //!< Reactant
+            Product   //!< Product
         };
 
-        const char * ActingToText(const Acting) noexcept;
+        //! human readable role
+        const char * RoleToText(const Role) noexcept;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! categorized Actor
+        //
+        //
+        //______________________________________________________________________
         class Component
         {
         public:
-            Component(const Actor &, const Acting) noexcept;
-            Component(const Component &)           noexcept;
-            ~Component()                           noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Component(const Actor &, const Role) noexcept; //!< setup
+            Component(const Component &)         noexcept; //!< duplicate
+            ~Component()                         noexcept; //!< cleanup
 
-            const Actor &actor;
-            const Acting role;
 
-            const String & key()  const noexcept;
-            const char *   side() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key()  const noexcept; //!< species name for Components
+            const char *   side() const noexcept; //!< ActingToText(role)
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            const Actor &actor; //!< persistent actor
+            const Role   role;  //!< its role
 
 
 

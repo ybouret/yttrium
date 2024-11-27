@@ -11,29 +11,67 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class SpeciesDB : public Species::Set, public Assembly
+    
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! database of species for Library
+        //
+        //
+        //______________________________________________________________________
+        class Ingredients : public Species::Set, public Assembly
         {
         public:
-            explicit SpeciesDB();
-            virtual ~SpeciesDB() noexcept;
-
-            void mustInsert(const Species::Handle &);
+            explicit Ingredients();                   //!< setup empty
+            virtual ~Ingredients() noexcept;          //!< cleanup
+            void mustInsert(const Species::Handle &); //!< insert new species
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(SpeciesDB);
+            Y_DISABLE_COPY_AND_ASSIGN(Ingredients);
         };
 
-        class Library : public Proxy<const SpeciesDB>
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Database of Species
+        //
+        //
+        //______________________________________________________________________
+        class Library : public Proxy<const Ingredients>
         {
         public:
-            typedef SpeciesDB::ConstIterator ConstIterator;
-            static const char * const CallSign;
-            explicit Library();
-            virtual ~Library() noexcept;
-            Y_OSTREAM_PROTO(Library);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Ingredients::ConstIterator ConstIterator; //!< alias
+            static const char * const          CallSign;      //!< "Chemical::Library"
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Library();           //!< setup empty
+            virtual ~Library() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Library);     //!< display info
+
+            //__________________________________________________________________
+            //
+            //
+            // Methdods
+            //
+            //__________________________________________________________________
+
+            //! get/create species from its formula
             const Species & get(const Formula &);
 
+            //! get/create species from string,text, formula...
             template <typename DATA> inline
             const Species & operator()(const DATA &data)
             {
@@ -44,7 +82,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual ConstInterface & surrogate() const noexcept;
-            SpeciesDB db;
+            Ingredients db;
         };
     }
 

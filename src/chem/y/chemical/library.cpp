@@ -13,7 +13,7 @@ namespace Yttrium
 
         const char * const Library:: CallSign = "Chemical::Library";
         
-        Library:: Library() : Proxy<const SpeciesDB>(), db()
+        Library:: Library() : Proxy<const Ingredients>(), db()
         {
 
         }
@@ -38,7 +38,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Library &lib)
         {
-            const SpeciesDB &db = lib.db;
+            const Ingredients &db = lib.db;
             if(db.size()<=0)
                 return os << "{}";
             os << '{' << std::endl;
@@ -63,16 +63,16 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        SpeciesDB:: SpeciesDB() : Species::Set(), Assembly()
+        Ingredients:: Ingredients() : Species::Set(), Assembly()
         {
         }
 
-        SpeciesDB:: ~SpeciesDB() noexcept
+        Ingredients:: ~Ingredients() noexcept
         {
             
         }
 
-        void SpeciesDB:: mustInsert(const Species::Handle &handle) {
+        void Ingredients:: mustInsert(const Species::Handle &handle) {
             if( !insert(handle) )
                 throw Specific::Exception(Library::CallSign,"multiple species '%s'", handle->key().c_str() );
             enroll( *handle );

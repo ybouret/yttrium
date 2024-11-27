@@ -14,25 +14,59 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! convert FORMULA node into string+charge
+        //
+        //
+        //______________________________________________________________________
         class Formula::Linker : public Lingo::Syntax::Translator
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+
+            //! formal charge
             enum Charge
             {
-                PositiveCharge,
-                NegativeCharge
+                PositiveCharge, //!< '+'
+                NegativeCharge  //!< '-'
             };
 
-            explicit Linker(const Weasel::Parser &);
-            virtual ~Linker() noexcept;
-            
-            void     clear()  noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Linker(const Weasel::Parser &); //!< setup using parser
+            virtual ~Linker() noexcept;              //!< cleanup
 
-            Vector<String,MemoryModel>   elements;
-            Vector<unsigned,MemoryModel> integers;
-            Vector<Charge,MemoryModel>   zcharges;
-            int                          z;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void     clear()  noexcept; //!< clear all resources
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Vector<String,MemoryModel>   elements; //!< stack of elements
+            Vector<unsigned,MemoryModel> integers; //!< stack of integers
+            Vector<Charge,MemoryModel>   zcharges; //!< stack of charges
+            int                          z;        //!< computed charge
 
 
         private:

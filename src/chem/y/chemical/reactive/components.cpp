@@ -17,7 +17,7 @@ namespace Yttrium
             return name;
         }
 
-        Actors & Components:: actorsPlaying(const Acting role)
+        Actors & Components:: actorsPlaying(const Role role)
         {
             switch(role)
             {
@@ -28,7 +28,7 @@ namespace Yttrium
             // never get here
         }
 
-        void Components:: operator()(const Acting role, const unsigned nu, const Species &sp)
+        void Components:: operator()(const Role role, const unsigned nu, const Species &sp)
         {
             const String &sid = sp.name;
 
@@ -42,7 +42,11 @@ namespace Yttrium
                     throw Specific::Exception(name.c_str(), "already used as %s %s", cm->actor.name.c_str(), cm->side());
             }
 
+            // get concerned actors
             Actors &      actors = actorsPlaying(role);
+            Actors        backup = actors;
+
+            // create new actor
             const Actor & actor  = actors(nu,sp);
 
             // safe insertion
@@ -53,15 +57,13 @@ namespace Yttrium
             }
             catch(...)
             {
-                Company &company = actors.company;
-                delete company.popTail();
-                company.recompute(company);
+                actors.company.xch(backup.company);
                 throw;
             }
 
         }
 
-        void Components:: operator()(const Acting role, const Species &sp)
+        void Components:: operator()(const Role role, const Species &sp)
         {
             (*this)(role,1,sp);
         }

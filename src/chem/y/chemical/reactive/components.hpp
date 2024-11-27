@@ -11,39 +11,86 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! internal component database
+        //
+        //
+        //______________________________________________________________________
         typedef SuffixSet<const String, const Component> Compendium;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! database of components
+        //
+        //
+        //______________________________________________________________________
         class Components : public Entity,  Proxy<const Compendium>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! create empty
             template <typename NAME> inline
             explicit Components(const NAME &_name) :
             Entity(),  Proxy<const Compendium>(),
             name(_name), reac(), prod(), cmdb()
             {
             }
-            
+
+            //! cleanup
             virtual ~Components() noexcept;
 
-            virtual const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const String & key() const noexcept; //!< [Entity] name
 
-            void operator()(const Acting role, const unsigned nu, const Species &sp);
-            void operator()(const Acting role, const Species &sp);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! create new actor with role
+            void operator()(const Role role, const unsigned nu, const Species &sp);
+
+            //! create new actor with role and unit coefficient
+            void operator()(const Role role, const Species &sp);
+
+
+            //! quick display
             std::ostream & print(std::ostream &) const;
 
-
-            const String name;
-            const Actors reac;
-            const Actors prod;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const String name; //!< unique name
+            const Actors reac; //!< reactants
+            const Actors prod; //!< products
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             virtual ConstInterface & surrogate() const noexcept;
             Compendium cmdb;
 
-            Actors & actorsPlaying(const Acting);
+            Actors & actorsPlaying(const Role);
 
         };
 
