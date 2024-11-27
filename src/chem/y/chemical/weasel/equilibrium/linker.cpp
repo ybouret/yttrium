@@ -16,6 +16,13 @@ namespace Yttrium
 
         Equilibrium:: Linker:: Linker(const Weasel::Parser &parser) :
         Lingo::Syntax::Translator(parser.EQUILIBRIUM.name),
+        eqName(),
+        spName(),
+        stoich(0),
+        actors(),
+        reac(),
+        prod(),
+        Kstr(),
         theLib(0),
         SPECIES("SPECIES", Lingo::Syntax::Terminal::Standard, Lingo::Syntax::Terminal::Semantic, 0),
         hashAct(parser.actors)
@@ -34,13 +41,11 @@ namespace Yttrium
         void Equilibrium:: Linker:: onEQ(const Lingo::Lexeme &lexeme)
         {
             eqName = lexeme.toString(1,0);
-            std::cerr << " (+) eqName='" << eqName << "'" << std::endl;
         }
 
         void Equilibrium:: Linker:: onSPECIES(const Lexeme &lexeme)
         {
             spName = lexeme.toString();
-            std::cerr << " (+) spName='" << spName << "'" << std::endl;
 
         }
 
@@ -69,7 +74,6 @@ namespace Yttrium
 
             Library &lib  = *theLib;
             actors.pushTail( new Actor(stoich, lib(spName) ) );
-            std::cerr << " (+) actors=" << actors << std::endl;
 
             stoich = 0;
             spName.free();
@@ -78,7 +82,6 @@ namespace Yttrium
         void Equilibrium::Linker:: onK(const Lexeme &lexeme)
         {
             Kstr = lexeme.toString(1,1);
-            std::cerr << " (+) K=" << Kstr << std::endl;
         }
 
 
@@ -91,7 +94,6 @@ namespace Yttrium
             assert(n==actors.size);
             assert(0==reac.size);
             reac.swapWith(actors);
-            std::cerr << " (+) reac=" << reac << std::endl;
         }
 
         void Equilibrium:: Linker:: onPROD(const size_t
@@ -103,7 +105,6 @@ namespace Yttrium
             assert(n==actors.size);
             assert(0==prod.size);
             prod.swapWith(actors);
-            std::cerr << " (+) prod=" << prod << std::endl;
         }
 
 
