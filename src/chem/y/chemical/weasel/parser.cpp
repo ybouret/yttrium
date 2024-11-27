@@ -19,8 +19,6 @@ namespace Yttrium
             "PROD"
         };
 
-#define Y_Weasel_REAC 0
-#define Y_Weasel_PROD 1
 
 
 

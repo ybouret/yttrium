@@ -12,6 +12,10 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+#define Y_Weasel_REAC 0
+#define Y_Weasel_PROD 1
+        
         //______________________________________________________________________
         //
         //

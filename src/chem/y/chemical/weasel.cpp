@@ -1,4 +1,5 @@
 #include "y/chemical/weasel/formula/linker.hpp"
+#include "y/chemical/weasel/equilibrium/linker.hpp"
 #include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
 
@@ -17,16 +18,20 @@ namespace Yttrium
         {
 
 
-#define Y_Chemical_FORMULA 0
+#define Y_Chemical_FORMULA     0
+#define Y_Chemical_EQUILIBRIUM 1
+
             class Compiler
             {
             public:
                 inline Compiler(const Lingo::Caption &caption) :
                 genericParser(caption),
                 formulaLinker(genericParser),
+                ldEquilibrium(genericParser),
                 treeNameIndex()
                 {
-                    treeNameIndex(*genericParser.FORMULA.name,Y_Chemical_FORMULA);
+                    treeNameIndex(*genericParser.FORMULA.name,     Y_Chemical_FORMULA);
+                    treeNameIndex(*genericParser.EQUILIBRIUM.name, Y_Chemical_EQUILIBRIUM);
 
                 }
 
@@ -34,9 +39,10 @@ namespace Yttrium
                 {
                 }
 
-                Weasel::Parser   genericParser;
-                Formula::Linker  formulaLinker;
-                Hashing::Perfect treeNameIndex;
+                Weasel::Parser      genericParser;
+                Formula::Linker     formulaLinker;
+                Equilibrium::Linker ldEquilibrium;
+                Hashing::Perfect    treeNameIndex;
 
 
             private:
@@ -177,7 +183,7 @@ namespace Yttrium
             XList &list = root->branch();
             while(list.size>0)
             {
-                const XTree   tree  = list.popHead();
+                  XTree       tree     = list.popHead();
                 const String &treeName = tree->name();
                 std::cerr << "compiling '" << treeName << "'" << std::endl;
                 switch(compiler->treeNameIndex(treeName))
@@ -186,6 +192,13 @@ namespace Yttrium
                         const Formula formula(tree);
                         (void) lib.get(formula);
                     } break;
+
+                    case Y_Chemical_EQUILIBRIUM:
+                        compiler->ldEquilibrium.policy  = Lingo::Syntax::Permissive;
+                        compiler->ldEquilibrium.verbose = true;
+                        compiler->ldEquilibrium.preProcess(tree,lib);
+                        compiler->ldEquilibrium(*tree);
+                        break;
 
                     default:
                         throw Specific::Exception(CallSign, "unhandled '%s'", treeName.c_str() );
