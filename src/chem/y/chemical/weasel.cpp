@@ -15,21 +15,28 @@ namespace Yttrium
 
         namespace
         {
+
+
+#define Y_Chemical_FORMULA 0
             class Compiler
             {
             public:
                 inline Compiler(const Lingo::Caption &caption) :
                 genericParser(caption),
-                formulaLinker(genericParser)
+                formulaLinker(genericParser),
+                treeNameIndex()
                 {
+                    treeNameIndex(*genericParser.FORMULA.name,Y_Chemical_FORMULA);
+
                 }
 
                 inline ~Compiler() noexcept
                 {
                 }
 
-                Weasel::Parser  genericParser;
-                Formula::Linker formulaLinker;
+                Weasel::Parser   genericParser;
+                Formula::Linker  formulaLinker;
+                Hashing::Perfect treeNameIndex;
 
 
             private:
@@ -145,6 +152,8 @@ namespace Yttrium
         }
 
 
+        
+
         void Weasel:: operator()(Library &             lib,
                                  Lingo::Module * const m)
         {
@@ -168,8 +177,19 @@ namespace Yttrium
             XList &list = root->branch();
             while(list.size>0)
             {
-                const XTree tree = list.popHead();
-                std::cerr << "compiling '" << tree->name() << "'" << std::endl;
+                const XTree   tree  = list.popHead();
+                const String &treeName = tree->name();
+                std::cerr << "compiling '" << treeName << "'" << std::endl;
+                switch(compiler->treeNameIndex(treeName))
+                {
+                    case Y_Chemical_FORMULA: {
+                        const Formula formula(tree);
+                        (void) lib.get(formula);
+                    } break;
+
+                    default:
+                        throw Specific::Exception(CallSign, "unhandled '%s'", treeName.c_str() );
+                }
             }
 
         }

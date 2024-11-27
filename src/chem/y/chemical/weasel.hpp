@@ -49,8 +49,7 @@ namespace Yttrium
             XNode * parseFormula(const String &);     //!< parse a string to FORMULA
             XNode * parseFormula(const char * const); //!< parse text to FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
-            //Formula createFormula(const XTree &tree);
-
+            
             void operator()(Library &lib,
                             Lingo::Module *const);
 
