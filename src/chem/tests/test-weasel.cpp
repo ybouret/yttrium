@@ -18,7 +18,7 @@ Y_UTEST(weasel)
     {
        weasel(lib,Lingo::Module::OpenFile(argv[1]) );
     }
-
+    
     std::cerr << "lib=" << lib << std::endl;
 
 
