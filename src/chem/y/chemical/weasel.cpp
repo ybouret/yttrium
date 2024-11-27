@@ -132,6 +132,25 @@ namespace Yttrium
             linker.clear();
         }
 
+
+        void Weasel:: operator()(Library & lib,
+                                 Lingo::Module * const m)
+        {
+            //------------------------------------------------------------------
+            //
+            // parse module
+            //
+            //------------------------------------------------------------------
+            AutoPtr<XNode> root = parse(m);
+
+            assert( root.isValid() );
+            assert(0!=compiler);
+            assert( *(compiler->genericParser.WEASEL.name) == root->name());
+            assert( XNode::Internal == root->type );
+
+
+        }
+
     }
 
 }
