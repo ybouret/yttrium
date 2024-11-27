@@ -47,9 +47,8 @@ namespace Yttrium
 
         void Formula:: Linker:: quit()
         {
-            std::cerr << "quit@" << elements << ", z=" << z << std::endl;
+            //std::cerr << "quit@" << elements << ", z=" << z << std::endl;
             assert(1==elements.size());
-
         }
 
         void Formula:: Linker:: onELEMENT(const Lingo::Lexeme &lexeme)

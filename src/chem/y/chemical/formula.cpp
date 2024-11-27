@@ -20,8 +20,8 @@ namespace Yttrium
             static Weasel &weasel = Weasel::Instance();
             weasel.setupFormula(formula);
 
-            std::cerr << "name ='" << formula.name  << "'" << std::endl;
-            std::cerr << "   z ="  << formula.z     << std::endl;
+            //std::cerr << "name ='" << formula.name  << "'" << std::endl;
+            //std::cerr << "   z ="  << formula.z     << std::endl;
         }
 
         Formula:: Formula(const XTree &code)   :

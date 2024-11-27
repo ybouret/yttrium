@@ -28,7 +28,6 @@ namespace Yttrium
             XList &list = Coerce(tree->branch());
             for(XNode *node=list.head;node;node=node->next)
             {
-                std::cerr << "\t" << node->name() << std::endl;
                 switch(actors(node->name()))
                 {
                     case Y_Weasel_REAC:
@@ -41,20 +40,51 @@ namespace Yttrium
                 }
             }
 
+            GraphViz::Vizible::DotToPng("etree.dot", *tree);
+
         }
 
 
         void  Equilibrium:: Linker:: replaceFormulae(XNode &parent, Library &lib)
         {
             assert( "REAC" == parent.name() || "PROD" == parent.name() );
+
+            //------------------------------------------------------------------
+            //
+            // loop over each ACTOR
+            //
+            //------------------------------------------------------------------
             for(XNode *actor=parent.branch().head;actor;actor=actor->next)
             {
                 assert( "ACTOR" == actor->name() );
-                XList &       content = actor->branch();                           assert(content.size>0);
-                XTree         tree    = content.popTail(); Coerce(tree->sire) = 0; assert( "FORMULA" == tree->name() );
-                const Formula formula(tree);
-                const Species &species = lib.get(formula);
-                
+
+                //--------------------------------------------------------------
+                // extract FORMULA tree
+                //--------------------------------------------------------------
+                XList &       content = actor->branch();   assert(content.size>0);
+                XTree         tree    = content.popTail(); assert( "FORMULA" == tree->name() );
+                Coerce(tree->sire) = 0;
+
+                //--------------------------------------------------------------
+                // convert it to species
+                //--------------------------------------------------------------
+                const Species &species = lib(tree);
+
+                //--------------------------------------------------------------
+                // make a SPECIES lexeme
+                //--------------------------------------------------------------
+                Lingo::Context         context(SPECIES.name,Lingo::AsCaption);
+                AutoPtr<Lingo::Lexeme> lexeme = new Lingo::Lexeme(SPECIES,context);
+                for(size_t i=1;i<=species.name.size();++i)
+                {
+                    context.newChar();
+                    lexeme->pushTail( new Lingo::Char(context,species.name[i]) );
+                }
+
+                //--------------------------------------------------------------
+                // replace into ACTOR
+                //--------------------------------------------------------------
+                actor->fusion( XNode::CreateFrom(SPECIES, lexeme.yield() ));
             }
 
         }

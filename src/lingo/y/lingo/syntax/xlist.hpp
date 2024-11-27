@@ -26,8 +26,7 @@ namespace Yttrium
                 explicit XList() noexcept;               //!< setup
                 virtual ~XList() noexcept;               //!< cleanup
                 void     backToLexer(Lexer &)  noexcept; //!< send content back to lexer
-                void     append(XNode * const) noexcept; //!< pushTail and link
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(XList);
             };

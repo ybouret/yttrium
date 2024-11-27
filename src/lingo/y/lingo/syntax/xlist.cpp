@@ -53,6 +53,8 @@ namespace Yttrium
             }
 
 
+           
+
             void XNode:: fusion(XNode * const node) noexcept
             {
                 assert(0!=node);

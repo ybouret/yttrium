@@ -131,9 +131,7 @@ namespace Yttrium
         {
             assert(0!=compiler);
             Formula::Linker &linker = compiler->formulaLinker;
-            //linker.policy  = Lingo::Syntax::Permissive;
-            //linker.verbose = true;
-
+            
             //------------------------------------------------------------------
             //
             // apply linker to Formula tree
@@ -188,10 +186,9 @@ namespace Yttrium
                 std::cerr << "compiling '" << treeName << "'" << std::endl;
                 switch(compiler->treeNameIndex(treeName))
                 {
-                    case Y_Chemical_FORMULA: {
-                        const Formula formula(tree);
-                        (void) lib.get(formula);
-                    } break;
+                    case Y_Chemical_FORMULA:
+                        (void) lib(tree);
+                        break;
 
                     case Y_Chemical_EQUILIBRIUM:
                         compiler->ldEquilibrium.policy  = Lingo::Syntax::Permissive;

@@ -140,9 +140,6 @@ namespace Yttrium
                     switch( actors(sub->name()) )
                     {
                         case Y_Weasel_REAC:
-                            removeFrom(sub,POSITIVE);
-                            break;
-
                         case Y_Weasel_PROD:
                             removeFrom(sub,POSITIVE);
                             break;
