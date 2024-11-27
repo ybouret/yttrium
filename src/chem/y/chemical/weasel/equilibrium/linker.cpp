@@ -35,6 +35,7 @@ namespace Yttrium
             Y_Lingo_OnInternal(Linker,ACTOR);
             Y_Lingo_OnInternal(Linker,REAC);
             Y_Lingo_OnInternal(Linker,PROD);
+            Y_Lingo_OnInternal(Linker,EQUILIBRIUM);
 
         }
 
@@ -55,8 +56,7 @@ namespace Yttrium
             const String    s = lexeme.toString();
             stoich = ASCII::Convert::To<unsigned>(s,fn);
             if(stoich<=0) throw Specific::Exception( name->c_str(), "forbidden zero %s",fn);
-            std::cerr << " (+) stoich='" << stoich << "'" << std::endl;
-        }
+         }
 
         void Equilibrium:: Linker:: onACTOR(const size_t n)
         {
@@ -105,6 +105,16 @@ namespace Yttrium
             assert(n==actors.size);
             assert(0==prod.size);
             prod.swapWith(actors);
+        }
+
+        void Equilibrium:: Linker:: onEQUILIBRIUM(const size_t
+#ifndef NDEBUG
+                                                  n
+#endif
+        )
+        {
+            assert(4==n);
+
         }
 
 

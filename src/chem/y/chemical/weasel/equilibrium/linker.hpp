@@ -3,7 +3,7 @@
 //! \file
 
 #ifndef Y_Chemical_Equilibrium_Linker_Included
-#define Y_Chemical_Equilibirum_Linker_Included 1
+#define Y_Chemical_Equilibrium_Linker_Included 1
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/chemical/weasel/parser.hpp"
@@ -16,7 +16,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Equilibrium:: Linker :  public Lingo::Syntax::Translator
+        //! convert EQUILIBRIUM tree into equilibrium
+        class Equilibrium:: Linker :  protected Lingo::Syntax::Translator
         {
         public:
             explicit Linker(const Weasel::Parser &);
@@ -35,8 +36,6 @@ namespace Yttrium
             const Lingo::Syntax::Terminal  SPECIES;
             const Hashing::Perfect        &hashAct;
 
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Linker);
             void replaceFormulae(XNode &parent, Library &lib);
@@ -53,6 +52,8 @@ namespace Yttrium
             void onREAC(const size_t);
             void onPROD(const size_t);
             void onK(const Lexeme &);
+            void onEQUILIBRIUM(const size_t);
+
         };
     }
 
