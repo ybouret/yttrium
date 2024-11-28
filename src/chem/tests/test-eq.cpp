@@ -1,5 +1,5 @@
-#include "y/chemical/library.hpp"
-#include "y/chemical/reactive/components.hpp"
+
+#include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;

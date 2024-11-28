@@ -56,7 +56,7 @@ namespace Yttrium
             void    setupEquilibrium(XTree &tree, Library &lib, Equilibria &eqs);
             XNode  *parseEquilibrium(const String &);                         //!< parse a string to EQUILIBRIUM
             void    queryEquilibrium(XTree &search, Library &, Equilibria &); //!< search precompiled
-
+            
 
             //! parse species and equilibria from a module
             void operator()(Library &             lib,

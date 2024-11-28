@@ -11,6 +11,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        class Library;
+
         //______________________________________________________________________
         //
         //
@@ -87,15 +89,20 @@ namespace Yttrium
             //! declare a new equilibrium
             void decl( Equilibrium * const );
 
-            
+
 
             //! helper to declare a derived equilibrium
             template <typename EQTYPE> inline
-            EQTYPE & operator()(EQTYPE * const eq)
+            EQTYPE & add(EQTYPE * const eq)
             {
                 decl(eq);
                 return *eq;
             }
+
+            void operator()(Library &lib, const String &     expr);
+            void operator()(Library &lib, const char * const expr);
+
+
 
             //! updateFragment()
             void update() noexcept;

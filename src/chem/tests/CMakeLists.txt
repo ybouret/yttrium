@@ -11,5 +11,6 @@ add_test(weasel  test-chem weasel)
 add_test(formula test-chem formula)
 add_test(library test-chem library)
 add_test(eq      test-chem eq)
+add_test(db      test-chem db)
 
 

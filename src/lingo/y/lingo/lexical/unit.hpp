@@ -89,6 +89,7 @@ namespace Yttrium
 
                 //! append description to exception
                 void appendTo(Exception &, const bool univocal) const noexcept;
+                const Unit & operator*() const noexcept { return *this; } //!< to display
 
                 //______________________________________________________________
                 //

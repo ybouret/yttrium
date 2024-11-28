@@ -50,6 +50,7 @@ namespace Yttrium {
             {
                 assert(0!=node);
                 AutoPtr<XNode>       keep = node; // GraphViz::Vizible::DotToPng("raw-tree.dot", *keep);
+                std::cerr << "accepted with cache=" << lexer.cache << std::endl;
                 const Lexeme * const last = node->lastLexeme();
                 const Lexeme * const next = lexer.peek(source,last);
                 if(0!=next)
@@ -69,7 +70,7 @@ namespace Yttrium {
 
             void Grammar:: rejected(const Lexer &lexer)
             {
-                const Lexeme * const curr = lexer.tail();
+                const Lexeme * const curr = lexer.cache.tail;
                 if(0==curr)
                     throw Specific::Exception(name->c_str(),"does not accept empty source");
 

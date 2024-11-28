@@ -83,6 +83,9 @@ namespace Yttrium
             return analyzer->name->c_str();
         }
 
+        
+
+
         Lexeme * Lexer:: get(Source &source, const Lexeme * const last)
         {
         GET:
@@ -170,10 +173,7 @@ namespace Yttrium
             }
         }
 
-        const Lexeme * Lexer:: tail() const noexcept
-        {
-            return lexemes.tail;
-        }
+        
     }
 
 }

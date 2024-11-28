@@ -122,7 +122,7 @@ namespace Yttrium
 
             Algo::Crop(Kstr,isblank);
 
-#if 9
+#if 0
             std::cerr << "Ready to create Equilibrium:" << std::endl;
             std::cerr << "name : "  << eqName << std::endl;
             std::cerr << "reac : "  << reac   << std::endl;
@@ -231,12 +231,12 @@ namespace Yttrium
             {
                 // assume constant
                 const xReal value = lvm->eval<real_t>(Kstr);
-                return eqs( new ConstEquilibrium(eqName,idx,value) );
+                return eqs.add( new ConstEquilibrium(eqName,idx,value) );
             }
             else
             {
                 // assume name of a function
-                return eqs( new LuaEquilibrium(eqName,idx,lvm,Kstr) );
+                return eqs.add( new LuaEquilibrium(eqName,idx,lvm,Kstr) );
             }
         }
     }

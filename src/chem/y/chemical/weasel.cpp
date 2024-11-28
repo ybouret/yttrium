@@ -85,7 +85,7 @@ namespace Yttrium
                 throw;
             }
 
-            compiler->genericParser.printRules();
+            //compiler->genericParser.printRules();
 
         }
 
@@ -106,7 +106,7 @@ namespace Yttrium
             assert(0!=compiler);
             Parser       & parser = compiler->genericParser;
             AutoPtr<XNode> tree   = parser.postProcess( parser(m) );
-            GraphViz::Vizible::DotToPng("wtree.dot", *tree);
+            //GraphViz::Vizible::DotToPng("wtree.dot", *tree);
             return tree.yield();
         }
 
@@ -336,6 +336,21 @@ namespace Yttrium
             if(count<=0)
                 throw Specific::Exception(CallSign,"no matching '%s' in database", expr.c_str() );
         }
+
+
+        void Equilibria :: operator()(Library &lib, const String &expr)
+        {
+            static Weasel &weasel = Weasel::Instance();
+            weasel(lib,*this, Lingo::Module::OpenData(expr,expr) );
+        }
+
+        void Equilibria:: operator()(Library &lib, const char * const expr)
+        {
+            const String _(expr);
+            (*this)(lib,_);
+        }
+
+
 
     }
 

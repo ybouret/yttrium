@@ -104,7 +104,8 @@ namespace Yttrium
             lexer.plug<Lingo::Lexical::C_Comment>("C_Comment");
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 
-            render();
+            validate();
+            //render();
             //Rule::Trace = true;
         }
 
