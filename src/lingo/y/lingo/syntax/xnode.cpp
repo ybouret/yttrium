@@ -39,6 +39,7 @@ namespace Yttrium
                 }
             }
 
+            
 
             XNode * XNode:: CreateFrom(const Syntax::Internal &rule)
             {

@@ -27,7 +27,7 @@ namespace Yttrium
         Kstr(),
         theLib(0),
         theEqs(0),
-        preProcess(parser)
+        preProcess(parser.hashing)
         {
             Y_Lingo_OnTerminal(Linker,EQ);
             Y_Lingo_OnTerminal(Linker,SPECIES);
@@ -122,12 +122,13 @@ namespace Yttrium
 
             Algo::Crop(Kstr,isblank);
 
+#if 9
             std::cerr << "Ready to create Equilibrium:" << std::endl;
             std::cerr << "name : "  << eqName << std::endl;
             std::cerr << "reac : "  << reac   << std::endl;
             std::cerr << "prod : "  << prod   << std::endl;
             std::cerr << "K    : '" << Kstr   << "'" << std::endl;
-
+#endif
             if(Kstr.size()<=0)
                 throw Specific::Exception(eqName.c_str(),"empty constant");
 
@@ -165,6 +166,7 @@ namespace Yttrium
                                             Library    & lib,
                                             Equilibria & eqs)
         {
+            if(tree->name() != *name) throw Specific::Exception("Equilibrium::Linker","tree is not %s", tree->name().c_str());
             Lingo::Syntax::Translator &self = *this;
             theLib = 0;
             theEqs = 0;
@@ -173,74 +175,6 @@ namespace Yttrium
             const Temporary<Equilibria *> tmpEqs(theEqs,&eqs);
             self(*tree);
         }
-
-#if 0
-        void Equilibrium:: Linker:: preProcess(XTree &tree, Library &lib)
-        {
-            assert(*name == tree->name() );
-            XList &list = Coerce(tree->branch());
-            for(XNode *node=list.head;node;node=node->next)
-            {
-                switch(hashAct(node->name()))
-                {
-                    case Y_Weasel_REAC:
-                    case Y_Weasel_PROD:
-                        replaceFormulae(*node,lib);
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            //GraphViz::Vizible::DotToPng("etree.dot", *tree);
-        }
-
-
-        void  Equilibrium:: Linker:: replaceFormulae(XNode &parent, Library &lib)
-        {
-            assert( "REAC" == parent.name() || "PROD" == parent.name() );
-
-            //------------------------------------------------------------------
-            //
-            // loop over each ACTOR
-            //
-            //------------------------------------------------------------------
-            for(XNode *actor=parent.branch().head;actor;actor=actor->next)
-            {
-                assert( "ACTOR" == actor->name() );
-
-                //--------------------------------------------------------------
-                // extract FORMULA tree
-                //--------------------------------------------------------------
-                XList &       content = actor->branch();   assert(content.size>0);
-                XTree         tree    = content.popTail(); assert( "FORMULA" == tree->name() );
-                Coerce(tree->sire) = 0;
-
-                //--------------------------------------------------------------
-                // convert it to species
-                //--------------------------------------------------------------
-                const Species &species = lib(tree);
-
-                //--------------------------------------------------------------
-                // make a SPECIES lexeme
-                //--------------------------------------------------------------
-                Lingo::Context  context(SPECIES.name,Lingo::AsCaption);
-                AutoPtr<Lexeme> lexeme = new Lexeme(SPECIES,context);
-                for(size_t i=1;i<=species.name.size();++i)
-                {
-                    context.newChar();
-                    lexeme->pushTail( new Lingo::Char(context,species.name[i]) );
-                }
-
-                //--------------------------------------------------------------
-                // replace into ACTOR
-                //--------------------------------------------------------------
-                actor->fusion( XNode::CreateFrom(SPECIES, lexeme.yield() ));
-            }
-
-        }
-#endif
 
 
     }

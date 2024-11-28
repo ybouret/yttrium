@@ -56,6 +56,10 @@ namespace Yttrium
                 //! create from Syntax::Terminal rule + lexeme
                 static XNode * CreateFrom(const Syntax::Terminal &, Lexeme * const);
 
+                //! create from Syntax::Terminal + synthetic data
+                static XNode * CreateFrom(const Syntax::Terminal &, const String &);
+
+
                 //! create from Syntax::Internal rule
                 static XNode * CreateFrom(const Syntax::Internal &);
 

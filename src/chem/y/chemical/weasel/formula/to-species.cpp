@@ -9,9 +9,9 @@ namespace Yttrium
         {
         }
 
-        FormulaToSpecies:: FormulaToSpecies(const Weasel::Parser &parser) :
+        FormulaToSpecies:: FormulaToSpecies(const Hashing::Perfect &h) :
         SPECIES("SPECIES", Lingo::Syntax::Terminal::Standard, Lingo::Syntax::Terminal::Semantic, 0),
-        hashing(parser.actors)
+        hashing(h)
         {
 
         }
@@ -62,20 +62,11 @@ namespace Yttrium
                 const Species &species = lib(tree);
 
                 //--------------------------------------------------------------
-                // make a SPECIES lexeme
+                // replace it in actor
                 //--------------------------------------------------------------
-                Lingo::Context  context(SPECIES.name,Lingo::AsCaption);
-                AutoPtr<Lexeme> lexeme = new Lexeme(SPECIES,context);
-                for(size_t i=1;i<=species.name.size();++i)
-                {
-                    context.newChar();
-                    lexeme->pushTail( new Lingo::Char(context,species.name[i]) );
-                }
+                actor->fusion( XNode::CreateFrom(SPECIES,species.name) );
 
-                //--------------------------------------------------------------
-                // replace into ACTOR
-                //--------------------------------------------------------------
-                actor->fusion( XNode::CreateFrom(SPECIES, lexeme.yield() ));
+
             }
 
         }

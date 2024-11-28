@@ -13,22 +13,19 @@ namespace Yttrium
         }
 
 
-        static const char * actorsTable[]
-        {
-            "REAC",
-            "PROD"
-        };
 
 
 
 
-        Weasel:: Parser:: Parser(const Lingo::Caption &caption) :
+        Weasel:: Parser:: Parser(const Lingo::Caption   &caption,
+                                 const Hashing::Perfect &h) :
         Lingo::Parser(caption),
         WEASEL(      agg("WEASEL")      ), // top-level rule
         FORMULA(     agg("FORMULA")     ),
         EQUILIBRIUM( agg("EQUILIBRIUM") ),
         POSITIVE(    term('+')          ),
-        actors( Y_Hashing_Perfect_Table(actorsTable) )
+        SEARCH(      term("SEARCH","%[:core:]+") ),
+        hashing( h )
         {
             //------------------------------------------------------------------
             //
@@ -85,7 +82,7 @@ namespace Yttrium
             EQUILIBRIUM << WHITE << plug<Lingo::Lexical::RString>("K");
 
 
-            const Rule &SEARCH = term("SEARCH","%[:core:]+");
+            //const Rule &SEARCH = term("SEARCH","%[:core:]+");
 
 
 
@@ -141,7 +138,7 @@ namespace Yttrium
                 if(node->name() != *EQUILIBRIUM.name) continue;
                 for(XNode *sub=node->branch().head;sub;sub=sub->next)
                 {
-                    switch( actors(sub->name()) )
+                    switch( hashing(sub->name()) )
                     {
                         case Y_Weasel_REAC:
                         case Y_Weasel_PROD:

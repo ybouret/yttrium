@@ -20,19 +20,21 @@ namespace Yttrium
 
 #define Y_Chemical_FORMULA     0
 #define Y_Chemical_EQUILIBRIUM 1
+#define Y_Chemical_SEARCH      2
 
             class Compiler
             {
             public:
-                inline Compiler(const Lingo::Caption &caption) :
-                genericParser(caption),
+                inline Compiler(const Lingo::Caption   &caption,
+                                const Hashing::Perfect &hashing) :
+                genericParser(caption,hashing),
                 formulaLinker(genericParser),
                 ldEquilibrium(genericParser),
                 treeNameIndex()
                 {
                     treeNameIndex(*genericParser.FORMULA.name,     Y_Chemical_FORMULA);
                     treeNameIndex(*genericParser.EQUILIBRIUM.name, Y_Chemical_EQUILIBRIUM);
-
+                    treeNameIndex(*genericParser.SEARCH.name,      Y_Chemical_SEARCH);
                 }
 
                 inline ~Compiler() noexcept
@@ -58,17 +60,23 @@ namespace Yttrium
         }
 
 
+        static const char * actorsTable[]
+        {
+            "REAC",
+            "PROD"
+        };
 
 
         Weasel:: Weasel() :
         Singleton<Weasel>(),
         luaVM( new Lua::State() ),
-        caption( CallSign )
+        caption( CallSign ),
+        hashing( Y_Hashing_Perfect_Table(actorsTable) )
         {
             assert(0==compiler);
             try {
                 zeroCompiler();
-                compiler = new (compiler_) Compiler(caption);
+                compiler = new (compiler_) Compiler(caption,hashing);
             }
             catch(...)
             {
@@ -102,10 +110,39 @@ namespace Yttrium
             return tree.yield();
         }
 
+        XNode * Weasel:: parseSingle(const Lingo::Syntax::Rule &rule,
+                                     const String              &expr,
+                                     const char * const         func)
+        {
+            assert(0!=compiler);
+            const Parser & parser  = compiler->genericParser;
+            const String & NAME    = *rule.name;
+            AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(NAME, expr) );
+
+            assert( tree->name() == *parser.WEASEL.name );
+            assert( tree->type   == XNode::Internal);
+
+            XList &        list = tree->branch();
+            if( list.size != 1  )
+                throw Specific::Exception(func, "'%s' is not a single %s",expr.c_str(),NAME.c_str());
+
+            XNode * const  node = list.head;
+            const String & uuid = node->name();
+            if( NAME != uuid )
+                throw Specific::Exception(func,"'%s' is not a %s",expr.c_str(),NAME.c_str());
+
+            // return extracted node
+            return list.pop(node);
+        }
+
+
         XNode * Weasel:: parseFormula(const String &expr) {
 
-            static const char fn[] = Y_Chemical_Weasel "::parseFormula";
+            static const char func[] = Y_Chemical_Weasel "::parseFormula";
             assert(0!=compiler);
+            return parseSingle(compiler->genericParser.FORMULA,expr,func);
+
+#if 0
             const Parser & parser  = compiler->genericParser;
             const String & FORMULA = *parser.FORMULA.name;
             AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(FORMULA, expr) );
@@ -119,12 +156,36 @@ namespace Yttrium
 
             // return extracted node
             return list.pop(node);
+#endif
         }
 
         XNode * Weasel:: parseFormula(const char * const expr)
         {
             const String _(expr);
             return parseFormula(_);
+        }
+
+        XNode  * Weasel:: parseEquilibrium(const String &expr)
+        {
+            static const char func[] = Y_Chemical_Weasel "::parseEquilibrium";
+            assert(0!=compiler);
+            return parseSingle(compiler->genericParser.EQUILIBRIUM,expr,func);
+
+#if 0
+            const Parser & parser      = compiler->genericParser;
+            const String & EQUILIBRIUM = *parser.EQUILIBRIUM.name;
+            AutoPtr<XNode> tree        = parse( Lingo::Module::OpenData(EQUILIBRIUM, expr) );
+
+            assert( tree->name() == *parser.WEASEL.name );
+            assert( tree->type   == XNode::Internal);
+
+            XList &        list = tree->branch(); if( list.size != 1  ) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),EQUILIBRIUM.c_str());
+            XNode * const  node = list.head;
+            const String & uuid = node->name();   if( EQUILIBRIUM != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),EQUILIBRIUM.c_str());
+
+            // return extracted node
+            return list.pop(node);
+#endif
         }
 
         void Weasel:: setupFormula(Formula &formula)
@@ -156,6 +217,11 @@ namespace Yttrium
         }
 
 
+        void  Weasel:: setupEquilibrium(XTree &tree, Library &lib, Equilibria &eqs)
+        {
+            assert(0!=compiler);
+            compiler->ldEquilibrium.process(tree,lib,eqs);
+        }
 
 
         void Weasel:: operator()(Library &             lib,
@@ -176,7 +242,7 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // parse module
+            // process results
             //
             //------------------------------------------------------------------
             XList &list = root->branch();
@@ -191,7 +257,11 @@ namespace Yttrium
                         break;
 
                     case Y_Chemical_EQUILIBRIUM:
-                        compiler->ldEquilibrium.process(tree,lib,eqs);
+                        setupEquilibrium(tree,lib,eqs);
+                        break;
+
+                    case Y_Chemical_SEARCH:
+                        queryEquilibrium(tree,lib,eqs);
                         break;
 
                     default:
@@ -206,6 +276,67 @@ namespace Yttrium
             //------------------------------------------------------------------
             eqs.update();
         }
+
+
+
+    }
+
+}
+
+#include "y/chemical/weasel/equilibrium/db.hpp"
+#include "y/lingo/pattern/matching.hpp"
+#include "y/string/tokenizer.hpp"
+#include "y/container/algo/crop.hpp"
+
+namespace Yttrium
+{
+
+    namespace Chemical
+    {
+
+        void Weasel:: queryEquilibrium(XTree &       search,
+                                       Library &     lib,
+                                       Equilibria &  eqs)
+        {
+            assert(0!=compiler);
+            assert(search->name() == *(compiler->genericParser.SEARCH.name) );
+
+            // prepare search
+            const String               expr = search->lexeme().toString(1,0);
+            Lingo::Matching            matching(expr);
+            Vector<String,MemoryModel> words(4,AsCapacity);
+            unsigned                   count = 0;
+
+            // loop over pre-compiled descriptions
+            for(size_t i=0;i<EDB::Count;++i)
+            {
+                const String data = EDB::Table[i];
+
+                // split with ':'
+                words.free();
+                Tokenizer::AppendTo(words,data,COLON);
+                if(words.size()<=0) continue;
+
+                // prepare label
+                String &label = words[1];
+                Algo::Crop(label,isblank);
+                if(label.size()<=0) continue;
+                if('@' != label[1]) continue;
+                label.skip(1);
+
+                // check label
+                if( matching.exactly(search->name(),label) )
+                {
+                    XTree  tree = parseEquilibrium(data);
+                    setupEquilibrium(tree,lib,eqs);
+                    ++count;
+                }
+            }
+
+            if(count<=0)
+                throw Specific::Exception(CallSign,"no matching '%s' in database", expr.c_str() );
+        }
+
     }
 
 }

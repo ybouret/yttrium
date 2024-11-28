@@ -9,12 +9,16 @@
 #include "y/lingo/module.hpp"
 #include "y/singleton.hpp"
 #include "y/lua++/state.hpp"
+#include "y/hashing/perfect.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
+#define Y_Weasel_REAC 0 //!< hash value
+#define Y_Weasel_PROD 1 //!< hash value
+                        
         //______________________________________________________________________
         //
         //
@@ -45,11 +49,16 @@ namespace Yttrium
             //
             //__________________________________________________________________
             XNode * parse(Lingo::Module * const);     //!< parse a full module
-            XNode * parseFormula(const String &);     //!< parse a string to FORMULA
-            XNode * parseFormula(const char * const); //!< parse text to FORMULA
+            XNode * parseFormula(const String &);     //!< parse a string to single FORMULA
+            XNode * parseFormula(const char * const); //!< parse text to  single FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
+            
+            void    setupEquilibrium(XTree &tree, Library &lib, Equilibria &eqs);
+            XNode  *parseEquilibrium(const String &);                         //!< parse a string to EQUILIBRIUM
+            void    queryEquilibrium(XTree &search, Library &, Equilibria &); //!< search precompiled
 
-            //! parse species and equilibria
+
+            //! parse species and equilibria from a module
             void operator()(Library &             lib,
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
@@ -63,12 +72,18 @@ namespace Yttrium
             //__________________________________________________________________
             Lua::VM                luaVM;   //!< shared VM
             const Lingo::Caption   caption; //!< shared caption
+            const Hashing::Perfect hashing; //!< "REAC" or "ACTOR"
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             friend class Singleton<Weasel>;
             virtual ~Weasel() noexcept;
             explicit Weasel();
+
+            XNode * parseSingle(const Lingo::Syntax::Rule &rule,
+                                const String              &expr,
+                                const char * const         func);
+
         };
     }
 

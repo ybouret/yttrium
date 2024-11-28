@@ -12,9 +12,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-
-#define Y_Weasel_REAC 0 //!< hash value
-#define Y_Weasel_PROD 1 //!< hash value
         
         //______________________________________________________________________
         //
@@ -33,7 +30,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Parser(const Lingo::Caption &); //!< setup
+            explicit Parser(const Lingo::Caption   &,
+                            const Hashing::Perfect &); //!< setup
             virtual ~Parser() noexcept;              //!< cleanup
 
             //__________________________________________________________________
@@ -45,18 +43,19 @@ namespace Yttrium
 
             //! remove '+' from REAC/PROD
             XNode * postProcess(XNode * const) const noexcept;
-
+            
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            Compound   &           WEASEL;       //!< top level rule
-            Compound   &           FORMULA;      //!< formula rule
-            Compound   &           EQUILIBRIUM;  //!< equilibrium rule
-            const Rule &           POSITIVE;     //!< mark('+') rule
-            const Hashing::Perfect actors;       //!< REAC/PROD to postprocess
+            Compound   &            WEASEL;       //!< top level rule
+            Compound   &            FORMULA;      //!< formula rule
+            Compound   &            EQUILIBRIUM;  //!< equilibrium rule
+            const Rule &            POSITIVE;     //!< mark('+') rule
+            const Rule &            SEARCH;       //!< %regexp
+            const Hashing::Perfect &hashing;      //!< REAC/PROD to postprocess
 
 
         private:

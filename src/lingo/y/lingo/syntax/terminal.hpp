@@ -85,10 +85,12 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
-                // Method
+                // Methods
                 //
                 //______________________________________________________________
-                Lexeme * synthetic(const String &input);
+
+                //! create a synthetic lexeme for AST manipulation
+                Lexeme * synthetic(const String &input) const;
 
                 //______________________________________________________________
                 //

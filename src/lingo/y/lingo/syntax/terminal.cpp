@@ -71,7 +71,7 @@ namespace Yttrium
                 return true;
             }
 
-            Lexeme * Terminal:: synthetic(const String &input)
+            Lexeme * Terminal:: synthetic(const String &input) const
             {
                 Context         context(name,AsCaption);
                 AutoPtr<Lexeme> lexeme = new Lexeme(*this,context);
@@ -117,7 +117,12 @@ namespace Yttrium
                 assert(Terminal==type);
                 lexeme().appendTo(excp,rule.as<Syntax::Terminal>()->kind == Syntax::Terminal::Univocal);
             }
-            
+
+            XNode * XNode:: CreateFrom(const Syntax::Terminal &term, const String &data)
+            {
+                return CreateFrom(term,term.synthetic(data) );
+            }
+
         }
 
     }

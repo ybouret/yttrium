@@ -19,10 +19,10 @@ namespace Yttrium
         class FormulaToSpecies
         {
         public:
-            typedef Lingo::Lexeme Lexeme;                         //!< alias
-            explicit FormulaToSpecies(const Weasel::Parser &);    //!< setup
-            virtual ~FormulaToSpecies() noexcept;                 //!< cleanup
-            void     operator()(XTree &tree, Library &lib) const; //!< apply
+            typedef Lingo::Lexeme Lexeme;                          //!< alias
+            explicit FormulaToSpecies(const Hashing::Perfect &);   //!< setup
+            virtual ~FormulaToSpecies() noexcept;                  //!< cleanup
+            void     operator()(XTree &tree, Library &lib) const;  //!< apply
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToSpecies);
