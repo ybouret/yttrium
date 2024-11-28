@@ -13,7 +13,7 @@ using namespace Chemical;
 
 Y_UTEST(db)
 {
-    for(size_t i=0;i<EDB::Count;++i)
+    for(unsigned i=0;i<EDB::Count;++i)
     {
         Library    lib;
         Equilibria eqs;
@@ -24,7 +24,7 @@ Y_UTEST(db)
 
         Y_ASSERT(eqs->size()==1);
         const Equilibrium &eq = ** eqs->begin();
-        const String       dotFile = eq.name + ".dot";
+        const String       dotFile = Formatted::Get("db%u.dot",i);
         GraphViz::Vizible::DotToPng(dotFile,eq);
         Y_ASSERT(eq.neutral());
     }
