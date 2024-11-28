@@ -50,20 +50,27 @@ namespace Yttrium {
             {
                 assert(0!=node);
                 AutoPtr<XNode>       keep = node; // GraphViz::Vizible::DotToPng("raw-tree.dot", *keep);
-                std::cerr << "accepted with cache=" << lexer.cache << std::endl;
-                const Lexeme * const last = node->lastLexeme();
-                const Lexeme * const next = lexer.peek(source,last);
-                if(0!=next)
+
+                if(lexer.cache.size>0)
                 {
-                    // unexpected/extraneous
-                    Specific::Exception excp(name->c_str(),"unexpected");
-                    tryAppendTo(excp, "", next);
-                    if(0!=last)
+                    rejected(lexer);
+                }
+                else
+                {
+                    const Lexeme * const last = node->lastLexeme();
+                    const Lexeme * const next = lexer.peek(source,last);
+                    if(0!=next)
                     {
-                        tryAppendTo(excp, " after",last);
+                        // unexpected/extraneous
+                        Specific::Exception excp(name->c_str(),"unexpected");
+                        tryAppendTo(excp, "", next);
+                        if(0!=last)
+                        {
+                            tryAppendTo(excp, " after",last);
+                        }
+                        next->info.stamp(excp);
+                        throw excp;
                     }
-                    next->info.stamp(excp);
-                    throw excp;
                 }
                 return keep.yield();
             }
