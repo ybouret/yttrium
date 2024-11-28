@@ -7,7 +7,10 @@ namespace Yttrium
     namespace Chemical
     {
         Formula:: ToHTML:: ToHTML(const Weasel::Parser &parser) :
-        Lingo::Syntax::Translator( *(parser.FORMULA.name) + "::ToHTML" )
+        Lingo::Syntax::Translator( *(parser.FORMULA.name) + "::ToHTML" ),
+        elements(),
+        integers(),
+        zcharges()
         {
             Y_Lingo_OnTerminal(ToHTML,ELEMENT);
             Y_Lingo_OnTerminal(ToHTML,INTEGER);
@@ -103,6 +106,7 @@ namespace Yttrium
                 case 2:
                     assert( integers.size() > 0 );
                     z += integers.pullTail();
+                    // FALLTHRU
                 case 1:
                     z += zcharges.pullTail();
                     break;

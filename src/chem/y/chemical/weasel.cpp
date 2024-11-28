@@ -118,11 +118,11 @@ namespace Yttrium
                                      const char * const         func)
         {
             assert(0!=compiler);
-            const Parser & parser  = compiler->genericParser;
+            //const Parser & parser  = compiler->genericParser;
             const String & NAME    = *rule.name;
             AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(NAME, expr) );
 
-            assert( tree->name() == *parser.WEASEL.name );
+            assert( tree->name() == *compiler->genericParser.WEASEL.name );
             assert( tree->type   == XNode::Internal);
 
             XList &        list = tree->branch();

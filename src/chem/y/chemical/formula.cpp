@@ -25,6 +25,7 @@ namespace Yttrium
         }
 
         Formula:: Formula(const XTree &code)   :
+        GraphViz::Vizible(),
         uuid( new String() ),
         name( *uuid ),
         tree(code),
@@ -36,6 +37,7 @@ namespace Yttrium
         
 
         Formula:: Formula(const String &expr) :
+        GraphViz::Vizible(),
         uuid( new String() ),
         name(*uuid),
         tree( Weasel::Instance().parseFormula(expr) ),
@@ -46,6 +48,7 @@ namespace Yttrium
 
 
         Formula:: Formula(const char * const expr) :
+        GraphViz::Vizible(),
         uuid( new String() ),
         name( *uuid ),
         tree( Weasel::Instance().parseFormula(expr) ),
@@ -56,6 +59,7 @@ namespace Yttrium
 
 
         Formula:: Formula(const Formula &_) noexcept :
+        GraphViz::Vizible(),
         uuid( _.uuid ),
         name( * uuid ),
         tree( _.tree ),
