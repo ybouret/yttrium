@@ -1,7 +1,7 @@
 
 
 #include "y/chemical/weasel.hpp"
-#include "y/chemical/formula.hpp"
+#include "y/chemical/species.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
 
@@ -18,6 +18,7 @@ Y_UTEST(formula)
     if(argc>1)
     {
         const Formula formula( argv[1] );
+        GraphViz::Vizible::DotToPng("formula.dot",formula);
     }
 
 

@@ -64,6 +64,23 @@ namespace Yttrium
         }
 
 
+        void Formula:: viz(OutputStream &     fp,
+                           const char * const color,
+                           const char * const style) const
+        {
+            Node(fp,this) << '[';
+            Label(fp, name) << ",shape=ellipse";
+            if( 0!=color ) fp << ",color=\"" << color << "\"";
+            if( 0!=style ) fp << ",style=\"" << style << "\"";
+            Endl(fp <<']');
+        }
+
+        void Formula:: graphViz(OutputStream &fp) const
+        {
+            Enter(fp, "G");
+            viz(fp,0,0);
+            Leave(fp);
+        }
     }
 
 }

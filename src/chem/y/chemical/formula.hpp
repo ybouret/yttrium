@@ -23,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Formula
+        class Formula :  public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -45,6 +45,18 @@ namespace Yttrium
             explicit Formula(const char * const expr); //!< create from expression
             virtual ~Formula()       noexcept;         //!< cleanup
             Formula(const Formula &) noexcept;         //!< duplicate
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void viz(OutputStream &     fp,
+                     const char * const color,
+                     const char * const style) const;
+
+            void graphViz(OutputStream &fp) const;
 
             //__________________________________________________________________
             //

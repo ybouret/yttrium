@@ -23,7 +23,10 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Species : public Indexed, public Counted, public Formula
+        class Species :
+        public Indexed,
+        public Counted,
+        public Formula
         {
         public:
             //__________________________________________________________________
@@ -61,8 +64,9 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual const String & key() const noexcept;
+            virtual const String & key() const noexcept; //! [Entity] name
 
+           
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
