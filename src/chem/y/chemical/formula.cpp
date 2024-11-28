@@ -69,7 +69,11 @@ namespace Yttrium
                            const char * const style) const
         {
             Node(fp,this) << '[';
-            Label(fp, name) << ",shape=ellipse";
+            fp << "label= < ";
+            fp << html();
+            fp << " >";
+
+            fp<< ",shape=box";
             if( 0!=color ) fp << ",color=\"" << color << "\"";
             if( 0!=style ) fp << ",style=\"" << style << "\"";
             Endl(fp <<']');
@@ -81,6 +85,7 @@ namespace Yttrium
             viz(fp,0,0);
             Leave(fp);
         }
+        
     }
 
 }

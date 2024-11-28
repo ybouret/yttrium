@@ -44,7 +44,33 @@ namespace Yttrium
             return RoleToText(role);
         }
 
-        
+        void Component:: viz(OutputStream            &fp,
+                             const GraphViz::Vizible &eq,
+                             const char * const       color) const
+        {
+            const GraphViz::Vizible *src = & actor.sp;
+            const GraphViz::Vizible *tgt = & eq;
+
+
+            switch(role)
+            {
+                case Reactant: break;
+                case Product: Swap(src,tgt); break;
+            }
+
+            GraphViz::Vizible::Arrow(fp, src, tgt) << '[';
+            if(actor.nu>1)
+            {
+                fp("label=\"%u\"", unsigned(actor.nu));
+            }
+            else
+            {
+                fp << "label=\"\"";
+            }
+            
+            if(color) fp << ",color=\"" << color << "\"";
+            GraphViz::Vizible::Endl(fp << ']');
+        }
     }
 
 }

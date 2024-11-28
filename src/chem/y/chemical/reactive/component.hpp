@@ -58,10 +58,14 @@ namespace Yttrium
             const String & key()  const noexcept; //!< species name for Components
             const char *   side() const noexcept; //!< ActingToText(role)
 
+            void viz(OutputStream            &fp,
+                     const GraphViz::Vizible &eq,
+                     const char * const       color) const;
+
             //__________________________________________________________________
             //
             //
-            // C++
+            // Members
             //
             //__________________________________________________________________
             const Actor &actor; //!< persistent actor

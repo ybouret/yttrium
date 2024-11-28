@@ -69,6 +69,35 @@ namespace Yttrium
             (*this)(role,1,sp);
         }
 
+        void Components :: viz(OutputStream &fp,
+                               const char * const color,
+                               const char * const style) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,name) << ",shape=box3d";
+            if(color) fp << "color=\"" << color << "\"";
+            if(style) fp << "style=\"" << style << "\"";
+            Endl(fp<<']');
+            
+            for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it)
+            {
+                const Component &cm = *it;
+                cm.viz(fp,*this,color);
+            }
+
+        }
+
+        void Components:: graphViz(OutputStream &fp) const
+        {
+            Enter(fp, "G");
+            for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it)
+            {
+                const Component &cm = *it;
+                cm.actor.sp.viz(fp,0,0);
+            }
+            viz(fp,0,0);
+            Leave(fp);
+        }
 
 
     }

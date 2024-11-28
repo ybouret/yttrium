@@ -49,6 +49,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             XNode * parse(Lingo::Module * const);     //!< parse a full module
+
             XNode * parseFormula(const String &);     //!< parse a string to single FORMULA
             XNode * parseFormula(const char * const); //!< parse text to  single FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
@@ -63,6 +64,7 @@ namespace Yttrium
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
 
+            String toHTML(const Formula &);
 
             //__________________________________________________________________
             //

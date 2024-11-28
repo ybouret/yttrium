@@ -5,15 +5,20 @@
 
 #include "y/chemical/type/memory.hpp"
 #include "y/mkl/xreal.hpp"
+#include "y/string.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double        real_t; //!< alias
-        typedef XReal<real_t> xReal;  //!< alias
+        typedef double          real_t; //!< alias
+        typedef XReal<real_t>   xReal;  //!< alias
+        typedef Writable<xReal> XWritable;
+        typedef Readable<xReal> XReadable;
 
 
+        typedef Vector<String,MemoryModel> Strings;
     }
 
 }

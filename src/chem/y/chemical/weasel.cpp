@@ -1,4 +1,5 @@
 #include "y/chemical/weasel/formula/linker.hpp"
+#include "y/chemical/weasel/formula/html.hpp"
 #include "y/chemical/weasel/equilibrium/linker.hpp"
 #include "y/utest/run.hpp"
 #include "y/system/exception.hpp"
@@ -30,6 +31,7 @@ namespace Yttrium
                 genericParser(caption,hashing),
                 formulaLinker(genericParser),
                 ldEquilibrium(genericParser),
+                formulaToHTML(genericParser),
                 treeNameIndex()
                 {
                     treeNameIndex(*genericParser.FORMULA.name,     Y_Chemical_FORMULA);
@@ -44,6 +46,7 @@ namespace Yttrium
                 Weasel::Parser      genericParser;
                 Formula::Linker     formulaLinker;
                 Equilibrium::Linker ldEquilibrium;
+                Formula::ToHTML     formulaToHTML;
                 Hashing::Perfect    treeNameIndex;
 
 
@@ -278,6 +281,24 @@ namespace Yttrium
         }
 
 
+        String Weasel:: toHTML(const Formula &formula)
+        {
+            assert(0!=compiler);
+            Formula::ToHTML &linker = compiler->formulaToHTML;
+            linker.verbose = true;
+            //compiler->formulaToHTML.policy  = Lingo::Syntax::Permissive;
+
+            linker( *formula.tree );
+            String ans;
+            ans = linker.elements.head();
+            return ans;
+        }
+
+        String Formula:: html() const
+        {
+            static Weasel &weasel = Weasel:: Instance();
+            return weasel.toHTML(*this);
+        }
 
     }
 

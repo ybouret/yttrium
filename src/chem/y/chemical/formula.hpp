@@ -33,7 +33,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Linker;
-
+            class ToHTML;
+            
             //__________________________________________________________________
             //
             //
@@ -57,6 +58,8 @@ namespace Yttrium
                      const char * const style) const;
 
             void graphViz(OutputStream &fp) const;
+
+            String html() const;
 
             //__________________________________________________________________
             //

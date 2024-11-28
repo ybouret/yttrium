@@ -29,7 +29,10 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components : public Indexed,  Proxy<const Compendium>
+        class Components :
+        public Indexed,
+        public Proxy<const Compendium>,
+        public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -87,6 +90,15 @@ namespace Yttrium
 
             //! quick display
             std::ostream & print(std::ostream &) const;
+
+            //! display name + arrows, but NOT the species
+            void viz(OutputStream &fp,
+                     const char * const color,
+                     const char * const style) const;
+
+            void graphViz(OutputStream &) const;
+            
+
 
             //__________________________________________________________________
             //

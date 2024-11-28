@@ -18,6 +18,7 @@ Y_UTEST(formula)
     if(argc>1)
     {
         const Formula formula( argv[1] );
+        std::cerr << "html=" << formula.html() << std::endl;
         GraphViz::Vizible::DotToPng("formula.dot",formula);
     }
 

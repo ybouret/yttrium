@@ -63,7 +63,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Vector<String,MemoryModel>   elements; //!< stack of elements
+            Strings                      elements; //!< stack of elements
             Vector<unsigned,MemoryModel> integers; //!< stack of integers
             Vector<Charge,MemoryModel>   zcharges; //!< stack of charges
             int                          z;        //!< computed charge
