@@ -97,7 +97,9 @@ namespace Yttrium
                      const char * const style) const;
 
             void graphViz(OutputStream &) const;
-            
+
+            bool neutral() const;
+
 
 
             //__________________________________________________________________

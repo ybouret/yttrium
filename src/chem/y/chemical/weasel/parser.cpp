@@ -70,7 +70,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            const Rule &EQ          = term("EQ","@[:word:]+");
+            const Rule &EQ          = term("EQ","@[[:word:]\\(\\)\\[\\]]+");
             EQUILIBRIUM << EQ << WHITE << COLON;
             Compound   &ACTOR  = agg("ACTOR")  << WHITE << OPT_INT << WHITE << FORMULA;
             Compound   &ACTORS = grp("ACTORS") << ACTOR << zom( cat(WHITE,POSITIVE,ACTOR) );

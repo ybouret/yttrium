@@ -18,7 +18,7 @@ Y_UTEST(db)
         Library    lib;
         Equilibria eqs;
 
-        const char * const db =EDB::Table[i];
+        const char * const db = EDB::Table[i];
         std::cerr << "using \"" << db << "\"" << std::endl;
         eqs(lib,db);
 
@@ -26,6 +26,7 @@ Y_UTEST(db)
         const Equilibrium &eq = ** eqs->begin();
         const String       dotFile = eq.name + ".dot";
         GraphViz::Vizible::DotToPng(dotFile,eq);
+        Y_ASSERT(eq.neutral());
     }
 
 

@@ -1,6 +1,7 @@
 #include "y/chemical/reactive/components.hpp"
 #include "y/system/exception.hpp"
 #include <cerrno>
+#include "y/kemp/integer.hpp"
 
 namespace Yttrium
 {
@@ -97,6 +98,23 @@ namespace Yttrium
             }
             viz(fp,0,0);
             Leave(fp);
+        }
+
+        static inline void sumZ(apz &sum, const Actor *a)
+        {
+            for(;a;a=a->next)
+            {
+                apz z = a->sp.z;
+                z *= a->nu;
+                sum += z;
+            }
+        }
+
+        bool Components:: neutral() const
+        {
+            apz lhs = 0; sumZ(lhs,reac->head);
+            apz rhs = 0; sumZ(rhs,prod->head);
+            return lhs == rhs;
         }
 
 

@@ -285,8 +285,8 @@ namespace Yttrium
         {
             assert(0!=compiler);
             Formula::ToHTML &linker = compiler->formulaToHTML;
-            linker.verbose = true;
-            //compiler->formulaToHTML.policy  = Lingo::Syntax::Permissive;
+            //linker.verbose = true;
+            //linker.policy  = Lingo::Syntax::Permissive;
 
             linker( *formula.tree );
             String ans;
