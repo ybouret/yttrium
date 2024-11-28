@@ -81,7 +81,15 @@ namespace Yttrium
                 virtual bool         accepts(Y_Lingo_Syntax_Args) const; //!< accept matching name lexeme
                 virtual bool         robust()                     const; //!< true
                 virtual void         vizMark(OutputStream &)      const; //!< box, style...
-                
+
+                //______________________________________________________________
+                //
+                //
+                // Method
+                //
+                //______________________________________________________________
+                Lexeme * synthetic(const String &input);
+
                 //______________________________________________________________
                 //
                 //

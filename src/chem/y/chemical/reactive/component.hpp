@@ -31,7 +31,7 @@ namespace Yttrium
         //
         //
         //
-        //! categorized Actor
+        //! Component = Categorized Actor
         //
         //
         //______________________________________________________________________

@@ -71,6 +71,22 @@ namespace Yttrium
                 return true;
             }
 
+            Lexeme * Terminal:: synthetic(const String &input)
+            {
+                Context         context(name,AsCaption);
+                AutoPtr<Lexeme> lexeme = new Lexeme(*this,context);
+
+                {
+                    const char * p = input.c_str();
+                    for(size_t i=input.size();i>0;--i)
+                    {
+                        lexeme->pushTail( new Char(context,*(p++)) );
+                        context.newChar();
+                    }
+                }
+                return lexeme.yield();
+            }
+
         }
     }
 }

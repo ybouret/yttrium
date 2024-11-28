@@ -4,6 +4,7 @@
 #define Y_Chemical_Fragment_Included 1
 
 #include "y/chemical/reactive/components.hpp"
+#include "y/chemical/type/assembly.hpp"
 
 namespace Yttrium
 {

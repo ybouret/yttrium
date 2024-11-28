@@ -4,64 +4,14 @@
 #ifndef Y_Chemical_Actors_Included
 #define Y_Chemical_Actors_Included 1
 
-#include "y/chemical/reactive/actor.hpp"
-#include "y/chemical/type/assembly.hpp"
-
+#include "y/chemical/reactive/company.hpp"
+ 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! List of actors and matching assembly
-        //
-        //
-        //______________________________________________________________________
-        class Company : public Entity, public Actor::List 
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit Company() noexcept; //!< setup emptu
-            virtual ~Company() noexcept; //!< cleanup
-            Company(const Company &);    //!< duplicate
-
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-            virtual const String & key() const noexcept; //!< [Entity] name
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            const Actor & recruit(Actor * const);                  //!< recruit and update name
-            bool          lookFor(const Species &) const noexcept; //!< look for species
-            void          xch(Company &)                 noexcept; //!< exchange all
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const String  name; //!< pre-computed
-
-        private:
-            Y_DISABLE_ASSIGN(Company);
-        };
+        
 
         //______________________________________________________________________
         //
