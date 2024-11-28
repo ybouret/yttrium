@@ -11,10 +11,11 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! Equilibria DataBase
         struct EDB
         {
-            static const char * Table[];
-            static const size_t Count;
+            static const char * Table[];  //!<  texts
+            static const size_t Count;    //!<  number
         };
     }
 

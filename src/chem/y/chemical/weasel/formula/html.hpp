@@ -14,17 +14,44 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! HTML encoding for GraphViz
+        //
+        //
+        //______________________________________________________________________
         class Formula:: ToHTML : public Lingo::Syntax::Translator
         {
         public:
-            explicit ToHTML(const Weasel::Parser &parser);
-            virtual ~ToHTML() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit ToHTML(const Weasel::Parser &parser); //!< setup
+            virtual ~ToHTML() noexcept;                    //!< cleanup
 
-            Strings elements;
-            Strings integers;
-            Strings zcharges;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void clear() noexcept; //!< clean all
 
-            void clear() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Strings elements; //!< stack of elements
+            Strings integers; //!< stack of integers
+            Strings zcharges; //!< stack of +/-
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ToHTML);

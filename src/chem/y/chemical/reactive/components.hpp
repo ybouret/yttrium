@@ -98,8 +98,8 @@ namespace Yttrium
 
             void graphViz(OutputStream &) const;
 
-            bool neutral() const;
-
+            bool neutral() const; //!< check charge conservation
+            bool correct() const noexcept; //!< has actores
 
 
             //__________________________________________________________________

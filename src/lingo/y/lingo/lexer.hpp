@@ -169,7 +169,7 @@ namespace Yttrium
             void     syntaxError(const AutoPtr<Lexeme> &lexeme,
                                  const Lexeme * const   last) const;
         public:
-            const ListOf<Lexeme> &cache;
+            const ListOf<Lexeme> &cache; //!< alias to internal cache
         };
 
     }

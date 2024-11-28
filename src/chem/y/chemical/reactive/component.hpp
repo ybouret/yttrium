@@ -58,6 +58,7 @@ namespace Yttrium
             const String & key()  const noexcept; //!< species name for Components
             const char *   side() const noexcept; //!< ActingToText(role)
 
+            //! weighted arrows in the proper direction
             void viz(OutputStream            &fp,
                      const GraphViz::Vizible &eq,
                      const char * const       color) const;

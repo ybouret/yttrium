@@ -12,13 +12,13 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        typedef double          real_t; //!< alias
-        typedef XReal<real_t>   xReal;  //!< alias
-        typedef Writable<xReal> XWritable;
-        typedef Readable<xReal> XReadable;
+        typedef double          real_t;    //!< alias
+        typedef XReal<real_t>   xReal;     //!< alias
+        typedef Writable<xReal> XWritable; //!< alias
+        typedef Readable<xReal> XReadable; //!< alias
 
 
-        typedef Vector<String,MemoryModel> Strings;
+        typedef Vector<String,MemoryModel> Strings; //!< alias
     }
 
 }
