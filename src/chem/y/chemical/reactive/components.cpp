@@ -197,12 +197,28 @@ namespace Yttrium
         }
 
 
+        xReal Components:: prodActivity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const
+        {
+            xmul.free();
+            xmul << one;
+            prod.activity(xmul,C,L,xi);
+            return -xmul.product();
+        }
+
+
 
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept
         {
             if(reac.haveZero(C,L) && prod.haveZero(C,L) ) return Blocked;
             return Running;
         }
+
+
+        const char * Components:: attrText() const noexcept
+        {
+            return AttributeText(attr);
+        }
+
 
         void Components:: addSpeciesTo(AddressBook &book) const
         {

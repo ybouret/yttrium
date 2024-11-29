@@ -139,6 +139,8 @@ namespace Yttrium
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;                 //!< delta activities
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const; //!< delta shifted activities
 
+            xReal prodActivity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const;
+
 
             //! transfer only components
             template <typename TARGET, typename SOURCE> inline
@@ -156,8 +158,8 @@ namespace Yttrium
             }
 
             //! situation from concentrations
-            Situation situation(const XReadable &C, const Level L) const noexcept;
-            
+            Situation    situation(const XReadable &C, const Level L) const noexcept;
+            const char * attrText() const noexcept;
 
             //__________________________________________________________________
             //
