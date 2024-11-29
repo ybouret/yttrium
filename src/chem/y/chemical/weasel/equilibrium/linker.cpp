@@ -137,6 +137,7 @@ namespace Yttrium
             for(const Actor *a=reac.head;a;a=a->next) eq(Reactant,a->nu,a->sp);
             for(const Actor *a=prod.head;a;a=a->next) eq(Product, a->nu,a->sp);
 
+            eq.applicable();
         }
 
 
@@ -166,7 +167,9 @@ namespace Yttrium
                                             Library    & lib,
                                             Equilibria & eqs)
         {
-            if(tree->name() != *name) throw Specific::Exception("Equilibrium::Linker","tree is not %s", tree->name().c_str());
+            if(tree->name() != *name)
+                throw Specific::Exception("Equilibrium::Linker","tree is not %s", tree->name().c_str());
+
             Lingo::Syntax::Translator &self = *this;
             theLib = 0;
             theEqs = 0;
@@ -174,6 +177,7 @@ namespace Yttrium
             const Temporary<Library *>    tmpLib(theLib,&lib);
             const Temporary<Equilibria *> tmpEqs(theEqs,&eqs);
             self(*tree);
+            clear();
         }
 
 

@@ -39,7 +39,7 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual void update() noexcept; //!< [Fragment] update with set
+            virtual void update() noexcept; //!< [Fragment] update with all equilibria
 
             //__________________________________________________________________
             //
@@ -104,8 +104,8 @@ namespace Yttrium
 
 
 
-            //! updateFragment()
-            void update() noexcept;
+            //! update fragment for formatting
+            void updateFragment() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

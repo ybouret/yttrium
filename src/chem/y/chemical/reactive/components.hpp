@@ -11,6 +11,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+
         //______________________________________________________________________
         //
         //
@@ -20,6 +22,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
         typedef SuffixSet<const String, const Component> Compendium;
+
+
+
 
         //______________________________________________________________________
         //
@@ -43,6 +48,16 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Compendium::ConstIterator ConstIterator; //!< alias
 
+            enum Attribute
+            {
+                Nebulous,
+                ReacOnly,
+                ProdOnly,
+                Definite
+            };
+
+            static const char * AttributeText(const Attribute) noexcept;
+
             //__________________________________________________________________
             //
             //
@@ -59,7 +74,8 @@ namespace Yttrium
             name(_name),
             reac(),
             prod(),
-            cmdb()
+            cmdb(),
+            attr(Nebulous)
             {
             }
 
@@ -98,9 +114,8 @@ namespace Yttrium
 
             void graphViz(OutputStream &) const;
 
-            bool neutral() const; //!< check charge conservation
-            bool correct() const noexcept; //!< has actores
-
+            bool neutral()    const; //!< check charge conservation
+            void applicable() const; //!< neutral and not nebulous
 
             //__________________________________________________________________
             //
@@ -122,8 +137,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             virtual ConstInterface & surrogate() const noexcept;
             Compendium cmdb;
-
             Actors & actorsPlaying(const Role);
+            void     updateAttribute() noexcept;
+
+        public:
+            const Attribute attr;
 
         };
 

@@ -7,6 +7,21 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+#define Y_ChemCm(PPTY) case PPTY: return #PPTY
+
+        const char * Components:: AttributeText(const Attribute p) noexcept
+        {
+            switch(p)
+            {
+                    Y_ChemCm(Nebulous);
+                    Y_ChemCm(ReacOnly);
+                    Y_ChemCm(ProdOnly);
+                    Y_ChemCm(Definite);
+            }
+            return Core::Unknown;
+        }
+
         Components:: ~Components() noexcept
         {
         }
@@ -63,11 +78,39 @@ namespace Yttrium
                 throw;
             }
 
+            updateAttribute();
         }
 
         void Components:: operator()(const Role role, const Species &sp)
         {
             (*this)(role,1,sp);
+        }
+
+
+        void Components:: updateAttribute() noexcept
+        {
+            if(reac->size>0)
+            {
+                if(prod->size>0)
+                {
+                    Coerce(attr) = Definite;
+                }
+                else
+                {
+                    Coerce(attr) = ReacOnly;
+                }
+            }
+            else
+            {
+                if(prod->size>0)
+                {
+                    Coerce(attr) = ProdOnly;
+                }
+                else
+                {
+                    Coerce(attr) = Nebulous;
+                }
+            }
         }
 
         void Components :: viz(OutputStream &fp,
@@ -117,7 +160,12 @@ namespace Yttrium
             return lhs == rhs;
         }
 
-
+        void Components:: applicable() const
+        {
+            const char * const id = name.c_str();
+            if(!neutral() )    throw Specific::Exception(id, "charge is not conserved");
+            if(Nebulous==attr) throw Specific::Exception(id, "no components");
+        }
     }
 
 }

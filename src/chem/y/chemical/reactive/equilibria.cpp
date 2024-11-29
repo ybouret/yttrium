@@ -75,7 +75,7 @@ namespace Yttrium
         }
 
 
-        void Equilibria:: update() noexcept
+        void Equilibria:: updateFragment() noexcept
         {
             reactor.update();
         }

@@ -277,7 +277,7 @@ namespace Yttrium
             // update for format
             //
             //------------------------------------------------------------------
-            eqs.update();
+            eqs.updateFragment();
         }
 
 
@@ -322,13 +322,21 @@ namespace Yttrium
             assert(0!=compiler);
             assert(search->name() == *(compiler->genericParser.SEARCH.name) );
 
+            //------------------------------------------------------------------
+            //
             // prepare search
+            //
+            //------------------------------------------------------------------
             const String               expr = search->lexeme().toString(1,0);
             Lingo::Matching            matching(expr);
             Vector<String,MemoryModel> words(4,AsCapacity);
             unsigned                   count = 0;
 
+            //------------------------------------------------------------------
+            //
             // loop over pre-compiled descriptions
+            //
+            //------------------------------------------------------------------
             for(size_t i=0;i<EDB::Count;++i)
             {
                 const String data = EDB::Table[i];
