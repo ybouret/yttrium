@@ -50,9 +50,14 @@ namespace Yttrium
 
             CallActivity F = { eq, eK, C1, L1, xmul };
 
-            XTriplet x = { zero, zero, zero };
-            XTriplet f = { eq.activity(xmul, eK, C1, L1), zero, zero };
-            
+            {
+                XTriplet x = { zero, zero, zero };
+                XTriplet f = { eq.activity(xmul, eK, C1, L1), zero, zero };
+
+                std::cerr << "f=" << f << std::endl;
+
+            }
+
 
 
 

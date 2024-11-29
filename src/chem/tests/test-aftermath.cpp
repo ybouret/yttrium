@@ -35,7 +35,16 @@ Y_UTEST(aftermath)
     lib(std::cerr << "C=","[",C,"]") << std::endl;
     lib(std::cerr << "C=","\t[",C,"]",Library::ToReal) << std::endl;
 
+    Aftermath am;
+    for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+    {
+        XVector C1(C);
+        C1.ld(0);
+        const Equilibrium &eq = **it;
+        const xReal        eK = eq.K(0);
 
-
+        const Outcome outcome = am.solve(eq, eK,C1, TopLevel, C, TopLevel);
+        
+    }
 }
 Y_UDONE()

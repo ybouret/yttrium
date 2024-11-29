@@ -34,7 +34,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Outcome);
         };
 
-        Outcome:: Outcome(const Situation  &_st,
+        inline Outcome:: Outcome(const Situation  &_st,
                           const Components &_eq,
                           const xReal       _eK,
                           const XReadable &_C,
@@ -48,7 +48,7 @@ namespace Yttrium
 
         }
 
-        Outcome:: Outcome(const Outcome &_) noexcept :
+        inline Outcome:: Outcome(const Outcome &_) noexcept :
         st(_.st),
         eq(_.eq),
         eK(_.eK),
@@ -59,7 +59,7 @@ namespace Yttrium
         }
 
 
-        Outcome:: ~Outcome() noexcept {}
+        inline Outcome:: ~Outcome() noexcept {}
 
         class Aftermath
         {
