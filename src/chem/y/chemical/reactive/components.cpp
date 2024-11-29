@@ -119,7 +119,7 @@ namespace Yttrium
         {
             Node(fp,this) << '[';
             Label(fp,name) << ",shape=box3d";
-            if(color) fp << "color=\"" << color << "\"";
+            if(color) fp << ",color=" << color << ",fontcolor=" << color;
             if(style) fp << "style=\"" << style << "\"";
             Endl(fp<<']');
             
@@ -212,6 +212,12 @@ namespace Yttrium
             }
         }
 
+        const char * const Components::Scheme = "set18";
+
+        String Components:: makeColor() const
+        {
+            return makeColorFrom(Scheme);
+        }
 
 
     }

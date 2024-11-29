@@ -85,17 +85,40 @@ namespace Yttrium
             reactor.update();
         }
 
-        void Equilibria:: viz(OutputStream &fp) const
+
+        void Equilibria:: graphViz(OutputStream &fp) const
         {
-            SList       species;
-            AddressBook book;
+            GraphViz::Vizible::Enter(fp, "G");
+            {
+                SList       species;
+                {
+                    AddressBook book;
+                    for(ConstIterator it=reactor.begin();it!=reactor.end();++it)
+                    {
+                        const Components &cm = **it;
+                        cm.addSpeciesTo(book);
+                    }
+                    DBOps::Extract(species,book);
+                }
+
+                for(const SNode *sn=species.head;sn;sn=sn->next)
+                {
+                    const Species &sp    = **sn;
+                    const String   color = sp.makeColor();
+                    std::cerr << "color=" << color << std::endl;
+                    sp.viz(fp,color.c_str(),0);
+                }
+            }
+
             for(ConstIterator it=reactor.begin();it!=reactor.end();++it)
             {
                 const Components &cm = **it;
-                cm.addSpeciesTo(book);
+                const String      color = cm.makeColor();
+                cm.viz(fp,color.c_str(),0);
             }
-            DBOps::Extract(species,book);
-            std::cerr << "species=" << species << std::endl;
+
+            GraphViz::Vizible::Leave(fp);
+
         }
 
 

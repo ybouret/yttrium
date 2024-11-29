@@ -25,8 +25,7 @@ Y_UTEST(weasel)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    OutputFile fp(StdErr);
-    eqs.viz(fp);
+    GraphViz::Vizible::DotToPng("eqs.dot", eqs);
 
 
 }

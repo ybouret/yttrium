@@ -52,6 +52,12 @@ namespace Yttrium
             virtual ~Indexed()                      noexcept; //!< cleanup
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             template <typename ARRAY> inline
             typename ARRAY::Type & operator()(ARRAY &arr, const Level level) const noexcept
             {
@@ -64,6 +70,7 @@ namespace Yttrium
                 return arr[ indx[level] ];
             }
 
+            String makeColorFrom(const char * const scheme) const;
 
             //__________________________________________________________________
             //

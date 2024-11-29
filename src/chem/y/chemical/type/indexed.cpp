@@ -17,6 +17,25 @@ namespace Yttrium
         {
 
         }
+
+
+
+
+
     }
 
+}
+
+#include "y/graphviz/vizible.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        String Indexed:: makeColorFrom(const char * const scheme) const
+        {
+            const String cid = GraphViz::Vizible::Color(scheme,indx[TopLevel]);
+            return  cid;
+        }
+    }
 }

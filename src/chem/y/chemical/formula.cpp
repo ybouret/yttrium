@@ -78,7 +78,7 @@ namespace Yttrium
             fp << " >";
 
             fp<< ",shape=box";
-            if( 0!=color ) fp << ",color=\"" << color << "\"";
+            if( 0!=color ) fp << ",color=" << color << ",fontcolor=" << color;
             if( 0!=style ) fp << ",style=\"" << style << "\"";
             Endl(fp <<']');
         }

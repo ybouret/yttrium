@@ -58,7 +58,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Compendium::ConstIterator ConstIterator; //!< alias
-
+            static const char * const Scheme;                //!< color scheme
 
 
             static const char * AttributeText(const Attribute) noexcept;
@@ -113,11 +113,14 @@ namespace Yttrium
             //! quick display
             std::ostream & print(std::ostream &) const;
 
+            String makeColor() const;
+
             //! display name + arrows, but NOT the species
             void viz(OutputStream &fp,
                      const char * const color,
                      const char * const style) const;
 
+            //! standalone graph
             void graphViz(OutputStream &) const;
 
             //__________________________________________________________________

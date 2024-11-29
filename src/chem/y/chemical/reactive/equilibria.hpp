@@ -107,7 +107,7 @@ namespace Yttrium
             //! update fragment for formatting all equilibria
             void updateFragment() noexcept;
 
-            void viz(OutputStream &fp) const;
+            void graphViz(OutputStream &fp) const; //!< standalone graphViz
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

@@ -42,6 +42,7 @@ namespace Yttrium
             typedef ArkPtr<const String,const Species>   Handle;   //!< alias
             typedef SuffixSet<const String,const Handle> Set;      //!< alias
             static const char * const                    CallSign; //!< "Chemical::Species"
+            static const char * const                    Scheme;   //!< color scheme
 
             //__________________________________________________________________
             //
@@ -70,7 +71,14 @@ namespace Yttrium
             //__________________________________________________________________
             virtual const String & key() const noexcept; //! [Entity] name
 
-           
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+            String makeColor() const;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

@@ -68,7 +68,7 @@ namespace Yttrium
                 fp << "label=\"\"";
             }
             
-            if(color) fp << ",color=\"" << color << "\"";
+            if(color) fp << ",color=" << color << ",fontcolor=" << color;
             GraphViz::Vizible::Endl(fp << ']');
         }
     }
