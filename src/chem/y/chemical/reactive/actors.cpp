@@ -44,6 +44,23 @@ namespace Yttrium
             for(const Actor *a=company.head;a;a=a->next) a->activity(xmul,C,L);
         }
 
+        bool Actors:: haveZero(const XReadable &C, const Level L) const noexcept
+        {
+            for(const Actor *a=company.head;a;a=a->next)
+            {
+                const xReal c = a->sp(C,L);
+                switch( Sign::Of(c.mantissa) )
+                {
+                    case Negative:
+                    case __Zero__:
+                        return true;
+                    case Positive:
+                        continue;
+                }
+            }
+            return false;
+        }
+
 
     }
 

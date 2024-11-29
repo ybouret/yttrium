@@ -11,7 +11,18 @@ namespace Yttrium
     namespace Chemical
     {
 
+        enum Attribute
+        {
+            Nebulous,
+            ReacOnly,
+            ProdOnly,
+            Definite
+        };
 
+        enum Situation {
+            Blocked,
+            Running
+        };
 
         //______________________________________________________________________
         //
@@ -48,13 +59,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Compendium::ConstIterator ConstIterator; //!< alias
 
-            enum Attribute
-            {
-                Nebulous,
-                ReacOnly,
-                ProdOnly,
-                Definite
-            };
+
 
             static const char * AttributeText(const Attribute) noexcept;
 
@@ -127,6 +132,24 @@ namespace Yttrium
             //! delta activity
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
 
+
+            //! transfer only components
+            template <typename TARGET, typename SOURCE> inline
+            void transfer(TARGET &target, const Level targetLevel,
+                          SOURCE &source, const Level sourceLevel) const
+            {
+                size_t        n = cmdb.size();
+                ConstIterator i = cmdb.begin();
+                while( n-- > 0 )
+                {
+                    const Species &s = (*i).actor.sp;
+                    s(target,targetLevel) = s(source,sourceLevel);
+                    ++i;
+                }
+            }
+
+            Situation situation(const XReadable &C, const Level L) const noexcept;
+            
 
             //__________________________________________________________________
             //

@@ -167,7 +167,7 @@ namespace Yttrium
             if(Nebulous==attr) throw Specific::Exception(id, "no components");
         }
 
-        
+
         xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const
         {
             xmul.free();
@@ -181,6 +181,16 @@ namespace Yttrium
             const xReal pa = xmul.product();
             return ra-pa;
         }
+
+
+        Situation Components:: situation(const XReadable &C, const Level L) const noexcept
+        {
+            if(reac.haveZero(C,L) && prod.haveZero(C,L) ) return Blocked;
+            return Running;
+        }
+
+        
+
     }
 
 }
