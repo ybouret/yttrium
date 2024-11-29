@@ -33,7 +33,7 @@ Y_UTEST(aftermath)
     Library::Conc(C,ran);
 
     lib(std::cerr << "C=","[",C,"]") << std::endl;
-    lib(std::cerr << "C=","[",C,"]",Library::ToReal) << std::endl;
+    lib(std::cerr << "C=","\t[",C,"]",Library::ToReal) << std::endl;
 
 
 
