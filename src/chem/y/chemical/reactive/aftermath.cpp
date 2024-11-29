@@ -1,5 +1,6 @@
 
 #include "y/chemical/reactive/aftermath.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -50,14 +51,19 @@ namespace Yttrium
 
             CallActivity F = { eq, eK, C1, L1, xmul };
 
+            while(true)
             {
                 XTriplet x = { zero, zero, zero };
                 XTriplet f = { eq.activity(xmul, eK, C1, L1), zero, zero };
 
-                std::cerr << "f=" << f << std::endl;
+                std::cerr << "f=" << real_t(f.a) << std::endl;
+                
+
+
 
             }
 
+            DONE:
 
 
 

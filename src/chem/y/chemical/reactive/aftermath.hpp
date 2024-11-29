@@ -75,8 +75,8 @@ namespace Yttrium
                           const XReadable  &C0,
                           const Level       L0);
 
-            XMul xmul;
-            XAdd xadd;
+            XMul        xmul;
+            XAdd        xadd;
             const xReal zero;
 
         private:

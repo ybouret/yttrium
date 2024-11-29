@@ -68,6 +68,24 @@ namespace Yttrium
             return false;
         }
 
+        xReal Actors:: limitingExtent(const XReadable &C, const Level L) const noexcept
+        {
+            if(company.size<=0)
+                return 0;
+            else
+            {
+                const Actor *a  = company.head;
+                xReal        xi = a->sp(C,L)/a->xn; assert(xi>=0.0);
+                for(a=a->next;a;a=a->next)
+                {
+                    const xReal xt = a->sp(C,L)/a->xn; assert(xt>=0.0);
+                    if(xt<xi) xi=xt;
+                }
+                return xi;
+            }
+
+        }
+
 
     }
 
