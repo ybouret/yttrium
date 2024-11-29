@@ -20,9 +20,9 @@ namespace Yttrium
         typedef Writable<xReal> XWritable; //!< alias
         typedef Readable<xReal> XReadable; //!< alias
 
-        typedef MKL::Antelope::Add<xReal> XAdd;
-        typedef MKL::Antelope::Mul<xReal> XMul;
-        typedef MKL::Triplet<xReal> XTriplet;
+        typedef MKL::Antelope::Add<xReal> XAdd;     //!< alias
+        typedef MKL::Antelope::Mul<xReal> XMul;     //!< alias
+        typedef MKL::Triplet<xReal>       XTriplet; //!< alias
 
         typedef Vector<String,MemoryModel> Strings; //!< alias
 

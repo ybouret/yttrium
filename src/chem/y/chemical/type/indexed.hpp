@@ -58,18 +58,23 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! access array by indexed level
             template <typename ARRAY> inline
             typename ARRAY::Type & operator()(ARRAY &arr, const Level level) const noexcept
             {
                 return arr[ indx[level] ];
             }
 
+            //! access array by indexed level
             template <typename ARRAY> inline
             typename ARRAY::ConstType & operator()(const ARRAY &arr, const Level level) const noexcept
             {
                 return arr[ indx[level] ];
             }
 
+
+            //! color from scheme and TopLevel index
             String makeColorFrom(const char * const scheme) const;
 
             //__________________________________________________________________

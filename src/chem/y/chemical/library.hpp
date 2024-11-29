@@ -51,10 +51,12 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Ingredients::ConstIterator ConstIterator; //!< alias
             static const char * const          CallSign;      //!< "Chemical::Library"
-            static const int                   PMIN = -12;
-            static const int                   PMAX =   2;
-            static real_t                      RanP( Random::Bits &ran ) noexcept;
-            static xReal                       RanC( Random::Bits &ran ) noexcept;
+            static const int                   PMIN = -12;    //!< Cmin = 10^PMIN
+            static const int                   PMAX =   2;    //!< Cmax = 10^PMAX
+            static real_t                      RanP( Random::Bits &ran ) noexcept; //!< ran(PMIN:PMAX)
+            static xReal                       RanC( Random::Bits &ran ) noexcept; //!< 10^RanP(ran)
+
+            //! C = RanC(ran) but below probaZero, and change sign below probaNegative
             static void                        Conc(XWritable &  C,
                                                     Random::Bits &ran,
                                                     const real_t probaZero     = 0,

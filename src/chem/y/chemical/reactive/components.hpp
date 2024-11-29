@@ -11,17 +11,20 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! Attribute for Components
         enum Attribute
         {
-            Nebulous,
-            ReacOnly,
-            ProdOnly,
-            Definite
+            Nebulous, //!< no component
+            ReacOnly, //!< only reactants
+            ProdOnly, //!< only products
+            Definite  //!< reactants+products
         };
 
+
+        //! Situation for Components
         enum Situation {
-            Blocked,
-            Running
+            Blocked, //!< at least one reac AND one prod are zero
+            Running  //!< all components have positive concentration
         };
 
         //______________________________________________________________________
@@ -58,10 +61,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef Compendium::ConstIterator ConstIterator; //!< alias
-            static const char * const Scheme;                //!< color scheme
-
-
-            static const char * AttributeText(const Attribute) noexcept;
+            static const char * const         Scheme;        //!< color scheme
+            static const char * AttributeText(const Attribute) noexcept; //!< human readable attribute
 
             //__________________________________________________________________
             //
@@ -113,6 +114,7 @@ namespace Yttrium
             //! quick display
             std::ostream & print(std::ostream &) const;
 
+            //! make color from TopLevel index and Scheme
             String makeColor() const;
 
             //! display name + arrows, but NOT the species
@@ -129,13 +131,13 @@ namespace Yttrium
             // Methods to query
             //
             //__________________________________________________________________
-            bool neutral()    const; //!< check charge conservation
-            void applicable() const; //!< neutral and not nebulous
-            void addSpeciesTo(AddressBook &) const;
+            bool neutral()                   const; //!< check charge conservation
+            void applicable()                const; //!< neutral and not nebulous
+            void addSpeciesTo(AddressBook &) const; //!< OR'd species into book
 
-            //! delta activity
-            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
-            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
+
+            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;                 //!< delta activities
+            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const; //!< delta shifted activities
 
 
             //! transfer only components
@@ -153,6 +155,7 @@ namespace Yttrium
                 }
             }
 
+            //! situation from concentrations
             Situation situation(const XReadable &C, const Level L) const noexcept;
             
 
@@ -173,8 +176,8 @@ namespace Yttrium
             void     updateAttribute() noexcept;
 
         public:
-            const Attribute attr;
-            const xReal     one;
+            const Attribute attr; //!< current attibute
+            const xReal     one;  //!< alias
         };
 
     }

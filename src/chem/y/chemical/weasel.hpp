@@ -53,18 +53,19 @@ namespace Yttrium
             XNode * parseFormula(const String &);     //!< parse a string to single FORMULA
             XNode * parseFormula(const char * const); //!< parse text to  single FORMULA
             void    setupFormula(Formula &formula);   //!< rebuild name + charge from FORMULA
-            
-            void    setupEquilibrium(XTree &tree, Library &lib, Equilibria &eqs);
-            XNode  *parseEquilibrium(const String &);                         //!< parse a string to EQUILIBRIUM
-            void    queryEquilibrium(XTree &search, Library &, Equilibria &); //!< search precompiled
-            
+            String  toHTML(const Formula &);          //!< convert formula to HTML label
+
+            void    setupEquilibrium(XTree &tree, Library &lib, Equilibria &eqs); //!< link EQUILIBRIUM into eqs, filling lib with species
+            XNode  *parseEquilibrium(const String &);                             //!< parse a string to EQUILIBRIUM
+            void    queryEquilibrium(XTree &search, Library &, Equilibria &);     //!< search precompiled in EDB
+
 
             //! parse species and equilibria from a module
             void operator()(Library &             lib,
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
 
-            String toHTML(const Formula &);
+
 
             //__________________________________________________________________
             //

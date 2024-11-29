@@ -85,13 +85,16 @@ namespace Yttrium
         };
 
 
-        typedef Small::BareLightList<const Species> SList;
-        typedef SList::NodeType                     SNode;
-        typedef Small::CoopLightList<const Species> SRepo;
-        typedef SRepo::ProxyType                    SBank;
+        typedef Small::BareLightList<const Species> SList; //!< alias
+        typedef SList::NodeType                     SNode; //!< alias
+        typedef Small::CoopLightList<const Species> SRepo; //!< alias
+        typedef SRepo::ProxyType                    SBank; //!< alias
 
+        //! operators
         struct DBOps
         {
+
+            //! extract stored addresses from book into target list
             template <typename LIST> static inline
             void Extract(LIST &target, const AddressBook &book)
             {

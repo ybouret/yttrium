@@ -53,12 +53,16 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! graphViz code
             void viz(OutputStream &     fp,
                      const char * const color,
                      const char * const style) const;
 
+            //! standalone graphViz code
             void graphViz(OutputStream &fp) const;
 
+            //! HTML label for pretty naming
             String html() const;
 
             //__________________________________________________________________

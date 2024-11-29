@@ -44,9 +44,9 @@ namespace Yttrium
             const Actor & operator()(const Species &);                 //!< register with coeff=1
             const Actor & operator()(const unsigned, const Species &); //!< register
 
-            void activity(XMul &xmul, const XReadable &C, const Level L) const;
-            void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const;
-            bool haveZero(const XReadable &C, const Level L) const noexcept;
+            void activity(XMul &xmul, const XReadable &C, const Level L) const;                 //!< gather product of activitis into mul
+            void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< gather product of shifted activities into mul
+            bool haveZero(const XReadable &C, const Level L) const noexcept;                    //!< check if at least one concentration is zero
 
         private:
             Y_DISABLE_ASSIGN(Actors);
