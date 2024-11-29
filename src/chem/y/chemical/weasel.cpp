@@ -144,22 +144,6 @@ namespace Yttrium
             static const char func[] = Y_Chemical_Weasel "::parseFormula";
             assert(0!=compiler);
             return parseSingle(compiler->genericParser.FORMULA,expr,func);
-
-#if 0
-            const Parser & parser  = compiler->genericParser;
-            const String & FORMULA = *parser.FORMULA.name;
-            AutoPtr<XNode> tree    = parse( Lingo::Module::OpenData(FORMULA, expr) );
-
-            assert( tree->name() == *parser.WEASEL.name );
-            assert( tree->type   == XNode::Internal);
-
-            XList &        list = tree->branch(); if( list.size != 1  ) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),FORMULA.c_str());
-            XNode * const  node = list.head;
-            const String & uuid = node->name();   if( FORMULA != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),FORMULA.c_str());
-
-            // return extracted node
-            return list.pop(node);
-#endif
         }
 
         XNode * Weasel:: parseFormula(const char * const expr)
@@ -173,22 +157,6 @@ namespace Yttrium
             static const char func[] = Y_Chemical_Weasel "::parseEquilibrium";
             assert(0!=compiler);
             return parseSingle(compiler->genericParser.EQUILIBRIUM,expr,func);
-
-#if 0
-            const Parser & parser      = compiler->genericParser;
-            const String & EQUILIBRIUM = *parser.EQUILIBRIUM.name;
-            AutoPtr<XNode> tree        = parse( Lingo::Module::OpenData(EQUILIBRIUM, expr) );
-
-            assert( tree->name() == *parser.WEASEL.name );
-            assert( tree->type   == XNode::Internal);
-
-            XList &        list = tree->branch(); if( list.size != 1  ) throw Specific::Exception(fn, "'%s' is not a single %s",expr.c_str(),EQUILIBRIUM.c_str());
-            XNode * const  node = list.head;
-            const String & uuid = node->name();   if( EQUILIBRIUM != uuid ) throw Specific::Exception(fn,"'%s' is not a %s",expr.c_str(),EQUILIBRIUM.c_str());
-
-            // return extracted node
-            return list.pop(node);
-#endif
         }
 
         void Weasel:: setupFormula(Formula &formula)

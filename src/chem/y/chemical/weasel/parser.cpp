@@ -2,6 +2,7 @@
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
 #include "y/lingo/lexical/add-on/rstring.hpp"
+#include "y/lingo/lexical/add-on/bstring.hpp"
 
 
 namespace Yttrium
@@ -14,7 +15,7 @@ namespace Yttrium
 
 
 
-
+#define Y_CHEM_EQ_CHAR "[:word:]\\(\\)\\[\\]"
 
 
         Weasel:: Parser:: Parser(const Lingo::Caption   &caption,
@@ -24,7 +25,8 @@ namespace Yttrium
         FORMULA(     agg("FORMULA")     ),
         EQUILIBRIUM( agg("EQUILIBRIUM") ),
         POSITIVE(    term('+')          ),
-        SEARCH(      term("SEARCH","%[:core:]+") ),
+        //SEARCH( plug<Lingo::Lexical::BString>("SEARCH") ),
+        SEARCH(      term("SEARCH","%[" Y_CHEM_EQ_CHAR "\\\\.*?+]+" ) ),
         hashing( h )
         {
             //------------------------------------------------------------------
@@ -39,6 +41,7 @@ namespace Yttrium
             const Rule & SPACE   = alt("SPACE") << BLANK << ENDL;
             const Rule & SPACES  = oom(SPACE);
             const Rule & WHITE   = opt(SPACES);
+
 
             //------------------------------------------------------------------
             //
@@ -70,7 +73,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            const Rule &EQ          = term("EQ","@[[:word:]\\(\\)\\[\\]]+");
+            const Rule &EQ          = term("EQ","@[" Y_CHEM_EQ_CHAR "]+");
             EQUILIBRIUM << EQ << WHITE << COLON;
             Compound   &ACTOR  = agg("ACTOR")  << WHITE << OPT_INT << WHITE << FORMULA;
             Compound   &ACTORS = grp("ACTORS") << ACTOR << zom( cat(WHITE,POSITIVE,ACTOR) );
@@ -82,7 +85,6 @@ namespace Yttrium
             EQUILIBRIUM << WHITE << plug<Lingo::Lexical::RString>("K");
 
 
-            //const Rule &SEARCH = term("SEARCH","%[:core:]+");
 
 
 
