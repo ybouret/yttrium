@@ -68,7 +68,12 @@ namespace Yttrium
             os << '{' << std::endl;
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
-                db.print(os << '\t' << '@', **it) << std::endl;
+                const Equilibrium &eq = **it;
+                db.print(os << '\t' << '@', eq);
+                const xReal  K = eq.K(0);
+                const real_t l = K.log10();
+                os << "'10^(" << l << ")'";
+                os << std::endl;
             }
             os << '}';
             return os;

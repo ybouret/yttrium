@@ -5,6 +5,7 @@
 
 #include "y/chemical/reactive/component.hpp"
 #include "y/chemical/reactive/actors.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -128,9 +129,11 @@ namespace Yttrium
             //__________________________________________________________________
             bool neutral()    const; //!< check charge conservation
             void applicable() const; //!< neutral and not nebulous
+            void addSpeciesTo(AddressBook &) const;
 
             //! delta activity
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
+            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
 
 
             //! transfer only components

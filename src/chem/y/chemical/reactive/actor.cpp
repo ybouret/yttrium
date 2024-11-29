@@ -78,6 +78,16 @@ namespace Yttrium
             assert(sp(C,L)>=0.0);
             xmul.insert( sp(C,L), nu);
         }
+
+        void Actor:: activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const
+        {
+            assert(sp(C,L)>=0.0);
+            xReal c = sp(C,L) + xn * xi;
+            if(c<=0.0) c=0.0;
+            xmul.insert(c,nu);
+        }
+
+
     }
 
 }

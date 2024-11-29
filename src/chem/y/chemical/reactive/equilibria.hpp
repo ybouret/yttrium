@@ -99,8 +99,8 @@ namespace Yttrium
                 return *eq;
             }
 
-            void operator()(Library &lib, const String &     expr);
-            void operator()(Library &lib, const char * const expr);
+            void operator()(Library &lib, const String &     expr); //! internally process expression as Weasel
+            void operator()(Library &lib, const char * const expr); //! internally process expression as Weasel
 
 
 

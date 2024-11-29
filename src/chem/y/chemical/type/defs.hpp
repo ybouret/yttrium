@@ -9,6 +9,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/antelope/mul.hpp"
+#include "y/mkl/triplet.hpp"
 
 namespace Yttrium
 {
@@ -21,6 +22,7 @@ namespace Yttrium
 
         typedef MKL::Antelope::Add<xReal> XAdd;
         typedef MKL::Antelope::Mul<xReal> XMul;
+        typedef MKL::Triplet<xReal> XTriplet;
 
         typedef Vector<String,MemoryModel> Strings; //!< alias
 

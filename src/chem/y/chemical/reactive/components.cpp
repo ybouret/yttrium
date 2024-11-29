@@ -182,6 +182,21 @@ namespace Yttrium
             return ra-pa;
         }
 
+        xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const
+        {
+            xmul.free();
+            xmul << K;
+            reac.activity(xmul,C,L,-xi);
+            const xReal ra = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << one;
+            prod.activity(xmul,C,L,xi);
+            const xReal pa = xmul.product();
+            return ra-pa;
+        }
+
+
 
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept
         {

@@ -44,6 +44,13 @@ namespace Yttrium
             for(const Actor *a=company.head;a;a=a->next) a->activity(xmul,C,L);
         }
 
+        void Actors:: activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const
+        {
+            for(const Actor *a=company.head;a;a=a->next) a->activity(xmul,C,L,xi);
+        }
+
+
+
         bool Actors:: haveZero(const XReadable &C, const Level L) const noexcept
         {
             for(const Actor *a=company.head;a;a=a->next)

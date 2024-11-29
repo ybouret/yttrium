@@ -76,7 +76,8 @@ namespace Yttrium
                           const Level       L0);
 
             XMul xmul;
-            //XAdd xadd;
+            XAdd xadd;
+            const xReal zero;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);

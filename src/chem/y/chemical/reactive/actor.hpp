@@ -65,6 +65,7 @@ namespace Yttrium
 
 
             void activity(XMul &xmul, const XReadable &C, const Level L) const;
+            void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const;
 
 
 

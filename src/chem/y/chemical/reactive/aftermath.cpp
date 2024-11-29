@@ -13,6 +13,19 @@ namespace Yttrium
         {
         }
 
+
+        namespace
+        {
+            struct CallActivity
+            {
+                const Components &eq;
+                const xReal       eK;
+                const XReadable  &C;
+                const Level       L;
+                XMul             &xmul;
+            };
+        }
+
         Outcome Aftermath:: solve(const Components &eq,
                                   const xReal       eK,
                                   XWritable        &C1,
@@ -32,8 +45,16 @@ namespace Yttrium
             // prepare outcome
             const Outcome outcome(Running,eq,eK,C1,L1);
 
-            // prepare workspace
-            eq.transfer(C1, L1, C0, L0);
+            // prepare workspace with initial conditions
+            eq.transfer(C1,L1,C0,L0);
+
+            CallActivity F = { eq, eK, C1, L1, xmul };
+
+            XTriplet x = { zero, zero, zero };
+            XTriplet f = { eq.activity(xmul, eK, C1, L1), zero, zero };
+            
+
+
 
             // done
             return outcome;
