@@ -12,7 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-    
+
         //______________________________________________________________________
         //
         //
@@ -91,6 +91,64 @@ namespace Yttrium
                 const Formula formula(data);
                 return get(formula);
             }
+
+            template <typename T> inline
+            T & Id(T &x) noexcept { return x; }
+
+            template <typename ARRAY> inline
+            std::ostream & operator()(std::ostream &os,
+                                      const char * const pfx,
+                                      ARRAY & arr,
+                                      const char * const sfx) const
+            {
+                if(db.size()<=0) os << "{}";
+                else
+                {
+                    os << '{' << std::endl;
+                    for(ConstIterator it=db.begin();it!=db.end();++it)
+                    {
+                        const Species &sp = **it;
+                        db.print(os, pfx, sp, sfx, Justify::Left);
+                        os << " = ";
+                        os << sp(arr,TopLevel);
+                        os << std::endl;
+                    }
+                    os << '}';
+                }
+                return os;
+            }
+
+            static inline String ToReal(const xReal &x) {
+                return Formatted::Get("%.15g", real_t(x) );
+            }
+
+            template <typename ARRAY, typename TRANSFORM> inline
+            std::ostream & operator()(std::ostream &os,
+                                      const char * const pfx,
+                                      ARRAY & arr,
+                                      const char * const sfx,
+                                      TRANSFORM    & proc) const
+            {
+                if(db.size()<=0) os << "{}";
+                else
+                {
+                    os << '{' << std::endl;
+                    for(ConstIterator it=db.begin();it!=db.end();++it)
+                    {
+                        const Species &sp = **it;
+                        db.print(os, pfx, sp, sfx, Justify::Left);
+                        os << " = ";
+                        os << proc(sp(arr,TopLevel));
+                        os << std::endl;
+                    }
+                    os << '}';
+                }
+                return os;
+            }
+
+
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

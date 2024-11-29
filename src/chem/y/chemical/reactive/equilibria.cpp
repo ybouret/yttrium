@@ -105,7 +105,6 @@ namespace Yttrium
                 {
                     const Species &sp    = **sn;
                     const String   color = sp.makeColor();
-                    std::cerr << "color=" << color << std::endl;
                     sp.viz(fp,color.c_str(),0);
                 }
             }

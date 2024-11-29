@@ -25,6 +25,8 @@ namespace Yttrium
         typedef MKL::Triplet<xReal>       XTriplet; //!< alias
 
         typedef Vector<String,MemoryModel> Strings; //!< alias
+        typedef Vector<xReal,MemoryModel>  XVector; //!< alias
+
 
     }
 
