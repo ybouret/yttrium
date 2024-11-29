@@ -182,19 +182,9 @@ namespace Yttrium
             return ra-pa;
         }
 
-        xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const
-        {
-            xmul.free();
-            xmul << K;
-            reac.activity(xmul,C,L,-xi);
-            const xReal ra = xmul.product();
 
-            assert(xmul.isEmpty());
-            xmul << one;
-            prod.activity(xmul,C,L,xi);
-            const xReal pa = xmul.product();
-            return ra-pa;
-        }
+
+
 
 
         xReal Components:: prodActivity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const
@@ -205,6 +195,19 @@ namespace Yttrium
             return -xmul.product();
         }
 
+        xReal Components:: reacActivity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const
+        {
+            xmul.free();
+            xmul << K;
+            reac.activity(xmul,C,L,-xi);
+            return xmul.product();
+        }
+
+        xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const
+        {
+            return reacActivity(xmul, K, C, L, -xi) + prodActivity(xmul, C, L, xi);
+        }
+        
 
 
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept

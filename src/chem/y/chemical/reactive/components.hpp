@@ -137,9 +137,15 @@ namespace Yttrium
 
 
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;                 //!< delta activities
-            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const; //!< delta shifted activities
 
+            //! K * product of activities at -xi
+            xReal reacActivity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
+
+            //! - 1*product of activities at +xi
             xReal prodActivity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const;
+
+            //! reacActivity+prodActivity
+            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
 
 
             //! transfer only components

@@ -81,7 +81,7 @@ namespace Yttrium
                             case Definite:
                                 // reach one limiting reactant => reacActivity=0
                                 x.c = eq.reac.limitingExtent(C1,L1);
-                                f.c = eq.prodActivity(xmul,C1, L1,x.c);
+                                f.c = eq.prodActivity(xmul,C1, L1,x.c); assert(f.c<0.0);
                                 break;
 
                             case ProdOnly:
