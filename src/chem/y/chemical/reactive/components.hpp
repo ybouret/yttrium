@@ -75,7 +75,8 @@ namespace Yttrium
             reac(),
             prod(),
             cmdb(),
-            attr(Nebulous)
+            attr(Nebulous),
+            one(1)
             {
             }
 
@@ -114,15 +115,18 @@ namespace Yttrium
 
             void graphViz(OutputStream &) const;
 
-            bool neutral()    const; //!< check charge conservation
-            void applicable() const; //!< neutral and not nebulous
-
             //__________________________________________________________________
             //
             //
             // Methods to query
             //
             //__________________________________________________________________
+            bool neutral()    const; //!< check charge conservation
+            void applicable() const; //!< neutral and not nebulous
+
+            //! delta activity
+            xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
+
 
             //__________________________________________________________________
             //
@@ -142,7 +146,7 @@ namespace Yttrium
 
         public:
             const Attribute attr;
-
+            const xReal     one;
         };
 
     }

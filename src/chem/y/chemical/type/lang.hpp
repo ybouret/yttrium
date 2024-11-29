@@ -13,7 +13,6 @@ namespace Yttrium
         typedef Lingo::Syntax::XNode XNode; //!< alias
         typedef Lingo::Syntax::XList XList; //!< alias
         typedef Lingo::Caption       XName; //!< alias
-        //extern const char            COLON; //!< ':'
     }
 
 }

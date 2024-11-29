@@ -61,9 +61,12 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! helper to Actor::List display
-            const Actor & operator*() const noexcept { return *this; }
+            const Actor & operator*() const noexcept;
 
-            
+
+            void activity(XMul &xmul, const XReadable &C, const Level L) const;
+
+
 
 
             //__________________________________________________________________

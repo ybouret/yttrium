@@ -166,6 +166,21 @@ namespace Yttrium
             if(!neutral() )    throw Specific::Exception(id, "charge is not conserved");
             if(Nebulous==attr) throw Specific::Exception(id, "no components");
         }
+
+        
+        xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const
+        {
+            xmul.free();
+            xmul << K;
+            reac.activity(xmul,C,L);
+            const xReal ra = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << one;
+            prod.activity(xmul, C, L);
+            const xReal pa = xmul.product();
+            return ra-pa;
+        }
     }
 
 }

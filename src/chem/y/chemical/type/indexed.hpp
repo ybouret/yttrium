@@ -52,6 +52,19 @@ namespace Yttrium
             virtual ~Indexed()                      noexcept; //!< cleanup
 
 
+            template <typename ARRAY> inline
+            typename ARRAY::Type & operator()(ARRAY &arr, const Level level) const noexcept
+            {
+                return arr[ indx[level] ];
+            }
+
+            template <typename ARRAY> inline
+            typename ARRAY::ConstType & operator()(const ARRAY &arr, const Level level) const noexcept
+            {
+                return arr[ indx[level] ];
+            }
+
+
             //__________________________________________________________________
             //
             //

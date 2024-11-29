@@ -55,7 +55,29 @@ namespace Yttrium
         }
 
 
+        const Actor & Actor:: operator*() const noexcept { return *this; }
 
+
+
+
+
+    }
+
+}
+
+#include "y/calculus/ipower.hpp"
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        void Actor:: activity(XMul &xmul, const XReadable &C, const Level L) const
+        {
+            assert(sp(C,L)>=0.0);
+            xmul.insert( sp(C,L), nu);
+        }
     }
 
 }

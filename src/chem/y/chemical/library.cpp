@@ -2,6 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/system/exception.hpp"
 #include <iomanip>
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -55,6 +56,39 @@ namespace Yttrium
             return os;
         }
 
+        real_t Library:: RanP( Random::Bits &ran ) noexcept
+        {
+            static const real_t amplitude = PMAX - PMIN;
+            return Clamp<real_t>(PMIN, PMIN + ran.to<real_t>() * amplitude, PMAX);
+        }
+
+        xReal Library:: RanC( Random::Bits &ran ) noexcept
+        {
+            static const real_t ten = 10;
+            return pow(ten, RanP(ran) );
+        }
+
+        void Library:: Conc(XWritable &  C,
+                            Random::Bits &ran,
+                            const real_t probaZero,
+                            const real_t probaNegative) noexcept
+        {
+            for(size_t i=C.size();i>0;--i)
+            {
+                xReal &c = C[i];
+                if( ran.to<real_t>() <= probaZero )
+                {
+                    c = 0;
+                    continue;
+                }
+
+                c = RanC( ran );
+                if( ran.to<real_t>() <= probaNegative )
+                {
+                    c.neg();
+                }
+            }
+        }
     }
 
 }

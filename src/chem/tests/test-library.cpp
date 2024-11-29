@@ -3,6 +3,7 @@
 
 #include "y/chemical/library.hpp"
 #include "y/utest/run.hpp"
+#include "y/random/park-miller.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -21,5 +22,11 @@ Y_UTEST(library)
 
     std::cerr << "lib=" << lib << std::endl;
 
+    Random::ParkMiller ran;
+
+    for(size_t i=0;i<10;++i)
+    {
+        std::cerr << Library::RanP(ran) << std::endl;
+    }
 }
 Y_UDONE()

@@ -44,6 +44,7 @@ namespace Yttrium
             const Actor & operator()(const Species &);                 //!< register with coeff=1
             const Actor & operator()(const unsigned, const Species &); //!< register
 
+            void activity(XMul &xmul, const XReadable &C, const Level L) const;
 
         private:
             Y_DISABLE_ASSIGN(Actors);

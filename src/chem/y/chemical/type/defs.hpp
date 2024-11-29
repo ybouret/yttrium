@@ -7,6 +7,8 @@
 #include "y/mkl/xreal.hpp"
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/mkl/antelope/add.hpp"
+#include "y/mkl/antelope/mul.hpp"
 
 namespace Yttrium
 {
@@ -17,8 +19,11 @@ namespace Yttrium
         typedef Writable<xReal> XWritable; //!< alias
         typedef Readable<xReal> XReadable; //!< alias
 
+        typedef MKL::Antelope::Add<xReal> XAdd;
+        typedef MKL::Antelope::Mul<xReal> XMul;
 
         typedef Vector<String,MemoryModel> Strings; //!< alias
+
     }
 
 }

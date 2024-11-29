@@ -5,6 +5,7 @@
 
 #include "y/chemical/species.hpp"
 #include "y/chemical/type/assembly.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -50,6 +51,16 @@ namespace Yttrium
             //__________________________________________________________________
             typedef Ingredients::ConstIterator ConstIterator; //!< alias
             static const char * const          CallSign;      //!< "Chemical::Library"
+            static const int                   PMIN = -12;
+            static const int                   PMAX =   2;
+            static real_t                      RanP( Random::Bits &ran ) noexcept;
+            static xReal                       RanC( Random::Bits &ran ) noexcept;
+            static void                        Conc(XWritable &  C,
+                                                    Random::Bits &ran,
+                                                    const real_t probaZero     = 0,
+                                                    const real_t probaNegative = 0) noexcept;
+
+
 
             //__________________________________________________________________
             //

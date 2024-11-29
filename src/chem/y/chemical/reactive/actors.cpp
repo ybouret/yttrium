@@ -39,6 +39,11 @@ namespace Yttrium
             return os << (actors->name);
         }
 
+        void Actors:: activity(XMul &xmul, const XReadable &C, const Level L) const
+        {
+            for(const Actor *a=company.head;a;a=a->next) a->activity(xmul,C,L);
+        }
+
 
     }
 

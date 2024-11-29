@@ -77,7 +77,7 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         XReal & operator=(const T);                      //!< decompose/assign
         ~XReal() noexcept;                               //!< cleanup
         XReal(const T x, const Raised_ &, const int xp); //!< x * radix&xp
-
+        
         //______________________________________________________________________
         //
         //
