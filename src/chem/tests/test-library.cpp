@@ -28,5 +28,9 @@ Y_UTEST(library)
     {
         std::cerr << Library::RanP(ran) << std::endl;
     }
+
+    SList slist;
+    SBank sbank;
+    SRepo srepo(sbank);
 }
 Y_UDONE()

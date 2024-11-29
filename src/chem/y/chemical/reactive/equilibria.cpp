@@ -85,6 +85,20 @@ namespace Yttrium
             reactor.update();
         }
 
+        void Equilibria:: viz(OutputStream &fp) const
+        {
+            SList       species;
+            AddressBook book;
+            for(ConstIterator it=reactor.begin();it!=reactor.end();++it)
+            {
+                const Components &cm = **it;
+                cm.addSpeciesTo(book);
+            }
+            DBOps::Extract(species,book);
+            std::cerr << "species=" << species << std::endl;
+        }
+
+
 
     }
 

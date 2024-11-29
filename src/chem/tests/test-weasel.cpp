@@ -2,6 +2,7 @@
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
 #include "y/stream/libc/input.hpp"
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -24,6 +25,9 @@ Y_UTEST(weasel)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    
+    OutputFile fp(StdErr);
+    eqs.viz(fp);
+
+
 }
 Y_UDONE()

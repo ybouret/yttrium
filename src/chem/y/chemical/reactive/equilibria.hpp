@@ -102,10 +102,12 @@ namespace Yttrium
             void operator()(Library &lib, const String &     expr); //! internally process expression as Weasel
             void operator()(Library &lib, const char * const expr); //! internally process expression as Weasel
 
+            
 
-
-            //! update fragment for formatting
+            //! update fragment for formatting all equilibria
             void updateFragment() noexcept;
+
+            void viz(OutputStream &fp) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

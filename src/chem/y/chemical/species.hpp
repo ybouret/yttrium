@@ -10,6 +10,10 @@
 #include "y/ptr/ark.hpp"
 #include "y/associative/suffix/set.hpp"
 
+#include "y/data/small/light/list/bare.hpp"
+#include "y/data/small/light/list/coop.hpp"
+#include "y/associative/address-book.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -71,6 +75,28 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
+
+
+        typedef Small::BareLightList<const Species> SList;
+        typedef SList::NodeType                     SNode;
+        typedef Small::CoopLightList<const Species> SRepo;
+        typedef SRepo::ProxyType                    SBank;
+
+        struct DBOps
+        {
+            template <typename LIST> static inline
+            void Extract(LIST &target, const AddressBook &book)
+            {
+                size_t                     n = book.size();
+                AddressBook::ConstIterator i = book.begin();
+                while(n-- > 0)
+                {
+                    const void * const addr = *(i++); assert(0!=addr);
+                    target << *static_cast<typename LIST::ConstType *>(addr);
+                }
+            }
+        };
+
     }
 
 }

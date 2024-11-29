@@ -204,7 +204,15 @@ namespace Yttrium
             return Running;
         }
 
-        
+        void Components:: addSpeciesTo(AddressBook &book) const
+        {
+            for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it)
+            {
+                book |= (*it).actor.sp;
+            }
+        }
+
+
 
     }
 
