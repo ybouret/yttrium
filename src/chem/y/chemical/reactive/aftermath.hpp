@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-       
+        
         //______________________________________________________________________
         //
         //
@@ -53,9 +53,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            XMul        xmul; //!< internal computation
-            XAdd        xadd; //!< internal computation
-            const xReal zero; //!< named constant
+            XMul        xmul;    //!< internal computation
+            XAdd        xadd;    //!< internal computation
+            const xReal zero;    //!< named constant
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);

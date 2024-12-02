@@ -79,6 +79,7 @@ namespace Yttrium
             assert(sp(C,L)>=0.0);
             xReal c = sp(C,L) + xn * xi;
             if(c<=0.0) c=0.0;
+            //std::cerr << "*([" << sp << "]=" << real_t(c) << ")^" << nu << std::endl;
             xmul.insert(c,nu);
         }
 

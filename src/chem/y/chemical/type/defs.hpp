@@ -28,6 +28,7 @@ namespace Yttrium
         typedef Vector<xReal,MemoryModel>  XVector; //!< alias
 
 
+
     }
 
 }

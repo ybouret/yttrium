@@ -20,16 +20,12 @@ namespace Yttrium
         {
             struct EqIndicator
             {
-                const Components &eq;
+                const Components &E;
                 const xReal       K;
                 XWritable        &C;
                 const Level       L;
                 XMul             &xmul;
 
-                xReal operator()(const xReal xi)
-                {
-                    return eq.activity(xmul, K, C, L, xi);
-                }
 
                 SignType moved(xReal &xi)
                 {
@@ -47,12 +43,11 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     {
-                        const SignType s = eq.bracket(x,f,xmul,K,C,L);
+                        const SignType s = E.bracket(x,f,xmul,K,C,L);
                         switch(s)
                         {
                             case __Zero__:
                                 xi = 0;
-                                std::cerr << "not moved :)" << std::endl;
                                 return  __Zero__; // no need to move
 
                             case Positive:
@@ -61,11 +56,19 @@ namespace Yttrium
                                 break;
 
                             case Negative:
-                                x_pos = &x.c; f_pos = &f.c; assert(f.c>0.0);
                                 x_neg = &x.a; f_neg = &f.a; assert(f.a<0.0);
+                                x_pos = &x.c; f_pos = &f.c; assert(f.c>0.0);
                                 break;
                         }
                     }
+
+                    {
+                        MKL:: Triplet<real_t> xx,ff;
+                        xx = x;
+                        ff = f;
+                        std::cerr << "x=" << xx << " =>" << ff << std::endl;
+                    }
+
 
                     //----------------------------------------------------------
                     //
@@ -76,13 +79,24 @@ namespace Yttrium
                     for(;;)
                     {
                         x.b = half * (*x_pos + *x_neg);
-                        f.b = eq.activity(xmul,K,C,L,x.b);
+                        f.b = E.activity(xmul,K,C,L,x.b);
                         const SignType s = Sign::Of(f.b);
+                        std::cerr << "f.b=" << real_t(f.b) << " @" << real_t(x.b) << std::endl;
+                        std::cerr << "reac: " << real_t(E.reacActivity(xmul, K, C, L, x.b)) << std::endl;
+                        std::cerr << "prod: " << real_t(E.prodActivity(xmul, C, L, x.b)) << std::endl;
+
+                        {
+                            MKL:: Triplet<real_t> xx,ff;
+                            xx = x;
+                            ff = f;
+                            //std::cerr << "x=" << xx << " =>" << ff << std::endl;
+                        }
+
+
                         switch(s)
                         {
                             case __Zero__:
-                                // early return
-                                eq.moveSafely(C, L,xi=x.b);
+                                E.moveSafely(C, L,xi=x.b);
                                 return __Zero__;
 
                             case Positive:
@@ -99,7 +113,7 @@ namespace Yttrium
                         const xReal newWidth = (*x_pos - *x_neg).abs();
                         if(newWidth>=width)
                         {
-                            eq.moveSafely(C,L,xi=x.b);
+                            E.moveSafely(C,L,xi=x.b);
                             return s;
                         }
                         width = newWidth;
@@ -143,7 +157,6 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const Outcome outcome(Running,eq,eK,C1,L1);
-            std::cerr << "Running" << std::endl;
 
             //------------------------------------------------------------------
             //
@@ -152,12 +165,13 @@ namespace Yttrium
             //------------------------------------------------------------------
             eq.transfer(C1,L1,C0,L0);
 
+
             //------------------------------------------------------------------
             //
             // prepare equilibrium indicator
             //
             //------------------------------------------------------------------
-            EqIndicator F = { eq, eK, C1, L1 , xmul};
+            EqIndicator F = { eq, eK, C1, L1 , xmul };
 
             //------------------------------------------------------------------
             //
@@ -167,6 +181,9 @@ namespace Yttrium
             xReal    x = zero;
             SignType s = F.moved(x);
             std::cerr << "xi0 = " << real_t(x) << " => " << real_t(eq.activity(xmul, eK, C1, L1)) <<  " @" << C1 << std::endl;
+
+            exit(1);
+            
             if(__Zero__==s)
                 goto DONE; // already solved
 

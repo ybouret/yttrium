@@ -116,6 +116,15 @@ namespace Yttrium
                 return *(( &a - 1) + indx);
             }
 
+            template <typename U> inline
+            Triplet & operator=( const Triplet<U> &_ )
+            {
+                a = static_cast<T>(_.a);
+                b = static_cast<T>(_.b);
+                c = static_cast<T>(_.c);
+                return *this;
+            }
+
             //! load three next value from array
             template <typename U> inline
             void load(U *arr)

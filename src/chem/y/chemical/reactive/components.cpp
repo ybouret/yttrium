@@ -211,7 +211,7 @@ namespace Yttrium
 
         xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const
         {
-            return reacActivity(xmul, K, C, L, -xi) + prodActivity(xmul, C, L, xi);
+            return reacActivity(xmul, K, C, L, xi) + prodActivity(xmul, C, L, xi);
         }
         
 
@@ -272,6 +272,7 @@ namespace Yttrium
             assert(ff.a>0.0);
             // there is too much reactant/not enough product
             // forward xi>0 up to negative activity
+            std::cerr << "Positive Bracket" << std::endl;
             switch(attr)
             {
                 case Nebulous:
@@ -306,6 +307,7 @@ namespace Yttrium
         {
             assert(ff.a<0.0);
             // there is too much product/not enough reactant
+            std::cerr << "Negative Bracket" << std::endl;
             switch(attr)
             {
                 case Nebulous:

@@ -30,7 +30,7 @@ Y_UTEST(aftermath)
     XVector C( lib->size(), 0 );
 
 
-    Library::Conc(C,ran);
+    Library::Conc(C,ran,1);
 
     lib(std::cerr << "C=","[",C,"]") << std::endl;
     lib(std::cerr << "C=","\t[",C,"]",Library::ToReal) << std::endl;
@@ -44,7 +44,9 @@ Y_UTEST(aftermath)
         const xReal        eK = eq.K(0);
 
         const Outcome outcome = am.solve(eq, eK,C1, TopLevel, C, TopLevel);
-        
+
+        lib(std::cerr << "C=","\t[",C1,"]",Library::ToReal) << std::endl;
+
     }
 }
 Y_UDONE()

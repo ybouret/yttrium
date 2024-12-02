@@ -63,7 +63,8 @@ namespace Yttrium
             typedef Compendium::ConstIterator ConstIterator; //!< alias
             static const char * const         Scheme;        //!< color scheme
             static const char * AttributeText(const Attribute) noexcept; //!< human readable attribute
-
+            static const char * SituationText(const Situation) noexcept; //!< human readable situation
+            
             //__________________________________________________________________
             //
             //
