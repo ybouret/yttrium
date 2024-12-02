@@ -223,6 +223,29 @@ namespace Yttrium
         }
 
 
+
+        SignType Components:: bracket(XTriplet &       xi,
+                                      XTriplet &       ff,
+                                      XMul     &       xmul,
+                                      const xReal      K,
+                                      const XReadable &C,
+                                      const Level      L) const
+        {
+            assert( Running == situation(C,L) );
+            const xReal zero;
+            xi.a = xi.b = xi.c = zero;
+            ff.a = ff.b = ff.c = activity(xmul, K, C, L);
+            const SignType s = Sign::Of(ff.a);
+
+            switch(s)
+            {
+                case __Zero__: break; // numeric zero
+                    
+            }
+
+            return s;
+        }
+
         void Components:: addSpeciesTo(AddressBook &book) const
         {
             for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it)

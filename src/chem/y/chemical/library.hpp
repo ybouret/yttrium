@@ -92,9 +92,7 @@ namespace Yttrium
                 return get(formula);
             }
 
-            template <typename T> inline
-            T & Id(T &x) noexcept { return x; }
-
+            //! formatted, species-wise display
             template <typename ARRAY> inline
             std::ostream & operator()(std::ostream &os,
                                       const char * const pfx,
@@ -118,10 +116,12 @@ namespace Yttrium
                 return os;
             }
 
+            //! xreal to real
             static inline String ToReal(const xReal &x) {
                 return Formatted::Get("%.15g", real_t(x) );
             }
 
+            //! formatted, species-wise, transformed display
             template <typename ARRAY, typename TRANSFORM> inline
             std::ostream & operator()(std::ostream &os,
                                       const char * const pfx,

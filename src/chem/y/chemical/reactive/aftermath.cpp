@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Aftermath:: Aftermath()
+        Aftermath:: Aftermath() : xmul(), xadd(), zero()
         {
         }
 
@@ -19,19 +19,17 @@ namespace Yttrium
         {
             struct CallActivity
             {
-                const Components &eq;
-                const xReal       eK;
-                const XReadable  &C;
-                const Level       L;
+                const Outcome    &outcome;
                 XMul             &xmul;
 
                 xReal operator()(const xReal xi)
                 {
-                    return eq.activity(xmul, eK, C, L, xi);
+                    return outcome.activity(xmul,xi);
                 }
 
             };
         }
+
 
         Outcome Aftermath:: solve(const Components &eq,
                                   const xReal       eK,
@@ -55,7 +53,7 @@ namespace Yttrium
             // prepare workspace with initial conditions
             eq.transfer(C1,L1,C0,L0);
 
-            CallActivity F = { eq, eK, C1, L1, xmul };
+            CallActivity F = { outcome, xmul };
 
             while(true)
             {
@@ -66,7 +64,8 @@ namespace Yttrium
 
                 switch( Sign::Of(f.a) )
                 {
-                    case __Zero__: goto DONE;
+                    case __Zero__:
+                        goto DONE;
 
                     case Negative:
                         std::cerr << "need xi<0 for " << eq.attrText() << std::endl;
@@ -81,7 +80,7 @@ namespace Yttrium
                             case Definite:
                                 // reach one limiting reactant => reacActivity=0
                                 x.c = eq.reac.limitingExtent(C1,L1);
-                                f.c = eq.prodActivity(xmul,C1, L1,x.c); assert(f.c<0.0);
+                                f.c = eq.prodActivity(xmul,C1,L1,x.c); assert(f.c<0.0);
                                 break;
 
                             case ProdOnly:

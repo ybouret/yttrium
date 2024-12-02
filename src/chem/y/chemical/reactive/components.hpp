@@ -163,9 +163,17 @@ namespace Yttrium
                 }
             }
 
-            //! situation from concentrations
-            Situation    situation(const XReadable &C, const Level L) const noexcept;
-            const char * attrText() const noexcept;
+
+            Situation    situation(const XReadable &C, const Level L) const noexcept; //!< situation from concentrations
+            const char * attrText()                                   const noexcept; //!< human readable attribute
+
+            //! bracket RUNNING 
+            SignType bracket(XTriplet &       xi,
+                             XTriplet &       ff,
+                             XMul    &        xmul,
+                             const xReal      K,
+                             const XReadable &C,
+                             const Level      L) const;
 
             //__________________________________________________________________
             //

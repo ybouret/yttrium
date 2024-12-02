@@ -1,26 +1,24 @@
-
 //! \file
 
-#ifndef Y_Chemical_Aftermath_Included
-#define Y_Chemical_Aftermath_Included 1
+#ifndef Y_Chemical_Outcome_Included
+#define Y_Chemical_Outcome_Included 1
 
-#include "y/chemical/reactive/outcome.hpp"
+#include "y/chemical/reactive/components.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-       
         //______________________________________________________________________
         //
         //
         //
-        //! Algorithm for single equilibrium outcome
+        //! outcome of an aftemath
         //
         //
         //______________________________________________________________________
-        class Aftermath
+        class Outcome
         {
         public:
             //__________________________________________________________________
@@ -29,37 +27,45 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Aftermath();
-            virtual ~Aftermath() noexcept;
 
+            //! setup from
+            Outcome(const Situation  &_st,
+                    const Components &_eq,
+                    const xReal       _eK,
+                    const XReadable &_C,
+                    const Level      _L);
+
+            //! duplicate
+            Outcome(const Outcome &) noexcept;
+
+            //! cleanup
+            ~Outcome() noexcept;
 
             //__________________________________________________________________
             //
             //
-            // C++
+            // Methods
             //
             //__________________________________________________________________
+            xReal activity(XMul &xmul, const xReal xi) const;
 
-            //! compute
-            Outcome solve(const Components &eq,
-                          const xReal       eK,
-                          XWritable        &C1,
-                          const Level       L1,
-                          const XReadable  &C0,
-                          const Level       L0);
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            XMul        xmul; //!< internal computation
-            XAdd        xadd; //!< internal computation
-            const xReal zero; //!< named constant
+            const Situation   st; //!< current situation
+            const Components &eq; //!< used components
+            const xReal       eK; //!< used constant
+            const XReadable  &C;  //!< initial concentration
+            const Level       L;  //!< level
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Aftermath);
+            Y_DISABLE_ASSIGN(Outcome);
         };
+
+      
 
     }
 
