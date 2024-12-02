@@ -58,20 +58,15 @@ namespace Yttrium
         const Actor & Actor:: operator*() const noexcept { return *this; }
 
 
+        void Actor::  moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept
+        {
+            const xReal zero;
+            xReal &c = sp(C,L);
+            assert(c>=zero);
+            c += xi * xn;
+            if(c<=zero) c = zero;
+        }
 
-
-
-    }
-
-}
-
-#include "y/calculus/ipower.hpp"
-
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
 
         void Actor:: activity(XMul &xmul, const XReadable &C, const Level L) const
         {

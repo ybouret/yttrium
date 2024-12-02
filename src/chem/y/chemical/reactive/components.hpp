@@ -80,6 +80,7 @@ namespace Yttrium
             name(_name),
             reac(),
             prod(),
+            d_nu(0),
             cmdb(),
             attr(Nebulous),
             one(1)
@@ -167,13 +168,17 @@ namespace Yttrium
             Situation    situation(const XReadable &C, const Level L) const noexcept; //!< situation from concentrations
             const char * attrText()                                   const noexcept; //!< human readable attribute
 
-            //! bracket RUNNING 
+            //! bracket RUNNING
             SignType bracket(XTriplet &       xi,
                              XTriplet &       ff,
                              XMul    &        xmul,
                              const xReal      K,
                              const XReadable &C,
                              const Level      L) const;
+
+            void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
+
+
 
             //__________________________________________________________________
             //
@@ -184,13 +189,29 @@ namespace Yttrium
             const String name; //!< unique name
             const Actors reac; //!< reactants
             const Actors prod; //!< products
+            const int    d_nu; //!< sum of signed nu
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             virtual ConstInterface & surrogate() const noexcept;
             Compendium cmdb;
             Actors & actorsPlaying(const Role);
+
             void     updateAttribute() noexcept;
 
+            SignType positiveBracket(XTriplet &       xi,
+                                     XTriplet &       ff,
+                                     XMul    &        xmul,
+                                     const xReal      K,
+                                     const XReadable &C,
+                                     const Level      L) const;
+
+            SignType negativeBracket(XTriplet &       xi,
+                                     XTriplet &       ff,
+                                     XMul    &        xmul,
+                                     const xReal      K,
+                                     const XReadable &C,
+                                     const Level      L) const;
         public:
             const Attribute attr; //!< current attibute
             const xReal     one;  //!< alias

@@ -50,6 +50,7 @@ namespace Yttrium
 
             //! fast >=0 limiting extent among actors
             xReal limitingExtent(const XReadable &C, const Level L) const noexcept;
+            void  moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Actors);

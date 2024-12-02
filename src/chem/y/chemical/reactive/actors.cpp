@@ -86,6 +86,14 @@ namespace Yttrium
 
         }
 
+        void  Actors:: moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept
+        {
+            for(const Actor *a=company.head;a;a=a->next)
+                a->moveSafely(C,L,xi);
+
+        }
+
+
 
     }
 

@@ -64,7 +64,7 @@ namespace Yttrium
             const Actor & operator*() const noexcept; //!< helper to Actor::List display
             void activity(XMul &xmul, const XReadable &C, const Level L) const;                 //!< sp(C,L)^nu into xmul
             void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< at sp(C,L) + xi * nu
-
+            void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
 
 
 

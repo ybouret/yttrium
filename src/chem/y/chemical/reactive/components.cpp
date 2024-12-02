@@ -78,6 +78,12 @@ namespace Yttrium
                 throw;
             }
 
+            switch(role)
+            {
+                case Product:  Coerce(d_nu) += int(nu); break;
+                case Reactant: Coerce(d_nu) -= int(nu); break;
+            }
+
             updateAttribute();
         }
 
@@ -240,11 +246,92 @@ namespace Yttrium
             switch(s)
             {
                 case __Zero__: break; // numeric zero
-                    
+                case Positive: return positiveBracket(xi,ff,xmul,K,C,L);
+                case Negative: return negativeBracket(xi,ff,xmul,K,C,L);
             }
 
             return s;
         }
+
+        void Components:: moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept
+        {
+            Coerce(prod).moveSafely(C,L,xi);
+            Coerce(reac).moveSafely(C,L,-xi);
+        }
+
+
+
+
+        SignType Components:: positiveBracket(XTriplet &       xi,
+                                              XTriplet &       ff,
+                                              XMul    &        xmul,
+                                              const xReal      K,
+                                              const XReadable &C,
+                                              const Level      L) const
+        {
+            assert(ff.a>0.0);
+            // there is too much reactant/not enough product
+            // forward xi>0 up to negative activity
+            switch(attr)
+            {
+                case Nebulous:
+                    throw Specific::Exception(name.c_str(),"no Nebulous positiveBracket");
+
+                case ProdOnly:
+                    // use saturating expression
+                    ++Coerce( (xi.c = K.pow( 1.0/d_nu )).exponent );
+                    assert( prodActivity(xmul, C, L, xi.c) < 0.0 );
+                    break;
+
+                case ReacOnly:
+                case Definite:
+                    // use limiting reactant
+                    xi.c = reac.limitingExtent(C,L);
+                    assert( prodActivity(xmul, C, L, xi.c) < 0.0 ); // -1 if reac only
+                    break;
+
+            }
+
+            ff.c = prodActivity(xmul, C, L, xi.c); assert(ff.c<0.0);
+            return Positive;
+        }
+
+
+        SignType Components:: negativeBracket(XTriplet &       xi,
+                                              XTriplet &       ff,
+                                              XMul    &        xmul,
+                                              const xReal      K,
+                                              const XReadable &C,
+                                              const Level      L) const
+        {
+            assert(ff.a<0.0);
+            // there is too much product/not enough reactant
+            switch(attr)
+            {
+                case Nebulous:
+                    throw Specific::Exception(name.c_str(),"no Nebulous positiveBracket");
+
+                case ReacOnly:
+                    // use saturation expression
+                    ++Coerce( (xi.c = -K.pow( 1.0/-d_nu )).exponent );
+                    assert(reacActivity(xmul, K, C, L, xi.c) > 0.0);
+                    break;
+
+                case Definite:
+                case ProdOnly:
+                    // use limiting product
+                    xi.c = -prod.limitingExtent(C,L);
+                    assert(reacActivity(xmul, K, C, L, xi.c) > 0.0);
+                    break;
+            }
+
+            ff.c = reacActivity(xmul, K, C, L, xi.c); assert(ff.c>0.0);
+            return Negative;
+        }
+
+
+        
+
 
         void Components:: addSpeciesTo(AddressBook &book) const
         {
