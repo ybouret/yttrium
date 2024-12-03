@@ -8,7 +8,8 @@ namespace Yttrium
     {
         Grouping:: Grouping() noexcept :
         EList(),
-        species()
+        species(),
+        iTopology()
         {
 
         }
@@ -44,7 +45,8 @@ namespace Yttrium
 
         void Grouping:: clear() noexcept
         {
-            Coerce(species).release();
+            iTopology.release();
+            species.release();
             forget();
         }
 
@@ -52,9 +54,10 @@ namespace Yttrium
         {
             try
             {
+                if(size<=0) throw Specific::Exception(CallSign, "unexpected empty cluster!!");
+
                 clear();
                 DBOps::RevampSub(*this);
-                SList &mine = Coerce(species);
                 {
                     AddressBook book;
                     for(const ENode *node=head;node;node=node->next)
@@ -63,9 +66,21 @@ namespace Yttrium
                         enroll(eq);
                         eq.addSpeciesTo(book);
                     }
-                    book.sendTo(mine);
+                    book.sendTo(species);
                 }
-                DBOps::RevampSub(mine);
+                DBOps::RevampSub(species);
+                if(species.size<=0) throw Specific::Exception(CallSign, "no species in equilibria!!");
+
+                // fill topology
+                const size_t N = size;
+                const size_t M = species.size;
+                iTopology.make(N,M);
+                for(const ENode *node=head;node;node=node->next)
+                {
+                    const Equilibrium &eq = **node;
+                    eq.topology( iTopology[ eq.indx[SubLevel] ], SubLevel);
+                }
+
             }
             catch(...)
             {

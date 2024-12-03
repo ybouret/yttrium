@@ -76,6 +76,7 @@ namespace Yttrium
                 os << "'10^(" << l << ")'";
                 os << std::endl;
             }
+            os << '\t' << '\t' << "Nu=" << cl->iTopology << std::endl;
             os << '\t' << '}';
             return os;
         }

@@ -183,6 +183,21 @@ namespace Yttrium
             void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
 
 
+            template <typename ARRAY> inline
+            void topology(ARRAY &Nu, const Level L) const
+            {
+                for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it)
+                {
+                    const Component &cm = *it;
+                    const Actor     &ac = cm.actor;
+                    const int        nu = int(ac.nu);
+                    switch(cm.role)
+                    {
+                        case Product:  ac.sp(Nu,L) =  nu; break;
+                        case Reactant: ac.sp(Nu,L) = -nu; break;
+                    }
+                }
+            }
 
             //__________________________________________________________________
             //

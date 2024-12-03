@@ -7,6 +7,7 @@
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/chemical/reactive/fragment.hpp"
+#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {
@@ -57,7 +58,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SList species; //!< synchronized list of species
+            SList       species;   //!< synchronized list of species
+            Matrix<int> iTopology; //!< synchronized topology
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grouping);

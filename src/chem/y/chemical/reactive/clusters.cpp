@@ -32,6 +32,7 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "build");
 
+            // build partitions
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
@@ -47,11 +48,18 @@ namespace Yttrium
                     }
                 }
 
-                if(!accepted)
-                {
-                    cls.pushTail( new Cluster(eq) );
-                }
+                if(!accepted) cls.pushTail( new Cluster(eq) );
             }
+
+
+            // compile data
+            for(const Cluster *cl=cls.head;cl;cl=cl->next)
+            {
+                const EList &el = **cl;
+                const SList &sl = (*cl)->species;
+                Y_XMLOG(xml,_ << '/' << sl);
+            }
+
         }
 
         void Clusters:: checkFusion() noexcept
