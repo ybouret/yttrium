@@ -40,7 +40,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Cluster(const Equilibrium &first); //!< setup with first equilibria
             virtual ~Cluster() noexcept;                //!< cleanup
-            Y_OSTREAM_PROTO(Cluster);
+            Y_OSTREAM_PROTO(Cluster);                   //!< display as list of eqs
 
             //__________________________________________________________________
             //
@@ -48,8 +48,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void add(const Equilibrium &eq);
-            void add(Cluster * const) noexcept;      //!< add content and delete cluster
+            void add(const Equilibrium &eq);         //!< add single equilibrium and upgrade
+            void add(Cluster * const) noexcept;      //!< add content, delete source and upgrade
             bool accepts(const Equilibrium &) const; //!< true is equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true is some species are shared
 

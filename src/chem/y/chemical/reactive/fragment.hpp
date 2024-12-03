@@ -37,7 +37,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            
+
+            //! update using iterator on components/equilibria
             template <typename ITERATOR> inline
             void updateWith(ITERATOR i, size_t n) noexcept
             {
@@ -45,14 +46,12 @@ namespace Yttrium
                 while(n-- > 0) enroll( **(i++) );
             }
 
+            //! update using node of a light list of equilibria
             template <typename NODE> inline
             void updateWith(const NODE *node) noexcept
             {
                 forget();
-                for(;0!=node;node=node->next)
-                {
-                    enroll( **node );
-                }
+                for(;0!=node;node=node->next) enroll( **node );
             }
 
 

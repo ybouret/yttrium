@@ -57,7 +57,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const SList species;
+            const SList species; //!< synchronized list of species
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grouping);

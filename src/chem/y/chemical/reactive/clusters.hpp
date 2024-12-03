@@ -31,7 +31,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Clusters(const Equilibria &eqs, XMLog &xml); //!< setup
             virtual ~Clusters() noexcept;                         //!< cleanup
-            Y_OSTREAM_PROTO(Clusters);
+            Y_OSTREAM_PROTO(Clusters);                            //!< eqs+species
 
         private:
             Cluster::List cls;

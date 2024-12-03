@@ -5,12 +5,13 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Indexed:: Indexed(const size_t topLevelIndex) noexcept :
+        Indexed:: Indexed(const size_t topIndex) noexcept :
         Entity(),
         indx()
         {
-            assert(topLevelIndex>0);
-            for(size_t i=0;i<Levels;++i) Coerce(indx[i]) = topLevelIndex;
+            assert(topIndex>0);
+            for(size_t i=0;i<Levels;++i) Coerce(indx[i]) = 0;
+            Coerce(indx[TopLevel]) = topIndex;
         }
 
         Indexed:: ~Indexed() noexcept

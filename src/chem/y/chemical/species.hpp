@@ -109,11 +109,13 @@ namespace Yttrium
                 }
             }
 
+            //! Revamping indices
             template <typename LIST>
             struct Revamp
             {
-                typedef typename LIST::NodeType NODE;
+                typedef typename LIST::NodeType NODE; //!< alias
 
+                //! comparions by indx[LEVEL]
                 template <const Level LEVEL> static inline
                 SignType Compare(const NODE * const lhs, const NODE * const rhs) noexcept
                 {
@@ -122,12 +124,14 @@ namespace Yttrium
                     return Sign::Of(l.indx[LEVEL],r.indx[LEVEL]);
                 }
 
+                //! TopLevel sorting
                 static inline
                 void Sort(LIST &list) noexcept
                 {
                     MergeSort::Call(list,Compare<TopLevel>);
                 }
 
+                //! make Sub/Aux/... index
                 template <const Level LEVEL> static inline
                 void Indx(LIST &list) noexcept
                 {
@@ -139,6 +143,8 @@ namespace Yttrium
                     }
                 }
 
+
+                //! build consistent list
                 template <const Level LEVEL> static inline
                 void At(LIST &list) noexcept
                 {
@@ -151,6 +157,7 @@ namespace Yttrium
             };
 
 
+            //! build consistent SubLevel list
             template <typename LIST> static inline
             void RevampSub(LIST &list) noexcept
             {
