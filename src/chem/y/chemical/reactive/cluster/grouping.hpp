@@ -40,22 +40,16 @@ namespace Yttrium
             explicit Grouping() noexcept; //!< setup empty
             virtual ~Grouping() noexcept; //!< cleanup
 
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-            virtual void update() noexcept; //!< [Fragment] update Fragment from list
 
+            
             //__________________________________________________________________
             //
             //
             // Method
             //
             //__________________________________________________________________
-            void         collect(const Equilibrium &); //!< add and enroll
-            void         upgrade();                    //!< update and index
+            void         collect(const Equilibrium &); //!< add and upgrade
+            void         collect(Grouping          &); //!< merge and upgrade
 
             //__________________________________________________________________
             //
@@ -67,6 +61,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grouping);
+            void clear() noexcept; //!< no species, forget fragment
+            void upgrade();        //!< update  and index
+
         };
 
     }

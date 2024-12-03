@@ -57,11 +57,15 @@ namespace Yttrium
         void Cluster:: add(Cluster * const cl) noexcept
         {
             assert(0!=cl);
-            eqs.mergeTail(cl->eqs);
-            delete cl;
+            AutoPtr<const Cluster> ptr(cl);
+            eqs.collect(cl->eqs);
         }
 
-
+        std::ostream & operator<<(std::ostream &os, const Cluster &cl)
+        {
+            const EList &elist = *cl;
+            return os << elist;
+        }
     }
 
 }

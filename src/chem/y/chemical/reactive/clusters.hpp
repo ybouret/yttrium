@@ -38,6 +38,7 @@ namespace Yttrium
 
             virtual ConstInterface & surrogate() const noexcept;
             void    build(const Equilibria &eqs, XMLog &xml);
+            void    checkFusion() noexcept;
         };
 
     }

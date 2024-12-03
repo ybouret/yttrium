@@ -151,19 +151,13 @@ namespace Yttrium
             };
 
 
-
-
-
-
-
-#if 0
             template <typename LIST> static inline
             void RevampSub(LIST &list) noexcept
             {
-                Sort<TopLevel,LIST>(list);
-                Index<SubLevel,LIST>(list);
+                Revamp<LIST>::template At<SubLevel>(list);
             }
-#endif
+
+
 
         };
 

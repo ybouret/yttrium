@@ -37,7 +37,25 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual void update() noexcept = 0; //!< update all post-construction
+            
+            template <typename ITERATOR> inline
+            void updateWith(ITERATOR i, size_t n) noexcept
+            {
+                forget();
+                while(n-- > 0) enroll( **(i++) );
+            }
+
+            template <typename NODE> inline
+            void updateWith(const NODE *node) noexcept
+            {
+                forget();
+                for(;0!=node;node=node->next)
+                {
+                    enroll( **node );
+                }
+            }
+
+
 
             //__________________________________________________________________
             //

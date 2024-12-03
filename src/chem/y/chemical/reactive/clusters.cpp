@@ -42,6 +42,7 @@ namespace Yttrium
                     {
                         cl->add(eq);
                         accepted = true;
+                        checkFusion();
                         break;
                     }
                 }
@@ -50,9 +51,28 @@ namespace Yttrium
                 {
                     cls.pushTail( new Cluster(eq) );
                 }
-
             }
+        }
 
+        void Clusters:: checkFusion() noexcept
+        {
+            Cluster::List store;
+            while(cls.size>0)
+            {
+                AutoPtr<Cluster> rhs = cls.popHead();
+                for(Cluster *lhs=store.head;lhs;lhs=lhs->next)
+                {
+                    if(lhs->accepts(*rhs))
+                    {
+                        lhs->add(rhs.yield());
+                        break;
+                    }
+                }
+
+                if(rhs.isValid())
+                    store.pushTail( rhs.yield() ); // untouched
+            }
+            cls.swapWith(store);
         }
 
 
@@ -65,8 +85,8 @@ namespace Yttrium
                 os << '{' << std::endl;
                 for(const Cluster *cl=cls->head;cl;cl=cl->next)
                 {
-                    const EList   &elist = **cl;
-                    os << '\t' << elist << std::endl;
+                    const Cluster &cluster = *cl;
+                    os << '\t' << cluster << '@' << cluster->species << std::endl;
                 }
                 os << '}';
             }

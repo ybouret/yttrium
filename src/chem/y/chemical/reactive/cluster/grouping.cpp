@@ -34,28 +34,46 @@ namespace Yttrium
         }
 
 
-        void Grouping:: update() noexcept
+        void Grouping:: collect(Grouping &other)
         {
+            assert(this != &other);
+            mergeTail(other);
+            upgrade();
+        }
+
+
+        void Grouping:: clear() noexcept
+        {
+            Coerce(species).release();
             forget();
-            for(const ENode *node=head;node;node=node->next)
-                enroll(**node);
         }
 
         void Grouping:: upgrade()
         {
             try
             {
-                update();
-                AddressBook book;
-                
+                clear();
+                DBOps::RevampSub(*this);
+                SList &mine = Coerce(species);
+                {
+                    AddressBook book;
+                    for(const ENode *node=head;node;node=node->next)
+                    {
+                        const Equilibrium &eq = **node;
+                        enroll(eq);
+                        eq.addSpeciesTo(book);
+                    }
+                    book.sendTo(mine);
+                }
+                DBOps::RevampSub(mine);
             }
             catch(...)
             {
                 release();
-                forget();
-                Coerce(species).release();
+                clear();
                 throw;
             }
+
 
         }
 

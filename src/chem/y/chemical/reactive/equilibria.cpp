@@ -21,11 +21,7 @@ namespace Yttrium
             enroll( *handle );
         }
 
-        void Reactor:: update() noexcept
-        {
-            for(Iterator it=begin();it!=end();++it)
-                enroll(**it);
-        }
+
 
     }
 
@@ -82,7 +78,7 @@ namespace Yttrium
 
         void Equilibria:: updateFragment() noexcept
         {
-            reactor.update();
+            reactor.updateWith(reactor.begin(), reactor.size() );
         }
 
 

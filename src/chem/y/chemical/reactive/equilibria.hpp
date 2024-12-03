@@ -33,14 +33,7 @@ namespace Yttrium
             explicit Reactor();
             virtual ~Reactor() noexcept;
 
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-            virtual void update() noexcept; //!< [Fragment] update with all equilibria
-
+            
             //__________________________________________________________________
             //
             //
@@ -104,9 +97,8 @@ namespace Yttrium
 
             
 
-            //! update fragment for formatting all equilibria
-            void updateFragment() noexcept;
 
+            void updateFragment() noexcept;        //!< update fragment for formatting all equilibria
             void graphViz(OutputStream &fp) const; //!< standalone graphViz
 
         private:
