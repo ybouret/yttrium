@@ -34,8 +34,7 @@ namespace Yttrium
                 formulaToHTML(genericParser),
                 treeNameIndex()
                 {
-                    mph(*genericParser.FORMULA.name,     Y_Chemical_FORMULA);
-                    //treeNameIndex(*genericParser.FORMULA.name,     Y_Chemical_FORMULA);
+                    treeNameIndex(genericParser.FORMULA.name->c_str(),     Y_Chemical_FORMULA);
                     treeNameIndex(*genericParser.EQUILIBRIUM.name, Y_Chemical_EQUILIBRIUM);
                     treeNameIndex(*genericParser.SEARCH.name,      Y_Chemical_SEARCH);
                 }
@@ -44,10 +43,6 @@ namespace Yttrium
                 {
                 }
 
-                inline void mph(const String &kw, const int h)
-                {
-                    treeNameIndex(kw,h);
-                }
 
                 Weasel::Parser      genericParser;
                 Formula::Linker     formulaLinker;
