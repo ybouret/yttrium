@@ -116,6 +116,7 @@ namespace Yttrium
                 return *(( &a - 1) + indx);
             }
 
+            //! transfer by static cast
             template <typename U> inline
             Triplet & operator=( const Triplet<U> &_ )
             {

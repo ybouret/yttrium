@@ -30,7 +30,7 @@ Y_UTEST(aftermath)
     XVector C( lib->size(), 0 );
 
 
-    Library::Conc(C,ran,1);
+    Library::Conc(C,ran);
 
     lib(std::cerr << "C=","[",C,"]") << std::endl;
     lib(std::cerr << "C=","\t[",C,"]",Library::ToReal) << std::endl;
@@ -46,6 +46,7 @@ Y_UTEST(aftermath)
         const Outcome outcome = am.solve(eq, eK,C1, TopLevel, C, TopLevel);
 
         lib(std::cerr << "C=","\t[",C1,"]",Library::ToReal) << std::endl;
+        std::cerr << "extent = " << real_t(am.extent(outcome,C,TopLevel)) << std::endl;
 
     }
 }

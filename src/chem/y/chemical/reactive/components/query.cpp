@@ -1,13 +1,11 @@
-
 #include "y/chemical/reactive/components.hpp"
 #include "y/system/exception.hpp"
-#include <cerrno>
-#include "y/kemp/integer.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
         xReal Components:: activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const
         {
             xmul.free();
@@ -17,7 +15,7 @@ namespace Yttrium
 
             assert(xmul.isEmpty());
             xmul << one;
-            prod.activity(xmul, C, L);
+            prod.activity(xmul,C,L);
             const xReal pa = xmul.product();
             return ra-pa;
         }
@@ -48,7 +46,7 @@ namespace Yttrium
 
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept
         {
-            if(reac.haveZero(C,L) && prod.haveZero(C,L) ) return Blocked;
+            if( reac.haveZero(C,L) && prod.haveZero(C,L) ) return Blocked;
             return Running;
         }
 
@@ -84,6 +82,7 @@ namespace Yttrium
 
 
 
+        static const char NoNebulous[] = "forbidden Nebulous for bracketing";
 
         SignType Components:: positiveBracket(XTriplet &       xi,
                                               XTriplet &       ff,
@@ -93,23 +92,28 @@ namespace Yttrium
                                               const Level      L) const
         {
             assert(ff.a>0.0);
+            //------------------------------------------------------------------
             // there is too much reactant/not enough product
             // forward xi>0 up to negative activity
-            //std::cerr << "Positive Bracket" << std::endl;
+            //------------------------------------------------------------------
             switch(attr)
             {
                 case Nebulous:
-                    throw Specific::Exception(name.c_str(),"no Nebulous positiveBracket");
+                    throw Specific::Exception(name.c_str(),NoNebulous);
 
                 case ProdOnly:
+                    //----------------------------------------------------------
                     // use saturating expression
+                    //----------------------------------------------------------
                     ++Coerce( (xi.c = K.pow( 1.0/d_nu )).exponent );
                     assert( prodActivity(xmul, C, L, xi.c) < 0.0 );
                     break;
 
                 case ReacOnly:
                 case Definite:
+                    //----------------------------------------------------------
                     // use limiting reactant
+                    //----------------------------------------------------------
                     xi.c = reac.limitingExtent(C,L);
                     assert( prodActivity(xmul, C, L, xi.c) < 0.0 ); // -1 if reac only
                     break;
@@ -129,22 +133,28 @@ namespace Yttrium
                                               const Level      L) const
         {
             assert(ff.a<0.0);
+            //------------------------------------------------------------------
             // there is too much product/not enough reactant
-            //std::cerr << "Negative Bracket" << std::endl;
+            // reverse xi<0 up to posivite activity
+            //------------------------------------------------------------------
             switch(attr)
             {
                 case Nebulous:
-                    throw Specific::Exception(name.c_str(),"no Nebulous positiveBracket");
+                    throw Specific::Exception(name.c_str(),NoNebulous);
 
                 case ReacOnly:
+                    //----------------------------------------------------------
                     // use saturation expression
+                    //----------------------------------------------------------
                     ++Coerce( (xi.c = -K.pow( 1.0/d_nu )).exponent );
                     assert(reacActivity(xmul, K, C, L, xi.c) > 0.0);
                     break;
 
                 case Definite:
                 case ProdOnly:
+                    //----------------------------------------------------------
                     // use limiting product
+                    //----------------------------------------------------------
                     xi.c = -prod.limitingExtent(C,L);
                     assert(reacActivity(xmul, K, C, L, xi.c) > 0.0);
                     break;

@@ -16,7 +16,7 @@ namespace Yttrium
         //
         //
         //
-        //! Actor = coefficient + species
+        //! Actor = POSITIVE coefficient + species
         //
         //
         //______________________________________________________________________
@@ -59,12 +59,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
-            const Actor & operator*() const noexcept; //!< helper to Actor::List display
-            void activity(XMul &xmul, const XReadable &C, const Level L) const;                 //!< sp(C,L)^nu into xmul
-            void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< at sp(C,L) + xi * nu
-            void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
+            void          activity(XMul &xmul, const XReadable &C, const Level L)                 const; //!< sp(C,L)^nu into xmul
+            void          activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< at sp(C,L) + xi * nu
+            void          moveSafely(XWritable &C, const Level L, const xReal xi)        const noexcept; //!< assuming C stays >=0
+            const Actor & operator*()                                                    const noexcept; //!< helper to Actor::List display
 
 
 

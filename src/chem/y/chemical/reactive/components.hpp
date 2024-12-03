@@ -177,6 +177,7 @@ namespace Yttrium
                              const XReadable &C,
                              const Level      L) const;
 
+            //! move assuming positivity
             void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
 
 
@@ -197,16 +198,13 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             Compendium cmdb;
             Actors & actorsPlaying(const Role);
-
             void     updateAttribute() noexcept;
-
             SignType positiveBracket(XTriplet &       xi,
                                      XTriplet &       ff,
                                      XMul    &        xmul,
                                      const xReal      K,
                                      const XReadable &C,
                                      const Level      L) const;
-
             SignType negativeBracket(XTriplet &       xi,
                                      XTriplet &       ff,
                                      XMul    &        xmul,

@@ -39,6 +39,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
             void enroll(const Entity &) noexcept; //!< check maxKeySize
 
             

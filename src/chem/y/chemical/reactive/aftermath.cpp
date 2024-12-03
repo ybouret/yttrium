@@ -18,20 +18,39 @@ namespace Yttrium
 
         namespace
         {
-            struct EqIndicator
+            class Gauge
             {
+            public:
+                inline Gauge(const Components & _E,
+                const xReal _K,
+                XWritable  &_C,
+                const Level _L,
+                XMul &_X) :
+                E(_E),
+                K(_K),
+                C(_C),
+                L(_L),
+                X(_X),
+                zero(0.0),
+                half(0.5)
+                {
+                }
+
+                inline ~Gauge() noexcept {}
+
                 const Components &E;
                 const xReal       K;
                 XWritable        &C;
                 const Level       L;
-                XMul             &xmul;
-
+                XMul             &X;
+                const xReal       zero;
+                const xReal       half;
 
                 SignType moved(xReal &xi)
                 {
-                    const xReal  half = 0.5;
-                    XTriplet     x;
-                    XTriplet     f;
+                    const xReal  zero;
+                    XTriplet     x = { zero, zero, zero };
+                    XTriplet     f = { zero, zero, zero };
                     xReal *      f_pos = 0;
                     xReal *      x_pos = 0;
                     xReal *      f_neg = 0;
@@ -43,12 +62,10 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     {
-                        const SignType s = E.bracket(x,f,xmul,K,C,L);
+                        const SignType s = E.bracket(x,f,X,K,C,L);
                         switch(s)
                         {
-                            case __Zero__:
-                                xi = 0;
-                                return  __Zero__; // no need to move
+                            case __Zero__: xi = zero; return  __Zero__; // no need to move
 
                             case Positive:
                                 x_pos = &x.a; f_pos = &f.a; assert(f.a>0.0);
@@ -62,12 +79,6 @@ namespace Yttrium
                         }
                     }
 
-                    {
-                        MKL:: Triplet<real_t> xx,ff;
-                        xx = x;
-                        ff = f;
-                        std::cerr << "x=" << xx << " =>" << ff << std::endl;
-                    }
 
 
                     //----------------------------------------------------------
@@ -75,23 +86,13 @@ namespace Yttrium
                     // maximal bisection
                     //
                     //----------------------------------------------------------
-                    xReal width = (*x_pos - *x_neg).abs();
+                    const xReal  half  = 0.5;
+                    xReal        width = (*x_pos - *x_neg).abs();
                     for(;;)
                     {
                         x.b = half * (*x_pos + *x_neg);
-                        f.b = E.activity(xmul,K,C,L,x.b);
+                        f.b = E.activity(X,K,C,L,x.b);
                         const SignType s = Sign::Of(f.b);
-                        //std::cerr << "f.b=" << real_t(f.b) << " @" << real_t(x.b) << std::endl;
-                        //std::cerr << "reac: " << real_t(E.reacActivity(xmul, K, C, L, x.b)) << std::endl;
-                        //std::cerr << "prod: " << real_t(E.prodActivity(xmul, C, L, x.b)) << std::endl;
-
-                        {
-                            MKL:: Triplet<real_t> xx,ff;
-                            xx = x;
-                            ff = f;
-                            //std::cerr << "x=" << xx << " =>" << ff << std::endl;
-                        }
-
 
                         switch(s)
                         {
@@ -121,6 +122,8 @@ namespace Yttrium
 
                 }
 
+                Y_DISABLE_COPY_AND_ASSIGN(Gauge);
+
             };
 
 
@@ -146,7 +149,7 @@ namespace Yttrium
             const Situation st = eq.situation(C0,L0);
             switch(st)
             {
-                case Blocked: return Outcome(Blocked,eq,eK,C0,L0);
+                case Blocked: return Outcome(Blocked,eq,eK,C0,L0); // early return
                 case Running:
                     break;
             }
@@ -171,7 +174,7 @@ namespace Yttrium
             // prepare equilibrium indicator
             //
             //------------------------------------------------------------------
-            EqIndicator F = { eq, eK, C1, L1 , xmul };
+            Gauge F(eq,eK,C1,L1,xmul);
 
             //------------------------------------------------------------------
             //
@@ -180,11 +183,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             xReal    x = zero;
             SignType s = F.moved(x);
-            std::cerr << "xi0 = " << real_t(x) << " => " << real_t(eq.activity(xmul, eK, C1, L1)) <<  " @" << C1 << std::endl;
-
-
-            if(__Zero__==s)
-                goto DONE; // already solved
+            if(__Zero__==s) goto DONE; // already solved
 
             //------------------------------------------------------------------
             //
@@ -195,14 +194,9 @@ namespace Yttrium
             {
                 xReal x_new = zero;
                 s = F.moved(x_new);
-                std::cerr << "xi  = " << real_t(x_new) << " => " << real_t(eq.activity(xmul, eK, C1, L1)) <<  " @" << C1 << std::endl;
 
-                if(__Zero__==s)
-                    goto DONE;
-
-                if(x_new.abs()>=x.abs()) {
-                    goto DONE;
-                }
+                if(__Zero__==s)          goto DONE; //!< numerical zero
+                if(x_new.abs()>=x.abs()) goto DONE; //!< numerical zero
 
                 x = x_new;
             }
@@ -211,6 +205,14 @@ namespace Yttrium
             // done
             return outcome;
         }
+
+
+        xReal  Aftermath:: extent(const Outcome &outcome, const XReadable &C0, const Level L0)
+        {
+            return outcome.extent(xadd,C0,L0);
+        }
+
+
     }
 
 }

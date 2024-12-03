@@ -44,13 +44,11 @@ namespace Yttrium
             const Actor & operator()(const Species &);                 //!< register with coeff=1
             const Actor & operator()(const unsigned, const Species &); //!< register
 
-            void activity(XMul &xmul, const XReadable &C, const Level L) const;                 //!< gather product of activitis into mul
-            void activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< gather product of shifted activities into mul
-            bool haveZero(const XReadable &C, const Level L) const noexcept;                    //!< check if at least one concentration is zero
-
-            //! fast >=0 limiting extent among actors
-            xReal limitingExtent(const XReadable &C, const Level L) const noexcept;
-            void  moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
+            void  activity(XMul &xmul, const XReadable &C, const Level L)                 const; //!< gather product of activitis into mul
+            void  activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< gather product of shifted activities into mul
+            bool  haveZero(const XReadable &C, const Level L)                    const noexcept; //!< check if at least one concentration is zero
+            xReal limitingExtent(const XReadable &C, const Level L)              const noexcept; //!< fast >=0 limiting extent among actors
+            void  moveSafely(XWritable &C, const Level L, const xReal xi)        const noexcept; //!< move all actors safely
 
         private:
             Y_DISABLE_ASSIGN(Actors);
