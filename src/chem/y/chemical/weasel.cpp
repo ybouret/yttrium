@@ -34,9 +34,16 @@ namespace Yttrium
                 formulaToHTML(genericParser),
                 treeNameIndex()
                 {
-                    treeNameIndex(genericParser.FORMULA.name->c_str(),     Y_Chemical_FORMULA);
+                    mph(genericParser.FORMULA.name,Y_Chemical_FORMULA);
+                    //treeNameIndex(genericParser.FORMULA.name->c_str(),     Y_Chemical_FORMULA);
                     treeNameIndex(*genericParser.EQUILIBRIUM.name, Y_Chemical_EQUILIBRIUM);
                     treeNameIndex(*genericParser.SEARCH.name,      Y_Chemical_SEARCH);
+                }
+
+                void mph(const Lingo::Caption &caption, const int h)
+                {
+                    const String &s = *caption;
+                    treeNameIndex(s,h);
                 }
 
                 inline ~Compiler() noexcept
