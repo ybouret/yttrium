@@ -12,16 +12,50 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! list of linked equilibria with format helper
+        //
+        //
+        //______________________________________________________________________
         class Grouping : public EList, public Fragment
         {
         public:
-            static const char * const CallSign;
-            explicit Grouping() noexcept;
-            virtual ~Grouping() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::Cluster"
 
-            void         collect(const Equilibrium &);
-            virtual void update() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Grouping() noexcept; //!< setup empty
+            virtual ~Grouping() noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual void update() noexcept; //!< [Fragment] update Fragment from list
+
+            //__________________________________________________________________
+            //
+            //
+            // Method
+            //
+            //__________________________________________________________________
+            void         collect(const Equilibrium &); //!< add and enroll
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grouping);

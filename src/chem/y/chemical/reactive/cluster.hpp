@@ -13,25 +13,54 @@ namespace Yttrium
     {
 
         
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Cluster of Linked equilibria
+        //
+        //
+        //______________________________________________________________________
         class Cluster :  public Proxy<const Grouping>
         {
         public:
-            static const char * const  CallSign;
-            typedef CxxListOf<Cluster> List;
-            
-            explicit Cluster(const Equilibrium &first);
-            virtual ~Cluster() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Cluster> List; //!< alias
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Cluster(const Equilibrium &first); //!< setup with first equilibria
+            virtual ~Cluster() noexcept;                //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void add(const Equilibrium &eq);
+            bool accepts(const Equilibrium &) const noexcept; //!< true is equilibrium is linked to a cluster's one
 
 
 
-            Cluster *next;
-            Cluster *prev;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            Grouping eqs;
+            Grouping eqs; //!< content
 
             virtual ConstInterface & surrogate() const noexcept;
+        public:
+            Cluster *next; //!< for list
+            Cluster *prev; //!< for list
         };
     }
 

@@ -49,7 +49,8 @@ namespace Yttrium
         public:
             //! cleanup
             virtual ~Equilibrium() noexcept;
-
+            Y_OSTREAM_PROTO(Equilibrium);
+            
             //__________________________________________________________________
             //
             //

@@ -52,7 +52,25 @@ namespace Yttrium
             }
         }
 
-     
+        bool Components:: included(const Species &sp) const
+        {
+            const Component * const cm = cmdb.search(sp.name);
+            if(0==cm) return false;
+            if( &sp != &(cm->actor.sp) ) throw Specific::Exception(name.c_str(), "foreign species '%s'", sp.name.c_str());
+            return true;
+        }
+
+        bool Components:: linkedTo(const Components &other) const
+        {
+            for(ConstIterator it=other->begin();it!=other->end();++it)
+            {
+                const Species &sp = (*it).actor.sp;
+                if( included(sp) ) return true;
+            }
+
+            return false;
+        }
+
 
 
     }

@@ -20,7 +20,7 @@ Y_UTEST(aftermath)
 
     for(int i=1;i<argc;++i)
     {
-        eqs(lib,argv[1]);
+        eqs(lib,argv[i]);
     }
 
     std::cerr << "lib=" << lib << std::endl;
