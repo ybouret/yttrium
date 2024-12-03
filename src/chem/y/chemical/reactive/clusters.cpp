@@ -85,8 +85,7 @@ namespace Yttrium
                 os << '{' << std::endl;
                 for(const Cluster *cl=cls->head;cl;cl=cl->next)
                 {
-                    const Cluster &cluster = *cl;
-                    os << '\t' << cluster << '@' << cluster->species << std::endl;
+                    std::cerr << *cl << std::endl;
                 }
                 os << '}';
             }

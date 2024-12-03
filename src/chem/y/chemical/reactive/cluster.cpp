@@ -63,9 +63,27 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
         {
-            const EList &elist = *cl;
-            return os << elist;
+            assert(cl->size>0);
+            os << '\t' << '{' << std::endl;
+            os << '\t' << '\t' << '#' << cl->species << std::endl;
+            for(const ENode *en=cl->head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                const Fragment    &fr = *cl;
+                fr.print(os << '\t' << '\t' << '@', eq);
+                const xReal  K = eq.K(0);
+                const real_t l = K.log10();
+                os << "'10^(" << l << ")'";
+                os << std::endl;
+            }
+            os << '\t' << '}';
+            return os;
         }
+
+
+
+
+
     }
 
 }
