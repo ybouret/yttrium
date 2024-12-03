@@ -63,7 +63,7 @@ namespace Yttrium
         }
 
 
-        static const char * actorsTable[]
+        static const char * actorsTable[] = 
         {
             "REAC",
             "PROD"
