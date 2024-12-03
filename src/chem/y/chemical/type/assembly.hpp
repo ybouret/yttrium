@@ -41,7 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             void enroll(const Entity &) noexcept; //!< check maxKeySize
-
+            void forget() noexcept;
             
             //! helper to format an entity key among this assembly
             template <typename OSTREAM> inline

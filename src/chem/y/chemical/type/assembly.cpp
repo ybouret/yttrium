@@ -6,7 +6,7 @@ namespace Yttrium
     {
         Assembly::  Assembly()                  noexcept : maxKeySize(0)            {}
         Assembly::  Assembly(const Assembly &_) noexcept : maxKeySize(_.maxKeySize) {}
-        Assembly:: ~Assembly() noexcept {}
+        Assembly:: ~Assembly() noexcept { forget(); }
 
 
         void Assembly:: enroll(const Entity &entity) noexcept
@@ -14,6 +14,12 @@ namespace Yttrium
             const size_t tmp = entity.key().size();
             if(tmp>maxKeySize) Coerce(maxKeySize) = tmp;
         }
+
+        void Assembly:: forget() noexcept
+        {
+            Coerce(maxKeySize) = 0;
+        }
+
 
     }
 

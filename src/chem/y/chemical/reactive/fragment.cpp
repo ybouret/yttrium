@@ -30,6 +30,13 @@ namespace Yttrium
             prod.enroll(*cm.prod);
         }
 
+        void Fragment:: forget() noexcept
+        {
+            self.forget();
+            reac.forget();
+            prod.forget();
+        }
+
 
 
 

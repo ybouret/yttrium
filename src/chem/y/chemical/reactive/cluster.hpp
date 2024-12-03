@@ -48,9 +48,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void add(const Equilibrium &eq);
-            bool accepts(const Equilibrium &) const noexcept; //!< true is equilibrium is linked to a cluster's one
-
-
+            bool accepts(const Equilibrium &) const; //!< true is equilibrium is linked to a cluster's one
+            bool accepts(const Cluster     &) const; //!< true is some species are shared
+            void add(Cluster * const) noexcept;      //!< add content and delete cluster
 
 
         private:

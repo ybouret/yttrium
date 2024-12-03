@@ -28,7 +28,7 @@ namespace Yttrium
             return eqs;
         }
 
-        bool Cluster:: accepts(const Equilibrium &eq) const noexcept
+        bool Cluster:: accepts(const Equilibrium &eq) const  
         {
             assert( !eqs.has(eq) );
             for(const ENode *node=eqs.head;node;node=node->next)
@@ -39,6 +39,14 @@ namespace Yttrium
             return false;
         }
 
+        bool Cluster:: accepts(const Cluster &cl) const
+        {
+            for(const ENode *node=cl->head;node;node=node->next)
+            {
+                if(accepts(**node)) return true;
+            }
+            return false;
+        }
 
         void Cluster:: add(const Equilibrium &eq)
         {
@@ -46,6 +54,12 @@ namespace Yttrium
             eqs.collect(eq);
         }
 
+        void Cluster:: add(Cluster * const cl) noexcept
+        {
+            assert(0!=cl);
+            eqs.mergeTail(cl->eqs);
+            delete cl;
+        }
 
 
     }

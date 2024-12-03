@@ -55,7 +55,15 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void         collect(const Equilibrium &); //!< add and enroll
+            void         upgrade();                    //!< update and index
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const SList species;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grouping);

@@ -6,7 +6,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Grouping:: Grouping() noexcept
+        Grouping:: Grouping() noexcept :
+        EList(),
+        species()
         {
 
         }
@@ -28,16 +30,33 @@ namespace Yttrium
             }
             
             (*this) << eq;
-            enroll(eq);
+            upgrade();
         }
 
 
         void Grouping:: update() noexcept
         {
+            forget();
             for(const ENode *node=head;node;node=node->next)
-            {
                 enroll(**node);
+        }
+
+        void Grouping:: upgrade()
+        {
+            try
+            {
+                update();
+                AddressBook book;
+                
             }
+            catch(...)
+            {
+                release();
+                forget();
+                Coerce(species).release();
+                throw;
+            }
+
         }
 
     }

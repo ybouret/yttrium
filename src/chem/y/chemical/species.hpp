@@ -13,6 +13,8 @@
 #include "y/data/small/light/list/bare.hpp"
 #include "y/data/small/light/list/coop.hpp"
 #include "y/associative/address-book.hpp"
+#include "y/sort/merge.hpp"
+#include "y/check/static.hpp"
 
 namespace Yttrium
 {
@@ -106,6 +108,63 @@ namespace Yttrium
                     target << *static_cast<typename LIST::ConstType *>(addr);
                 }
             }
+
+            template <typename LIST>
+            struct Revamp
+            {
+                typedef typename LIST::NodeType NODE;
+
+                template <const Level LEVEL> static inline
+                SignType Compare(const NODE * const lhs, const NODE * const rhs) noexcept
+                {
+                    const Indexed &l = **lhs;
+                    const Indexed &r = **rhs;
+                    return Sign::Of(l.indx[LEVEL],r.indx[LEVEL]);
+                }
+
+                static inline
+                void Sort(LIST &list) noexcept
+                {
+                    MergeSort::Call(list,Compare<TopLevel>);
+                }
+
+                template <const Level LEVEL> static inline
+                void Indx(LIST &list) noexcept
+                {
+                    Y_STATIC_CHECK(LEVEL>TopLevel,BadLevel);
+                    size_t i=0;
+                    for(typename LIST::NodeType *node=list.head;node;node=node->next)
+                    {
+                        Coerce( (**node).indx[LEVEL] ) = ++i;
+                    }
+                }
+
+                template <const Level LEVEL> static inline
+                void At(LIST &list) noexcept
+                {
+                    Sort(list);
+                    Indx<LEVEL>(list);
+                }
+
+
+
+            };
+
+
+
+
+
+
+
+#if 0
+            template <typename LIST> static inline
+            void RevampSub(LIST &list) noexcept
+            {
+                Sort<TopLevel,LIST>(list);
+                Index<SubLevel,LIST>(list);
+            }
+#endif
+
         };
 
     }

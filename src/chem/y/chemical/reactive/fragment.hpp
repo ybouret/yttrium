@@ -46,8 +46,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! update all assemblies
-            void enroll(const Components &);
+
+            void enroll(const Components &);  //!< update all assemblies
+            void forget() noexcept;           //!< forget all assemblies
 
             //! print name:reac<=>prod:
             std::ostream & print(std::ostream &os, const Components &) const;
