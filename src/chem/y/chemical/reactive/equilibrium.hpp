@@ -94,6 +94,10 @@ namespace Yttrium
             virtual xReal getK(xReal) const;
         };
 
+
+        typedef Small::BareLightList<const Equilibrium> EList;
+        typedef EList::NodeType                         ENode;
+
     }
 
 }
