@@ -81,9 +81,9 @@ namespace Yttrium
                         x.b = half * (*x_pos + *x_neg);
                         f.b = E.activity(xmul,K,C,L,x.b);
                         const SignType s = Sign::Of(f.b);
-                        std::cerr << "f.b=" << real_t(f.b) << " @" << real_t(x.b) << std::endl;
-                        std::cerr << "reac: " << real_t(E.reacActivity(xmul, K, C, L, x.b)) << std::endl;
-                        std::cerr << "prod: " << real_t(E.prodActivity(xmul, C, L, x.b)) << std::endl;
+                        //std::cerr << "f.b=" << real_t(f.b) << " @" << real_t(x.b) << std::endl;
+                        //std::cerr << "reac: " << real_t(E.reacActivity(xmul, K, C, L, x.b)) << std::endl;
+                        //std::cerr << "prod: " << real_t(E.prodActivity(xmul, C, L, x.b)) << std::endl;
 
                         {
                             MKL:: Triplet<real_t> xx,ff;
@@ -182,8 +182,7 @@ namespace Yttrium
             SignType s = F.moved(x);
             std::cerr << "xi0 = " << real_t(x) << " => " << real_t(eq.activity(xmul, eK, C1, L1)) <<  " @" << C1 << std::endl;
 
-            exit(1);
-            
+
             if(__Zero__==s)
                 goto DONE; // already solved
 
