@@ -10,7 +10,7 @@ namespace Yttrium
         {
         }
 
-        Entity:: Entity() noexcept : Object()
+        Entity:: Entity() noexcept : Oversized()
         {
         }
         
