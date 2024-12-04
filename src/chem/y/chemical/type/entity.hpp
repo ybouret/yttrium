@@ -5,6 +5,7 @@
 #define Y_Chemical_Entity_Included 1
 
 #include "y/chemical/type/lang.hpp"
+#include "y/oversized.hpp"
 
 namespace Yttrium
 {
@@ -19,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Entity : public Object
+        class Entity : public Oversized
         {
         public:
             //__________________________________________________________________
