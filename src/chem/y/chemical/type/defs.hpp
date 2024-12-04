@@ -10,6 +10,8 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/antelope/mul.hpp"
 #include "y/mkl/triplet.hpp"
+#include "y/container/cxx/array.hpp"
+#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {
@@ -27,6 +29,8 @@ namespace Yttrium
         typedef Vector<String,MemoryModel> Strings; //!< alias
         typedef Vector<xReal,MemoryModel>  XVector; //!< alias
 
+        typedef CxxArray<xReal,MemoryModel> XArray;
+        typedef Matrix<xReal,MemoryModel>   XMatrix;
 
 
     }

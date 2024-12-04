@@ -7,7 +7,6 @@
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/chemical/reactive/fragment.hpp"
-#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {

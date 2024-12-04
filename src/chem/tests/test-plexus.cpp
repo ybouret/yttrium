@@ -2,6 +2,9 @@
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
+#include "y/chemical/reactive/conservation/law.hpp"
+
+
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -30,6 +33,19 @@ Y_UTEST(plexus)
     std::cerr << clusters << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
+
+    if(lib->size()>=2)
+    {
+        Actor::List       alist;
+        for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+        {
+            alist.pushTail( new Actor( ran.in<unsigned>(1,5), **it) );
+        }
+        Conservation::Law law(alist);
+        std::cerr << law << std::endl;
+    }
+
+
 
 }
 Y_UDONE()

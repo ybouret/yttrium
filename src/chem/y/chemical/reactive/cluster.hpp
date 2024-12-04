@@ -50,8 +50,8 @@ namespace Yttrium
             //__________________________________________________________________
             void addPrimary(const Equilibrium &eq);  //!< add single equilibrium and upgrade
             void addPrimary(Cluster * const);        //!< add content, delete source and upgrade
-            bool accepts(const Equilibrium &) const; //!< true is equilibrium is linked to a cluster's one
-            bool accepts(const Cluster     &) const; //!< true is some species are shared
+            bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
+            bool accepts(const Cluster     &) const; //!< true if some species are shared
 
 
 

@@ -9,6 +9,7 @@ chemical/weasel/equilibrium
 chemical/reactive
 chemical/reactive/components
 chemical/reactive/cluster
+chemical/reactive/conservation
 )
 
 add_subdirectory(tests)
