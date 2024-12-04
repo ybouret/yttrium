@@ -48,13 +48,13 @@ namespace Yttrium
             return false;
         }
 
-        void Cluster:: add(const Equilibrium &eq)
+        void Cluster:: addPrimary(const Equilibrium &eq)
         {
             assert(accepts(eq));
             eqs.collect(eq);
         }
 
-        void Cluster:: add(Cluster * const cl) noexcept
+        void Cluster:: addPrimary(Cluster * const cl)
         {
             assert(0!=cl);
             AutoPtr<const Cluster> ptr(cl);

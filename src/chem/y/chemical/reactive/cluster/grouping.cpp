@@ -1,6 +1,7 @@
 
 #include "y/chemical/reactive/cluster/grouping.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/algebra/rank.hpp"
 
 namespace Yttrium
 {
@@ -31,6 +32,7 @@ namespace Yttrium
             }
             
             (*this) << eq;
+
             upgrade();
         }
 
@@ -56,8 +58,25 @@ namespace Yttrium
             {
                 if(size<=0) throw Specific::Exception(CallSign, "unexpected empty cluster!!");
 
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 clear();
+
+                //--------------------------------------------------------------
+                //
+                // revamp equilibria
+                //
+                //--------------------------------------------------------------
                 DBOps::RevampSub(*this);
+
+                //--------------------------------------------------------------
+                //
+                // collect and revamp speices
+                //
+                //--------------------------------------------------------------
                 {
                     AddressBook book;
                     for(const ENode *node=head;node;node=node->next)
@@ -69,9 +88,14 @@ namespace Yttrium
                     book.sendTo(species);
                 }
                 DBOps::RevampSub(species);
-                if(species.size<=0) throw Specific::Exception(CallSign, "no species in equilibria!!");
+                if(species.size<=0)
+                    throw Specific::Exception(CallSign, "no species in equilibria!!");
 
+                //--------------------------------------------------------------
+                //
                 // fill topology
+                //
+                //--------------------------------------------------------------
                 const size_t N = size;
                 const size_t M = species.size;
                 iTopology.make(N,M);
@@ -80,6 +104,14 @@ namespace Yttrium
                     const Equilibrium &eq = **node;
                     eq.topology( iTopology[ eq.indx[SubLevel] ], SubLevel);
                 }
+
+                //--------------------------------------------------------------
+                //
+                // Check topology
+                //
+                //--------------------------------------------------------------
+                if( MKL::Rank::Of(iTopology) != size )
+                    throw Specific::Exception(CallSign, "primary equilibria are not independent!!");
 
             }
             catch(...)

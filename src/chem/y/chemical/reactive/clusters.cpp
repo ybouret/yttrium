@@ -41,13 +41,12 @@ namespace Yttrium
                 {
                     if(cl->accepts(eq))
                     {
-                        cl->add(eq);
+                        cl->addPrimary(eq);
                         accepted = true;
                         checkFusion();
                         break;
                     }
                 }
-
                 if(!accepted) cls.pushTail( new Cluster(eq) );
             }
 
@@ -57,7 +56,7 @@ namespace Yttrium
             {
                 const EList &el = **cl;
                 const SList &sl = (*cl)->species;
-                Y_XMLOG(xml,_ << '/' << sl);
+                Y_XMLOG(xml,el << '/' << sl);
             }
 
         }
@@ -72,7 +71,7 @@ namespace Yttrium
                 {
                     if(lhs->accepts(*rhs))
                     {
-                        lhs->add(rhs.yield());
+                        lhs->addPrimary(rhs.yield());
                         break;
                     }
                 }
