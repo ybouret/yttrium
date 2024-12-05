@@ -29,8 +29,8 @@ namespace Yttrium
         typedef Vector<String,MemoryModel> Strings; //!< alias
         typedef Vector<xReal,MemoryModel>  XVector; //!< alias
 
-        typedef CxxArray<xReal,MemoryModel> XArray;
-        typedef Matrix<xReal,MemoryModel>   XMatrix;
+        typedef CxxArray<xReal,MemoryModel> XArray;  //!< alias
+        typedef Matrix<xReal,MemoryModel>   XMatrix; //!< alias
 
 
     }

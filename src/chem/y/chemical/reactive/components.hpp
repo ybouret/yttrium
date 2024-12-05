@@ -152,7 +152,7 @@ namespace Yttrium
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
 
 
-            //! transfer only components
+            //! transfer only components from source to target
             template <typename TARGET, typename SOURCE> inline
             void transfer(TARGET &target, const Level targetLevel,
                           SOURCE &source, const Level sourceLevel) const

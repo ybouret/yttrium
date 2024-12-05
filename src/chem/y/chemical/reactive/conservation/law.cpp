@@ -21,7 +21,9 @@ namespace Yttrium
             Actors(),
             denom(0),
             alpha(actors.size,denom),
-            xproj(actors.size,actors.size)
+            xproj(actors.size,actors.size),
+            next(0),
+            prev(0)
             {
                 const size_t dim = actors.size;
                 if(dim<2) throw Specific::Exception(CallSign,"not enough species");
@@ -50,12 +52,49 @@ namespace Yttrium
                     Coerce(xproj[i][i]) += denom;
                 }
                 std::cerr << "xproj =" << xproj << std::endl;
-
-
-                
-
-
             }
+
+
+            xReal Law:: excess(XAdd &xadd, const XReadable &C, const Level L) const
+            {
+                xadd.free();
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    xadd << a->xn * a->sp(C,L);
+                }
+                const xReal temp = xadd.sum();
+                const xReal zero;
+                if(temp<zero)
+                {
+                    return (temp*temp)/denom;
+                }
+                else
+                {
+                    return zero;
+                }
+            }
+
+            void  Law:: excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const
+            {
+                const Actors &      self = *this;
+                const Actor * const head = self->head;
+                target.ld(source);
+                for(const Actor *i=head;i;i=i->next)
+                {
+                    xadd.free();
+
+                    size_t k=1;
+                    for(const Actor *j=head;j;j=j->next,++k)
+                    {
+
+                    }
+
+                    i->sp(target,level) = xadd.sum();
+                }
+            }
+
+
+
 
         }
 

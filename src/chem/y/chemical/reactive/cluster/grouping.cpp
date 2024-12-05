@@ -15,6 +15,21 @@ namespace Yttrium
 
         }
 
+        Grouping:: Grouping(const Grouping &_) :
+        EList(_),
+        species(_.species),
+        iTopology(_.iTopology)
+        {
+
+        }
+
+        void Grouping:: xch(Grouping &_) noexcept
+        {
+            swapWith(_);
+            species.swapWith(_.species);
+            iTopology.xch(_.iTopology);
+        }
+
 
         Grouping:: ~Grouping() noexcept
         {
@@ -25,71 +40,48 @@ namespace Yttrium
 
         void Grouping:: collect(const Equilibrium &eq)
         {
+            // check
             for(const ENode *node=head;node;node=node->next)
             {
                 const Equilibrium &mine = **node;
                 if( &eq == &mine ) throw Specific::Exception(CallSign,"multiple '%s' in cluster", eq.name.c_str());
             }
-            
-            (*this) << eq;
 
-            upgrade();
-        }
+            // backup
+            Grouping G(*this);
 
 
-        void Grouping:: collect(Grouping &other)
-        {
-            assert(this != &other);
-            mergeTail(other);
-            upgrade();
-        }
-
-
-        void Grouping:: clear() noexcept
-        {
-            iTopology.release();
-            species.release();
-            forget();
-        }
-
-        void Grouping:: upgrade()
-        {
-            try
-            {
-                if(size<=0) throw Specific::Exception(CallSign, "unexpected empty cluster!!");
+            try {
+                //--------------------------------------------------------------
+                //
+                // expand list of equilibria
+                //
+                //--------------------------------------------------------------
+                (*this) << eq;
+                assert(size>0);
 
                 //--------------------------------------------------------------
                 //
-                // initialize
+                // expand list of species
                 //
                 //--------------------------------------------------------------
-                clear();
+                for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
+                {
+                    const Species &sp = (*it).actor.sp;
+                    if(!species.has(sp)) species << sp;
+                }
+
+                if(species.size<=0)
+                    throw Specific::Exception(CallSign,"no species in equilibria");
 
                 //--------------------------------------------------------------
                 //
-                // revamp equilibria
+                // revamp
                 //
                 //--------------------------------------------------------------
                 DBOps::RevampSub(*this);
-
-                //--------------------------------------------------------------
-                //
-                // collect and revamp speices
-                //
-                //--------------------------------------------------------------
-                {
-                    AddressBook book;
-                    for(const ENode *node=head;node;node=node->next)
-                    {
-                        const Equilibrium &eq = **node;
-                        enroll(eq);
-                        eq.addSpeciesTo(book);
-                    }
-                    book.sendTo(species);
-                }
                 DBOps::RevampSub(species);
-                if(species.size<=0)
-                    throw Specific::Exception(CallSign, "no species in equilibria!!");
+
 
                 //--------------------------------------------------------------
                 //
@@ -113,16 +105,35 @@ namespace Yttrium
                 if( MKL::Rank::Of(iTopology) != size )
                     throw Specific::Exception(CallSign, "primary equilibria are not independent!!");
 
+
+                enroll(eq);
             }
             catch(...)
             {
-                release();
-                clear();
+                xch(G); // restore state
                 throw;
             }
 
-
         }
+
+
+        void Grouping:: collect(Grouping &other)
+        {
+            assert(this != &other);
+            Grouping current(*this);
+            try {
+                for(const ENode *en=other.head;en;en=en->next)
+                    collect(**en);
+            }
+            catch(...)
+            {
+                xch(current);
+                throw;
+            }
+        }
+
+
+        
 
     }
 

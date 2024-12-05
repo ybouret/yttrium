@@ -41,7 +41,6 @@ namespace Yttrium
             virtual ~Grouping() noexcept; //!< cleanup
 
 
-            
             //__________________________________________________________________
             //
             //
@@ -50,6 +49,18 @@ namespace Yttrium
             //__________________________________________________________________
             void         collect(const Equilibrium &); //!< add and upgrade
             void         collect(Grouping          &); //!< merge and upgrade
+
+            //! transfer only species from source to target
+            template <typename TARGET, typename SOURCE> inline
+            void transfer(TARGET &target, const Level targetLevel,
+                          SOURCE &source, const Level sourceLevel) const
+            {
+                for(const SNode *sn=species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    sp(target,targetLevel) = sp(source,sourceLevel);
+                }
+            }
 
             //__________________________________________________________________
             //
@@ -61,10 +72,9 @@ namespace Yttrium
             Matrix<int> iTopology; //!< synchronized topology
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Grouping);
-            void clear() noexcept; //!< no species, forget fragment
-            void upgrade();        //!< update  and index
-
+            Grouping(const Grouping &);   //!< duplicate
+            Y_DISABLE_ASSIGN(Grouping);
+            void xch(Grouping &) noexcept; //!< exchange all
         };
 
     }
