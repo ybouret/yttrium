@@ -105,7 +105,7 @@ namespace Yttrium
                 if( MKL::Rank::Of(iTopology) != size )
                     throw Specific::Exception(CallSign, "primary equilibria are not independent!!");
 
-
+                // keep format up to date
                 enroll(eq);
             }
             catch(...)

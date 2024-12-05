@@ -21,11 +21,16 @@ namespace Yttrium
             {
             public:
                 static const char * const CallSign;
+                typedef CxxListOf<Law>    List;
+                
+
                 explicit Law(const Actor::List &);
                 virtual ~Law() noexcept;
 
                 //! if <alpha|C> <0, return <alpha|C>^2/alpha^2 else 0
                 xReal excess(XAdd &xadd, const XReadable &C, const Level L) const;
+
+                //! copy source into target and modify actors
                 void  excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const;
 
                 const xReal   denom; //!< alpha^2

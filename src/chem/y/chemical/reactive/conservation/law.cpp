@@ -78,17 +78,20 @@ namespace Yttrium
             {
                 const Actors &      self = *this;
                 const Actor * const head = self->head;
+                
                 target.ld(source);
-                for(const Actor *i=head;i;i=i->next)
+                size_t I=1;
+                for(const Actor *i=head;i;i=i->next,++i)
                 {
                     xadd.free();
-
-                    size_t k=1;
-                    for(const Actor *j=head;j;j=j->next,++k)
                     {
-
+                        const XReadable &proj = xproj[I];
+                        size_t           J=1;
+                        for(const Actor *j=head;j;j=j->next,++J)
+                        {
+                            xadd << j->sp(source,level) * proj[J];
+                        }
                     }
-
                     i->sp(target,level) = xadd.sum();
                 }
             }

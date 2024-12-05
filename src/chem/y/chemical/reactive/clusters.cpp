@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        const char * const Clusters:: CallSign = "Chemical::Clusters";
 
         Clusters:: ConstInterface & Clusters:: surrogate() const noexcept
         {
@@ -18,21 +18,13 @@ namespace Yttrium
         Proxy<const Cluster::List>(),
         cls()
         {
-            Y_XML_SECTION(xml, "Clusters");
-            build(eqs,xml);
-        }
+            Y_XML_SECTION(xml,CallSign);
 
-        Clusters:: ~Clusters() noexcept
-        {
-        }
-
-
-
-        void Clusters:: build(const Equilibria &eqs, XMLog &xml)
-        {
-            Y_XML_SECTION(xml, "build");
-
-            // build partitions
+            //------------------------------------------------------------------
+            //
+            // build grouping
+            //
+            //------------------------------------------------------------------
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
@@ -48,18 +40,27 @@ namespace Yttrium
                     }
                 }
                 if(!accepted) cls.pushTail( new Cluster(eq) );
+
             }
 
-
+            //------------------------------------------------------------------
+            //
             // compile data
-            for(const Cluster *cl=cls.head;cl;cl=cl->next)
+            //
+            //------------------------------------------------------------------
+            for(Cluster *cl=cls.head;cl;cl=cl->next)
             {
-                const EList &el = **cl;
-                const SList &sl = (*cl)->species;
-                Y_XMLOG(xml,el << '/' << sl);
+                cl->compile(xml);
             }
 
         }
+
+        Clusters:: ~Clusters() noexcept
+        {
+        }
+
+
+        
 
         void Clusters:: checkFusion() noexcept
         {

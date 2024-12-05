@@ -5,6 +5,7 @@
 
 
 #include "y/chemical/reactive/cluster/grouping.hpp"
+#include "y/chemical/reactive/conservation/laws.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -30,8 +31,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<Cluster> List; //!< alias
-
+            typedef CxxListOf<Cluster>          List; //!< alias
+            static const char * const           CallSign;
+            
             //__________________________________________________________________
             //
             //
@@ -53,6 +55,7 @@ namespace Yttrium
             bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true if some species are shared
 
+            void compile(XMLog &xml);
 
 
         private:
@@ -61,6 +64,7 @@ namespace Yttrium
 
             virtual ConstInterface & surrogate() const noexcept;
         public:
+            const AutoPtr<Conservation::Laws> laws;
             Cluster *next; //!< for list
             Cluster *prev; //!< for list
         };

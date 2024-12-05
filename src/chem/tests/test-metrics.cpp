@@ -3,7 +3,6 @@
 
 
 #include "y/chemical/reactive/clusters.hpp"
-#include "y/chemical/reactive/conservation/law.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
@@ -17,6 +16,8 @@ Y_UTEST(metrics)
 {
     Y_SIZEOF(Cluster);
     Y_SIZEOF(Conservation::Law);
+    Y_SIZEOF(Conservation::Laws);
+
     Y_SIZEOF(Species);
     Y_SIZEOF(Equilibrium);
     Y_SIZEOF(ConstEquilibrium);

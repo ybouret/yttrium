@@ -23,6 +23,8 @@ namespace Yttrium
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
+            static const char * const CallSign;
+
             //__________________________________________________________________
             //
             //
@@ -37,7 +39,6 @@ namespace Yttrium
             Cluster::List cls;
 
             virtual ConstInterface & surrogate() const noexcept;
-            void    build(const Equilibria &eqs, XMLog &xml);
             void    checkFusion() noexcept;
         };
 

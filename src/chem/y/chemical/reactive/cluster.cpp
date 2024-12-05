@@ -8,9 +8,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Cluster:: CallSign = "Chemical::Cluster";
+
+
         Cluster:: Cluster(const Equilibrium &first) :
         Proxy<const Grouping>(),
         eqs(),
+        laws(0),
         next(0),
         prev(0)
         {
@@ -82,7 +87,16 @@ namespace Yttrium
         }
 
 
+        void Cluster:: compile(XMLog &xml)
+        {
+            const EList &el = eqs;
+            const SList &sl = eqs.species;
+            Y_XML_SECTION_OPT(xml,CallSign, el << '/' << sl);
+            assert(laws.isEmpty());
 
+
+            Coerce(laws) = new Conservation::Laws(eqs,xml);
+        }
 
 
     }
