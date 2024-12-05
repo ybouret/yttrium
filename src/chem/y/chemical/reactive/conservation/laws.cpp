@@ -42,26 +42,33 @@ namespace Yttrium
                 Y_XMLOG(xml,"#conservations=" << survey.size);
                 if(survey.size<=0) return;
 
-                Matrix<unsigned> &cmtx = Coerce(cluster.cmtx); assert(0==cmtx.rows);
-                cmtx.make(survey.size,cluster->species.size);
-
-                for(const WOVEn::NaturalArray *warr=survey.head;warr;warr=warr->next)
                 {
-                    const Readable<const apn> &w = *warr;
-                    Actor::List                a;
-                    for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
+                    Matrix<unsigned> &cmtx = Coerce(cluster.cmtx); assert(0==cmtx.rows);
+                    cmtx.make(survey.size,cluster->species.size);
+
+                    size_t ic=1;
+                    for(const WOVEn::NaturalArray *warr=survey.head;warr;warr=warr->next,++ic)
                     {
-                        const Species &sp = **sn;
-                        const apn     &sw = sp(w,SubLevel);
-                        const unsigned nu = sw.cast<unsigned>("conservation weight");
-                        if(nu<=0) continue;
-                        a.pushTail( new Actor(nu,sp) );
+                        const Readable<const apn> &w = *warr;
+                        Writable<unsigned>        &u = cmtx[ic];
+                        Actor::List                a;
+                        for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
+                        {
+                            const Species &sp = **sn;
+                            const apn     &sw = sp(w,SubLevel);
+                            const unsigned nu = sw.cast<unsigned>("conservation weight");
+                            if(nu<=0) continue;
+                            a.pushTail( new Actor(nu,sp) );
+                            sp(u,SubLevel) = nu;
+                        }
+                        if(a.size<2) continue;
+                        const Law & law = * pushTail( new Law(a) );
+                        enroll(*law);
+                        Y_XMLOG(xml,"(+) " << law);
                     }
-                    if(a.size<2) continue;
-                    const Law & law = * pushTail( new Law(a) );
-                    enroll(*law);
-                    Y_XMLOG(xml,"(+) " << law);
                 }
+
+                Y_XMLOG(xml, "cmtx=" << cluster.cmtx );
 
             }
 
