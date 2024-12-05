@@ -30,7 +30,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Actors() noexcept; //!< setup
+            explicit Actors(const bool bareName) noexcept; //!< setup
             virtual ~Actors() noexcept; //!< cleanup
             Actors(const Actors &);     //!< duplicate
             Y_OSTREAM_PROTO(Actors);    //!< display name

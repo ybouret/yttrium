@@ -1,8 +1,11 @@
 
 #include "y/chemical/reactive/conservation/laws.hpp"
-#include "y/chemical/reactive/cluster/grouping.hpp"
+#include "y/chemical/reactive/cluster.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
+
+#include "y/woven/survey/natural.hpp"
+#include "y/woven/subspaces.hpp"
 
 namespace Yttrium
 {
@@ -18,19 +21,47 @@ namespace Yttrium
 
             const char * const Laws:: CallSign = "Chemical::Conservation::Laws";
             
-            Laws:: Laws(const Grouping &g, XMLog &xml) :
+            Laws:: Laws(Cluster &cluster, XMLog &xml):
             Law::List()
             {
                 Y_XML_SECTION(xml,CallSign);
 
                 Y_XML_COMMENT(xml, "building orthogonal space of topology");
-                Y_XMLOG(xml, "Nu = " << g.iTopology);
-                
-                Matrix<apz> Q;
-                if(!OrthoSpace::Make(Q,g.iTopology))
-                    throw Specific::Exception(CallSign,"no orthogonal space of topology");
+                Y_XMLOG(xml, "Nu = " << cluster->iTopology);
+                WOVEn::NaturalSurvey survey(xml);
 
-                Y_XMLOG(xml, "Q  = " << Q);
+                {
+                    Matrix<apz> Q;
+                    if(!OrthoSpace::Make(Q,cluster->iTopology))
+                        throw Specific::Exception(CallSign,"no orthogonal space of topology");
+
+                    Y_XMLOG(xml, "Q  = " << Q);
+                    WOVEn::Explore(Q,survey,true);
+                }
+
+                Y_XMLOG(xml,"#conservations=" << survey.size);
+                if(survey.size<=0) return;
+
+                Matrix<unsigned> &cmtx = Coerce(cluster.cmtx); assert(0==cmtx.rows);
+                cmtx.make(survey.size,cluster->species.size);
+
+                for(const WOVEn::NaturalArray *warr=survey.head;warr;warr=warr->next)
+                {
+                    const Readable<const apn> &w = *warr;
+                    Actor::List                a;
+                    for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        const apn     &sw = sp(w,SubLevel);
+                        const unsigned nu = sw.cast<unsigned>("conservation weight");
+                        if(nu<=0) continue;
+                        a.pushTail( new Actor(nu,sp) );
+                    }
+                    if(a.size<2) continue;
+                    const Law & law = * pushTail( new Law(a) );
+                    enroll(*law);
+                    Y_XMLOG(xml,"(+) " << law);
+                }
 
             }
 

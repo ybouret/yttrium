@@ -94,8 +94,8 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml,CallSign, el << '/' << sl);
             assert(laws.isEmpty());
 
-
-            Coerce(laws) = new Conservation::Laws(eqs,xml);
+            
+            Coerce(laws) = new Conservation::Laws(*this,xml);
         }
 
 

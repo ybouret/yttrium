@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+
         //______________________________________________________________________
         //
         //
@@ -28,7 +29,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Company() noexcept; //!< setup emptu
+            explicit Company(const bool bareName) noexcept; //!< setup emptu
             virtual ~Company() noexcept; //!< cleanup
             Company(const Company &);    //!< duplicate
 
@@ -57,6 +58,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const String  name; //!< pre-computed
+            const bool    bare; //!< use bar  name
 
         private:
             Y_DISABLE_ASSIGN(Company);

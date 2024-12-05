@@ -18,7 +18,7 @@ namespace Yttrium
             real_t toReal(const xReal &x) { return real_t(x); }
 
             Law:: Law(const Actor::List &actors) :
-            Actors(),
+            Actors(false),
             denom(0),
             alpha(actors.size,denom),
             xproj(actors.size,actors.size),
@@ -40,8 +40,8 @@ namespace Yttrium
                 }
                 Coerce(denom) = sum2.cast<unsigned>("conservation law denominator");
 
-                std::cerr << "name  = '" << self->name << "'" << std::endl;
-                Core::Display(std::cerr << "alpha = ", &alpha[1], alpha.size(), toReal) << std::endl;
+                //std::cerr << "name  = '" << self->name << "'" << std::endl;
+                //Core::Display(std::cerr << "alpha = ", &alpha[1], alpha.size(), toReal) << std::endl;
 
                 for(size_t i=dim;i>0;--i)
                 {
@@ -51,7 +51,7 @@ namespace Yttrium
                     }
                     Coerce(xproj[i][i]) += denom;
                 }
-                std::cerr << "xproj =" << xproj << std::endl;
+                //std::cerr << "xproj =" << xproj << std::endl;
             }
 
 
@@ -96,7 +96,11 @@ namespace Yttrium
                 }
             }
 
-
+            std::ostream & operator<<(std::ostream &os, const Law &law)
+            {
+                const Actors &ac = law;
+                return os << "d_(" << ac << ")";
+            }
 
 
         }

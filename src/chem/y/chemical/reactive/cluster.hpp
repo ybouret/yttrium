@@ -33,7 +33,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxListOf<Cluster>          List; //!< alias
             static const char * const           CallSign;
-            
+
             //__________________________________________________________________
             //
             //
@@ -54,7 +54,6 @@ namespace Yttrium
             void addPrimary(Cluster * const);        //!< add content, delete source and upgrade
             bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true if some species are shared
-
             void compile(XMLog &xml);
 
 
@@ -64,7 +63,8 @@ namespace Yttrium
 
             virtual ConstInterface & surrogate() const noexcept;
         public:
-            const AutoPtr<Conservation::Laws> laws;
+            const AutoPtr<Conservation::Laws> laws; //!< conservation laws
+            const Matrix<unsigned>            cmtx; //!< conservation matrix
             Cluster *next; //!< for list
             Cluster *prev; //!< for list
         };

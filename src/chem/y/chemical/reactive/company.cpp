@@ -7,14 +7,14 @@ namespace Yttrium
 
         Company:: ~Company() noexcept {}
 
-        Company:: Company() noexcept :
-        Entity(), Actor::List(), name()
+        Company:: Company(const bool bareName) noexcept :
+        Entity(), Actor::List(), name(), bare(bareName)
         {
 
         }
 
         Company:: Company(const Company &_) :
-        Entity(), Actor::List(_),name(_.name)
+        Entity(), Actor::List(_),name(_.name),bare(_.bare)
         {
         }
 
@@ -37,7 +37,15 @@ namespace Yttrium
             {
                 String newName = name;
                 if(size>0) newName += " + ";
-                newName += actor->name;
+                if(bare)
+                {
+                    newName += actor->name;
+                }
+                else
+                {
+                    newName += '[' + actor->name + ']';
+                }
+
                 Coerce(name).swapWith(newName);
             }
             return * pushTail( guard.yield() );

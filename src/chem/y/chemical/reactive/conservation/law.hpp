@@ -26,6 +26,7 @@ namespace Yttrium
 
                 explicit Law(const Actor::List &);
                 virtual ~Law() noexcept;
+                Y_OSTREAM_PROTO(Law);
 
                 //! if <alpha|C> <0, return <alpha|C>^2/alpha^2 else 0
                 xReal excess(XAdd &xadd, const XReadable &C, const Level L) const;
