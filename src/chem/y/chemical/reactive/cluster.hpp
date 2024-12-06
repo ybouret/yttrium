@@ -81,6 +81,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             virtual ConstInterface & surrogate() const noexcept;
+            void                     classifySpecies(XMLog &);
 
             Grouping                eqs;  //!< content
         public:
