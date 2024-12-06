@@ -457,7 +457,7 @@ namespace Yttrium
 
         void Weasel:: executeLuaCode(Args &args)
         {
-            std::cerr << "Executing Lua Code..." << std::endl;
+            //std::cerr << "Executing Lua Code..." << std::endl;
             const size_t n = args.arg.size();
             for(size_t i=1;i<=n;++i)
             {

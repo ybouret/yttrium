@@ -44,15 +44,16 @@ namespace Yttrium
             static const char * const      SYMBOL;       //!< "<=>"
             static const char              COLON = ':';  //!< alias
 
+            //! Arguments for Scheme
             struct  Args
             {
-                const Readable<String> & arg;
-                Library &                lib;
-                Equilibria &             eqs;
+                const Readable<String> & arg; //!< parsed
+                Library &                lib; //!< current library
+                Equilibria &             eqs; //!< current equilibria
             };
 
-            typedef Functor<void,TL1(Args&)>        Scheme;
-            typedef SuffixMap<const String,Scheme> Schemes;
+            typedef Functor<void,TL1(Args&)>        Scheme; //!< alias
+            typedef SuffixMap<const String,Scheme> Schemes; //!< alias
 
 
 
@@ -81,7 +82,7 @@ namespace Yttrium
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
 
-
+            //! record a scheme for a given instruction label
             template <typename LABEL, typename HOST, typename METH> inline
             void on(const LABEL &label, HOST &host, METH meth)
             {
@@ -99,7 +100,7 @@ namespace Yttrium
             Lua::VM                luaVM;   //!< shared VM
             const Lingo::Caption   caption; //!< shared caption
             const Hashing::Perfect hashing; //!< "REAC" or "ACTOR"
-            Schemes                schemes;
+            Schemes                schemes; //!< database of schemes for instructions
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);

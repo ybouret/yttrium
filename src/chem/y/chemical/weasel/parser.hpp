@@ -32,7 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Parser(const Lingo::Caption   &,
                             const Hashing::Perfect &); //!< setup
-            virtual ~Parser() noexcept;              //!< cleanup
+            virtual ~Parser() noexcept;                //!< cleanup
 
             //__________________________________________________________________
             //
@@ -55,7 +55,7 @@ namespace Yttrium
             Compound   &            EQUILIBRIUM;  //!< equilibrium rule
             const Rule &            POSITIVE;     //!< mark('+') rule
             const Rule &            SEARCH;       //!< %regexp
-            Compound   &            INSTR;        //!< #instr ""...
+            Compound   &            INSTR;        //!< 'hashtag instr ""...'
             const Hashing::Perfect &hashing;      //!< REAC/PROD to postprocess
 
 
