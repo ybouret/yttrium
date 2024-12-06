@@ -25,8 +25,8 @@ namespace Yttrium
         FORMULA(     agg("FORMULA")     ),
         EQUILIBRIUM( agg("EQUILIBRIUM") ),
         POSITIVE(    term('+')          ),
-        //SEARCH( plug<Lingo::Lexical::BString>("SEARCH") ),
         SEARCH(      term("SEARCH","%[" Y_CHEM_EQ_CHAR "\\\\.*?+]+" ) ),
+        INSTR(       agg("INSTR") ),
         hashing( h )
         {
             //------------------------------------------------------------------
@@ -85,7 +85,14 @@ namespace Yttrium
             EQUILIBRIUM << WHITE << plug<Lingo::Lexical::RString>("K");
 
 
-
+            //------------------------------------------------------------------
+            //
+            //
+            // Instruction
+            //
+            //
+            //------------------------------------------------------------------
+            INSTR << term("LABEL","#[:word:]+");
 
 
             //------------------------------------------------------------------
@@ -96,13 +103,18 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Compound & STATEMENT = alt("STATEMENT");
-            STATEMENT <<  FORMULA << EQUILIBRIUM << SEARCH;
+            STATEMENT <<  FORMULA << EQUILIBRIUM << SEARCH << INSTR;
 
             const Rule &SEP = opt( get(';') );
             WEASEL << zom( cat(WHITE,STATEMENT,WHITE,SEP) ) << WHITE;
 
-
+            //------------------------------------------------------------------
+            //
+            //
             // lexer only: comments
+            //
+            //
+            //------------------------------------------------------------------
             lexer.plug<Lingo::Lexical::C_Comment>("C_Comment");
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 

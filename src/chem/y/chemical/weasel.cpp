@@ -22,6 +22,7 @@ namespace Yttrium
 #define Y_Chemical_FORMULA     0
 #define Y_Chemical_EQUILIBRIUM 1
 #define Y_Chemical_SEARCH      2
+#define Y_Chemical_INSTR       3
 
             class Compiler
             {
@@ -37,6 +38,8 @@ namespace Yttrium
                     treeNameIndex(genericParser.FORMULA.name,      Y_Chemical_FORMULA);
                     treeNameIndex(*genericParser.EQUILIBRIUM.name, Y_Chemical_EQUILIBRIUM);
                     treeNameIndex(*genericParser.SEARCH.name,      Y_Chemical_SEARCH);
+                    treeNameIndex(*genericParser.INSTR.name,       Y_Chemical_INSTR);
+
                 }
                 
 
@@ -237,6 +240,10 @@ namespace Yttrium
                         queryEquilibrium(tree,lib,eqs);
                         break;
 
+                    case Y_Chemical_INSTR:
+                        queryInstruction(tree,lib,eqs);
+                        break;
+
                     default:
                         throw Specific::Exception(CallSign, "unhandled '%s'", treeName.c_str() );
                 }
@@ -350,6 +357,26 @@ namespace Yttrium
         }
 
 
+
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Chemical
+    {
+
+        void Weasel:: queryInstruction(XTree &instr, Library &, Equilibria &)
+        {
+            assert(0!=compiler);
+            assert(instr->name() == *(compiler->genericParser.INSTR.name) );
+            const XNode *node = instr->branch().head; assert("LABEL"==node->name());
+            const String label = node->lexeme().toString(1,0);
+            std::cerr << "processing '" << label << "'" << std::endl;
+
+        }
 
     }
 

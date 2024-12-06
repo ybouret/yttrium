@@ -55,6 +55,7 @@ namespace Yttrium
             Compound   &            EQUILIBRIUM;  //!< equilibrium rule
             const Rule &            POSITIVE;     //!< mark('+') rule
             const Rule &            SEARCH;       //!< %regexp
+            Compound   &            INSTR;        //!< #instr ""...
             const Hashing::Perfect &hashing;      //!< REAC/PROD to postprocess
 
 

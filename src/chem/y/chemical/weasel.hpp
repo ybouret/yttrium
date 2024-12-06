@@ -59,11 +59,15 @@ namespace Yttrium
             XNode  *parseEquilibrium(const String &);                             //!< parse a string to EQUILIBRIUM
             void    queryEquilibrium(XTree &search, Library &, Equilibria &);     //!< search precompiled in EDB
 
+            void    queryInstruction(XTree &instr, Library &, Equilibria &);      //!< process instructions
+
 
             //! parse species and equilibria from a module
             void operator()(Library &             lib,
                             Equilibria &          eqs,
                             Lingo::Module * const inp);
+
+
 
 
 
