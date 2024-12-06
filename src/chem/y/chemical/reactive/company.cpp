@@ -39,8 +39,8 @@ namespace Yttrium
                 if(size>0) newName += " + ";
                 switch(form)
                 {
-                    case NameAsNormalSpecies: newName += actor->name; break;
-                    case NameAsConcentration:newName += '[' + actor->name + ']'; break;
+                    case NameAsNormalSpecies: newName +=       actor->name;       break;
+                    case NameAsConcentration: newName += '[' + actor->name + ']'; break;
                 }
                 Coerce(name).swapWith(newName);
             }

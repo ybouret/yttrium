@@ -66,7 +66,9 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
+            //
             // create combinatorics
+            //
             //
             //------------------------------------------------------------------
             WOVEn::IntegerSurvey survey(xml);
@@ -86,7 +88,6 @@ namespace Yttrium
             {
                 const WOVEn::IntegerArray &comb = *warr;
 
-                //std::cerr << "testing " << comb << " / order=" << comb.order << std::endl;
 
                 // initialize state
                 stoi.ld(zero);
@@ -97,7 +98,10 @@ namespace Yttrium
                 {
                     const Equilibrium &eq = **en;
                     const Indexed     &id = eq;
-                    const apz         &cf = id(comb,SubLevel);  if(zero==cf) continue;
+                    const apz         &cf = id(comb,SubLevel);
+
+                    if(zero==cf)
+                        continue;
 
                     // use equilibrium
                     eq.addSpeciesTo(original);
@@ -124,8 +128,25 @@ namespace Yttrium
                 SList oldSpecies; original.sendTo(oldSpecies);
                 SList newSpecies; combined.sendTo(newSpecies);
 
-                Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies);
+                DBOps::Revamp<SList>::Sort(oldSpecies);
+                DBOps::Revamp<SList>::Sort(newSpecies);
 
+
+                switch( Sign::Of(newSpecies.size,oldSpecies.size) )
+                {
+                    case __Zero__:
+                        assert( oldSpecies.alike(newSpecies) );
+                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / useless");
+                        continue;
+
+                    case Positive:
+                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / corrupted!");
+                        throw Specific::Exception(Grouping::CallSign, "corrupted combinatorics!");
+
+                    case Negative:
+                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies);
+                        break;
+                }
 
 
 
