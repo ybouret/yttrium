@@ -15,11 +15,20 @@ namespace Yttrium
 
         namespace Conservation
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Internal list of laws
+            //
+            //
+            //__________________________________________________________________
             class Canon : public Law::List, public Assembly
             {
             public:
-                explicit Canon() noexcept;
-                virtual ~Canon() noexcept;
+                explicit Canon() noexcept; //!< setup
+                virtual ~Canon() noexcept; //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canon);

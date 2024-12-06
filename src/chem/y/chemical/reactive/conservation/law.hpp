@@ -33,8 +33,8 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const CallSign;
-                typedef CxxListOf<Law>    List;
+                static const char * const CallSign; //!< "Chemical::Conservation::Law"
+                typedef CxxListOf<Law>    List;     //!< alias
                 
 
                 //______________________________________________________________

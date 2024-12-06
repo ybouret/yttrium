@@ -40,8 +40,6 @@ namespace Yttrium
                 }
                 Coerce(denom) = sum2.cast<unsigned>("conservation law denominator");
 
-                //std::cerr << "name  = '" << self->name << "'" << std::endl;
-                //Core::Display(std::cerr << "alpha = ", &alpha[1], alpha.size(), toReal) << std::endl;
 
                 for(size_t i=dim;i>0;--i)
                 {
@@ -51,7 +49,6 @@ namespace Yttrium
                     }
                     Coerce(xproj[i][i]) += denom;
                 }
-                //std::cerr << "xproj =" << xproj << std::endl;
             }
 
 

@@ -16,18 +16,40 @@ namespace Yttrium
 
         namespace Conservation
         {
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Laws for a cluster
+            //
+            //
+            //__________________________________________________________________
             class Laws : public Object, public Proxy<const Canon>
             {
             public:
-                static const char * const CallSign;
-                virtual ~Laws() noexcept;
-                explicit Laws(Cluster &, XMLog &);
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const CallSign; //!< "Chemical::Conservation::Laws"
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Laws(Cluster &, XMLog &); //!< setup
+                virtual ~Laws() noexcept;          //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
-                Canon canon;
                 virtual ConstInterface & surrogate() const noexcept;
+
+                Canon canon; //!< internal list
             };
 
 
