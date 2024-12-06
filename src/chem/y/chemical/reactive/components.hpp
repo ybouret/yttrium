@@ -182,7 +182,7 @@ namespace Yttrium
             //! move assuming positivity
             void moveSafely(XWritable &C, const Level L, const xReal xi) const noexcept;
 
-
+            //! fill topology matrix
             template <typename ARRAY> inline
             void topology(ARRAY &Nu, const Level L) const
             {

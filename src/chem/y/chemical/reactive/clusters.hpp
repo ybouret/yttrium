@@ -23,7 +23,13 @@ namespace Yttrium
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::Clusters"
 
             //__________________________________________________________________
             //
@@ -39,7 +45,7 @@ namespace Yttrium
             Cluster::List cls;
 
             virtual ConstInterface & surrogate() const noexcept;
-            void    checkFusion() noexcept;
+            void    checkFusion() noexcept; //!< for clusters creation
         };
 
     }

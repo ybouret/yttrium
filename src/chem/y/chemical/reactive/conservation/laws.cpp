@@ -28,7 +28,8 @@ namespace Yttrium
             
             Laws:: Laws(Cluster &cluster, XMLog &xml):
             Object(),
-            Proxy<const Canon>()
+            Proxy<const Canon>(),
+            canon()
             {
                 Y_XML_SECTION(xml,CallSign);
 

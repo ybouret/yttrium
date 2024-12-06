@@ -31,8 +31,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<Cluster>          List; //!< alias
-            static const char * const           CallSign;
+            typedef CxxListOf<Cluster>          List;     //!< alias
+            static const char * const           CallSign; //!< "Chemical::Cluster"
 
             //__________________________________________________________________
             //
@@ -54,7 +54,7 @@ namespace Yttrium
             void addPrimary(Cluster * const);        //!< add content, delete source and upgrade
             bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true if some species are shared
-            void compile(XMLog &xml);
+            void compile(XMLog &xml);                //!< post-build, called by Clusters
 
 
         private:
@@ -65,8 +65,8 @@ namespace Yttrium
         public:
             const AutoPtr<Conservation::Laws> laws; //!< conservation laws
             const Matrix<unsigned>            cmtx; //!< conservation matrix
-            Cluster *next; //!< for list
-            Cluster *prev; //!< for list
+            Cluster *                         next; //!< for list
+            Cluster *                         prev; //!< for list
         };
     }
 
