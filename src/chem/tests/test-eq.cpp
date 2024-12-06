@@ -20,7 +20,7 @@ Y_UTEST(eq)
     std::cerr << "lib=" << lib << std::endl;
 
     {
-        Actors actors(true);
+        Actors actors(NameAsNormalSpecies);
 
         actors(h);
         actors(2,w);

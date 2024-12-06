@@ -11,7 +11,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
 
         //______________________________________________________________________
         //
@@ -30,7 +29,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Actors(const bool bareName) noexcept; //!< setup
+            explicit Actors(const NameForm) noexcept; //!< setup
             virtual ~Actors() noexcept; //!< cleanup
             Actors(const Actors &);     //!< duplicate
             Y_OSTREAM_PROTO(Actors);    //!< display name

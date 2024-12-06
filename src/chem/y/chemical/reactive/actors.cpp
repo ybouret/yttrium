@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Actors:: Actors(const bool bareName) noexcept : Proxy<const Company>(), company(bareName)
+        Actors:: Actors(const NameForm disp) noexcept : Proxy<const Company>(), company(disp)
         {
         }
 

@@ -11,6 +11,19 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Naming actors
+        //
+        //
+        //______________________________________________________________________
+        enum NameForm
+        {
+            NameAsNormalSpecies, //!< use raw name
+            NameAsConcentration  //!< use [name]
+        };
 
         //______________________________________________________________________
         //
@@ -29,7 +42,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Company(const bool bareName) noexcept; //!< setup emptu
+            explicit Company(const NameForm) noexcept; //!< setup empty
             virtual ~Company() noexcept; //!< cleanup
             Company(const Company &);    //!< duplicate
 
@@ -57,8 +70,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const String  name; //!< pre-computed
-            const bool    bare; //!< use bar  name
+            const String     name; //!< pre-computed
+            const NameForm   form; //!< name form
 
         private:
             Y_DISABLE_ASSIGN(Company);

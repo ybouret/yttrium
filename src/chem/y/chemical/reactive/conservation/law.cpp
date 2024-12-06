@@ -18,7 +18,7 @@ namespace Yttrium
             real_t toReal(const xReal &x) { return real_t(x); }
 
             Law:: Law(const Actor::List &actors) :
-            Actors(false),
+            Actors(NameAsConcentration),
             denom(0),
             alpha(actors.size,denom),
             xproj(actors.size,actors.size),
