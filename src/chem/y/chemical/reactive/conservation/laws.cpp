@@ -7,6 +7,9 @@
 #include "y/woven/survey/natural.hpp"
 #include "y/woven/subspaces.hpp"
 
+
+
+
 namespace Yttrium
 {
     namespace Chemical
@@ -19,10 +22,13 @@ namespace Yttrium
 
             Laws:: ~Laws() noexcept {}
 
+            Laws::ConstInterface & Laws:: surrogate() const noexcept { return canon; }
+
             const char * const Laws:: CallSign = "Chemical::Conservation::Laws";
             
             Laws:: Laws(Cluster &cluster, XMLog &xml):
-            Law::List()
+            Object(),
+            Proxy<const Canon>()
             {
                 Y_XML_SECTION(xml,CallSign);
 
@@ -52,6 +58,8 @@ namespace Yttrium
                         const Readable<const apn> &w = *warr;
                         Writable<unsigned>        &u = cmtx[ic];
                         Actor::List                a;
+
+                        // extract actors from survey
                         for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
                         {
                             const Species &sp = **sn;
@@ -62,8 +70,10 @@ namespace Yttrium
                             sp(u,SubLevel) = nu;
                         }
                         if(a.size<2) continue;
-                        const Law & law = * pushTail( new Law(a) );
-                        enroll(*law);
+
+                        // update canon
+                        const Law & law = * canon.pushTail( new Law(a) );
+                        canon.enroll(*law);
                         Y_XMLOG(xml,"(+) " << law);
                     }
                 }
