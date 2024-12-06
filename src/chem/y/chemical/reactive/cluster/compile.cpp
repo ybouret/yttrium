@@ -79,7 +79,7 @@ namespace Yttrium
             for(const WOVEn::IntegerArray *warr=survey.head;warr;warr=warr->next)
             {
                 const WOVEn::IntegerArray &comb = *warr;
-                std::cerr << "testing " << comb << std::endl;
+                std::cerr << "testing " << comb << " / order=" << comb.order << std::endl;
             }
 
 
