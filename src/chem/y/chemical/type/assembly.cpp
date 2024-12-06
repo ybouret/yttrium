@@ -20,6 +20,10 @@ namespace Yttrium
             Coerce(maxKeySize) = 0;
         }
 
+        void Assembly:: tradeFor(Assembly &_) noexcept
+        {
+            CoerceSwap(maxKeySize,_.maxKeySize);
+        }
 
     }
 

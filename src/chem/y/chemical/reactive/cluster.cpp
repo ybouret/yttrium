@@ -9,13 +9,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        const char * const Cluster:: CallSign = "Chemical::Cluster";
 
 
         Cluster:: Cluster(const Equilibrium &first) :
         Proxy<const Grouping>(),
         eqs(),
         laws(0),
+        cmtx(),
         next(0),
         prev(0)
         {
@@ -91,7 +91,7 @@ namespace Yttrium
         {
             const EList &el = eqs;
             const SList &sl = eqs.species;
-            Y_XML_SECTION_OPT(xml,CallSign, el << '/' << sl);
+            Y_XML_SECTION_OPT(xml,Grouping::CallSign, el << '/' << sl);
             assert(laws.isEmpty());
 
             

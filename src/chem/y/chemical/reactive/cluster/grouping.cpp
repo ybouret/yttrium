@@ -17,6 +17,7 @@ namespace Yttrium
 
         Grouping:: Grouping(const Grouping &_) :
         EList(_),
+        Fragment(_),
         species(_.species),
         iTopology(_.iTopology)
         {
@@ -25,9 +26,10 @@ namespace Yttrium
 
         void Grouping:: xch(Grouping &_) noexcept
         {
-            swapWith(_);
-            species.swapWith(_.species);
-            iTopology.xch(_.iTopology);
+            swapWith(_);                    // EList
+            trades(_);                      // Fragment
+            species.swapWith(_.species);    // species
+            iTopology.xch(_.iTopology);     // topology
         }
 
 

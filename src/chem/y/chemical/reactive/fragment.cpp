@@ -13,6 +13,14 @@ namespace Yttrium
         {
         }
 
+        Fragment:: Fragment(const Fragment &_) noexcept :
+        Proxy<const Assembly>(),
+        self(_.self),
+        reac(_.reac),
+        prod(_.prod)
+        {
+        }
+
         Fragment:: ~Fragment() noexcept
         {
         }
@@ -37,6 +45,12 @@ namespace Yttrium
             prod.forget();
         }
 
+        void Fragment:: trades(Fragment &_) noexcept
+        {
+            self.tradeFor(_.self);
+            reac.tradeFor(_.reac);
+            prod.tradeFor(_.prod);
+        }
 
 
 

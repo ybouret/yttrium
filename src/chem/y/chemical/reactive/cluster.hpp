@@ -32,8 +32,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef CxxListOf<Cluster>          List;     //!< alias
-            static const char * const           CallSign; //!< "Chemical::Cluster"
-
+            
             //__________________________________________________________________
             //
             //

@@ -28,8 +28,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Fragment() noexcept; //!< setup
-            virtual ~Fragment() noexcept; //!< cleanup
+            explicit Fragment()        noexcept; //!< setup
+            virtual ~Fragment()        noexcept; //!< cleanup
+            Fragment(const Fragment &) noexcept; //!< duplicate
 
             //__________________________________________________________________
             //
@@ -65,7 +66,8 @@ namespace Yttrium
 
 
             void enroll(const Components &);  //!< update all assemblies
-            void forget() noexcept;           //!< forget all assemblies
+            void forget()           noexcept; //!< forget all assemblies
+            void trades(Fragment &) noexcept; //!< for all assemblies
 
             //! print name:reac<=>prod:
             std::ostream & print(std::ostream &os, const Components &) const;
@@ -73,7 +75,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fragment);
+            Y_DISABLE_ASSIGN(Fragment);
             virtual ConstInterface & surrogate() const noexcept;
             Assembly self; //!< for names
             Assembly reac; //!< for actors
