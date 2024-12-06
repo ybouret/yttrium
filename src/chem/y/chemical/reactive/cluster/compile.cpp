@@ -1,7 +1,7 @@
 #include "y/chemical/reactive/cluster.hpp"
 #include "y/system/exception.hpp"
 
-#include "y/woven/survey/integer.hpp"
+#include "y/chemical/reactive/cluster/mixed.hpp"
 #include "y/woven/subspaces.hpp"
 
 
@@ -123,7 +123,7 @@ namespace Yttrium
                 for(const SNode *sn=sl.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    if(zero!=sp(stoi,SubLevel)) combined |= sp;
+                    if(zero!=sp(stoi,SubLevel)) combined += sp; // only once
                 }
 
                 SList oldSpecies; original.sendTo(oldSpecies);
@@ -152,7 +152,8 @@ namespace Yttrium
                 }
 
                 
-
+                const String eqName = MixedEquilibrium::MakeName(my,comb);
+                Y_XMLOG(xml, "(+) " << eqName);
 
 
             }
