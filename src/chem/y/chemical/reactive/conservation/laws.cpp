@@ -38,6 +38,7 @@ namespace Yttrium
                 WOVEn::NaturalSurvey survey(xml);
 
                 {
+                    Y_XML_SECTION(xml, "WOVEn::Explore");
                     Matrix<apz> Q;
                     if(!OrthoSpace::Make(Q,cluster->iTopology))
                         throw Specific::Exception(CallSign,"no orthogonal space of topology");
