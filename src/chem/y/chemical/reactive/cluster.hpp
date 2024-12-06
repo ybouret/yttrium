@@ -6,6 +6,7 @@
 
 #include "y/chemical/reactive/cluster/grouping.hpp"
 #include "y/chemical/reactive/conservation/laws.hpp"
+#include "y/ptr/drill-down.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -62,7 +63,7 @@ namespace Yttrium
 
             virtual ConstInterface & surrogate() const noexcept;
         public:
-            const AutoPtr<Conservation::Laws> laws; //!< conservation laws
+            const AutoPtr<Conservation::Laws,DrillDown> laws; //!< conservation laws
             const Matrix<unsigned>            cmtx; //!< conservation matrix
             Cluster *                         next; //!< for list
             Cluster *                         prev; //!< for list

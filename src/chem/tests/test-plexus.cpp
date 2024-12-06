@@ -57,8 +57,16 @@ Y_UTEST(plexus)
                 const Components &cm    = **en;
                 const String      color = cm.makeColor();
                 cm.viz(fp, color.c_str(), 0);
-                
+
             }
+
+            // write laws
+            for(const Conservation::Law *ln=cl.laws->head;ln;ln=ln->next)
+            {
+                const Conservation::Law &law = *ln;
+                law.viz(fp,0);
+            }
+
             fp << "}\n";
         }
         GraphViz::Vizible::Leave(fp);

@@ -101,13 +101,24 @@ namespace Yttrium
             }
 
 
-            void  Law:: viz(OutputStream &fp) const
+            void  Law:: viz(OutputStream &fp, const char * const color) const
             {
                 const Actors & self = *this;
                 const String   uuid = self->html();
                 Node(fp,this) << '[';
                 fp << "label= <" << uuid << ">";
+                fp << ",shape=box,style=bold";
                 Endl(fp << ']');
+                for(const Actor *a=self->head;a;a=a->next)
+                {
+                    const GraphViz::Vizible &source = a->sp;
+                    const GraphViz::Vizible &target = *this;
+
+                    Arrow(fp, &source, &target);
+                    fp << "[arrowhead=empty]";
+                    Endl(fp);
+                }
+
             }
 
 

@@ -61,7 +61,7 @@ namespace Yttrium
                 void  excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const;
 
                 //! emit GraphViz code
-                void  viz(OutputStream &fp) const;
+                void  viz(OutputStream &fp, const char * const color) const;
 
                 //______________________________________________________________
                 //
