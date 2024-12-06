@@ -37,7 +37,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Clusters(const Equilibria &eqs, XMLog &xml); //!< setup
+            explicit Clusters(Equilibria &eqs, XMLog &xml); //!< setup
             virtual ~Clusters() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Clusters);                            //!< eqs+species
 

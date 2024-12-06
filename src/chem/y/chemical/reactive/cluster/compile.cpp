@@ -12,8 +12,9 @@ namespace Yttrium
         void Cluster:: classifySpecies(XMLog &xml)
         {
 
-
             Y_XML_SECTION(xml,"SpeciesClassification");
+
+            // extracting conserved from laws
             {
                 AddressBook &abiding = Coerce(conserved.book);
                 for(const Conservation::Law *ln=laws->head;ln;ln=ln->next)
@@ -25,6 +26,7 @@ namespace Yttrium
             Coerce(conserved).compile();
             Y_XMLOG(xml,"conserved=" << conserved.list);
 
+            // excluding undounded from conserved
             {
                 AddressBook &rebels = Coerce(unbounded.book);
                 for(const SNode *sn=my.species.head;sn;sn=sn->next)
@@ -36,10 +38,9 @@ namespace Yttrium
             }
             Coerce(unbounded).compile();
             Y_XMLOG(xml,"unbounded=" << unbounded.list);
-
         }
 
-        void Cluster:: compile(XMLog &xml)
+        void Cluster:: compile(Equilibria &eqs, XMLog &xml)
         {
             const EList &el = my;
             const SList &sl = my.species;

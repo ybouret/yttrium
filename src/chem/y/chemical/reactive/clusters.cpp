@@ -13,8 +13,8 @@ namespace Yttrium
             return cls;
         }
 
-        Clusters:: Clusters(const Equilibria &eqs,
-                            XMLog            &xml) :
+        Clusters:: Clusters(Equilibria &eqs,
+                            XMLog      &xml) :
         Proxy<const Cluster::List>(),
         cls()
         {
@@ -52,7 +52,7 @@ namespace Yttrium
             for(Cluster *cl=cls.head;cl;cl=cl->next)
             {
                 Coerce(cl->indx) = ++indx;
-                cl->compile(xml);
+                cl->compile(eqs,xml);
             }
 
         }

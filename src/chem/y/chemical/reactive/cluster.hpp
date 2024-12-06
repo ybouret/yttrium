@@ -6,6 +6,7 @@
 
 #include "y/chemical/reactive/cluster/grouping.hpp"
 #include "y/chemical/reactive/conservation/laws.hpp"
+#include "y/chemical/reactive/equilibria.hpp"
 #include "y/ptr/drill-down.hpp"
 #include "y/stream/xmlog.hpp"
 
@@ -75,7 +76,7 @@ namespace Yttrium
             void addPrimary(Cluster * const);        //!< add content, delete source and upgrade
             bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true if some species are shared
-            void compile(XMLog &xml);                //!< post-build, called by Clusters
+            void compile(Equilibria &eqs, XMLog &xml); //!< post-build, called by Clusters
 
 
         private:

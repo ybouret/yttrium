@@ -82,8 +82,7 @@ namespace Yttrium
             //! declare a new equilibrium
             void decl( Equilibrium * const );
 
-
-
+            
             //! helper to declare a derived equilibrium
             template <typename EQTYPE> inline
             EQTYPE & add(EQTYPE * const eq)
