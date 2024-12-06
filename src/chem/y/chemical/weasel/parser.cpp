@@ -3,6 +3,7 @@
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
 #include "y/lingo/lexical/add-on/rstring.hpp"
 #include "y/lingo/lexical/add-on/bstring.hpp"
+#include "y/lingo/lexical/add-on/jstring.hpp"
 
 
 namespace Yttrium
@@ -93,7 +94,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             INSTR << term("LABEL","#[:word:]+");
-
+            INSTR << zom(  cat(WHITE,plug<Lingo::Lexical::JString>("JSTRING") ) );
 
             //------------------------------------------------------------------
             //

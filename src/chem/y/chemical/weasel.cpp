@@ -374,9 +374,16 @@ namespace Yttrium
             assert(instr->name() == *(compiler->genericParser.INSTR.name) );
             const XNode *node = instr->branch().head; assert("LABEL"==node->name());
             const String label = node->lexeme().toString(1,0);
-            std::cerr << "processing '" << label << "'" << std::endl;
+            Strings strings;
+            for(node=node->next;node;node=node->next)
+            {
+                strings << node->lexeme().toString(1,1);
+            }
+            std::cerr << "processing '" << label << "(" << strings << ")'" << std::endl;
+
 
         }
+
 
     }
 
