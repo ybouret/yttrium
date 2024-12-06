@@ -64,7 +64,7 @@ Y_UTEST(plexus)
             for(const Conservation::Law *ln=cl.laws->head;ln;ln=ln->next)
             {
                 const Conservation::Law &law = *ln;
-                law.viz(fp,0);
+                law.viz(fp);
             }
 
             fp << "}\n";

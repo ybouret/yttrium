@@ -35,7 +35,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static const char * const CallSign; //!< "Chemical::Conservation::Law"
                 typedef CxxListOf<Law>    List;     //!< alias
-
+                static const char * const Scheme;   //!< color scheme
 
                 //______________________________________________________________
                 //
@@ -58,10 +58,10 @@ namespace Yttrium
                 xReal excess(XAdd &xadd, const XReadable &C, const Level L) const;
 
                 //! copy source into target and modify actors
-                void  excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const;
+                void  project(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const;
 
                 //! emit GraphViz code
-                void  viz(OutputStream &fp, const char * const color) const;
+                void  viz(OutputStream &fp) const;
 
                 //______________________________________________________________
                 //
@@ -72,7 +72,7 @@ namespace Yttrium
                 const xReal   denom; //!< alpha^2
                 const XArray  alpha; //!< weights of actors
                 const XMatrix xproj; //!< Id * alpha^2 - |alpha><alpha|
-
+                const size_t  place; //!< in laws
 
                 Law * next; //!< for laws
                 Law * prev; //!< for laws

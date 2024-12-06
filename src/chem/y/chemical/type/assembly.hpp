@@ -68,6 +68,7 @@ namespace Yttrium
                 return os << jst;
             }
 
+            //! trade contents
             void tradeFor(Assembly &) noexcept;
 
             //__________________________________________________________________

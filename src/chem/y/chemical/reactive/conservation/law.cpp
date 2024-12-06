@@ -23,6 +23,7 @@ namespace Yttrium
             denom(0),
             alpha(actors.size,denom),
             xproj(actors.size,actors.size),
+            place(0),
             next(0),
             prev(0)
             {
@@ -72,7 +73,7 @@ namespace Yttrium
                 }
             }
 
-            void  Law:: excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const
+            void  Law:: project(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const
             {
                 const Actors &      self = *this;
                 const Actor * const head = self->head;
@@ -101,13 +102,18 @@ namespace Yttrium
             }
 
 
-            void  Law:: viz(OutputStream &fp, const char * const color) const
+            //const char * const Law:: Scheme = "accent8";
+            const char * const Law:: Scheme = "spectral9";
+
+            void  Law:: viz(OutputStream &fp) const
             {
                 const Actors & self = *this;
                 const String   uuid = self->html();
+                const String   c_id = GraphViz::Vizible::Color(Scheme,place);
+                const char * const color = c_id.c_str();
                 Node(fp,this) << '[';
                 fp << "label= <" << uuid << ">";
-                fp << ",shape=box,style=bold";
+                fp << ",shape=box,style=bold,color=" << color << ",fontcolor=" << color;
                 Endl(fp << ']');
                 for(const Actor *a=self->head;a;a=a->next)
                 {
@@ -115,7 +121,7 @@ namespace Yttrium
                     const GraphViz::Vizible &target = *this;
 
                     Arrow(fp, &source, &target);
-                    fp << "[arrowhead=empty]";
+                    fp << "[arrowhead=empty,color=" << color << "]";
                     Endl(fp);
                 }
 

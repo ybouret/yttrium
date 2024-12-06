@@ -75,8 +75,11 @@ namespace Yttrium
                         // update canon
                         const Law & law = * canon.pushTail( new Law(a) );
                         canon.enroll(*law);
+                        Coerce(law.place) = ic;
                         Y_XMLOG(xml,"(+) " << law);
                     }
+
+
                 }
 
                 Y_XMLOG(xml, "cmtx=" << cluster.cmtx );
