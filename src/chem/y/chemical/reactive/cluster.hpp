@@ -18,7 +18,7 @@ namespace Yttrium
         class Roster
         {
         public:
-            inline  Roster() {}
+            inline  Roster() : list(), book() {}
             inline ~Roster() noexcept {}
 
             void compile() {
@@ -83,10 +83,10 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             void                     classifySpecies(XMLog &);
 
-            Grouping                eqs;  //!< content
+            Grouping                my;   //!< content
         public:
-            const LawsPtr           laws; //!< conservation laws
-            const Matrix<unsigned>  cmtx; //!< conservation matrix
+            const LawsPtr           laws;        //!< conservation laws
+            const Matrix<unsigned>  conservancy; //!< conservation matrix
             const Roster<SList>     conserved;
             const Roster<SList>     unbounded;
             Cluster *               next; //!< for list

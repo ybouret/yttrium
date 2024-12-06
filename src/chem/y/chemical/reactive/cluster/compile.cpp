@@ -27,7 +27,7 @@ namespace Yttrium
 
             {
                 AddressBook &rebels = Coerce(unbounded.book);
-                for(const SNode *sn=eqs.species.head;sn;sn=sn->next)
+                for(const SNode *sn=my.species.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
                     if(conserved.book.has(sp)) continue;
@@ -41,8 +41,8 @@ namespace Yttrium
 
         void Cluster:: compile(XMLog &xml)
         {
-            const EList &el = eqs;
-            const SList &sl = eqs.species;
+            const EList &el = my;
+            const SList &sl = my.species;
             Y_XML_SECTION_OPT(xml,Grouping::CallSign, el << '/' << sl);
             assert(laws.isEmpty());
 
@@ -74,12 +74,12 @@ namespace Yttrium
             WOVEn::IntegerSurvey survey(xml);
             {
                 Y_XML_SECTION(xml, "WOVEn::Explore");
-                const Matrix<int>    mu(TransposeOf,eqs.iTopology);
+                const Matrix<int>    mu(TransposeOf,my.iTopology);
                 WOVEn::Explore(mu,survey,false);
                 survey.sort();
             }
 
-            const size_t            nspc = eqs.species.size;
+            const size_t            nspc = sl.size;
             const apz               zero = 0;
             Vector<apz,MemoryModel> stoi(nspc,0);
             AddressBook             original;
@@ -94,7 +94,7 @@ namespace Yttrium
                 original.free();
                 combined.free();
 
-                for(const ENode *en=eqs.head;en;en=en->next)
+                for(const ENode *en=my.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     const Indexed     &id = eq;
@@ -119,7 +119,7 @@ namespace Yttrium
                 }
 
 
-                for(const SNode *sn=eqs.species.head;sn;sn=sn->next)
+                for(const SNode *sn=sl.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
                     if(zero!=sp(stoi,SubLevel)) combined |= sp;
@@ -127,6 +127,7 @@ namespace Yttrium
 
                 SList oldSpecies; original.sendTo(oldSpecies);
                 SList newSpecies; combined.sendTo(newSpecies);
+                SList evaporated(oldSpecies);
 
                 DBOps::Revamp<SList>::Sort(oldSpecies);
                 DBOps::Revamp<SList>::Sort(newSpecies);
@@ -144,9 +145,12 @@ namespace Yttrium
                         throw Specific::Exception(Grouping::CallSign, "corrupted combinatorics!");
 
                     case Negative:
-                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies);
+                        evaporated.subtract(newSpecies);
+                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / (-) " << evaporated);
                         break;
                 }
+
+                
 
 
 

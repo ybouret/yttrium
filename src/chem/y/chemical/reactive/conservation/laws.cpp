@@ -52,7 +52,7 @@ namespace Yttrium
 
                 survey.sort();
                 {
-                    Matrix<unsigned> &cmtx = Coerce(cluster.cmtx); assert(0==cmtx.rows);
+                    Matrix<unsigned> &cmtx = Coerce(cluster.conservancy); assert(0==cmtx.rows);
                     cmtx.make(survey.size,cluster->species.size);
 
                     size_t ic=1;
@@ -88,7 +88,7 @@ namespace Yttrium
 
                 }
 
-                Y_XMLOG(xml, "cmtx=" << cluster.cmtx );
+                Y_XMLOG(xml, "conservancy=" << cluster.conservancy );
 
             }
 

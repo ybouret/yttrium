@@ -11,14 +11,16 @@ namespace Yttrium
 
         Cluster:: Cluster(const Equilibrium &first) :
         Proxy<const Grouping>(),
-        eqs(),
+        my(),
         laws(0),
-        cmtx(),
+        conservancy(),
+        conserved(),
+        unbounded(),
         next(0),
         prev(0),
         indx(0)
         {
-            eqs.collect(first);
+            my.collect(first);
         }
 
         Cluster:: ~Cluster() noexcept
@@ -29,13 +31,13 @@ namespace Yttrium
 
         Cluster::ConstInterface & Cluster:: surrogate() const noexcept
         {
-            return eqs;
+            return my;
         }
 
         bool Cluster:: accepts(const Equilibrium &eq) const  
         {
-            assert( !eqs.has(eq) );
-            for(const ENode *node=eqs.head;node;node=node->next)
+            assert( !my.has(eq) );
+            for(const ENode *node=my.head;node;node=node->next)
             {
                 const Components &mine = **node;
                 if(mine.linkedTo(eq)) return true;
@@ -55,14 +57,14 @@ namespace Yttrium
         void Cluster:: addPrimary(const Equilibrium &eq)
         {
             assert(accepts(eq));
-            eqs.collect(eq);
+            my.collect(eq);
         }
 
         void Cluster:: addPrimary(Cluster * const cl)
         {
             assert(0!=cl);
             AutoPtr<const Cluster> ptr(cl);
-            eqs.collect(cl->eqs);
+            my.collect(cl->my);
         }
 
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)

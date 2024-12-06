@@ -154,6 +154,21 @@ namespace Yttrium
                 return (lhs.size == rhs.size) && lhs.contains(rhs) && rhs.contains(lhs);
             }
 
+            inline void subtract(const LightList &rhs) noexcept
+            {
+                assert(contains(rhs));
+                LightList store;
+                while(this->size>0)
+                {
+                    NodeType *  node = this->popHead();
+                    ConstType & data = **node;
+                    if(rhs.has(data))
+                        proxy->destroy(node);
+                    else
+                        store.pushTail(node);
+                }
+                this->swapWith(store);
+            }
 
 
 
