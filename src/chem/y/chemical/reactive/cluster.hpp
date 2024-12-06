@@ -14,7 +14,27 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
+        template <typename LIST>
+        class Roster
+        {
+        public:
+            inline  Roster() {}
+            inline ~Roster() noexcept {}
+
+            void compile() {
+                LIST &mine = Coerce(list);
+                mine.release();
+                book.sendTo(mine);
+                DBOps::Revamp<LIST>::Sort(mine);
+            }
+
+            const LIST        list;
+            const AddressBook book;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Roster);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -32,8 +52,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxListOf<Cluster>          List;     //!< alias
-            
+            typedef CxxListOf<Cluster>                    List;     //!< alias
+            typedef AutoPtr<Conservation::Laws,DrillDown> LawsPtr;
+
             //__________________________________________________________________
             //
             //
@@ -59,15 +80,17 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
-            Grouping eqs; //!< content
-
             virtual ConstInterface & surrogate() const noexcept;
+
+            Grouping                eqs;  //!< content
         public:
-            const AutoPtr<Conservation::Laws,DrillDown> laws; //!< conservation laws
-            const Matrix<unsigned>            cmtx; //!< conservation matrix
-            Cluster *                         next; //!< for list
-            Cluster *                         prev; //!< for list
-            const unsigned                    indx; //!< index in clusters
+            const LawsPtr           laws; //!< conservation laws
+            const Matrix<unsigned>  cmtx; //!< conservation matrix
+            const Roster<SList>     conserved;
+            const Roster<SList>     unbounded;
+            Cluster *               next; //!< for list
+            Cluster *               prev; //!< for list
+            const unsigned          indx; //!< index in clusters
         };
     }
 

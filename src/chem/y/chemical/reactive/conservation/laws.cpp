@@ -49,6 +49,7 @@ namespace Yttrium
                 Y_XMLOG(xml,"#conservations=" << survey.size);
                 if(survey.size<=0) return;
 
+                survey.sort();
                 {
                     Matrix<unsigned> &cmtx = Coerce(cluster.cmtx); assert(0==cmtx.rows);
                     cmtx.make(survey.size,cluster->species.size);
@@ -60,7 +61,9 @@ namespace Yttrium
                         Writable<unsigned>        &u = cmtx[ic];
                         Actor::List                a;
 
+                        //------------------------------------------------------
                         // extract actors from survey
+                        //------------------------------------------------------
                         for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
                         {
                             const Species &sp = **sn;
@@ -72,7 +75,9 @@ namespace Yttrium
                         }
                         if(a.size<2) continue;
 
+                        //------------------------------------------------------
                         // update canon
+                        //------------------------------------------------------
                         const Law & law = * canon.pushTail( new Law(a) );
                         canon.enroll(*law);
                         Coerce(law.place) = ic;

@@ -63,9 +63,7 @@ namespace Yttrium
                 // remove multiple same vector
                 //--------------------------------------------------------------
                 pack();
-
-
-
+                
                 //--------------------------------------------------------------
                 // conduct initial survey if any
                 //--------------------------------------------------------------
@@ -159,7 +157,7 @@ namespace Yttrium
                      Survey         &survey,
                      const bool      useTop)
         {
-            SubSpaces working(mu,(useTop ? &survey : 0),survey.xml);
+            SubSpaces working(mu, (useTop ? &survey : 0), survey.xml);
         CYCLE:
             if( working.generate(mu,&survey) )
                 goto CYCLE;
