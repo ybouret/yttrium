@@ -44,7 +44,8 @@ Y_GV_CS_3_11(NAME),        \
             Y_GV_CS_3_9(set1),
             Y_GV_CS_3_8(set2),
             Y_GV_CS_3_12(set3),
-            Y_GV_CS_3_11(spectral)
+            Y_GV_CS_3_11(spectral),
+            Y_GV_CS_3_12(paired)
         };
 
         const size_t ColorScheme:: Count = sizeof(Table)/sizeof(Table[0]);

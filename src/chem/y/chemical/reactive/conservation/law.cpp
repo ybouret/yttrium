@@ -103,7 +103,7 @@ namespace Yttrium
 
 
             //const char * const Law:: Scheme = "accent8";
-            const char * const Law:: Scheme = "spectral9";
+            const char * const Law:: Scheme = "paired10";
 
             void  Law:: viz(OutputStream &fp) const
             {
