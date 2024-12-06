@@ -49,7 +49,6 @@ namespace Yttrium
                 const Readable<String> & arg;
                 Library &                lib;
                 Equilibria &             eqs;
-                Lua::VM &                lvm;
             };
 
             typedef Functor<void,TL1(Args&)>        Scheme;
@@ -115,7 +114,7 @@ namespace Yttrium
             void record(const String &label, const Scheme &scheme);
             void record(const char * const, const Scheme &);
 
-            void execLua(Args &);
+            void executeLuaCode(Args &);
 
         };
     }

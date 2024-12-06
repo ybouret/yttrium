@@ -74,13 +74,24 @@ namespace Yttrium
             "PROD"
         };
 
+        static inline
+        void DestructCompiler() noexcept
+        {
+            assert(0!=compiler);
+            Destruct(compiler);
+            compiler=0;
+            zeroCompiler();
+        }
 
         Weasel:: Weasel() :
         Singleton<Weasel>(),
         luaVM( new Lua::State() ),
         caption( CallSign ),
-        hashing( Y_Hashing_Perfect_Table(actorsTable) )
+        hashing( Y_Hashing_Perfect_Table(actorsTable) ),
+        schemes()
         {
+
+            // initialization
             assert(0==compiler);
             try {
                 zeroCompiler();
@@ -93,16 +104,23 @@ namespace Yttrium
                 throw;
             }
 
-            //compiler->genericParser.printRules();
+            // post-init
+            try
+            {
+                on("lua", *this, & Weasel::executeLuaCode );
+            }
+            catch(...)
+            {
+                DestructCompiler();
+                throw;
+            }
+
 
         }
 
         Weasel:: ~Weasel() noexcept
         {
-            assert(0!=compiler);
-            Destruct(compiler);
-            compiler=0;
-            zeroCompiler();
+            DestructCompiler();
         }
 
 
@@ -374,31 +392,52 @@ namespace Yttrium
             assert(instr->name() == *(compiler->genericParser.INSTR.name) );
             const XNode *node = instr->branch().head; assert("LABEL"==node->name());
 
+
+            //------------------------------------------------------------------
+            //
             // get label
+            //
+            //------------------------------------------------------------------
             const String label = node->lexeme().toString(1,0);
 
+            //------------------------------------------------------------------
+            //
             // aggregate instructions
+            //
+            //------------------------------------------------------------------
             Strings strings;
             for(node=node->next;node;node=node->next)
             {
                 strings << node->lexeme().toString(1,1);
             }
-            std::cerr << "processing '" << label << "(" << strings << ")'" << std::endl;
 
+            //std::cerr << "processing '" << label << "(" << strings << ")'" << std::endl;
+
+            //------------------------------------------------------------------
+            //
             // look for scheme
+            //
+            //------------------------------------------------------------------
             Scheme * const pScheme = schemes.search( label );
             if(0==pScheme)
                 throw Specific::Exception(CallSign,"no recorded instruction '#%s'", label.c_str());
 
+            //------------------------------------------------------------------
+            //
             // prepare arguments
+            //
+            //------------------------------------------------------------------
             Args args = {
                 strings,
                 lib,
-                eqs,
-                luaVM
+                eqs
             };
 
+            //------------------------------------------------------------------
+            //
             // and execute
+            //
+            //------------------------------------------------------------------
             Scheme &F = *pScheme;
             F(args);
         }
@@ -416,6 +455,15 @@ namespace Yttrium
             const String _(label); record(_,scheme);
         }
 
+        void Weasel:: executeLuaCode(Args &args)
+        {
+            std::cerr << "Executing Lua Code..." << std::endl;
+            const size_t n = args.arg.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                luaVM->dostring(args.arg[i]);
+            }
+        }
 
     }
 
