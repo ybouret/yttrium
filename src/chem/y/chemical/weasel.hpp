@@ -18,7 +18,8 @@ namespace Yttrium
 
 #define Y_Weasel_REAC 0 //!< hash value
 #define Y_Weasel_PROD 1 //!< hash value
-                        
+
+
         //______________________________________________________________________
         //
         //
@@ -36,11 +37,25 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
+            class Parser;
+
             static const char * const      CallSign;                                 //!< "Weasel"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 30; //!< alias
             static const char * const      SYMBOL;       //!< "<=>"
             static const char              COLON = ':';  //!< alias
-            class Parser;
+
+            struct  Args
+            {
+                const Readable<String> & arg;
+                Library &                lib;
+                Equilibria &             eqs;
+                Lua::VM &                lvm;
+            };
+
+            typedef Functor<void,TL1(Args&)>        Scheme;
+            typedef SuffixMap<const String,Scheme> Schemes;
+
+
 
             //__________________________________________________________________
             //
@@ -68,7 +83,12 @@ namespace Yttrium
                             Lingo::Module * const inp);
 
 
-
+            template <typename LABEL, typename HOST, typename METH> inline
+            void on(const LABEL &label, HOST &host, METH meth)
+            {
+                const Scheme scheme( &host, meth );
+                record(label,scheme);
+            }
 
 
             //__________________________________________________________________
@@ -80,6 +100,7 @@ namespace Yttrium
             Lua::VM                luaVM;   //!< shared VM
             const Lingo::Caption   caption; //!< shared caption
             const Hashing::Perfect hashing; //!< "REAC" or "ACTOR"
+            Schemes                schemes;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
@@ -90,6 +111,11 @@ namespace Yttrium
             XNode * parseSingle(const Lingo::Syntax::Rule &rule,
                                 const String              &expr,
                                 const char * const         func);
+
+            void record(const String &label, const Scheme &scheme);
+            void record(const char * const, const Scheme &);
+
+            void execLua(Args &);
 
         };
     }

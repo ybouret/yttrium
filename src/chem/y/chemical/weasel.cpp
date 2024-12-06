@@ -368,12 +368,16 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Weasel:: queryInstruction(XTree &instr, Library &, Equilibria &)
+        void Weasel:: queryInstruction(XTree &instr, Library &lib, Equilibria &eqs)
         {
             assert(0!=compiler);
             assert(instr->name() == *(compiler->genericParser.INSTR.name) );
             const XNode *node = instr->branch().head; assert("LABEL"==node->name());
+
+            // get label
             const String label = node->lexeme().toString(1,0);
+
+            // aggregate instructions
             Strings strings;
             for(node=node->next;node;node=node->next)
             {
@@ -381,7 +385,35 @@ namespace Yttrium
             }
             std::cerr << "processing '" << label << "(" << strings << ")'" << std::endl;
 
+            // look for scheme
+            Scheme * const pScheme = schemes.search( label );
+            if(0==pScheme)
+                throw Specific::Exception(CallSign,"no recorded instruction '#%s'", label.c_str());
 
+            // prepare arguments
+            Args args = {
+                strings,
+                lib,
+                eqs,
+                luaVM
+            };
+
+            // and execute
+            Scheme &F = *pScheme;
+            F(args);
+        }
+
+        void Weasel:: record(const String &label, const Scheme &scheme)
+        {
+            if( !schemes.insert(label,scheme) ) {
+                throw Specific::Exception(CallSign, "record multiple instruction label='%s'", label.c_str());
+            }
+        }
+
+
+        void Weasel:: record(const char *const label, const Scheme &scheme)
+        {
+            const String _(label); record(_,scheme);
         }
 
 
