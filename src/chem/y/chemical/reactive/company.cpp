@@ -59,6 +59,21 @@ namespace Yttrium
         }
 
 
+        String Company:: html() const
+        {
+            String res;
+            const Actor *a = head;
+            if(0!=a)
+            {
+                res = a->html(form);
+                for(a=a->next;a;a=a->next)
+                {
+                    res += '+' + a->html(form);
+                }
+            }
+            return res;
+        }
+
     }
 
 }

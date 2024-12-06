@@ -6,6 +6,7 @@
 
 
 #include "y/utest/run.hpp"
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -27,23 +28,43 @@ Y_UTEST(plexus)
     std::cerr << "eqs=" << eqs << std::endl;
 
     bool verbose = true;
-    XMLog xml(verbose);
+    XMLog    xml(verbose);
     Clusters clusters(eqs,xml);
 
     std::cerr << clusters << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
 
-    if(lib->size()>=2)
     {
-        Actor::List       alist;
-        for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+        OutputFile fp("plexus.dot");
+        GraphViz::Vizible::Enter(fp,"G");
+        for(const Cluster *cluster=clusters->head;cluster;cluster=cluster->next)
         {
-            alist.pushTail( new Actor( ran.in<unsigned>(1,5), **it) );
+            const Cluster &cl = *cluster;
+            fp << "subgraph cluster_" << Formatted::Get("%u",cl.indx) << "{\n";
+
+            // write species
+            for(const SNode *sn=cl->species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                const String   color = sp.makeColor();
+                sp.viz(fp, color.c_str(), 0);
+            }
+
+            // write components
+            for(const ENode *en=cl->head;en;en=en->next)
+            {
+                const Components &cm    = **en;
+                const String      color = cm.makeColor();
+                cm.viz(fp, color.c_str(), 0);
+                
+            }
+            fp << "}\n";
         }
-        Conservation::Law law(alist);
-        std::cerr << law << std::endl;
+        GraphViz::Vizible::Leave(fp);
     }
+
+    GraphViz::Vizible::RenderPNG("plexus.dot",false);
 
 
 

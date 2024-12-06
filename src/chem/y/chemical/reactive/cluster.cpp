@@ -17,7 +17,8 @@ namespace Yttrium
         laws(0),
         cmtx(),
         next(0),
-        prev(0)
+        prev(0),
+        indx(0)
         {
             eqs.collect(first);
         }

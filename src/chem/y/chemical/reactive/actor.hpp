@@ -16,6 +16,20 @@ namespace Yttrium
         //
         //
         //
+        //! Naming Actor/Actors
+        //
+        //
+        //______________________________________________________________________
+        enum NameForm
+        {
+            NameAsNormalSpecies, //!< use raw name
+            NameAsConcentration  //!< use [name]
+        };
+
+        //______________________________________________________________________
+        //
+        //
+        //
         //! Actor = POSITIVE coefficient + species
         //
         //
@@ -38,7 +52,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Actor(const unsigned, const Species &); //!< setup
+            explicit Actor(const unsigned, const Species &); //!< setup with
             explicit Actor(const Species &);                 //!< setup with nu=1
             virtual ~Actor() noexcept;                       //!< cleanup
             Actor(const Actor &);                            //!< duplicate
@@ -50,8 +64,8 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual const String & key() const noexcept; //!< name
-            
+            virtual const String & key() const noexcept; //!< [Entity] name
+
 
             //__________________________________________________________________
             //
@@ -63,7 +77,7 @@ namespace Yttrium
             void          activity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const; //!< at sp(C,L) + xi * nu
             void          moveSafely(XWritable &C, const Level L, const xReal xi)        const noexcept; //!< assuming C stays >=0
             const Actor & operator*()                                                    const noexcept; //!< helper to Actor::List display
-
+            String        html(const NameForm) const;
 
 
             //__________________________________________________________________

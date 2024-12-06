@@ -48,8 +48,10 @@ namespace Yttrium
             // compile data
             //
             //------------------------------------------------------------------
+            unsigned indx=0;
             for(Cluster *cl=cls.head;cl;cl=cl->next)
             {
+                Coerce(cl->indx) = ++indx;
                 cl->compile(xml);
             }
 

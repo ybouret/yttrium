@@ -66,6 +66,7 @@ namespace Yttrium
             const Matrix<unsigned>            cmtx; //!< conservation matrix
             Cluster *                         next; //!< for list
             Cluster *                         prev; //!< for list
+            const unsigned                    indx; //!< index in clusters
         };
     }
 

@@ -11,20 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Naming actors
-        //
-        //
-        //______________________________________________________________________
-        enum NameForm
-        {
-            NameAsNormalSpecies, //!< use raw name
-            NameAsConcentration  //!< use [name]
-        };
-
+    
         //______________________________________________________________________
         //
         //
@@ -63,7 +50,8 @@ namespace Yttrium
             const Actor & recruit(Actor * const);                  //!< recruit and update name
             bool          lookFor(const Species &) const noexcept; //!< look for species
             void          xch(Company &)                 noexcept; //!< exchange all
-
+            String        html()                            const; //!< make html label with form
+            
             //__________________________________________________________________
             //
             //

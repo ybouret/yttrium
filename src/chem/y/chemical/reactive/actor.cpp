@@ -12,6 +12,12 @@ namespace Yttrium
         }
 
 
+        static inline
+        String actorPrefix(const unsigned nu)
+        {
+            return nu>1 ? Formatted::Get("%u",nu) : String();
+        }
+
         Actor:: Actor(const unsigned _nu, const Species & _sp) :
         Entity(),
         nu(_nu),
@@ -20,7 +26,7 @@ namespace Yttrium
         n1(nu-1),
         next(0),
         prev(0),
-        name( (nu>1) ? Formatted::Get("%u",nu) + sp.name : sp.name )
+        name( actorPrefix(nu) + sp.name )
         {
             assert(nu>0);
         }
@@ -82,6 +88,16 @@ namespace Yttrium
             xmul.insert(c,nu);
         }
 
+        String Actor:: html(const NameForm form) const
+        {
+            String res = actorPrefix(nu);
+            switch(form)
+            {
+                case NameAsNormalSpecies: res += sp.html(); break;
+                case NameAsConcentration: res += '[' + sp.html() + ']'; break;
+            }
+            return res;
+        }
 
     }
 

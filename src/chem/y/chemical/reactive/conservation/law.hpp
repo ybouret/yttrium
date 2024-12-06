@@ -24,7 +24,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Law : public Actors
+            class Law : public Actors, public GraphViz::Vizible
             {
             public:
                 //______________________________________________________________
@@ -35,7 +35,7 @@ namespace Yttrium
                 //______________________________________________________________
                 static const char * const CallSign; //!< "Chemical::Conservation::Law"
                 typedef CxxListOf<Law>    List;     //!< alias
-                
+
 
                 //______________________________________________________________
                 //
@@ -59,6 +59,9 @@ namespace Yttrium
 
                 //! copy source into target and modify actors
                 void  excess(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const;
+
+                //! emit GraphViz code
+                void  viz(OutputStream &fp) const;
 
                 //______________________________________________________________
                 //

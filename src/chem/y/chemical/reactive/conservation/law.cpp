@@ -19,6 +19,7 @@ namespace Yttrium
 
             Law:: Law(const Actor::List &actors) :
             Actors(NameAsConcentration),
+            GraphViz::Vizible(),
             denom(0),
             alpha(actors.size,denom),
             xproj(actors.size,actors.size),
@@ -97,6 +98,16 @@ namespace Yttrium
             {
                 const Actors &ac = law;
                 return os << "d_(" << ac << ")";
+            }
+
+
+            void  Law:: viz(OutputStream &fp) const
+            {
+                const Actors & self = *this;
+                const String   uuid = self->html();
+                Node(fp,this) << '[';
+                fp << "label= <" << uuid << ">";
+                Endl(fp << ']');
             }
 
 
