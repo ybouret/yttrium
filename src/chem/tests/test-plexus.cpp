@@ -60,17 +60,43 @@ Y_UTEST(plexus)
             eq.print(std::cerr) << ":" << Library::ToReal(eK) << std::endl;
             C0.ld(0);
             C1.ld(0);
-            const Outcome outcome = am.solve(eq, eK, C1, SubLevel, C0, TopLevel);
-            switch(outcome.st)
-            {
-                case Blocked:
-                    Y_XMLOG(xml, "Blocked");
-                    break;
 
-                case Running:
-                    cluster(std::cerr,"\t[",C1,"]",Library::ToReal) << std::endl;
-                    Y_XMLOG(xml,"activity = " << Library::ToReal(eq.activity(am.xmul, eK, C1, SubLevel)) );
-                    break;
+            cluster(std::cerr << "C0=","\t[",C0,"]",Library::ToReal) << std::endl;
+            {
+                const Outcome outcome = am.solve(eq, eK, C1, SubLevel, C0, TopLevel);
+                switch(outcome.st)
+                {
+                    case Blocked:
+                        Y_XMLOG(xml, "Blocked");
+                        break;
+
+                    case Running:
+                        cluster(std::cerr << "C1=","\t[",C1,"]",Library::ToReal) << std::endl;
+                        Y_XMLOG(xml,"activity = " << Library::ToReal(eq.activity(am.xmul, eK, C1, SubLevel)) );
+                        break;
+                }
+            }
+
+            for(size_t iter=0;iter<1;++iter)
+            {
+                Library::Conc(C0,ran);
+                cluster(std::cerr << "C0=","\t[",C0,"]",Library::ToReal) << std::endl;
+                C1.ld(0);
+                {
+                    const Outcome outcome = am.solve(eq, eK, C1, SubLevel, C0, TopLevel);
+                    switch(outcome.st)
+                    {
+                        case Blocked:
+                            Y_XMLOG(xml, "Blocked");
+                            break;
+
+                        case Running:
+                            cluster(std::cerr << "C1=","\t[",C1,"]",Library::ToReal) << std::endl;
+                            Y_XMLOG(xml,"activity = " << Library::ToReal(eq.activity(am.xmul, eK, C1, SubLevel)) );
+                            break;
+                    }
+                }
+
             }
 
         }
