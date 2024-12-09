@@ -47,8 +47,9 @@ namespace Yttrium
             // Method
             //
             //__________________________________________________________________
-            void         collect(const Equilibrium &); //!< add and upgrade
-            void         collect(Grouping          &); //!< merge and upgrade
+            void         collectPrimary(const Equilibrium &); //!< add and upgrade
+            void         collectPrimary(Grouping          &); //!< merge and upgrade
+            void         collectReplica(const Equilibrium &); //!< add a mixed equilibrium
 
             //! transfer only species from source to target
             template <typename TARGET, typename SOURCE> inline
@@ -75,6 +76,7 @@ namespace Yttrium
             Grouping(const Grouping &);   //!< duplicate
             Y_DISABLE_ASSIGN(Grouping);
             void xch(Grouping &) noexcept; //!< exchange all
+            void chk(const Equilibrium &eq) const;
         };
 
     }

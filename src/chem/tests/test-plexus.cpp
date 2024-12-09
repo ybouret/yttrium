@@ -34,7 +34,8 @@ Y_UTEST(plexus)
     std::cerr << clusters << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
-
+    std::cerr << "eqs=" << eqs << std::endl;
+    
     {
         OutputFile fp("plexus.dot");
         GraphViz::Vizible::Enter(fp,"G");

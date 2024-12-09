@@ -161,11 +161,13 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            iStoiList               existing(my.iTopology);
+            iStoiList               existing(my.iTopology); // existing primary stoichiometries
+            const EList             primary(my);            // primary equilibria
             const size_t            nspc = sl.size;
             const apz               zero = 0;
+            Vector<int,MemoryModel> ecof(primary.size,0);
             Vector<apz,MemoryModel> stoi(nspc,0);
-            Vector<int,MemoryModel> coef(nspc,0);
+            Vector<int,MemoryModel> scof(nspc,0);
             AddressBook             original;
             AddressBook             combined;
             for(const WOVEn::IntegerArray *warr=survey.head;warr;warr=warr->next)
@@ -178,11 +180,17 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 stoi.ld(zero);
-                coef.ld(0);
+                ecof.ld(0);
+                scof.ld(0);
                 original.free();
                 combined.free();
 
-                for(const ENode *en=my.head;en;en=en->next)
+                //--------------------------------------------------------------
+                //
+                // Loop over primary
+                //
+                //--------------------------------------------------------------
+                for(const ENode *en=primary.head;en;en=en->next)
                 {
                     //----------------------------------------------------------
                     // get coefficient
@@ -193,6 +201,8 @@ namespace Yttrium
 
                     if(zero==cf)
                         continue;
+
+                    id(ecof,SubLevel) = cf.cast<int>("equilibrium weight");
 
                     //----------------------------------------------------------
                     // use equilibrium
@@ -224,11 +234,11 @@ namespace Yttrium
                     if(zero!=cf)
                     {
                         combined += sp; // must appear only once
-                        sp(coef,SubLevel) = cf.cast<int>("stoichiometry");
+                        sp(scof,SubLevel) = cf.cast<int>("stoichiometry");
                     }
                 }
 
-                if( !existing.push(coef) )
+                if( !existing.push(scof) )
                 {
                     Y_XML_COMMENT(xml, "duplicate");
                 }
@@ -266,12 +276,23 @@ namespace Yttrium
                 // build mixed equilibrium
                 //
                 //--------------------------------------------------------------
-                const String eqName = MixedEquilibrium::MakeName(my,comb);
-                Y_XMLOG(xml, "(+) " << eqName << ", order=" << comb.order << ", removing " << evaporated);
-                
+                const String       eqName = MixedEquilibrium::MakeName(primary,comb);
+                const size_t       eqIndx = eqs->size()+1;
+                const Equilibrium  &eq    = eqs.add(new MixedEquilibrium(eqName,eqIndx,primary,ecof,my.species,scof,eqs.K) );
+                my.collectReplica(eq);
+                if(xml.verbose)
+                {
+                    eq.print( xml() ) << " / order=" << comb.order << std::endl;
+                }
+
+
+                //Y_XMLOG(xml, "(+) " << eqName << ", order=" << comb.order << ", removing " << evaporated);
+                //AutoPtr<Equilibrium> eq =
+                //std::cerr << eq << std::endl;
 
             }
 
+            eqs.updateFragment();
 
 
 

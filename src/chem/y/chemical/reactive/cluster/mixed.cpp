@@ -44,6 +44,54 @@ namespace Yttrium
         }
 
 
+
+        MixedEquilibrium:: MixedEquilibrium(const String &        _name,
+                                            const size_t          _indx,
+                                            const EList &         eqs,
+                                            const Readable<int> & cof,
+                                            const SList &         spc,
+                                            const Readable<int> & sto,
+                                            XWritable &           shK) :
+        Equilibrium(_name,_indx),
+        xmul(),
+        topK(shK)
+        {
+
+            for(const ENode *en=eqs.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                const Indexed     &id = eq;
+                const int          nu = id(cof,SubLevel);
+                if(0==nu) continue;
+                Coerce(primary) << eq;
+                Coerce(weights) << nu;
+            }
+            assert(primary.size>=2);
+
+            Components &self = *this;
+            for(const SNode *sn=spc.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                const int      nu = sp(sto,SubLevel);
+                switch(Sign::Of(nu))
+                {
+                    case __Zero__: continue;
+                    case Positive: self(Product,  nu,sp); break;
+                    case Negative: self(Reactant,-nu,sp); break;
+                }
+            }
+
+        }
+
+        MixedEquilibrium:: ~MixedEquilibrium() noexcept
+        {
+        }
+
+
+        xReal MixedEquilibrium:: getK(xReal) const
+        {
+            return 1;
+        }
     }
 
 }

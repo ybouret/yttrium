@@ -20,7 +20,7 @@ namespace Yttrium
         prev(0),
         indx(0)
         {
-            my.collect(first);
+            my.collectPrimary(first);
         }
 
         Cluster:: ~Cluster() noexcept
@@ -57,15 +57,19 @@ namespace Yttrium
         void Cluster:: addPrimary(const Equilibrium &eq)
         {
             assert(accepts(eq));
-            my.collect(eq);
+            my.collectPrimary(eq);
         }
+
 
         void Cluster:: addPrimary(Cluster * const cl)
         {
             assert(0!=cl);
             AutoPtr<const Cluster> ptr(cl);
-            my.collect(cl->my);
+            my.collectPrimary(cl->my);
         }
+
+        
+
 
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
         {

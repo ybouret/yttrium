@@ -40,14 +40,19 @@ namespace Yttrium
 
         const char * const Grouping:: CallSign = "Chemical::Cluster";
 
-        void Grouping:: collect(const Equilibrium &eq)
+        void Grouping:: chk(const Equilibrium &eq) const
         {
-            // check
             for(const ENode *node=head;node;node=node->next)
             {
                 const Equilibrium &mine = **node;
                 if( &eq == &mine ) throw Specific::Exception(CallSign,"multiple '%s' in cluster", eq.name.c_str());
             }
+        }
+
+        void Grouping:: collectPrimary(const Equilibrium &eq)
+        {
+            // check
+            chk(eq);
 
             // backup
             Grouping G(*this);
@@ -119,13 +124,13 @@ namespace Yttrium
         }
 
 
-        void Grouping:: collect(Grouping &other)
+        void Grouping:: collectPrimary(Grouping &other)
         {
             assert(this != &other);
             Grouping current(*this);
             try {
                 for(const ENode *en=other.head;en;en=en->next)
-                    collect(**en);
+                    collectPrimary(**en);
             }
             catch(...)
             {
@@ -134,6 +139,38 @@ namespace Yttrium
             }
         }
 
+
+        void Grouping:: collectReplica(const Equilibrium &eq)
+        {
+            chk(eq);
+
+            Grouping G(*this);
+
+            // shared all species are included
+            for(Components::ConstIterator it=eq->begin();it!=eq->end();++it)
+            {
+                const Component &cm = *it;
+                const Species   &sp = cm.actor.sp;
+                if( !species.has(sp) )
+                    throw Specific::Exception(CallSign,"missing '%s' in replica '%s'", sp.name.c_str(), eq.name.c_str() );
+            }
+
+            // register
+            try
+            {
+                (*this) << eq;
+                DBOps::RevampSub(*this);
+                enroll(eq);
+            }
+            catch(...)
+            {
+                xch(G);
+                throw;
+            }
+
+
+
+        }
 
         
 
