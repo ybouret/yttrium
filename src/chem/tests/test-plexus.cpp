@@ -2,7 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
-#include "y/chemical/reactive/conservation/law.hpp"
+#include "y/chemical/reactive/aftermath.hpp"
 
 
 #include "y/utest/run.hpp"
@@ -27,7 +27,7 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    bool verbose = true;
+    bool     verbose = true;
     XMLog    xml(verbose);
     Clusters clusters(eqs,xml);
 
@@ -37,48 +37,46 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-#if 0
-    {
-        OutputFile fp("plexus.dot");
-        GraphViz::Vizible::Enter(fp,"G");
-        for(const Cluster *cluster=clusters->head;cluster;cluster=cluster->next)
-        {
-            const Cluster &cl = *cluster;
-            fp << "subgraph cluster_" << Formatted::Get("%u",cl.indx) << "{\n";
-
-            // write species
-            for(const SNode *sn=cl->species.head;sn;sn=sn->next)
-            {
-                const Species &sp = **sn;
-                const String   color = sp.makeColor();
-                sp.viz(fp, color.c_str(), 0);
-            }
-
-            // write components
-            for(const ENode *en=cl->head;en;en=en->next)
-            {
-                const Components &cm    = **en;
-                const String      color = cm.makeColor();
-                cm.viz(fp, color.c_str(), 0);
-
-            }
-
-            // write laws
-            for(const Conservation::Law *ln=cl.laws->head;ln;ln=ln->next)
-            {
-                const Conservation::Law &law = *ln;
-                law.viz(fp);
-            }
-
-            fp << "}\n";
-        }
-        GraphViz::Vizible::Leave(fp);
-    }
-
-    GraphViz::Vizible::RenderPNG("plexus.dot",false);
-#endif
 
     clusters.graphViz("plexus",true);
+
+    const size_t M = lib->size();
+    XVector C0(M,0);
+
+    Aftermath am;
+    for(const Cluster *cl=clusters->head;cl;cl=cl->next)
+    {
+        const Cluster &cluster = *cl;
+        const size_t   n = cluster->size;
+        const size_t   m = cluster->species.size;
+        XVector C1(m,0);
+
+        Y_XML_SECTION_OPT(xml, "Cluster","size=" << n);
+        for(const ENode *en=cluster->head;en;en=en->next)
+        {
+            const Equilibrium &eq = **en;
+            const xReal        eK = eq.K(1.0);
+            Y_XML_SECTION(xml,eq.name);
+            eq.print(std::cerr) << ":" << Library::ToReal(eK) << std::endl;
+            C0.ld(0);
+            C1.ld(0);
+            const Outcome outcome = am.solve(eq, eK, C1, SubLevel, C0, TopLevel);
+            switch(outcome.st)
+            {
+                case Blocked:
+                    Y_XMLOG(xml, "Blocked");
+                    break;
+
+                case Running:
+                    cluster(std::cerr,"\t[",C1,"]",Library::ToReal) << std::endl;
+                    Y_XMLOG(xml,"activity = " << Library::ToReal(eq.activity(am.xmul, eK, C1, SubLevel)) );
+                    break;
+            }
+
+        }
+    }
+
+
 
 
 

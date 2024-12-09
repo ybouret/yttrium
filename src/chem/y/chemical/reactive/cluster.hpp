@@ -91,6 +91,59 @@ namespace Yttrium
 
             bool hasConserved(const Actors &) const noexcept;
 
+            //! formatted, species-wise display at SubLevel
+            template <typename ARRAY> inline
+            std::ostream & operator()(std::ostream &     os,
+                                      const char * const pfx,
+                                      ARRAY &            arr,
+                                      const char * const sfx) const
+            {
+                if(my.species.size<=0)
+                    os << "{}";
+                else
+                {
+                    os << '{' << std::endl;
+                    for(const SNode *it=my.species.head;it;it=it->next)
+                    {
+                        const Species &sp = **it;
+                        my.sformat.print(os, pfx, sp, sfx, Justify::Left);
+                        os << " = ";
+                        os << sp(arr,SubLevel);
+                        os << std::endl;
+                    }
+                    os << '}';
+                }
+                return os;
+            }
+
+
+            //! formatted, species-wise display at SubLevel
+            template <typename ARRAY, typename PROC> inline
+            std::ostream & operator()(std::ostream &     os,
+                                      const char * const pfx,
+                                      ARRAY &            arr,
+                                      const char * const sfx,
+                                      PROC              &proc) const
+            {
+                if(my.species.size<=0)
+                    os << "{}";
+                else
+                {
+                    os << '{' << std::endl;
+                    for(const SNode *it=my.species.head;it;it=it->next)
+                    {
+                        const Species &sp = **it;
+                        my.sformat.print(os, pfx, sp, sfx, Justify::Left);
+                        os << " = ";
+                        os << proc(sp(arr,SubLevel));
+                        os << std::endl;
+                    }
+                    os << '}';
+                }
+                return os;
+            }
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             virtual ConstInterface & surrogate() const noexcept;

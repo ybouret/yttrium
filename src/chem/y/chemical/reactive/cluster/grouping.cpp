@@ -10,6 +10,7 @@ namespace Yttrium
         Grouping:: Grouping() noexcept :
         EList(),
         species(),
+        sformat(),
         iTopology()
         {
 
@@ -19,6 +20,7 @@ namespace Yttrium
         EList(_),
         Fragment(_),
         species(_.species),
+        sformat(_.sformat),
         iTopology(_.iTopology)
         {
 
@@ -29,6 +31,7 @@ namespace Yttrium
             swapWith(_);                    // EList
             trades(_);                      // Fragment
             species.swapWith(_.species);    // species
+            Coerce(sformat).tradeFor( Coerce(_.sformat)); // sformat
             iTopology.xch(_.iTopology);     // topology
         }
 
@@ -75,7 +78,11 @@ namespace Yttrium
                 for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
                 {
                     const Species &sp = (*it).actor.sp;
-                    if(!species.has(sp)) species << sp;
+                    if(!species.has(sp))
+                    {
+                        species << sp;
+                        Coerce(sformat).enroll(sp);
+                    }
                 }
 
                 if(species.size<=0)

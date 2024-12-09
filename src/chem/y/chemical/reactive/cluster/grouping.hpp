@@ -69,8 +69,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SList       species;   //!< synchronized list of species
-            Matrix<int> iTopology; //!< synchronized topology
+            SList          species;   //!< synchronized list of species
+            const Assembly sformat;   //!< synchronized species format
+            Matrix<int>    iTopology; //!< synchronized topology
 
         private:
             Grouping(const Grouping &);   //!< duplicate
