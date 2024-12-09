@@ -36,7 +36,7 @@ namespace Yttrium
                 static const char * const CallSign; //!< "Chemical::Conservation::Law"
                 typedef CxxListOf<Law>    List;     //!< alias
                 static const char * const Scheme;   //!< color scheme
-
+                
                 //______________________________________________________________
                 //
                 //
@@ -62,6 +62,9 @@ namespace Yttrium
 
                 //! emit GraphViz code
                 void  viz(OutputStream &fp) const;
+
+                bool  isRelatedTo(const Law &) const noexcept;
+
 
                 //______________________________________________________________
                 //

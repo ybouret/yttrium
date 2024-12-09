@@ -45,6 +45,7 @@ namespace Yttrium
                                       const Readable<int> &       sto,
                                       XWritable                 & shK);
 
+            //! cleanup
             virtual ~MixedEquilibrium() noexcept;
 
             //__________________________________________________________________
@@ -53,7 +54,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-
             const EList   primary; //!< list of primary equilibria
             const Weights weights; //!< their algebraic coefficients
 

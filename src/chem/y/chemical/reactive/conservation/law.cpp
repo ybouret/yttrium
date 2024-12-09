@@ -95,6 +95,18 @@ namespace Yttrium
                 }
             }
 
+
+            bool Law:: isRelatedTo(const Law &law) const noexcept
+            {
+                const Company &self = **this;
+                for(const Actor *a=law->head;a;a=a->next)
+                {
+                    if(self.lookFor(a->sp)) return true;
+                }
+                return false;
+            }
+
+
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {
                 const Actors &ac = law;

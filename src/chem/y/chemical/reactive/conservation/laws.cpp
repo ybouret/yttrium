@@ -33,7 +33,12 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,CallSign);
 
+
+                //--------------------------------------------------------------
+                //
                 Y_XML_COMMENT(xml, "building orthogonal space of topology");
+                //
+                //--------------------------------------------------------------
                 Y_XMLOG(xml, "Nu = " << cluster->iTopology);
                 WOVEn::NaturalSurvey survey(xml);
 
@@ -45,14 +50,14 @@ namespace Yttrium
 
                     Y_XMLOG(xml, "Q  = " << Q);
                     WOVEn::Explore(Q,survey,true);
+                    survey.sort();
                 }
 
                 Y_XMLOG(xml,"#conservations=" << survey.size);
                 if(survey.size<=0) return;
 
-                survey.sort();
                 {
-                    Matrix<unsigned> &cmtx = Coerce(cluster.conservancy); assert(0==cmtx.rows);
+                    Matrix<unsigned> &cmtx = Coerce(cluster.conservancy); assert(0==cluster.conservancy.rows);
                     cmtx.make(survey.size,cluster->species.size);
 
                     size_t ic=1;
