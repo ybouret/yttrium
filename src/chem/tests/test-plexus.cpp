@@ -33,8 +33,7 @@ Y_UTEST(plexus)
 
     std::cerr << clusters << std::endl;
 
-    //eqs.K(0);
-
+    
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
     
