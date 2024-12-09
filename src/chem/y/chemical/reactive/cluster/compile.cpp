@@ -40,6 +40,66 @@ namespace Yttrium
             Y_XMLOG(xml,"unbounded=" << unbounded.list);
         }
 
+        namespace
+        {
+            typedef Vector<int,MemoryModel> iVector;
+
+            class iStoi : public Object, public iVector
+            {
+            public:
+                typedef CxxListOf<iStoi> List;
+
+                inline explicit iStoi(const Readable<int> &arr) :
+                Object(), iVector(arr.size(),0), next(0), prev(0)
+                {
+                    for(size_t i=size();i>0;--i) (*this)[i]  = arr[i];
+                }
+
+                inline virtual ~iStoi() noexcept {}
+
+                iStoi *next, *prev;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(iStoi);
+            };
+
+            class iStoiList : public iStoi::List
+            {
+            public:
+                inline explicit iStoiList(const Matrix<int> &topo) :
+                iStoi::List(), dims(topo.cols)
+                {
+                    for(size_t i=1;i<=topo.rows;++i) {
+                        if( !push(topo[i]) )
+                            throw Specific::Exception(Grouping::CallSign,"unexpected multiple stoichiometry");
+                    }
+                }
+
+                inline virtual ~iStoiList() noexcept {}
+
+                bool push(const Readable<int> &rhs)
+                {
+                    assert( dims == rhs.size() );
+                    for(const iStoi *stoi=head;stoi;stoi=stoi->next) {
+                        const Readable<int> &lhs = *stoi;
+                        if( lhs == rhs ) return false;
+                    }
+
+                    pushTail( new iStoi(rhs) );
+                    return true;
+                }
+
+
+
+                const size_t dims;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(iStoiList);
+
+            };
+
+        };
+
         void Cluster:: compile(Equilibria &eqs, XMLog &xml)
         {
             const EList &el = my;
@@ -65,6 +125,20 @@ namespace Yttrium
             //------------------------------------------------------------------
             classifySpecies(xml);
 
+
+            //------------------------------------------------------------------
+            //
+            //
+            // create lists of equilibria and register primary
+            //
+            //
+            //------------------------------------------------------------------
+            ELists &elists = Coerce(* ( Coerce(order) = new ELists(my.iTopology.rows) ));
+            for(ENode *en=my.head;en;en=en->next)
+            {
+                elists[1] << **en;
+            }
+
             //------------------------------------------------------------------
             //
             //
@@ -77,8 +151,6 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "WOVEn::Explore");
                 const Matrix<int>    mu(TransposeOf,my.iTopology);
                 WOVEn::Explore(mu,survey,false);
-                
-
                 survey.sort();
             }
 
@@ -89,6 +161,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            iStoiList               existing(my.iTopology);
             const size_t            nspc = sl.size;
             const apz               zero = 0;
             Vector<apz,MemoryModel> stoi(nspc,0);
@@ -155,6 +228,12 @@ namespace Yttrium
                     }
                 }
 
+                if( !existing.push(coef) )
+                {
+                    Y_XML_COMMENT(xml, "duplicate");
+                }
+
+
                 SList oldSpecies; original.sendTo(oldSpecies);
                 SList newSpecies; combined.sendTo(newSpecies);
                 SList evaporated(oldSpecies);
@@ -166,40 +245,21 @@ namespace Yttrium
                 switch( Sign::Of(newSpecies.size,oldSpecies.size) )
                 {
                     case __Zero__:
-                        assert( oldSpecies.alike(newSpecies) );
-                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / useless");
+                        if(  !oldSpecies.alike(newSpecies) )
+                            throw Specific::Exception(Grouping::CallSign, "corrupted same size combinatorics!");
+                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / useless");
                         continue;
 
                     case Positive:
-                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / corrupted!");
-                        throw Specific::Exception(Grouping::CallSign, "corrupted combinatorics!");
+                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / corrupted!");
+                        throw Specific::Exception(Grouping::CallSign, "expanding combinatorics!");
 
                     case Negative:
                         evaporated.subtract(newSpecies);
-                        Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / (-) " << evaporated);
+                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / (-) " << evaporated);
                         break;
                 }
 
-                //--------------------------------------------------------------
-                //
-                // check existing
-                //
-                //--------------------------------------------------------------
-                {
-                    bool alreadyExists = false;
-                    for(size_t i=my.iTopology.rows;i>0;--i)
-                    {
-                        const Readable<int> &lhs = coef;
-                        const Readable<int> &rhs = my.iTopology[i];
-                        if( lhs == rhs)
-                        {
-                            Y_XMLOG(xml, "combination already exists");
-                            alreadyExists = true;
-                        }
-                    }
-                    if(alreadyExists)
-                        continue;
-                }
 
                 //--------------------------------------------------------------
                 //
@@ -207,7 +267,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 const String eqName = MixedEquilibrium::MakeName(my,comb);
-                Y_XMLOG(xml, "(+) " << eqName);
+                Y_XMLOG(xml, "(+) " << eqName << ", order=" << comb.order << ", removing " << evaporated);
 
 
             }

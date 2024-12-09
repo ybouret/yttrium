@@ -110,11 +110,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void           sort()             noexcept; //!< sort by norm1 then lexicographic
-            template <typename MATRIX> inline
-            void remove(MATRIX &M)
-            {
-                
-            }
+            
 
 
         private:

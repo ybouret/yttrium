@@ -55,6 +55,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxListOf<Cluster>                    List;     //!< alias
             typedef AutoPtr<Conservation::Laws,DrillDown> LawsPtr;
+            typedef CxxArray<EList>                       ELists;
 
             //__________________________________________________________________
             //
@@ -90,9 +91,10 @@ namespace Yttrium
             const Matrix<unsigned>  conservancy; //!< conservation matrix
             const Roster<SList>     conserved;
             const Roster<SList>     unbounded;
-            Cluster *               next; //!< for list
-            Cluster *               prev; //!< for list
-            const unsigned          indx; //!< index in clusters
+            const AutoPtr<const ELists> order;
+            Cluster *                   next; //!< for list
+            Cluster *                   prev; //!< for list
+            const unsigned              indx; //!< index in clusters
         };
     }
 
