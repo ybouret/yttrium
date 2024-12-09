@@ -100,11 +100,12 @@ namespace Yttrium
 
         };
 
-        void Cluster:: compile(Equilibria &eqs, XMLog &xml)
+        void Cluster:: compile(Equilibria &eqs,
+                               XMLog &     xml)
         {
-            const EList &el = my;
+            const EList  primary(my);
             const SList &sl = my.species;
-            Y_XML_SECTION_OPT(xml,Grouping::CallSign, el << '/' << sl);
+            Y_XML_SECTION_OPT(xml,Grouping::CallSign, primary << '/' << sl);
             assert(laws.isEmpty());
 
             //------------------------------------------------------------------
@@ -133,7 +134,11 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            ELists &elists = Coerce(* ( Coerce(order) = new ELists(my.iTopology.rows) ));
+            ELists &elists = Coerce(order);
+            {
+                ELists tmp(my.iTopology.rows);
+                elists.swapWith(tmp);
+            }
             for(ENode *en=my.head;en;en=en->next)
             {
                 elists[1] << **en;
@@ -162,14 +167,10 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             iStoiList               existing(my.iTopology); // existing primary stoichiometries
-            const EList             primary(my);            // primary equilibria
+            const size_t            neqs = primary.size; assert(existing.size==primary.size);
             const size_t            nspc = sl.size;
             const apz               zero = 0;
-            Vector<int,MemoryModel> ecof(primary.size,0);
-            Vector<apz,MemoryModel> stoi(nspc,0);
-            Vector<int,MemoryModel> scof(nspc,0);
-            AddressBook             original;
-            AddressBook             combined;
+
             for(const WOVEn::IntegerArray *warr=survey.head;warr;warr=warr->next)
             {
                 const WOVEn::IntegerArray &comb = *warr;
@@ -179,11 +180,11 @@ namespace Yttrium
                 // initialize state
                 //
                 //--------------------------------------------------------------
-                stoi.ld(zero);
-                ecof.ld(0);
-                scof.ld(0);
-                original.free();
-                combined.free();
+                Vector<int,MemoryModel> ecof(neqs,0);
+                Vector<apz,MemoryModel> stoi(nspc,zero);
+                Vector<int,MemoryModel> scof(nspc,0);
+                AddressBook             original;
+                AddressBook             combined;
 
                 //--------------------------------------------------------------
                 //
@@ -257,16 +258,13 @@ namespace Yttrium
                     case __Zero__:
                         if(  !oldSpecies.alike(newSpecies) )
                             throw Specific::Exception(Grouping::CallSign, "corrupted same size combinatorics!");
-                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / useless");
                         continue;
 
                     case Positive:
-                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / corrupted!");
-                        throw Specific::Exception(Grouping::CallSign, "expanding combinatorics!");
+                        throw Specific::Exception(Grouping::CallSign, "expanding number of species!");
 
                     case Negative:
                         evaporated.subtract(newSpecies);
-                        //Y_XMLOG(xml, comb << " : " << oldSpecies << " => " << newSpecies << " / (-) " << evaporated);
                         break;
                 }
 
@@ -280,22 +278,14 @@ namespace Yttrium
                 const size_t       eqIndx = eqs->size()+1;
                 const Equilibrium  &eq    = eqs.add(new MixedEquilibrium(eqName,eqIndx,primary,ecof,my.species,scof,eqs.K) );
                 my.collectReplica(eq);
-                if(xml.verbose)
-                {
-                    eq.print( xml() ) << " / order=" << comb.order << std::endl;
-                }
-
-
-                //Y_XMLOG(xml, "(+) " << eqName << ", order=" << comb.order << ", removing " << evaporated);
-                //AutoPtr<Equilibrium> eq =
-                //std::cerr << eq << std::endl;
-
+                elists[comb.order] << eq;
             }
 
+            // finalize
             eqs.updateFragment();
 
-
-
+            Y_XML_COMMENT(xml," Summary ");
+            Y_XMLOG(xml,*this);
 
         }
     }

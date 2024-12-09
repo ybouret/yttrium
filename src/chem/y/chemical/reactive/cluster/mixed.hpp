@@ -15,6 +15,9 @@ namespace Yttrium
         class MixedEquilibrium : public Equilibrium
         {
         public:
+            typedef Small::BareHeavyList<int>  Weights;
+            typedef Weights::NodeType          WNode;
+            
             static String MakeName(const EList               &eqs,
                                    const WOVEn::IntegerArray &cof);
 
@@ -28,11 +31,11 @@ namespace Yttrium
 
             virtual ~MixedEquilibrium() noexcept;
 
-            XMul       xmul;
-            XWritable &topK;
+            mutable XMul xmul;
+            XWritable   &topK;
 
-            const EList                     primary;
-            const Small::BareHeavyList<int> weights;
+            const EList   primary;
+            const Weights weights;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);

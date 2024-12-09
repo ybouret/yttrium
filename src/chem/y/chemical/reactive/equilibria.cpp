@@ -34,6 +34,7 @@ namespace Yttrium
             }
 
             assert( size() == sharedK->size() );
+            (*sharedK)[ size() ] = handle->K(0);
         }
 
 

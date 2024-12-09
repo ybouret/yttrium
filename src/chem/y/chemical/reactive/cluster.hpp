@@ -54,8 +54,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             typedef CxxListOf<Cluster>                    List;     //!< alias
-            typedef AutoPtr<Conservation::Laws,DrillDown> LawsPtr;
-            typedef CxxArray<EList>                       ELists;
+            typedef AutoPtr<Conservation::Laws,DrillDown> LawsPtr;  //!< alias
+            typedef CxxArray<EList>                       ELists;   //!< alias
 
             //__________________________________________________________________
             //
@@ -77,7 +77,8 @@ namespace Yttrium
             void addPrimary(Cluster * const);        //!< add content, delete source and upgrade
             bool accepts(const Equilibrium &) const; //!< true if equilibrium is linked to a cluster's one
             bool accepts(const Cluster     &) const; //!< true if some species are shared
-            void compile(Equilibria &eqs, XMLog &xml); //!< post-build, called by Clusters
+            void compile(Equilibria &eqs,
+                         XMLog      &xml); //!< post-build, called by Clusters
 
 
         private:
@@ -87,11 +88,11 @@ namespace Yttrium
 
             Grouping                my;   //!< content
         public:
-            const LawsPtr           laws;        //!< conservation laws
-            const Matrix<unsigned>  conservancy; //!< conservation matrix
-            const Roster<SList>     conserved;
-            const Roster<SList>     unbounded;
-            const AutoPtr<const ELists> order;
+            const LawsPtr               laws;        //!< conservation laws
+            const Matrix<unsigned>      conservancy; //!< conservation matrix
+            const Roster<SList>         conserved;
+            const Roster<SList>         unbounded;
+            const ELists                order;
             Cluster *                   next; //!< for list
             Cluster *                   prev; //!< for list
             const unsigned              indx; //!< index in clusters

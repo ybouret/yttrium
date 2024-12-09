@@ -16,6 +16,7 @@ namespace Yttrium
         conservancy(),
         conserved(),
         unbounded(),
+        order(0),
         next(0),
         prev(0),
         indx(0)
@@ -87,6 +88,15 @@ namespace Yttrium
                 os << std::endl;
             }
             os << '\t' << '\t' << "Nu=" << cl->iTopology << std::endl;
+            for(size_t i=1;i<=cl.order.size();++i)
+            {
+                const EList &el = cl.order[i];
+                if(el.size>0)
+                {
+                    os << "\t\torder #" << std::setw(3) << i << " : " << el.size << std::endl;
+                }
+            }
+            os << "\t\ttotal      : " << cl->size << std::endl;
             os << '\t' << '}';
             return os;
         }

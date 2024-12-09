@@ -90,7 +90,27 @@ namespace Yttrium
 
         xReal MixedEquilibrium:: getK(xReal) const
         {
-            return 1;
+            xmul.free();
+            assert(weights.size==primary.size);
+
+            const WNode *     wn = weights.head;
+            for(const ENode * en = primary.head;en;en=en->next,wn=wn->next)
+            {
+                const int      nu = **wn;
+                const Indexed &eq = **en;
+                const xReal    eK = eq(topK,TopLevel);
+                if(nu<0)
+                {
+                    const xReal iK = 1.0 / eK;
+                    xmul.insert(iK,-nu);
+                }
+                else
+                {
+                    assert(nu>0);
+                    xmul.insert(eK,nu);
+                }
+            }
+            return xmul.product();
         }
     }
 

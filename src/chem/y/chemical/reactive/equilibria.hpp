@@ -114,7 +114,8 @@ namespace Yttrium
             void operator()(Library &lib, const String &     expr); //!< internally process expression as Weasel
             void operator()(Library &lib, const char * const expr); //!< internally process expression as Weasel
 
-            
+
+            //XReadable & K(const xReal t); //!< recompute constants
 
 
             void updateFragment() noexcept;        //!< update fragment for formatting all equilibria
@@ -126,7 +127,8 @@ namespace Yttrium
             Reactor reactor;
 
         public:
-            XWritable &K;
+            XWritable & K;
+
         };
 
 
