@@ -77,26 +77,43 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "WOVEn::Explore");
                 const Matrix<int>    mu(TransposeOf,my.iTopology);
                 WOVEn::Explore(mu,survey,false);
+                
+
                 survey.sort();
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // scan combinatorics
+            //
+            //
+            //------------------------------------------------------------------
             const size_t            nspc = sl.size;
             const apz               zero = 0;
             Vector<apz,MemoryModel> stoi(nspc,0);
+            Vector<int,MemoryModel> coef(nspc,0);
             AddressBook             original;
             AddressBook             combined;
             for(const WOVEn::IntegerArray *warr=survey.head;warr;warr=warr->next)
             {
                 const WOVEn::IntegerArray &comb = *warr;
 
-
+                //--------------------------------------------------------------
+                //
                 // initialize state
+                //
+                //--------------------------------------------------------------
                 stoi.ld(zero);
+                coef.ld(0);
                 original.free();
                 combined.free();
 
                 for(const ENode *en=my.head;en;en=en->next)
                 {
+                    //----------------------------------------------------------
+                    // get coefficient
+                    //----------------------------------------------------------
                     const Equilibrium &eq = **en;
                     const Indexed     &id = eq;
                     const apz         &cf = id(comb,SubLevel);
@@ -104,7 +121,9 @@ namespace Yttrium
                     if(zero==cf)
                         continue;
 
+                    //----------------------------------------------------------
                     // use equilibrium
+                    //----------------------------------------------------------
                     eq.addSpeciesTo(original);
                     for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
                     {
@@ -120,10 +139,20 @@ namespace Yttrium
                 }
 
 
+                //--------------------------------------------------------------
+                //
+                // fetch new set of species
+                //
+                //--------------------------------------------------------------
                 for(const SNode *sn=sl.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    if(zero!=sp(stoi,SubLevel)) combined += sp; // only once
+                    const apz     &cf = sp(stoi,SubLevel);
+                    if(zero!=cf)
+                    {
+                        combined += sp; // must appear only once
+                        sp(coef,SubLevel) = cf.cast<int>("stoichiometry");
+                    }
                 }
 
                 SList oldSpecies; original.sendTo(oldSpecies);
@@ -151,7 +180,32 @@ namespace Yttrium
                         break;
                 }
 
-                
+                //--------------------------------------------------------------
+                //
+                // check existing
+                //
+                //--------------------------------------------------------------
+                {
+                    bool alreadyExists = false;
+                    for(size_t i=my.iTopology.rows;i>0;--i)
+                    {
+                        const Readable<int> &lhs = coef;
+                        const Readable<int> &rhs = my.iTopology[i];
+                        if( lhs == rhs)
+                        {
+                            Y_XMLOG(xml, "combination already exists");
+                            alreadyExists = true;
+                        }
+                    }
+                    if(alreadyExists)
+                        continue;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // build mixed equilibrium
+                //
+                //--------------------------------------------------------------
                 const String eqName = MixedEquilibrium::MakeName(my,comb);
                 Y_XMLOG(xml, "(+) " << eqName);
 

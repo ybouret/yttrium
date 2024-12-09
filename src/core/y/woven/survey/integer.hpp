@@ -47,6 +47,18 @@ namespace Yttrium
             explicit IntegerArray(const QVector &); //!< copy from QVector
             virtual ~IntegerArray() noexcept;       //!< cleanup
 
+            template <typename ARRAY> inline
+            bool isEqualTo(ARRAY &rhs) const
+            {
+                const Readable<const apz> &lhs = *this;
+                assert(lhs.size() == rhs.size());
+                for(size_t i=lhs.size(); i>0; --i)
+                {
+                    if( lhs[i] != rhs[i] ) return false;
+                }
+                return true;
+            }
+
             //__________________________________________________________________
             //
             //
@@ -88,10 +100,21 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual size_t dimensions() const noexcept; //!< from first array
-            void           sort()             noexcept; //!< sort by norm1 then lexicographic
-            virtual size_t maxOrder()   const noexcept; //!< maximum order
+            virtual size_t dimensions() const noexcept; //!< [Survey] from first array
+            virtual size_t maxOrder()   const noexcept; //!< [Survey] maximum order
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void           sort()             noexcept; //!< sort by norm1 then lexicographic
+            template <typename MATRIX> inline
+            void remove(MATRIX &M)
+            {
+                
+            }
 
 
         private:
