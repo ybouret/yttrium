@@ -57,6 +57,14 @@ namespace Yttrium
                 Coerce(maxOrder) = Max(maxOrder,cl->maxOrder);
             }
 
+
+            //------------------------------------------------------------------
+            //
+            // finalize
+            //
+            //------------------------------------------------------------------
+            eqs.updateFragment();
+
         }
 
         Clusters:: ~Clusters() noexcept

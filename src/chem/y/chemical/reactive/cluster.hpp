@@ -89,6 +89,7 @@ namespace Yttrium
             void compile(Equilibria &eqs,
                          XMLog      &xml); //!< post-build, called by Clusters
 
+            bool hasConserved(const Actors &) const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
@@ -101,6 +102,11 @@ namespace Yttrium
             const Matrix<unsigned>      conservancy; //!< conservation matrix
             const Roster<SList>         conserved;   //!< roster of conserved species
             const Roster<SList>         unbounded;   //!< roster of unbounded species
+            const Roster<EList>         reacOnly;    //!< roster of reacOnly equilibria
+            const Roster<EList>         prodOnly;    //!< roster of prodOnly equilibria
+            const Roster<EList>         rigorous;    //!< roster of rigouros equilibria
+            const Roster<EList>         tolerant;    //!< roster of tolerant equilibria
+
             const ELists                order;       //!< different orders of combined primary equilibria
             Cluster *                   next;        //!< for list
             Cluster *                   prev;        //!< for list

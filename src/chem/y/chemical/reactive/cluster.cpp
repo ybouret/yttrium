@@ -71,7 +71,7 @@ namespace Yttrium
         }
 
         
-
+        
 
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
         {
@@ -98,6 +98,13 @@ namespace Yttrium
                 }
             }
             os << "\t\ttotal      : " << cl->size << std::endl;
+            if(cl.conserved.list.size>0) os << "\t\tconserved = " << cl.conserved.list << std::endl;
+            if(cl.unbounded.list.size>0) os << "\t\tunbounded = " << cl.unbounded.list << std::endl;
+            if(cl.reacOnly.list.size>0)  os << "\t\treacOnly  = " << cl.reacOnly.list << std::endl;
+            if(cl.prodOnly.list.size>0)  os << "\t\tprodOnly  = " << cl.prodOnly.list << std::endl;
+            if(cl.rigorous.list.size>0)  os << "\t\trigorous  = " << cl.rigorous.list << std::endl;
+            if(cl.tolerant.list.size>0)  os << "\t\ttolerant  = " << cl.tolerant.list << std::endl;
+
             os << '\t' << '}';
             return os;
         }

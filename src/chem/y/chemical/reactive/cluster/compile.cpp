@@ -140,9 +140,8 @@ namespace Yttrium
                 elists.swapWith(tmp);
             }
             for(ENode *en=my.head;en;en=en->next)
-            {
                 elists[1] << **en;
-            }
+
 
             //------------------------------------------------------------------
             //
@@ -284,13 +283,60 @@ namespace Yttrium
 
             }
 
-            // finalize
-            eqs.updateFragment();
+            //------------------------------------------------------------------
+            //
+            // finalize equilibria
+            //
+            //------------------------------------------------------------------
+            for(const ENode *en=my.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                switch(eq.attr)
+                {
+                    case Nebulous:
+                        throw Specific::Exception(Grouping::CallSign,"'%s' shouldn't be nebulous", eq.name.c_str());
+
+                    case ReacOnly:
+                        Coerce(reacOnly.book) += eq;
+                        break;
+
+                    case ProdOnly:
+                        Coerce(prodOnly.book) += eq;
+                        break;
+
+                    case Definite:
+                        if( hasConserved(eq.reac) && hasConserved(eq.prod) )
+                            Coerce(rigorous.book) += eq;
+                        else
+                            Coerce(tolerant.book) += eq;;
+
+                        break;
+                }
+            }
+
+            Coerce(reacOnly).compile();
+            Coerce(prodOnly).compile();
+            Coerce(rigorous).compile();
+            Coerce(tolerant).compile();
+
+
 
             Y_XML_COMMENT(xml," Summary ");
             Y_XMLOG(xml,*this);
 
         }
+
+
+        bool Cluster:: hasConserved(const Actors &actors) const noexcept
+        {
+            for(const Actor *a=actors->head;a;a=a->next)
+            {
+                if( conserved.book.has(a->sp) ) return true;
+            }
+            return false;
+        }
+
+
     }
 
 }
