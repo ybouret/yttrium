@@ -41,8 +41,17 @@ namespace Yttrium
             virtual ~Clusters() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Clusters);                            //!< eqs+species
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! render different orders
             void graphViz(const String &root, const bool showConservations) const;
 
+            //! check if order is present in a least one cluster
             bool haveOrder(const size_t) const noexcept;
 
         private:
@@ -50,7 +59,7 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             void    checkFusion() noexcept; //!< for clusters creation
         public:
-            const size_t maxOrder;
+            const size_t maxOrder; //!< overall maximum order
         };
 
     }

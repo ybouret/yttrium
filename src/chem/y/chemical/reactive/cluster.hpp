@@ -105,7 +105,7 @@ namespace Yttrium
             Cluster *                   next;        //!< for list
             Cluster *                   prev;        //!< for list
             const unsigned              indx;        //!< index in clusters
-            const size_t                maxOrder;    //!< max order
+            const size_t                maxOrder;    //!< max combination order
         };
     }
 
