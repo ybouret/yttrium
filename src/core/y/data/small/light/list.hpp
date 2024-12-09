@@ -154,6 +154,7 @@ namespace Yttrium
                 return (lhs.size == rhs.size) && lhs.contains(rhs) && rhs.contains(lhs);
             }
 
+            //! subtract sub-list
             inline void subtract(const LightList &rhs) noexcept
             {
                 assert(contains(rhs));

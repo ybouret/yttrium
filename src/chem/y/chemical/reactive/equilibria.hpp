@@ -13,17 +13,6 @@ namespace Yttrium
     {
         class Library;
 
-        class Constants : public Object, public Counted, public XVector
-        {
-        public:
-            explicit Constants() noexcept {}
-            virtual ~Constants() noexcept {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Constants);
-        };
-
-        typedef ArcPtr<Constants> SharedConstants;
 
 
         //______________________________________________________________________
@@ -61,8 +50,8 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SharedConstants sharedK;
-
+            XVector K; //!< syncronized constants
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
         };
@@ -114,8 +103,7 @@ namespace Yttrium
             void operator()(Library &lib, const String &     expr); //!< internally process expression as Weasel
             void operator()(Library &lib, const char * const expr); //!< internally process expression as Weasel
 
-
-            //XReadable & K(const xReal t); //!< recompute constants
+            XReadable & updateK(xReal) const;
 
 
             void updateFragment() noexcept;        //!< update fragment for formatting all equilibria
@@ -127,7 +115,7 @@ namespace Yttrium
             Reactor reactor;
 
         public:
-            XWritable & K;
+            XWritable & K; //!< synchronized K
 
         };
 

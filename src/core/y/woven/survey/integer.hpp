@@ -46,18 +46,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit IntegerArray(const QVector &); //!< copy from QVector
             virtual ~IntegerArray() noexcept;       //!< cleanup
-
-            template <typename ARRAY> inline
-            bool isEqualTo(ARRAY &rhs) const
-            {
-                const Readable<const apz> &lhs = *this;
-                assert(lhs.size() == rhs.size());
-                for(size_t i=lhs.size(); i>0; --i)
-                {
-                    if( lhs[i] != rhs[i] ) return false;
-                }
-                return true;
-            }
+            
 
             //__________________________________________________________________
             //

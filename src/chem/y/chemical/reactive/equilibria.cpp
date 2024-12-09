@@ -12,14 +12,23 @@ namespace Yttrium
         Reactor:: Reactor() :
         Equilibrium::Set(),
         Fragment(),
-        sharedK( new Constants() )
+        K()
         {
         }
 
         void Reactor:: mustInsert(const Equilibrium::Handle &handle)
         {
-            const xReal _0;
-            sharedK->adjust( size() + 1, _0);
+            // check index
+            const size_t nextIndex = size() + 1;
+            if(nextIndex != handle->indx[TopLevel])
+                throw Specific::Exception( Equilibria::CallSign,"invalid index for '%s'", handle->name.c_str());
+
+            // syncrhonize constants
+            {
+                const xReal _0;
+                K.adjust( nextIndex, _0);
+            }
+
             try
             {
                 if( !insert(handle) )
@@ -28,13 +37,13 @@ namespace Yttrium
             }
             catch(...)
             {
-                sharedK->popTail();
-                assert( size() == sharedK->size() );
+                K.popTail();
+                assert( size() == K.size() );
                 throw;
             }
 
-            assert( size() == sharedK->size() );
-            (*sharedK)[ size() ] = handle->K(0);
+            assert( size() == K.size() );
+            K[ size() ] = handle->K(0);
         }
 
 
@@ -54,7 +63,7 @@ namespace Yttrium
         Equilibria:: Equilibria() :
         Proxy<const Reactor>(),
         reactor(),
-        K( *reactor.sharedK )
+        K( reactor.K )
         {
         }
 
@@ -85,7 +94,7 @@ namespace Yttrium
             {
                 const Equilibrium &eq = **it;
                 db.print(os << '\t' << '@', eq);
-                const xReal  K = eq.K(0);
+                const xReal  K = eqs.K[ eq.indx[TopLevel] ];
                 const real_t l = K.log10();
                 os << "'10^(" << l << ")'";
                 os << std::endl;
@@ -98,6 +107,19 @@ namespace Yttrium
         void Equilibria:: updateFragment() noexcept
         {
             reactor.updateWith(reactor.begin(), reactor.size() );
+        }
+
+
+        XReadable & Equilibria:: updateK(xReal t) const
+        {
+            ConstIterator it = reactor.begin();
+            for(size_t i=reactor.size();i>0;--i)
+            {
+                const Equilibrium &eq = **it;
+                const Indexed     &id = eq;
+                id(K,TopLevel) = eq.K(t);
+            }
+            return K;
         }
 
 

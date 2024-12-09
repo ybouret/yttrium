@@ -14,14 +14,23 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! syncronized list and addresses of list
+        //
+        //
+        //______________________________________________________________________
         template <typename LIST>
         class Roster
         {
         public:
-            inline  Roster() : list(), book() {}
-            inline ~Roster() noexcept {}
 
+            inline  Roster() : list(), book() {} //!< setup
+            inline ~Roster() noexcept         {} //!< cleanup
+
+            //! collect book into list and sort
             void compile() {
                 LIST &mine = Coerce(list);
                 mine.release();
@@ -29,8 +38,8 @@ namespace Yttrium
                 DBOps::Revamp<LIST>::Sort(mine);
             }
 
-            const LIST        list;
-            const AddressBook book;
+            const LIST        list; //!< list
+            const AddressBook book; //!< addresses
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Roster);
@@ -86,16 +95,16 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             void                     classifySpecies(XMLog &);
 
-            Grouping                my;   //!< content
+            Grouping                    my;   //!< content
         public:
             const LawsPtr               laws;        //!< conservation laws
             const Matrix<unsigned>      conservancy; //!< conservation matrix
-            const Roster<SList>         conserved;
-            const Roster<SList>         unbounded;
-            const ELists                order;
-            Cluster *                   next; //!< for list
-            Cluster *                   prev; //!< for list
-            const unsigned              indx; //!< index in clusters
+            const Roster<SList>         conserved;   //!< roster of conserved species
+            const Roster<SList>         unbounded;   //!< roster of unbounded species
+            const ELists                order;       //!< different orders of combined primary equilibria
+            Cluster *                   next;        //!< for list
+            Cluster *                   prev;        //!< for list
+            const unsigned              indx;        //!< index in clusters
         };
     }
 
