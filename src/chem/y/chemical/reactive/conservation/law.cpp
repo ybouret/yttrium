@@ -121,7 +121,7 @@ namespace Yttrium
                     const GraphViz::Vizible &target = *this;
 
                     Arrow(fp, &source, &target);
-                    fp << "[arrowhead=empty,color=" << color << "]";
+                    fp << "[style=dashed,arrowhead=empty,color=" << color << "]";
                     Endl(fp);
                 }
 

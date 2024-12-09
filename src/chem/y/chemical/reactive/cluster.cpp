@@ -19,7 +19,8 @@ namespace Yttrium
         order(0),
         next(0),
         prev(0),
-        indx(0)
+        indx(0),
+        maxOrder(1)
         {
             my.collectPrimary(first);
         }

@@ -36,7 +36,8 @@ Y_UTEST(plexus)
     
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
-    
+
+#if 0
     {
         OutputFile fp("plexus.dot");
         GraphViz::Vizible::Enter(fp,"G");
@@ -75,6 +76,10 @@ Y_UTEST(plexus)
     }
 
     GraphViz::Vizible::RenderPNG("plexus.dot",false);
+#endif
+
+    clusters.graphViz("plexus",true);
+
 
 
 

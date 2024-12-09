@@ -41,11 +41,16 @@ namespace Yttrium
             virtual ~Clusters() noexcept;                         //!< cleanup
             Y_OSTREAM_PROTO(Clusters);                            //!< eqs+species
 
-        private:
-            Cluster::List cls;
+            void graphViz(const String &root, const bool showConservations) const;
 
+            bool haveOrder(const size_t) const noexcept;
+
+        private:
+            Cluster::List my;
             virtual ConstInterface & surrogate() const noexcept;
             void    checkFusion() noexcept; //!< for clusters creation
+        public:
+            const size_t maxOrder;
         };
 
     }

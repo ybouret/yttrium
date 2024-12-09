@@ -10,13 +10,14 @@ namespace Yttrium
 
         Clusters:: ConstInterface & Clusters:: surrogate() const noexcept
         {
-            return cls;
+            return my;
         }
 
         Clusters:: Clusters(Equilibria &eqs,
                             XMLog      &xml) :
         Proxy<const Cluster::List>(),
-        cls()
+        my(),
+        maxOrder(0)
         {
             Y_XML_SECTION(xml,CallSign);
 
@@ -29,7 +30,7 @@ namespace Yttrium
             {
                 const Equilibrium &eq = **it;
                 bool               accepted = false;
-                for(Cluster *cl=cls.head;cl;cl=cl->next)
+                for(Cluster *cl=my.head;cl;cl=cl->next)
                 {
                     if(cl->accepts(eq))
                     {
@@ -39,7 +40,7 @@ namespace Yttrium
                         break;
                     }
                 }
-                if(!accepted) cls.pushTail( new Cluster(eq) );
+                if(!accepted) my.pushTail( new Cluster(eq) );
 
             }
 
@@ -49,10 +50,11 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             unsigned indx=0;
-            for(Cluster *cl=cls.head;cl;cl=cl->next)
+            for(Cluster *cl=my.head;cl;cl=cl->next)
             {
                 Coerce(cl->indx) = ++indx;
                 cl->compile(eqs,xml);
+                Coerce(maxOrder) = Max(maxOrder,cl->maxOrder);
             }
 
         }
@@ -67,9 +69,9 @@ namespace Yttrium
         void Clusters:: checkFusion() noexcept
         {
             Cluster::List store;
-            while(cls.size>0)
+            while(my.size>0)
             {
-                AutoPtr<Cluster> rhs = cls.popHead();
+                AutoPtr<Cluster> rhs = my.popHead();
                 for(Cluster *lhs=store.head;lhs;lhs=lhs->next)
                 {
                     if(lhs->accepts(*rhs))
@@ -82,7 +84,7 @@ namespace Yttrium
                 if(rhs.isValid())
                     store.pushTail( rhs.yield() ); // untouched
             }
-            cls.swapWith(store);
+            my.swapWith(store);
         }
 
 
@@ -101,7 +103,7 @@ namespace Yttrium
             }
             return os;
         }
-
+        
 
     }
     

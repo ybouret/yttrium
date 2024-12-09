@@ -279,6 +279,9 @@ namespace Yttrium
                 const Equilibrium  &eq    = eqs.add(new MixedEquilibrium(eqName,eqIndx,primary,ecof,my.species,scof,eqs.K) );
                 my.collectReplica(eq);
                 elists[comb.order] << eq;
+
+                Coerce(maxOrder) = Max(maxOrder,comb.order);
+
             }
 
             // finalize
