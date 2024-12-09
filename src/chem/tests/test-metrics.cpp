@@ -24,5 +24,7 @@ Y_UTEST(metrics)
     Y_SIZEOF(Entity);
     Y_SIZEOF(Actor);
 
+    Y_SIZEOF(Constants);
+
 }
 Y_UDONE()

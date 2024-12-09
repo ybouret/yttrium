@@ -268,7 +268,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 const String eqName = MixedEquilibrium::MakeName(my,comb);
                 Y_XMLOG(xml, "(+) " << eqName << ", order=" << comb.order << ", removing " << evaporated);
-
+                
 
             }
 

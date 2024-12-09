@@ -11,14 +11,29 @@ namespace Yttrium
         Reactor:: ~Reactor() noexcept {}
         Reactor:: Reactor() :
         Equilibrium::Set(),
-        Fragment()
+        Fragment(),
+        sharedK( new Constants() )
         {
         }
 
         void Reactor:: mustInsert(const Equilibrium::Handle &handle)
         {
-            if( !insert(handle) ) throw Specific::Exception( Equilibria::CallSign, "multiple '%s'", handle->name.c_str());
-            enroll( *handle );
+            const xReal _0;
+            sharedK->adjust( size() + 1, _0);
+            try
+            {
+                if( !insert(handle) )
+                    throw Specific::Exception( Equilibria::CallSign, "multiple '%s'", handle->name.c_str());
+                enroll( *handle );
+            }
+            catch(...)
+            {
+                sharedK->popTail();
+                assert( size() == sharedK->size() );
+                throw;
+            }
+
+            assert( size() == sharedK->size() );
         }
 
 
@@ -35,7 +50,10 @@ namespace Yttrium
 
         const char * const Equilibria:: CallSign = "Chemical::Equilibria";
 
-        Equilibria:: Equilibria() : Proxy<const Reactor>(), reactor()
+        Equilibria:: Equilibria() :
+        Proxy<const Reactor>(),
+        reactor(),
+        K( *reactor.sharedK )
         {
         }
 

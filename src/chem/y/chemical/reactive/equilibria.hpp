@@ -13,6 +13,19 @@ namespace Yttrium
     {
         class Library;
 
+        class Constants : public Object, public Counted, public XVector
+        {
+        public:
+            explicit Constants() noexcept {}
+            virtual ~Constants() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Constants);
+        };
+
+        typedef ArcPtr<Constants> SharedConstants;
+
+
         //______________________________________________________________________
         //
         //
@@ -37,11 +50,18 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
-            // methods
+            // Methods
             //
             //__________________________________________________________________
             void         mustInsert(const Equilibrium::Handle &); //!< insert/enroll
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SharedConstants sharedK;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
@@ -105,6 +125,8 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             Reactor reactor;
 
+        public:
+            XWritable &K;
         };
 
 
