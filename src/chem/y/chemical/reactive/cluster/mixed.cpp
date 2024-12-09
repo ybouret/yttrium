@@ -53,10 +53,13 @@ namespace Yttrium
                                             const Readable<int> & sto,
                                             XWritable &           shK) :
         Equilibrium(_name,_indx),
+        primary(),
+        weights(),
         xmul(),
         topK(shK)
         {
 
+            // record primary/weights
             for(const ENode *en=eqs.head;en;en=en->next)
             {
                 const Equilibrium &eq = **en;
@@ -68,6 +71,7 @@ namespace Yttrium
             }
             assert(primary.size>=2);
 
+            // record content
             Components &self = *this;
             for(const SNode *sn=spc.head;sn;sn=sn->next)
             {

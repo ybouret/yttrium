@@ -103,8 +103,7 @@ namespace Yttrium
             void operator()(Library &lib, const String &     expr); //!< internally process expression as Weasel
             void operator()(Library &lib, const char * const expr); //!< internally process expression as Weasel
 
-            XReadable & updateK(xReal) const;
-
+            XReadable & updateK(xReal) const; //!< sequential update of constants
 
             void updateFragment() noexcept;        //!< update fragment for formatting all equilibria
             void graphViz(OutputStream &fp) const; //!< standalone graphViz
