@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/company.hpp"
+#include "y/chemical/reactive/equilibrium/company.hpp"
 
 namespace Yttrium
 {
