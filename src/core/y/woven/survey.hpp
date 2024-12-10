@@ -83,7 +83,9 @@ namespace Yttrium
             explicit ArrayOf(ARRAY &arr, const char * const which) :
             Object(),
             BaseType( arr.size() ),
-            order(    arr.order  )
+            order(    arr.order  ),
+            next(0),
+            prev(0)
             {
                 BaseType &self = *this;
                 for(size_t i=self.size();i>0;--i)
@@ -91,8 +93,47 @@ namespace Yttrium
 
             }
 
+            explicit inline ArrayOf(const size_t dims) :
+            Object(),
+            BaseType(dims),
+            order(0),
+            next(0),
+            prev(0)
+            {
+            }
+
+
             //! cleanup
             inline virtual ~ArrayOf() noexcept {}
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            inline size_t updateOrder() const noexcept
+            {
+                const BaseType &self = *this;
+                Coerce(order) = 0;
+                for(size_t i=self.size();i>0;--i)
+                {
+                    if( 0 != self[i] ) ++Coerce(order);
+                }
+                return order;
+            }
+
+            template <typename MATRIX>
+            inline bool isRedundantWith(const MATRIX &matrix) const noexcept
+            {
+                const ArrayOf &self = *this;
+                for(size_t i=1;i<=matrix.rows;++i)
+                {
+                    if( self == matrix[i] ) return true;
+                }
+                return false;
+            }
 
             //__________________________________________________________________
             //
@@ -152,6 +193,35 @@ namespace Yttrium
                 }
             }
 
+            //! create linear combination of matrix, check validity and not redundant
+            template <typename MATRIX>
+            inline explicit ArraysOf(const MATRIX   & matrix,
+                                     const ArraysOf & weight) :
+            Object(),
+            ListType()
+            {
+                const size_t dims = matrix.cols;
+                const size_t rows = matrix.rows;
+                for(const ArrayType *node=weight.head;node;node=node->next)
+                {
+                    const ArrayType &w = *node; assert(rows==w.size());
+                    ArrayType       &a = * this->pushTail( new ArrayType(dims) );
+                    for(size_t j=dims;j>0;--j)
+                    {
+                        for(size_t i=rows;i>0;--i)
+                        {
+                            a[j] += matrix[i][j] * w[i];
+                        }
+                    }
+
+                    if( a.updateOrder() <= 0 || a.isRedundantWith(matrix) || alreadyComputed() )
+                    {
+                        delete this->popTail();
+                        continue;
+                    }
+                }
+            }
+
             //! cleanup
             inline virtual ~ArraysOf() noexcept
             {
@@ -159,6 +229,20 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArraysOf);
+
+            inline bool alreadyComputed() const noexcept
+            {
+                assert(this->size>0);
+                const ArrayType * const curr = this->tail;
+                for(const ArrayType *node=curr->prev;node;node=node->prev)
+                {
+                    if( *node == *curr) return true;
+                }
+                return false;
+            }
+
+
+
         };
     }
 

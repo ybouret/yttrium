@@ -134,8 +134,8 @@ namespace Yttrium
 
             Equilibrium &eq = newEquilibrium();
 
-            for(const Actor *a=reac.head;a;a=a->next) eq(Reactant,a->nu,a->sp);
-            for(const Actor *a=prod.head;a;a=a->next) eq(Product, a->nu,a->sp);
+            for(const Actor *a=reac.head;a;a=a->next) eq.add(Reactant,a->nu,a->sp);
+            for(const Actor *a=prod.head;a;a=a->next) eq.add(Product, a->nu,a->sp);
 
             eq.applicable();
         }

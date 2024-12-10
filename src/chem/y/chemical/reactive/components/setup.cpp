@@ -19,7 +19,7 @@ namespace Yttrium
             // never get here
         }
 
-        void Components:: operator()(const Role role, const unsigned nu, const Species &sp)
+        void Components:: add(const Role role, const unsigned nu, const Species &sp)
         {
             const String &sid = sp.name;
 
@@ -61,9 +61,9 @@ namespace Yttrium
             updateAttribute();
         }
 
-        void Components:: operator()(const Role role, const Species &sp)
+        void Components:: add(const Role role, const Species &sp)
         {
-            (*this)(role,1,sp);
+            add(role,1,sp);
         }
 
 

@@ -63,8 +63,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
             void enroll(const Components &);  //!< update all assemblies
             void forget()           noexcept; //!< forget all assemblies
             void trades(Fragment &) noexcept; //!< for all assemblies

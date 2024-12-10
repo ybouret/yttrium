@@ -107,10 +107,10 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! create new actor with role
-            void operator()(const Role role, const unsigned nu, const Species &sp);
+            void add(const Role role, const unsigned nu, const Species &sp);
 
             //! create new actor with role and unit coefficient
-            void operator()(const Role role, const Species &sp);
+            void add(const Role role, const Species &sp);
 
 
             //! quick display

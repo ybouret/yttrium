@@ -4,59 +4,14 @@
 #ifndef Y_Chemical_Equilibria_Included
 #define Y_Chemical_Equilibria_Included 1
 
-#include "y/chemical/reactive/equilibrium.hpp"
-#include "y/chemical/reactive/fragment.hpp"
+#include "y/chemical/reactive/reactor.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
         class Library;
-
-
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! internal class for equilibria
-        //
-        //
-        //______________________________________________________________________
-        class Reactor : public Equilibrium::Set, public Fragment
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-            explicit Reactor();
-            virtual ~Reactor() noexcept;
-
-            
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-            void         mustInsert(const Equilibrium::Handle &); //!< insert/enroll
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            XVector K; //!< syncronized constants
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-        };
-
-
+        
         //______________________________________________________________________
         //
         //
@@ -68,7 +23,6 @@ namespace Yttrium
         class Equilibria : public Proxy<const Reactor>
         {
         public:
-            static const char * const      CallSign;      //!< "Chemical::Equilibria"
             typedef Reactor::ConstIterator ConstIterator; //!< alias
 
             //__________________________________________________________________
@@ -89,7 +43,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! declare a new equilibrium
-            void decl( Equilibrium * const );
+            void decl(Equilibrium * const );
 
             
             //! helper to declare a derived equilibrium
@@ -111,7 +65,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual ConstInterface & surrogate() const noexcept;
-            Reactor reactor;
+            Reactor my;
 
         public:
             XWritable & K; //!< synchronized K

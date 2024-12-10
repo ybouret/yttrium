@@ -159,7 +159,8 @@ namespace Yttrium
             }
 
             WOVEn::ArraysOf<int> I(survey,"combination coefficient",2);
-
+            WOVEn::ArraysOf<int> S(my.iTopology,I);
+            
 
             //------------------------------------------------------------------
             //

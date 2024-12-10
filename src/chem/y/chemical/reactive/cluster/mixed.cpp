@@ -72,7 +72,6 @@ namespace Yttrium
             assert(primary.size>=2);
 
             // record content
-            Components &self = *this;
             for(const SNode *sn=spc.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
@@ -80,8 +79,8 @@ namespace Yttrium
                 switch(Sign::Of(nu))
                 {
                     case __Zero__: continue;
-                    case Positive: self(Product,  nu,sp); break;
-                    case Negative: self(Reactant,-nu,sp); break;
+                    case Positive: add(Product,  nu,sp); break;
+                    case Negative: add(Reactant,-nu,sp); break;
                 }
             }
 

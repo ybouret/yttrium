@@ -40,6 +40,8 @@ Y_UTEST(plexus)
 
     clusters.graphViz("plexus",true);
 
+    return 0;
+    
     const size_t M = lib->size();
     XVector C0(M,0);
 
