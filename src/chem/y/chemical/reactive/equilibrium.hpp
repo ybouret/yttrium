@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Equilibrium_Included
 #define Y_Chemical_Equilibrium_Included 1
 
-#include "y/chemical/reactive/components.hpp"
+#include "y/chemical/reactive/equilibrium/components.hpp"
 
 namespace Yttrium
 {

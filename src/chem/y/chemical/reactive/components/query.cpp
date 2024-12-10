@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/components.hpp"
+#include "y/chemical/reactive/equilibrium/components.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium
