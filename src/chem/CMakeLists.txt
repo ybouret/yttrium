@@ -9,6 +9,7 @@ chemical/weasel/equilibrium
 chemical/reactive
 chemical/reactive/equilibrium
 chemical/reactive/equilibrium/components
+chemical/reactive/equilibria
 chemical/reactive/cluster
 chemical/reactive/conservation
 )

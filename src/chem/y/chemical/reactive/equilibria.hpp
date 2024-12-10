@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Equilibria_Included
 #define Y_Chemical_Equilibria_Included 1
 
-#include "y/chemical/reactive/reactor.hpp"
+#include "y/chemical/reactive/equilibria/reactor.hpp"
 
 namespace Yttrium
 {

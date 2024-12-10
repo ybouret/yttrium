@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/reactor.hpp"
+#include "y/chemical/reactive/equilibria/reactor.hpp"
 #include "y/system/exception.hpp"
 
 
