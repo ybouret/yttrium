@@ -1,5 +1,4 @@
-
-#include "y/chemical/reactive/outcome.hpp"
+#include "y/chemical/reactive/equilibrium/outcome.hpp"
 
 namespace Yttrium
 {

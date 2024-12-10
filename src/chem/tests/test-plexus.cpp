@@ -2,7 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
-#include "y/chemical/reactive/aftermath.hpp"
+#include "y/chemical/reactive/equilibrium/aftermath.hpp"
 
 
 #include "y/utest/run.hpp"

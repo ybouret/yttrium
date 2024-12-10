@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/aftermath.hpp"
+#include "y/chemical/reactive/equilibrium/aftermath.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/root/zbis.hpp"
 

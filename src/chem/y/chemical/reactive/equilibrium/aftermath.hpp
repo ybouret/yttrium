@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Aftermath_Included
 #define Y_Chemical_Aftermath_Included 1
 
-#include "y/chemical/reactive/outcome.hpp"
+#include "y/chemical/reactive/equilibrium/outcome.hpp"
 
 namespace Yttrium
 {
