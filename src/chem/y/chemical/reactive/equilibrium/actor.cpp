@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/actor.hpp"
+#include "y/chemical/reactive/equilibrium/actor.hpp"
 
 
 namespace Yttrium

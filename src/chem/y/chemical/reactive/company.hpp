@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Company_Included
 #define Y_Chemical_Company_Included 1
 
-#include "y/chemical/reactive/actor.hpp"
+#include "y/chemical/reactive/equilibrium/actor.hpp"
 
 namespace Yttrium
 {

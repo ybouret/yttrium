@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Conservation_Law_Included
 #define Y_Chemical_Conservation_Law_Included 1
 
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/equilibrium/actors.hpp"
 
 
 namespace Yttrium

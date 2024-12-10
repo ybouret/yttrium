@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/equilibrium/actors.hpp"
 
 
 
