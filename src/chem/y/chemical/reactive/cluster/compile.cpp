@@ -158,6 +158,9 @@ namespace Yttrium
                 survey.sort();
             }
 
+            WOVEn::ArraysOf<int> I(survey,"combination coefficient",2);
+
+
             //------------------------------------------------------------------
             //
             //

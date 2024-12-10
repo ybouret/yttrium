@@ -14,7 +14,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! base type for UArray
+        //! base type for NaturalArray
         //
         //______________________________________________________________________
         typedef CxxArray<const apn,Memory::Pooled> NaturalArrayType;
@@ -98,8 +98,12 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);
             virtual void verify(const QVector &);
-            
         };
+
+        typedef CxxArray<const apn,Memory::Pooled> NaturalArrayType;
+
+        
+
     }
 
 }

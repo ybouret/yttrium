@@ -106,6 +106,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
             virtual void verify(const QVector &);
         };
+
+
     }
 
 }

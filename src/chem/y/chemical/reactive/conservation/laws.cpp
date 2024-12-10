@@ -56,6 +56,10 @@ namespace Yttrium
                 Y_XMLOG(xml,"#conservations=" << survey.size);
                 if(survey.size<=0) return;
 
+                //WOVEn::ArrayOf<unsigned> u(*survey.head,"conservation weight");
+
+                WOVEn::ArraysOf<unsigned> U(survey,"conservation weight",2);
+
                 {
                     Matrix<unsigned> &cmtx = Coerce(cluster.conservancy); assert(0==cluster.conservancy.rows);
                     cmtx.make(survey.size,cluster->species.size);
