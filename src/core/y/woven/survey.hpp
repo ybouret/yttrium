@@ -206,6 +206,7 @@ namespace Yttrium
                 {
                     const ArrayType &w = *node; assert(rows==w.size());
                     ArrayType       &a = * this->pushTail( new ArrayType(dims) );
+
                     for(size_t j=dims;j>0;--j)
                     {
                         for(size_t i=rows;i>0;--i)
