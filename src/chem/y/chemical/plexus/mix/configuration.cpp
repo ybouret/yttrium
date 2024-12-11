@@ -8,7 +8,7 @@ namespace Yttrium
         void Mix:: buildConfiguration(Equilibria &eqs, XMLog &xml)
         {
             buildConservations(xml);
-
+            buildCombinatorics(eqs,xml);
         }
     }
 
