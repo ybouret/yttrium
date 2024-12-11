@@ -28,9 +28,9 @@ namespace Yttrium
             bool accepts(const Mix &)         const noexcept;
             void addPrimary(const Equilibrium &);
             void addPrimary(const Mix &);
-            void buildConfiguration(Equilibria &eqs, XMLog &xml);
+            void buildConfiguration(XMLog &xml, Equilibria &eqs);
             void buildConservations(XMLog &xml);
-            void buildCombinatorics(Equilibria &eqs, XMLog &xml);
+            void buildCombinatorics(XMLog &xml, Equilibria &eqs);
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline

@@ -5,10 +5,10 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Mix:: buildConfiguration(Equilibria &eqs, XMLog &xml)
+        void Mix:: buildConfiguration(XMLog &xml,Equilibria &eqs)
         {
             buildConservations(xml);
-            buildCombinatorics(eqs,xml);
+            buildCombinatorics(xml,eqs);
         }
     }
 

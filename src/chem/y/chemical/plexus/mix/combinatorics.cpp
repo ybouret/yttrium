@@ -7,7 +7,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Mix:: buildCombinatorics(Equilibria &eqs, XMLog &xml)
+        void Mix:: buildCombinatorics(XMLog &xml, Equilibria &eqs)
         {
             Y_XML_SECTION(xml, "Mix::Combinatorics");
 
