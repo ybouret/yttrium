@@ -30,7 +30,7 @@ namespace Yttrium
             void addPrimary(const Mix &);
             void buildConfiguration(Equilibria &eqs, XMLog &xml);
             void buildConservations(XMLog &xml);
-            void buildCombinatorics(Equilibria &eqs, XMLog *xml);
+            void buildCombinatorics(Equilibria &eqs, XMLog &xml);
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline

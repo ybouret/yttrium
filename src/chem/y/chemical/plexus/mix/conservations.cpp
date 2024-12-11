@@ -6,6 +6,7 @@ namespace Yttrium
     {
         void Mix:: buildConservations(XMLog &xml)
         {
+            Y_XML_SECTION(xml, "Mix::Conservations");
             Coerce(laws) = new Conservation::Laws(*this,xml);
             
         }

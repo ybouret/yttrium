@@ -57,6 +57,7 @@ namespace Yttrium
             {
                 mix->print(os << "\t\t",**en) << std::endl;
             }
+            os << "\t\ttopology=" << mix->topology << std::endl;
             os << "\t}";
             return os;
         }
