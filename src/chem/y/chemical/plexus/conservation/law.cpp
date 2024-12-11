@@ -1,5 +1,5 @@
 
-#include "y/chemical/reactive/conservation/law.hpp"
+#include "y/chemical/plexus/conservation/law.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium

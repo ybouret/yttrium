@@ -6,6 +6,8 @@
 
 #include "y/chemical/plexus/mix.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
+#include "y/chemical/plexus/conservation/laws.hpp"
+
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium

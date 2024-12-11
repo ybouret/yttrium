@@ -4,17 +4,21 @@
 #define Y_Chemical_Mix_Included 1
 
 #include "y/chemical/plexus/connected.hpp"
+#include "y/chemical/plexus/conservation/laws.hpp"
+#include "y/ptr/drill-down.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+        class Equilibria;
 
         class Mix : public Oversized, public Proxy<const Connected>
         {
         public:
             typedef CxxListOf<Mix> List;
-            
+            typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws;
+
             explicit Mix(const Equilibrium &first);
             virtual ~Mix() noexcept;
             Y_OSTREAM_PROTO(Mix);
@@ -24,7 +28,9 @@ namespace Yttrium
             bool accepts(const Mix &)         const noexcept;
             void addPrimary(const Equilibrium &);
             void addPrimary(const Mix &);
-
+            void buildConfiguration(Equilibria &eqs, XMLog &xml);
+            void buildConservations(XMLog &xml);
+            void buildCombinatorics(Equilibria &eqs, XMLog *xml);
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline
@@ -84,6 +90,8 @@ namespace Yttrium
             Connected my;
 
         public:
+            const Matrix<unsigned> conservancy;
+            const ConservationLaws laws;
             Mix * next;
             Mix * prev;
         };

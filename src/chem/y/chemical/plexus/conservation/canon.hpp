@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Conservation_Canon_Included
 #define Y_Chemical_Conservation_Canon_Included 1
 
-#include "y/chemical/reactive/conservation/law.hpp"
+#include "y/chemical/plexus/conservation/law.hpp"
 #include "y/chemical/type/assembly.hpp"
 
 namespace Yttrium

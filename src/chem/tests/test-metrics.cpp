@@ -2,7 +2,7 @@
 
 
 
-#include "y/chemical/reactive/clusters.hpp"
+#include "y/chemical/plexus/mixes.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
@@ -14,7 +14,6 @@ using namespace Chemical;
 
 Y_UTEST(metrics)
 {
-    Y_SIZEOF(Cluster);
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);
 

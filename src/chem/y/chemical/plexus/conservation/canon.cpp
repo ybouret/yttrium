@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/conservation/canon.hpp"
+#include "y/chemical/plexus/conservation/canon.hpp"
 
 
 namespace Yttrium

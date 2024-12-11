@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Conservation_Laws_Included
 #define Y_Chemical_Conservation_Laws_Included 1
 
-#include "y/chemical/reactive/conservation/canon.hpp"
+#include "y/chemical/plexus/conservation/canon.hpp"
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -12,7 +12,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Cluster;
+        class Mix;
 
         namespace Conservation
         {
@@ -42,14 +42,13 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Laws(Cluster &, XMLog &); //!< setup
+                explicit Laws(Mix &, XMLog &); //!< setup
                 virtual ~Laws() noexcept;          //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
                 virtual ConstInterface & surrogate() const noexcept;
-
-                Canon canon; //!< internal list
+                Canon my; //!< internal list
             };
 
 
