@@ -30,11 +30,8 @@ Y_UTEST(plexus)
     bool     verbose = true;
     XMLog    xml(verbose);
     Mixes    mixes(eqs,xml);
-    
-    for(const Mix *mix=mixes->head;mix;mix=mix->next)
-    {
-        std::cerr << *mix << std::endl;
-    }
+
+    std::cerr << "mixes=" << mixes << std::endl;
 
 #if 0
     Clusters clusters(eqs,xml);

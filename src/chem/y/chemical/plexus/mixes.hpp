@@ -20,6 +20,7 @@ namespace Yttrium
             explicit Mixes(Equilibria &eqs,
                            XMLog  &    xml);
             virtual ~Mixes() noexcept;
+            Y_OSTREAM_PROTO(Mixes);;
 
         private:
             Mix::List my;

@@ -76,6 +76,20 @@ namespace Yttrium
             my.swapWith(store);
         }
 
+        std::ostream & operator<<(std::ostream &os, const Mixes &mixes)
+        {
+            if(mixes->size<=0) return os << "{}";
+            os << '{' << std::endl;
+            for(const Mix *mix=mixes->head;mix;mix=mix->next)
+            {
+                os << *mix << std::endl;
+            }
+            os << '}';
+
+            return os;
+        }
+
+
     }
 
 }

@@ -53,6 +53,10 @@ namespace Yttrium
             assert(mix->size>0);
             os << "\t{" << std::endl;
             os << "\t\tspecies=" << mix->species << std::endl;
+            for(const ENode *en=mix->head;en;en=en->next)
+            {
+                mix->print(os << "\t\t",**en) << std::endl;
+            }
             os << "\t}";
             return os;
         }
