@@ -16,6 +16,8 @@ namespace Yttrium
         class Mix : public Oversized, public Proxy<const Connected>
         {
         public:
+            static const char * const CallSign;
+            
             typedef CxxListOf<Mix> List;
             typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws;
 

@@ -106,6 +106,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~ArrayOf() noexcept {}
 
+            inline const ArrayOf &operator*() const noexcept { return *this; }
 
             //__________________________________________________________________
             //

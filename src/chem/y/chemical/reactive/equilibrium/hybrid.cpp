@@ -41,6 +41,24 @@ namespace Yttrium
             }
             return res;
         }
+
+
+        xReal HybridEquilibrium:: getK(xReal) const
+        {
+            xmul.free();
+
+            return xmul.product();
+        }
+
+        HybridEquilibrium:: HybridEquilibrium(const String &        _name,
+                                              const size_t          _indx,
+                                              const EList  &        elist,
+                                              const Readable<int> & ecoef) :
+        Equilibrium(_name,_indx),
+        xmul()
+        {
+        }
+
     }
 
 }

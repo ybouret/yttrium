@@ -25,9 +25,16 @@ namespace Yttrium
                                    const Readable<int> & coefficient);
 
             virtual ~HybridEquilibrium() noexcept;
+            explicit HybridEquilibrium(const String & _name,
+                                       const size_t   _indx,
+                                       const EList  &        elist,
+                                       const Readable<int> & ecoef);
 
+            mutable XMul xmul;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HybridEquilibrium);
+            virtual xReal getK(xReal) const;
         };
     }
 
