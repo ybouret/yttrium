@@ -37,13 +37,14 @@ namespace Yttrium
 
             for(const iArray *W = weight->head, *S=stoich->head; W; W=W->next,S=S->next)
             {
-                const Readable<int> &weight = *W;
+                const Readable<int> &w = *W;
+                const Readable<int> &s = *S;
                 // load original species
                 AddressBook original;
                 for(const ENode *en=my.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    if( 0 == eq(weight,SubLevel) ) continue;
+                    if( 0 == eq(w,SubLevel) ) continue;
                     eq.addSpeciesTo(original);
                 }
 
@@ -72,16 +73,15 @@ namespace Yttrium
                 assert(combinedList.size>0);
                 assert(combinedList.size<originalList.size);
 
-#if 0
-                SList vanished(originalList);
-                vanished.subtract(combinedList);
-                Y_XMLOG(xml, "vanished: " << vanished);
-#endif
+
 
                 // create hybrid
-                const String name = HybridEquilibrium::MakeName(my,weight);
+                const String name = HybridEquilibrium::MakeName(my,w);
                 const size_t indx = eqs->size() + 1;
-                std::cerr << name << std::endl;
+
+                AutoPtr<Equilibrium> eq = new HybridEquilibrium(name,indx,my,w,my.species,s);
+                eq->print(std::cerr) << std::endl;
+
             }
 
 

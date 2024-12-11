@@ -53,10 +53,39 @@ namespace Yttrium
         HybridEquilibrium:: HybridEquilibrium(const String &        _name,
                                               const size_t          _indx,
                                               const EList  &        elist,
-                                              const Readable<int> & ecoef) :
+                                              const Readable<int> & ecoef,
+                                              const SList         & slist,
+                                              const Readable<int> & scoef) :
         Equilibrium(_name,_indx),
-        xmul()
+        xmul(),
+        eqs(),
+        cof()
         {
+            // build combination
+            for(const ENode *en=elist.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                const int          nu = eq(ecoef,SubLevel);
+                if(nu!=0)
+                {
+                    Coerce(eqs) << eq;
+                    Coerce(cof) << nu;
+                }
+            }
+
+            // record species
+            for(const SNode *sn=slist.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                const int      nu = sp(scoef,SubLevel);
+                switch(Sign::Of(nu))
+                {
+                    case __Zero__: continue;
+                    case Positive: add(Product,nu,sp);   break;
+                    case Negative: add(Reactant,-nu,sp); break;
+                }
+            }
+
         }
 
     }

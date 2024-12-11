@@ -28,13 +28,19 @@ namespace Yttrium
             explicit HybridEquilibrium(const String & _name,
                                        const size_t   _indx,
                                        const EList  &        elist,
-                                       const Readable<int> & ecoef);
+                                       const Readable<int> & ecoef,
+                                       const SList  &        slist,
+                                       const Readable<int>  &scoef);
 
-            mutable XMul xmul;
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HybridEquilibrium);
             virtual xReal getK(xReal) const;
+
+            mutable XMul                          xmul;
+            const   EList                         eqs;
+            const Small::BareHeavyList<const int> cof;
+
         };
     }
 
