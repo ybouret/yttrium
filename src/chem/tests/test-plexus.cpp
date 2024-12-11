@@ -1,4 +1,4 @@
-#include "y/chemical/reactive/clusters.hpp"
+#include "y/chemical/plexus/mixes.hpp"
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
@@ -29,6 +29,14 @@ Y_UTEST(plexus)
 
     bool     verbose = true;
     XMLog    xml(verbose);
+    Mixes    mixes(eqs,xml);
+    
+    for(const Mix *mix=mixes->head;mix;mix=mix->next)
+    {
+        std::cerr << *mix << std::endl;
+    }
+
+#if 0
     Clusters clusters(eqs,xml);
 
     std::cerr << clusters << std::endl;
@@ -103,11 +111,7 @@ Y_UTEST(plexus)
 
         }
     }
-
-
-
-
-
+#endif
 
 }
 Y_UDONE()

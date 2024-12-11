@@ -27,7 +27,8 @@ namespace Yttrium
             void swapAll(Connected &) noexcept;
 
             SList       species;
-            Matrix<int> topology;
+            Assembly    sformat;  //!< for species
+            Matrix<int> topology; //!< primary topology
 
         private:
             Y_DISABLE_ASSIGN(Connected);

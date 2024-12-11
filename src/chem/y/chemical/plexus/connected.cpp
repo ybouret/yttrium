@@ -6,19 +6,37 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Connected::CallSign = "Chemical::Connected";
+
+
+        Connected:: Connected(const Equilibrium &first) :
+        EList(),
+        Fragment(),
+        species(),
+        sformat(),
+        topology()
+        {
+            connect(first);
+        }
+
         Connected:: Connected(const Connected &_ ) :
         EList(_),
         Fragment(_),
         species(_.species),
+        sformat(_.sformat),
         topology(_.topology)
         {
         }
+
+        Connected:: ~Connected() noexcept {}
 
         void Connected:: swapAll(Connected &_) noexcept
         {
             swapWith(_);
             trades(_);
             species.swapWith(_.species);
+            sformat.tradeFor(_.sformat);
             topology.xch(_.topology);
         }
 
@@ -39,21 +57,32 @@ namespace Yttrium
             Connected backup(*this);
 
             try {
+                // add eq
                 *this << eq;
+
+                // add species
                 for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
                 {
                     const Species &sp = (*it).actor.sp;
-                    if(!species.has(sp)) species << sp;
+                    if(!species.has(sp))
+                    {
+                        species << sp;
+                        sformat.enroll(sp);
+                    }
                 }
 
+                // new topology
                 const size_t N = DBOps::RevampSub(*this).size;
                 const size_t M = DBOps::RevampSub(species).size;
                 topology.make(N,M);
                 fillTopology();
 
+                // check it
                 if( N != MKL::Rank::Of(topology) )
                     throw Specific::Exception(CallSign, "dependent '%s'", eq.name.c_str());
 
+                // prepare format
+                enroll(eq);
 
             }
             catch(...)

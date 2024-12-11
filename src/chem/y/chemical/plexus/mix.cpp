@@ -48,6 +48,15 @@ namespace Yttrium
         }
 
 
+        std::ostream & operator<<(std::ostream &os, const Mix &mix)
+        {
+            assert(mix->size>0);
+            os << "\t{" << std::endl;
+            os << "\t\tspecies=" << mix->species << std::endl;
+            os << "\t}";
+            return os;
+        }
+
     }
 
 }

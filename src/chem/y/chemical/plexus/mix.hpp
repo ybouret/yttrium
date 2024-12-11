@@ -13,8 +13,12 @@ namespace Yttrium
         class Mix : public Oversized, public Proxy<const Connected>
         {
         public:
+            typedef CxxListOf<Mix> List;
+            
             explicit Mix(const Equilibrium &first);
             virtual ~Mix() noexcept;
+            Y_OSTREAM_PROTO(Mix);
+            
 
             bool accepts(const Equilibrium &) const noexcept;
             bool accepts(const Mix &)         const noexcept;
