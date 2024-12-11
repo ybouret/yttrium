@@ -12,6 +12,7 @@ chemical/reactive/equilibrium/components
 chemical/reactive/equilibria
 chemical/reactive/cluster
 chemical/reactive/conservation
+chemical/plexus
 )
 
 add_subdirectory(tests)

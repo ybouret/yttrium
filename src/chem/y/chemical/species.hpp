@@ -159,9 +159,10 @@ namespace Yttrium
 
             //! build consistent SubLevel list
             template <typename LIST> static inline
-            void RevampSub(LIST &list) noexcept
+            LIST & RevampSub(LIST &list) noexcept
             {
                 Revamp<LIST>::template At<SubLevel>(list);
+                return list;
             }
 
 
