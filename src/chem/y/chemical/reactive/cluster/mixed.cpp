@@ -1,5 +1,6 @@
 
 #include "y/chemical/reactive/cluster/mixed.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {

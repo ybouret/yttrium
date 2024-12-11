@@ -366,6 +366,7 @@ namespace Yttrium
         {
             static Weasel &weasel = Weasel::Instance();
             weasel(lib,*this, Lingo::Module::OpenData(expr,expr) );
+            updateFragment();
         }
 
         void Equilibria:: operator()(Library &lib, const char * const expr)

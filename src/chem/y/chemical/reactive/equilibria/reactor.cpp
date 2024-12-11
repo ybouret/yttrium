@@ -20,18 +20,36 @@ namespace Yttrium
 
         void Reactor:: mustInsert(const Equilibrium::Handle &handle)
         {
+            //------------------------------------------------------------------
+            //
+            //
             // check index
+            //
+            //
+            //------------------------------------------------------------------
             const size_t nextIndex = size() + 1;
             if(nextIndex != handle->indx[TopLevel])
                 throw Specific::Exception(CallSign,"invalid index for '%s'", handle->name.c_str());
 
-            // syncrhonize constants
+            //------------------------------------------------------------------
+            //
+            //
+            // synchronize constants
+            //
+            //
+            //------------------------------------------------------------------
             {
                 const xReal _0;
                 K.adjust( nextIndex, _0);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
             // try to insert
+            //
+            //
+            //------------------------------------------------------------------
             try
             {
                 if( !insert(handle) )

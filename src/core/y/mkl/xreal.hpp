@@ -32,11 +32,11 @@ namespace Yttrium
 
     //! helper to implement operators
 #define Y_XREAL_BINARY(OP,CALL) \
-inline friend XReal   operator OP (const XReal &lhs, const XReal &rhs) noexcept { return CALL(lhs,rhs); }                            \
-inline friend XReal   operator OP (const T      lhs, const XReal &rhs) noexcept { const XReal _(lhs); return CALL(_,rhs); }          \
-inline friend XReal   operator OP (const XReal &lhs, const T      rhs) noexcept { const XReal _(rhs); return CALL(lhs,_); }          \
-inline        XReal & operator OP##=(const XReal &rhs)                 noexcept { return (*this=CALL(*this,rhs)); }                  \
-inline        XReal & operator OP##=(const T      rhs)                 noexcept { const XReal _(rhs); return (*this=CALL(*this,_)); }
+inline friend XReal   operator OP (const XReal &lhs, const XReal &rhs) { return CALL(lhs,rhs); }                            \
+inline friend XReal   operator OP (const T      lhs, const XReal &rhs) { const XReal _(lhs); return CALL(_,rhs); }          \
+inline friend XReal   operator OP (const XReal &lhs, const T      rhs) { const XReal _(rhs); return CALL(lhs,_); }          \
+inline        XReal & operator OP##=(const XReal &rhs)                 { return (*this=CALL(*this,rhs)); }                  \
+inline        XReal & operator OP##=(const T      rhs)                 { const XReal _(rhs); return (*this=CALL(*this,_)); }
 
 
 
