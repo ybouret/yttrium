@@ -47,11 +47,11 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const Actor & recruit(Actor * const);                  //!< recruit and update name
-            bool          lookFor(const Species &) const noexcept; //!< look for species
-            void          xch(Company &)                 noexcept; //!< exchange all
-            String        html()                            const; //!< make html label with form
-            
+            const Actor & recruit(Actor * const);                    //!< recruit and update name
+            bool          lookFor(const Species &)   const noexcept; //!< look for species
+            void          xch(Company &)                   noexcept; //!< exchange all
+            String        html()                              const; //!< make html label with form
+            bool          worksWith(const Company &) const noexcept; //!< sharing species
 
             //__________________________________________________________________
             //

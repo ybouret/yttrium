@@ -74,6 +74,16 @@ namespace Yttrium
             return res;
         }
 
+
+        bool Company:: worksWith(const Company &other) const noexcept
+        {
+            for(const Actor *mine=head;mine;mine=mine->next)
+            {
+                if( other.lookFor(mine->sp) ) return true;
+            }
+            return false;
+        }
+
     }
 
 }

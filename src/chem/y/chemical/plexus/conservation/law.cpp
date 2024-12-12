@@ -99,11 +99,8 @@ namespace Yttrium
             bool Law:: isRelatedTo(const Law &law) const noexcept
             {
                 const Company &self = **this;
-                for(const Actor *a=law->head;a;a=a->next)
-                {
-                    if(self.lookFor(a->sp)) return true;
-                }
-                return false;
+                const Company &peer = *law;
+                return self.worksWith(peer);
             }
 
 
