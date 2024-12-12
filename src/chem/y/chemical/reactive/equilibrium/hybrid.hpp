@@ -15,6 +15,8 @@ namespace Yttrium
         class HybridEquilibrium : public Equilibrium
         {
         public:
+            typedef Small::BareHeavyList<const int> CoefList;
+            typedef CoefList::NodeType              CoefNode;
 
             //! make name from linear combination of primary equilibria
             /**
@@ -25,21 +27,23 @@ namespace Yttrium
                                    const Readable<int> & coefficient);
 
             virtual ~HybridEquilibrium() noexcept;
-            explicit HybridEquilibrium(const String & _name,
-                                       const size_t   _indx,
+            explicit HybridEquilibrium(const String &        _name,
+                                       const size_t          _indx,
                                        const EList  &        elist,
                                        const Readable<int> & ecoef,
                                        const SList  &        slist,
-                                       const Readable<int>  &scoef);
+                                       const Readable<int>  &scoef,
+                                       const XReadable      &top_K);
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HybridEquilibrium);
             virtual xReal getK(xReal) const;
 
-            mutable XMul                          xmul;
-            const   EList                         eqs;
-            const Small::BareHeavyList<const int> cof;
+            mutable XMul        xmul;
+            const   EList       eqs;
+            const   CoefList    cof;
+            const   XReadable & _K_;
 
         };
     }

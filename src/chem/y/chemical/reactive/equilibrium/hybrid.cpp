@@ -55,11 +55,13 @@ namespace Yttrium
                                               const EList  &        elist,
                                               const Readable<int> & ecoef,
                                               const SList         & slist,
-                                              const Readable<int> & scoef) :
+                                              const Readable<int> & scoef,
+                                              const XReadable     & top_K) :
         Equilibrium(_name,_indx),
         xmul(),
         eqs(),
-        cof()
+        cof(),
+        _K_(top_K)
         {
             // build combination
             for(const ENode *en=elist.head;en;en=en->next)

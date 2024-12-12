@@ -79,7 +79,7 @@ namespace Yttrium
                 const String name = HybridEquilibrium::MakeName(my,w);
                 const size_t indx = eqs->size() + 1;
 
-                AutoPtr<Equilibrium> eq = new HybridEquilibrium(name,indx,my,w,my.species,s);
+                AutoPtr<Equilibrium> eq = new HybridEquilibrium(name,indx,my,w,my.species,s,eqs.K);
                 eq->print(std::cerr) << std::endl;
 
             }

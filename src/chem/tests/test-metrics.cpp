@@ -22,6 +22,8 @@ Y_UTEST(metrics)
     Y_SIZEOF(ConstEquilibrium);
     Y_SIZEOF(Entity);
     Y_SIZEOF(Actor);
-    
+
+    Y_SIZEOF(Mix);
+
 }
 Y_UDONE()
