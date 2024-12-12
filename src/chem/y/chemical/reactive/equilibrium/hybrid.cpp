@@ -74,6 +74,7 @@ namespace Yttrium
                                               const Readable<int> & scoef,
                                               const XReadable     & top_K) :
         Equilibrium(_name,_indx),
+        xmul(),
         eqs(),
         cof(),
         _K_(top_K)

@@ -14,16 +14,37 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! list of indepedent mixes of dependents equilibria
+        //
+        //
+        //______________________________________________________________________
         class Mixes : public Proxy<const Mix::List>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::Mixes"
 
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup/update from equilibria
             explicit Mixes(Equilibria &eqs,
                            XMLog  &    xml);
-            virtual ~Mixes() noexcept;
-            Y_OSTREAM_PROTO(Mixes);;
+            virtual ~Mixes() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Mixes);    //!< display
 
         private:
             Mix::List my;

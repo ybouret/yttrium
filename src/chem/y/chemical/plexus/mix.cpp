@@ -17,6 +17,8 @@ namespace Yttrium
         Mix:: Mix(const Equilibrium &first) :
         Proxy<const Connected>(),
         my(first),
+        conservancy(),
+        laws(0),
         order(0),
         next(0),
         prev(0)

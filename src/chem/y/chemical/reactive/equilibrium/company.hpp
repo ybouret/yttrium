@@ -52,6 +52,7 @@ namespace Yttrium
             void          xch(Company &)                 noexcept; //!< exchange all
             String        html()                            const; //!< make html label with form
             
+
             //__________________________________________________________________
             //
             //

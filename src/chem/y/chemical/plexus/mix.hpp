@@ -13,24 +13,50 @@ namespace Yttrium
     {
         class Equilibria;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mix of interlinked equilibria
+        //
+        //
+        //______________________________________________________________________
         class Mix : public Oversized, public Proxy<const Connected>
         {
         public:
-            static const char * const CallSign;
-            
-            typedef CxxListOf<Mix> List;
-            typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws;
-            typedef CxxArray<EList,MemoryModel> ELists;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const                           CallSign;         //!< "Chemical::Mix"
+            typedef CxxListOf<Mix>                              List;             //!< alias
+            typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws; //!< alias
+            typedef CxxArray<EList,MemoryModel>                 ELists;           //!< alias
 
-            explicit Mix(const Equilibrium &first);
-            virtual ~Mix() noexcept;
-            Y_OSTREAM_PROTO(Mix);
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Mix(const Equilibrium &first); //!< initialize
+            virtual ~Mix() noexcept;                //!< cleanup
+            Y_OSTREAM_PROTO(Mix);                   //!< display
 
-            bool accepts(const Equilibrium &) const noexcept;
-            bool accepts(const Mix &)         const noexcept;
-            void addPrimary(const Equilibrium &);
-            void addPrimary(const Mix &);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            bool accepts(const Equilibrium &) const noexcept; //!< if shared species
+            bool accepts(const Mix &)         const noexcept; //!< if shared species
+            void addPrimary(const Equilibrium &);             //!< add primary equilibrium
+            void addPrimary(const Mix &);                     //!< add primary connected mix
+
+            //! compile once builts
             void buildConfiguration(XMLog &xml, Equilibria &eqs);
 
 
@@ -95,11 +121,11 @@ namespace Yttrium
             Connected my;
 
         public:
-            const Matrix<unsigned> conservancy;
-            const ConservationLaws laws;
-            const ELists           order;
-            Mix * next;
-            Mix * prev;
+            const Matrix<unsigned> conservancy; //!< conservancy matrix
+            const ConservationLaws laws;        //!< conservation laws
+            const ELists           order;       //!< at least 1
+            Mix * next; //!< for list
+            Mix * prev; //!< for list
         };
 
     }
