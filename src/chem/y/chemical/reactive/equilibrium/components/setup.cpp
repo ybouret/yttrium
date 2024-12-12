@@ -111,13 +111,18 @@ namespace Yttrium
             return lhs == rhs;
         }
 
-        void Components:: applicable() const
+        bool Components:: working() const noexcept
         {
-            const char * const id = name.c_str();
-            if(!neutral() )    throw Specific::Exception(id, "charge is not conserved");
-            if(Nebulous==attr) throw Specific::Exception(id, "no components");
+            return Nebulous!=attr;
         }
 
+        void Components:: checkpoint(const char * const fn) const
+        {
+            assert(0!=fn);
+            const char * const id = name.c_str();
+            if(!neutral()) throw Specific::Exception(id, "charge is not conserved in '%s'", fn);
+            if(!working()) throw Specific::Exception(id, "no components in '%s'",fn);
+        }
 
     }
 

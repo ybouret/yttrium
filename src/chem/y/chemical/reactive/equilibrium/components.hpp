@@ -133,11 +133,12 @@ namespace Yttrium
             // Methods to query
             //
             //__________________________________________________________________
-            bool neutral()                    const; //!< check charge conservation
-            void applicable()                 const; //!< neutral and not nebulous
-            void addSpeciesTo(AddressBook &)  const; //!< OR'd species into book
-            bool included(const Species &)    const; //!< test if species is in components (name+ref)
-            bool linkedTo(const Components &) const; //!< check if at least one species is shared
+            bool neutral()                      const; //!< check charge conservation
+            bool working()             const noexcept; //!< not nebulous
+            void checkpoint(const char * const) const;
+            void addSpeciesTo(AddressBook &)    const; //!< OR'd species into book
+            bool included(const Species &)      const; //!< test if species is in components (name+ref)
+            bool linkedTo(const Components &)   const; //!< check if at least one species is shared
 
 
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;                 //!< delta activities

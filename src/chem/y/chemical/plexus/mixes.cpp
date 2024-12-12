@@ -21,9 +21,11 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,CallSign);
 
-
-
+            //------------------------------------------------------------------
+            //
             // dispatch equilibria
+            //
+            //------------------------------------------------------------------
             for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
             {
                 const Equilibrium &eq = **it;
@@ -51,12 +53,13 @@ namespace Yttrium
             }
 
 
+            //------------------------------------------------------------------
+            //
             // configure mixes
+            //
+            //------------------------------------------------------------------
             for(Mix *mix=my.head;mix;mix=mix->next)
-            {
                 mix->buildConfiguration(xml,eqs);
-            }
-
         }
 
 

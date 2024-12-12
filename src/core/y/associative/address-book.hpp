@@ -107,6 +107,9 @@ namespace Yttrium
             return target;
         }
 
+        bool contains(const AddressBook &sub) const noexcept;
+        
+        friend bool operator==(const AddressBook &lhs, const AddressBook &rhs) noexcept;
 
 
 

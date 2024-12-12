@@ -18,6 +18,7 @@ namespace Yttrium
         class Mixes : public Proxy<const Mix::List>
         {
         public:
+
             static const char * const CallSign;
             explicit Mixes(Equilibria &eqs,
                            XMLog  &    xml);
@@ -30,6 +31,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Mixes);
             virtual ConstInterface & surrogate() const noexcept;
             void                     checkFusion();
+
         };
 
     }

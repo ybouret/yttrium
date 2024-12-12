@@ -45,6 +45,24 @@ namespace Yttrium
         throw Specific::Exception( callSign(), "try to insert same address %p",p);
     }
 
+
+    bool AddressBook:: contains(const AddressBook &sub) const noexcept
+    {
+        for(ConstIterator it=sub.begin();it!=sub.end();++it)
+        {
+            if( ! search_(*it) ) return false;
+        }
+        assert(sub.size()<=size());
+        return true;
+    }
+
+    bool operator==(const AddressBook &lhs, const AddressBook &rhs) noexcept
+    {
+        return lhs.size() == rhs.size() && lhs.contains(rhs) && rhs.contains(lhs);
+    }
+
+
+
 }
 
 

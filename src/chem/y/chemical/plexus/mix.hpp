@@ -20,6 +20,7 @@ namespace Yttrium
             
             typedef CxxListOf<Mix> List;
             typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws;
+            typedef CxxArray<EList,MemoryModel> ELists;
 
             explicit Mix(const Equilibrium &first);
             virtual ~Mix() noexcept;
@@ -96,6 +97,7 @@ namespace Yttrium
         public:
             const Matrix<unsigned> conservancy;
             const ConservationLaws laws;
+            const ELists           order;
             Mix * next;
             Mix * prev;
         };

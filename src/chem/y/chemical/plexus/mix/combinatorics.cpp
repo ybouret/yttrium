@@ -41,7 +41,18 @@ namespace Yttrium
 
             assert(weight->size==stoich->size);
 
-            const EList primary(my);
+            ELists &mine = Coerce(order);
+            {
+                ELists temp(my.size);
+                mine.swapWith(temp);
+            }
+
+            EList &primary = mine[1];
+            for(const ENode *en=my.head;en;en=en->next)
+            {
+                primary << **en;
+            }
+
             for(const iArray *W = weight->head, *S=stoich->head; W; W=W->next,S=S->next)
             {
                 const Readable<int> &w = *W;
@@ -73,25 +84,10 @@ namespace Yttrium
                 }
                 assert(combined.size()>0);
 
-                //--------------------------------------------------------------
-                //
-                // check
-                //
-                //--------------------------------------------------------------
-                SList originalList; original.sendTo(originalList);
-                SList combinedList; combined.sendTo(combinedList);
 
-                if( ! originalList.contains(combinedList) )
-                    throw Specific::Exception(CallSign,"corrupted WOVEn stoichiometry");
-
-                if( combinedList.contains(originalList) )
-                {
-                    assert( combinedList.alike(originalList) );
-                    continue; // inefficient
-                }
-
-                assert(combinedList.size>0);
-                assert(combinedList.size<originalList.size);
+                if( !original.contains(combined) ) throw Specific::Exception(CallSign,"corrupted WOVEn stoichiometry");
+                if(  original.size() == combined.size() ) continue; // inefficient
+                assert(combined.size()<original.size());
 
 
                 //--------------------------------------------------------------
@@ -110,6 +106,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 my.replica(eq);
                 eqs.updateFragment();
+                mine[W->order] << eq;
             }
 
 
