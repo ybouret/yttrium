@@ -12,11 +12,25 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Combination of primary equilibria
+        //
+        //
+        //______________________________________________________________________
         class HybridEquilibrium : public Equilibrium
         {
         public:
-            typedef Small::BareHeavyList<const int> CoefList;
-            typedef CoefList::NodeType              CoefNode;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Small::BareHeavyList<const int> CoefList; //!< alias
+            typedef CoefList::NodeType              CoefNode; //!< alias
 
             //! make name from linear combination of primary equilibria
             /**
@@ -26,7 +40,14 @@ namespace Yttrium
             static String MakeName(const EList &         primaryList,
                                    const Readable<int> & coefficient);
 
-            virtual ~HybridEquilibrium() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! parametric setup
             explicit HybridEquilibrium(const String &        _name,
                                        const size_t          _indx,
                                        const EList  &        elist,
@@ -35,6 +56,8 @@ namespace Yttrium
                                        const Readable<int>  &scoef,
                                        const XReadable      &top_K);
 
+            //! cleanup
+            virtual ~HybridEquilibrium() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(HybridEquilibrium);

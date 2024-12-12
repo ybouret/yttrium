@@ -98,7 +98,8 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Equilibrium> EList;
         typedef EList::NodeType                         ENode;
-
+        typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
+        typedef ERepo::ProxyType                        EBank; //!< alias
     }
 
 }

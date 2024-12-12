@@ -135,7 +135,7 @@ namespace Yttrium
             //__________________________________________________________________
             bool neutral()                      const; //!< check charge conservation
             bool working()             const noexcept; //!< not nebulous
-            void checkpoint(const char * const) const;
+            void checkpoint(const char * const) const; //!< neutral and working in given function
             void addSpeciesTo(AddressBook &)    const; //!< OR'd species into book
             bool included(const Species &)      const; //!< test if species is in components (name+ref)
             bool linkedTo(const Components &)   const; //!< check if at least one species is shared

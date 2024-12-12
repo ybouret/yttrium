@@ -107,8 +107,10 @@ namespace Yttrium
             return target;
         }
 
+        //! check if all addresses in sub are here
         bool contains(const AddressBook &sub) const noexcept;
-        
+
+        //! same size and contains each other
         friend bool operator==(const AddressBook &lhs, const AddressBook &rhs) noexcept;
 
 
