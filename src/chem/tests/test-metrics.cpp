@@ -3,6 +3,7 @@
 
 
 #include "y/chemical/plexus/mixes.hpp"
+#include "y/chemical/reactive/equilibrium/hybrid.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
@@ -24,6 +25,8 @@ Y_UTEST(metrics)
     Y_SIZEOF(Actor);
 
     Y_SIZEOF(Mix);
+    Y_SIZEOF(HybridEquilibrium);
+    Y_SIZEOF(XMul);
 
 }
 Y_UDONE()

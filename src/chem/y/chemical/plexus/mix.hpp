@@ -31,8 +31,7 @@ namespace Yttrium
             void addPrimary(const Equilibrium &);
             void addPrimary(const Mix &);
             void buildConfiguration(XMLog &xml, Equilibria &eqs);
-            void buildConservations(XMLog &xml);
-            void buildCombinatorics(XMLog &xml, Equilibria &eqs);
+
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline
@@ -89,6 +88,9 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mix);
             virtual ConstInterface & surrogate() const noexcept;
+            void buildConservations(XMLog &xml);
+            void buildCombinatorics(XMLog &xml, Equilibria &eqs);
+            
             Connected my;
 
         public:

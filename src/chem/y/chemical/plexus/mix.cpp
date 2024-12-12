@@ -13,7 +13,7 @@ namespace Yttrium
 
 
         const char * const Mix:: CallSign = "Chemical::Mix";
-        
+
         Mix:: Mix(const Equilibrium &first) :
         Proxy<const Connected>(),
         my(first),
@@ -50,6 +50,7 @@ namespace Yttrium
             }
         }
 
+        
 
         std::ostream & operator<<(std::ostream &os, const Mix &mix)
         {
@@ -58,7 +59,8 @@ namespace Yttrium
             os << "\t\tspecies=" << mix->species << std::endl;
             for(const ENode *en=mix->head;en;en=en->next)
             {
-                mix->print(os << "\t\t@",**en) << std::endl;
+                const Equilibrium &eq = **en;
+                mix->print(os << "\t\t@",eq,eq.K(0)) << std::endl;
             }
             os << "\t\ttopology=" << mix->topology << std::endl;
             os << "\t}";

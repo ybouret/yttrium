@@ -70,6 +70,9 @@ namespace Yttrium
             //! print name:reac<=>prod:
             std::ostream & print(std::ostream &os, const Components &) const;
 
+            //! print name:reac<=>prod:'10^log10(K)'
+            std::ostream & print(std::ostream &os, const Components &, const xReal K) const;
+
 
 
         private:

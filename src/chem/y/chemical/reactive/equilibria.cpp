@@ -56,7 +56,7 @@ namespace Yttrium
 
         void Equilibria:: updateFragment() noexcept
         {
-            my.updateWith(my.begin(), my.size() );
+            my.updateWith( my.begin(), my.size() );
         }
 
 

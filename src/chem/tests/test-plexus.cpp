@@ -30,7 +30,7 @@ Y_UTEST(plexus)
     bool     verbose = true;
     XMLog    xml(verbose);
     Mixes    mixes(eqs,xml);
-
+    
     std::cerr << "mixes=" << mixes << std::endl;
 
 #if 0

@@ -29,26 +29,42 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Mix::Combinatorics");
 
+            //------------------------------------------------------------------
+            //
+            //
+            // compute all weights and stoichiometries
+            //
+            //
+            //------------------------------------------------------------------
             const AutoPtr<iArrays> weight = computeWeights(xml,my.topology);
             const AutoPtr<iArrays> stoich = new iArrays(my.topology,*weight);
 
             assert(weight->size==stoich->size);
 
-
+            const EList primary(my);
             for(const iArray *W = weight->head, *S=stoich->head; W; W=W->next,S=S->next)
             {
                 const Readable<int> &w = *W;
                 const Readable<int> &s = *S;
+
+                //--------------------------------------------------------------
+                //
                 // load original species
+                //
+                //--------------------------------------------------------------
                 AddressBook original;
-                for(const ENode *en=my.head;en;en=en->next)
+                for(const ENode *en=primary.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     if( 0 == eq(w,SubLevel) ) continue;
                     eq.addSpeciesTo(original);
                 }
 
+                //--------------------------------------------------------------
+                //
                 // find combined species
+                //
+                //--------------------------------------------------------------
                 AddressBook combined;
                 for(const SNode *sn=my.species.head;sn;sn=sn->next)
                 {
@@ -57,7 +73,11 @@ namespace Yttrium
                 }
                 assert(combined.size()>0);
 
+                //--------------------------------------------------------------
+                //
                 // check
+                //
+                //--------------------------------------------------------------
                 SList originalList; original.sendTo(originalList);
                 SList combinedList; combined.sendTo(combinedList);
 
@@ -74,15 +94,24 @@ namespace Yttrium
                 assert(combinedList.size<originalList.size);
 
 
+                //--------------------------------------------------------------
+                //
+                // create hybrid in equilibria
+                //
+                //--------------------------------------------------------------
+                const String       name = HybridEquilibrium::MakeName(primary,w);
+                const size_t       indx = eqs->size() + 1;
+                const Equilibrium &eq   = eqs.add( new HybridEquilibrium(name,indx,primary,w,my.species,s,eqs.K) );
 
-                // create hybrid
-                const String name = HybridEquilibrium::MakeName(my,w);
-                const size_t indx = eqs->size() + 1;
-
-                AutoPtr<Equilibrium> eq = new HybridEquilibrium(name,indx,my,w,my.species,s,eqs.K);
-                eq->print(std::cerr) << std::endl;
-
+                //--------------------------------------------------------------
+                //
+                // record hybrid as replica
+                //
+                //--------------------------------------------------------------
+                my.replica(eq);
+                eqs.updateFragment();
             }
+
 
 
 

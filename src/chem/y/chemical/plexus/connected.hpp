@@ -25,6 +25,7 @@ namespace Yttrium
             void connect(const Equilibrium &eq);
             bool accepts(const Equilibrium &eq) const noexcept;
             void swapAll(Connected &) noexcept;
+            void replica(const Equilibrium &eq);
 
             SList       species;
             Assembly    sformat;  //!< for species

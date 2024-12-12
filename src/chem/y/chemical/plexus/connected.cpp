@@ -102,6 +102,13 @@ namespace Yttrium
             }
         }
 
+        void Connected:: replica(const Equilibrium &eq)
+        {
+            assert( !has(eq) );
+            (*this) << eq;
+            DBOps::RevampSub(*this);
+            enroll(eq);
+        }
 
     }
 

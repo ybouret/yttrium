@@ -1,5 +1,6 @@
 
 #include "y/chemical/reactive/equilibrium/hybrid.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -46,7 +47,22 @@ namespace Yttrium
         xReal HybridEquilibrium:: getK(xReal) const
         {
             xmul.free();
+            assert(eqs.size==cof.size);
 
+            const ENode    *en = eqs.head;
+            const CoefNode *cn = cof.head;
+            for(size_t i=eqs.size;i>0;--i,en=en->next,cn=cn->next)
+            {
+                const Equilibrium &eq = **en;
+                const int          nu = **cn;
+                const xReal        eK = eq(_K_,TopLevel);
+                switch( Sign::Of(nu) )
+                {
+                    case __Zero__: throw Specific::Exception(name.c_str(),"zero coefficient for '%s'", eq.name.c_str()); // never hapen
+                    case Positive: xmul.insert(eK,nu);      break;
+                    case Negative: xmul.insert(1.0/eK,-nu); break;
+                }
+            }
             return xmul.product();
         }
 
@@ -58,7 +74,6 @@ namespace Yttrium
                                               const Readable<int> & scoef,
                                               const XReadable     & top_K) :
         Equilibrium(_name,_indx),
-        xmul(),
         eqs(),
         cof(),
         _K_(top_K)

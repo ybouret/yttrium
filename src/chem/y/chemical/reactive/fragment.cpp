@@ -75,6 +75,14 @@ namespace Yttrium
             os << ' ' << Weasel::COLON;
             return os;
         }
+
+        std::ostream & Fragment:: print(std::ostream &os, const Components &cm, const xReal K) const
+        {
+            const real_t l10 = K.log10();
+            print(os,cm) << "'10^(" << l10 << ")'";
+            return os;
+        }
+
     }
 
 }
