@@ -21,11 +21,7 @@ namespace Yttrium
         auth(0),
         order(0),
         genus(0),
-        prodOnly(),
-        reacOnly(),
-        oneSided(),
-        limiting(),
-        floating(),
+        grade(0),
         next(0),
         prev(0)
         {
@@ -59,19 +55,7 @@ namespace Yttrium
             }
         }
 
-        bool Mix:: hasConserved(const Actors &A) const noexcept
-        {
-            for(const Actor *a=A->head;a;a=a->next)
-            {
-                if( genus->conserved.book.has(a->sp) ) return true;
-            }
-            return false;
-        }
-
-        bool Mix:: isLimiting(const Equilibrium &eq) const noexcept
-        {
-            return hasConserved(eq.reac) && hasConserved(eq.prod);
-        }
+       
 
 
 
@@ -111,11 +95,12 @@ namespace Yttrium
             }
             if(mix.genus->conserved.list.size>0) os << pfx << "conserved = " << mix.genus->conserved.list << std::endl;
             if(mix.genus->unbounded.list.size>0) os << pfx << "unbounded = " << mix.genus->unbounded.list << std::endl;
-            if(mix.reacOnly.list.size>0)  os << pfx << "reacOnly  = " << mix.reacOnly.list << std::endl;
-            if(mix.prodOnly.list.size>0)  os << pfx << "prodOnly  = " << mix.prodOnly.list << std::endl;
-            if(mix.oneSided.list.size>0)  os << pfx << "oneSided  = " << mix.oneSided.list << std::endl;
-            if(mix.limiting.list.size>0)  os << pfx << "limiting  = " << mix.limiting.list << std::endl;
-            if(mix.floating.list.size>0)  os << pfx << "floating  = " << mix.floating.list << std::endl;
+
+            if(mix.grade->reacOnly.list.size>0)  os << pfx << "reacOnly  = " << mix.grade->reacOnly.list << std::endl;
+            if(mix.grade->prodOnly.list.size>0)  os << pfx << "prodOnly  = " << mix.grade->prodOnly.list << std::endl;
+            if(mix.grade->oneSided.list.size>0)  os << pfx << "oneSided  = " << mix.grade->oneSided.list << std::endl;
+            if(mix.grade->limiting.list.size>0)  os << pfx << "limiting  = " << mix.grade->limiting.list << std::endl;
+            if(mix.grade->floating.list.size>0)  os << pfx << "floating  = " << mix.grade->floating.list << std::endl;
 
 
 

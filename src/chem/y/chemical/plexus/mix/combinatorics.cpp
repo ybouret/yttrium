@@ -113,30 +113,8 @@ namespace Yttrium
                 mine[W->order] << eq;
             }
 
-
-
-
-            for(const ENode *en=my.head;en;en=en->next)
-            {
-                const Equilibrium &eq = **en;
-                switch(eq.attr)
-                {
-                    case Nebulous: continue;
-                    case ProdOnly: Coerce(prodOnly.book) += eq; Coerce(oneSided.book) += eq; break;
-                    case ReacOnly: Coerce(reacOnly.book) += eq; Coerce(oneSided.book) += eq; break;
-                    case Definite:
-                        if(isLimiting(eq)) Coerce(limiting.book) += eq;
-                        else               Coerce(floating.book) += eq;
-                        break;
-                }
-            }
-
-            Coerce(prodOnly).compile(); Y_XMLOG(xml, "prodOnly=" << prodOnly.list);
-            Coerce(reacOnly).compile(); Y_XMLOG(xml, "reacOnly=" << reacOnly.list);
-            Coerce(oneSided).compile(); Y_XMLOG(xml, "oneSided=" << oneSided.list);
-            Coerce(limiting).compile(); Y_XMLOG(xml, "limiting=" << limiting.list);
-            Coerce(floating).compile(); Y_XMLOG(xml, "floating=" << floating.list);
-
+            
+            Coerce(grade) = new Grade(my,*genus);
         }
 
 

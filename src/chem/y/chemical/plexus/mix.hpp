@@ -35,7 +35,8 @@ namespace Yttrium
         };
 
 
-
+        typedef Duplex<SList> SDuplex;
+        typedef Duplex<EList> EDuplex;
 
 
 
@@ -66,43 +67,35 @@ namespace Yttrium
             class Genus : public Object
             {
             public:
-                explicit Genus(const ConservationAuth &auth, const SList &species)
-                {
-                    if(auth.isValid())
-                    {
-                        for(const Conservation::Law *law=auth->laws->head;law;law=law->next)
-                        {
-                            for(const Actor *a=(*law)->head;a;a=a->next)
-                            {
-                                Coerce(conserved.book) |= a->sp;
-                            }
-                        }
-                    }
-                    Coerce(conserved).compile();
+                explicit Genus(const ConservationAuth & , const SList & );
+                virtual ~Genus() noexcept;
 
+                bool hasConserved(const Actors &)    const noexcept; //!< at least one conserved actor
+                bool isLimiting(const Equilibrium &) const noexcept; //!< at least one conserved reac and prod
 
-                    for(const SNode *sn=species.head;sn;sn=sn->next)
-                    {
-                        const Species &sp = **sn;
-                        if(conserved.book.has(sp)) continue;
-                        Coerce(unbounded.book) += sp;
-                    }
-                    Coerce(unbounded).compile();
-                }
-
-                virtual ~Genus() noexcept
-                {
-
-                }
-
-
-                const Duplex<SList> conserved;
-                const Duplex<SList> unbounded;
+                const SDuplex conserved;
+                const SDuplex unbounded;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Genus);
             };
 
+            class Grade : public Object
+            {
+            public:
+
+                explicit Grade(const EList &, const Genus &);
+                virtual ~Grade() noexcept;
+
+                const EDuplex prodOnly;    //!< product only
+                const EDuplex reacOnly;    //!< reactant only
+                const EDuplex oneSided;    //!< reacOnly + prodOnly
+                const EDuplex limiting;    //!< limiting equilibria
+                const EDuplex floating;    //!< floating equilibria
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Grade);
+            };
 
 
             //__________________________________________________________________
@@ -128,8 +121,7 @@ namespace Yttrium
 
             //! compile once built
             void buildConfiguration(XMLog &xml, Equilibria &eqs);
-            bool hasConserved(const Actors &)    const noexcept;
-            bool isLimiting(const Equilibrium &) const noexcept;
+            
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline
@@ -194,15 +186,11 @@ namespace Yttrium
             Connected my;
 
         public:
-            const Matrix<unsigned> conservancy; //!< conservancy matrix
-            const ConservationAuth auth;        //!< conservation authority
-            const ELists           order;       //!< at least 1
-            const AutoPtr<const Genus> genus;       //!< conserved/unbounded
-            const Duplex<EList>    prodOnly;    //!< product only
-            const Duplex<EList>    reacOnly;    //!< reactant only
-            const Duplex<EList>    oneSided;    //!< reacOnly + prodOnly
-            const Duplex<EList>    limiting;    //!< limiting equilibria
-            const Duplex<EList>    floating;    //!< floating equilibria
+            const Matrix<unsigned>     conservancy; //!< conservancy matrix
+            const ConservationAuth     auth;        //!< conservation authority
+            const ELists               order;       //!< at least 1
+            const AutoPtr<const Genus> genus;   //!< conserved/unbounded
+            const AutoPtr<const Grade> grade;   //!< graded equilibria
 
 
             Mix * next; //!< for list
