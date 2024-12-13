@@ -9,12 +9,12 @@ namespace Yttrium
         namespace Conservation
         {
 
-            Conduct:: ~Conduct() noexcept {}
+            Act:: ~Act() noexcept {}
 
-            Conduct::ConstInterface & Conduct:: surrogate() const noexcept { return my; }
+            Act::ConstInterface & Act:: surrogate() const noexcept { return my; }
 
 
-            Conduct:: Conduct(const Law &first) :
+            Act:: Act(const Law &first) :
             Proxy<const Law::Group>(),
             my(),
             next(0),
@@ -23,7 +23,7 @@ namespace Yttrium
                 my << first;
             }
 
-            bool Conduct:: accepts(const Law &law) const noexcept
+            bool Act:: accepts(const Law &law) const noexcept
             {
                 assert(!my.has(law));
 
@@ -37,7 +37,7 @@ namespace Yttrium
             }
 
 
-            bool Conduct:: accepts(const Conduct &other) const noexcept
+            bool Act:: accepts(const Act &other) const noexcept
             {
                 for(const Law::GNode *ln=other->head;ln;ln=ln->next)
                 {
@@ -48,12 +48,13 @@ namespace Yttrium
             }
 
 
-            void Conduct:: collect(const Law &law)
+            void Act:: collect(const Law &law)
             {
                 assert(!my.has(law));
                 my << law;
             }
 
+            
 
 
 

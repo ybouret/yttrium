@@ -43,7 +43,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 explicit Laws(Mix &, XMLog &); //!< setup
-                virtual ~Laws() noexcept;          //!< cleanup
+                virtual ~Laws() noexcept;      //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);

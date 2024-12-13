@@ -14,27 +14,28 @@ namespace Yttrium
         namespace Conservation
         {
 
-            class Conduct : public Proxy<const Law::Group>
+            class Act : public Proxy<const Law::Group>
             {
             public:
-                typedef CxxListOf<Conduct> List;
+                typedef CxxListOf<Act> List;
 
-                explicit Conduct(const Law &first);
-                virtual ~Conduct() noexcept;
+                explicit Act(const Law &first);
+                virtual ~Act() noexcept;
 
-                bool accepts(const Law &)     const noexcept;
-                bool accepts(const Conduct &) const noexcept;
+                bool accepts(const Law &) const noexcept;
+                bool accepts(const Act &) const noexcept;
                 void collect(const Law &);
-
+                void collect(const Act &);
+                
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Conduct);
+                Y_DISABLE_COPY_AND_ASSIGN(Act);
                 virtual ConstInterface & surrogate() const noexcept;
 
                 Law::Group my;
                 
             public:
-                Conduct * next;
-                Conduct * prev;
+                Act * next;
+                Act * prev;
             };
 
         }

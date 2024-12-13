@@ -16,7 +16,7 @@ namespace Yttrium
         {
             class Laws;
 
-            class Conducts : public Proxy<const Conduct::List>
+            class Conducts : public Proxy<const Act::List>
             {
             public:
                 explicit Conducts(const Laws &laws);
@@ -25,7 +25,8 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Conducts);
                 virtual ConstInterface & surrogate() const noexcept;
-                Conduct::List my;
+                void                     reconnect();
+                Act::List my;
             };
         }
 

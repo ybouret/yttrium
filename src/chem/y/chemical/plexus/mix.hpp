@@ -4,7 +4,7 @@
 #define Y_Chemical_Mix_Included 1
 
 #include "y/chemical/plexus/connected.hpp"
-#include "y/chemical/plexus/conservation/laws.hpp"
+#include "y/chemical/plexus/conservation/authority.hpp"
 #include "y/ptr/drill-down.hpp"
 
 namespace Yttrium

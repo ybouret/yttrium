@@ -14,7 +14,7 @@ namespace Yttrium
             }
 
             Conducts:: Conducts(const Laws &laws) :
-            Proxy<const Conduct::List>(),
+            Proxy<const Act::List>(),
             my()
             {
 
@@ -22,13 +22,13 @@ namespace Yttrium
                 {
                     const Law &law      = *lp;
                     bool       accepted = false;
-                    for(Conduct *cn=my.head;cn;cn=cn->next)
+                    for(Act *act=my.head;act;act=act->next)
                     {
-                        if(cn->accepts(law))
+                        if(act->accepts(law))
                         {
-                            cn->collect(law);
+                            act->collect(law);
                             accepted = true;
-                            // fusion
+                            reconnect();
                             break;
                         }
                     }
@@ -36,17 +36,38 @@ namespace Yttrium
                     if(!accepted)
                     {
                         // start new group
-                        my.pushTail( new Conduct(law) );
+                        my.pushTail( new Act(law) );
                     }
                 }
-
-
-
+                
             }
 
             Conducts:: ConstInterface & Conducts:: surrogate() const noexcept { return my; }
 
+            void Conducts:: reconnect()
+            {
+                Act::List store;
+                while(my.size>0)
+                {
+                    AutoPtr<Act> lhs = my.popHead();
+
+                    for(Act *rhs=store.head;rhs;rhs=rhs->next)
+                    {
+                        if(rhs->accepts(*lhs))
+                        {
+
+                        }
+                    }
+
+                    if(lhs.isValid())
+                        store.pushTail( lhs.yield() );
+                }
+
+                my.swapWith(store);
+            }
+
         }
+
 
     }
 
