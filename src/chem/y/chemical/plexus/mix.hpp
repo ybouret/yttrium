@@ -34,6 +34,13 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Duplex);
         };
 
+
+
+
+
+
+
+
         //______________________________________________________________________
         //
         //
@@ -55,6 +62,48 @@ namespace Yttrium
             typedef CxxListOf<Mix>                              List;             //!< alias
             typedef AutoPtr<const Conservation::Authority>      ConservationAuth; //!< alias
             typedef CxxArray<EList,MemoryModel>                 ELists;           //!< alias
+
+            class Genus : public Object
+            {
+            public:
+                explicit Genus(const ConservationAuth &auth, const SList &species)
+                {
+                    if(auth.isValid())
+                    {
+                        for(const Conservation::Law *law=auth->laws->head;law;law=law->next)
+                        {
+                            for(const Actor *a=(*law)->head;a;a=a->next)
+                            {
+                                Coerce(conserved.book) |= a->sp;
+                            }
+                        }
+                    }
+                    Coerce(conserved).compile();
+
+
+                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        if(conserved.book.has(sp)) continue;
+                        Coerce(unbounded.book) += sp;
+                    }
+                    Coerce(unbounded).compile();
+                }
+
+                virtual ~Genus() noexcept
+                {
+
+                }
+
+
+                const Duplex<SList> conserved;
+                const Duplex<SList> unbounded;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Genus);
+            };
+
+
 
             //__________________________________________________________________
             //
@@ -148,8 +197,7 @@ namespace Yttrium
             const Matrix<unsigned> conservancy; //!< conservancy matrix
             const ConservationAuth auth;        //!< conservation authority
             const ELists           order;       //!< at least 1
-            const Duplex<SList>    conserved;   //!< conserved species
-            const Duplex<SList>    unbounded;   //!< undounded species
+            const AutoPtr<const Genus> genus;       //!< conserved/unbounded
             const Duplex<EList>    prodOnly;    //!< product only
             const Duplex<EList>    reacOnly;    //!< reactant only
             const Duplex<EList>    oneSided;    //!< reacOnly + prodOnly

@@ -20,8 +20,7 @@ namespace Yttrium
         conservancy(),
         auth(0),
         order(0),
-        conserved(),
-        unbounded(),
+        genus(0),
         prodOnly(),
         reacOnly(),
         oneSided(),
@@ -64,7 +63,7 @@ namespace Yttrium
         {
             for(const Actor *a=A->head;a;a=a->next)
             {
-                if( conserved.book.has(a->sp) ) return true;
+                if( genus->conserved.book.has(a->sp) ) return true;
             }
             return false;
         }
@@ -110,8 +109,8 @@ namespace Yttrium
                     os << pfx << "  0=" << *act << std::endl;
                 }
             }
-            if(mix.conserved.list.size>0) os << pfx << "conserved = " << mix.conserved.list << std::endl;
-            if(mix.unbounded.list.size>0) os << pfx << "unbounded = " << mix.unbounded.list << std::endl;
+            if(mix.genus->conserved.list.size>0) os << pfx << "conserved = " << mix.genus->conserved.list << std::endl;
+            if(mix.genus->unbounded.list.size>0) os << pfx << "unbounded = " << mix.genus->unbounded.list << std::endl;
             if(mix.reacOnly.list.size>0)  os << pfx << "reacOnly  = " << mix.reacOnly.list << std::endl;
             if(mix.prodOnly.list.size>0)  os << pfx << "prodOnly  = " << mix.prodOnly.list << std::endl;
             if(mix.oneSided.list.size>0)  os << pfx << "oneSided  = " << mix.oneSided.list << std::endl;
