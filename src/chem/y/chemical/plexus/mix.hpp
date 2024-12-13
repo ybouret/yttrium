@@ -32,7 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const                           CallSign;         //!< "Chemical::Mix"
             typedef CxxListOf<Mix>                              List;             //!< alias
-            typedef AutoPtr<const Conservation::Laws,DrillDown> ConservationLaws; //!< alias
+            typedef AutoPtr<const Conservation::Authority>      ConservationAuth; //!< alias
             typedef CxxArray<EList,MemoryModel>                 ELists;           //!< alias
 
             //__________________________________________________________________
@@ -122,7 +122,7 @@ namespace Yttrium
 
         public:
             const Matrix<unsigned> conservancy; //!< conservancy matrix
-            const ConservationLaws laws;        //!< conservation laws
+            const ConservationAuth auth;        //!< conservation authority
             const ELists           order;       //!< at least 1
             Mix * next; //!< for list
             Mix * prev; //!< for list

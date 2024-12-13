@@ -25,8 +25,8 @@ namespace Yttrium
         //
         //! sort a list
         /**
-         \param L            list of nodes
-         \param compareNodes is SignType compareNodes(const NODE *, const NODE *)
+         \param L            generic list of nodes
+         \param compareNodes SignType compareNodes(const NODE *, const NODE *)
          */
         //
         //______________________________________________________________________

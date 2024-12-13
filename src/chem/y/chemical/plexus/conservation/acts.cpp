@@ -13,6 +13,8 @@ namespace Yttrium
             {
             }
 
+
+
             Acts:: Acts(const Laws &laws) :
             Proxy<const Act::List>(),
             my()
@@ -39,7 +41,9 @@ namespace Yttrium
                         my.pushTail( new Act(law) );
                     }
                 }
-                
+
+
+
             }
 
             Acts:: ConstInterface & Acts:: surrogate() const noexcept { return my; }

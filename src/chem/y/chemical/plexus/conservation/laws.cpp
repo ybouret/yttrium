@@ -88,48 +88,6 @@ namespace Yttrium
 
 
 
-
-#if 0
-                {
-                    Matrix<unsigned> &cmtx = Coerce(cluster.conservancy); assert(0==cluster.conservancy.rows);
-                    cmtx.make(survey.size,cluster->species.size);
-
-                    size_t ic=1;
-                    for(const WOVEn::NaturalArray *warr=survey.head;warr;warr=warr->next,++ic)
-                    {
-                        const Readable<const apn> &w = *warr;
-                        Writable<unsigned>        &u = cmtx[ic];
-                        Actor::List                a;
-
-                        //------------------------------------------------------
-                        // extract actors from survey
-                        //------------------------------------------------------
-                        for(const SNode *sn=cluster->species.head;sn;sn=sn->next)
-                        {
-                            const Species &sp = **sn;
-                            const apn     &sw = sp(w,SubLevel);
-                            const unsigned nu = sw.cast<unsigned>("conservation weight");
-                            if(nu<=0) continue;
-                            a.pushTail( new Actor(nu,sp) );
-                            sp(u,SubLevel) = nu;
-                        }
-                        if(a.size<2) continue;
-
-                        //------------------------------------------------------
-                        // update canon
-                        //------------------------------------------------------
-                        const Law & law = * canon.pushTail( new Law(a) );
-                        canon.enroll(*law);
-                        Coerce(law.place) = ic;
-                        Y_XMLOG(xml,"(+) " << law);
-                    }
-
-
-                }
-
-                Y_XMLOG(xml, "conservancy=" << cluster.conservancy );
-#endif
-
             }
 
         }

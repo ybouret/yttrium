@@ -13,6 +13,19 @@ namespace Yttrium
             laws(mix,xml),
             acts(laws)
             {
+                if(acts->size>0)
+                {
+                    Y_XML_SECTION(xml, "Chemical::Conservation::Acts");
+                    for(const Act *act=acts->head;act;act=act->next)
+                    {
+                        Y_XMLOG(xml, *act);
+                    }
+                }
+
+            }
+
+            Authority:: ~Authority() noexcept
+            {
             }
             
         }

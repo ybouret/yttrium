@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_Chemical_Conservation_Conducts_Included
-#define Y_Chemical_Conservation_Conducts_Included 1
+#ifndef Y_Chemical_Conservation_Acts_Included
+#define Y_Chemical_Conservation_Acts_Included 1
 
-#include "y/chemical/plexus/conservation/conduct.hpp"
+#include "y/chemical/plexus/conservation/act.hpp"
 
 
 namespace Yttrium

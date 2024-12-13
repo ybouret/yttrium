@@ -1,4 +1,4 @@
-#include "y/chemical/plexus/conservation/conduct.hpp"
+#include "y/chemical/plexus/conservation/act.hpp"
 
 
 namespace Yttrium
@@ -28,7 +28,7 @@ namespace Yttrium
                 assert(!my.has(law));
 
                 const Company &rhs = *law;
-                for(const Law::GNode *ln=my.head;ln;ln=ln->next)
+                for(const LNode *ln=my.head;ln;ln=ln->next)
                 {
                     const Company &lhs = ***ln;
                     if(lhs.worksWith(rhs)) return true;
@@ -39,7 +39,7 @@ namespace Yttrium
 
             bool Act:: accepts(const Act &other) const noexcept
             {
-                for(const Law::GNode *ln=other->head;ln;ln=ln->next)
+                for(const LNode *ln=other->head;ln;ln=ln->next)
                 {
                     const Law &law = **ln;
                     if(accepts(law)) return true;
@@ -48,15 +48,28 @@ namespace Yttrium
             }
 
 
+
+
             void Act:: collect(const Law &law)
             {
                 assert(!my.has(law));
                 my << law;
             }
 
-            
+            void Act:: collect(const Act &act)
+            {
+                for(const LNode *ln=act->head;ln;ln=ln->next)
+                    collect(**ln);
+            }
 
-
+#if 0
+            std::ostream & operator<<(std::ostream &os, const Act &act)
+            {
+                assert(act->size>0);
+                os << act.my;
+                return os;
+            }
+#endif
 
         }
 

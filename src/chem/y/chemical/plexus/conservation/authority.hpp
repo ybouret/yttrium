@@ -17,7 +17,7 @@ namespace Yttrium
         namespace Conservation
         {
 
-            class Authority : public Object
+            class Authority : public Oversized
             {
             public:
                 explicit Authority(Mix &, XMLog &);

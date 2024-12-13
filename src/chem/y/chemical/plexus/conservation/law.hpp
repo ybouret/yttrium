@@ -37,8 +37,7 @@ namespace Yttrium
                 typedef CxxListOf<Law>    List;     //!< alias
                 static const char * const Scheme;   //!< color scheme
                 typedef Small::BareLightList<const Law> Group;
-                typedef Group::NodeType                 GNode;
-                
+
                 //______________________________________________________________
                 //
                 //
@@ -86,6 +85,8 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
                 
             };
+
+            typedef Law::Group::NodeType LNode;
 
 
 

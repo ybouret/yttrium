@@ -18,7 +18,7 @@ namespace Yttrium
         Proxy<const Connected>(),
         my(first),
         conservancy(),
-        laws(0),
+        auth(0),
         order(0),
         next(0),
         prev(0)
@@ -79,6 +79,16 @@ namespace Yttrium
             }
             assert(total==mix->size);
             os << pfx << "#total      = " << std::setw(8) << total << "  (=" << mix.order[1].size << "+" << total-mix.order[1].size << ")" << std::endl;
+
+            const size_t nAct = mix.auth->acts->size;
+            if(nAct>0)
+            {
+                os << pfx << "#law=" << mix.auth->laws->size << " => #act=" << nAct << std::endl;
+                for(const Conservation::Act *act=mix.auth->acts->head;act;act=act->next)
+                {
+                    os << pfx << "  0=" << *act << std::endl;
+                }
+            }
             os << "\t}";
             return os;
         }

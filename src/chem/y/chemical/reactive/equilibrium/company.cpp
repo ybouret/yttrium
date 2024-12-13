@@ -36,7 +36,14 @@ namespace Yttrium
             AutoPtr<Actor> guard(actor);
             {
                 String newName = name;
-                if(size>0) newName += " + ";
+                if(size>0)
+                {
+                    switch(form)
+                    {
+                        case NameAsNormalSpecies:  newName += " + "; break;
+                        case NameAsConcentration:  newName += '+'; break;
+                    }
+                }
                 switch(form)
                 {
                     case NameAsNormalSpecies: newName +=       actor->name;       break;
