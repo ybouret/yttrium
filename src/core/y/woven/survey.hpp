@@ -92,7 +92,7 @@ namespace Yttrium
                     self[i] = arr[i].template cast<T>(which);
 
             }
-
+            //! build a zeroed arrau with given dimensions
             explicit inline ArrayOf(const size_t dims) :
             Object(),
             BaseType(dims),
@@ -106,6 +106,7 @@ namespace Yttrium
             //! cleanup
             inline virtual ~ArrayOf() noexcept {}
 
+            //! access for self printing
             inline const ArrayOf &operator*() const noexcept { return *this; }
 
             //__________________________________________________________________
@@ -114,6 +115,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! post-assign order
             inline size_t updateOrder() const noexcept
             {
                 const BaseType &self = *this;
@@ -125,6 +128,8 @@ namespace Yttrium
                 return order;
             }
 
+
+            //! check if present in matrix
             template <typename MATRIX>
             inline bool isRedundantWith(const MATRIX &matrix) const noexcept
             {
@@ -148,6 +153,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArrayOf);
+
         };
 
 
@@ -203,6 +209,7 @@ namespace Yttrium
             {
                 const size_t dims = matrix.cols;
                 const size_t rows = matrix.rows;
+                const MATRIX matneg(CopyOf,matrix,MakeOpposite<typename MATRIX::Type>);
                 for(const ArrayType *node=weight.head;node;node=node->next)
                 {
                     const ArrayType &w = *node; assert(rows==w.size());
@@ -216,7 +223,7 @@ namespace Yttrium
                         }
                     }
 
-                    if( a.updateOrder() <= 0 || a.isRedundantWith(matrix) || alreadyComputed() )
+                    if( a.updateOrder() <= 0 || a.isRedundantWith(matrix) || a.isRedundantWith(matneg) ||  alreadyComputed() )
                     {
                         delete this->popTail();
                         continue;
@@ -231,6 +238,9 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ArraysOf);
+
+            template <typename I>
+            static inline I MakeOpposite(const I &i) { return -i; }
 
             inline bool alreadyComputed() const noexcept
             {
