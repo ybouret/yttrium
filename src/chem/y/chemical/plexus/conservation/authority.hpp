@@ -5,7 +5,7 @@
 #ifndef Y_Chemical_Conservation_Authority_Included
 #define Y_Chemical_Conservation_Authority_Included 1
 
-#include "y/chemical/plexus/conservation/conducts.hpp"
+#include "y/chemical/plexus/conservation/acts.hpp"
 #include "y/chemical/plexus/conservation/laws.hpp"
 
 
