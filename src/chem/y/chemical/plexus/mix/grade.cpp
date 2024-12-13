@@ -35,8 +35,6 @@ namespace Yttrium
             Coerce(oneSided).compile();
             Coerce(limiting).compile();
             Coerce(floating).compile();
-
-
         }
 
     }

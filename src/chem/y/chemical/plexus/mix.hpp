@@ -12,22 +12,49 @@ namespace Yttrium
     {
         class Equilibria;
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Duplex List/Book to classify elements
+        //
+        //
+        //______________________________________________________________________
         template <typename LIST>
         class Duplex
         {
         public:
-            inline  Duplex() : list(), book() {}
-            inline ~Duplex() noexcept {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline  Duplex() : list(), book() {} //!< setup
+            inline ~Duplex() noexcept {}         //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! build list from book
             void compile() {
                 assert(0==list.size);
                 DBOps::Revamp<LIST>::Sort( book.sendTo(Coerce(list)) );
                 assert(book.size()==list.size);
             }
 
-            const LIST        list;
-            const AddressBook book;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const LIST        list; //!< ordered list
+            const AddressBook book; //!< dictionary
 
 
         private:
@@ -35,8 +62,8 @@ namespace Yttrium
         };
 
 
-        typedef Duplex<SList> SDuplex;
-        typedef Duplex<EList> EDuplex;
+        typedef Duplex<SList> SDuplex; //!< alias
+        typedef Duplex<EList> EDuplex; //!< alias
 
 
 
@@ -64,29 +91,60 @@ namespace Yttrium
             typedef AutoPtr<const Conservation::Authority>      ConservationAuth; //!< alias
             typedef CxxArray<EList,MemoryModel>                 ELists;           //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! Genus for unbounded/conserved species
+            //
+            //__________________________________________________________________
             class Genus : public Object
             {
             public:
-                explicit Genus(const ConservationAuth & , const SList & );
-                virtual ~Genus() noexcept;
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit Genus(const ConservationAuth & , const SList &); //!< setup
+                virtual ~Genus() noexcept;                                //!< cleanup
 
+                //______________________________________________________________
+                //
+                // Methods
+                //______________________________________________________________
                 bool hasConserved(const Actors &)    const noexcept; //!< at least one conserved actor
                 bool isLimiting(const Equilibrium &) const noexcept; //!< at least one conserved reac and prod
 
-                const SDuplex conserved;
-                const SDuplex unbounded;
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
+                const SDuplex conserved; //!< duplex of conserved species
+                const SDuplex unbounded; //!< duplex of unbounded species
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Genus);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! Grade for equilibria
+            //
+            //__________________________________________________________________
             class Grade : public Object
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit Grade(const EList &, const Genus &); //!< setup
+                virtual ~Grade() noexcept;                    //!< cleanup
 
-                explicit Grade(const EList &, const Genus &);
-                virtual ~Grade() noexcept;
-
+                //______________________________________________________________
+                //
+                // Members
+                //______________________________________________________________
                 const EDuplex prodOnly;    //!< product only
                 const EDuplex reacOnly;    //!< reactant only
                 const EDuplex oneSided;    //!< reacOnly + prodOnly

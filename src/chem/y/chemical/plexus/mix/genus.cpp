@@ -6,7 +6,9 @@ namespace Yttrium
     {
         Mix:: Genus:: ~Genus() noexcept {}
 
-        Mix:: Genus:: Genus(const ConservationAuth &auth, const SList &species)
+        Mix:: Genus:: Genus(const ConservationAuth &auth, const SList &species) :
+        conserved(),
+        unbounded()
         {
             if(auth.isValid())
             {
