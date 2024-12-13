@@ -95,14 +95,7 @@ namespace Yttrium
                 }
             }
 
-
-            bool Law:: isRelatedTo(const Law &law) const noexcept
-            {
-                const Company &self = **this;
-                const Company &peer = *law;
-                return self.worksWith(peer);
-            }
-
+            
 
             std::ostream & operator<<(std::ostream &os, const Law &law)
             {

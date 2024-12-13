@@ -56,7 +56,7 @@ namespace Yttrium
             void addPrimary(const Equilibrium &);             //!< add primary equilibrium
             void addPrimary(const Mix &);                     //!< add primary connected mix
 
-            //! compile once builts
+            //! compile once built
             void buildConfiguration(XMLog &xml, Equilibria &eqs);
 
 
