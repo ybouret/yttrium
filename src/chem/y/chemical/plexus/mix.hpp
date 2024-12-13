@@ -79,7 +79,8 @@ namespace Yttrium
 
             //! compile once built
             void buildConfiguration(XMLog &xml, Equilibria &eqs);
-
+            bool hasConserved(const Actors &)    const noexcept;
+            bool isLimiting(const Equilibrium &) const noexcept;
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline
@@ -133,6 +134,8 @@ namespace Yttrium
                 return os;
             }
 
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mix);
             virtual ConstInterface & surrogate() const noexcept;
@@ -147,7 +150,13 @@ namespace Yttrium
             const ELists           order;       //!< at least 1
             const Duplex<SList>    conserved;   //!< conserved species
             const Duplex<SList>    unbounded;   //!< undounded species
-            
+            const Duplex<EList>    prodOnly;    //!< product only
+            const Duplex<EList>    reacOnly;    //!< reactant only
+            const Duplex<EList>    oneSided;    //!< reacOnly + prodOnly
+            const Duplex<EList>    limiting;    //!< limiting equilibria
+            const Duplex<EList>    floating;    //!< floating equilibria
+
+
             Mix * next; //!< for list
             Mix * prev; //!< for list
         };

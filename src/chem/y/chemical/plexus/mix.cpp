@@ -20,6 +20,13 @@ namespace Yttrium
         conservancy(),
         auth(0),
         order(0),
+        conserved(),
+        unbounded(),
+        prodOnly(),
+        reacOnly(),
+        oneSided(),
+        limiting(),
+        floating(),
         next(0),
         prev(0)
         {
@@ -53,7 +60,21 @@ namespace Yttrium
             }
         }
 
-        
+        bool Mix:: hasConserved(const Actors &A) const noexcept
+        {
+            for(const Actor *a=A->head;a;a=a->next)
+            {
+                if( conserved.book.has(a->sp) ) return true;
+            }
+            return false;
+        }
+
+        bool Mix:: isLimiting(const Equilibrium &eq) const noexcept
+        {
+            return hasConserved(eq.reac) && hasConserved(eq.prod);
+        }
+
+
 
         std::ostream & operator<<(std::ostream &os, const Mix &mix)
         {
@@ -89,8 +110,15 @@ namespace Yttrium
                     os << pfx << "  0=" << *act << std::endl;
                 }
             }
-            if(mix.conserved.list.size>0) os << pfx << "conserved=" << mix.conserved.list << std::endl;
-            if(mix.unbounded.list.size>0) os << pfx << "unbounded=" << mix.unbounded.list << std::endl;
+            if(mix.conserved.list.size>0) os << pfx << "conserved = " << mix.conserved.list << std::endl;
+            if(mix.unbounded.list.size>0) os << pfx << "unbounded = " << mix.unbounded.list << std::endl;
+            if(mix.reacOnly.list.size>0)  os << pfx << "reacOnly  = " << mix.reacOnly.list << std::endl;
+            if(mix.prodOnly.list.size>0)  os << pfx << "prodOnly  = " << mix.prodOnly.list << std::endl;
+            if(mix.oneSided.list.size>0)  os << pfx << "oneSided  = " << mix.oneSided.list << std::endl;
+            if(mix.limiting.list.size>0)  os << pfx << "limiting  = " << mix.limiting.list << std::endl;
+            if(mix.floating.list.size>0)  os << pfx << "floating  = " << mix.floating.list << std::endl;
+
+
 
             os << "\t}";
             return os;
