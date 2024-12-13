@@ -1,4 +1,3 @@
-
 #include "y/chemical/plexus/conservation/conduct.hpp"
 
 
@@ -49,6 +48,11 @@ namespace Yttrium
             }
 
 
+            void Conduct:: collect(const Law &law)
+            {
+                assert(!my.has(law));
+                my << law;
+            }
 
 
 

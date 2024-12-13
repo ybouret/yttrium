@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Chemical_Conservation_Conduct_Included
@@ -18,11 +17,14 @@ namespace Yttrium
             class Conduct : public Proxy<const Law::Group>
             {
             public:
+                typedef CxxListOf<Conduct> List;
+
                 explicit Conduct(const Law &first);
                 virtual ~Conduct() noexcept;
 
                 bool accepts(const Law &)     const noexcept;
                 bool accepts(const Conduct &) const noexcept;
+                void collect(const Law &);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Conduct);
