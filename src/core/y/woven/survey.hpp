@@ -207,9 +207,10 @@ namespace Yttrium
             Object(),
             ListType()
             {
+                const MATRIX matneg(CopyOf,matrix,MakeOpposite<typename MATRIX::Type>);
                 const size_t dims = matrix.cols;
                 const size_t rows = matrix.rows;
-                const MATRIX matneg(CopyOf,matrix,MakeOpposite<typename MATRIX::Type>);
+                
                 for(const ArrayType *node=weight.head;node;node=node->next)
                 {
                     const ArrayType &w = *node; assert(rows==w.size());

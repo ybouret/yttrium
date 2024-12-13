@@ -14,20 +14,44 @@ namespace Yttrium
         namespace Conservation
         {
 
-
+            //__________________________________________________________________
+            //
+            //
+            //
             //! group of dependent laws
+            //
+            //
+            //__________________________________________________________________
             class Act : public Proxy<const Law::Group>
             {
             public:
-                typedef CxxListOf<Act> List;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<Act> List; //!< alias
 
-                explicit Act(const Law &first);
-                virtual ~Act() noexcept;
-                
-                bool accepts(const Law &) const noexcept;
-                bool accepts(const Act &) const noexcept;
-                void collect(const Law &);
-                void collect(const Act &);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Act(const Law &first); //!< setup
+                virtual ~Act() noexcept;        //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                bool accepts(const Law &) const noexcept; //!< if law is linked to mine
+                bool accepts(const Act &) const noexcept; //!< if one of the law is linked to mine
+                void collect(const Law &);                //!< collect law
+                void collect(const Act &);                //!< collect laws
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Act);
@@ -36,8 +60,8 @@ namespace Yttrium
                 Law::Group my;
                 
             public:
-                Act * next;
-                Act * prev;
+                Act * next; //!< for list
+                Act * prev; //!< for list
             };
 
         }

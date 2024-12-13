@@ -16,11 +16,26 @@ namespace Yttrium
         {
             class Laws;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Indepedent Acts of dependent Laws
+            //
+            //
+            //__________________________________________________________________
             class Acts : public Proxy<const Act::List>
             {
             public:
-                explicit Acts(const Laws &laws);
-                virtual ~Acts() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Acts(const Laws &laws); //!< create acts
+                virtual ~Acts() noexcept;        //!< cleanup
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Acts);

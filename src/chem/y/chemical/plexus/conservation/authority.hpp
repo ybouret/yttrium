@@ -16,15 +16,34 @@ namespace Yttrium
 
         namespace Conservation
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! laws and their associated acts
+            //
+            //
+            //__________________________________________________________________
             class Authority : public Oversized
             {
             public:
-                explicit Authority(Mix &, XMLog &);
-                virtual ~Authority() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Authority(Mix &, XMLog &); //!< setup
+                virtual ~Authority() noexcept;      //!< cleanup
 
-                const Laws laws;
-                const Acts acts;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Laws laws; //!< laws from mix topology
+                const Acts acts; //!< organized acts
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Authority);

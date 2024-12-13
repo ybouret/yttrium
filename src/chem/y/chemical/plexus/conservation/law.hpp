@@ -33,10 +33,10 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const CallSign; //!< "Chemical::Conservation::Law"
-                typedef CxxListOf<Law>    List;     //!< alias
-                static const char * const Scheme;   //!< color scheme
-                typedef Small::BareLightList<const Law> Group;
+                static const char * const CallSign;            //!< "Chemical::Conservation::Law"
+                typedef CxxListOf<Law>    List;                //!< alias
+                static const char * const Scheme;              //!< color scheme
+                typedef Small::BareLightList<const Law> Group; //!< alias
 
                 //______________________________________________________________
                 //
@@ -86,7 +86,7 @@ namespace Yttrium
                 
             };
 
-            typedef Law::Group::NodeType LNode;
+            typedef Law::Group::NodeType LNode; //!< alias
 
 
 
