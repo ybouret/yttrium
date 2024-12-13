@@ -11,7 +11,7 @@ namespace Yttrium
         {
             Authority:: Authority(Mix &mix, XMLog &xml) :
             laws(mix,xml),
-            conducts(laws)
+            acts(laws)
             {
             }
             

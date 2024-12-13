@@ -9,11 +9,11 @@ namespace Yttrium
         namespace Conservation
         {
 
-            Conducts:: ~Conducts() noexcept
+            Acts:: ~Acts() noexcept
             {
             }
 
-            Conducts:: Conducts(const Laws &laws) :
+            Acts:: Acts(const Laws &laws) :
             Proxy<const Act::List>(),
             my()
             {
@@ -42,9 +42,9 @@ namespace Yttrium
                 
             }
 
-            Conducts:: ConstInterface & Conducts:: surrogate() const noexcept { return my; }
+            Acts:: ConstInterface & Acts:: surrogate() const noexcept { return my; }
 
-            void Conducts:: reconnect()
+            void Acts:: reconnect()
             {
                 Act::List store;
                 while(my.size>0)
@@ -55,7 +55,9 @@ namespace Yttrium
                     {
                         if(rhs->accepts(*lhs))
                         {
-
+                            rhs->collect(*rhs);
+                            lhs.erase();
+                            break;
                         }
                     }
 

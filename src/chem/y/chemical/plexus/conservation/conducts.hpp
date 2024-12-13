@@ -16,14 +16,14 @@ namespace Yttrium
         {
             class Laws;
 
-            class Conducts : public Proxy<const Act::List>
+            class Acts : public Proxy<const Act::List>
             {
             public:
-                explicit Conducts(const Laws &laws);
-                virtual ~Conducts() noexcept;
+                explicit Acts(const Laws &laws);
+                virtual ~Acts() noexcept;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Conducts);
+                Y_DISABLE_COPY_AND_ASSIGN(Acts);
                 virtual ConstInterface & surrogate() const noexcept;
                 void                     reconnect();
                 Act::List my;

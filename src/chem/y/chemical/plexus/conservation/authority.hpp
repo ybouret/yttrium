@@ -23,8 +23,8 @@ namespace Yttrium
                 explicit Authority(Mix &, XMLog &);
                 virtual ~Authority() noexcept;
 
-                const Laws       laws;
-                const Conducts   conducts;
+                const Laws laws;
+                const Acts acts;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Authority);
