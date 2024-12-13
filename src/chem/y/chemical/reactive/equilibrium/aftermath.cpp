@@ -151,6 +151,7 @@ namespace Yttrium
             {
                 case Blocked: return Outcome(Blocked,eq,eK,C0,L0); // early return
                 case Running:
+                case Crucial:
                     break;
             }
 
@@ -159,7 +160,7 @@ namespace Yttrium
             // prepare outcome
             //
             //------------------------------------------------------------------
-            const Outcome outcome(Running,eq,eK,C1,L1);
+            const Outcome outcome(st,eq,eK,C1,L1);
 
             //------------------------------------------------------------------
             //

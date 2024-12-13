@@ -46,8 +46,29 @@ namespace Yttrium
 
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept
         {
-            if( reac.haveZero(C,L) && prod.haveZero(C,L) ) return Blocked;
-            return Running;
+            if( reac.haveZero(C,L) )
+            {
+                if( prod.haveZero(C,L) )
+                {
+                    return Blocked;
+                }
+                else
+                {
+                    return Crucial;
+                }
+            }
+            else
+            {
+                if( prod.haveZero(C,L) )
+                {
+                    return Crucial;
+                }
+                else
+                {
+                    return Running;
+                }
+            }
+            
         }
 
 

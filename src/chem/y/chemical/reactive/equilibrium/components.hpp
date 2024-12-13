@@ -24,6 +24,7 @@ namespace Yttrium
         //! Situation for Components
         enum Situation {
             Blocked, //!< at least one reac AND one prod are zero
+            Crucial, //!< one side is OK, the other one has at least one zero reac
             Running  //!< all components have positive concentration
         };
 
