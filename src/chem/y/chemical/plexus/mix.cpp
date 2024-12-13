@@ -89,6 +89,9 @@ namespace Yttrium
                     os << pfx << "  0=" << *act << std::endl;
                 }
             }
+            if(mix.conserved.list.size>0) os << pfx << "conserved=" << mix.conserved.list << std::endl;
+            if(mix.unbounded.list.size>0) os << pfx << "unbounded=" << mix.unbounded.list << std::endl;
+
             os << "\t}";
             return os;
         }

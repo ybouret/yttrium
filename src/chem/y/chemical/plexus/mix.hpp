@@ -5,13 +5,34 @@
 
 #include "y/chemical/plexus/connected.hpp"
 #include "y/chemical/plexus/conservation/authority.hpp"
-#include "y/ptr/drill-down.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
         class Equilibria;
+
+
+        template <typename LIST>
+        class Duplex
+        {
+        public:
+            inline  Duplex() : list(), book() {}
+            inline ~Duplex() noexcept {}
+
+            void compile() {
+                assert(0==list.size);
+                DBOps::Revamp<LIST>::Sort( book.sendTo(Coerce(list)) );
+                assert(book.size()==list.size);
+            }
+
+            const LIST        list;
+            const AddressBook book;
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Duplex);
+        };
 
         //______________________________________________________________________
         //
@@ -124,6 +145,9 @@ namespace Yttrium
             const Matrix<unsigned> conservancy; //!< conservancy matrix
             const ConservationAuth auth;        //!< conservation authority
             const ELists           order;       //!< at least 1
+            const Duplex<SList>    conserved;   //!< conserved species
+            const Duplex<SList>    unbounded;   //!< undounded species
+            
             Mix * next; //!< for list
             Mix * prev; //!< for list
         };
