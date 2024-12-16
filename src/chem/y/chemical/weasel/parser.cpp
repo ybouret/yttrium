@@ -120,7 +120,7 @@ namespace Yttrium
             lexer.plug<Lingo::Lexical::CPlusPlusComment>("C++Comment");
 
             validate();
-            render();
+            //render();
             //Rule::Trace = true;
         }
 
