@@ -58,7 +58,7 @@ namespace Yttrium
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
             void                     buildODE(XMLog &xml, const xReal f0);
-            void                     makeStep(XMLog &xml, const xReal f0);
+            xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
             const Mix   & mix;          //!< persistent mix
             Engine        my;

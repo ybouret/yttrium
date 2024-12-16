@@ -9,9 +9,12 @@ namespace Yttrium
     namespace Chemical
     {
 
-        void Solver:: makeStep(XMLog &xml, const xReal f0)
+        xReal Solver:: makeStep(XMLog &            xml,
+                               const xReal        f0,
+                               const char * const sid)
         {
-            Y_XML_SECTION(xml, "makeStep");
+            assert(0!=sid);
+            Y_XML_SECTION_OPT(xml, "makeStep", "name='" << sid << "'");
             bool  hasCut = false;
             xReal factor = one;
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
@@ -43,7 +46,8 @@ namespace Yttrium
             }
 
             {
-                OutputFile fp("ode.dat");
+                String     fn = sid; fn += ".dat";
+                OutputFile fp(fn);
                 const size_t np=100;
                 for(size_t i=0;i<=np;++i)
                 {
@@ -64,15 +68,18 @@ namespace Yttrium
             std::cerr << "ff=" << real_t(f_opt) << " @" << real_t(x_opt) << std::endl;
 
 
-
-
+            return f_opt;
         }
 
         void Solver:: buildODE(XMLog &xml, const xReal f0)
         {
             Y_XML_SECTION(xml, "ODE");
 
-            // accumulate
+            //------------------------------------------------------------------
+            //
+            // accumulate virtual rates
+            //
+            //------------------------------------------------------------------
             for(size_t i=Cadd.size();i>0;--i)
                 Cadd[i].free();
 
@@ -93,11 +100,17 @@ namespace Yttrium
                 sp(step,SubLevel) = sp(Cadd,SubLevel).sum();
                 if(xml.verbose)
                 {
-                    mix->sformat.print(xml() << "d[", sp, Justify::Right) << "] = " << real_t(sp(step,SubLevel)) << std::endl;
+                    mix->sformat.print(xml() << "d[", sp, Justify::Right) << "] = " << std::setw(15) << real_t(sp(step,SubLevel)) << std::endl;
                 }
             }
 
-            makeStep(xml,f0);
+
+            //------------------------------------------------------------------
+            //
+            // make step
+            //
+            //------------------------------------------------------------------
+            makeStep(xml,f0,"ode");
 
         }
 
