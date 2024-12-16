@@ -42,9 +42,9 @@ Y_UTEST(plexus)
     std::cerr << "mixes=" << mixes << std::endl;
 
     const size_t M = lib->size();
-    XVector C0(M,0);
+    XVector      C0(M,0);
 
-    Library::Conc(C0,ran);
+    Library::Conc(C0,ran,0.5);
 
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {

@@ -57,7 +57,8 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
-            void                     buildODE(XMLog &xml);
+            void                     buildODE(XMLog &xml, const xReal f0);
+            void                     makeStep(XMLog &xml, const xReal f0);
 
             const Mix   & mix;          //!< persistent mix
             Engine        my;
