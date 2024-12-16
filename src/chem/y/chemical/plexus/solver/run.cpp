@@ -103,6 +103,7 @@ namespace Yttrium
                 // initializing
                 my.update();
                 mix.transfer(Cini,SubLevel,C,L);
+
                 const xReal f0 = objectiveFunction(C,L);
                 Y_XMLOG(xml, "f0 = " << real_t(f0) );
                 for(ProNode *pn=my.head;pn;pn=pn->next)
@@ -120,11 +121,17 @@ namespace Yttrium
                     const size_t np=100;
                     for(const ProNode *pn=my.head;pn;pn=pn->next)
                     {
+                        const Prospect &pro = **pn;
+                        mix.transfer(Cend, SubLevel, pro.out.C, pro.out.L);
+
+                        
                         for(size_t i=0;i<=np;++i)
                         {
                             const double u = double(i)/np;
-                            
+                            const double f = double(objectiveFunction(u));
+                            fp("%.15g %.15g\n",u,f);
                         }
+                        fp << "\n";
                     }
 
                 }

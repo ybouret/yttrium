@@ -57,6 +57,11 @@ namespace Yttrium
                 const xReal ctmp = c0 * v + c1 * u;
                 Ctmp[j] = Clamp(cmin, ctmp, cmax);
             }
+
+            //std::cerr << "Cini=" << Cini << std::endl;
+            //std::cerr << "Cend=" << Cend << std::endl;
+            //std::cerr << "Ctmp=" << Ctmp << " @" << u << std::endl;
+
             return objectiveFunction(Ctmp,SubLevel);
         }
 

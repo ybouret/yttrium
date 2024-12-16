@@ -5,7 +5,7 @@
 #define Y_Chemical_Solver_Included 1
 
 #include "y/chemical/plexus/mix.hpp"
-#include "y/chemical/plexus/solver/prospect.hpp"
+#include "y/chemical/plexus/solver/engine.hpp"
 #include "y/chemical/reactive/equilibrium/aftermath.hpp"
 
 namespace Yttrium
@@ -13,45 +13,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Engine : public ProBank, public ProList, public Assembly
-        {
-        public:
-            explicit Engine() : ProBank(), ProList( static_cast<ProBank &>(*this) ), Assembly() {}
-            virtual ~Engine() noexcept {}
-
-            void update() noexcept
-            {
-                forget();
-                for(const ProNode *pn=head;pn;pn=pn->next)
-                    enroll(**pn);
-            }
-
-            void  reset() noexcept
-            {
-                forget();
-                free();
-            }
-
-            void  show(XMLog &xml) const
-            {
-                Y_XML_SECTION_OPT(xml, "Chemical::Prospects", "count='" << size << "'");
-                for(const ProNode *pn=head;pn;pn=pn->next)
-                {
-                    const Prospect &pro = **pn;
-                    if(xml.verbose) {
-                        const char * const info = Components::SituationText(pro.out.st);
-                        print(xml() << info << " @",pro,Justify::Left)
-                        << " : |xi| = | " << std::setw(15) << real_t(pro.xi) << " |"
-                        << " ff = " << std::setw(15) << real_t(pro.ff)
-                        << std::endl;
-                    }
-                }
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Engine);
-        };
-
+     
         //______________________________________________________________________
         //
         //
