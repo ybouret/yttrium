@@ -14,7 +14,7 @@ namespace Yttrium
         //
         //
         //
-        //! outcome of an aftemath
+        //! outcome of an aftermath
         //
         //
         //______________________________________________________________________
@@ -54,6 +54,7 @@ namespace Yttrium
             //! compute extent from C0 to this outcome and corresponding dC
             xReal extent(XAdd &xadd, const XReadable &C0, const Level L0, XWritable &dC, const Level dL) const;
 
+            //! upload content into target
             template <typename TARGET> inline
             TARGET & upload(TARGET &target, const Level tgt) const
             {

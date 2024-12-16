@@ -13,25 +13,57 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Mix solver
+        //
+        //
+        //______________________________________________________________________
         class Solver : public Assembly
         {
         public:
-            static const char * const CallSign;
-            explicit Solver(const Mix &);
-            virtual ~Solver() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Chemical::Solver"
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Solver(const Mix &); //!< setup from persistent mix
+            virtual ~Solver() noexcept;   //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
+
+
             void update() noexcept; //!< update assembly from prospect
 
-            const Mix   & mix;
-            XMatrix       Csolve;
-            XMatrix       deltaC;
-            Aftermath     aftermath;
-            ProBank       pbank;
-            ProList       plist;
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
+
+            const Mix   & mix;          //!< persistent mix
+            XMatrix       Csolve;       //!< all possible solving C
+            XMatrix       deltaC;       //!< all possible delta   C
+            Aftermath     aftermath;    //!< aftermath computation
+            ProBank       pbank;        //!< resources
+            ProList       plist;        //!< list of active prospects
+
         };
     }
 

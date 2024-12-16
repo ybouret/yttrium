@@ -11,19 +11,52 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibirum prospect
+        //
+        //
+        //______________________________________________________________________
         class Prospect : public Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             explicit Prospect(const Outcome &   _out,
-                     const xReal       _xi,
-                     const XReadable & _dx) noexcept;
+                              const xReal       _xi,
+                              const XReadable & _dx) noexcept;
+
+            //! duplicate
             explicit Prospect(const Prospect &) noexcept;
+
+            //! cleanup
             virtual ~Prospect() noexcept;
+
+            //! display
             Y_OSTREAM_PROTO(Prospect);
 
-            virtual const String & key() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const String & key() const noexcept; //! [Entity] out.eq.name
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Outcome     out;   //!< current outcome
             const xReal       xi;    //!< current extent to outcome
             const xReal       ax;    //!< |xi|
@@ -35,9 +68,9 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Prospect);
         };
 
-        typedef Small::CoopHeavyList<const Prospect> ProList;
-        typedef ProList::NodeType                    ProNode;
-        typedef ProList::ProxyType                   ProBank;
+        typedef Small::CoopHeavyList<const Prospect> ProList; //!< alias
+        typedef ProList::NodeType                    ProNode; //!< alias
+        typedef ProList::ProxyType                   ProBank; //!< alias
 
     }
 

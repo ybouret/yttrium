@@ -13,6 +13,7 @@ namespace Yttrium
         Prospect:: Prospect(const Outcome & _out,
                             const xReal     _xi,
                             const XReadable & _dc) noexcept :
+        Entity(),
         out(_out),
         xi(_xi),
         ax(xi.abs()),
@@ -21,6 +22,7 @@ namespace Yttrium
         }
 
         Prospect:: Prospect(const Prospect &_) noexcept :
+        Entity(),
         out(_.out),
         xi(_.xi),
         ax(_.ax),

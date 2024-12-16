@@ -12,6 +12,7 @@ namespace Yttrium
         mix(_),
         Csolve(mix->size,mix->species.size),
         deltaC(mix->size,mix->species.size),
+        aftermath(),
         pbank(),
         plist(pbank)
         {
