@@ -2,6 +2,8 @@
 #include "y/stream/libc/output.hpp"
 #include "y/mkl/opt/minimize.hpp"
 
+#include "y/stream/libc/output.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -40,6 +42,17 @@ namespace Yttrium
                 assert(sp(Cend,SubLevel) >= 0.0 );
             }
 
+            {
+                OutputFile fp("ode.dat");
+                const size_t np=100;
+                for(size_t i=0;i<=np;++i)
+                {
+                    const double u = double(i)/np;
+                    const double f = double(objectiveFunction(u));
+                    fp("%.15g %.15g\n",u,f);
+                }
+            }
+
             XTriplet x = { zero, zero, one };
             XTriplet f = { f0,   f0,   objectiveFunction(Cend,SubLevel) };
 
@@ -49,6 +62,9 @@ namespace Yttrium
             const xReal f_opt = F(x_opt);
 
             std::cerr << "ff=" << real_t(f_opt) << " @" << real_t(x_opt) << std::endl;
+
+
+
 
         }
 
