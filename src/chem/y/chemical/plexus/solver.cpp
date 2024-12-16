@@ -16,6 +16,8 @@ namespace Yttrium
         Cini(mix->species.size),
         Cend(mix->species.size),
         Ctmp(mix->species.size),
+        step(mix->species.size),
+        Cadd(mix->species.size),
         one(1)
         {
 
@@ -61,8 +63,7 @@ namespace Yttrium
             return objectiveFunction(Ctmp,SubLevel);
         }
 
-
-        
+        xReal Solver:: operator()(const xReal u) { return objectiveFunction(u); }
 
 
     }

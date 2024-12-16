@@ -44,6 +44,8 @@ Y_UTEST(plexus)
     const size_t M = lib->size();
     XVector C0(M,0);
 
+    Library::Conc(C0,ran);
+
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
         Solver solver(*mix);

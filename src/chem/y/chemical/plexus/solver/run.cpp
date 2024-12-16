@@ -208,6 +208,7 @@ namespace Yttrium
                 //
                 // sort by increasing FF
                 //
+                //
                 //--------------------------------------------------------------
                 Y_XML_COMMENT(xml, "ordered state");
                 MergeSort::Call(my,byIncreasingFF);
@@ -231,6 +232,12 @@ namespace Yttrium
                         fp << "\n";
                     }
                 }
+
+
+                buildODE(xml);
+
+
+
 
             }
 

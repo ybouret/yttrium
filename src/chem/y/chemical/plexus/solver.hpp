@@ -50,16 +50,15 @@ namespace Yttrium
             //__________________________________________________________________
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
-
-            xReal objectiveFunction(const XReadable &C, const Level L);
-            xReal objectiveFunction(const xReal u);
-
-            xReal operator()(const xReal u) { return objectiveFunction(u); }
+            xReal operator()(const xReal u);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             virtual ConstInterface & surrogate() const noexcept;
-            
+            xReal                    objectiveFunction(const XReadable &C, const Level L);
+            xReal                    objectiveFunction(const xReal u);
+            void                     buildODE(XMLog &xml);
+
             const Mix   & mix;          //!< persistent mix
             Engine        my;
             XMatrix       Csolve;       //!< all possible solving C
@@ -67,6 +66,8 @@ namespace Yttrium
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
             XArray        Ctmp;         //!< updated by objectiveFunction(u)
+            XArray        step;         //!< temporary computed step
+            XAdds         Cadd;         //!< for algebra on rates
             const xReal   one;
 
         };
