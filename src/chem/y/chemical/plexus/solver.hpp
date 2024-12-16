@@ -57,7 +57,7 @@ namespace Yttrium
             virtual ConstInterface & surrogate() const noexcept;
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
-            void                     buildODE(XMLog &xml, const xReal f0);
+            xReal                    buildODE(XMLog &xml, const xReal f0);
             xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
             void                     save(OutputStream &fp, const size_t np);
             void                     save(const String &fn, const size_t np);
@@ -68,6 +68,7 @@ namespace Yttrium
             XMatrix       deltaC;       //!< all possible delta   C
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
+            XArray        Capp;         //!< applicant
             XArray        Ctmp;         //!< updated by objectiveFunction(u)
             XArray        step;         //!< temporary computed step
             XAdds         Cadd;         //!< for algebra on rates

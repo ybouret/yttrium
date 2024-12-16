@@ -1,9 +1,6 @@
-
 #include "y/chemical/plexus/solver.hpp"
-#include "y/stream/libc/output.hpp"
 #include "y/mkl/opt/minimize.hpp"
 
-#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -35,8 +32,8 @@ namespace Yttrium
                     hasCut = true;
                 }
             }
-            Y_XMLOG(xml, "hasCut=" << hasCut);
-            Y_XMLOG(xml, "factor=" << real_t(factor) );
+            Y_XMLOG(xml, sid << ".hasCut=" << hasCut);
+            Y_XMLOG(xml, sid << ".factor=" << real_t(factor) );
 
 
             if(hasCut)
@@ -68,15 +65,12 @@ namespace Yttrium
             //------------------------------------------------------------------
             XTriplet x = { zero, zero, one };
             XTriplet f = { f0,   f0,   objectiveFunction(Cend,SubLevel) };
-            
-            std::cerr << "ff=" << real_t(f.c) << std::endl;
+
+            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f.c));
             Solver &    F     = *this;
             const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
             const xReal f_opt = F(x_opt);
-            
-            std::cerr << "ff=" << real_t(f_opt) << " @" << real_t(x_opt) << std::endl;
-            
-            
+            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f_opt) << " @" << std::setw(15) << real_t(x_opt));
             return f_opt;
         }
         

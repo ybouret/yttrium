@@ -16,6 +16,7 @@ namespace Yttrium
         deltaC(mix->size,mix->species.size),
         Cini(mix->species.size),
         Cend(mix->species.size),
+        Capp(mix->species.size),
         Ctmp(mix->species.size),
         step(mix->species.size),
         Cadd(mix->species.size),

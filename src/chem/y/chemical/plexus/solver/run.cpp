@@ -164,6 +164,8 @@ namespace Yttrium
                     return;
                 }
 
+                // TODO: f0<=0
+
 
                 //--------------------------------------------------------------
                 //
@@ -226,8 +228,23 @@ namespace Yttrium
                     }
                 }
 
+                const Prospect &pr = **my.head;
+                xReal           Fx = pr.ff;
+                mix.transfer(Capp, SubLevel, pr.C, pr.L);
 
-                buildODE(xml,f0);
+                {
+                    const xReal Ftmp = buildODE(xml,f0);
+                    if(Ftmp<Fx)
+                    {
+                        Fx = Ftmp;
+                        Capp.ld(Ctmp);
+                        Y_XML_COMMENT(xml, "keep ODE");
+                    }
+                    else
+                    {
+                        Y_XML_COMMENT(xml, "drop ODE");
+                    }
+                }
 
 
 
