@@ -63,14 +63,10 @@ namespace Yttrium
             // optimize
             //
             //------------------------------------------------------------------
-            XTriplet x = { zero, zero, one };
-            XTriplet f = { f0,   f0,   objectiveFunction(Cend,SubLevel) };
+            const xReal f1    = objectiveFunction(Cend,SubLevel);
+            const xReal f_opt = optimize(f0,f1);
+            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f1) << " => " << std::setw(15) << real_t(f_opt));
 
-            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f.c));
-            Solver &    F     = *this;
-            const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
-            const xReal f_opt = F(x_opt);
-            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f_opt) << " @" << std::setw(15) << real_t(x_opt));
             return f_opt;
         }
         

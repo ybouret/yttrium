@@ -175,21 +175,15 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 Y_XML_COMMENT(xml, "refine  state");
-                Solver &F = *this;
                 for(ProNode *pn=my.head;pn;pn=pn->next)
                 {
                     Prospect &pro = **pn;
                     mix.transfer(Cend, SubLevel, pro.C, pro.L);
-                    XTriplet    x     = {zero, zero, one    };
-                    XTriplet    f     = {f0,   f0,   pro.ff };
-                    const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
-                    const xReal f_opt = F(x_opt);
-
-
+                    const xReal f_opt = optimize(f0,pro.ff);
                     if(f_opt<f0)
                     {
                         // update prospect
-                        Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " @" << real_t(x_opt) << " => " << real_t(f_opt) );
+                        Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " => " << real_t(f_opt) );
                         mix.transfer(pro.C, pro.L, Ctmp, SubLevel);
                         pro.ax = (pro.xi = pro.extent(xadd, C, L)).abs();
                         pro.ff = f_opt;
@@ -228,7 +222,6 @@ namespace Yttrium
                     }
                 }
 
-                const char      ode[] = "ode";
                 const Prospect &pr = **my.head;
                 xReal           Fx = pr.ff;
                 const char *    id = pr.eq.name.c_str();
@@ -240,12 +233,12 @@ namespace Yttrium
                     {
                         Fx = Ftmp;
                         Capp.ld(Ctmp);
-                        Y_XML_COMMENT(xml, "keep ODE/" << id);
-                        id = ode;
+                        Y_XML_COMMENT(xml, "keep " << ODE << "/" << id);
+                        id = ODE;
                     }
                     else
                     {
-                        Y_XML_COMMENT(xml, "drop ODE/" << id);
+                        Y_XML_COMMENT(xml, "drop " << ODE << "/" << id);
                     }
                 }
 

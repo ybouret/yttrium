@@ -32,7 +32,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Chemical::Solver"
-
+            static const char * const ODE;
+            
             //__________________________________________________________________
             //
             //
@@ -52,6 +53,7 @@ namespace Yttrium
 
             xReal operator()(const xReal u);
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             virtual ConstInterface & surrogate() const noexcept;
@@ -61,6 +63,7 @@ namespace Yttrium
             xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
             void                     save(OutputStream &fp, const size_t np);
             void                     save(const String &fn, const size_t np);
+            xReal                    optimize(const xReal f0, const xReal f1); //!< f0 at Cini, f1 at Cend => f_opt at Ctmp
 
             const Mix   & mix;          //!< persistent mix
             Engine        my;

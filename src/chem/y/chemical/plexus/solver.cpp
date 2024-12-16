@@ -26,6 +26,7 @@ namespace Yttrium
         }
 
         const char * const Solver:: CallSign = "Chemical::Solver";
+        const char * const Solver:: ODE      = "ODE";
 
         Solver::ConstInterface & Solver:: surrogate() const noexcept { return my; }
 
