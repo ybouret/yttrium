@@ -18,6 +18,12 @@ namespace Yttrium
             return Sign::Of( (**rhs).ax, (**lhs).ax );
         }
 
+        static inline SignType byIncreasingFF(const ProNode * const lhs,
+                                              const ProNode * const rhs) noexcept
+        {
+            return Sign::Of( (**lhs).ff, (**rhs).ff );
+        }
+
         void Solver:: run(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
         {
 
@@ -118,6 +124,7 @@ namespace Yttrium
                 my.update();
                 mix.transfer(Cini,SubLevel,C,L);
                 const xReal f0 = objectiveFunction(C,L);
+                Y_XML_COMMENT(xml, "initial state");
                 Y_XMLOG(xml, "f0 = " << real_t(f0) );
                 for(ProNode *pn=my.head;pn;pn=pn->next)
                 {
@@ -165,6 +172,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
+                Y_XML_COMMENT(xml, "refine  state");
                 Solver &F = *this;
                 for(ProNode *pn=my.head;pn;pn=pn->next)
                 {
@@ -173,27 +181,34 @@ namespace Yttrium
                     XTriplet  x = {zero, zero, one    };
                     XTriplet  f = {f0,   f0,   pro.ff };
 
-                    std::cerr << "F(" << real_t(x.a) << ")=" << real_t(f.a) << "/" <<  real_t(F(0)) << std::endl;
-                    std::cerr << "F(" << real_t(x.c) << ")=" << real_t(f.c) << "/" <<  real_t(F(1)) << std::endl;
+                    //std::cerr << "F(" << real_t(x.a) << ")=" << real_t(f.a) << "/" <<  real_t(F(0)) << std::endl;
+                    //std::cerr << "F(" << real_t(x.c) << ")=" << real_t(f.c) << "/" <<  real_t(F(1)) << std::endl;
 
                     const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
                     const xReal f_opt = F(x_opt);
 
-                    std::cerr << "F(" << real_t(x_opt) << ")=" << real_t(f_opt) << std::endl;
 
                     if(f_opt<f0)
                     {
                         // update prospect
+                        Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " @" << real_t(x_opt) << " => " << real_t(f_opt) );
+                        mix.transfer(pro.C, pro.L, Ctmp, SubLevel);
+                        pro.ax = (pro.xi = pro.extent(xadd, C, L)).abs();
+                        pro.ff = f_opt;
                     }
                     else
                     {
                         // degenerate prospect
+                        Y_XMLOG(xml, "(-) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right));
+                        mix.transfer(pro.C,pro.L,C,L);
+                        pro.xi = pro.ax = zero;
+                        pro.dc.ld(zero);
+                        pro.ff = f0;
                     }
-
-                    std::cerr << std::endl;
-
                 }
 
+                MergeSort::Call(my,byIncreasingFF);
+                my.show(xml);
 
             }
 
