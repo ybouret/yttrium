@@ -39,9 +39,7 @@ namespace Yttrium
 
             //! cleanup
             virtual ~Prospect() noexcept;
-
-            //! display
-            Y_OSTREAM_PROTO(Prospect);
+            
 
             //__________________________________________________________________
             //
@@ -54,6 +52,15 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Method
+            //
+            //__________________________________________________________________
+            xReal score(XMul &X, const XReadable &C, const Level &L) const;
+            void  revise(XMul &X); //!< set self score
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
@@ -61,16 +68,15 @@ namespace Yttrium
             const xReal       xi;    //!< current extent to outcome
             const xReal       ax;    //!< |xi|
             const XReadable & dc;    //!< SubLevel deltaC
-
-
+            xReal             ff;    //!< score
 
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };
 
-        typedef Small::CoopHeavyList<const Prospect> ProList; //!< alias
-        typedef ProList::NodeType                    ProNode; //!< alias
-        typedef ProList::ProxyType                   ProBank; //!< alias
+        typedef Small::CoopHeavyList<Prospect> ProList; //!< alias
+        typedef ProList::NodeType              ProNode; //!< alias
+        typedef ProList::ProxyType             ProBank; //!< alias
 
     }
 

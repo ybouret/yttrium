@@ -17,7 +17,8 @@ namespace Yttrium
         out(_out),
         xi(_xi),
         ax(xi.abs()),
-        dc(_dc)
+        dc(_dc),
+        ff(0)
         {
         }
 
@@ -26,7 +27,8 @@ namespace Yttrium
         out(_.out),
         xi(_.xi),
         ax(_.ax),
-        dc(_.dc)
+        dc(_.dc),
+        ff(_.ff)
         {
         }
 
@@ -35,8 +37,25 @@ namespace Yttrium
             return out.eq.name;
         }
 
+        xReal Prospect:: score(XMul &X, const XReadable &C, const Level &L) const
+        {
+            return out.eq.score(X,out.eK,C,L);
+        }
+
+        void  Prospect:: revise(XMul &X)
+        {
+            ff = score(X,out.C,out.L);
+        }
+
+
+
+
 
     }
 
 }
+
+
+
+
 
