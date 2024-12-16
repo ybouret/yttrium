@@ -29,7 +29,7 @@ namespace Yttrium
         static inline SignType byDecreasingAX(const ProNode * const lhs,
                                               const ProNode * const rhs) noexcept
         {
-            return Sign::Of( (**lhs).ax, (**rhs).ax );
+            return Sign::Of( (**rhs).ax, (**lhs).ax );
         }
 
         void Solver:: update() noexcept
@@ -48,6 +48,7 @@ namespace Yttrium
             const xReal zero;
 
             forget();
+
             {
                 plist.free();
 
@@ -64,6 +65,7 @@ namespace Yttrium
                     switch(out.st)
                     {
                         case Blocked:
+                            if(crucial) continue;;
                             Y_XMLOG(xml, "[Blocked] " << eq);
                             continue;
 
@@ -100,7 +102,7 @@ namespace Yttrium
                     for(const ProNode *pn=plist.head;pn;pn=pn->next)
                     {
                         const Prospect &pro = **pn;
-                        print(std::cerr,pro,Justify::Left) << " xi=" << pro.xi << std::endl;
+                        print(std::cerr,pro,Justify::Left) << " => |xi| = |" << pro.xi << "|" << std::endl;
                     }
                 }
 
