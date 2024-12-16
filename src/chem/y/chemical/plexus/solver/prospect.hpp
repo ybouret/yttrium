@@ -29,6 +29,8 @@ namespace Yttrium
             const xReal       ax;    //!< |xi|
             const XReadable & dc;    //!< SubLevel deltaC
 
+
+
         private:
             Y_DISABLE_ASSIGN(Prospect);
         };

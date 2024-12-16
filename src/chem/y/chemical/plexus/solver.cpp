@@ -36,9 +36,8 @@ namespace Yttrium
         {
             forget();
             for(const ProNode *pn=plist.head;pn;pn=pn->next)
-            {
                 enroll(**pn);
-            }
+
         }
 
         void Solver:: run(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
@@ -50,6 +49,15 @@ namespace Yttrium
             forget();
 
             {
+                Y_XML_SECTION(xml, "Probe");
+                size_t probe = 0;
+            PROBE:
+                ++probe;
+                Y_XML_COMMENT(xml, "probing phase space #" << probe);
+                if(xml.verbose)
+                {
+                    mix(xml() << "C=","\t[",C,"]") << std::endl;
+                }
                 plist.free();
 
                 bool crucial = false;
@@ -94,7 +102,7 @@ namespace Yttrium
                 assert(plist.size>0);
                 if(crucial)
                 {
-                    Y_XML_SECTION(xml, "Crucial");
+                    Y_XML_SECTION(xml, "CrucialRemoval");
                     MergeSort::Call(plist.removeIf(isRunning),byDecreasingAX); assert(plist.size>0);
 
                     if(xml.verbose)
@@ -107,6 +115,9 @@ namespace Yttrium
                         }
                     }
 
+                    const Prospect &pro = **plist.head;
+                    pro.out.upload(C,L);
+                    goto PROBE;
                 }
 
             }

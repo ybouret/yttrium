@@ -54,6 +54,12 @@ namespace Yttrium
             //! compute extent from C0 to this outcome and corresponding dC
             xReal extent(XAdd &xadd, const XReadable &C0, const Level L0, XWritable &dC, const Level dL) const;
 
+            template <typename TARGET> inline
+            TARGET & upload(TARGET &target, const Level tgt) const
+            {
+                return eq.transfer(target,tgt,C,L);
+            }
+
             //__________________________________________________________________
             //
             //

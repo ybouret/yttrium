@@ -199,9 +199,11 @@ namespace Yttrium
                         my.sformat.print(os, pfx, sp, sfx, Justify::Left);
                         os << " = ";
                         os << sp(arr,SubLevel);
-                        os << std::endl;
+                        if(0!=it->next)
+                            os << std::endl;
+                        else
+                            os << ' ' <<  '}';
                     }
-                    os << '}';
                 }
                 return os;
             }
@@ -226,9 +228,11 @@ namespace Yttrium
                         my.sformat.print(os, pfx, sp, sfx, Justify::Left);
                         os << " = ";
                         os << proc(sp(arr,SubLevel));
-                        os << std::endl;
+                        if(0!=it->next)
+                            os << std::endl;
+                        else
+                            os << ' ' <<  '}';
                     }
-                    os << '}';
                 }
                 return os;
             }
