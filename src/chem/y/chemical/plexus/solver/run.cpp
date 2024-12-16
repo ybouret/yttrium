@@ -138,7 +138,7 @@ namespace Yttrium
 
                 {
 
-                    OutputFile fp("pro.dat");
+                    OutputFile fp("pro0.dat");
                     const size_t np=100;
                     for(const ProNode *pn=my.head;pn;pn=pn->next)
                     {
@@ -178,12 +178,8 @@ namespace Yttrium
                 {
                     Prospect &pro = **pn;
                     mix.transfer(Cend, SubLevel, pro.C, pro.L);
-                    XTriplet  x = {zero, zero, one    };
-                    XTriplet  f = {f0,   f0,   pro.ff };
-
-                    //std::cerr << "F(" << real_t(x.a) << ")=" << real_t(f.a) << "/" <<  real_t(F(0)) << std::endl;
-                    //std::cerr << "F(" << real_t(x.c) << ")=" << real_t(f.c) << "/" <<  real_t(F(1)) << std::endl;
-
+                    XTriplet    x     = {zero, zero, one    };
+                    XTriplet    f     = {f0,   f0,   pro.ff };
                     const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
                     const xReal f_opt = F(x_opt);
 
@@ -207,8 +203,34 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // sort by increasing FF
+                //
+                //--------------------------------------------------------------
+                Y_XML_COMMENT(xml, "ordered state");
                 MergeSort::Call(my,byIncreasingFF);
                 my.show(xml);
+
+                {
+
+                    OutputFile fp("pro1.dat");
+                    const size_t np=100;
+                    for(const ProNode *pn=my.head;pn;pn=pn->next)
+                    {
+                        const Prospect &pro = **pn;
+                        mix.transfer(Cend, SubLevel, pro.C, pro.L);
+
+                        for(size_t i=0;i<=np;++i)
+                        {
+                            const double u = double(i)/np;
+                            const double f = double(objectiveFunction(u));
+                            fp("%.15g %.15g\n",u,f);
+                        }
+                        fp << "\n";
+                    }
+                }
 
             }
 
