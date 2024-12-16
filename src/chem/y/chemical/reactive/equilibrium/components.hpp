@@ -154,6 +154,9 @@ namespace Yttrium
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
 
 
+            xReal score(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
+
+
             //! transfer only components from source to target
             template <typename TARGET, typename SOURCE> inline
             TARGET & transfer(TARGET &target, const Level targetLevel,

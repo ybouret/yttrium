@@ -21,6 +21,23 @@ namespace Yttrium
         }
 
 
+        xReal Components:: score(XMul &xmul, const xReal K, const XReadable &C, const Level L) const
+        {
+            assert( running(C,L) );
+            xmul.free();
+            xmul << K;
+            reac.activity(xmul,C,L);
+            const xReal ra = xmul.product();
+
+            assert(xmul.isEmpty());
+            xmul << one;
+            prod.activity(xmul,C,L);
+            const xReal pa = xmul.product();
+            const xReal Q_over_K = pa/ra;
+            return Q_over_K.log();
+        }
+
+
         xReal Components:: prodActivity(XMul &xmul, const XReadable &C, const Level L, const xReal xi) const
         {
             xmul.free();
