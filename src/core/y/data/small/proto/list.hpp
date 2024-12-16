@@ -93,8 +93,9 @@ namespace Yttrium
                 this->mergeTail(temp);
             }
 
+            //! remove node content that must be removed
             template <typename MUST_REMOVE>
-            inline void removeIf(MUST_REMOVE &mustRemove) noexcept
+            inline ProtoList & removeIf(MUST_REMOVE &mustRemove) noexcept
             {
                 ListOf<NODE> store;
                 while(this->size>0)
@@ -105,6 +106,7 @@ namespace Yttrium
                         store.pushTail( this->popHead() );
                 }
                 this->swapWith(store);
+                return *this;
             }
 
 

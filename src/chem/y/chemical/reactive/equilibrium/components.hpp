@@ -202,6 +202,7 @@ namespace Yttrium
                 }
             }
 
+            //! display compact content
             template <typename ARRAY> inline
             std::ostream & displayCompact(std::ostream &os, ARRAY &C, const Level L) const
             {

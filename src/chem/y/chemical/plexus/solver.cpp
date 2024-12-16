@@ -94,16 +94,19 @@ namespace Yttrium
                 assert(plist.size>0);
                 if(crucial)
                 {
-                    plist.removeIf(isRunning);
-                    assert(plist.size>0);
-                    MergeSort::Call(plist,byDecreasingAX);
-                    update();
+                    Y_XML_SECTION(xml, "Crucial");
+                    MergeSort::Call(plist.removeIf(isRunning),byDecreasingAX); assert(plist.size>0);
 
-                    for(const ProNode *pn=plist.head;pn;pn=pn->next)
+                    if(xml.verbose)
                     {
-                        const Prospect &pro = **pn;
-                        print(std::cerr,pro,Justify::Left) << " => |xi| = |" << pro.xi << "|" << std::endl;
+                        update();
+                        for(const ProNode *pn=plist.head;pn;pn=pn->next)
+                        {
+                            const Prospect &pro = **pn;
+                            print(xml() << "@",pro,Justify::Left) << " => |xi| = | " << real_t(pro.xi) << " |" << std::endl;
+                        }
                     }
+
                 }
 
             }
