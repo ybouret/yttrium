@@ -19,8 +19,7 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
-            const xReal zero;
-
+            
             //------------------------------------------------------------------
             //
             //
@@ -50,7 +49,7 @@ namespace Yttrium
                     const size_t       ei  = plist.size+1;
                     XWritable         &cc  = mix.transfer(Csolve[ei].ld(zero),SubLevel,C,L);
                     XWritable         &dc  = deltaC[ei].ld(zero);
-                    const Outcome      out = aftermath.solve(eq,eK,cc,SubLevel,C,L);
+                    const Outcome      out = solve(eq,eK,cc,SubLevel,C,L);
 
                     switch(out.st)
                     {
@@ -70,7 +69,7 @@ namespace Yttrium
                             break;
                     }
 
-                    const xReal    xi = aftermath.extent(out, C, L, dc, SubLevel);
+                    const xReal    xi = extent(out, C, L, dc, SubLevel);
                     const Prospect pro(out,xi,dc);
                     plist << pro;
                 }
@@ -89,6 +88,8 @@ namespace Yttrium
 
 
                     update();
+                    show(xml);
+                    if(false)
                     for(const ProNode *pn=plist.head;pn;pn=pn->next)
                     {
                         const Prospect &pro = **pn; assert( Crucial == pro.out.st );
@@ -106,17 +107,16 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "Find");
                 update();
                 mix.transfer(Cini,SubLevel,C,L);
+                const xReal f0 = objectiveFunction(C,L);
+                Y_XMLOG(xml, "f0 = " << real_t(f0) );
                 for(ProNode *pn=plist.head;pn;pn=pn->next)
                 {
                     Prospect &pro = **pn;
                     assert(pro.out.st == Running);
                     assert(pro.out.eq.running(C,L));
-                    pro.revise(aftermath.xmul);
-                    if(xml.verbose) print(xml() << "@",pro,Justify::Left)
-                        << " : |xi| = | " << std::setw(15) << real_t(pro.xi) << " |"
-                        << " ff = " << std::setw(15) << real_t(pro.ff)
-                        << std::endl;
+                    pro.ff = objectiveFunction(pro.out.C,pro.out.L);
                 }
+                show(xml);
             }
 
 

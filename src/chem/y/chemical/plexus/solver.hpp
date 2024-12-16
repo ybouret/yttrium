@@ -21,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Solver : public Assembly
+        class Solver : public Aftermath, public Assembly
         {
         public:
             //__________________________________________________________________
@@ -48,10 +48,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
-
+            void show(XMLog &xml) const;
 
             void update() noexcept; //!< update assembly from prospect
 
+            xReal objectiveFunction(const XReadable &C, const Level L);
 
             
         private:
@@ -62,7 +63,6 @@ namespace Yttrium
             XMatrix       deltaC;       //!< all possible delta   C
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
-            Aftermath     aftermath;    //!< aftermath computation
             ProBank       pbank;        //!< resources
             ProList       plist;        //!< list of active prospects
 

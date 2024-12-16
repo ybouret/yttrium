@@ -22,6 +22,18 @@ namespace Yttrium
             return Core::Unknown;
         }
 
+        const char * Components:: SituationText(const Situation p) noexcept
+        {
+            switch(p)
+            {
+                    Y_ChemCm(Blocked);
+                    Y_ChemCm(Crucial);
+                    Y_ChemCm(Running);
+            }
+            return Core::Unknown;
+
+        }
+
         Components:: ~Components() noexcept
         {
         }
@@ -34,7 +46,7 @@ namespace Yttrium
             return name;
         }
 
-        
+
 
 
         const char * Components:: attrText() const noexcept

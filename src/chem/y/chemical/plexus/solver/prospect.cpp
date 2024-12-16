@@ -41,13 +41,8 @@ namespace Yttrium
         {
             return out.eq.score(X,out.eK,C,L);
         }
-
-        void  Prospect:: revise(XMul &X)
-        {
-            ff = score(X,out.C,out.L);
-        }
-
-
+        
+        
 
 
 

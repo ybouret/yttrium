@@ -39,7 +39,7 @@ namespace Yttrium
 
             //! cleanup
             virtual ~Prospect() noexcept;
-            
+
 
             //__________________________________________________________________
             //
@@ -56,8 +56,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             xReal score(XMul &X, const XReadable &C, const Level &L) const;
-            void  revise(XMul &X); //!< set self score
-
+            
             //__________________________________________________________________
             //
             //
