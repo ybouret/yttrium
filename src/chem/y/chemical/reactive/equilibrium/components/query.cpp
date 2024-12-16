@@ -72,6 +72,12 @@ namespace Yttrium
         }
 
 
+        bool Components:: running(const XReadable &C, const Level L) const noexcept
+        {
+            return reac.positive(C,L) && prod.positive(C,L);
+        }
+
+
         SignType Components:: bracket(XTriplet &       xi,
                                       XTriplet &       ff,
                                       XMul     &       xmul,

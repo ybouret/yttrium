@@ -171,8 +171,9 @@ namespace Yttrium
             }
 
 
-            Situation    situation(const XReadable &C, const Level L) const noexcept; //!< situation from concentrations
-            const char * attrText()                                   const noexcept; //!< human readable attribute
+            Situation    situation(const XReadable &, const Level) const noexcept; //!< situation from concentrations
+            bool         running(const XReadable &, const Level)   const noexcept; //!< check if is running
+            const char * attrText()                                const noexcept; //!< human readable attribute
 
             //! bracket RUNNING
             SignType bracket(XTriplet &       xi,

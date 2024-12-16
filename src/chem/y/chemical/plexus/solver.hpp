@@ -60,6 +60,8 @@ namespace Yttrium
             const Mix   & mix;          //!< persistent mix
             XMatrix       Csolve;       //!< all possible solving C
             XMatrix       deltaC;       //!< all possible delta   C
+            XArray        Cini;         //!< starting point
+            XArray        Cend;         //!< final point
             Aftermath     aftermath;    //!< aftermath computation
             ProBank       pbank;        //!< resources
             ProList       plist;        //!< list of active prospects

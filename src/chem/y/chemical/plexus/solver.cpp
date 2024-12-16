@@ -12,6 +12,8 @@ namespace Yttrium
         mix(_),
         Csolve(mix->size,mix->species.size),
         deltaC(mix->size,mix->species.size),
+        Cini(mix->species.size),
+        Cend(mix->species.size),
         aftermath(),
         pbank(),
         plist(pbank)
@@ -47,9 +49,9 @@ namespace Yttrium
             Y_XML_SECTION(xml,CallSign);
             const xReal zero;
 
-            forget();
 
             {
+                // probing all equilibria
                 Y_XML_SECTION(xml, "Probe");
                 size_t probe = 0;
             PROBE:
@@ -60,6 +62,7 @@ namespace Yttrium
                     mix(xml() << "C=","\t[",C,"]") << std::endl;
                 }
                 plist.free();
+                forget();
 
                 bool crucial = false;
                 for(const ENode *en=mix->head;en;en=en->next)
@@ -106,14 +109,12 @@ namespace Yttrium
                     Y_XML_SECTION(xml, "CrucialRemoval");
                     MergeSort::Call(plist.removeIf(isRunning),byDecreasingAX); assert(plist.size>0);
 
-                    if(xml.verbose)
+
+                    update();
+                    for(const ProNode *pn=plist.head;pn;pn=pn->next)
                     {
-                        update();
-                        for(const ProNode *pn=plist.head;pn;pn=pn->next)
-                        {
-                            const Prospect &pro = **pn;
-                            print(xml() << "@",pro,Justify::Left) << " => |xi| = | " << real_t(pro.xi) << " |" << std::endl;
-                        }
+                        const Prospect &pro = **pn; assert( Crucial == pro.out.st );
+                        if(xml.verbose) print(xml() << "@",pro,Justify::Left) << " => |xi| = | " << real_t(pro.xi) << " |" << std::endl;
                     }
 
                     const Prospect &pro = **plist.head;
@@ -121,6 +122,17 @@ namespace Yttrium
                     goto PROBE;
                 }
 
+            }
+
+            {
+                Y_XML_SECTION(xml, "Find");
+                mix.transfer(Cini,SubLevel,C,L);
+                for(const ProNode *pn=plist.head;pn;pn=pn->next)
+                {
+                    const Prospect &pro = **pn;
+                    assert(pro.out.st == Running);
+                    assert(pro.out.eq.running(C,L));
+                }
             }
 
 

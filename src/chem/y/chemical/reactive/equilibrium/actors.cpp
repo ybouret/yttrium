@@ -68,6 +68,24 @@ namespace Yttrium
             return false;
         }
 
+        bool Actors:: positive(const XReadable &C, const Level L) const noexcept
+        {
+            for(const Actor *a=company.head;a;a=a->next)
+            {
+                const xReal c = a->sp(C,L);
+                switch( Sign::Of(c.mantissa) )
+                {
+                    case Negative:
+                    case __Zero__:
+                        return false;
+
+                    case Positive:
+                        continue;
+                }
+            }
+            return true;
+        }
+
         xReal Actors:: limitingExtent(const XReadable &C, const Level L) const noexcept
         {
             if(company.size<=0)
