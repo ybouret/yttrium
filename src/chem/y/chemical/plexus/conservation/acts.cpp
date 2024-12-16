@@ -28,9 +28,9 @@ namespace Yttrium
                     {
                         if(act->accepts(law))
                         {
-                            act->collect(law);
                             accepted = true;
-                            reconnect();
+                            act->collect(law); // append to act
+                            reconnect();       // check reconnection
                             break;
                         }
                     }
@@ -59,7 +59,7 @@ namespace Yttrium
                     {
                         if(rhs->accepts(*lhs))
                         {
-                            rhs->collect(*rhs);
+                            rhs->collect(*lhs);
                             lhs.erase();
                             break;
                         }

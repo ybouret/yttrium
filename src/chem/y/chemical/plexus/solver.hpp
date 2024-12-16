@@ -13,7 +13,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Solver
+        class Solver : public Assembly
         {
         public:
             static const char * const CallSign;
@@ -21,6 +21,7 @@ namespace Yttrium
             virtual ~Solver() noexcept;
 
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
+            void update() noexcept; //!< update assembly from prospect
 
             const Mix   & mix;
             XMatrix       Csolve;

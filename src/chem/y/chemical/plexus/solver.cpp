@@ -26,6 +26,20 @@ namespace Yttrium
             return Running == pro.out.st;
         }
 
+        static inline SignType byDecreasingAX(const ProNode * const lhs,
+                                              const ProNode * const rhs) noexcept
+        {
+            return Sign::Of( (**lhs).ax, (**rhs).ax );
+        }
+
+        void Solver:: update() noexcept
+        {
+            forget();
+            for(const ProNode *pn=plist.head;pn;pn=pn->next)
+            {
+                enroll(**pn);
+            }
+        }
 
         void Solver:: run(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
         {
@@ -33,8 +47,10 @@ namespace Yttrium
             Y_XML_SECTION(xml,CallSign);
             const xReal zero;
 
+            forget();
             {
                 plist.free();
+
                 bool crucial = false;
                 for(const ENode *en=mix->head;en;en=en->next)
                 {
@@ -78,6 +94,14 @@ namespace Yttrium
                 {
                     plist.removeIf(isRunning);
                     assert(plist.size>0);
+                    MergeSort::Call(plist,byDecreasingAX);
+                    update();
+
+                    for(const ProNode *pn=plist.head;pn;pn=pn->next)
+                    {
+                        const Prospect &pro = **pn;
+                        print(std::cerr,pro,Justify::Left) << " xi=" << pro.xi << std::endl;
+                    }
                 }
 
             }

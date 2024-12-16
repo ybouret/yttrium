@@ -12,14 +12,17 @@ namespace Yttrium
     {
 
 
-        class Prospect
+        class Prospect : public Entity
         {
         public:
-            Prospect(const Outcome &   _out,
+            explicit Prospect(const Outcome &   _out,
                      const xReal       _xi,
                      const XReadable & _dx) noexcept;
-            Prospect(const Prospect &) noexcept;
-            ~Prospect() noexcept;
+            explicit Prospect(const Prospect &) noexcept;
+            virtual ~Prospect() noexcept;
+            Y_OSTREAM_PROTO(Prospect);
+
+            virtual const String & key() const noexcept;
 
             const Outcome     out;   //!< current outcome
             const xReal       xi;    //!< current extent to outcome

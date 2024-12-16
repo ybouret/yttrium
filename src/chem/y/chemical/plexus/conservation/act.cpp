@@ -39,6 +39,7 @@ namespace Yttrium
 
             bool Act:: accepts(const Act &other) const noexcept
             {
+                assert( this != &other );
                 for(const LNode *ln=other->head;ln;ln=ln->next)
                 {
                     const Law &law = **ln;
@@ -58,18 +59,11 @@ namespace Yttrium
 
             void Act:: collect(const Act &act)
             {
+                assert( this != &act );
                 for(const LNode *ln=act->head;ln;ln=ln->next)
                     collect(**ln);
             }
 
-#if 0
-            std::ostream & operator<<(std::ostream &os, const Act &act)
-            {
-                assert(act->size>0);
-                os << act.my;
-                return os;
-            }
-#endif
 
         }
 

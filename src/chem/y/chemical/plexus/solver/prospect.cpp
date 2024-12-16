@@ -28,6 +28,11 @@ namespace Yttrium
         {
         }
 
+        const String & Prospect:: key() const noexcept
+        {
+            return out.eq.name;
+        }
+
 
     }
 
