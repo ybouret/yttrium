@@ -43,9 +43,9 @@ namespace Yttrium
             //! compute C1 from C0
             Outcome solve(const Components &eq,
                           const xReal       eK,
-                          XWritable        &C1,
+                          XWritable &       C1,
                           const Level       L1,
-                          const XReadable  &C0,
+                          XWritable &       C0,
                           const Level       L0);
 
             //! compute extent from C0 to outcome

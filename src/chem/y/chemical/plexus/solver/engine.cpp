@@ -33,7 +33,7 @@ namespace Yttrium
             {
                 const Prospect &pro = **pn;
                 if(xml.verbose) {
-                    const char * const info = Components::SituationText(pro.out.st);
+                    const char * const info = Components::SituationText(pro.st);
                     print(xml() << info << " @",pro,Justify::Left)
                     << " : |xi| = | " << std::setw(15) << real_t(pro.xi) << " |"
                     << " ff = " << std::setw(15) << real_t(pro.ff)

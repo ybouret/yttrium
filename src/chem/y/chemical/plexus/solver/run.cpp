@@ -1,13 +1,15 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
 
+#include "y/mkl/opt/minimize.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
     {
         static inline bool isRunning(const Prospect &pro) noexcept
         {
-            return Running == pro.out.st;
+            return Running == pro.st;
         }
 
         static inline SignType byDecreasingAX(const ProNode * const lhs,
@@ -20,16 +22,16 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
-            
-            //------------------------------------------------------------------
-            //
-            //
-            // probing all equilibria to build non-crucial prospects
-            //
-            //
-            //------------------------------------------------------------------
-            {
 
+
+            {
+                //--------------------------------------------------------------
+                //
+                //
+                // probing all equilibria to build non-crucial prospects
+                //
+                //
+                //--------------------------------------------------------------
                 Y_XML_SECTION(xml, "Probe");
                 size_t probe = 0;
             PROBE:
@@ -84,14 +86,19 @@ namespace Yttrium
                 if(crucial)
                 {
                     Y_XML_SECTION(xml, "CrucialRemoval");
-                    MergeSort::Call(my.removeIf(isRunning),byDecreasingAX); assert(my.size>0);
 
+                    //----------------------------------------------------------
+                    // keep crucial part
+                    //----------------------------------------------------------
+                    MergeSort::Call(my.removeIf(isRunning),byDecreasingAX); assert(my.size>0);
                     my.update();
                     my.show(xml);
 
+                    //----------------------------------------------------------
                     // apply most crucial
+                    //----------------------------------------------------------
                     const Prospect &pro = **my.head;
-                    pro.out.upload(C,L);
+                    pro.upload(C,L);
                     goto PROBE;
                 }
 
@@ -100,31 +107,38 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml, "Find");
 
-                // initializing
+
+                //--------------------------------------------------------------
+                //
+                //
+                // Initialize with all outcome
+                //
+                //
+                //--------------------------------------------------------------
                 my.update();
                 mix.transfer(Cini,SubLevel,C,L);
-
                 const xReal f0 = objectiveFunction(C,L);
                 Y_XMLOG(xml, "f0 = " << real_t(f0) );
                 for(ProNode *pn=my.head;pn;pn=pn->next)
                 {
                     Prospect &pro = **pn;
-                    assert(pro.out.st == Running);
-                    assert(pro.out.eq.running(C,L));
-                    assert(pro.out.eq.running(pro.out.C,pro.out.L));
-                    pro.ff = objectiveFunction(pro.out.C,pro.out.L);
+                    assert(pro.st == Running);
+                    assert(pro.eq.running(C,L));
+                    assert(pro.eq.running(pro.C,pro.L));
+                    pro.ff = objectiveFunction(pro.C,pro.L);
                 }
                 my.show(xml);
 
                 {
+
                     OutputFile fp("pro.dat");
                     const size_t np=100;
                     for(const ProNode *pn=my.head;pn;pn=pn->next)
                     {
                         const Prospect &pro = **pn;
-                        mix.transfer(Cend, SubLevel, pro.out.C, pro.out.L);
+                        mix.transfer(Cend, SubLevel, pro.C, pro.L);
 
-                        
+
                         for(size_t i=0;i<=np;++i)
                         {
                             const double u = double(i)/np;
@@ -133,9 +147,52 @@ namespace Yttrium
                         }
                         fp << "\n";
                     }
-
                 }
 
+                if(1==my.size)
+                {
+                    const Prospect &pro = **my.head;
+                    Y_XML_COMMENT(xml, "single equilibrium '" << pro.key() << "'");
+                    mix.transfer(C,L,pro.C,pro.L);
+                    return;
+                }
+
+
+                //--------------------------------------------------------------
+                //
+                //
+                // Refining
+                //
+                //
+                //--------------------------------------------------------------
+                Solver &F = *this;
+                for(ProNode *pn=my.head;pn;pn=pn->next)
+                {
+                    Prospect &pro = **pn;
+                    mix.transfer(Cend, SubLevel, pro.C, pro.L);
+                    XTriplet  x = {zero, zero, one    };
+                    XTriplet  f = {f0,   f0,   pro.ff };
+
+                    std::cerr << "F(" << real_t(x.a) << ")=" << real_t(f.a) << "/" <<  real_t(F(0)) << std::endl;
+                    std::cerr << "F(" << real_t(x.c) << ")=" << real_t(f.c) << "/" <<  real_t(F(1)) << std::endl;
+
+                    const xReal x_opt = MKL::Minimize<xReal>::Locate(MKL::Minimizing::Inside, F, x, f);
+                    const xReal f_opt = F(x_opt);
+
+                    std::cerr << "F(" << real_t(x_opt) << ")=" << real_t(f_opt) << std::endl;
+
+                    if(f_opt<f0)
+                    {
+                        // update prospect
+                    }
+                    else
+                    {
+                        // degenerate prospect
+                    }
+
+                    std::cerr << std::endl;
+
+                }
 
 
             }

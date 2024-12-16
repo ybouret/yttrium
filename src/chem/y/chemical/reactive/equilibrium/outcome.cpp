@@ -12,10 +12,11 @@ namespace Yttrium
 #endif
 
         Outcome:: Outcome(const Situation  &_st,
-                                 const Components &_eq,
-                                 const xReal       _eK,
-                                 const XReadable &_C,
-                                 const Level      _L) :
+                          const Components &_eq,
+                          const xReal       _eK,
+                          XWritable &       _C,
+                          const Level       _L) :
+        Entity(),
         st(_st),
         eq(_eq),
         eK(_eK),
@@ -26,6 +27,7 @@ namespace Yttrium
         }
 
         Outcome:: Outcome(const Outcome &_) noexcept :
+        Entity(),
         st(_.st),
         eq(_.eq),
         eK(_.eK),
@@ -34,7 +36,10 @@ namespace Yttrium
         {
 
         }
-        
+
+
+        const String & Outcome:: key() const noexcept { return eq.key(); }
+
         Outcome:: ~Outcome() noexcept {}
 
 

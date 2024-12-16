@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Outcome
+        class Outcome : public Entity
         {
         public:
             //__________________________________________________________________
@@ -32,14 +32,21 @@ namespace Yttrium
             Outcome(const Situation  & _st,
                     const Components & _eq,
                     const xReal        _eK,
-                    const XReadable &  _C,
+                    XWritable &        _C,
                     const Level        _L);
 
             //! duplicate
             Outcome(const Outcome &) noexcept;
 
             //! cleanup
-            ~Outcome() noexcept;
+            virtual ~Outcome() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const String & key() const noexcept; //! [Entity] eq.key()
 
             //__________________________________________________________________
             //
@@ -70,7 +77,7 @@ namespace Yttrium
             const Situation   st; //!< current situation
             const Components &eq; //!< used components
             const xReal       eK; //!< used constant
-            const XReadable  &C;  //!< concentration
+            XWritable        &C;  //!< concentration
             const Level       L;  //!< level
             
         private:

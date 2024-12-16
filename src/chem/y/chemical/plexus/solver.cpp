@@ -15,7 +15,8 @@ namespace Yttrium
         deltaC(mix->size,mix->species.size),
         Cini(mix->species.size),
         Cend(mix->species.size),
-        Ctmp(mix->species.size)
+        Ctmp(mix->species.size),
+        one(1)
         {
 
         }
@@ -43,8 +44,7 @@ namespace Yttrium
 
         xReal Solver:: objectiveFunction(const xReal u)
         {
-            const xReal  _1 = 1;
-            const xReal   v = _1 - u;
+            const xReal   v = one - u;
             const size_t  m = Ctmp.size();
             for(size_t j=m;j>0;--j)
             {
@@ -58,10 +58,6 @@ namespace Yttrium
                 Ctmp[j] = Clamp(cmin, ctmp, cmax);
             }
 
-            //std::cerr << "Cini=" << Cini << std::endl;
-            //std::cerr << "Cend=" << Cend << std::endl;
-            //std::cerr << "Ctmp=" << Ctmp << " @" << u << std::endl;
-
             return objectiveFunction(Ctmp,SubLevel);
         }
 
@@ -74,7 +70,7 @@ namespace Yttrium
             {
                 const Prospect &pro = **pn;
                 if(xml.verbose) {
-                    const char * const info = Components::SituationText(pro.out.st);
+                    const char * const info = Components::SituationText(pro.st);
                     my.print(xml() << info << " @",pro,Justify::Left)
                     << " : |xi| = | " << std::setw(15) << real_t(pro.xi) << " |"
                     << " ff = " << std::setw(15) << real_t(pro.ff)

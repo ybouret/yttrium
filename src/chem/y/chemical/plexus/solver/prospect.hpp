@@ -19,7 +19,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Prospect : public Entity
+        class Prospect : public Outcome
         {
         public:
             //__________________________________________________________________
@@ -32,7 +32,7 @@ namespace Yttrium
             //! setup
             explicit Prospect(const Outcome &   _out,
                               const xReal       _xi,
-                              const XReadable & _dx) noexcept;
+                              XWritable       & _dx) noexcept;
 
             //! duplicate
             explicit Prospect(const Prospect &) noexcept;
@@ -40,15 +40,7 @@ namespace Yttrium
             //! cleanup
             virtual ~Prospect() noexcept;
 
-
-            //__________________________________________________________________
-            //
-            //
-            // Interface
-            //
-            //__________________________________________________________________
-            virtual const String & key() const noexcept; //! [Entity] out.eq.name
-
+            
             //__________________________________________________________________
             //
             //
@@ -63,10 +55,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const Outcome     out;   //!< current outcome
-            const xReal       xi;    //!< current extent to outcome
-            const xReal       ax;    //!< |xi|
-            const XReadable & dc;    //!< SubLevel deltaC
+            xReal             xi;    //!< current extent to outcome
+            xReal             ax;    //!< |xi|
+            XWritable       & dc;    //!< SubLevel deltaC
             xReal             ff;    //!< score
 
         private:

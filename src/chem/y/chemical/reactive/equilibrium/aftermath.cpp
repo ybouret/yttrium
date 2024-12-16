@@ -137,7 +137,7 @@ namespace Yttrium
                                   const xReal       eK,
                                   XWritable        &C1,
                                   const Level       L1,
-                                  const XReadable  &C0,
+                                  XWritable  &      C0,
                                   const Level       L0)
         {
 

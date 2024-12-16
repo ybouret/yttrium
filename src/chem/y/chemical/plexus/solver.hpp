@@ -55,6 +55,8 @@ namespace Yttrium
             xReal objectiveFunction(const XReadable &C, const Level L);
             xReal objectiveFunction(const xReal u);
 
+            xReal operator()(const xReal u) { return objectiveFunction(u); }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             virtual ConstInterface & surrogate() const noexcept;
@@ -66,7 +68,7 @@ namespace Yttrium
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
             XArray        Ctmp;         //!< updated by objectiveFunction(u)
-
+            const xReal   one;
 
         };
     }
