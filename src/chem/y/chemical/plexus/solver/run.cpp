@@ -228,8 +228,10 @@ namespace Yttrium
                     }
                 }
 
+                const char      ode[] = "ode";
                 const Prospect &pr = **my.head;
                 xReal           Fx = pr.ff;
+                const char *    id = pr.eq.name.c_str();
                 mix.transfer(Capp, SubLevel, pr.C, pr.L);
 
                 {
@@ -238,11 +240,12 @@ namespace Yttrium
                     {
                         Fx = Ftmp;
                         Capp.ld(Ctmp);
-                        Y_XML_COMMENT(xml, "keep ODE");
+                        Y_XML_COMMENT(xml, "keep ODE/" << id);
+                        id = ode;
                     }
                     else
                     {
-                        Y_XML_COMMENT(xml, "drop ODE");
+                        Y_XML_COMMENT(xml, "drop ODE/" << id);
                     }
                 }
 
