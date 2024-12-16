@@ -53,8 +53,8 @@ namespace Yttrium
             void update() noexcept; //!< update assembly from prospect
 
             xReal objectiveFunction(const XReadable &C, const Level L);
+            xReal objectiveFunction(const xReal u);
 
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
 
@@ -63,6 +63,7 @@ namespace Yttrium
             XMatrix       deltaC;       //!< all possible delta   C
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
+            XArray        Ctmp;         //!< updated by objectiveFunction(u)
             ProBank       pbank;        //!< resources
             ProList       plist;        //!< list of active prospects
 

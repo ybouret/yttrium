@@ -14,6 +14,7 @@ namespace Yttrium
         deltaC(mix->size,mix->species.size),
         Cini(mix->species.size),
         Cend(mix->species.size),
+        Ctmp(mix->species.size),
         pbank(),
         plist(pbank)
         {
@@ -46,6 +47,27 @@ namespace Yttrium
 
             return (xadd.sum()/den).sqrt();
         }
+
+
+        xReal Solver:: objectiveFunction(const xReal u)
+        {
+            const xReal  _1 = 1;
+            const xReal   v = _1 - u;
+            const size_t  m = Ctmp.size();
+            for(size_t j=m;j>0;--j)
+            {
+                const xReal c0 = Cini[j];
+                const xReal c1 = Cend[j];
+                xReal       cmin = c0;
+                xReal       cmax = c1;
+                if(cmax<cmin) Swap(cmin,cmax);
+                assert(cmin<=cmax);
+                const xReal ctmp = c0 * v + c1 * u;
+                Ctmp[j] = Clamp(cmin, ctmp, cmax);
+            }
+            return objectiveFunction(Ctmp,SubLevel);
+        }
+
 
 
         void Solver:: show(XMLog &xml) const
