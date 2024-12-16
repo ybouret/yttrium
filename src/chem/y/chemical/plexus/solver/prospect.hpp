@@ -47,8 +47,10 @@ namespace Yttrium
             // Method
             //
             //__________________________________________________________________
+
+            //! score of equilibrium with its constant at C
             xReal score(XMul &X, const XReadable &C, const Level &L) const;
-            
+
             //__________________________________________________________________
             //
             //

@@ -49,7 +49,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
-            void show(XMLog &xml) const;
 
 
             xReal objectiveFunction(const XReadable &C, const Level L);

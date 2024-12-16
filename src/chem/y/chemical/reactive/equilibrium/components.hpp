@@ -154,6 +154,7 @@ namespace Yttrium
             xReal activity(XMul &xmul, const xReal K, const XReadable &C, const Level L, const xReal xi) const;
 
 
+            //! log(Q/K)
             xReal score(XMul &xmul, const xReal K, const XReadable &C, const Level L) const;
 
 

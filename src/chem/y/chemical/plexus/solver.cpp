@@ -62,22 +62,7 @@ namespace Yttrium
         }
 
 
-
-        void Solver:: show(XMLog &xml) const
-        {
-            Y_XML_SECTION_OPT(xml, "Chemical::Prospects", "count='" << my.size << "'");
-            for(const ProNode *pn=my.head;pn;pn=pn->next)
-            {
-                const Prospect &pro = **pn;
-                if(xml.verbose) {
-                    const char * const info = Components::SituationText(pro.st);
-                    my.print(xml() << info << " @",pro,Justify::Left)
-                    << " : |xi| = | " << std::setw(15) << real_t(pro.xi) << " |"
-                    << " ff = " << std::setw(15) << real_t(pro.ff)
-                    << std::endl;
-                }
-            }
-        }
+        
 
 
     }
