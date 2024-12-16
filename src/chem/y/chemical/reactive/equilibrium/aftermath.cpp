@@ -213,6 +213,10 @@ namespace Yttrium
             return outcome.extent(xadd,C0,L0);
         }
 
+        xReal  Aftermath:: extent(const Outcome &outcome, const XReadable &C0, const Level L0, XWritable &dC, const Level dL)
+        {
+            return outcome.extent(xadd,C0,L0,dC,dL);
+        }
 
     }
 

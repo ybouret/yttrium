@@ -51,6 +51,10 @@ namespace Yttrium
             //! compute extent from C0 to outcome
             xReal  extent(const Outcome &outcome, const XReadable &C0, const Level L0);
 
+            //! compute extent from C0 to outcome and corresponding dC
+            xReal  extent(const Outcome &outcome, const XReadable &C0, const Level L0, XWritable &dC, const Level dL);
+
+
             //__________________________________________________________________
             //
             //

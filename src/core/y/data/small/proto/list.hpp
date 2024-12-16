@@ -86,12 +86,28 @@ namespace Yttrium
                 proxy->destroy( this->pop(node) );
             }
 
-            //! add a copy of other
+            //! add a copy of another
             inline void growTail(const CopyOf_ &, const ProtoList &other)
             {
                 ProtoList temp(other);
                 this->mergeTail(temp);
             }
+
+            template <typename MUST_REMOVE>
+            inline void removeIf(MUST_REMOVE &mustRemove) noexcept
+            {
+                ListOf<NODE> store;
+                while(this->size>0)
+                {
+                    if( mustRemove(**(this->head)) )
+                        cutHead();
+                    else
+                        store.pushTail( this->popHead() );
+                }
+                this->swapWith(store);
+            }
+
+
 
 
 

@@ -233,6 +233,19 @@ namespace Yttrium
                 return os;
             }
 
+            //! transfer by species
+            template <typename TARGET, typename SOURCE> inline
+            TARGET & transfer(TARGET &target, const Level tgt,
+                              SOURCE &source, const Level src) const
+            {
+                for(const SNode *sn=my.species.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    sp(target,tgt) = sp(source,src);
+                }
+                return target;
+            }
+
 
 
         private:

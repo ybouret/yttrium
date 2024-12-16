@@ -79,7 +79,7 @@ namespace Yttrium
                                       const XReadable &C,
                                       const Level      L) const
         {
-            assert( Running == situation(C,L) );
+            assert( Running == situation(C,L) || Crucial == situation(C,L) );
             const xReal zero;
             xi.a = xi.b = xi.c = zero;
             ff.a = ff.b = ff.c = activity(xmul, K, C, L);

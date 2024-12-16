@@ -65,7 +65,7 @@ namespace Yttrium
             static const char * const         Scheme;        //!< color scheme
             static const char * AttributeText(const Attribute) noexcept; //!< human readable attribute
             static const char * SituationText(const Situation) noexcept; //!< human readable situation
-            
+
             //__________________________________________________________________
             //
             //
@@ -156,8 +156,8 @@ namespace Yttrium
 
             //! transfer only components from source to target
             template <typename TARGET, typename SOURCE> inline
-            void transfer(TARGET &target, const Level targetLevel,
-                          SOURCE &source, const Level sourceLevel) const
+            TARGET & transfer(TARGET &target, const Level targetLevel,
+                              SOURCE &source, const Level sourceLevel) const
             {
                 size_t        n = cmdb.size();
                 ConstIterator i = cmdb.begin();
@@ -167,6 +167,7 @@ namespace Yttrium
                     s(target,targetLevel) = s(source,sourceLevel);
                     ++i;
                 }
+                return target;
             }
 
 
@@ -200,6 +201,22 @@ namespace Yttrium
                     }
                 }
             }
+
+            template <typename ARRAY> inline
+            std::ostream & displayCompact(std::ostream &os, ARRAY &C, const Level L) const
+            {
+                os << '{';
+                size_t i=0;
+                for(ConstIterator it=cmdb.begin();it!=cmdb.end();++it,++i)
+                {
+                    const Species &sp = (*it).actor.sp;
+                    os << '[' << sp.name << ']' << '=' << real_t( sp(C,L) );
+                    if(i>0) os << ';';
+                }
+                os << '}';
+                return os;
+            }
+
 
             //__________________________________________________________________
             //

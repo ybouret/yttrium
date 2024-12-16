@@ -2,7 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
-#include "y/chemical/reactive/equilibrium/aftermath.hpp"
+#include "y/chemical/plexus/solver.hpp"
 
 
 #include "y/utest/run.hpp"
@@ -40,6 +40,16 @@ Y_UTEST(plexus)
     Mixes    mixes(eqs,xml);
     
     std::cerr << "mixes=" << mixes << std::endl;
+
+    const size_t M = lib->size();
+    XVector C0(M,0);
+
+    for(const Mix *mix=mixes->head;mix;mix=mix->next)
+    {
+        Solver solver(*mix);
+        solver.run(xml, C0, TopLevel, eqs.K);
+    }
+
 
 #if 0
     Clusters clusters(eqs,xml);
