@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/solver.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -65,6 +66,23 @@ namespace Yttrium
 
         xReal Solver:: operator()(const xReal u) { return objectiveFunction(u); }
 
+
+        void Solver:: save(OutputStream &fp, const size_t np) 
+        {
+            for(size_t i=0;i<=np;++i)
+            {
+                const double u = double(i)/np;
+                const double f = double(objectiveFunction(u));
+                fp("%.15g %.15g\n",u,f);
+            }
+        }
+
+
+        void Solver:: save(const String &fn, const size_t np)
+        {
+            OutputFile fp(fn);
+            save(fp,np);
+        }
 
     }
 

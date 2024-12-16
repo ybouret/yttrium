@@ -217,18 +217,11 @@ namespace Yttrium
                 {
 
                     OutputFile fp("pro1.dat");
-                    const size_t np=100;
                     for(const ProNode *pn=my.head;pn;pn=pn->next)
                     {
                         const Prospect &pro = **pn;
                         mix.transfer(Cend, SubLevel, pro.C, pro.L);
-
-                        for(size_t i=0;i<=np;++i)
-                        {
-                            const double u = double(i)/np;
-                            const double f = double(objectiveFunction(u));
-                            fp("%.15g %.15g\n",u,f);
-                        }
+                        save(fp,100);
                         fp << "\n";
                     }
                 }
