@@ -63,7 +63,7 @@ namespace Yttrium
             const Situation   st; //!< current situation
             const Components &eq; //!< used components
             const xReal       eK; //!< used constant
-            const XReadable  &C;  //!< initial concentration
+            const XReadable  &C;  //!< concentration
             const Level       L;  //!< level
             
         private:
