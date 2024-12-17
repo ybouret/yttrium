@@ -10,6 +10,14 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,NRA);
 
+            Orthogonal::Family qfamily(mix->species.size);
+
+
+            // extracting
+            qfamily.free();
+            
+
+
             return f0;
         }
 

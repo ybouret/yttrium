@@ -7,6 +7,7 @@
 #include "y/chemical/plexus/mix.hpp"
 #include "y/chemical/plexus/solver/engine.hpp"
 #include "y/chemical/reactive/equilibrium/aftermath.hpp"
+#include "y/orthogonal/family.hpp"
 
 namespace Yttrium
 {
