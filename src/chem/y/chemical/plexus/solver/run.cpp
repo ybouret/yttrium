@@ -34,8 +34,10 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
-
+            size_t cycle = 0;
         PROBE:
+            ++cycle;
+
             //------------------------------------------------------------------
             //
             //
@@ -45,9 +47,9 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            for(size_t cycle=1;;++cycle)
+            for(size_t probe=1;;++probe)
             {
-                Y_XML_COMMENT(xml, "probing cycle #" << cycle);
+                Y_XML_COMMENT(xml, "probing cycle #" << cycle << "." << probe);
 
                 //--------------------------------------------------------------
                 //
