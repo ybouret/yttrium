@@ -34,6 +34,8 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
+            OutputFile::Overwrite("score.dat");
+
             size_t cycle = 0;
         PROBE:
             ++cycle;
@@ -163,6 +165,10 @@ namespace Yttrium
             const xReal f0 = objectiveFunction( mix.transfer(Cini, SubLevel, C, L), SubLevel );
             Y_XMLOG(xml, "f0 = " << real_t(f0) );
 
+            {
+                OutputFile fp("score.dat",true);
+                fp("%g %.15g\n", double(cycle), double(f0));
+            }
 
             //------------------------------------------------------------------
             //
@@ -217,7 +223,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml, "searching better score");
+            Y_XML_COMMENT(xml, "searching better score #" << cycle);
             const Prospect &pro = **my.head;
             xReal           f1  = pro.ff;      assert(f1<=f0);
             Y_XMLOG(xml, "[pro] " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
