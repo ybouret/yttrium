@@ -285,6 +285,32 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // check if nra decreased current state
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                const xReal ftmp = buildNRA(xml,f0);
+                Y_XMLOG(xml, "[nra] " << toReal(ftmp) << " / " << toReal(f1) );
+                if(ftmp<f1)
+                {
+                    decreased = true;
+                    f1=ftmp;
+                    mix.transfer(C,L,Ctmp,SubLevel);
+                    Y_XML_COMMENT(xml, "keep [nra] result");
+                }
+                else
+                {
+                    Y_XML_COMMENT(xml, "drop [nra] result");
+                }
+            }
+
+
+
+
 
             if(decreased)
             {

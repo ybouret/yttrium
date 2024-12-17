@@ -33,6 +33,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const CallSign; //!< "Chemical::Solver"
             static const char * const ODE;      //!< "ode"
+            static const char * const NRA;      //!< "nra"
 
             //__________________________________________________________________
             //
@@ -62,6 +63,7 @@ namespace Yttrium
             xReal                    objectiveFunction(const xReal u);
 
             xReal                    buildODE(XMLog &xml, const xReal f0);
+            xReal                    buildNRA(XMLog &xml, const xReal f0);
             xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
             void                     save(OutputStream &fp, const size_t np);    //!< save with Cini/Cend loaded
@@ -77,7 +79,6 @@ namespace Yttrium
             XMatrix       deltaC;       //!< all possible delta   C
             XArray        Cini;         //!< starting point
             XArray        Cend;         //!< final point
-            XArray        Capp;         //!< applicant
             XArray        Ctmp;         //!< updated by objectiveFunction(u)
             XArray        step;         //!< temporary computed step
             XAdds         Cadd;         //!< for algebra on rates

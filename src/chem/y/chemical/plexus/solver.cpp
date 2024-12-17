@@ -16,7 +16,6 @@ namespace Yttrium
         deltaC(mix->size,mix->species.size),
         Cini(mix->species.size),
         Cend(mix->species.size),
-        Capp(mix->species.size),
         Ctmp(mix->species.size),
         step(mix->species.size),
         Cadd(mix->species.size),
@@ -27,6 +26,7 @@ namespace Yttrium
 
         const char * const Solver:: CallSign = "Chemical::Solver";
         const char * const Solver:: ODE      = "ode";
+        const char * const Solver:: NRA      = "nra";
 
         Solver::ConstInterface & Solver:: surrogate() const noexcept { return my; }
 
