@@ -9,7 +9,7 @@ namespace Yttrium
 
         xReal Solver:: buildODE(XMLog &xml, const xReal f0)
         {
-            Y_XML_SECTION(xml, "ODE");
+            Y_XML_SECTION(xml, ODE);
 
             //------------------------------------------------------------------
             //
@@ -51,7 +51,7 @@ namespace Yttrium
             // make step
             //
             //------------------------------------------------------------------
-            return makeStep(xml,f0,"ode");
+            return makeStep(xml,f0,ODE);
 
         }
 

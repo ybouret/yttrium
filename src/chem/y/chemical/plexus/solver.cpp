@@ -26,7 +26,7 @@ namespace Yttrium
         }
 
         const char * const Solver:: CallSign = "Chemical::Solver";
-        const char * const Solver:: ODE      = "ODE";
+        const char * const Solver:: ODE      = "ode";
 
         Solver::ConstInterface & Solver:: surrogate() const noexcept { return my; }
 
@@ -84,6 +84,19 @@ namespace Yttrium
         {
             OutputFile fp(fn);
             save(fp,np);
+        }
+
+
+        void Solver:: savePro(const String &fn, const size_t np)
+        {
+            OutputFile fp(fn);
+            for(const ProNode *pn=my.head;pn;pn=pn->next)
+            {
+                const Prospect &pro = **pn;
+                mix.transfer(Cend, SubLevel, pro.C, pro.L);
+                save(fp,np);
+                fp << "\n";
+            }
         }
 
     }

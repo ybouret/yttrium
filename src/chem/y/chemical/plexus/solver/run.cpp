@@ -24,32 +24,50 @@ namespace Yttrium
             return Sign::Of( (**lhs).ff, (**rhs).ff );
         }
 
+
+
+        static inline String toReal(const xReal x) {
+            return Formatted::Get("%.15g", double(x) );
+        }
+
         void Solver:: run(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
         {
 
             Y_XML_SECTION(xml,CallSign);
 
-
+        PROBE:
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // probing all equilibria, with crucial state detection
+            //
+            //
+            //
+            //------------------------------------------------------------------
+            for(size_t cycle=1;;++cycle)
             {
-                //--------------------------------------------------------------
-                //
-                //
-                // probing all equilibria to build non-crucial prospects
-                //
-                //
-                //--------------------------------------------------------------
-                Y_XML_SECTION(xml, "Probe");
-                size_t probe = 0;
-            PROBE:
-                ++probe;
-                Y_XML_COMMENT(xml, "probing phase space #" << probe);
-                if(xml.verbose)
-                {
-                    mix(xml() << "C=","\t[",C,"]") << std::endl;
-                }
-                my.reset();
+                Y_XML_COMMENT(xml, "probing cycle #" << cycle);
 
+                //--------------------------------------------------------------
+                //
+                //
+                //  initialize probe
+                //
+                //
+                //--------------------------------------------------------------
+                my.reset();
                 bool crucial = false;
+                if(xml.verbose)
+                    mix(xml() << "C=","\t[", mix.transfer(Ctmp, SubLevel, C, L),"]",toReal) << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                //
+                //  loop over equilibria
+                //
+                //
+                //--------------------------------------------------------------
                 for(const ENode *en=mix->head;en;en=en->next)
                 {
                     const Equilibrium &eq  = **en;
@@ -61,18 +79,15 @@ namespace Yttrium
 
                     switch(out.st)
                     {
-                        case Blocked:
-                            if(crucial) continue;;
+                        case Blocked: if(crucial) continue; // shortcut
                             Y_XMLOG(xml, "[Blocked] " << eq);
                             continue;
 
-                        case Crucial:
-                            crucial = true;
+                        case Crucial: crucial = true;
                             Y_XMLOG(xml, "[Crucial] " << eq);
                             break;
 
-                        case Running:
-                            if(crucial) continue;
+                        case Running: if(crucial) continue; // shortcut
                             Y_XMLOG(xml, "[Running] " << eq);
                             break;
                     }
@@ -82,16 +97,34 @@ namespace Yttrium
                     my << pro;
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                //  let's check what we got
+                //
+                //
+                //--------------------------------------------------------------
+
+                //--------------------------------------------------------------
+                //
+                // no active prospect ?
+                //
+                //--------------------------------------------------------------
                 if(my.size<=0)
                 {
                     Y_XML_COMMENT(xml, "all blocked");
                     return;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // crucial prospects ?
+                //
+                //--------------------------------------------------------------
                 assert(my.size>0);
                 if(crucial)
                 {
-                    Y_XML_SECTION(xml, "CrucialRemoval");
+                    Y_XML_COMMENT(xml, "removing crucial");
 
                     //----------------------------------------------------------
                     // keep crucial part
@@ -105,149 +138,151 @@ namespace Yttrium
                     //----------------------------------------------------------
                     const Prospect &pro = **my.head;
                     pro.upload(C,L);
-                    goto PROBE;
+                    continue;
                 }
 
+                assert(my.size>0);
+                break;
             }
 
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // we have my.size>0 of running prospects:
+            // - objectiveFunction is defined
+            // - setup f0 @ Cini=C
+            //
+            //
+            //------------------------------------------------------------------
+            Y_XML_COMMENT(xml, "running #" << my.size << "/" << mix->size);
+            my.update();
+            const xReal f0 = objectiveFunction( mix.transfer(Cini, SubLevel, C, L), SubLevel );
+            Y_XMLOG(xml, "f0 = " << real_t(f0) );
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // Optimize all prospects
+            //
+            //
+            //
+            //------------------------------------------------------------------
+            Y_XML_COMMENT(xml, "optimize prospects");
+            for(ProNode *pn=my.head;pn;pn=pn->next)
             {
-                Y_XML_SECTION(xml, "Find");
-
-
-                //--------------------------------------------------------------
-                //
-                //
-                // Initialize with all outcome
-                //
-                //
-                //--------------------------------------------------------------
-                my.update();
-                mix.transfer(Cini,SubLevel,C,L);
-                const xReal f0 = objectiveFunction(C,L);
-                Y_XML_COMMENT(xml, "initial state");
-                Y_XMLOG(xml, "f0 = " << real_t(f0) );
-                for(ProNode *pn=my.head;pn;pn=pn->next)
+                Prospect &  pro   = **pn;
+                const xReal f_opt = optimize(f0, pro.ff = objectiveFunction( mix.transfer(Cend,SubLevel,pro.C,pro.L), SubLevel ));
+                if(f_opt<f0)
                 {
-                    Prospect &pro = **pn;
-                    assert(pro.st == Running);
-                    assert(pro.eq.running(C,L));
-                    assert(pro.eq.running(pro.C,pro.L));
-                    pro.ff = objectiveFunction(pro.C,pro.L);
+                    //----------------------------------------------------------
+                    //
+                    // update prospect to f_opt @ Ctmp
+                    //
+                    //----------------------------------------------------------
+                    Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " => " << real_t(f_opt) );
+                    mix.transfer(pro.C, pro.L, Ctmp, SubLevel);
+                    pro.ax = (pro.xi = pro.extent(xadd, C, L, pro.dc, SubLevel)).abs();
+                    pro.ff = f_opt;
                 }
-                my.show(xml);
-
+                else
                 {
-
-                    OutputFile fp("pro0.dat");
-                    const size_t np=100;
-                    for(const ProNode *pn=my.head;pn;pn=pn->next)
-                    {
-                        const Prospect &pro = **pn;
-                        mix.transfer(Cend, SubLevel, pro.C, pro.L);
-
-
-                        for(size_t i=0;i<=np;++i)
-                        {
-                            const double u = double(i)/np;
-                            const double f = double(objectiveFunction(u));
-                            fp("%.15g %.15g\n",u,f);
-                        }
-                        fp << "\n";
-                    }
+                    //----------------------------------------------------------
+                    //
+                    // degenerate prospect
+                    //
+                    //----------------------------------------------------------
+                    Y_XMLOG(xml, "(-) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right));
+                    mix.transfer(pro.C,pro.L,C,L);
+                    pro.xi = pro.ax = zero;
+                    pro.dc.ld(zero);
+                    pro.ff = f0;
                 }
-
-                if(1==my.size)
-                {
-                    const Prospect &pro = **my.head;
-                    Y_XML_COMMENT(xml, "single equilibrium '" << pro.key() << "'");
-                    mix.transfer(C,L,pro.C,pro.L);
-                    return;
-                }
-
-                // TODO: f0<=0
+            }
+            MergeSort::Call(my,byIncreasingFF);
+            my.show(xml);
 
 
-                //--------------------------------------------------------------
-                //
-                //
-                // Refining
-                //
-                //
-                //--------------------------------------------------------------
-                Y_XML_COMMENT(xml, "refine  state");
-                for(ProNode *pn=my.head;pn;pn=pn->next)
-                {
-                    Prospect &pro = **pn;
-                    mix.transfer(Cend, SubLevel, pro.C, pro.L);
-                    const xReal f_opt = optimize(f0,pro.ff);
-                    if(f_opt<f0)
-                    {
-                        // update prospect
-                        Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " => " << real_t(f_opt) );
-                        mix.transfer(pro.C, pro.L, Ctmp, SubLevel);
-                        pro.ax = (pro.xi = pro.extent(xadd, C, L)).abs();
-                        pro.ff = f_opt;
-                    }
-                    else
-                    {
-                        // degenerate prospect
-                        Y_XMLOG(xml, "(-) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right));
-                        mix.transfer(pro.C,pro.L,C,L);
-                        pro.xi = pro.ax = zero;
-                        pro.dc.ld(zero);
-                        pro.ff = f0;
-                    }
-                }
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // Check most promising prospect
+            //
+            //
+            //
+            //------------------------------------------------------------------
+            Y_XML_COMMENT(xml, "searching better score");
+            const Prospect &pro = **my.head;
+            xReal           f1  = pro.ff;      assert(f1<=f0);
+            Y_XMLOG(xml, "[pro] " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
 
-                //--------------------------------------------------------------
-                //
-                //
-                // sort by increasing FF
-                //
-                //
-                //--------------------------------------------------------------
-                Y_XML_COMMENT(xml, "ordered state");
-                MergeSort::Call(my,byIncreasingFF);
-                my.show(xml);
+            //------------------------------------------------------------------
+            //
+            //
+            // early return on single equilibrium/zero score
+            //
+            //
+            //------------------------------------------------------------------
+            if(1==my.size || f1 <= 0.0)
+            {
+                Y_XML_COMMENT(xml, "numerical solution '" << pro.eq.name << "'");
+                mix.transfer(C,L,pro.C,pro.L);
+                return;
+            }
 
-                {
-
-                    OutputFile fp("pro1.dat");
-                    for(const ProNode *pn=my.head;pn;pn=pn->next)
-                    {
-                        const Prospect &pro = **pn;
-                        mix.transfer(Cend, SubLevel, pro.C, pro.L);
-                        save(fp,100);
-                        fp << "\n";
-                    }
-                }
-
-                const Prospect &pr = **my.head;
-                xReal           Fx = pr.ff;
-                const char *    id = pr.eq.name.c_str();
-                mix.transfer(Capp, SubLevel, pr.C, pr.L);
-
-                {
-                    const xReal Ftmp = buildODE(xml,f0);
-                    if(Ftmp<Fx)
-                    {
-                        Fx = Ftmp;
-                        Capp.ld(Ctmp);
-                        Y_XML_COMMENT(xml, "keep " << ODE << "/" << id);
-                        id = ODE;
-                    }
-                    else
-                    {
-                        Y_XML_COMMENT(xml, "drop " << ODE << "/" << id);
-                    }
-                }
-
-
-
+            //------------------------------------------------------------------
+            //
+            //
+            // check if prospect decreased f0
+            //
+            //
+            //------------------------------------------------------------------
+            bool decreased = false;
+            if(f1<f0)
+            {
+                decreased = true;
+                mix.transfer(C,L,pro.C,pro.L);
+                Y_XML_COMMENT(xml, "keep [pro] result");
+            }
+            else
+            {
+                Y_XML_COMMENT(xml, "drop [pro] result");
 
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // check if ode decreased current state
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                const xReal ftmp = buildODE(xml,f0);
+                Y_XMLOG(xml, "[ode] " << toReal(ftmp) << " / " << toReal(f1) );
+                if(ftmp<f1)
+                {
+                    decreased = true;
+                    f1=ftmp;
+                    mix.transfer(C,L,Ctmp,SubLevel);
+                    Y_XML_COMMENT(xml, "keep [ode] result");
+                }
+                else
+                {
+                    Y_XML_COMMENT(xml, "drop [ode] result");
+                }
+            }
 
+
+            if(decreased)
+            {
+                Y_XML_COMMENT(xml, "decreased");
+                goto PROBE;
+            }
 
 
         }

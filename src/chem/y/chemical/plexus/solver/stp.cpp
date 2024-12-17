@@ -32,8 +32,8 @@ namespace Yttrium
                     hasCut = true;
                 }
             }
-            Y_XMLOG(xml, sid << ".hasCut=" << hasCut);
-            Y_XMLOG(xml, sid << ".factor=" << real_t(factor) );
+            Y_XMLOG(xml, sid << ".hasCut = " << hasCut);
+            Y_XMLOG(xml, sid << ".factor = " << real_t(factor) );
 
 
             if(hasCut)
@@ -65,7 +65,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             const xReal f1    = objectiveFunction(Cend,SubLevel);
             const xReal f_opt = optimize(f0,f1);
-            Y_XMLOG(xml, sid << ".ff=" << std::setw(15) << real_t(f1) << " => " << std::setw(15) << real_t(f_opt));
+            Y_XMLOG(xml, sid << ".f      = " << std::setw(15) << real_t(f1) << " => " << std::setw(15) << real_t(f_opt));
 
             return f_opt;
         }
