@@ -73,6 +73,16 @@ namespace Yttrium
 
             Y_XMLOG(xml,"Xi="<<Xi);
 
+            if( !lu.build(Xi) )
+            {
+                Y_XML_COMMENT(xml, "singular system");
+                return f0;
+            }
+
+            lu.solve(Xi,xi);
+            Y_XMLOG(xml, "xi=" << xi);
+
+
             throw Exception("not implemented");
             return f0;
         }
