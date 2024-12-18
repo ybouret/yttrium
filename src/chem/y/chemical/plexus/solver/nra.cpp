@@ -81,6 +81,11 @@ namespace Yttrium
 
             lu.solve(Xi,xi);
             Y_XMLOG(xml, "xi=" << xi);
+            for(size_t j=m;j>0;--j)
+                step[j] = xadd.dot(NuT[j],xi);
+
+            Y_XMLOG(xml, "step=" << step);
+
 
 
             throw Exception("not implemented");
