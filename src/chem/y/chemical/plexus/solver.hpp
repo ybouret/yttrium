@@ -8,6 +8,7 @@
 #include "y/chemical/plexus/solver/engine.hpp"
 #include "y/chemical/reactive/equilibrium/aftermath.hpp"
 #include "y/orthogonal/family.hpp"
+#include "y/mkl/algebra/lu.hpp"
 
 namespace Yttrium
 {
@@ -78,13 +79,14 @@ namespace Yttrium
             Engine             my;
             XMatrix            Csolve;       //!< all possible solving C
             XMatrix            deltaC;       //!< all possible delta   C
-            Orthogonal::Family family;
-            ProList            basis;        //!< basis of leading prospects
             XArray             Cini;         //!< starting point
             XArray             Cend;         //!< final point
             XArray             Ctmp;         //!< updated by objectiveFunction(u)
             XArray             step;         //!< temporary computed step
             XAdds              Cadd;         //!< for algebra on rates
+            Orthogonal::Family ortho;
+            ProList            basis;        //!< basis of leading prospects
+            MKL::LU<xReal>     lu;           //!< to solve algebraic systems
             const xReal        one;
 
         };

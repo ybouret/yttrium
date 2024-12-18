@@ -14,13 +14,14 @@ namespace Yttrium
         my(),
         Csolve(mix->size,mix->species.size),
         deltaC(mix->size,mix->species.size),
-        family(mix->species.size,mix->size),
-        basis( static_cast<ProBank &>(my) ),
         Cini(mix->species.size),
         Cend(mix->species.size),
         Ctmp(mix->species.size),
         step(mix->species.size),
         Cadd(mix->species.size),
+        ortho(mix->species.size,mix->size),
+        basis( static_cast<ProBank &>(my) ),
+        lu(mix->size),
         one(1)
         {
 

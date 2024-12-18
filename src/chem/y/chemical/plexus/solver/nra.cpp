@@ -15,7 +15,7 @@ namespace Yttrium
 
             // extracting
             {
-                family.free();
+                ortho.free();
                 basis.free();
                 const size_t dof = mix->topology.rows;
                 for(ProNode *pn=my.head;pn;pn=pn->next)
@@ -23,11 +23,11 @@ namespace Yttrium
                     Prospect            &pro = **pn;
                     const Components    &eq = pro.eq;
                     const Readable<int> &nu = mix.topology[ eq.indx[SubLevel] ];
-                    if( family.wouldAccept(nu) )
+                    if( ortho.wouldAccept(nu) )
                     {
-                        family.expand();
+                        ortho.expand();
                         basis << pro;
-                        assert(basis.size==family.size);
+                        assert(basis.size==ortho.size);
                         Y_XMLOG(xml, "(+) " << pro.key());
                         Coerce(pro.eq.indx[AuxLevel]) = basis.size;
                         if( basis.size >= dof) break;
@@ -35,12 +35,14 @@ namespace Yttrium
                 }
             }
 
+            // computing local algebra
             const size_t n = basis.size;
             const size_t m = mix->species.size;
             XArray       xi(n);
             XMatrix      Phi(n,m);
             XMatrix      Nu(n,m);
             XMatrix      NuT(m,n);
+            XMatrix      Xi(n,n);
 
             for(const ProNode *pn=basis.head;pn;pn=pn->next)
             {
@@ -60,7 +62,16 @@ namespace Yttrium
             Y_XMLOG(xml, "Nu="  << Nu);
             Y_XMLOG(xml, "NuT="  << NuT);
 
+            // preparing system
+            for(size_t i=n;i>0;--i)
+            {
+                for(size_t j=n;j>0;--j)
+                {
+                    Xi[i][j] = xadd.dot(Phi[i], Nu[j]);
+                }
+            }
 
+            Y_XMLOG(xml,"Xi="<<Xi);
 
             throw Exception("not implemented");
             return f0;
