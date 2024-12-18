@@ -41,7 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! compute C1 from C0
-            Outcome solve(const Equilibrium &eq,
+            Outcome solve(const Components & eq,
                           const xReal        eK,
                           XWritable &        C1,
                           const Level        L1,

@@ -215,9 +215,23 @@ namespace Yttrium
             assert(hasSameMetricsThan(other));
             for(size_t i=rows;i>0;--i)
             {
-                Writable<T      > &tgt = (*this)[i];
+                Writable<T>       &tgt = (*this)[i];
                 const Readable<U> &src = other[i];
                 for(size_t j=cols;j>0;--j) tgt[j] = src[j];
+            }
+            return *this;
+        }
+
+        //! assign matrices with transpose metrics
+        template <typename U> inline
+        Matrix<T> & assign(const TransposeOf_ &, const Matrix<U> &other)
+        {
+            assert(hasSameMetricsThanTransposeOf(other));
+            for(size_t i=rows;i>0;--i)
+            {
+                Writable<T> &tgt = (*this)[i];
+                for(size_t j=cols;j>0;--j)
+                    tgt[j] = other[j][i];
             }
             return *this;
         }

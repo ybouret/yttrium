@@ -79,6 +79,7 @@ namespace Yttrium
             XMatrix            Csolve;       //!< all possible solving C
             XMatrix            deltaC;       //!< all possible delta   C
             Orthogonal::Family family;
+            ProList            basis;        //!< basis of leading prospects
             XArray             Cini;         //!< starting point
             XArray             Cend;         //!< final point
             XArray             Ctmp;         //!< updated by objectiveFunction(u)

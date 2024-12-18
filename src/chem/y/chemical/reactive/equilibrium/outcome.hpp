@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Outcome_Included
 #define Y_Chemical_Outcome_Included 1
 
-#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/reactive/equilibrium/components.hpp"
 
 namespace Yttrium
 {
@@ -29,8 +29,8 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup from
-            Outcome(const Situation   & _st,
-                    const Equilibrium & _eq,
+            Outcome(const Situation  & _st,
+                    const Components & _eq,
                     const xReal        _eK,
                     XWritable &        _C,
                     const Level        _L);
@@ -75,7 +75,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const Situation     st; //!< current situation
-            const Equilibrium & eq; //!< used components
+            const Components &  eq; //!< used components
             const xReal         eK; //!< used constant
             XWritable &         C;  //!< concentration
             const Level         L;  //!< level
