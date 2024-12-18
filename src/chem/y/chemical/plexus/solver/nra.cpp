@@ -13,7 +13,13 @@ namespace Yttrium
 
             Y_XML_COMMENT(xml, "extracting basis");
 
-            // extracting
+            //------------------------------------------------------------------
+            //
+            //
+            // extracting local basis
+            //
+            //
+            //------------------------------------------------------------------
             {
                 ortho.free();
                 basis.free();
@@ -35,7 +41,13 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            //
             // computing local algebra
+            //
+            //
+            //------------------------------------------------------------------
             const size_t n = basis.size;
             const size_t m = mix->species.size;
             XArray       xi(n);
