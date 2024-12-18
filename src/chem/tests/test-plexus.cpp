@@ -41,6 +41,7 @@ Y_UTEST(plexus)
     
     std::cerr << "mixes=" << mixes << std::endl;
 
+    
     const size_t M = lib->size();
     XVector      C0(M,0);
 

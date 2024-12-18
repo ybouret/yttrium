@@ -1,6 +1,6 @@
 
 #include "y/chemical/plexus/solver.hpp"
-
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -10,14 +10,25 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,NRA);
 
-            Orthogonal::Family qfamily(mix->species.size);
-
+            EBank ebank;
+            ERepo basis(ebank);
 
             // extracting
-            qfamily.free();
-            
+            family.free();
+            const size_t dof = mix->topology.rows;
+            for(const ProNode *pn=my.head;pn;pn=pn->next)
+            {
+                const Components    &eq = (**pn).eq;
+                const Readable<int> &nu = mix.topology[ eq.indx[SubLevel] ];
+                if( family.wouldAccept(nu) )
+                {
+                    family.expand();
+                    //basis << eq;
+                    if( basis.size >= dof) break;
+                }
+            }
 
-
+            throw Exception("not implemented");
             return f0;
         }
 

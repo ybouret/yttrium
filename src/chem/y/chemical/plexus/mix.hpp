@@ -264,9 +264,9 @@ namespace Yttrium
             const Matrix<unsigned>     conservancy; //!< conservancy matrix
             const ConservationAuth     auth;        //!< conservation authority
             const ELists               order;       //!< at least 1
-            const AutoPtr<const Genus> genus;   //!< conserved/unbounded
-            const AutoPtr<const Grade> grade;   //!< graded equilibria
-
+            const AutoPtr<const Genus> genus;       //!< conserved/unbounded
+            const AutoPtr<const Grade> grade;       //!< graded equilibria
+            const Matrix<int>          topology;    //!< full topology
 
             Mix * next; //!< for list
             Mix * prev; //!< for list

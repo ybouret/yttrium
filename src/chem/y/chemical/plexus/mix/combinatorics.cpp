@@ -45,18 +45,39 @@ namespace Yttrium
 
             assert(weight->size==stoich->size);
 
+            //------------------------------------------------------------------
+            //
+            //
+            // prepare orders
+            //
+            //
+            //------------------------------------------------------------------
             ELists &mine = Coerce(order);
             {
                 ELists temp(my.size);
                 mine.swapWith(temp);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // Record orders
+            //
+            //
+            //------------------------------------------------------------------
             EList &primary = mine[1];
             for(const ENode *en=my.head;en;en=en->next)
             {
                 primary << **en;
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // create replica
+            //
+            //
+            //------------------------------------------------------------------
             for(const iArray *W = weight->head, *S=stoich->head; W; W=W->next,S=S->next)
             {
                 const Readable<int> &w = *W;
@@ -113,8 +134,31 @@ namespace Yttrium
                 mine[W->order] << eq;
             }
 
-            
+            //------------------------------------------------------------------
+            //
+            //
+            // grade all equilibria according to their species
+            //
+            //
+            //------------------------------------------------------------------
             Coerce(grade) = new Grade(my,*genus);
+
+            //------------------------------------------------------------------
+            //
+            //
+            // make the full topology
+            //
+            //
+            //------------------------------------------------------------------
+            Matrix<int> &Nu = Coerce(topology);
+            Nu.make(my.size,my.species.size);
+            for(const ENode *en=my.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                Writable<int>     &nu = Nu[ eq.indx[SubLevel] ];
+                eq.topology(nu,SubLevel);
+            }
+            
         }
 
 

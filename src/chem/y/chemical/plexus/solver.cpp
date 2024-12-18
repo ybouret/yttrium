@@ -14,6 +14,7 @@ namespace Yttrium
         my(),
         Csolve(mix->size,mix->species.size),
         deltaC(mix->size,mix->species.size),
+        family(mix->species.size,mix->size),
         Cini(mix->species.size),
         Cend(mix->species.size),
         Ctmp(mix->species.size),

@@ -74,16 +74,17 @@ namespace Yttrium
             //! f0 at Cini, f1 at Cend => f_opt at Ctmp
             xReal                    optimize(const xReal f0, const xReal f1);
             
-            const Mix   & mix;          //!< persistent mix
-            Engine        my;
-            XMatrix       Csolve;       //!< all possible solving C
-            XMatrix       deltaC;       //!< all possible delta   C
-            XArray        Cini;         //!< starting point
-            XArray        Cend;         //!< final point
-            XArray        Ctmp;         //!< updated by objectiveFunction(u)
-            XArray        step;         //!< temporary computed step
-            XAdds         Cadd;         //!< for algebra on rates
-            const xReal   one;
+            const Mix   &      mix;          //!< persistent mix
+            Engine             my;
+            XMatrix            Csolve;       //!< all possible solving C
+            XMatrix            deltaC;       //!< all possible delta   C
+            Orthogonal::Family family;
+            XArray             Cini;         //!< starting point
+            XArray             Cend;         //!< final point
+            XArray             Ctmp;         //!< updated by objectiveFunction(u)
+            XArray             step;         //!< temporary computed step
+            XAdds              Cadd;         //!< for algebra on rates
+            const xReal        one;
 
         };
     }

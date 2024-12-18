@@ -133,12 +133,12 @@ namespace Yttrium
 
         // static inline real_t toReal(const xReal &x) { return real_t(x); }
 
-        Outcome Aftermath:: solve(const Components &eq,
-                                  const xReal       eK,
-                                  XWritable        &C1,
-                                  const Level       L1,
-                                  XWritable  &      C0,
-                                  const Level       L0)
+        Outcome Aftermath:: solve(const Equilibrium & eq,
+                                  const xReal         eK,
+                                  XWritable         & C1,
+                                  const Level         L1,
+                                  XWritable  &        C0,
+                                  const Level         L0)
         {
 
             //------------------------------------------------------------------

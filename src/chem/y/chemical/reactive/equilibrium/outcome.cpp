@@ -11,11 +11,11 @@ namespace Yttrium
         }
 #endif
 
-        Outcome:: Outcome(const Situation  &_st,
-                          const Components &_eq,
-                          const xReal       _eK,
-                          XWritable &       _C,
-                          const Level       _L) :
+        Outcome:: Outcome(const Situation   &_st,
+                          const Equilibrium &_eq,
+                          const xReal        _eK,
+                          XWritable &        _C,
+                          const Level        _L) :
         Entity(),
         st(_st),
         eq(_eq),
