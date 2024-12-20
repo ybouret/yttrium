@@ -56,6 +56,7 @@ namespace Yttrium
 
             xReal operator()(const xReal u);
 
+            bool isAcceptable(const XReadable &C, const Level L) const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
@@ -63,6 +64,7 @@ namespace Yttrium
 
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
+            void                     computeStepDS(XMLog &xml);
 
             xReal                    buildODE(XMLog &xml, const xReal f0);
             xReal                    buildNRA(XMLog &xml, const xReal f0);

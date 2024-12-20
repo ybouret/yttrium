@@ -164,6 +164,7 @@ namespace Yttrium
             my.update();
             const xReal f0 = objectiveFunction( mix.transfer(Cini, SubLevel, C, L), SubLevel );
             Y_XMLOG(xml, "f0 = " << real_t(f0) );
+            assert(isAcceptable(Cini,SubLevel));
 
             {
                 OutputFile fp("score.dat",true);
@@ -182,7 +183,7 @@ namespace Yttrium
             Y_XML_COMMENT(xml, "optimize prospects");
             for(ProNode *pn=my.head;pn;pn=pn->next)
             {
-                Prospect &  pro   = **pn;
+                Prospect &  pro   = **pn; assert(isAcceptable(pro.C,pro.L));
                 const xReal f_opt = optimize(f0, pro.ff = objectiveFunction( mix.transfer(Cend,SubLevel,pro.C,pro.L), SubLevel ));
                 if(f_opt<f0)
                 {
@@ -261,6 +262,10 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "drop [pro] result");
 
             }
+
+
+            computeStepDS(xml);
+
 
             //------------------------------------------------------------------
             //

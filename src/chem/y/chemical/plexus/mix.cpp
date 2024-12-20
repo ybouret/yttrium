@@ -22,6 +22,7 @@ namespace Yttrium
         order(0),
         genus(0),
         grade(0),
+        topology(),
         next(0),
         prev(0)
         {

@@ -102,6 +102,24 @@ namespace Yttrium
             }
         }
 
+
+        bool Solver:: isAcceptable(const XReadable &C, const Level L) const noexcept
+        {
+
+            for(const ProNode *pn=my.head;pn;pn=pn->next)
+            {
+                const Components &cm = (**pn).eq;
+                switch(cm.situation(C,L))
+                {
+                    case Running: continue;
+                    case Blocked:
+                    case Crucial:
+                        return false;
+                }
+            }
+            return true;
+        }
+
     }
 
 }
