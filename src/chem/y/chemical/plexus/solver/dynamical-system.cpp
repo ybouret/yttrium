@@ -36,7 +36,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             step.ld(zero);
             bool  mustCut = false;
-            xReal scaling = 0;
+            xReal scaling = 2;
 
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
@@ -48,11 +48,7 @@ namespace Yttrium
                 if(dc<0.0)
                 {
                     const xReal smax = cc/(-dc);
-                    if(mustCut)
-                    {
-                        scaling = Min(scaling,smax);
-                    }
-                    else
+                    if(smax<scaling)
                     {
                         mustCut = true;
                         scaling = smax;
@@ -69,7 +65,12 @@ namespace Yttrium
                     << std::endl;
                 }
 
+            }
 
+            if(mustCut) scaling *= 0.99;
+            for(size_t i=Cend.size();i>0;--i)
+            {
+                
             }
 
 
