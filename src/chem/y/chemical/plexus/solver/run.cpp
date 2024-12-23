@@ -295,8 +295,7 @@ namespace Yttrium
                 }
             }
 
-            //throw Exception("Not Finished Yet");
-
+            
             //------------------------------------------------------------------
             //
             //
@@ -304,9 +303,8 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            if(false)
             {
-                const xReal ftmp = buildNRA(xml,f0);
+                const xReal ftmp = computeStepAS(xml,f0);
                 Y_XMLOG(xml, "[nra] " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {

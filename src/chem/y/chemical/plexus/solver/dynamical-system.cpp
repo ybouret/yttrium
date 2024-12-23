@@ -1,18 +1,15 @@
-
 #include "y/chemical/plexus/solver.hpp"
-#include "y/exception.hpp"
+//#include "y/exception.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-
-       
-
+        
         xReal Solver:: computeStepDS(XMLog &xml, const xReal f0)
         {
-            Y_XML_SECTION(xml, "DynamicalSystem.Step");
+            Y_XML_SECTION(xml, "DynamicalSystem");
             assert(isAcceptable(Cini,SubLevel));
 
             //------------------------------------------------------------------
@@ -90,11 +87,6 @@ namespace Yttrium
             }
             save("ode.dat",100);
 
-            const xReal f1   = optimize(f0, objectiveFunction(Cend,SubLevel) );
-            Y_XML_COMMENT(xml, "scaling was " << real_t(scaling) );
-            Y_XML_COMMENT(xml, "function is " << real_t(f1) << " / " << f0 );
-
-
             //------------------------------------------------------------------
             //
             //
@@ -102,6 +94,10 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            const xReal f1   = optimize(f0, objectiveFunction(Cend,SubLevel) );
+            Y_XML_COMMENT(xml, "scaling was " << real_t(scaling) );
+            Y_XML_COMMENT(xml, "function is " << real_t(f1) << " / " << f0 );
+            
             return f1;
         }
 
