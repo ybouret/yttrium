@@ -34,9 +34,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Chemical::Solver"
-            static const char * const ODE;      //!< "ode"
-            static const char * const NRA;      //!< "nra"
-
+            
             //__________________________________________________________________
             //
             //
@@ -69,7 +67,6 @@ namespace Yttrium
             void                     getOrthoBasis(XMLog &xml);
             xReal                    computeStepAS(XMLog &xml, const xReal f0);
 
-            xReal                    buildNRA(XMLog &xml, const xReal f0);
             xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
             void                     save(OutputStream &fp, const size_t np);    //!< save with Cini/Cend loaded

@@ -8,7 +8,8 @@ namespace Yttrium
 
         xReal Solver:: computeStepAS(XMLog &xml, const xReal f0)
         {
-            Y_XML_SECTION(xml, "AlgebraicSystem");
+            static const char fn[] ="AlgebraicSystem";
+            Y_XML_SECTION(xml,fn);
 
             //------------------------------------------------------------------
             //
@@ -80,7 +81,7 @@ namespace Yttrium
             if( !lu.build(Xi) )
             {
                 Y_XML_COMMENT(xml, "singular system");
-                return f0;
+                return f0; // register as failure..
             }
 
             lu.solve(Xi,xi);
@@ -94,11 +95,60 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            for(size_t j=m;j>0;--j)
-                step[j] = xadd.dot(NuT[j],xi);
+            step.ld(zero);
+            bool  mustCut = false;
+            xReal scaling =     2; // default scaling
 
-            Y_XMLOG(xml, "step=" << step);
-            throw Exception("Not Finished");
+            for(const SNode *sn=mix->species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                const size_t   sj = sp.indx[SubLevel];
+                const xReal    dc = step[sj] = xadd.dot(NuT[sj],xi);
+                const xReal    cc = Cini[sj]; assert(cc>=0.0);
+
+
+                if(dc<0.0)
+                {
+                    const xReal smax = cc/(-dc);
+                    if(smax<scaling)
+                    {
+                        mustCut = true;
+                        scaling = smax;
+                    }
+                }
+
+                if(xml.verbose)
+                {
+                    mix->sformat.print(xml() << "d[", sp, Justify::Right)
+                    << "] = " << std::setw(15) << real_t(dc)
+                    << " / "  << std::setw(15) << real_t(cc)
+                    << " => scaling=" << std::setw(15) << real_t(scaling)
+                    << std::endl;
+                }
+
+            }
+
+            if(mustCut) scaling *= safe;
+            setRecentStep(scaling);
+            while( !isAcceptable(Cend, SubLevel) )
+            {
+                scaling *= safe;
+                setRecentStep(scaling);
+            }
+            save("nra.dat",100);
+
+            //------------------------------------------------------------------
+            //
+            //
+            // look for optimized position
+            //
+            //
+            //------------------------------------------------------------------
+            const xReal f1   = optimize(f0, objectiveFunction(Cend,SubLevel) );
+            Y_XML_COMMENT(xml, fn << " scaling was " << real_t(scaling) );
+            Y_XML_COMMENT(xml, fn << " function is " << real_t(f1) << " / " << real_t(f0) );
+            //throw Exception("Not Finished");
+            return f1;
         }
     }
 

@@ -169,7 +169,10 @@ namespace Yttrium
 
             {
                 OutputFile fp("score.dat",true);
-                fp("%g %.15g\n", double(cycle), double(f0));
+                const double ans = double(f0);
+                if(ans>0.0)
+                    fp("%g %.15g\n", double(cycle), log10(ans));
+
             }
 
             //------------------------------------------------------------------
@@ -256,6 +259,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            assert(f1>0.0);
             bool decreased = false;
             if(f1<f0)
             {
@@ -265,6 +269,7 @@ namespace Yttrium
             }
             else
             {
+                assert(f1>=f0);
                 Y_XML_COMMENT(xml, "drop [pro] result");
             }
 
@@ -288,14 +293,20 @@ namespace Yttrium
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
                     Y_XML_COMMENT(xml, "keep [ode] result");
+                    if(f1<=0.0)
+                    {
+                        Y_XML_COMMENT(xml,"early return");
+                        return;
+                    }
                 }
                 else
                 {
                     Y_XML_COMMENT(xml, "drop [ode] result");
                 }
             }
+            assert(f1>0.0);
 
-            
+
             //------------------------------------------------------------------
             //
             //
@@ -312,6 +323,11 @@ namespace Yttrium
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
                     Y_XML_COMMENT(xml, "keep [nra] result");
+                    if(f1<=0.0)
+                    {
+                        Y_XML_COMMENT(xml,"early return");
+                        return;
+                    }
                 }
                 else
                 {
@@ -319,6 +335,7 @@ namespace Yttrium
                 }
             }
 
+            assert(f1>0.0);
 
 
 
@@ -329,6 +346,7 @@ namespace Yttrium
                 goto PROBE;
             }
 
+            throw Exception("not decreased, not implemented");
 
         }
     }
