@@ -23,9 +23,24 @@ namespace Yttrium
         ortho(mix->species.size,mix->size),
         basis( static_cast<ProBank &>(my) ),
         lu(mix->size),
+        xiArr(  mix->topology.size() ),
+        PhiMat( mix->topology.size() ),
+        NuMat(  mix->topology.size() ),
+        NuTMat( mix->topology.size() ),
+        XiMat(  mix->topology.size() ),
         one(1),
         safe(0.99)
         {
+
+            const size_t m = mix->species.size;
+            for(size_t n=1;n<=mix->topology.size();++n)
+            {
+                xiArr.  grow(n);
+                PhiMat. grow(n,m);
+                NuMat.  grow(n,m);
+                NuTMat. grow(m,n);
+                XiMat.  grow(n,n);
+            }
 
         }
 

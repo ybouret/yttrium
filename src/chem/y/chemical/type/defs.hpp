@@ -11,6 +11,7 @@
 #include "y/mkl/antelope/mul.hpp"
 #include "y/mkl/triplet.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/container/cxx/series.hpp"
 #include "y/container/matrix.hpp"
 
 namespace Yttrium
@@ -33,6 +34,10 @@ namespace Yttrium
         typedef Matrix<xReal,MemoryModel>   XMatrix; //!< alias
 
         typedef CxxArray<XAdd,MemoryModel>  XAdds;   //!< alias
+
+        typedef CxxSeries<XArray>  XArrays;
+        typedef CxxSeries<XMatrix> XMatrices;
+        ;
 
     }
 

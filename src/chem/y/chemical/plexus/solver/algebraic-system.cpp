@@ -30,12 +30,12 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const size_t n = basis.size;
-            const size_t m = mix->species.size;
-            XArray       xi(n);
-            XMatrix      Phi(n,m);
-            XMatrix      Nu(n,m);
-            XMatrix      NuT(m,n);
-            XMatrix      Xi(n,n);
+            //const size_t m = mix->species.size;
+            XArray       & xi  = xiArr[n];
+            XMatrix      & Phi = PhiMat[n]; //XMatrix      Phi(n,m);
+            XMatrix      & Nu  = NuMat[n];  //XMatrix      Nu(n,m);
+            XMatrix      & NuT = NuTMat[n]; //XMatrix      NuT(m,n);
+            XMatrix      & Xi  = XiMat[n];  //XMatrix      Xi(n,n);
 
             for(const ProNode *pn=basis.head;pn;pn=pn->next)
             {

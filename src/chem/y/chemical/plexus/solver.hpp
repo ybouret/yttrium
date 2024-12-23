@@ -87,6 +87,12 @@ namespace Yttrium
             Orthogonal::Family ortho;
             ProList            basis;        //!< basis of leading prospects
             MKL::LU<xReal>     lu;           //!< to solve algebraic systems
+            XArrays            xiArr;        //!< arrays of xi
+            XMatrices          PhiMat;       //!< arrays of Phi
+            XMatrices          NuMat;        //!< arrays of Nu
+            XMatrices          NuTMat;       //!< arrays of Nu'
+            XMatrices          XiMat;        //!< arrays of Xi
+
         public:
             const xReal        one;  //!< 1.0
             const xReal        safe; //!< 0.99
