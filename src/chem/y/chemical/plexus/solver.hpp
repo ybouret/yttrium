@@ -67,7 +67,7 @@ namespace Yttrium
             void                     getOrthoBasis(XMLog &xml);
             xReal                    computeStepAS(XMLog &xml, const xReal f0);
 
-            xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
+            //xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
             void                     save(OutputStream &fp, const size_t np);    //!< save with Cini/Cend loaded
             void                     save(const String &fn, const size_t np);    //!< save with Cini/Cend loaded

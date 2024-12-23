@@ -6,6 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+#if 0
         xReal Solver:: makeStep(XMLog &            xml,
                                 const xReal        f0,
                                 const char * const sid)
@@ -69,7 +70,8 @@ namespace Yttrium
 
             return f_opt;
         }
-        
+#endif
+
     }
 
 }
