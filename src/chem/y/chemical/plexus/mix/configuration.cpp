@@ -9,6 +9,7 @@ namespace Yttrium
         {
             buildConservations(xml);
             buildCombinatorics(xml,eqs);
+            solver = new Solver(*this);
         }
     }
 

@@ -1,4 +1,5 @@
 #include "y/chemical/plexus/solver.hpp"
+#include "y/chemical/plexus/mix.hpp"
 
 namespace Yttrium
 {

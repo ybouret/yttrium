@@ -23,6 +23,7 @@ namespace Yttrium
         genus(0),
         grade(0),
         topology(),
+        solver(0),
         next(0),
         prev(0)
         {
@@ -108,6 +109,13 @@ namespace Yttrium
             os << "\t}";
             return os;
         }
+
+
+        void Mix:: solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
+        {
+            solver->run(xml,C,L,K);
+        }
+
 
     }
 

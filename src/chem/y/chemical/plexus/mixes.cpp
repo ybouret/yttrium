@@ -14,8 +14,8 @@ namespace Yttrium
 
         Mixes::ConstInterface & Mixes:: surrogate() const noexcept { return my; }
 
-        Mixes:: Mixes(Equilibria &eqs,
-                      XMLog      &xml) :
+        Mixes:: Mixes(XMLog      &xml,
+                      Equilibria &eqs) :
         Proxy<const Mix::List>(),
         my()
         {
@@ -97,6 +97,13 @@ namespace Yttrium
             os << '}';
 
             return os;
+        }
+
+        void Mixes:: solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
+        {
+            for(Mix *mix=my.head;mix;mix=mix->next)
+                mix->solve(xml,C,L,K);
+
         }
 
 

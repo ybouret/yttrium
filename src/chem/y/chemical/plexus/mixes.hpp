@@ -41,10 +41,13 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup/update from equilibria
-            explicit Mixes(Equilibria &eqs,
-                           XMLog  &    xml);
+            explicit Mixes(XMLog &      xml,
+                           Equilibria & eqs);
             virtual ~Mixes() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Mixes);    //!< display
+
+
+            void solve(XMLog &xml,XWritable &C, const Level L, const XReadable &K);
 
         private:
             Mix::List my;

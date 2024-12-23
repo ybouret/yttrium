@@ -1,6 +1,7 @@
 
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/chemical/plexus/mix.hpp"
 
 namespace Yttrium
 {

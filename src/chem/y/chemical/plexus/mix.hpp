@@ -5,6 +5,7 @@
 
 #include "y/chemical/plexus/connected.hpp"
 #include "y/chemical/plexus/conservation/authority.hpp"
+#include "y/chemical/plexus/solver.hpp"
 
 namespace Yttrium
 {
@@ -251,6 +252,8 @@ namespace Yttrium
             }
 
 
+            void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mix);
@@ -268,6 +271,10 @@ namespace Yttrium
             const AutoPtr<const Grade> grade;       //!< graded equilibria
             const Matrix<int>          topology;    //!< full topology
 
+        private:
+            AutoPtr<Solver>            solver;      //!< internal solver
+            
+        public:
             Mix * next; //!< for list
             Mix * prev; //!< for list
         };
