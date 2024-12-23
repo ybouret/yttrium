@@ -21,10 +21,13 @@ namespace Yttrium
         void Solver:: computeStepDS(XMLog &xml)
         {
             Y_XML_SECTION(xml, "DynamicalSystem.Step");
+            assert(isAcceptable(Cini,SubLevel));
 
             //------------------------------------------------------------------
             //
+            //
             // accumulate virtual rates
+            //
             //
             //------------------------------------------------------------------
             Cadd.forEach( & XAdd::free );
@@ -41,7 +44,9 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // compose step
+            //
+            // compose step and check scaling
+            //
             //
             //------------------------------------------------------------------
             step.ld(zero);
@@ -79,15 +84,20 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // prepare initial step
+            //
+            // prepare Cend from step
+            //
             //
             //------------------------------------------------------------------
-            if(mustCut) scaling *= 0.99;
-            for(size_t i=Cend.size();i>0;--i)
+            if(mustCut) scaling *= safe;
+            setRecentStep(scaling);
+            while( !isAcceptable(Cend, SubLevel) )
             {
-                
+                scaling *= safe;
+                setRecentStep(scaling);
             }
-
+            Y_XML_COMMENT(xml, "scaling was " << real_t(scaling) );
+            save("ode.dat",100);
 
             //------------------------------------------------------------------
             //
