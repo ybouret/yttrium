@@ -50,6 +50,6 @@ Y_UTEST(plexus)
     mixes.solve(xml, C0, TopLevel, eqs.K);
 
 
-    
+
 }
 Y_UDONE()
