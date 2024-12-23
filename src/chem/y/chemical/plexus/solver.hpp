@@ -15,7 +15,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-     
+        
         //______________________________________________________________________
         //
         //
@@ -66,8 +66,6 @@ namespace Yttrium
             void                     setRecentStep(const xReal scal) noexcept; //!< Cend = Cini + scal * step
             void                     getOrthoBasis(XMLog &xml);
             xReal                    computeStepAS(XMLog &xml, const xReal f0);
-
-            //xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
             void                     save(OutputStream &fp, const size_t np);    //!< save with Cini/Cend loaded
             void                     save(const String &fn, const size_t np);    //!< save with Cini/Cend loaded
