@@ -67,7 +67,6 @@ namespace Yttrium
             xReal                    computeStepDS(XMLog &xml, const xReal f0);
             void                     setRecentStep(const xReal scal) noexcept; //!< Cend = Cini + scal * step
 
-            xReal                    buildODE(XMLog &xml, const xReal f0);
             xReal                    buildNRA(XMLog &xml, const xReal f0);
             xReal                    makeStep(XMLog &xml, const xReal f0, const char * const sid);
 
