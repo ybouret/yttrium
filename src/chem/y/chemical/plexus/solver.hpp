@@ -64,7 +64,7 @@ namespace Yttrium
 
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
-            void                     computeStepDS(XMLog &xml);
+            xReal                    computeStepDS(XMLog &xml, const xReal f0);
             void                     setRecentStep(const xReal scal) noexcept; //!< Cend = Cini + scal * step
 
             xReal                    buildODE(XMLog &xml, const xReal f0);

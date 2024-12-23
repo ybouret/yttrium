@@ -103,6 +103,15 @@ namespace Yttrium
             }
         }
 
+        void Solver:: setRecentStep(const xReal scal) noexcept
+        {
+            assert( Cini.size() == step.size() );
+            assert( Cend.size() == step.size() );
+            for(size_t i=Cend.size();i>0;--i)
+            {
+                Cend[i] = Cini[i] + scal * step[i];
+            }
+        }
 
         bool Solver:: isAcceptable(const XReadable &C, const Level L) const noexcept
         {

@@ -1,7 +1,8 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
 
-#include "y/mkl/opt/minimize.hpp"
+//#include "y/mkl/opt/minimize.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -229,6 +230,11 @@ namespace Yttrium
             xReal           f1  = pro.ff;      assert(f1<=f0);
             Y_XMLOG(xml, "[pro] " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
 
+            {
+                Cend.ld(pro.C);
+                save("pro.dat",100);
+            }
+
             //------------------------------------------------------------------
             //
             //
@@ -260,11 +266,10 @@ namespace Yttrium
             else
             {
                 Y_XML_COMMENT(xml, "drop [pro] result");
-
             }
 
 
-            computeStepDS(xml);
+
 
 
             //------------------------------------------------------------------
@@ -275,7 +280,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                const xReal ftmp = buildODE(xml,f0);
+                const xReal ftmp = computeStepDS(xml,f0);
                 Y_XMLOG(xml, "[ode] " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {
@@ -290,6 +295,8 @@ namespace Yttrium
                 }
             }
 
+            //throw Exception("Not Finished Yet");
+
             //------------------------------------------------------------------
             //
             //
@@ -297,6 +304,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            if(false)
             {
                 const xReal ftmp = buildNRA(xml,f0);
                 Y_XMLOG(xml, "[nra] " << toReal(ftmp) << " / " << toReal(f1) );

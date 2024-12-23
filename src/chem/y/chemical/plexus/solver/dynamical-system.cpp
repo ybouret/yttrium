@@ -8,17 +8,9 @@ namespace Yttrium
     {
 
 
-        void Solver:: setRecentStep(const xReal scal) noexcept
-        {
-            assert( Cini.size() == step.size() );
-            assert( Cend.size() == step.size() );
-            for(size_t i=Cend.size();i>0;--i)
-            {
-                Cend[i] = Cini[i] + scal * step[i];
-            }
-        }
+       
 
-        void Solver:: computeStepDS(XMLog &xml)
+        xReal Solver:: computeStepDS(XMLog &xml, const xReal f0)
         {
             Y_XML_SECTION(xml, "DynamicalSystem.Step");
             assert(isAcceptable(Cini,SubLevel));
@@ -96,18 +88,21 @@ namespace Yttrium
                 scaling *= safe;
                 setRecentStep(scaling);
             }
-            Y_XML_COMMENT(xml, "scaling was " << real_t(scaling) );
             save("ode.dat",100);
 
+            const xReal f1   = optimize(f0, objectiveFunction(Cend,SubLevel) );
+            Y_XML_COMMENT(xml, "scaling was " << real_t(scaling) );
+            Y_XML_COMMENT(xml, "function is " << real_t(f1) << " / " << f0 );
+
+
             //------------------------------------------------------------------
             //
             //
+            // look for optimized position
+            //
             //
             //------------------------------------------------------------------
-
-
-
-            throw Exception("Not Implemented Yet");
+            return f1;
         }
 
     }
