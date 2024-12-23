@@ -22,7 +22,8 @@ namespace Yttrium
         ortho(mix->species.size,mix->size),
         basis( static_cast<ProBank &>(my) ),
         lu(mix->size),
-        one(1)
+        one(1),
+        safe(0.99)
         {
 
         }

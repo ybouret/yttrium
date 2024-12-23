@@ -65,6 +65,7 @@ namespace Yttrium
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
             void                     computeStepDS(XMLog &xml);
+            void                     setRecentStep(const xReal scal) noexcept; //!< Cend = Cini + scal * step
 
             xReal                    buildODE(XMLog &xml, const xReal f0);
             xReal                    buildNRA(XMLog &xml, const xReal f0);
@@ -89,7 +90,9 @@ namespace Yttrium
             Orthogonal::Family ortho;
             ProList            basis;        //!< basis of leading prospects
             MKL::LU<xReal>     lu;           //!< to solve algebraic systems
-            const xReal        one;
+        public:
+            const xReal        one;  //!< 1.0
+            const xReal        safe; //!< 0.99
 
         };
     }

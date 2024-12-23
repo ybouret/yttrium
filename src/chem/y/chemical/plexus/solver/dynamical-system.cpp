@@ -8,6 +8,16 @@ namespace Yttrium
     {
 
 
+        void Solver:: setRecentStep(const xReal scal) noexcept
+        {
+            assert( Cini.size() == step.size() );
+            assert( Cend.size() == step.size() );
+            for(size_t i=Cend.size();i>0;--i)
+            {
+                Cend[i] = Cini[i] + scal * step[i];
+            }
+        }
+
         void Solver:: computeStepDS(XMLog &xml)
         {
             Y_XML_SECTION(xml, "DynamicalSystem.Step");
@@ -36,7 +46,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             step.ld(zero);
             bool  mustCut = false;
-            xReal scaling = 2;
+            xReal scaling =     2; // default scaling
 
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
@@ -67,6 +77,11 @@ namespace Yttrium
 
             }
 
+            //------------------------------------------------------------------
+            //
+            // prepare initial step
+            //
+            //------------------------------------------------------------------
             if(mustCut) scaling *= 0.99;
             for(size_t i=Cend.size();i>0;--i)
             {
