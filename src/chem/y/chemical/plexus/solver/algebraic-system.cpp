@@ -145,9 +145,10 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const xReal f1   = optimize(f0, objectiveFunction(Cend,SubLevel) );
+
             Y_XML_COMMENT(xml, fn << " scaling was " << real_t(scaling) );
             Y_XML_COMMENT(xml, fn << " function is " << real_t(f1) << " / " << real_t(f0) );
-            //throw Exception("Not Finished");
+
             return f1;
         }
     }
