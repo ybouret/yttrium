@@ -374,6 +374,53 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            for(const SNode *sn=mix->species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                mix->sformat.print(std::cerr, sp, Justify::Right) << " = " << real_t(sp(C,L)) << std::endl;
+            }
+
+            step.ld(zero);
+            for(const ProNode *pn=my.head;pn;pn=pn->next)
+            {
+                const Prospect &pro = **pn;
+                const xReal     score = pro.score(xmul,C,L);
+                mix->print(std::cerr, pro.eq) << " $ " << real_t(score) << std::endl;
+
+
+                xadd.free();
+                for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
+                {
+                    const Component &cm     = *it;
+                    const Actor     &a      = cm.actor;
+                    const xReal      factor = a.xn * a.xn / a.sp(C,L);
+                    xadd << factor;
+                }
+                const xReal denom = xadd.sum();
+                std::cerr << "\tdenom=" << real_t(denom) << std::endl;
+                const xReal xiErr = score/denom;
+                std::cerr << "\txiErr=" << real_t(xiErr) << std::endl;
+
+                for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
+                {
+                    const Component &cm     = *it;
+                    const Actor     &a      = cm.actor;
+                    const xReal      dc     = (a.xn*xiErr).abs();
+                    const Species   &sp     = a.sp;
+                    sp(step,SubLevel) = Max(sp(step,SubLevel),dc);
+
+                }
+            }
+
+
+            for(const SNode *sn=mix->species.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                mix->sformat.print(std::cerr << "d_|", sp, Justify::Left)
+                << "| = " << std::setw(15) << real_t(sp(step,SubLevel))
+                << "/"    << std::setw(15) << real_t(sp(C,L))
+                << std::endl;
+            }
 
             throw Exception("not decreased, not implemented");
 
