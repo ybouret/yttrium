@@ -380,14 +380,16 @@ namespace Yttrium
                 mix->sformat.print(std::cerr, sp, Justify::Right) << " = " << real_t(sp(C,L)) << std::endl;
             }
 
-            step.ld(zero);
+            Cerr.ld(zero);
+            
+
             for(const ProNode *pn=my.head;pn;pn=pn->next)
             {
                 const Prospect &pro = **pn;
                 const xReal     score = pro.score(xmul,C,L);
                 mix->print(std::cerr, pro.eq) << " $ " << real_t(score) << std::endl;
 
-
+                // computing denominator
                 xadd.free();
                 for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
                 {
@@ -397,17 +399,16 @@ namespace Yttrium
                     xadd << factor;
                 }
                 const xReal denom = xadd.sum();
-                std::cerr << "\tdenom=" << real_t(denom) << std::endl;
                 const xReal xiErr = score/denom;
-                std::cerr << "\txiErr=" << real_t(xiErr) << std::endl;
 
+                // computing delta for each species
                 for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
                 {
                     const Component &cm     = *it;
                     const Actor     &a      = cm.actor;
                     const xReal      dc     = (a.xn*xiErr).abs();
                     const Species   &sp     = a.sp;
-                    sp(step,SubLevel) = Max(sp(step,SubLevel),dc);
+                    sp(Cerr,SubLevel) = Max(sp(Cerr,SubLevel),dc);
 
                 }
             }
@@ -417,7 +418,7 @@ namespace Yttrium
             {
                 const Species &sp = **sn;
                 mix->sformat.print(std::cerr << "d_|", sp, Justify::Left)
-                << "| = " << std::setw(15) << real_t(sp(step,SubLevel))
+                << "| = " << std::setw(15) << real_t(sp(Cerr,SubLevel))
                 << "/"    << std::setw(15) << real_t(sp(C,L))
                 << std::endl;
             }

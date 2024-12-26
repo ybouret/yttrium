@@ -83,6 +83,7 @@ namespace Yttrium
             XArray             Cend;         //!< final point
             XArray             Ctmp;         //!< updated by objectiveFunction(u)
             XArray             step;         //!< temporary computed step
+            XArray             Cerr;         //!< error on computed C
             XAdds              Cadd;         //!< for algebra on rates
             Orthogonal::Family ortho;
             ProList            basis;        //!< basis of leading prospects

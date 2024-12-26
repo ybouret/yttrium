@@ -19,6 +19,7 @@ namespace Yttrium
         Cend(mix->species.size),
         Ctmp(mix->species.size),
         step(mix->species.size),
+        Cerr(mix->species.size),
         Cadd(mix->species.size),
         ortho(mix->species.size,mix->size),
         basis( static_cast<ProBank &>(my) ),
