@@ -50,10 +50,10 @@ namespace Yttrium
             }
             NuT.assign(TransposeOf,Nu);
 
-            Y_XMLOG(xml, "rhs=" << xi);
-            Y_XMLOG(xml, "Phi=" << Phi);
-            Y_XMLOG(xml, "Nu="  << Nu);
-            Y_XMLOG(xml, "NuT="  << NuT);
+            //Y_XMLOG(xml, "rhs=" << xi);
+            //Y_XMLOG(xml, "Phi=" << Phi);
+            //Y_XMLOG(xml, "Nu="  << Nu);
+            //Y_XMLOG(xml, "NuT="  << NuT);
 
             //------------------------------------------------------------------
             //

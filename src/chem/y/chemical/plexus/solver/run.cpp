@@ -44,7 +44,7 @@ namespace Yttrium
             //
             //
             //
-            // probing all equilibria, with crucial state detection
+            // probing all equilibria, with crucial states detection
             //
             //
             //
@@ -145,6 +145,11 @@ namespace Yttrium
                     continue;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // no crucial and at least one running: break
+                //
+                //--------------------------------------------------------------
                 assert(my.size>0);
                 break;
             }
@@ -167,7 +172,7 @@ namespace Yttrium
             assert(isAcceptable(Cini,SubLevel));
 
             {
-                OutputFile fp("score.dat",true);
+                AppendFile fp("score.dat");
                 const double ans = double(f0);
                 if(ans>0.0)
                     fp("%g %.15g\n", double(cycle), log10(ans));
@@ -184,6 +189,13 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Y_XML_COMMENT(xml, "optimize prospects");
+
+            //------------------------------------------------------------------
+            //
+            //
+            // study costs
+            //
+            //------------------------------------------------------------------
             for(ProNode *pn=my.head;pn;pn=pn->next)
             {
                 Prospect &  pro   = **pn; assert(isAcceptable(pro.C,pro.L));
@@ -207,13 +219,20 @@ namespace Yttrium
                     // degenerate prospect
                     //
                     //----------------------------------------------------------
-                    Y_XMLOG(xml, "(-) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right));
+                    Y_XMLOG(xml, "(0) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right));
                     mix.transfer(pro.C,pro.L,C,L);
                     pro.xi = pro.ax = zero;
                     pro.dc.ld(zero);
                     pro.ff = f0;
                 }
             }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // sort by increasing costs
+            //
+            //------------------------------------------------------------------
             MergeSort::Call(my,byIncreasingFF);
             my.show(xml);
 
@@ -344,6 +363,17 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "decreased");
                 goto PROBE;
             }
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            // C is computed to the minimal numeric value
+            //
+            //
+            //
+            //------------------------------------------------------------------
 
             throw Exception("not decreased, not implemented");
 

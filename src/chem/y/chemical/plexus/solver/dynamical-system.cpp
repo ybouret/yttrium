@@ -41,7 +41,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             step.ld(zero);
             bool  mustCut = false;
-            xReal scaling =     2; // default scaling
+            xReal scaling =    10; // default scaling
 
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
