@@ -64,10 +64,10 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(size_t i=n;i>0;--i)
             {
+                XWritable &      Xi_i  = Xi[i];
+                const XReadable &Phi_i = Phi[i];
                 for(size_t j=n;j>0;--j)
-                {
-                    Xi[i][j] = xadd.dot(Phi[i], Nu[j]);
-                }
+                    Xi_i[j] = xadd.dot(Phi_i, Nu[j]);
             }
 
             Y_XMLOG(xml,"Xi="<<Xi);
