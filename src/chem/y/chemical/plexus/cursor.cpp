@@ -25,6 +25,23 @@ namespace Yttrium
         {
         }
 
+        xReal & Cursor:: operator*() noexcept
+        {
+            return value;
+        }
+
+        const xReal & Cursor:: operator*() const noexcept
+        {
+            return value;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Cursor &cr)
+        {
+            const SRepo &sr = cr;
+            os << sr << "=" << cr.value.str();
+            return os;
+        }
+
     }
 
 }

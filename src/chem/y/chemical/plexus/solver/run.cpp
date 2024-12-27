@@ -36,6 +36,11 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
+            SBank   sbank;
+            Cursors crs(sbank);
+            crs.reset();
+            Cerr.ld(zero);
+
             OutputFile::Overwrite("score.dat");
 
             size_t cycle = 0;
@@ -265,6 +270,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            bool decreased = false;
             if(1==my.size || f1 <= 0.0)
             {
                 Y_XML_COMMENT(xml, "numerical solution '" << pro.eq.name << "'");
@@ -280,7 +286,6 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             assert(f1>0.0);
-            bool decreased = false;
             if(f1<f0)
             {
                 decreased = true;
@@ -376,19 +381,13 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            for(const SNode *sn=mix->species.head;sn;sn=sn->next)
-            {
-                const Species &sp = **sn;
-                mix->sformat.print(std::cerr, sp, Justify::Right) << " = " << real_t(sp(C,L)) << std::endl;
-            }
-
-            Cerr.ld(zero);
-
+            Y_XML_COMMENT(xml,"computing residual errors");
             for(const ProNode *pn=my.head;pn;pn=pn->next)
             {
-                const Prospect &pro = **pn;
+                const Prospect &pro   = **pn;
                 const xReal     score = pro.score(xmul,C,L);
-                mix->print(std::cerr, pro.eq) << " $ " << real_t(score) << std::endl;
+                if(xml.verbose)
+                    mix->print( xml(), pro.eq) << " $ " << real_t(score) << std::endl;
 
                 // computing denominator
                 xadd.free();
@@ -407,23 +406,33 @@ namespace Yttrium
                 {
                     const Component &cm     = *it;
                     const Actor     &a      = cm.actor;
-                    const xReal      dc     = (a.xn*xiErr).abs();
+                    const xReal      dc     = (a.xn*xiErr).abs(); if(dc<=0.0) continue;
                     const Species   &sp     = a.sp;
                     sp(Cerr,SubLevel) = Max(sp(Cerr,SubLevel),dc);
-
                 }
             }
 
 
+
+            Y_XML_COMMENT(xml,"computing errors");
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
-                mix->sformat.print(std::cerr << "d_|", sp, Justify::Left)
-                << "| = " << std::setw(15) << real_t(sp(Cerr,SubLevel))
-                << "/"    << std::setw(15) << real_t(sp(C,L))
-                << std::endl;
+                const xReal    dc = sp(Cerr,SubLevel);
+                const xReal    cc = sp(C,L);
+                if(xml.verbose)
+                    mix->sformat.print(xml() << "d_|", sp, Justify::Left)
+                    << "| = " << std::setw(15) << real_t(dc)
+                    << "/"    << std::setw(15) << real_t(cc)
+                    << std::endl;
+                if(cc>0.0 && dc>0.0) {
+                    const xReal err = dc/cc;
+                    crs(sp,err);
+                }
             }
-
+            //std::cerr << "crs=" << crs << std::endl;
+            if(crs->size>0)
+                Y_XMLOG(xml, "maxError: "  << *(crs->tail) );
             throw Exception("not decreased, not implemented");
 
         }

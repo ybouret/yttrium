@@ -20,6 +20,7 @@ namespace Yttrium
                             const SBank &  _sbank);
             virtual ~Cursor() noexcept;
             Cursor(const Cursor &);
+            Y_OSTREAM_PROTO(Cursor);
 
             xReal &       operator*()       noexcept;
             const xReal & operator*() const noexcept;
