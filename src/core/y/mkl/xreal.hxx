@@ -313,4 +313,18 @@ namespace Yttrium
         return ans;
     }
 
+    template<>
+    String XReal<real_t>:: str() const
+    {
+        return Formatted::Get("%.15g",double( static_cast<real_t>(*this)));
+    }
+
+    template <>
+    String XReal<real_t>:: ToString(const XReal &xr)
+    {
+        return xr.str();
+    }
+
+
 }
+

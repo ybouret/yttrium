@@ -2,7 +2,7 @@
 #include "y/mkl/xreal.hpp"
 #include "y/system/exception.hpp"
 #include "y/mkl/numeric.hpp"
-
+#include "y/string.hpp"
 
 #include <cerrno>
 #include <cmath>

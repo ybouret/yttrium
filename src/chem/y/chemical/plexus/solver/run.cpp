@@ -26,9 +26,11 @@ namespace Yttrium
 
 
 
-        static inline String toReal(const xReal x) {
-            return Formatted::Get("%.15g", double(x) );
+        static inline String toReal(const xReal &x) {
+            return x.str();
         }
+
+       
 
         void Solver:: run(XMLog &xml, XWritable &C, const Level L, const XReadable &K)
         {
@@ -381,7 +383,6 @@ namespace Yttrium
             }
 
             Cerr.ld(zero);
-            
 
             for(const ProNode *pn=my.head;pn;pn=pn->next)
             {
