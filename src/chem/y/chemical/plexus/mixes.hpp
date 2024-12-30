@@ -51,7 +51,9 @@ namespace Yttrium
 
         private:
             Mix::List my;
-
+            CrBank    cb;
+            SBank     sb;
+            
             Y_DISABLE_COPY_AND_ASSIGN(Mixes);
             virtual ConstInterface & surrogate() const noexcept;
             void                     checkFusion();

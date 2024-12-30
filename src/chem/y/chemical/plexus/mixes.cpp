@@ -17,7 +17,9 @@ namespace Yttrium
         Mixes:: Mixes(XMLog      &xml,
                       Equilibria &eqs) :
         Proxy<const Mix::List>(),
-        my()
+        my(),
+        cb(),
+        sb()
         {
             Y_XML_SECTION(xml,CallSign);
 
