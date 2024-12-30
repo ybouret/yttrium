@@ -52,8 +52,10 @@ Y_UTEST(plexus)
 
     GraphViz::Vizible::RenderPNG("mix1.dot",false);
 #endif
-    
+
     GraphViz::Vizible::DotToPngEx("mix1.dot",mixes,1);
+
+    mixes.renderGraphViz(xml,"mix");
 
 
     return 0;

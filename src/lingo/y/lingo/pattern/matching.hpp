@@ -88,6 +88,8 @@ namespace Yttrium
                 return false;
             }
 
+            static String StringToRegExp(const String &);
+            static String StringToRegExp(const char * const);
 
             //__________________________________________________________________
             //

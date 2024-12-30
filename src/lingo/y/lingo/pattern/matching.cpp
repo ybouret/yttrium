@@ -47,6 +47,23 @@ namespace Yttrium
             return true;
         }
 
+        String Matching:: StringToRegExp(const String &str)
+        {
+            String rxp;
+            const size_t n = str.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                const uint8_t byte( str[i] );
+                const String  hexa = Formatted::Get("\\x%02x",byte);
+                rxp << hexa;
+            }
+            return rxp;
+        }
 
+        String Matching:: StringToRegExp(const char * const str)
+        {
+            const String _(str);
+            return StringToRegExp(_);
+        }
     }
 }

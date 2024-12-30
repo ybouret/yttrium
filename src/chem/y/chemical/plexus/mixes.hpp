@@ -51,6 +51,7 @@ namespace Yttrium
 
             void viz(OutputStream &fp, const size_t which) const;
             void graphViz(OutputStream &fp, const size_t which) const;
+            void renderGraphViz(XMLog &xml, const String &root) const;
 
         private:
             Mix::List my;
