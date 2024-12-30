@@ -260,7 +260,7 @@ namespace Yttrium
             Y_XML_COMMENT(xml, "searching better score #" << cycle);
             const Prospect &pro = **my.head;
             xReal           f1  = pro.ff;      assert(f1<=f0);
-            Y_XMLOG(xml, "[pro] " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
+            Y_XMLOG(xml, OptimalProspect << " " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
 
             {
                 Cend.ld(pro.C);
@@ -303,12 +303,12 @@ namespace Yttrium
             {
                 decreased = true;
                 mix.transfer(C,L,pro.C,pro.L);
-                Y_XML_COMMENT(xml, "keep [pro] result");
+                Y_XML_COMMENT(xml, "keep " << OptimalProspect << " result");
             }
             else
             {
                 assert(f1>=f0);
-                Y_XML_COMMENT(xml, "drop [pro] result");
+                Y_XML_COMMENT(xml, "drop " << OptimalProspect << " result");
             }
 
 
@@ -318,28 +318,28 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // check if ode decreased current state
+            // check if DynamicalSystem decreased current state
             //
             //
             //------------------------------------------------------------------
             {
                 const xReal ftmp = computeStepDS(xml,f0);
-                Y_XMLOG(xml, "[ode] " << toReal(ftmp) << " / " << toReal(f1) );
+                Y_XMLOG(xml, DynamicalSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {
                     decreased = true;
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
-                    Y_XML_COMMENT(xml, "keep [ode] result");
+                    Y_XML_COMMENT(xml, "keep " << DynamicalSystem << " result");
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"early return");
+                        Y_XML_COMMENT(xml,"early return on" << DynamicalSystem);
                         return;
                     }
                 }
                 else
                 {
-                    Y_XML_COMMENT(xml, "drop [ode] result");
+                    Y_XML_COMMENT(xml, "drop " << DynamicalSystem << " result");
                 }
             }
             assert(f1>0.0);
@@ -348,28 +348,28 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // check if nra decreased current state
+            // check if AlgebraicSystem decreased current state
             //
             //
             //------------------------------------------------------------------
             {
                 const xReal ftmp = computeStepAS(xml,f0);
-                Y_XMLOG(xml, "[nra] " << toReal(ftmp) << " / " << toReal(f1) );
+                Y_XMLOG(xml, AlgebraicSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {
                     decreased = true;
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
-                    Y_XML_COMMENT(xml, "keep [nra] result");
+                    Y_XML_COMMENT(xml, "keep " << AlgebraicSystem << " result");
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"early return");
+                        Y_XML_COMMENT(xml,"early return on " << AlgebraicSystem);
                         return;
                     }
                 }
                 else
                 {
-                    Y_XML_COMMENT(xml, "drop [nra] result");
+                    Y_XML_COMMENT(xml, "drop " << AlgebraicSystem << " result");
                 }
             }
 

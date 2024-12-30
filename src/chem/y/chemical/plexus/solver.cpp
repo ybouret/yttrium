@@ -49,10 +49,15 @@ namespace Yttrium
         }
 
         const char * const Solver:: CallSign = "Chemical::Solver";
+
+        const char * const Solver:: OptimalProspect = "OptimalProspect";
+        const char * const Solver:: DynamicalSystem = "DynamicalSystem";
+        const char * const Solver:: AlgebraicSystem = "AlgebraicSystem";
+
+
+        Y_PROXY_IMPL(Solver,my)
+
         
-
-        Solver::ConstInterface & Solver:: surrogate() const noexcept { return my; }
-
 
         xReal Solver:: objectiveFunction(const XReadable &C, const Level L)
         {

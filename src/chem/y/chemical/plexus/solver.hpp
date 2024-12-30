@@ -36,7 +36,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Chemical::Solver"
-            
+            static const char * const OptimalProspect;
+            static const char * const DynamicalSystem;
+            static const char * const AlgebraicSystem;
+
             //__________________________________________________________________
             //
             //
@@ -66,8 +69,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
-            virtual ConstInterface & surrogate() const noexcept; //!< [Proxy]
-
+            Y_PROXY_DECL();
+            
             xReal                    objectiveFunction(const XReadable &C, const Level L);
             xReal                    objectiveFunction(const xReal u);
             xReal                    computeStepDS(XMLog &xml, const xReal f0);
