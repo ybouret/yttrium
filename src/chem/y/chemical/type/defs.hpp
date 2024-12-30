@@ -35,10 +35,9 @@ namespace Yttrium
 
         typedef CxxArray<XAdd,MemoryModel>  XAdds;   //!< alias
 
-        typedef CxxSeries<XArray>  XArrays;
-        typedef CxxSeries<XMatrix> XMatrices;
-        ;
-
+        typedef CxxSeries<XArray>  XArrays;          //!< alias
+        typedef CxxSeries<XMatrix> XMatrices;        //!< alias
+        
     }
 
 }

@@ -179,7 +179,7 @@ namespace Yttrium
             bool         running(const XReadable &, const Level)   const noexcept; //!< check if is running
             const char * attrText()                                const noexcept; //!< human readable attribute
 
-            //! bracket RUNNING
+            //! bracket RUNNING components
             SignType bracket(XTriplet &       xi,
                              XTriplet &       ff,
                              XMul    &        xmul,

@@ -57,7 +57,21 @@ namespace Yttrium
         virtual ConstInterface & surrogate() const noexcept = 0;
     };
 
+
+    //______________________________________________________________________
+    //
+    //
+    //! helper for private surrogate declaration
+    //
+    //______________________________________________________________________
 #define Y_PROXY_DECL() virtual ConstInterface & surrogate() const noexcept
+
+    //______________________________________________________________________
+    //
+    //
+    //! helper for private surrogate implementation
+    //
+    //______________________________________________________________________
 #define Y_PROXY_IMPL(CLASS,MY) \
 CLASS::ConstInterface & CLASS:: surrogate() const noexcept { return MY; }
 
