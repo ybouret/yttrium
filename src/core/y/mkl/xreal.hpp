@@ -102,7 +102,7 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         XReal              pow(const T alpha) const; //!< this^alpha
         Core::String<char> str()              const; //!< %.15g
 
-        static Core::String<char> ToString(const XReal &);
+        static Core::String<char> ToString(const XReal &x); //!< return x.str()
 
 
         //______________________________________________________________________

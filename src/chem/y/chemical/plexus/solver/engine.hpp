@@ -12,16 +12,35 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! internal data for solver
+        //
+        //
+        //______________________________________________________________________
         class Engine : public ProBank, public ProList, public Assembly
         {
         public:
-            explicit Engine();
-            virtual ~Engine() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Engine();           //!< setup
+            virtual ~Engine() noexcept;  //!< cleanup
 
-            void update() noexcept;
-            void reset()  noexcept;
-
-            void  show(XMLog &xml) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void  update()         noexcept; //!< update assembly with prospects
+            void  reset()          noexcept; //!< clear assembly and prospects
+            void  show(XMLog &xml) const;    //!< display prospects
 
 
         private:
