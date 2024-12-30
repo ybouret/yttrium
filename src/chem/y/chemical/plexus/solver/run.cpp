@@ -260,7 +260,7 @@ namespace Yttrium
             Y_XML_COMMENT(xml, "searching better score #" << cycle);
             const Prospect &pro = **my.head;
             xReal           f1  = pro.ff;      assert(f1<=f0);
-            Y_XMLOG(xml, OptimalProspect << " " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
+            Y_XMLOG(xml, "@" << OptimalProspect << " " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
 
             {
                 Cend.ld(pro.C);
@@ -324,7 +324,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 const xReal ftmp = computeStepDS(xml,f0);
-                Y_XMLOG(xml, DynamicalSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
+                Y_XMLOG(xml, "@" << DynamicalSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {
                     decreased = true;
@@ -333,7 +333,7 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "keep " << DynamicalSystem << " result");
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"early return on" << DynamicalSystem);
+                        Y_XML_COMMENT(xml,"zero " << DynamicalSystem << " return");
                         return;
                     }
                 }
@@ -354,7 +354,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 const xReal ftmp = computeStepAS(xml,f0);
-                Y_XMLOG(xml, AlgebraicSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
+                Y_XMLOG(xml, "@" << AlgebraicSystem << " " << toReal(ftmp) << " / " << toReal(f1) );
                 if(ftmp<f1)
                 {
                     decreased = true;
@@ -363,7 +363,7 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "keep " << AlgebraicSystem << " result");
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"early return on " << AlgebraicSystem);
+                        Y_XML_COMMENT(xml,"zero " << AlgebraicSystem << " return");
                         return;
                     }
                 }
