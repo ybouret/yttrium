@@ -258,6 +258,8 @@ namespace Yttrium
             void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
 
+            void viz(OutputStream &fp, const size_t which) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mix);
             virtual ConstInterface & surrogate() const noexcept;

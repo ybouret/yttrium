@@ -49,15 +49,20 @@ namespace Yttrium
             //! solve each Mix
             void solve(XMLog &xml,XWritable &C, const Level L, const XReadable &K);
 
+            void viz(OutputStream &fp, const size_t which) const;
+            void graphViz(OutputStream &fp, const size_t which) const;
+
         private:
             Mix::List my;
             CrBank    cb;
             SBank     sb;
-            
-            Y_DISABLE_COPY_AND_ASSIGN(Mixes);
-            virtual ConstInterface & surrogate() const noexcept;
-            void                     checkFusion();
 
+            Y_DISABLE_COPY_AND_ASSIGN(Mixes);
+            Y_PROXY_DECL();
+            void checkFusion();
+
+        public:
+            const size_t maxOrder;
         };
 
     }

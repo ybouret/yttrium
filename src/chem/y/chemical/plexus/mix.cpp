@@ -14,9 +14,9 @@ namespace Yttrium
 
         const char * const Mix:: CallSign = "Chemical::Mix";
 
-        Mix:: Mix(const Equilibrium &first) :
+        Mix:: Mix(const Equilibrium &first):
         Proxy<const Connected>(),
-        my(first),
+        my(first,0),
         conservancy(),
         auth(0),
         order(0),

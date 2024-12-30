@@ -47,7 +47,7 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
-                virtual ConstInterface & surrogate() const noexcept;
+                Y_PROXY_DECL();
                 Canon my; //!< internal list
             };
 

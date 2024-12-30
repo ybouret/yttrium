@@ -10,12 +10,14 @@ namespace Yttrium
         const char * const Connected::CallSign = "Chemical::Connected";
 
 
-        Connected:: Connected(const Equilibrium &first) :
+        Connected:: Connected(const Equilibrium &first,
+                              const unsigned     cindx) :
         EList(),
         Fragment(),
         species(),
         sformat(),
-        topology()
+        topology(),
+        hallmark(cindx)
         {
             connect(first);
         }
@@ -25,7 +27,8 @@ namespace Yttrium
         Fragment(_),
         species(_.species),
         sformat(_.sformat),
-        topology(_.topology)
+        topology(_.topology),
+        hallmark(_.hallmark)
         {
         }
 
@@ -38,6 +41,7 @@ namespace Yttrium
             species.swapWith(_.species);
             sformat.tradeFor(_.sformat);
             topology.xch(_.topology);
+            CoerceSwap(hallmark, _.hallmark);
         }
 
 

@@ -19,7 +19,8 @@ namespace Yttrium
         Proxy<const Mix::List>(),
         my(),
         cb(),
-        sb()
+        sb(),
+        maxOrder(0)
         {
             Y_XML_SECTION(xml,CallSign);
 
@@ -60,8 +61,15 @@ namespace Yttrium
             // configure mixes
             //
             //------------------------------------------------------------------
+            unsigned hallmark = 0;
             for(Mix *mix=my.head;mix;mix=mix->next)
+            {
+                Coerce((**mix).hallmark) = ++hallmark;
                 mix->buildConfiguration(xml,eqs,cb,sb);
+                InSituMax( Coerce(maxOrder), mix->order.size() );
+            }
+
+            Y_XML_COMMENT(xml, "maxOrder = " << maxOrder);
         }
 
 
@@ -108,6 +116,24 @@ namespace Yttrium
 
         }
 
+
+        void Mixes:: viz(OutputStream &fp, const size_t which) const
+        {
+            assert(which>0);
+            assert(which<=maxOrder);
+            for(const Mix *mix=my.head;mix;mix=mix->next)
+            {
+                mix->viz(fp, which);
+            }
+
+        }
+
+        void Mixes:: graphViz(OutputStream &fp, const size_t which) const
+        {
+            GraphViz::Vizible::Enter(fp,"G");
+            viz(fp,which);
+            GraphViz::Vizible::Leave(fp);
+        }
 
     }
 

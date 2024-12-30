@@ -38,7 +38,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Connected(const Equilibrium &first); //!< initialize
+            explicit Connected(const Equilibrium &first,
+                               const unsigned     cindx); //!< initialize
             virtual ~Connected() noexcept;                //!< cleanup
             Connected(const Connected &);                 //!< duplicate
 
@@ -59,9 +60,10 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SList       species;  //!< species of all equilibria
-            Assembly    sformat;  //!< for species
-            Matrix<int> topology; //!< primary topology
+            SList          species;  //!< species of all equilibria
+            Assembly       sformat;  //!< for species
+            Matrix<int>    topology; //!< primary topology
+            const unsigned hallmark; //!< within mixes
 
         private:
             Y_DISABLE_ASSIGN(Connected);

@@ -41,7 +41,23 @@ Y_UTEST(plexus)
 
     std::cerr << "mixes=" << mixes << std::endl;
 
+
+#if 0
+    {
+        OutputFile fp("mix1.dot");
+        GraphViz::Vizible::Enter(fp, "G");
+        mixes.viz(fp,1);
+        GraphViz::Vizible::Leave(fp);
+    }
+
+    GraphViz::Vizible::RenderPNG("mix1.dot",false);
+#endif
     
+    GraphViz::Vizible::DotToPngEx("mix1.dot",mixes,1);
+
+
+    return 0;
+
     const size_t M = lib->size();
     XVector      C0(M,0);
 
