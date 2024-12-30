@@ -452,7 +452,6 @@ namespace Yttrium
             if(crs->size<=0) throw Specific::Exception(CallSign, "inconsistent errors!");
             Y_XMLOG(xml, "maxError: "  << *(crs->tail) );
             
-            throw Exception("not decreased, not implemented");
         }
     }
 
