@@ -1,7 +1,7 @@
 #include "y/chemical/plexus/solver.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/chemical/plexus/mix.hpp"
-#include "y/exception.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -431,7 +431,7 @@ namespace Yttrium
                     InSituMax(sp(Cerr,SubLevel),dc);
                 }
             }
-            
+
             Y_XML_COMMENT(xml,"Computing Fractionnal Errors");
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
@@ -448,8 +448,10 @@ namespace Yttrium
                     crs(sp,err);
                 }
             }
-            if(crs->size>0)
-                Y_XMLOG(xml, "maxError: "  << *(crs->tail) );
+
+            if(crs->size<=0) throw Specific::Exception(CallSign, "inconsistent errors!");
+            Y_XMLOG(xml, "maxError: "  << *(crs->tail) );
+            
             throw Exception("not decreased, not implemented");
         }
     }
