@@ -136,7 +136,7 @@ namespace Yttrium
                 scaling *= safe;
                 setRecentStep(scaling);
             }
-            save("nra.dat",100);
+            //save("nra.dat",100);
 
             //------------------------------------------------------------------
             //

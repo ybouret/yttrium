@@ -86,7 +86,8 @@ namespace Yttrium
                 scaling *= safe;
                 setRecentStep(scaling);
             }
-            save("ode.dat",100);
+
+            //save("ode.dat",100);
 
             //------------------------------------------------------------------
             //

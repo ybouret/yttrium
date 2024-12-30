@@ -62,7 +62,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(size_t probe=1;;++probe)
             {
-                Y_XML_COMMENT(xml, "probing cycle #" << cycle << "." << probe);
+                Y_XML_COMMENT(xml, "Probing cycle #" << cycle << "." << probe);
 
                 //--------------------------------------------------------------
                 //
@@ -127,7 +127,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 if(my.size<=0)
                 {
-                    Y_XML_COMMENT(xml, "all blocked !!");
+                    Y_XML_COMMENT(xml, "All blocked !!");
                     return; // no error as well
                 }
 
@@ -139,7 +139,7 @@ namespace Yttrium
                 assert(my.size>0);
                 if(crucial)
                 {
-                    Y_XML_COMMENT(xml, "removing crucial");
+                    Y_XML_COMMENT(xml, "Removing crucial states");
 
                     //----------------------------------------------------------
                     // keep crucial part
@@ -164,7 +164,7 @@ namespace Yttrium
                 assert(my.size>0);
                 break;
             }
-
+            my.update();
 
             //------------------------------------------------------------------
             //
@@ -176,18 +176,16 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml, "running #" << my.size << "/" << mix->size);
-            my.update();
-            const xReal f0 = objectiveFunction( mix.transfer(Cini, SubLevel, C, L), SubLevel );
+            Y_XML_COMMENT(xml, "#Running = " << my.size << " / " << mix->size);
+            const xReal f0 = objectiveFunction( mix.transfer(Cini,SubLevel,C,L), SubLevel );
             Y_XMLOG(xml, "f0 = " << f0.str() );
-            assert(isAcceptable(Cini,SubLevel));
+
 
             {
                 AppendFile fp("score.dat");
                 const double ans = double(f0);
                 if(ans>0.0)
                     fp("%g %.15g\n", double(cycle), log10(ans));
-
             }
 
             //------------------------------------------------------------------
@@ -199,7 +197,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml, "optimize prospects");
+            Y_XML_COMMENT(xml, "Optimize Prospects");
 
             //------------------------------------------------------------------
             //
@@ -258,7 +256,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml, "searching better score #" << cycle);
+            Y_XML_COMMENT(xml, "Searching better score #" << cycle);
             const Prospect &pro = **my.head;
             xReal           f1  = pro.ff;      assert(f1<=f0);
             Y_XMLOG(xml, "@" << OptimalProspect << " " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
@@ -273,7 +271,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // early returns
+            // early returns detectetion
             //
             //
             //------------------------------------------------------------------
@@ -281,7 +279,7 @@ namespace Yttrium
 
             if(f1<=0.0)
             {
-                Y_XML_COMMENT(xml, "'" << pro.eq.name << "' numerical zero");
+                Y_XML_COMMENT(xml, "Zero '" << pro.eq.name << "'!");
                 mix.transfer(C,L,pro.C,pro.L);
                 return; // no error
             }
@@ -289,7 +287,7 @@ namespace Yttrium
 
             if(1==my.size)
             {
-                Y_XML_COMMENT(xml, "'" << pro.eq.name << "' is single");
+                Y_XML_COMMENT(xml, "Lone '" << pro.eq.name << "'!");
                 mix.transfer(C,L,pro.C,pro.L);
                 goto COMPUTE_ERROR;
             }
@@ -306,12 +304,12 @@ namespace Yttrium
             {
                 decreased = true;
                 mix.transfer(C,L,pro.C,pro.L);
-                Y_XML_COMMENT(xml, "keep " << OptimalProspect << " result");
+                Y_XML_COMMENT(xml, "Keep " << OptimalProspect);
             }
             else
             {
                 assert(f1>=f0);
-                Y_XML_COMMENT(xml, "drop " << OptimalProspect << " result");
+                Y_XML_COMMENT(xml, "Drop " << OptimalProspect);
             }
 
             
@@ -330,16 +328,16 @@ namespace Yttrium
                     decreased = true;
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
-                    Y_XML_COMMENT(xml, "keep " << DynamicalSystem << " result");
+                    Y_XML_COMMENT(xml, "Keep " << DynamicalSystem);
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"zero " << DynamicalSystem << " return");
+                        Y_XML_COMMENT(xml,"Zero " << DynamicalSystem << "!");
                         return;
                     }
                 }
                 else
                 {
-                    Y_XML_COMMENT(xml, "drop " << DynamicalSystem << " result");
+                    Y_XML_COMMENT(xml, "Drop " << DynamicalSystem);
                 }
             }
             assert(f1>0.0);
@@ -360,16 +358,16 @@ namespace Yttrium
                     decreased = true;
                     f1=ftmp;
                     mix.transfer(C,L,Ctmp,SubLevel);
-                    Y_XML_COMMENT(xml, "keep " << AlgebraicSystem << " result");
+                    Y_XML_COMMENT(xml, "Keep " << AlgebraicSystem);
                     if(f1<=0.0)
                     {
-                        Y_XML_COMMENT(xml,"zero " << AlgebraicSystem << " return");
+                        Y_XML_COMMENT(xml,"Zero " << AlgebraicSystem << "!");
                         return;
                     }
                 }
                 else
                 {
-                    Y_XML_COMMENT(xml, "drop " << AlgebraicSystem << " result");
+                    Y_XML_COMMENT(xml, "Drop " << AlgebraicSystem << "!");
                 }
             }
 
@@ -380,7 +378,7 @@ namespace Yttrium
 
             if(decreased)
             {
-                Y_XML_COMMENT(xml, "decreased");
+                Y_XML_COMMENT(xml, "Decreased Objective Function");
                 goto PROBE;
             }
 
@@ -395,7 +393,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
         COMPUTE_ERROR:
-            Y_XML_COMMENT(xml,"computing residual concentrations");
+            Y_XML_COMMENT(xml,"Computing Residual Concentrations");
             for(const ProNode *pn=my.head;pn;pn=pn->next)
             {
                 const Prospect &pro   = **pn;
@@ -403,7 +401,9 @@ namespace Yttrium
                 if(xml.verbose)
                     mix->print( xml(), pro.eq) << " $ " << real_t(score) << std::endl;
 
+                //--------------------------------------------------------------
                 // computing denominator
+                //--------------------------------------------------------------
                 xadd.free();
                 for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
                 {
@@ -413,22 +413,26 @@ namespace Yttrium
                     xadd << factor;
                 }
                 const xReal denom = xadd.sum();
+
+                //--------------------------------------------------------------
+                // computing first order extent
+                //--------------------------------------------------------------
                 const xReal xiErr = score/denom;
 
+                //--------------------------------------------------------------
                 // computing delta for each species
+                //--------------------------------------------------------------
                 for(Components::ConstIterator it=pro.eq->begin();it!=pro.eq->end();++it)
                 {
                     const Component &cm     = *it;
                     const Actor     &a      = cm.actor;
                     const xReal      dc     = (a.xn*xiErr).abs(); if(dc<=0.0) continue;
                     const Species   &sp     = a.sp;
-                    sp(Cerr,SubLevel) = Max(sp(Cerr,SubLevel),dc);
+                    InSituMax(sp(Cerr,SubLevel),dc);
                 }
             }
-
-
-
-            Y_XML_COMMENT(xml,"computing fractionnal errors");
+            
+            Y_XML_COMMENT(xml,"Computing Fractionnal Errors");
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
