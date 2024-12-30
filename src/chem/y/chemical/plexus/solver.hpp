@@ -52,10 +52,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! solve concentration with globa K
             void run(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
+            //! objective function at Cini * (1-u) + u * Cend
             xReal operator()(const xReal u);
 
+            //! check that all prospects accept C
             bool isAcceptable(const XReadable &C, const Level L) const noexcept;
 
         private:

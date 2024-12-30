@@ -251,7 +251,7 @@ namespace Yttrium
                 return target;
             }
 
-
+            //! use internal solver and global K
             void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
 

@@ -46,7 +46,7 @@ namespace Yttrium
             virtual ~Mixes() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Mixes);    //!< display
 
-
+            //! solve each Mix
             void solve(XMLog &xml,XWritable &C, const Level L, const XReadable &K);
 
         private:
