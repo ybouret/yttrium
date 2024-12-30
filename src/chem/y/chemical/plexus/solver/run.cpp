@@ -37,7 +37,8 @@ namespace Yttrium
 
             Y_XML_SECTION(xml,CallSign);
             SBank   sbank;
-            Cursors crs(sbank);
+            CrBank  cbank;
+            Cursors crs(cbank,sbank);
             crs.reset();
             Cerr.ld(zero);
 

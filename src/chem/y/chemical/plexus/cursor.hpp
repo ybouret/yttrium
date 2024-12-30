@@ -11,19 +11,40 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
         //! one or more species at the same value
+        //
+        //
+        //______________________________________________________________________
         class Cursor : public SRepo
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with first species/value and SBank
             explicit Cursor(const Species &_first,
                             const xReal    _value,
                             const SBank &  _sbank);
-            virtual ~Cursor() noexcept;
-            Cursor(const Cursor &);
-            Y_OSTREAM_PROTO(Cursor);
+            virtual ~Cursor() noexcept; //!< cleanup
+            Cursor(const Cursor &);     //!< duplicate
+            Y_OSTREAM_PROTO(Cursor);    //!< dispay
 
-            xReal &       operator*()       noexcept;
-            const xReal & operator*() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            xReal &       operator*()       noexcept; //!< access
+            const xReal & operator*() const noexcept; //!< access, const
 
         private:
             Y_DISABLE_ASSIGN(Cursor);

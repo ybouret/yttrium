@@ -12,27 +12,60 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef Small:: CoopHeavyList<Cursor> CrList;
-        typedef CrList:: ProxyType            CrBank;
-        typedef CrList:: NodeType             CrNode;
+        //______________________________________________________________________
+        //
+        //
+        //
+        // Definitions
+        //
+        //
+        //______________________________________________________________________
+        typedef Small::  CoopHeavyList<Cursor> CrList; //!< alias
+        typedef CrList:: ProxyType             CrBank; //!< alias
+        typedef CrList:: NodeType              CrNode; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! ordered list of cursors
+        //
+        //
+        //______________________________________________________________________
         class Cursors : public Proxy<const CrList>
         {
         public:
-            explicit Cursors(const SBank &) noexcept;
-            virtual ~Cursors()              noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            void reset() noexcept;
+            //! setup with banks for dynamic usage
+            explicit Cursors(const CrBank &,
+                             const SBank  &) noexcept;
+            virtual ~Cursors()               noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void reset() noexcept; //!< reset all
+
+            //! insert species value at its place
             void operator()(const Species &s,
                             const xReal   &x);
 
+            //! mostly for debug
             bool areOK() const noexcept;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cursors);
             Y_PROXY_DECL();
 
-            CrBank cb;
             CrList my;
             SBank  sb;
 

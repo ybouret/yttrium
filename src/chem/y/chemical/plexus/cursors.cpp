@@ -11,11 +11,11 @@ namespace Yttrium
         {
         }
 
-        Cursors:: Cursors(const SBank  & _sbank) noexcept:
+        Cursors:: Cursors(const CrBank & _cb,
+                          const SBank  & _sb) noexcept:
         Proxy<const CrList>(),
-        cb(),
-        my(cb),
-        sb(_sbank)
+        my(_cb),
+        sb(_sb)
         {
         }
 
