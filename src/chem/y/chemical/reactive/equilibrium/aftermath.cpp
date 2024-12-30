@@ -25,12 +25,12 @@ namespace Yttrium
                 const xReal _K0,
                 XWritable  &_C0,
                 const Level _L0,
-                XMul &_X) :
+                XMul &      _X0) :
                 E(_E),
                 K(_K0),
                 C(_C0),
                 L(_L0),
-                X(_X),
+                X(_X0),
                 zero(0.0),
                 half(0.5)
                 {
