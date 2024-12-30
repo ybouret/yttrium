@@ -41,7 +41,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // initialize errors
+            // initialize errors and cycle
             //
             //
             //------------------------------------------------------------------
@@ -127,8 +127,8 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 if(my.size<=0)
                 {
-                    Y_XML_COMMENT(xml, "all blocked");
-                    return;
+                    Y_XML_COMMENT(xml, "all blocked !!");
+                    return; // no error as well
                 }
 
                 //--------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace Yttrium
             Y_XML_COMMENT(xml, "running #" << my.size << "/" << mix->size);
             my.update();
             const xReal f0 = objectiveFunction( mix.transfer(Cini, SubLevel, C, L), SubLevel );
-            Y_XMLOG(xml, "f0 = " << real_t(f0) );
+            Y_XMLOG(xml, "f0 = " << f0.str() );
             assert(isAcceptable(Cini,SubLevel));
 
             {
@@ -206,6 +206,7 @@ namespace Yttrium
             //
             // study costs
             //
+            //
             //------------------------------------------------------------------
             for(ProNode *pn=my.head;pn;pn=pn->next)
             {
@@ -218,7 +219,7 @@ namespace Yttrium
                     // update prospect to f_opt @ Ctmp
                     //
                     //----------------------------------------------------------
-                    Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " => " << real_t(f_opt) );
+                    Y_XMLOG(xml, "(+) " << Justify(pro.eq.name,my.maxKeySize,Justify::Right) << " => " <<  f_opt.str() );
                     mix.transfer(pro.C, pro.L, Ctmp, SubLevel);
                     pro.ax = (pro.xi = pro.extent(xadd, C, L, pro.dc, SubLevel)).abs();
                     pro.ff = f_opt;
@@ -262,10 +263,12 @@ namespace Yttrium
             xReal           f1  = pro.ff;      assert(f1<=f0);
             Y_XMLOG(xml, "@" << OptimalProspect << " " << toReal(f1) << " / " << toReal(f0) << " @" << pro.key());
 
+#if 0
             {
                 Cend.ld(pro.C);
                 save("pro.dat",100);
             }
+#endif
 
             //------------------------------------------------------------------
             //
@@ -278,7 +281,7 @@ namespace Yttrium
 
             if(f1<=0.0)
             {
-                Y_XML_COMMENT(xml, "numerical zero for '" << pro.eq.name << "'");
+                Y_XML_COMMENT(xml, "'" << pro.eq.name << "' numerical zero");
                 mix.transfer(C,L,pro.C,pro.L);
                 return; // no error
             }
@@ -286,7 +289,7 @@ namespace Yttrium
 
             if(1==my.size)
             {
-                Y_XML_COMMENT(xml, "single '" << pro.eq.name << "'");
+                Y_XML_COMMENT(xml, "'" << pro.eq.name << "' is single");
                 mix.transfer(C,L,pro.C,pro.L);
                 goto COMPUTE_ERROR;
             }
@@ -311,10 +314,7 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "drop " << OptimalProspect << " result");
             }
 
-
-
-
-
+            
             //------------------------------------------------------------------
             //
             //
