@@ -32,8 +32,8 @@ namespace Yttrium
             Outcome(const Situation  & _st,
                     const Components & _eq,
                     const xReal        _eK,
-                    XWritable &        _C,
-                    const Level        _L);
+                    XWritable &        _C0,
+                    const Level        _L0);
 
             //! duplicate
             Outcome(const Outcome &) noexcept;

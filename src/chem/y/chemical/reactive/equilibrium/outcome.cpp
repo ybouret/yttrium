@@ -14,14 +14,14 @@ namespace Yttrium
         Outcome:: Outcome(const Situation &  _st,
                           const Components & _eq,
                           const xReal        _eK,
-                          XWritable &        _C,
-                          const Level        _L) :
+                          XWritable &        _C0,
+                          const Level        _L0) :
         Entity(),
         st(_st),
         eq(_eq),
         eK(_eK),
-        C(_C),
-        L(_L)
+        C(_C0),
+        L(_L0)
         {
 
         }

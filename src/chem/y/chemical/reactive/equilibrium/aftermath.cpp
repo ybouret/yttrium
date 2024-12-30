@@ -22,14 +22,14 @@ namespace Yttrium
             {
             public:
                 inline Gauge(const Components & _E,
-                const xReal _K,
-                XWritable  &_C,
-                const Level _L,
+                const xReal _K0,
+                XWritable  &_C0,
+                const Level _L0,
                 XMul &_X) :
                 E(_E),
-                K(_K),
-                C(_C),
-                L(_L),
+                K(_K0),
+                C(_C0),
+                L(_L0),
                 X(_X),
                 zero(0.0),
                 half(0.5)
