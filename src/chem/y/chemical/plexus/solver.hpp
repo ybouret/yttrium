@@ -43,8 +43,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Solver(const Mix &); //!< setup from persistent mix
-            virtual ~Solver() noexcept;   //!< cleanup
+            explicit Solver(const Mix    &,
+                            const CrBank &,
+                            const SBank  &); //!< setup from persistent mix
+            virtual ~Solver() noexcept;      //!< cleanup
 
             //__________________________________________________________________
             //
@@ -98,6 +100,7 @@ namespace Yttrium
             XMatrices          NuMat;        //!< arrays of Nu
             XMatrices          NuTMat;       //!< arrays of Nu'
             XMatrices          XiMat;        //!< arrays of Xi
+            Cursors            crs;          //!< cursors
 
         public:
             const xReal        one;  //!< 1.0

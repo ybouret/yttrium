@@ -179,8 +179,11 @@ namespace Yttrium
             void addPrimary(const Mix &);                     //!< add primary connected mix
 
             //! compile once built
-            void buildConfiguration(XMLog &xml, Equilibria &eqs);
-            
+            void buildConfiguration(XMLog        &xml,
+                                    Equilibria   &eqs,
+                                    const CrBank &cb,
+                                    const SBank  &sb);
+
 
             //! formatted, species-wise display at SubLevel
             template <typename ARRAY> inline

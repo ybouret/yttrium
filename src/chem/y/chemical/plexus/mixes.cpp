@@ -61,7 +61,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             for(Mix *mix=my.head;mix;mix=mix->next)
-                mix->buildConfiguration(xml,eqs);
+                mix->buildConfiguration(xml,eqs,cb,sb);
         }
 
 

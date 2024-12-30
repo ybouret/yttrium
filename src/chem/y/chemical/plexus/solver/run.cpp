@@ -36,14 +36,17 @@ namespace Yttrium
         {
 
             Y_XML_SECTION(xml,CallSign);
-            SBank   sbank;
-            CrBank  cbank;
-            Cursors crs(cbank,sbank);
-            crs.reset();
-            Cerr.ld(zero);
-
             OutputFile::Overwrite("score.dat");
 
+            //------------------------------------------------------------------
+            //
+            //
+            // initialize errors
+            //
+            //
+            //------------------------------------------------------------------
+            crs.reset();
+            Cerr.ld(zero);
             size_t cycle = 0;
         PROBE:
             ++cycle;
@@ -267,16 +270,25 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // early return on single equilibrium/zero score
+            // early returns
             //
             //
             //------------------------------------------------------------------
             bool decreased = false;
-            if(1==my.size || f1 <= 0.0)
+
+            if(f1<=0.0)
             {
-                Y_XML_COMMENT(xml, "numerical solution '" << pro.eq.name << "'");
+                Y_XML_COMMENT(xml, "numerical zero for '" << pro.eq.name << "'");
                 mix.transfer(C,L,pro.C,pro.L);
-                return;
+                return; // no error
+            }
+
+
+            if(1==my.size)
+            {
+                Y_XML_COMMENT(xml, "single '" << pro.eq.name << "'");
+                mix.transfer(C,L,pro.C,pro.L);
+                goto COMPUTE_ERROR;
             }
 
             //------------------------------------------------------------------
@@ -382,7 +394,8 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml,"computing residual errors");
+        COMPUTE_ERROR:
+            Y_XML_COMMENT(xml,"computing residual concentrations");
             for(const ProNode *pn=my.head;pn;pn=pn->next)
             {
                 const Prospect &pro   = **pn;
@@ -415,7 +428,7 @@ namespace Yttrium
 
 
 
-            Y_XML_COMMENT(xml,"computing errors");
+            Y_XML_COMMENT(xml,"computing fractionnal errors");
             for(const SNode *sn=mix->species.head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
@@ -431,11 +444,9 @@ namespace Yttrium
                     crs(sp,err);
                 }
             }
-            //std::cerr << "crs=" << crs << std::endl;
             if(crs->size>0)
                 Y_XMLOG(xml, "maxError: "  << *(crs->tail) );
             throw Exception("not decreased, not implemented");
-
         }
     }
 
