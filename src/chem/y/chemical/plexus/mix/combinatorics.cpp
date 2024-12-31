@@ -14,9 +14,6 @@ namespace Yttrium
         typedef WOVEn::ArrayOf<int>  iArray;
         typedef WOVEn::ArraysOf<int> iArrays;
 
-
-        //static inline int MakeOpposite(const int i) noexcept { return -i; }
-
         static inline
         iArrays * computeWeights(XMLog &            xml,
                                  const Matrix<int> &topology)
@@ -48,7 +45,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // prepare orders
+            // Prepare orders
             //
             //
             //------------------------------------------------------------------

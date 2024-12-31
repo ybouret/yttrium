@@ -22,7 +22,7 @@ namespace Yttrium
 
             Laws:: ~Laws() noexcept {}
 
-            Laws::ConstInterface & Laws:: surrogate() const noexcept { return my; }
+            Y_PROXY_IMPL(Laws,my);
 
             const char * const Laws:: CallSign = "Chemical::Conservation::Laws";
             

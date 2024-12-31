@@ -38,15 +38,14 @@ namespace Yttrium
         {
         }
 
-        Components:: ConstInterface & Components:: surrogate() const noexcept { return cmdb; }
+
+        Y_PROXY_IMPL(Components,cmdb)
 
 
         const String & Components:: key() const noexcept
         {
             return name;
         }
-
-
 
 
         const char * Components:: attrText() const noexcept

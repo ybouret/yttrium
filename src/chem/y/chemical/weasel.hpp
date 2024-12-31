@@ -115,7 +115,7 @@ namespace Yttrium
             void record(const String &label, const Scheme &scheme);
             void record(const char * const, const Scheme &);
 
-            void executeLuaCode(Args &);
+            void executeLuaCode(Args &); //!< to make Lua Scheme
 
         };
     }

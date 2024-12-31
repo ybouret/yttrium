@@ -64,7 +64,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
-            virtual ConstInterface & surrogate() const noexcept;
+            Y_PROXY_DECL();
             Reactor my;
 
         public:

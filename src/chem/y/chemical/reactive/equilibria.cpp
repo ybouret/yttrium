@@ -20,11 +20,9 @@ namespace Yttrium
         Equilibria:: ~Equilibria() noexcept
         {
         }
+        
 
-        Equilibria:: ConstInterface & Equilibria:: surrogate() const noexcept
-        {
-            return my;
-        }
+        Y_PROXY_IMPL(Equilibria,my)
 
         void Equilibria:: decl( Equilibrium * const eq)
         {

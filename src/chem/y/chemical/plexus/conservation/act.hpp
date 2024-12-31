@@ -55,8 +55,8 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Act);
-                virtual ConstInterface & surrogate() const noexcept;
-
+                Y_PROXY_DECL();
+                
                 Law::Group my;
                 
             public:

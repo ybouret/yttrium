@@ -239,7 +239,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
-            virtual ConstInterface & surrogate() const noexcept;
+            Y_PROXY_DECL();
+
             Compendium cmdb;
             Actors & actorsPlaying(const Role);
             void     updateAttribute() noexcept;

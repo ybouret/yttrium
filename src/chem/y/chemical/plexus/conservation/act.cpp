@@ -11,8 +11,7 @@ namespace Yttrium
 
             Act:: ~Act() noexcept {}
 
-            Act::ConstInterface & Act:: surrogate() const noexcept { return my; }
-
+            Y_PROXY_IMPL(Act,my)
 
             Act:: Act(const Law &first) :
             Proxy<const Law::Group>(),

@@ -16,7 +16,7 @@ namespace Yttrium
         xReal Equilibrium:: K(xReal t) const
         {
             const xReal value = getK(t);
-            if(value<=0.0) throw Specific::Exception(name.c_str(), "negative constant @%g", real_t(t));
+            if(value<=0.0) throw Specific::Exception(name.c_str(), "negative constant @time=%g", real_t(t));
             return value;
         }
 
