@@ -77,9 +77,8 @@ namespace Yttrium
                 const XArray  alpha; //!< weights of actors
                 const XMatrix xproj; //!< Id * alpha^2 - |alpha><alpha|
                 const size_t  place; //!< in laws
-
-                Law * next; //!< for laws
-                Law * prev; //!< for laws
+                Law *         next;  //!< for laws
+                Law *         prev;  //!< for laws
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
