@@ -257,7 +257,7 @@ namespace Yttrium
             //! use internal solver and global K
             void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
-
+            //! write graphViz code for order[which]
             void viz(OutputStream &fp, const size_t which) const;
 
         private:

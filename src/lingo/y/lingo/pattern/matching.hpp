@@ -88,7 +88,10 @@ namespace Yttrium
                 return false;
             }
 
+            //! string to fully escaped expression
             static String StringToRegExp(const String &);
+
+            //! text to fully escaped expression
             static String StringToRegExp(const char * const);
 
             //__________________________________________________________________

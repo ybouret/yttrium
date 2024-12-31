@@ -49,8 +49,13 @@ namespace Yttrium
             //! solve each Mix
             void solve(XMLog &xml,XWritable &C, const Level L, const XReadable &K);
 
+            //! write graphViz code for each order[which]
             void viz(OutputStream &fp, const size_t which) const;
+
+            //! write standalone graphViz code for order[which]
             void graphViz(OutputStream &fp, const size_t which) const;
+
+            //! render in "root[1:maxOrder].png"
             void renderGraphViz(XMLog &xml, const String &root) const;
 
         private:
