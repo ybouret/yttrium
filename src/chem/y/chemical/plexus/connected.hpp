@@ -6,27 +6,14 @@
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/chemical/reactive/fragment.hpp"
+#include "y/chemical/type/squad.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        class Squad
-        {
-        public:
-
-            explicit Squad() noexcept {}
-            virtual ~Squad() noexcept {}
-            Squad(const Squad &_) : species(_.species), sformat(_.sformat) {}
-            
-            SList    species;
-            Assembly sformat;
-
-        private:
-            Y_DISABLE_ASSIGN(Squad);
-        };
-
+        
         //______________________________________________________________________
         //
         //

@@ -192,24 +192,7 @@ namespace Yttrium
                                       ARRAY &            arr,
                                       const char * const sfx) const
             {
-                if(my.species.size<=0)
-                    os << "{}";
-                else
-                {
-                    os << '{' << std::endl;
-                    for(const SNode *it=my.species.head;it;it=it->next)
-                    {
-                        const Species &sp = **it;
-                        my.sformat.print(os, pfx, sp, sfx, Justify::Left);
-                        os << " = ";
-                        os << sp(arr,SubLevel);
-                        if(0!=it->next)
-                            os << std::endl;
-                        else
-                            os << ' ' <<  '}';
-                    }
-                }
-                return os;
+                return my.display(os, pfx, arr, sfx, SubLevel);
             }
 
 
@@ -221,24 +204,7 @@ namespace Yttrium
                                       const char * const sfx,
                                       PROC              &proc) const
             {
-                if(my.species.size<=0)
-                    os << "{}";
-                else
-                {
-                    os << '{' << std::endl;
-                    for(const SNode *it=my.species.head;it;it=it->next)
-                    {
-                        const Species &sp = **it;
-                        my.sformat.print(os, pfx, sp, sfx, Justify::Left);
-                        os << " = ";
-                        os << proc(sp(arr,SubLevel));
-                        if(0!=it->next)
-                            os << std::endl;
-                        else
-                            os << ' ' <<  '}';
-                    }
-                }
-                return os;
+                return my.display(os, pfx, arr, sfx, SubLevel, proc);
             }
 
             //! transfer by species
@@ -262,7 +228,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mix);
-            virtual ConstInterface & surrogate() const noexcept;
+            Y_PROXY_DECL();
             void buildConservations(XMLog &xml);
             void buildCombinatorics(XMLog &xml, Equilibria &eqs);
             
