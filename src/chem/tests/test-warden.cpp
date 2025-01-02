@@ -40,7 +40,20 @@ Y_UTEST(warden)
 
     Library::Conc(C0,ran,0.5,0.5);
 
-    lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl;
+    lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl << std::endl;
+
+
+    std::cerr << "Wardens..." << std::endl;
+    for(const Mix *mix=mixes->head;mix;mix=mix->next)
+    {
+        if(mix->auth.isEmpty()) continue;
+
+        for(const Conservation::Act *act=mix->auth->acts->head;act;act=act->next)
+        {
+            Conservation::Warden warden(*mix,*act);
+        }
+
+    }
 
 
 }
