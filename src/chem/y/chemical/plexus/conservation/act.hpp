@@ -54,7 +54,25 @@ namespace Yttrium
                 void collect(const Act &);                //!< collect laws
                 void compile();                           //!< gather species and make their AuxLevel indices
 
-
+                template <typename TARGET, typename SOURCE> inline
+                TARGET & transfer(TARGET     &target,
+                                  const Level tgt,
+                                  SOURCE     &source,
+                                  const Level src) const
+                {
+                    for(const SNode *sn=species.head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        sp(target,tgt) = sp(source,src);
+                    }
+                    return target;
+                }
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Act);
                 Y_PROXY_DECL();

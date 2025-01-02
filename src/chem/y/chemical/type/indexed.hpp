@@ -63,6 +63,8 @@ namespace Yttrium
             template <typename ARRAY> inline
             typename ARRAY::Type & operator()(ARRAY &arr, const Level level) const noexcept
             {
+                assert(indx[level]>0);
+                assert(indx[level]<=arr.size());
                 return arr[ indx[level] ];
             }
 
@@ -70,6 +72,8 @@ namespace Yttrium
             template <typename ARRAY> inline
             typename ARRAY::ConstType & operator()(const ARRAY &arr, const Level level) const noexcept
             {
+                assert(indx[level]>0);
+                assert(indx[level]<=arr.size());
                 return arr[ indx[level] ];
             }
 

@@ -75,12 +75,12 @@ namespace Yttrium
 
             void  Law:: project(XAdd &xadd, XWritable &target, const XReadable  &source, const Level level) const
             {
-                const Actors &      self = *this;
-                const Actor * const head = self->head;
-                
+                const Actors &      self = *this;      assert(self->size>0);
+                const Actor * const head = self->head; assert(self->head!=0);
+
                 target.ld(source);
                 size_t I=1;
-                for(const Actor *i=head;i;i=i->next,++i)
+                for(const Actor *i=head;i;i=i->next,++I)
                 {
                     xadd.free();
                     {
@@ -91,7 +91,7 @@ namespace Yttrium
                             xadd << j->sp(source,level) * proj[J];
                         }
                     }
-                    i->sp(target,level) = xadd.sum();
+                    i->sp(target,level) = xadd.sum() / denom;
                 }
             }
 

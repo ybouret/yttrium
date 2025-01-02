@@ -178,6 +178,18 @@ namespace Yttrium
         }
 
 
+        //! apply the same method to all data
+        template <typename METHOD_POINTER> inline
+        const Readable &forEachConst(METHOD_POINTER meth) const
+        {
+            Readable<T> &self = *this;
+            for(size_t i=self.size();i>0;--i)
+            {
+                (self[i].*(meth))();
+            }
+            return self;
+        }
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Readable);
         static inline SignType lxcmp(const Readable<T> &lhs, const Readable<T> &rhs)
