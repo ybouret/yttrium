@@ -40,7 +40,7 @@ Y_UTEST(warden)
 
     Library::Conc(C0,ran,0.5,0.5);
 
-    lib(std::cerr << "C0=","[",C0,"]") << std::endl;
+    lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl;
 
 
 }
