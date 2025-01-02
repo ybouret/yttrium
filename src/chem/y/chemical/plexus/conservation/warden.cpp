@@ -12,6 +12,9 @@ namespace Yttrium
 
         namespace Conservation
         {
+
+            const char * const Warden:: CallSign = "Conservation::Warden";
+
             Warden:: ~Warden() noexcept
             {
             }
@@ -19,14 +22,27 @@ namespace Yttrium
             Warden:: Warden(const Mix & _mix,
                             const Act & _act) :
             mix(_mix),
-            act(_act)
+            act(_act),
+            xadd()
             {
 
                 std::cerr << "Warden for #act=" << act->size << std::endl;
 
             }
 
-            
+            void Warden:: run(XMLog &xml, XWritable &C, const Level L)
+            {
+                Y_XML_SECTION_OPT(xml, CallSign, "size=" << act->size);
+
+                for(const LNode *ln=act->head;ln;ln=ln->next)
+                {
+                    const Law & law = **ln;
+                    const xReal xs  = law.excess(xadd,C,L);
+                    Y_XMLOG(xml, law << " => " << xs );
+                }
+
+            }
+
 
         }
 

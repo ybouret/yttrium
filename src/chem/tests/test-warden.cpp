@@ -51,6 +51,7 @@ Y_UTEST(warden)
         for(const Conservation::Act *act=mix->auth->acts->head;act;act=act->next)
         {
             Conservation::Warden warden(*mix,*act);
+            warden.run(xml,C0,TopLevel);
         }
 
     }
