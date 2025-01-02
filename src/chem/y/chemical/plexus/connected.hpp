@@ -12,6 +12,21 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Squad
+        {
+        public:
+
+            explicit Squad() noexcept {}
+            virtual ~Squad() noexcept {}
+            Squad(const Squad &_) : species(_.species), sformat(_.sformat) {}
+            
+            SList    species;
+            Assembly sformat;
+
+        private:
+            Y_DISABLE_ASSIGN(Squad);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -20,7 +35,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Connected : public EList, public Fragment
+        class Connected : public EList, public Fragment, public Squad
         {
         public:
             //__________________________________________________________________
@@ -60,8 +75,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            SList          species;  //!< species of all equilibria
-            Assembly       sformat;  //!< for species
             Matrix<int>    topology; //!< primary topology
             const unsigned hallmark; //!< within mixes
 

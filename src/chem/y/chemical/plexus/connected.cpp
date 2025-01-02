@@ -14,8 +14,7 @@ namespace Yttrium
                               const unsigned     cindx) :
         EList(),
         Fragment(),
-        species(),
-        sformat(),
+        Squad(),
         topology(),
         hallmark(cindx)
         {
@@ -25,8 +24,7 @@ namespace Yttrium
         Connected:: Connected(const Connected &_ ) :
         EList(_),
         Fragment(_),
-        species(_.species),
-        sformat(_.sformat),
+        Squad(_),
         topology(_.topology),
         hallmark(_.hallmark)
         {
