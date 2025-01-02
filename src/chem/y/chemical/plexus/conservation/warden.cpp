@@ -27,7 +27,11 @@ namespace Yttrium
             {
 
                 std::cerr << "Warden for #act=" << act->size << std::endl;
-
+                for(const LNode *ln=act->head;ln;ln=ln->next)
+                {
+                    const Law & law = **ln;
+                    enroll(*law);
+                }
             }
 
             void Warden:: run(XMLog &xml, XWritable &C, const Level L)
@@ -38,7 +42,10 @@ namespace Yttrium
                 {
                     const Law & law = **ln;
                     const xReal xs  = law.excess(xadd,C,L);
-                    Y_XMLOG(xml, law << " => " << xs );
+
+                    if(xml.verbose)
+                        print( xml() , "d_(",*law, ")", Justify::Right) << " = " << xs.str() << std::endl;
+
                 }
 
             }

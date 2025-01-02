@@ -4,6 +4,8 @@
 #define Y_Chemical_Conservation_Warden_Included 1
 
 #include "y/chemical/plexus/conservation/law.hpp"
+#include "y/chemical/type/assembly.hpp"
+
 #include "y/stream/xmlog.hpp"
 
 namespace Yttrium
@@ -18,7 +20,7 @@ namespace Yttrium
 
             class Act;
 
-            class Warden
+            class Warden : public Assembly
             {
             public:
                 static const char * const CallSign;
