@@ -120,12 +120,9 @@ namespace Yttrium
         void Mixes:: viz(OutputStream &fp, const size_t which) const
         {
             assert(which>0);
-            assert(which<=maxOrder);
+            assert(which<=Max<size_t>(1,maxOrder));
             for(const Mix *mix=my.head;mix;mix=mix->next)
-            {
                 mix->viz(fp, which);
-            }
-
         }
 
         void Mixes:: graphViz(OutputStream &fp, const size_t which) const

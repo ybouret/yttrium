@@ -94,9 +94,9 @@ namespace Yttrium
 
             //! formatted, species-wise display
             template <typename ARRAY> inline
-            std::ostream & operator()(std::ostream &os,
+            std::ostream & operator()(std::ostream &     os,
                                       const char * const pfx,
-                                      ARRAY & arr,
+                                      ARRAY &            arr,
                                       const char * const sfx) const
             {
                 if(db.size()<=0) os << "{}";

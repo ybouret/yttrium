@@ -22,8 +22,14 @@ namespace Yttrium
             {
             public:
 
+                explicit Warden(const Mix & _mix,
+                                const Act & _act);
+
                 virtual ~Warden() noexcept;
-                
+
+                const Mix & mix;
+                const Act & act;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
             };

@@ -1,8 +1,10 @@
+
 #include "y/chemical/plexus/mixes.hpp"
+#include "y/chemical/plexus/conservation/warden.hpp"
+
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
 
-#include "y/chemical/plexus/solver.hpp"
 
 
 #include "y/utest/run.hpp"
@@ -11,17 +13,8 @@
 using namespace Yttrium;
 using namespace Chemical;
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
 
-        
-
-    }
-}
-
-Y_UTEST(plexus)
+Y_UTEST(warden)
 {
     Random::ParkMiller ran;
     Library            lib;
@@ -40,20 +33,14 @@ Y_UTEST(plexus)
     Mixes    mixes(xml,eqs);
 
     std::cerr << "mixes=" << mixes << std::endl;
-
-
-
-
-    mixes.renderGraphViz(xml,"mix");
-
+    GraphViz::Vizible::DotToPngEx("warden.dot",mixes,1);
 
     const size_t M = lib->size();
     XVector      C0(M,0);
 
-    Library::Conc(C0,ran,0.5);
+    Library::Conc(C0,ran,0.5,0.5);
 
-    mixes.solve(xml, C0, TopLevel, eqs.K);
-
+    lib(std::cerr << "C0=","[",C0,"]") << std::endl;
 
 
 }
