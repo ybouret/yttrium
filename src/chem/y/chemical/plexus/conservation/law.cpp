@@ -109,9 +109,9 @@ namespace Yttrium
 
             void  Law:: viz(OutputStream &fp) const
             {
-                const Actors & self = *this;
-                const String   uuid = self->html();
-                const String   c_id = GraphViz::Vizible::Color(Scheme,place);
+                const Actors &     self = *this;
+                const String       uuid = self->html();
+                const String       c_id = GraphViz::Vizible::Color(Scheme,place);
                 const char * const color = c_id.c_str();
                 Node(fp,this) << '[';
                 fp << "label= <" << uuid << ">";

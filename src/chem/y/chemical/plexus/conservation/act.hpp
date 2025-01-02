@@ -52,6 +52,8 @@ namespace Yttrium
                 bool accepts(const Act &) const noexcept; //!< if one of the law is linked to mine
                 void collect(const Law &);                //!< collect law
                 void collect(const Act &);                //!< collect laws
+                void compile();                           //!< gather species and make their AuxLevel indices
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Act);
@@ -60,6 +62,8 @@ namespace Yttrium
                 Law::Group my;
                 
             public:
+                const SList species; //!< species involved in act, once compiled
+
                 Act * next; //!< for list
                 Act * prev; //!< for list
             };

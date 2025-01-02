@@ -20,6 +20,7 @@ namespace Yttrium
             my()
             {
 
+                // create acts
                 for(const Law *lp=laws->head;lp;lp=lp->next)
                 {
                     const Law &law      = *lp;
@@ -42,7 +43,11 @@ namespace Yttrium
                     }
                 }
 
-
+                // finalizing
+                for(Act *act=my.head;act;act=act->next)
+                {
+                    act->compile();
+                }
 
             }
 

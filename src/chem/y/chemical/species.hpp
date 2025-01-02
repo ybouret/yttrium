@@ -165,6 +165,14 @@ namespace Yttrium
                 return list;
             }
 
+            //! build consistent SubLevel list
+            template <typename LIST> static inline
+            LIST & RevampAux(LIST &list) noexcept
+            {
+                Revamp<LIST>::template At<AuxLevel>(list);
+                return list;
+            }
+
 
 
         };

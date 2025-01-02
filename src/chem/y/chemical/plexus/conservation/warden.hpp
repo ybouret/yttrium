@@ -20,21 +20,54 @@ namespace Yttrium
 
             class Act;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Apply single act
+            //
+            //
+            //__________________________________________________________________
             class Warden : public Assembly
             {
             public:
-                static const char * const CallSign;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const CallSign; //!< "Chemical::Warden"
 
-                explicit Warden(const Mix & _mix,
-                                const Act & _act);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
 
-                virtual ~Warden() noexcept;
+                //! setup
+                explicit Warden(const Mix & _mix, const Act & _act);
+                virtual ~Warden() noexcept; //!< cleanup
 
-                const Mix & mix;
-                const Act & act;
-                XAdd        xadd;
-                
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
                 void run(XMLog &xml,XWritable &C, const Level L);
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Mix & mix;   //!< persistent mix
+                const Act & act;   //!< persistent act in mix
+                XAdd        xadd;  //!< eXtended addition
+
 
 
             private:

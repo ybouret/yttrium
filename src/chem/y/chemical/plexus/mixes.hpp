@@ -68,7 +68,7 @@ namespace Yttrium
             void checkFusion();
 
         public:
-            const size_t maxOrder;
+            const size_t maxOrder; //!< max order of hybrid equilibrium
         };
 
     }
