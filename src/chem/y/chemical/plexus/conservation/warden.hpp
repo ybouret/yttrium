@@ -27,7 +27,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Warden : public Oversized, public Counted, public Assembly
+            class Warden : public Oversized, public Assembly
             {
             public:
                 //______________________________________________________________
@@ -37,7 +37,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const char * const CallSign; //!< "Chemical::Warden"
-
+                typedef CxxListOf<Warden> List;     //!< alias
+                
                 //______________________________________________________________
                 //
                 //
@@ -77,6 +78,8 @@ namespace Yttrium
                 BList        blist;    //!< list of broken laws in act
             public:
                 const XArray extra;    //!< what was added
+                Warden *     next;     //!< for list
+                Warden *     prev;     //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);

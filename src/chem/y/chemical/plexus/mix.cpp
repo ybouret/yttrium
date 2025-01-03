@@ -23,6 +23,7 @@ namespace Yttrium
         genus(0),
         grade(0),
         topology(),
+        keeper(0),
         solver(0),
         next(0),
         prev(0)

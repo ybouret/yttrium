@@ -16,7 +16,6 @@ namespace Yttrium
             Act:: Act(const Law &first) :
             Proxy<const Law::Group>(),
             my(),
-            warden(0),
             next(0),
             prev(0)
             {
@@ -82,9 +81,9 @@ namespace Yttrium
                     my.buildSpeciesFormat();
                 }
 
-                warden = new Warden(*this);
             }
 
+            
 
         }
 

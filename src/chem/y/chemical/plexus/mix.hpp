@@ -6,6 +6,7 @@
 #include "y/chemical/plexus/connected.hpp"
 #include "y/chemical/plexus/conservation/authority.hpp"
 #include "y/chemical/plexus/solver.hpp"
+#include "y/chemical/plexus/conservation/wardens.hpp"
 
 namespace Yttrium
 {
@@ -91,6 +92,7 @@ namespace Yttrium
             typedef CxxListOf<Mix>                              List;             //!< alias
             typedef AutoPtr<const Conservation::Authority>      ConservationAuth; //!< alias
             typedef CxxArray<EList,MemoryModel>                 ELists;           //!< alias
+            typedef Conservation::Wardens                       Keeper;           //!< alias
 
             //__________________________________________________________________
             //
@@ -241,10 +243,11 @@ namespace Yttrium
             const AutoPtr<const Genus> genus;       //!< conserved/unbounded
             const AutoPtr<const Grade> grade;       //!< graded equilibria
             const Matrix<int>          topology;    //!< full topology
-
-        private:
-            AutoPtr<Solver>            solver;      //!< internal solver
             
+        private:
+            AutoPtr<Keeper> keeper;    //!< internal legalizer
+            AutoPtr<Solver> solver;     //!< internal solver
+
         public:
             Mix * next; //!< for list
             Mix * prev; //!< for list

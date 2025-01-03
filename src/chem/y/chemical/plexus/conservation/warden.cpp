@@ -26,7 +26,9 @@ namespace Yttrium
             Cini(act->species.size),
             Corr(act->size,act->species.size),
             blist(),
-            extra(act->species.size)
+            extra(act->species.size),
+            next(0),
+            prev(0)
             {
                 for(const LNode *ln=act->head;ln;ln=ln->next)
                 {

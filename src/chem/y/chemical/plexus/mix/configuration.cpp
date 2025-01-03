@@ -11,6 +11,8 @@ namespace Yttrium
                                       const SBank  &sb)
         {
             buildConservations(xml);
+            keeper = new Keeper(*this);
+            
             buildCombinatorics(xml,eqs);
             solver = new Solver(*this,cb,sb);
         }
