@@ -146,13 +146,14 @@ namespace Yttrium
         void Mixes:: renderGraphViz(XMLog &xml, const String &root) const
         {
             Y_XML_SECTION_OPT(xml, "Mixes::renderGraphViz", "maxOrder=" << maxOrder);
-            // cleanup
+            // cleanup temporary/existing files
             {
                 const String expr = Lingo::Matching::StringToRegExp(root) + "[:digit:]+.(dot|png)";
                 Y_XML_COMMENT(xml, "removing '" << expr << "'");
                 Lingo::LocalFileSystem::TryRemove<VFS::Entry::Base>::In(".",expr);
             }
 
+            // render
             for(size_t i=1;i<=maxOrder;++i)
             {
                 const String dotFile = root + Formatted::Get("%lu.dot", static_cast<unsigned long>(i));

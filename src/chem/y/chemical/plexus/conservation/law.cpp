@@ -2,6 +2,23 @@
 #include "y/chemical/plexus/conservation/law.hpp"
 #include "y/system/exception.hpp"
 
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        namespace Conservation
+        {
+
+            Law:: Group:: ~Group() noexcept {}
+            Law:: Group::  Group() noexcept : Group_(), Squad() {}
+        }
+
+    }
+
+}
+
 namespace Yttrium
 {
     namespace Chemical

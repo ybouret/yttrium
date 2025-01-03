@@ -16,7 +16,6 @@ namespace Yttrium
             Act:: Act(const Law &first) :
             Proxy<const Law::Group>(),
             my(),
-            species(),
             next(0),
             prev(0)
             {
@@ -67,7 +66,7 @@ namespace Yttrium
 
             void Act:: compile()
             {
-                SList &     mine = Coerce(species);
+                SList &     mine = my.species;
                 AddressBook book;
                 for(const LNode *ln=my.head;ln;ln=ln->next)
                 {
@@ -78,6 +77,8 @@ namespace Yttrium
                     }
                 }
                 DBOps::RevampAux( book.sendTo( mine ) );
+
+                my.buildSpeciesFormat();
             }
 
 
