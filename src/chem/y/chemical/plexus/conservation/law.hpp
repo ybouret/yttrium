@@ -33,16 +33,20 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const CallSign;            //!< "Chemical::Conservation::Law"
-                typedef CxxListOf<Law>    List;                //!< alias
-                static const char * const Scheme;              //!< color scheme
+                static const char * const CallSign;             //!< "Chemical::Conservation::Law"
+                typedef CxxListOf<Law>    List;                 //!< alias
+                static const char * const Scheme;               //!< color scheme
                 typedef Small::BareLightList<const Law> Group_; //!< alias
 
+                //__________________________________________________________________
+                //
+                //! group of laws + their species
+                //__________________________________________________________________
                 class Group : public Group_, public Squad
                 {
                 public:
-                    explicit Group() noexcept;
-                    virtual ~Group() noexcept;
+                    explicit Group() noexcept; //!< setup
+                    virtual ~Group() noexcept; //!< cleanup
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Group);

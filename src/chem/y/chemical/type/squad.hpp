@@ -11,13 +11,33 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! species and their assembly
+        //
+        //
+        //______________________________________________________________________
         class Squad
         {
         public:
-            explicit Squad() noexcept;
-            virtual ~Squad() noexcept;
-            Squad(const Squad &_);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Squad() noexcept; //!< setup
+            virtual ~Squad() noexcept; //!< cleanup
+            Squad(const Squad &_);     //!< duplicate
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! formatted, species-wise display at given level
             template <typename ARRAY> inline
@@ -80,9 +100,14 @@ namespace Yttrium
             //! post build if necessary
             void buildSpeciesFormat() noexcept;
             
-
-            SList    species;
-            Assembly sformat;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SList    species; //!< list of species
+            Assembly sformat; //!< assembly for species format
 
         private:
             Y_DISABLE_ASSIGN(Squad);

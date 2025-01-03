@@ -20,6 +20,14 @@ namespace Yttrium
 
             class Act;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Broken law status
+            //
+            //
+            //__________________________________________________________________
             class Broken {
             public:
                 Broken(const Law  & _law,
@@ -39,6 +47,21 @@ namespace Yttrium
                 cok(_.cok)
                 {
                 }
+
+                bool fixed(XAdd &xadd, const XReadable &Cin) {
+                    bad = law.excess(xadd, Cin, AuxLevel);
+                    if(bad>0.0)
+                    {
+                        law.project(xadd,cok,Cin,AuxLevel);
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+
 
 
                 const Law & law;
@@ -96,13 +119,16 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Mix & mix;    //!< persistent mix
-                const Act & act;    //!< persistent act in mix
-                XAdd        xadd;   //!< eXtended addition
-                XAdds       Cadd;   //!< sum of added concentrations
-                XArray      Cini;   //!< temporary
-                XMatrix     Corr;   //!< corrected concentrations
-                BList       blist;  //!< list of broken laws in act
+            private:
+                const Mix &  mix;      //!< persistent mix
+                const Act &  act;      //!< persistent act in mix
+                XAdd         xadd;     //!< eXtended addition
+                XAdds        Cadd;     //!< sum of added concentrations
+                XArray       Cini;     //!< temporary
+                XMatrix      Corr;     //!< corrected concentrations
+                BList        blist;    //!< list of broken laws in act
+            public:
+                const XArray extra;    //!< what was added
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
