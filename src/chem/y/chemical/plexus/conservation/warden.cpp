@@ -44,6 +44,7 @@ namespace Yttrium
             {
                 Y_XML_SECTION_OPT(xml, CallSign, "size=" << act->size << " species=" << act->species);
 
+                // initialize all
                 const xReal zero;
                 Cadd.forEach( & XAdd::free );
                 Corr.ld(zero);
@@ -53,6 +54,7 @@ namespace Yttrium
                 act.transfer(Cini,AuxLevel,C,L);
                 if(xml.verbose) act( xml() << "Cini=", "  [", Cini, "]", xReal::ToString) << std::endl;
 
+                // first pass
                 for(const LNode *ln=act->head;ln;ln=ln->next)
                 {
                     const Law & law = **ln;
@@ -66,6 +68,13 @@ namespace Yttrium
                     const Broken broken(law,xs,cc);
                     blist << broken;
                 }
+
+                while(blist.size>0)
+                {
+                    std::cerr << "#broken=" << blist.size << std::endl;
+                    break;
+                }
+
 
             }
 
