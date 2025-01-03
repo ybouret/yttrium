@@ -52,10 +52,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Actor(const unsigned, const Species &); //!< setup with
-            explicit Actor(const Species &);                 //!< setup with nu=1
-            virtual ~Actor() noexcept;                       //!< cleanup
-            Actor(const Actor &);                            //!< duplicate
+            explicit Actor(const unsigned, const Species &, const NameForm ); //!< setup with
+            explicit Actor(const Species &, const NameForm);                  //!< setup with nu=1
+            virtual ~Actor() noexcept;                                        //!< cleanup
+            Actor(const Actor &);                                             //!< duplicate
 
 
             //__________________________________________________________________

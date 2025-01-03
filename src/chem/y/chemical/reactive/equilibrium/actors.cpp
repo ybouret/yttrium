@@ -24,14 +24,14 @@ namespace Yttrium
         const Actor & Actors:: operator()(const Species &sp)
         {
             assert(!company.lookFor(sp));
-            return company.recruit( new Actor(sp) );
+            return company.recruit( new Actor(sp,company.form) );
         }
 
         const Actor & Actors:: operator()(const unsigned nu, const Species &sp)
         {
             assert(!company.lookFor(sp));
             assert(nu>0);
-            return company.recruit( new Actor(nu,sp) );
+            return company.recruit( new Actor(nu,sp,company.form) );
         }
 
         std::ostream &   operator<<(std::ostream &os, const Actors &actors)

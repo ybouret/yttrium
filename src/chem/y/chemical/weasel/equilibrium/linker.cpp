@@ -75,7 +75,7 @@ namespace Yttrium
             }
 
             Library &lib  = *theLib;
-            actors.pushTail( new Actor(stoich, lib(spName) ) );
+            actors.pushTail( new Actor(stoich, lib(spName), NameAsNormalSpecies ) );
 
             stoich = 0;
             spName.free();

@@ -73,7 +73,7 @@ namespace Yttrium
                             const Species &sp = **sn;
                             const unsigned nu = sp(coef,SubLevel);
                             if(nu<=0) continue;
-                            crew.pushTail(new Actor(nu,sp) );
+                            crew.pushTail(new Actor(nu,sp,NameAsConcentration) );
                         }
                         assert(crew.size>=2);
 

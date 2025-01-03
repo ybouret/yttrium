@@ -44,11 +44,14 @@ namespace Yttrium
                         case NameAsConcentration:  newName += '+'; break;
                     }
                 }
+                newName += actor->name;
+#if 0
                 switch(form)
                 {
                     case NameAsNormalSpecies: newName +=       actor->name;       break;
                     case NameAsConcentration: newName += '[' + actor->name + ']'; break;
                 }
+#endif
                 Coerce(name).swapWith(newName);
             }
             return * pushTail( guard.yield() );
