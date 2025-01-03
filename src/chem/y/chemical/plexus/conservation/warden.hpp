@@ -56,6 +56,11 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! make legal concentration
+                /**
+                 - on output, extra is updated to injected concentrations at AuxLevel
+                 */
                 void run(XMLog &xml,XWritable &C, const Level L);
 
                 //______________________________________________________________

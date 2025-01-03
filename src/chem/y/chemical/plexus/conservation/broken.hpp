@@ -62,13 +62,13 @@ namespace Yttrium
                 const Law &  law; //!< law
                 xReal        bad; //!< bad excess
                 XWritable  & cok; //!< corrected concentration
-                
+
             private:
                 Y_DISABLE_ASSIGN(Broken);
             };
 
-            typedef Small::SoloHeavyList<Broken> BList;
-            typedef BList::NodeType              BNode;
+            typedef Small::SoloHeavyList<Broken> BList; //!< alias
+            typedef BList::NodeType              BNode; //!< alias
 
         }
 
