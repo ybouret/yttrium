@@ -82,7 +82,7 @@ namespace Yttrium
                 const xReal zero;
                 if(temp<zero)
                 {
-                    return (temp*temp)/denom;
+                    return ((temp*temp)/denom).sqrt();
                 }
                 else
                 {
