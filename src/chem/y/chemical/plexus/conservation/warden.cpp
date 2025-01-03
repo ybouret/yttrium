@@ -38,7 +38,13 @@ namespace Yttrium
             }
 
           
-
+            static inline SignType CompareBroken(const BNode * const lhs,
+                                                 const BNode * const rhs) noexcept
+            {
+                const Broken &L = **lhs;
+                const Broken &R = **rhs;
+                return Sign::Of(L.bad,R.bad);
+            }
 
             void Warden:: run(XMLog &xml, XWritable &C, const Level L)
             {
@@ -54,7 +60,7 @@ namespace Yttrium
                 act.transfer(Cini,AuxLevel,C,L);
                 if(xml.verbose) act( xml() << "Cini=", "  [", Cini, "]", xReal::ToString) << std::endl;
 
-                // first pass
+                Y_XML_COMMENT(xml, "collecting broken laws");
                 for(const LNode *ln=act->head;ln;ln=ln->next)
                 {
                     const Law & law = **ln;
@@ -64,7 +70,7 @@ namespace Yttrium
 
                     XWritable &cc = Corr[blist.size+1];
                     law.project(xadd,cc,Cini,AuxLevel);
-                    if(xml.verbose) act( xml() << "Corr=","  [", cc, "]", xReal::ToString) << std::endl;
+                    //if(xml.verbose) act( xml() << "Corr=","  [", cc, "]", xReal::ToString) << std::endl;
                     const Broken broken(law,xs,cc);
                     blist << broken;
                 }
@@ -72,6 +78,13 @@ namespace Yttrium
                 while(blist.size>0)
                 {
                     std::cerr << "#broken=" << blist.size << std::endl;
+                    MergeSort::Call(blist,CompareBroken);
+                    for(const BNode *bn=blist.head;bn;bn=bn->next)
+                    {
+                        const Broken &broken = **bn;
+                        if(xml.verbose)
+                            print( xml(),  "d_(", *broken.law, ")", Justify::Right) << " = " << broken.bad.str() << std::endl;
+                    }
                     break;
                 }
 
