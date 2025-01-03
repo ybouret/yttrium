@@ -3,6 +3,7 @@
 
 
 #include "y/chemical/plexus/mixes.hpp"
+#include "y/chemical/plexus/conservation/warden.hpp"
 #include "y/chemical/reactive/equilibrium/hybrid.hpp"
 
 #include "y/utest/run.hpp"
@@ -37,6 +38,7 @@ Y_UTEST(metrics)
     Y_SIZEOF(Conservation::Act);
     Y_SIZEOF(Conservation::Acts);
     Y_SIZEOF(Conservation::Authority);
+    Y_SIZEOF(Conservation::Warden);
     std::cerr << std::endl;
 
 

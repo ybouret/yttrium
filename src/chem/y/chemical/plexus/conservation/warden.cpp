@@ -19,9 +19,7 @@ namespace Yttrium
             {
             }
 
-            Warden:: Warden(const Mix & _mix,
-                            const Act & _act) :
-            mix(_mix),
+            Warden:: Warden(const Act & _act) :
             act(_act),
             xadd(),
             Cadd(act->species.size),

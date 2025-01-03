@@ -12,6 +12,8 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Mix;
+
         namespace Conservation
         {
             class Laws;
@@ -39,8 +41,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Acts);
-                virtual ConstInterface & surrogate() const noexcept;
-                void                     reconnect();
+                Y_PROXY_DECL();
+                void reconnect();
+                
                 Act::List my;
             };
         }

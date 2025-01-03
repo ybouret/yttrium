@@ -16,6 +16,7 @@ namespace Yttrium
             Act:: Act(const Law &first) :
             Proxy<const Law::Group>(),
             my(),
+            warden(0),
             next(0),
             prev(0)
             {
@@ -63,22 +64,25 @@ namespace Yttrium
                     collect(**ln);
             }
 
-
+            
             void Act:: compile()
             {
-                SList &     mine = my.species;
-                AddressBook book;
-                for(const LNode *ln=my.head;ln;ln=ln->next)
                 {
-                    const Company &company = ***ln;
-                    for(const Actor *a=company.head;a;a=a->next)
+                    SList &     mine = my.species;
+                    AddressBook book;
+                    for(const LNode *ln=my.head;ln;ln=ln->next)
                     {
-                        book |= a->sp;
+                        const Company &company = ***ln;
+                        for(const Actor *a=company.head;a;a=a->next)
+                        {
+                            book |= a->sp;
+                        }
                     }
+                    DBOps::RevampAux( book.sendTo( mine ) );
+                    my.buildSpeciesFormat();
                 }
-                DBOps::RevampAux( book.sendTo( mine ) );
 
-                my.buildSpeciesFormat();
+                warden = new Warden(*this);
             }
 
 

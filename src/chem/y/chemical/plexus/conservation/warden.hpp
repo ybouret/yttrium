@@ -13,7 +13,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Mix;
 
         namespace Conservation
         {
@@ -28,7 +27,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Warden : public Assembly
+            class Warden : public Oversized, public Counted, public Assembly
             {
             public:
                 //______________________________________________________________
@@ -47,7 +46,7 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! setup
-                explicit Warden(const Mix & _mix, const Act & _act);
+                explicit Warden(const Act & _act);
                 virtual ~Warden() noexcept; //!< cleanup
 
                 //______________________________________________________________
@@ -70,7 +69,6 @@ namespace Yttrium
                 //
                 //______________________________________________________________
             private:
-                const Mix &  mix;      //!< persistent mix
                 const Act &  act;      //!< persistent act in mix
                 XAdd         xadd;     //!< eXtended addition
                 XAdds        Cadd;     //!< sum of added concentrations

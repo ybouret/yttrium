@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Conservation_Act_Included
 #define Y_Chemical_Conservation_Act_Included 1
 
-#include "y/chemical/plexus/conservation/law.hpp"
+#include "y/chemical/plexus/conservation/warden.hpp"
 
 
 namespace Yttrium
@@ -52,7 +52,7 @@ namespace Yttrium
                 bool accepts(const Act &) const noexcept; //!< if one of the law is linked to mine
                 void collect(const Law &);                //!< collect law
                 void collect(const Act &);                //!< collect laws
-                void compile();                           //!< gather species, make their AuxLevel indices and sformat
+                void compile();                           //!< gather species, make their AuxLevel indices and sformat, and create warden
 
                 //! transfer to target from source using my species
                 template <typename TARGET, typename SOURCE> inline
@@ -101,8 +101,9 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Act);
                 Y_PROXY_DECL();
                 
-                Law::Group my;
-                
+                Law::Group      my;
+                AutoPtr<Warden> warden;
+
             public:
                 Act * next; //!< for list
                 Act * prev; //!< for list
