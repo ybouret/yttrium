@@ -1,9 +1,9 @@
-
+//! \file
 
 #ifndef Y_Chemical_Conservation_Warden_Included
 #define Y_Chemical_Conservation_Warden_Included 1
 
-#include "y/chemical/plexus/conservation/law.hpp"
+#include "y/chemical/plexus/conservation/broken.hpp"
 #include "y/chemical/type/assembly.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
 #include "y/stream/xmlog.hpp"
@@ -19,61 +19,6 @@ namespace Yttrium
         {
 
             class Act;
-
-            //__________________________________________________________________
-            //
-            //
-            //
-            //! Broken law status
-            //
-            //
-            //__________________________________________________________________
-            class Broken {
-            public:
-                Broken(const Law  & _law,
-                       const xReal  _bad,
-                       XWritable  & _cok) noexcept :
-                law(_law),
-                bad(_bad),
-                cok(_cok)
-                {
-                }
-
-                ~Broken() noexcept {}
-
-                Broken(const Broken &_) noexcept :
-                law(_.law),
-                bad(_.bad),
-                cok(_.cok)
-                {
-                }
-
-                bool fixed(XAdd &xadd, const XReadable &Cin) {
-                    bad = law.excess(xadd, Cin, AuxLevel);
-                    if(bad>0.0)
-                    {
-                        law.project(xadd,cok,Cin,AuxLevel);
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-
-
-
-
-                const Law & law;
-                xReal       bad;
-                XWritable  &cok;
-
-            private:
-                Y_DISABLE_ASSIGN(Broken);
-            };
-
-            typedef Small::SoloHeavyList<Broken> BList;
-            typedef BList::NodeType              BNode;
 
             //__________________________________________________________________
             //
