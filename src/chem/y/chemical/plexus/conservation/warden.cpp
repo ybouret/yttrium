@@ -81,6 +81,7 @@ namespace Yttrium
                 {
                     Y_XML_SECTION_OPT(xml,"Relieve","broken=" << blist.size);
 
+                    // sort in increasing excess
                     MergeSort::Call(blist,CompareBroken);
                     Y_XML_COMMENT(xml, "increasing excess");
                     for(const BNode *bn=blist.head;bn;bn=bn->next)
@@ -92,6 +93,7 @@ namespace Yttrium
                         }
                     }
 
+                    // select least broken
                     const Broken    &broken = **(blist.head);
                     const XReadable &Cnew   = broken.cok;
                     Y_XML_COMMENT(xml, "using " << broken.law);
@@ -99,6 +101,8 @@ namespace Yttrium
                     {
                         act( xml() << broken.law << " => ","  [", Cnew, "]", xReal::ToString) << std::endl;
                     }
+
+                    // update concentration
                     for(const SNode *sn=act->species.head;sn;sn=sn->next)
                     {
                         const Species &sp    = **sn;
@@ -108,6 +112,12 @@ namespace Yttrium
                         sp(Cini,AuxLevel) = c_new;
                     }
                     std::cerr << "Cadd=" << Cadd << std::endl;
+
+                    // remove fixed
+                    blist.cutHead();
+
+                    // check remaining
+
 
 
                     break;
