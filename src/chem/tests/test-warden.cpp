@@ -37,6 +37,7 @@ Y_UTEST(warden)
 
     const size_t M = lib->size();
     XVector      C0(M,0);
+    XVector      dC(M,0);
 
     Library::Conc(C0,ran,0.5,0.5);
 
@@ -51,7 +52,7 @@ Y_UTEST(warden)
         for(const Conservation::Act *act=mix->auth->acts->head;act;act=act->next)
         {
             Conservation::Warden warden(*act);
-            warden.run(xml,C0,TopLevel);
+            warden.run(xml,C0,TopLevel,dC);
         }
 
     }

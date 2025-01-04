@@ -26,7 +26,6 @@ namespace Yttrium
             Cini(act->species.size),
             Corr(act->size,act->species.size),
             blist(),
-            extra(act->species.size),
             next(0),
             prev(0)
             {
@@ -46,21 +45,20 @@ namespace Yttrium
                 return Sign::Of(L.bad,R.bad);
             }
 
-            void Warden:: run(XMLog &xml, XWritable &C, const Level L)
+            void Warden:: run(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
             {
                 Y_XML_SECTION_OPT(xml, CallSign, "size=" << act->size << " species=" << act->species);
 
                 //--------------------------------------------------------------
                 //
                 //
-                // initialize all
+                // initialize all, assuming injected is zeroed
                 //
                 //
                 //--------------------------------------------------------------
                 const xReal zero;
                 Cadd.forEach( & XAdd::free );
                 Corr.ld(zero);
-                Coerce(extra).ld(zero);
                 blist.free();
                 act.transfer(Cini,AuxLevel,C,L);
 
@@ -183,9 +181,9 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 for(const SNode *sn=act->species.head;sn;sn=sn->next)
                 {
-                    const Species &sp = **sn;
-                    const xReal    cc = sp(Cini,AuxLevel);
-                    const xReal    dc = Coerce(sp(extra,AuxLevel)) = sp(Cadd,AuxLevel).sum();
+                    const Species & sp = **sn;
+                    const xReal     cc = sp(Cini,AuxLevel);
+                    const xReal     dc = sp(injected,L) = sp(Cadd,AuxLevel).sum();
                     if(xml.verbose) {
                         act->sformat.print( xml() << "[", sp, Justify::Right) << "] = " << cc.str() << " / " << sp(C,L).str() << " + " << dc.str() << std::endl;
                     }

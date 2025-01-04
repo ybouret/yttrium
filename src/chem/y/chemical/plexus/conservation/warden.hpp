@@ -59,9 +59,9 @@ namespace Yttrium
 
                 //! make legal concentration
                 /**
-                 - on output, extra is updated to injected concentrations at AuxLevel
+                 - on output,  injected is computed
                  */
-                void run(XMLog &xml,XWritable &C, const Level L);
+                void run(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
 
                 //______________________________________________________________
                 //
@@ -77,7 +77,6 @@ namespace Yttrium
                 XMatrix      Corr;     //!< corrected concentrations
                 BList        blist;    //!< list of broken laws in act
             public:
-                const XArray extra;    //!< what was added
                 Warden *     next;     //!< for list
                 Warden *     prev;     //!< for list
 

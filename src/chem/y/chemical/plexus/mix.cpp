@@ -118,6 +118,13 @@ namespace Yttrium
         }
 
 
+        void Mix:: guard(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
+        {
+            my.ldz(injected,L);
+            keeper->run(xml,C,L,injected);
+        }
+
+
     }
 
 }

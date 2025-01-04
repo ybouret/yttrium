@@ -12,7 +12,7 @@ namespace Yttrium
         {
             buildConservations(xml);
             keeper = new Keeper(*this);
-            
+
             buildCombinatorics(xml,eqs);
             solver = new Solver(*this,cb,sb);
         }

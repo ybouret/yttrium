@@ -97,6 +97,18 @@ namespace Yttrium
                 return os;
             }
 
+            template <typename ARRAY> inline
+            void ldz(ARRAY &arr, const Level L) const
+            {
+                typename ARRAY::ConstType _0 = 0;
+                for(const SNode *it=species.head;it;it=it->next)
+                {
+                    const Species &sp = **it;
+                    sp(arr,L) = _0;
+                }
+            }
+
+
             //! post build if necessary
             void buildSpeciesFormat() noexcept;
             

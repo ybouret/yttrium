@@ -19,8 +19,10 @@ namespace Yttrium
             public XArray
             {
             public:
-                explicit Wardens(const Mix &);
+                explicit Wardens(const Mix &);  
                 virtual ~Wardens() noexcept;
+
+                void run(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wardens);

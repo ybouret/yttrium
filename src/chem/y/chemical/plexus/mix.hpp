@@ -222,6 +222,10 @@ namespace Yttrium
                 return target;
             }
 
+
+            void guard(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
+
+
             //! use internal solver and global K
             void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
