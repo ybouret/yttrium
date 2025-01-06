@@ -73,25 +73,49 @@ namespace Yttrium
 
         };
 
-        class Boundaries
+        class Extents
         {
         public:
-            Boundaries(const XBanks &_) noexcept :
+            Extents(const XBanks &_) noexcept :
             limiting(_),
             requests(_)
             {
             }
 
-            ~Boundaries() noexcept {}
-            Boundaries(const Boundaries &_) : limiting(_.limiting), requests(_.requests) {}
+            ~Extents() noexcept {}
+            Extents(const Extents &_) : limiting(_.limiting), requests(_.requests) {}
 
             Limiting limiting;
             Requests requests;
 
 
         private:
+            Y_DISABLE_ASSIGN(Extents);
+        };
+
+        class Boundaries
+        {
+        public:
+            Boundaries(const Components &eq,
+                       const XReadable  &C,
+                       const Level       L,
+                       const XBanks     &X) :
+            reac(X),
+            prod(X)
+            {
+
+            }
+
+
+            ~Boundaries() noexcept;
+
+            const Extents reac;
+            const Extents prod;
+
+        private:
             Y_DISABLE_ASSIGN(Boundaries);
         };
+
 
     }
 
@@ -144,7 +168,12 @@ Y_UTEST(eqz)
 
     }
 #endif
-    
+
+    Y_SIZEOF(Requests);
+    Y_SIZEOF(Limiting);
+    Y_SIZEOF(Extents);
+    Y_SIZEOF(Boundaries);
+
 
 }
 Y_UDONE()
