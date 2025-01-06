@@ -14,19 +14,24 @@ namespace Yttrium
 
         namespace Conservation
         {
-            class Wardens : public Proxy<const Warden::List>, public XArray
+            class Wardens : public Proxy<const Warden::List>
             {
             public:
                 explicit Wardens(const Mix &);  
                 virtual ~Wardens() noexcept;
 
-                void run(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
+
+                void run(XMLog &      xml,
+                         XWritable &  C,
+                         const Level  L,
+                         XWritable  & injected);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wardens);
                 Y_PROXY_DECL();
                 Warden::List my;
-
+                const Squad &squad;
+                
             };
         }
     }

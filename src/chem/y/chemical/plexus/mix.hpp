@@ -223,6 +223,7 @@ namespace Yttrium
             }
 
 
+            //! guard concentrations and update global injected
             void guard(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
 
 

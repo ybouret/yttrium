@@ -45,7 +45,10 @@ namespace Yttrium
                 return Sign::Of(L.bad,R.bad);
             }
 
-            void Warden:: run(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
+            void Warden:: run(XMLog &     xml,
+                              XWritable & C,
+                              const Level L,
+                              XWritable & injected)
             {
                 Y_XML_SECTION_OPT(xml, CallSign, "size=" << act->size << " species=" << act->species);
 
@@ -61,6 +64,7 @@ namespace Yttrium
                 Corr.ld(zero);
                 blist.free();
                 act.transfer(Cini,AuxLevel,C,L);
+                
 
                 if(xml.verbose) act( xml() << "Cini=", "\t[", Cini, "]", xReal::ToString) << std::endl;
 
@@ -183,7 +187,7 @@ namespace Yttrium
                 {
                     const Species & sp = **sn;
                     const xReal     cc = sp(Cini,AuxLevel);
-                    const xReal     dc = sp(injected,L) = sp(Cadd,AuxLevel).sum();
+                    const xReal     dc = sp(injected,TopLevel) = sp(Cadd,AuxLevel).sum();
                     if(xml.verbose) {
                         act->sformat.print( xml() << "[", sp, Justify::Right) << "] = " << cc.str() << " / " << sp(C,L).str() << " + " << dc.str() << std::endl;
                     }

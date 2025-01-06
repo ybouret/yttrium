@@ -16,8 +16,8 @@ namespace Yttrium
 
             Wardens:: Wardens(const Mix &mix) :
             Proxy<const Warden::List>(),
-            XArray(mix->species.size),
-            my()
+            my(),
+            squad(*mix)
             {
                 
                 if(mix.auth.isValid())
@@ -28,10 +28,15 @@ namespace Yttrium
 
             }
 
-            void Wardens:: run(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
+            void Wardens:: run(XMLog &     xml,
+                               XWritable & C,
+                               const Level L,
+                               XWritable & injected)
             {
+                Y_XML_SECTION_OPT(xml,"Conservation::Wardens", "count=" << my.size);
+                squad.ldz(injected,TopLevel);
                 for(Warden *warden=my.head;warden;warden=warden->next)
-                    warden->run(xml, C, L, injected);
+                    warden->run(xml,C,L,injected);
             }
         }
     }

@@ -61,9 +61,12 @@ namespace Yttrium
 
                 //! make legal concentrations according to act
                 /**
-                 - on output,  injected (at Level L) is computed
+                 - on output,  injected   is computed
                  */
-                void run(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
+                void run(XMLog      &xml,
+                         XWritable  &C,
+                         const Level L,
+                         XWritable   &injected);
 
                 //______________________________________________________________
                 //
