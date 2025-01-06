@@ -43,7 +43,6 @@ Y_UTEST(warden)
     lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl << std::endl;
 
 
-    std::cerr << "Wardens..." << std::endl;
     mixes.guard(xml, C0, TopLevel, dC);
 
 

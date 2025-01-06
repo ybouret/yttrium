@@ -126,7 +126,7 @@ namespace Yttrium
             }
 
 
-            ~Boundaries() noexcept;
+            ~Boundaries() noexcept {}
 
             const Extents reac;
             const Extents prod;
@@ -172,21 +172,18 @@ Y_UTEST(eqz)
     Library::Conc(C0,ran,0.5,0.5);
 
     lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl << std::endl;
-    
-#if 0
-    std::cerr << "Wardens..." << std::endl;
+
+    mixes.guard(xml, C0, TopLevel, dC);
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
-        if(mix->auth.isEmpty()) continue;
-
-        for(const Conservation::Act *act=mix->auth->acts->head;act;act=act->next)
+        const AddressBook &conserved = mix->genus->conserved.book;
+        for(const ENode *en=mix->grade->limiting.list.head;en;en=en->next)
         {
-            Conservation::Warden warden(*act);
-            warden.run(xml,C0,TopLevel,dC);
+            const Equilibrium &eq = **en;
+            std::cerr << "Study " << eq << std::endl;
+            const Boundaries bnd(eq,C0,TopLevel,mixes.xbanks,conserved);
         }
-
     }
-#endif
 
     Y_SIZEOF(Requests);
     Y_SIZEOF(Limiting);

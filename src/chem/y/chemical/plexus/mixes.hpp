@@ -65,13 +65,13 @@ namespace Yttrium
 
         private:
             Mix::List my;
-            XBanks    xb;
 
             Y_DISABLE_COPY_AND_ASSIGN(Mixes);
             Y_PROXY_DECL();
             void checkFusion();
 
         public:
+            XBanks       xbanks;
             const size_t maxOrder; //!< max order of hybrid equilibrium
         };
 

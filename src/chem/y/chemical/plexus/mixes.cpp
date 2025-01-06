@@ -18,7 +18,7 @@ namespace Yttrium
                       Equilibria &eqs) :
         Proxy<const Mix::List>(),
         my(),
-        xb(),
+        xbanks(),
         maxOrder(0)
         {
             Y_XML_SECTION(xml,CallSign);
@@ -64,7 +64,7 @@ namespace Yttrium
             for(Mix *mix=my.head;mix;mix=mix->next)
             {
                 Coerce((**mix).hallmark) = ++hallmark;
-                mix->buildConfiguration(xml,eqs,xb);
+                mix->buildConfiguration(xml,eqs,xbanks);
                 InSituMax( Coerce(maxOrder), mix->order.size() );
             }
 
