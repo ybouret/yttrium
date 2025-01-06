@@ -115,6 +115,13 @@ namespace Yttrium
 
         }
 
+        void Mixes:: guard(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
+        {
+            for(Mix *mix=my.head;mix;mix=mix->next)
+                mix->guard(xml,C,L,injected);
+        }
+
+
 
         void Mixes:: viz(OutputStream &fp, const size_t which) const
         {

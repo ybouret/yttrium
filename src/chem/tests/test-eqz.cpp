@@ -76,16 +76,17 @@ namespace Yttrium
         class Extents
         {
         public:
-            Extents(const Actors    &actors,
-                    const XReadable &C,
-                    const Level      L,
-                    const XBanks    &X) noexcept :
-            limiting(X),
-            requests(X)
+            Extents(const Actors      &actors,
+                    const XReadable   &C,
+                    const Level        L,
+                    const XBanks      &xbanks,
+                    const AddressBook &conserved) noexcept :
+            limiting(xbanks),
+            requests(xbanks)
             {
                 for(const Actor *a=actors->head;a;a=a->next)
                 {
-                    const Species &sp = a->sp;
+                    const Species &sp = a->sp;   if(!conserved.has(sp)) continue;
                     const xReal    cc = sp(C,L);
                     const xReal    xi = cc / a->xn;
                     if(xi>=0.0)
@@ -116,9 +117,10 @@ namespace Yttrium
             Boundaries(const Components &eq,
                        const XReadable  &C,
                        const Level       L,
-                       const XBanks     &X) :
-            reac(eq.reac,C,L,X),
-            prod(eq.prod,C,L,X)
+                       const XBanks      &xbanks,
+                       const AddressBook &conserved) :
+            reac(eq.reac,C,L,xbanks,conserved),
+            prod(eq.prod,C,L,xbanks,conserved)
             {
 
             }

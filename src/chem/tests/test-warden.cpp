@@ -44,17 +44,8 @@ Y_UTEST(warden)
 
 
     std::cerr << "Wardens..." << std::endl;
-    for(const Mix *mix=mixes->head;mix;mix=mix->next)
-    {
-        if(mix->auth.isEmpty()) continue;
+    mixes.guard(xml, C0, TopLevel, dC);
 
-        for(const Conservation::Act *act=mix->auth->acts->head;act;act=act->next)
-        {
-            Conservation::Warden warden(*act);
-            warden.run(xml,C0,TopLevel,dC);
-        }
-
-    }
 
 
 }

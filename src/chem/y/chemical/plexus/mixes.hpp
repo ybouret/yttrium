@@ -46,8 +46,13 @@ namespace Yttrium
             virtual ~Mixes() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Mixes);    //!< display
 
+
+            //! guard each Mix
+            void guard(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
+
+
             //! solve each Mix
-            void solve(XMLog &xml,XWritable &C, const Level L, const XReadable &K);
+            void solve(XMLog &xml, XWritable &C, const Level L, const XReadable &K);
 
             //! write graphViz code for each order[which]
             void viz(OutputStream &fp, const size_t which) const;
