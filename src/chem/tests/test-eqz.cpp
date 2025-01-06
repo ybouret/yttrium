@@ -35,7 +35,7 @@ namespace Yttrium
             explicit Limiting(const Limiting &_) : Marker(_) {}
             virtual ~Limiting() noexcept {}
 
-            void update(const Species &sp, const xReal xi)
+            void operator()(const Species &sp, const xReal xi)
             {
                 assert(xi>=0.0);
                 if(srepo.size<=0)
@@ -76,10 +76,27 @@ namespace Yttrium
         class Extents
         {
         public:
-            Extents(const XBanks &_) noexcept :
-            limiting(_),
-            requests(_)
+            Extents(const Actors    &actors,
+                    const XReadable &C,
+                    const Level      L,
+                    const XBanks    &X) noexcept :
+            limiting(X),
+            requests(X)
             {
+                for(const Actor *a=actors->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp;
+                    const xReal    cc = sp(C,L);
+                    const xReal    xi = cc / a->xn;
+                    if(xi>=0.0)
+                    {
+                        limiting(sp,xi);
+                    }
+                    else
+                    {
+                        requests(sp,xi);
+                    }
+                }
             }
 
             ~Extents() noexcept {}
@@ -100,8 +117,8 @@ namespace Yttrium
                        const XReadable  &C,
                        const Level       L,
                        const XBanks     &X) :
-            reac(X),
-            prod(X)
+            reac(eq.reac,C,L,X),
+            prod(eq.prod,C,L,X)
             {
 
             }
