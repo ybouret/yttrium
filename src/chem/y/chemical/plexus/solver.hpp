@@ -47,8 +47,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Solver(const Mix    &,
-                            const CrBank &,
-                            const SBank  &); //!< setup from persistent mix
+                            const XBanks &); //!< setup from persistent mix
             virtual ~Solver() noexcept;      //!< cleanup
 
             //__________________________________________________________________

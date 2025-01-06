@@ -25,15 +25,8 @@ namespace Yttrium
         {
         }
 
-
-
-#if 0
-        xReal & Cursor:: operator*() noexcept
-        {
-            return value;
-        }
-#endif
         
+
         const xReal & Cursor:: operator*() const noexcept
         {
             return value;

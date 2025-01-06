@@ -24,6 +24,21 @@ namespace Yttrium
         typedef CrList:: ProxyType             CrBank; //!< alias
         typedef CrList:: NodeType              CrNode; //!< alias
 
+
+        class XBanks
+        {
+        public:
+            XBanks();
+            ~XBanks() noexcept;
+            XBanks(const XBanks &) noexcept;
+
+            SBank  species;
+            CrBank cursors;
+
+        private:
+            Y_DISABLE_ASSIGN(XBanks);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -43,9 +58,9 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup with banks for dynamic usage
-            explicit Cursors(const CrBank &,
-                             const SBank  &) noexcept;
+            explicit Cursors(const XBanks &) noexcept;
             virtual ~Cursors()               noexcept; //!< cleanup
+            Cursors(const Cursors &);                  //!< duplicate
 
             //__________________________________________________________________
             //
@@ -63,7 +78,7 @@ namespace Yttrium
             bool areOK() const noexcept;
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Cursors);
+            Y_DISABLE_ASSIGN(Cursors);
             Y_PROXY_DECL();
 
             CrList my;

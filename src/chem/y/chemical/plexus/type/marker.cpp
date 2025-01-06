@@ -7,11 +7,13 @@ namespace Yttrium
     {
 
         Marker:: Marker(const SBank & _) noexcept :
+        Proxy<const SRepo>(),
         srepo(_),
         value(0)
         {}
 
         Marker:: Marker(const Marker &_) :
+        Proxy<const SRepo>(),
         srepo(_.srepo),
         value(_.value) {}
 

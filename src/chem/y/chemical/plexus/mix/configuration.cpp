@@ -5,16 +5,15 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        void Mix:: buildConfiguration(XMLog &      xml,
-                                      Equilibria & eqs,
-                                      const CrBank &cb,
-                                      const SBank  &sb)
+        void Mix:: buildConfiguration(XMLog &        xml,
+                                      Equilibria &   eqs,
+                                      const XBanks & xbk)
         {
             buildConservations(xml);
             keeper = new Keeper(*this);
 
             buildCombinatorics(xml,eqs);
-            solver = new Solver(*this,cb,sb);
+            solver = new Solver(*this,xbk);
         }
     }
 

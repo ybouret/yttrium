@@ -60,8 +60,7 @@ namespace Yttrium
 
         private:
             Mix::List my;
-            CrBank    cb;
-            SBank     sb;
+            XBanks    xb;
 
             Y_DISABLE_COPY_AND_ASSIGN(Mixes);
             Y_PROXY_DECL();

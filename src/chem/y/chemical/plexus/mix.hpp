@@ -183,8 +183,7 @@ namespace Yttrium
             //! compile once built
             void buildConfiguration(XMLog        &xml,
                                     Equilibria   &eqs,
-                                    const CrBank &cb,
-                                    const SBank  &sb);
+                                    const XBanks &xbk);
 
 
             //! formatted, species-wise display at SubLevel

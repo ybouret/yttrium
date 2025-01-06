@@ -7,20 +7,40 @@ namespace Yttrium
     namespace Chemical
     {
 
+        XBanks::  XBanks() :  species(), cursors() {}
+        XBanks::  XBanks(const XBanks & _) noexcept : species(_.species), cursors(_.cursors) {}
+        XBanks:: ~XBanks() noexcept {}
+    }
+
+}
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
         Cursors:: ~Cursors() noexcept
         {
         }
 
-        Cursors:: Cursors(const CrBank & _cb,
-                          const SBank  & _sb) noexcept:
+        Cursors:: Cursors(const XBanks &_) noexcept:
         Proxy<const CrList>(),
-        my(_cb),
-        sb(_sb)
+        my(_.cursors),
+        sb(_.species)
         {
         }
 
         Y_PROXY_IMPL(Cursors,my)
-        
+
+
+        Cursors:: Cursors(const Cursors &_) :
+        Proxy<const CrList>(),
+        my(_.my),
+        sb(_.sb)
+        {
+        }
+
         void Cursors:: reset() noexcept
         {
             my.free();

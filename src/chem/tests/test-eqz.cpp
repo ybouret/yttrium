@@ -16,16 +16,81 @@ namespace Yttrium
     namespace Chemical
     {
 
+        class Requests : public Cursors
+        {
+        public:
+            explicit Requests(const XBanks &_) noexcept : Cursors(_) {}
+            virtual ~Requests() noexcept {}
+            Requests(const Requests &_) : Cursors(_) {}
+
+        private:
+            Y_DISABLE_ASSIGN(Requests);
+        };
+
+
         class Limiting : public Marker
         {
         public:
-            explicit Limiting(const SBank &  _sbank) : Marker(_sbank) {}
+            explicit Limiting(const XBanks &_) : Marker(_.species) {}
             explicit Limiting(const Limiting &_) : Marker(_) {}
             virtual ~Limiting() noexcept {}
+
+            void update(const Species &sp, const xReal xi)
+            {
+                assert(xi>=0.0);
+                if(srepo.size<=0)
+                {
+                    srepo << sp;
+                    value = xi;
+                }
+                else
+                {
+                    switch( Sign::Of(xi,value) )
+                    {
+                        case Negative:
+                            // new winner
+                            srepo.free();
+                            srepo << sp;
+                            value = xi;
+                            break;
+
+                        case __Zero__:
+                            // group same extent
+                            srepo << sp;
+                            break;
+
+
+                        case Positive:
+                            // discard
+                            break;
+                    }
+                }
+            }
 
 
         private:
             Y_DISABLE_ASSIGN(Limiting);
+
+        };
+
+        class Boundaries
+        {
+        public:
+            Boundaries(const XBanks &_) noexcept :
+            limiting(_),
+            requests(_)
+            {
+            }
+
+            ~Boundaries() noexcept {}
+            Boundaries(const Boundaries &_) : limiting(_.limiting), requests(_.requests) {}
+
+            Limiting limiting;
+            Requests requests;
+
+
+        private:
+            Y_DISABLE_ASSIGN(Boundaries);
         };
 
     }

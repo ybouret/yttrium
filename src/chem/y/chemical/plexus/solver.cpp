@@ -10,10 +10,9 @@ namespace Yttrium
 
         Solver:: ~Solver() noexcept {}
 
-        Solver:: Solver(const Mix &    __,
-                        const CrBank & cb,
-                        const SBank &  sb) :
-        mix(__),
+        Solver:: Solver(const Mix &    _mx,
+                        const XBanks & xbk) :
+        mix(_mx),
         my(),
         Csolve(mix->size,mix->species.size),
         deltaC(mix->size,mix->species.size),
@@ -31,7 +30,7 @@ namespace Yttrium
         NuMat(  mix->topology.size() ),
         NuTMat( mix->topology.size() ),
         XiMat(  mix->topology.size() ),
-        crs(cb,sb),
+        crs(xbk),
         one(1),
         safe(0.99)
         {
