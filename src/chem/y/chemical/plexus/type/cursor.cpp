@@ -1,6 +1,6 @@
 
 
-#include "y/chemical/plexus/cursor.hpp"
+#include "y/chemical/plexus/type/cursor.hpp"
 
 namespace Yttrium
 {
@@ -9,10 +9,11 @@ namespace Yttrium
         Cursor:: Cursor(const Species &_first,
                         const xReal    _value,
                         const SBank &  _sbank) :
-        SRepo(_sbank),
-        value(_value)
+        Marker(_sbank)
         {
-            (*this) << _first;
+
+            srepo << _first;
+            value =  _value;
         }
 
         Cursor:: ~Cursor() noexcept
@@ -20,10 +21,12 @@ namespace Yttrium
         }
 
         Cursor:: Cursor(const Cursor &_) :
-        SRepo(_),
-        value(_.value)
+        Marker(_)
         {
         }
+
+
+
 
         xReal & Cursor:: operator*() noexcept
         {
@@ -35,12 +38,6 @@ namespace Yttrium
             return value;
         }
 
-        std::ostream & operator<<(std::ostream &os, const Cursor &cr)
-        {
-            const SRepo &sr = cr;
-            os << sr << "=" << cr.value.str();
-            return os;
-        }
 
     }
 

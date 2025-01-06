@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/cursors.hpp"
+#include "y/chemical/plexus/type/cursors.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium
@@ -62,7 +62,7 @@ namespace Yttrium
                     {
                         case Negative: atHead(s,x); return;
                         case Positive: atTail(s,x); return;
-                        case __Zero__: cr << s;     return;
+                        case __Zero__: cr.join(s);  return;
                     }
                 } return;
 
@@ -81,8 +81,8 @@ namespace Yttrium
             CrNode *lower = my.head;
             switch( Sign::Of(x,***lower) )
             {
-                case Negative: atHead(s,x); return;
-                case __Zero__: **lower << s;   return;
+                case Negative: atHead(s,x);       return;
+                case __Zero__: (**lower).join(s); return;
                 case Positive:
                     break;
             }
@@ -97,8 +97,8 @@ namespace Yttrium
             CrNode * const upper = my.tail;
             switch( Sign::Of(x,***upper) )
             {
-                case Positive: atTail(s,x);   return;
-                case __Zero__: **upper << s;   return;
+                case Positive: atTail(s,x);       return;
+                case __Zero__: (**upper).join(s); return;
                 case Negative:
                     break;
             }
@@ -116,9 +116,9 @@ namespace Yttrium
             if(upper == next) goto INSERT_AFTER_LOWER;
             switch( Sign::Of(x,***next) )
             {
-                case Negative: goto INSERT_AFTER_LOWER; // found slot
-                case __Zero__: **next <<s; return;      // grow next
-                case Positive: break;                   // next slot
+                case Negative: goto INSERT_AFTER_LOWER;  // found slot
+                case __Zero__: (**next).join(s); return; // grow next
+                case Positive: break;                    // next slot
             }
             lower = next;
             goto LOOK_UP;

@@ -16,6 +16,7 @@ chemical/plexus
 chemical/plexus/conservation
 chemical/plexus/mix
 chemical/plexus/solver
+chemical/plexus/type
 )
 
 add_subdirectory(tests)

@@ -4,13 +4,14 @@
 #ifndef Y_Chemical_Cursor_Included
 #define Y_Chemical_Cursor_Included 1
 
-#include "y/chemical/species.hpp"
+#include "y/chemical/plexus/type/marker.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
+        
         //______________________________________________________________________
         //
         //
@@ -19,7 +20,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Cursor : public SRepo
+        class Cursor : public Marker
         {
         public:
             //__________________________________________________________________
@@ -35,7 +36,6 @@ namespace Yttrium
                             const SBank &  _sbank);
             virtual ~Cursor() noexcept; //!< cleanup
             Cursor(const Cursor &);     //!< duplicate
-            Y_OSTREAM_PROTO(Cursor);    //!< dispay
 
             //__________________________________________________________________
             //
@@ -44,11 +44,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             xReal &       operator*()       noexcept; //!< access
-            const xReal & operator*() const noexcept; //!< access, const
+            const xReal & operator*() const noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Cursor);
-            xReal value;
         };
     }
 

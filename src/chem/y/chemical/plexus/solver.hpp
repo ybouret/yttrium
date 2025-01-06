@@ -5,7 +5,7 @@
 #define Y_Chemical_Solver_Included 1
 
 #include "y/chemical/plexus/solver/engine.hpp"
-#include "y/chemical/plexus/cursors.hpp"
+#include "y/chemical/plexus/type/cursors.hpp"
 
 #include "y/chemical/reactive/equilibrium/aftermath.hpp"
 #include "y/orthogonal/family.hpp"

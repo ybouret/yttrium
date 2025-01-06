@@ -1,7 +1,6 @@
 
 
 #include "y/chemical/plexus/mixes.hpp"
-#include "y/chemical/plexus/conservation/warden.hpp"
 
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
@@ -10,6 +9,28 @@
 
 #include "y/utest/run.hpp"
 #include "y/stream/libc/output.hpp"
+
+namespace Yttrium
+{
+
+    namespace Chemical
+    {
+
+        class Limiting : public Cursor
+        {
+        public:
+            explicit Limiting(const Species &_first,
+                              const xReal    _value,
+                              const SBank &  _sbank) : Cursor(_first,_value,_sbank) {}
+            virtual ~Limiting() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Limiting);
+        };
+
+    }
+
+}
 
 using namespace Yttrium;
 using namespace Chemical;

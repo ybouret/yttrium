@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Cursors_Included
 #define Y_Chemical_Cursors_Included 1
 
-#include "y/chemical/plexus/cursor.hpp"
+#include "y/chemical/plexus/type/cursor.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
