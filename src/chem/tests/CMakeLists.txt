@@ -14,6 +14,7 @@ add_test(eq      test-chem eq)
 add_test(db      test-chem db)
 add_test(aftermath test-chem aftermath)
 add_test(warden    test-chem warden)
+add_test(eqz       test-chem eqz)
 add_test(plexus  test-chem plexus)
 add_test(metrics test-chem metrics)
 

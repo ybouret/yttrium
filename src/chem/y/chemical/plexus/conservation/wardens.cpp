@@ -31,9 +31,7 @@ namespace Yttrium
             void Wardens:: run(XMLog &xml, XWritable &C, const Level L, XWritable &injected)
             {
                 for(Warden *warden=my.head;warden;warden=warden->next)
-                {
                     warden->run(xml, C, L, injected);
-                }
             }
         }
     }

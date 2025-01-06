@@ -14,9 +14,7 @@ namespace Yttrium
 
         namespace Conservation
         {
-            class Wardens :
-            public Proxy<const Warden::List>,
-            public XArray
+            class Wardens : public Proxy<const Warden::List>, public XArray
             {
             public:
                 explicit Wardens(const Mix &);  

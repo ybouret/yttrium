@@ -1,5 +1,7 @@
 
+
 #include "y/chemical/plexus/mixes.hpp"
+#include "y/chemical/plexus/conservation/warden.hpp"
 
 #include "y/chemical/library.hpp"
 #include "y/random/park-miller.hpp"
@@ -13,7 +15,7 @@ using namespace Yttrium;
 using namespace Chemical;
 
 
-Y_UTEST(warden)
+Y_UTEST(eqz)
 {
     Random::ParkMiller ran;
     Library            lib;
@@ -41,8 +43,8 @@ Y_UTEST(warden)
     Library::Conc(C0,ran,0.5,0.5);
 
     lib(std::cerr << "C0=","[",C0,"]", xReal::ToString) << std::endl << std::endl;
-
-
+    
+#if 0
     std::cerr << "Wardens..." << std::endl;
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
@@ -55,7 +57,8 @@ Y_UTEST(warden)
         }
 
     }
-
+#endif
+    
 
 }
 Y_UDONE()

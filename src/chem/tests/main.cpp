@@ -9,6 +9,7 @@ Y_UTEST_DECL(16)
     Y_UTEST(db);
     Y_UTEST(aftermath);
     Y_UTEST(warden);
+    Y_UTEST(eqz);
     Y_UTEST(plexus);
     Y_UTEST(metrics);
 }

@@ -48,7 +48,9 @@ namespace Yttrium
 
                 //! setup
                 explicit Warden(const Act & _act);
-                virtual ~Warden() noexcept; //!< cleanup
+
+                //! cleanup
+                virtual ~Warden() noexcept;
 
                 //______________________________________________________________
                 //
@@ -57,9 +59,9 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! make legal concentration
+                //! make legal concentrations according to act
                 /**
-                 - on output,  injected is computed
+                 - on output,  injected (at Level L) is computed
                  */
                 void run(XMLog &xml, XWritable &C, const Level L, XWritable &injected);
 
