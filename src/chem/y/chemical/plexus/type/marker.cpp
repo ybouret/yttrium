@@ -27,12 +27,7 @@ namespace Yttrium
             return os;
         }
 
-        void Marker:: join(const Species &s)
-        {
-            assert( !srepo.has(s) );
-            srepo << s;
-        }
-
+       
     }
 
 }

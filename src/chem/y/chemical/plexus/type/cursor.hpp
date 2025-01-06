@@ -43,8 +43,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            xReal &       operator*()       noexcept; //!< access
-            const xReal & operator*() const noexcept;
+            //xReal &       operator*()       noexcept; //!< access
+            const xReal & operator*() const noexcept; //!< access, const
+            void join(const Species &);               //!< species with same value
 
         private:
             Y_DISABLE_ASSIGN(Cursor);

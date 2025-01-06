@@ -20,7 +20,6 @@ namespace Yttrium
             virtual ~Marker() noexcept;
             Y_OSTREAM_PROTO(Marker);    //!< dispay
 
-            void join(const Species &);
 
         protected:
             SRepo srepo;

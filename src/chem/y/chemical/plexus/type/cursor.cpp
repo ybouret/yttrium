@@ -27,17 +27,23 @@ namespace Yttrium
 
 
 
-
+#if 0
         xReal & Cursor:: operator*() noexcept
         {
             return value;
         }
-
+#endif
+        
         const xReal & Cursor:: operator*() const noexcept
         {
             return value;
         }
 
+        void Cursor:: join(const Species &s)
+        {
+            assert( !srepo.has(s) );
+            srepo << s;
+        }
 
     }
 

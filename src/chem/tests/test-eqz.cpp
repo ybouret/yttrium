@@ -16,16 +16,16 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Limiting : public Cursor
+        class Limiting : public Marker
         {
         public:
-            explicit Limiting(const Species &_first,
-                              const xReal    _value,
-                              const SBank &  _sbank) : Cursor(_first,_value,_sbank) {}
+            explicit Limiting(const SBank &  _sbank) : Marker(_sbank) {}
+            explicit Limiting(const Limiting &_) : Marker(_) {}
             virtual ~Limiting() noexcept {}
 
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Limiting);
+            Y_DISABLE_ASSIGN(Limiting);
         };
 
     }
