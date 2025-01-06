@@ -25,10 +25,9 @@ namespace Yttrium
         {
         }
 
-        Fragment::ConstInterface & Fragment:: surrogate() const noexcept
-        {
-            return self;
-        }
+        Y_PROXY_IMPL(Fragment,self)
+
+        
 
 
         void Fragment:: enroll(const Components &cm)

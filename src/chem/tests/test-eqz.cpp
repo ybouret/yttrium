@@ -103,6 +103,9 @@ namespace Yttrium
             ~Extents() noexcept {}
             Extents(const Extents &_) : limiting(_.limiting), requests(_.requests) {}
 
+            Y_OSTREAM_PROTO(Extents);
+
+
             Limiting limiting;
             Requests requests;
 
@@ -110,6 +113,30 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Extents);
         };
+
+        std::ostream & operator<<(std::ostream &os, const Extents &ex)
+        {
+            os << "lim@";
+            if(ex.limiting->size>0)
+            {
+                os << ex.limiting;
+            }
+            else
+            {
+                os << Core::Ptr::Nil;
+            }
+            os << ",req@";
+            if(ex.requests->size>0)
+            {
+                os << ex.requests;
+            }
+            else
+            {
+                os << Core::Ptr::Nil;
+            }
+            return os;
+        }
+
 
         class Boundaries
         {
@@ -127,6 +154,7 @@ namespace Yttrium
 
 
             ~Boundaries() noexcept {}
+            Y_OSTREAM_PROTO(Boundaries);
 
             const Extents reac;
             const Extents prod;
@@ -135,6 +163,12 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Boundaries);
         };
 
+
+        std::ostream & operator<<(std::ostream &os, const Boundaries &bnd)
+        {
+            os << "reac={" << bnd.reac << "} prod={" << bnd.prod << "}";
+            return os;
+        }
 
     }
 
@@ -177,11 +211,13 @@ Y_UTEST(eqz)
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
         const AddressBook &conserved = mix->genus->conserved.book;
+        //const Assembly    &assembly  = ***mix;
         for(const ENode *en=mix->grade->limiting.list.head;en;en=en->next)
         {
             const Equilibrium &eq = **en;
-            std::cerr << "Study " << eq << std::endl;
+            //std::cerr << "Study " << eq << std::endl;
             const Boundaries bnd(eq,C0,TopLevel,mixes.xbanks,conserved);
+            (***mix).print(std::cerr,eq,Justify::Right) << ": " << bnd << std::endl;
         }
     }
 

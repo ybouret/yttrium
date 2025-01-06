@@ -77,7 +77,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_ASSIGN(Fragment);
-            virtual ConstInterface & surrogate() const noexcept;
+            Y_PROXY_DECL();
+            
             Assembly self; //!< for names
             Assembly reac; //!< for actors
             Assembly prod; //!< for actors
