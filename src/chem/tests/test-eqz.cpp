@@ -121,7 +121,31 @@ namespace Yttrium
 
             static Dynamics Dyn(const Extents &reac, const Extents &prod) noexcept
             {
-              
+                if(prod.requests->size>0)
+                {
+                    // negative products: MustGoForward
+                    if(reac.requests->size>0)
+                    {
+                        // MustGoReverse as well
+                        return BlockedMotion;
+                    }
+                    else
+                    {
+                        return MustGoForward;
+                    }
+                }
+                else
+                {
+                    // no negative products
+                    if(reac.requests->size>0)
+                    {
+                        return MustGoReverse;
+                    }
+                    else
+                    {
+                        return FullyBalanced;
+                    }
+                }
 
             }
 
