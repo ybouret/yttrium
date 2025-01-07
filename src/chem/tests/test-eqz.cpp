@@ -121,24 +121,7 @@ namespace Yttrium
 
             static Dynamics Dyn(const Extents &reac, const Extents &prod) noexcept
             {
-                if(reac.requests->size>0)
-                {
-                    // got negative reactant
-                    if(prod.requests->size>0)
-                    {
-                        // got
-                        return BlockedMotion;
-                    }
-                    else
-                    {
-
-                    }
-                }
-                else
-                {
-                    // no negative reactant
-
-                }
+                
             }
 
 

@@ -78,6 +78,7 @@ string
 fft
 fft/xbitrev
 tow
+apex
 kemp
 kemp/element
 kemp/natural

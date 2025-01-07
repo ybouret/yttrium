@@ -283,5 +283,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(codec_b64);
     Y_UTEST(codec_u64);
 
+    Y_UTEST(apex_types);
+
 }
 Y_UTEST_EXEC()

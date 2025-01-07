@@ -13,6 +13,7 @@ ptr
 io
 fft
 string
+apex
 kemp
 tow
 ordered
@@ -361,3 +362,7 @@ add_test(kemp:rsa      test-core kemp_rsa)
 #codec
 add_test(codec:b64 test-core codec_b64)
 add_test(codec:u64 test-core codec_u64)
+
+#apex
+add_test(apex:types test_cxore apex_type)
+
