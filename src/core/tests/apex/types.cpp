@@ -1,9 +1,9 @@
 #include "y/apex/types.hpp"
 #include "y/utest/run.hpp"
 #include "y/system/rtti.hpp"
-#include "y/calculus/ilog2.hpp"
 #include "y/calculus/base2.hpp"
-
+#include "y/calculus/align.hpp"
+#include "y/memory/allocator/archon.hpp"
 
 namespace Yttrium
 {
@@ -12,19 +12,28 @@ namespace Yttrium
 
         struct API
         {
-            static const size_t MinCapacity = 2*sizeof(uint64_t);
-            static const size_t MinCapaLog2 = iLog2<MinCapacity>::Value;
+            typedef uint64_t  natural_t;
+            typedef int64_t   integer_t;
 
-            template <typename T> static inline
-            size_t NumberOf(const size_t bytes) noexcept
+            static const size_t ConstantStaticBytes = 2 * sizeof(natural_t);
+            static const size_t MinimalDynamicBytes = 2 * ConstantStaticBytes;
+            
+
+            template <typename T>
+            struct NumberOf
             {
-                assert(IsPowerOfTwo(bytes));
-                assert(bytes>=MinCapacity);
-                return bytes >> ( iLog2Of<T>::Value );
-            }
+                static inline size_t ToHold(const size_t bytes) noexcept
+                {
+                    return Y_ALIGN_TO(T,bytes)/sizeof(T);
+                }
+            };
+
+
 
 
         };
+
+
 
     }
 }
@@ -35,13 +44,11 @@ using namespace Apex;
 Y_UTEST(apex_types)
 {
 
-    Y_USHOW(Apex::API::MinCapacity);
-    Y_USHOW(Apex::API::MinCapaLog2);
+    Y_USHOW(Apex::API::NumberOf<uint8_t> ::ToHold(21));
+    Y_USHOW(Apex::API::NumberOf<uint16_t>::ToHold(21));
+    Y_USHOW(Apex::API::NumberOf<uint32_t>::ToHold(21));
+    Y_USHOW(Apex::API::NumberOf<uint64_t>::ToHold(21));
 
-    Y_USHOW(Apex::API::NumberOf<uint8_t>(32));
-    Y_USHOW(Apex::API::NumberOf<uint16_t>(32));
-    Y_USHOW(Apex::API::NumberOf<uint32_t>(32));
-    Y_USHOW(Apex::API::NumberOf<uint64_t>(32));
 
 }
 Y_UDONE()
