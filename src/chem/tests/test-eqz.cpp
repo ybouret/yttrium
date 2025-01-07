@@ -74,6 +74,7 @@ namespace Yttrium
         };
 
 
+#if 0
         enum Dynamics
         {
             FullyBalanced,
@@ -81,7 +82,7 @@ namespace Yttrium
             MustGoReverse,
             BlockedMotion
         };
-
+#endif
 
         class Extents
         {
@@ -119,35 +120,6 @@ namespace Yttrium
             Limiting limiting;
             Requests requests;
 
-            static Dynamics Dyn(const Extents &reac, const Extents &prod) noexcept
-            {
-                if(prod.requests->size>0)
-                {
-                    // negative products: MustGoForward
-                    if(reac.requests->size>0)
-                    {
-                        // MustGoReverse as well
-                        return BlockedMotion;
-                    }
-                    else
-                    {
-                        return MustGoForward;
-                    }
-                }
-                else
-                {
-                    // no negative products
-                    if(reac.requests->size>0)
-                    {
-                        return MustGoReverse;
-                    }
-                    else
-                    {
-                        return FullyBalanced;
-                    }
-                }
-
-            }
 
 
         private:
@@ -187,8 +159,7 @@ namespace Yttrium
                        const XBanks      &xbanks,
                        const AddressBook &conserved) :
             reac(eq.reac,C,L,xbanks,conserved),
-            prod(eq.prod,C,L,xbanks,conserved),
-            dynamics(Extents::Dyn(reac,prod))
+            prod(eq.prod,C,L,xbanks,conserved)
             {
 
 
@@ -200,8 +171,7 @@ namespace Yttrium
 
             const Extents  reac;
             const Extents  prod;
-            const Dynamics dynamics;
-
+            
         private:
             Y_DISABLE_ASSIGN(Boundaries);
         };
