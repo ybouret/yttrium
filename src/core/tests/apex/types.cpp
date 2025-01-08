@@ -59,14 +59,16 @@ namespace Yttrium
 
             inline  View(void * const addr, const size_t capa) noexcept :
             word( static_cast<Word *>(addr ) ),
-            wmax( capa >> WordShift )
+            count(0),
+            space( capa >> WordShift )
             {
             }
 
             inline ~View() noexcept {}
 
             Word * const word;
-            const size_t wmax;
+            size_t       count;
+            const size_t space;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(View);
