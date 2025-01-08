@@ -43,43 +43,61 @@ namespace Yttrium
 
         enum Plan
         {
-            Plan1=1,
-            Plan2=2,
-            Plan4=4,
-            Plan8=8
+            Plan1=0,
+            Plan2=1,
+            Plan4=2,
+            Plan8=3
         };
 
         template <Plan PLAN>
-        class Scheme
+        class View
         {
         public:
-            typedef typename UnsignedInt<PLAN>::Type Word;
+            static const unsigned                         WordShift = PLAN;
+            static const unsigned                         WordBytes = 1 << PLAN;
+            typedef typename UnsignedInt<WordBytes>::Type Word;
 
-            inline  Scheme(void * const addr, const size_t capa) noexcept
+            inline  View(void * const addr, const size_t capa) noexcept :
+            word( static_cast<Word *>(addr ) ),
+            wmax( capa >> WordShift )
             {
             }
 
-            inline ~Scheme() noexcept {}
+            inline ~View() noexcept {}
 
-            Word * const    word;
+            Word * const word;
             const size_t wmax;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Scheme);
+            Y_DISABLE_COPY_AND_ASSIGN(View);
         };
 
-        typedef Scheme<Plan1> Scheme1;
-        typedef Scheme<Plan2> Scheme2;
-        typedef Scheme<Plan4> Scheme4;
-        typedef Scheme<Plan8> Scheme8;
+        typedef View<Plan1> View1;
+        typedef View<Plan2> View2;
+        typedef View<Plan4> View4;
+        typedef View<Plan8> View8;
 
-        class Schemes {
+        class Views {
         public:
-            
+            Views(void * const addr, const size_t capa) noexcept:
+            _1(addr,capa),
+            _2(addr,capa),
+            _4(addr,capa),
+            _8(addr,capa)
+            {
+            }
+
+            ~Views() noexcept {}
+
+            View1 _1;
+            View2 _2;
+            View4 _4;
+            View8 _8;
+
+
         private:
-
+            Y_DISABLE_COPY_AND_ASSIGN(Views);
         };
-
 
 
         struct Bulk
@@ -88,14 +106,18 @@ namespace Yttrium
             unsigned shift;
         };
 
-#define Y_Apex_Block()  \
-wksp(),                 \
-bulk( *(Bulk *)wksp ),  \
-capa(API::StaticBytes), \
-size(0),                \
-bits(0),                \
-mode(StaticMemory),     \
-plan(Plan1),            \
+#define Y_Apex_Block_Bulk ( *(Bulk  *) &wksp[0] )
+#define Y_Apex_Block_View ( *(Views *) &wksp[API::StaticWords] )
+
+#define Y_Apex_Block()     \
+wksp(),                    \
+bulk( Y_Apex_Block_Bulk ), \
+view( Y_Apex_Block_View ), \
+plan( Plan1 ),             \
+capa(API::StaticBytes),    \
+size(0),                   \
+bits(0),                   \
+mode(StaticMemory),        \
 addr( (void*) wksp )
 
         class Block : public Object
@@ -104,13 +126,14 @@ addr( (void*) wksp )
             explicit Block() noexcept :
             Y_Apex_Block()
             {
-                clear();
+                zclear();
+                onInit();
             }
 
             explicit Block(size_t requested) :
             Y_Apex_Block()
             {
-                clear();
+                zclear();
                 if(requested>capa)
                 {
                     if(requested>Base2<size_t>::MaxPowerOfTwo)
@@ -123,6 +146,7 @@ addr( (void*) wksp )
                     Coerce(capa) = size_t(1) << bulk.shift;
                     Coerce(addr) = bulk.entry;
                 }
+                onInit();
             }
 
 
@@ -140,31 +164,45 @@ addr( (void*) wksp )
                         Coerce(mode) = StaticMemory;
                         break;
                 }
-                clear();
+                onQuit();
+                zclear();
                 size = 0;
                 bits = 0;
             }
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Block);
-            void * wksp[API::StaticWords];
-            Bulk &bulk;
-
-
-            void clear() noexcept {
-                memset(wksp,0,sizeof(wksp));
-            }
-
+            void *           wksp[API::StaticWords+Y_WORDS_FOR(Views)];
+            Bulk &           bulk;
+            Views &          view;
         public:
+            const Plan       plan;
             const size_t     capa; //!< in bytes, a power of two
             size_t           size; //!< in bytes <= capa
             size_t           bits; //!< [0..bytes*8]
             const MemoryMode mode;
-            const Plan       plan;
         private:
             void * const     addr;
+
+            Y_DISABLE_COPY_AND_ASSIGN(Block);
+            void zclear() noexcept {
+                memset(wksp,0,sizeof(wksp));
+            }
+
+
+            void onInit() noexcept
+            {
+                new ( &view ) Views(addr,capa);
+            }
+
+            void onQuit() noexcept
+            {
+                Destruct( &view );
+            }
+
         };
+
+
 
 
 
@@ -190,16 +228,12 @@ Y_UTEST(apex_types)
     Y_USHOW(Memory::Archon::MinBytes);
     Y_USHOW(Memory::Archon::MinShift);
 
+
     Y_SIZEOF(Apex::Block);
 
-    Y_SIZEOF(Apex::Scheme1);
-    Y_SIZEOF(Apex::Scheme2);
-    Y_SIZEOF(Apex::Scheme4);
-    Y_SIZEOF(Apex::Scheme8);
 
-
-    Apex::Block b0;
-    Apex::Block b1(100);
+    Apex:: Block b0;
+    Apex:: Block b1(100);
 
 
 
