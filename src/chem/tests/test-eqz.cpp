@@ -16,6 +16,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! request are ordered extent to correct negative values
         class Requests : public Cursors
         {
         public:
@@ -28,6 +29,7 @@ namespace Yttrium
         };
 
 
+        //! limiting extent due to positive or zero value
         class Limiting : public Marker
         {
         public:
@@ -74,16 +76,6 @@ namespace Yttrium
         };
 
 
-#if 0
-        enum Dynamics
-        {
-            FullyBalanced,
-            MustGoForward,
-            MustGoReverse,
-            BlockedMotion
-        };
-#endif
-
         class Extents
         {
         public:
@@ -117,8 +109,8 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Extents);
 
 
-            Limiting limiting;
-            Requests requests;
+            Limiting limiting; //!< limiting extent   if c>=0
+            Requests requests; //!< requested extents if c<0
 
 
 
@@ -149,7 +141,7 @@ namespace Yttrium
             return os;
         }
 
-
+        //! boundaries from reactants and products
         class Boundaries
         {
         public:
@@ -161,12 +153,17 @@ namespace Yttrium
             reac(eq.reac,C,L,xbanks,conserved),
             prod(eq.prod,C,L,xbanks,conserved)
             {
-
-
             }
 
 
             ~Boundaries() noexcept {}
+
+            Boundaries(const Boundaries &_) :
+            reac(_.reac),
+            prod(_.prod)
+            {
+            }
+
             Y_OSTREAM_PROTO(Boundaries);
 
             const Extents  reac;
@@ -224,13 +221,16 @@ Y_UTEST(eqz)
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
         const AddressBook &conserved = mix->genus->conserved.book;
-        //const Assembly    &assembly  = ***mix;
+        std::cerr << "limiting=" << mix->grade->limiting.list << std::endl;
         for(const ENode *en=mix->grade->limiting.list.head;en;en=en->next)
         {
             const Equilibrium &eq = **en;
             //std::cerr << "Study " << eq << std::endl;
             const Boundaries bnd(eq,C0,TopLevel,mixes.xbanks,conserved);
             (***mix).print(std::cerr,eq,Justify::Right) << ": " << bnd << std::endl;
+            const Boundaries cpy(bnd);
+            (***mix).print(std::cerr,eq,Justify::Right) << ": " << cpy << std::endl;
+
         }
     }
 
