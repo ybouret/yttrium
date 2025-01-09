@@ -142,43 +142,85 @@ namespace Yttrium
         }
 
         //! boundaries from reactants and products
-        class Boundaries
+        class Frontiers
         {
         public:
-            Boundaries(const Components &eq,
-                       const XReadable  &C,
-                       const Level       L,
-                       const XBanks      &xbanks,
-                       const AddressBook &conserved) :
+            Frontiers(const Components &eq,
+                      const XReadable  &C,
+                      const Level       L,
+                      const XBanks      &xbanks,
+                      const AddressBook &conserved) :
             reac(eq.reac,C,L,xbanks,conserved),
-            prod(eq.prod,C,L,xbanks,conserved)
+            prod(eq.prod,C,L,xbanks,conserved),
+            good(reac.requests->size<=0 && prod.requests->size<=0)
             {
             }
 
 
-            ~Boundaries() noexcept {}
+            ~Frontiers() noexcept {}
 
-            Boundaries(const Boundaries &_) :
+            Frontiers(const Frontiers &_) :
             reac(_.reac),
-            prod(_.prod)
+            prod(_.prod),
+            good(_.good)
             {
             }
 
-            Y_OSTREAM_PROTO(Boundaries);
+            Y_OSTREAM_PROTO(Frontiers);
 
             const Extents  reac;
             const Extents  prod;
-            
+            const bool     good;
+
         private:
-            Y_DISABLE_ASSIGN(Boundaries);
+            Y_DISABLE_ASSIGN(Frontiers);
         };
 
 
-        std::ostream & operator<<(std::ostream &os, const Boundaries &bnd)
+        std::ostream & operator<<(std::ostream &os, const Frontiers &f)
         {
-            os << "reac={" << bnd.reac << "} prod={" << bnd.prod << "}";
+            os << (f.good? "(+) " : "(-) ") << "reac={" << f.reac << "} prod={" << f.prod << "}";
             return os;
         }
+
+        //typedef Small::CoopHeavyList<Boundaries> BndList;
+
+
+        class Equalizer
+        {
+        public:
+
+            explicit Equalizer(const Mix    &_mix,
+                               const XBanks &_xbanks) :
+            mix(_mix),
+            xbanks(_xbanks)
+            {
+            }
+
+            virtual ~Equalizer() noexcept
+            {
+            }
+
+
+            const Mix &mix;
+            XBanks     xbanks;
+
+            void run(XMLog &xml, XWritable &C, const Level L)
+            {
+                const AddressBook &conserved = mix.genus->conserved.book;
+                for(const ENode *en=mix.grade->limiting.list.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const Frontiers    ff(eq,C,L,xbanks,conserved);
+                    (**mix).print(std::cerr,eq,Justify::Right) << ": " << ff << std::endl;
+
+                }
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
+        };
+
 
     }
 
@@ -220,24 +262,28 @@ Y_UTEST(eqz)
     mixes.guard(xml, C0, TopLevel, dC);
     for(const Mix *mix=mixes->head;mix;mix=mix->next)
     {
+        Equalizer eqz(*mix,mixes.xbanks);
+
         const AddressBook &conserved = mix->genus->conserved.book;
         std::cerr << "limiting=" << mix->grade->limiting.list << std::endl;
-        for(const ENode *en=mix->grade->limiting.list.head;en;en=en->next)
-        {
-            const Equilibrium &eq = **en;
-            //std::cerr << "Study " << eq << std::endl;
-            const Boundaries bnd(eq,C0,TopLevel,mixes.xbanks,conserved);
-            (***mix).print(std::cerr,eq,Justify::Right) << ": " << bnd << std::endl;
-            const Boundaries cpy(bnd);
-            (***mix).print(std::cerr,eq,Justify::Right) << ": " << cpy << std::endl;
+        eqz.run(xml, C0, TopLevel);
 
-        }
+        if(false)
+            for(const ENode *en=mix->grade->limiting.list.head;en;en=en->next)
+            {
+                const Equilibrium &eq = **en;
+                const Frontiers bnd(eq,C0,TopLevel,mixes.xbanks,conserved);
+                (***mix).print(std::cerr,eq,Justify::Right) << ": " << bnd << std::endl;
+                const Frontiers cpy(bnd);
+                (***mix).print(std::cerr,eq,Justify::Right) << ": " << cpy << std::endl;
+
+            }
     }
 
     Y_SIZEOF(Requests);
     Y_SIZEOF(Limiting);
     Y_SIZEOF(Extents);
-    Y_SIZEOF(Boundaries);
+    Y_SIZEOF(Frontiers);
 
 
 }
