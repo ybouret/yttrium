@@ -74,14 +74,21 @@ namespace Yttrium
             my(),
             shift(_shift)
             {
-                assert(shift>=Memroy::Archon::MinShift);
-                assert(shift<=Base2<size_t>::Max)
+                assert(shift>=Memory::Archon::MinShift);
+                assert(shift<=Base2<size_t>::MaxShift);
             }
 
             virtual ~Blocks() noexcept {}
 
             Block * query() {
                 return (my.size>0) ? my.query() : new Block(shift);
+            }
+
+            void store(Block * const block) noexcept
+            {
+                assert(0!=block);
+                assert(block->shift==shift);
+                my.store(block)->ldz();
             }
 
 
@@ -108,6 +115,7 @@ Y_UTEST(apex_types)
 {
 
     Y_SIZEOF(Apex::Block);
+    Y_SIZEOF(Apex::Blocks);
 
     Apex::Block block(0);
 
