@@ -158,7 +158,6 @@ namespace Yttrium
             }
 
 
-
             JigAPI & operator[](const Plan plan) noexcept {
                 switch(plan) {
                     case Plan1: break;
@@ -444,10 +443,9 @@ Y_UTEST(apex_types)
     F.display();
     F.gc();
     F.display();
-    return 0;
-
+    
     Apex::Block b(0);
-#if 0
+#if 1
     const size_t maxBits = b.range * 8;
     std::cerr << "maxBits=" << maxBits << std::endl;
     for(size_t i=0;i<=maxBits;++i)
@@ -455,8 +453,9 @@ Y_UTEST(apex_types)
         std::cerr << "bits=" << std::setw(4) << i;
         for(size_t j=0;j<Apex::JigAPI::Plans;++j)
         {
-            b.jigs[j]->updateFor(i);
-            std::cerr << " | " << b.jigs[j]->words;
+            Apex::JigAPI &jig = b.jigs[ Apex::Plan(j) ];
+            jig.updateFor(i);
+            std::cerr << " | " << jig.words;
         }
 
         std::cerr << std::endl;
