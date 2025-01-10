@@ -12,6 +12,7 @@
 #include "y/type/utils.hpp"
 #include "y/data/rework.hpp"
 #include "y/sort/merge.hpp"
+#include "y/text/hexadecimal.hpp"
 
 #include <cstring>
 
@@ -35,14 +36,21 @@ namespace Yttrium
         {
         public:
             static const unsigned Plans = 4;
+            static const unsigned Faded = Plans-1;
+            static const Plan     Dull[Plans][Faded];
 
         protected:
             explicit JigAPI(const size_t _count) noexcept :
             words(0), count(_count)
             {
             }
-
+        public:
             virtual ~JigAPI() noexcept {}
+
+            virtual void updateFor(const size_t bits) noexcept = 0;
+            virtual void display(std::ostream &) const         = 0;
+
+            Y_OSTREAM_PROTO(JigAPI);
 
         public:
             const size_t words;
@@ -52,23 +60,64 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(JigAPI);
         };
 
+        const Plan JigAPI:: Dull[Plans][Faded] =
+        {
+            { Plan2, Plan4, Plan8 },
+            { Plan1, Plan4, Plan8 },
+            { Plan1, Plan2, Plan8 },
+            { Plan1, Plan2, Plan4 },
+        };
+
+        std::ostream & operator<<(std::ostream &os, const JigAPI &J)
+        {
+            J.display(os);
+            return os;
+        }
+
         template <Plan PLAN>
         class Jig : public JigAPI
         {
         public:
-            static const unsigned WordShift = PLAN;
-            static const unsigned WordBytes = 1 << WordShift;
+            static const unsigned                         WordShift = PLAN;
+            static const unsigned                         WordBytes = (1 << WordShift);
             typedef typename UnsignedInt<WordBytes>::Type Word;
 
-            explicit Jig(void * const entry, const size_t range) noexcept :
+            inline explicit Jig(void * const entry, const size_t range) noexcept :
             JigAPI(range >> WordShift),
             word( static_cast<Word *>(entry) )
             {
             }
 
-            virtual ~Jig() noexcept
+            inline virtual ~Jig() noexcept
             {
             }
+
+            static inline size_t BytesToWords(const size_t bytes) noexcept
+            {
+                return  (Y_ALIGN_TO(Word,bytes)) >> WordShift;
+            }
+
+            virtual void display(std::ostream &os)  const  {
+                if(words<=0)
+                {
+                    const Word zero = 0;
+                    os << Hexadecimal(zero);
+                }
+                else
+                {
+                    size_t i = words;
+                    while(i-- > 0)
+                        os << Hexadecimal(word[i]);
+                }
+            }
+
+            virtual void updateFor(const size_t bits) noexcept
+            {
+                Coerce(words) = BytesToWords( (Y_ALIGN_ON(8,bits)) >> 3 );
+            }
+
+
+
 
 
             Word * const word;
@@ -81,15 +130,65 @@ namespace Yttrium
         typedef Jig<Plan4> Jig4;
         typedef Jig<Plan8> Jig8;
 
+        class Jigs {
+        public:
+            static const size_t JigSize = sizeof(Jig1);
+            static const size_t Measure = JigAPI::Plans * JigSize;
+
+            explicit Jigs(void * const entry,  const size_t range) noexcept :
+            addr(0),
+            wksp()
+            {
+                Coerce(addr) = static_cast<char *>( Memory::OutOfReach::Addr( &wksp[0] ) );
+                char  *p = addr;
+                new (p)            Jig1(entry,range);
+                new (p += JigSize) Jig2(entry,range);
+                new (p += JigSize) Jig4(entry,range);
+                new (p += JigSize) Jig8(entry,range);
+            }
+
+            template <Plan PLAN> inline
+            Jig<PLAN> & as() noexcept {
+                return *(Jig<PLAN> *) &addr[JigSize*PLAN];
+            }
+
+            template <Plan PLAN> inline
+            const Jig<PLAN> & as() const noexcept {
+                return *(const Jig<PLAN> *) &addr[JigSize*PLAN];
+            }
+
+
+
+            JigAPI & operator[](const Plan plan) noexcept {
+                switch(plan) {
+                    case Plan1: break;
+                    case Plan2: return as<Plan2>();
+                    case Plan4: return as<Plan4>();
+                    case Plan8: return as<Plan8>();
+                }
+                return as<Plan1>();
+            }
+
+            virtual ~Jigs() noexcept
+            {
+
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Jigs);
+            char * const addr;
+            void *       wksp[ Y_WORDS_GEQ(Measure) ];
+
+        };
 
 
 
         class Block : public Quantized
         {
         public:
-            static const unsigned MinRange = 4 * sizeof(natural_t);
-            static const unsigned MinShift = iLog2<MinRange>::Value;
-            static const unsigned MaxShift = Base2<size_t>::MaxShift;
+            static const unsigned    MinRange = 4 * sizeof(natural_t);
+            static const unsigned    MinShift = iLog2<MinRange>::Value;
+            static const unsigned    MaxShift = Base2<size_t>::MaxShift;
             typedef CxxListOf<Block> List;
             typedef CxxPoolOf<Block> Pool;
 
@@ -99,57 +198,83 @@ namespace Yttrium
             shift( Max(_shift,MinShift) ),
             entry( Memory::Archon::Acquire( Coerce(shift) ) ),
             bits(0),
-            jig1(entry, One << shift ),
-            bytes( jig1.words ),
-            range( jig1.count ),
-            jig2(entry,range),
-            jig4(entry,range),
-            jig8(entry,range),
-            jig(),
+            plan(Plan1),
+            curr(0),
+            dull(),
+            range( One << shift ),
+            jigs(entry,range),
+            bytes(jigs.as<Plan1>().words),
             next(0),
             prev(0)
             {
-                jig[Plan1] = &jig1;
-                jig[Plan2] = &jig2;
-                jig[Plan4] = &jig4;
-                jig[Plan8] = &jig8;
-
+                relink();
                 assert( Memory::OutOfReach::Are0(entry,range) );
             }
 
             virtual ~Block() noexcept
             {
-                ldz();
                 Memory::Archon::Release(entry,shift);
-                Coerce(shift) = 0;
-                Coerce(entry) = 0;
             }
 
+            Y_OSTREAM_PROTO(Block);
+
+
+            //! set all to zero, keep plan
             void ldz() noexcept
             {
+
                 Coerce(bits) = 0;
                 memset(entry,0,range);
-                for(unsigned i=0;i<JigAPI::Plans;++i)
-                    Coerce(jig[i]->words) = 0;
+                for(unsigned i=0;i<JigAPI::Plans;++i) {
+                    Coerce(jigs[Plan(i)].words) = 0;
+                }
             }
-            
 
-            const unsigned shift;              //!< log2(range)
-            void * const   entry;              //!< memory
-            size_t         bits;               //!< current number of bits
-            Jig1           jig1;               //!< uint8_t
-            const size_t &bytes;               //!< jig1.words
-            const size_t &range;               //!< jig1.count
-            Jig2           jig2;               //!< uint16_t rep
-            Jig4           jig4;               //!< uint32_t rep
-            Jig8           jig8;               //!< uint64_t rep
-            JigAPI *       jig[JigAPI::Plans]; //!< APIs
-            Block *        next;               //!< for list/pool
-            Block *        prev;               //!< for list
+            void relink() noexcept {
+                // set current plan
+                Coerce( curr ) = &jigs[plan];
+
+                // store foreign plans
+                const Plan * const p = JigAPI::Dull[plan];
+                for(size_t i=0;i<JigAPI::Faded;++i)
+                {
+                    dull[i] = &jigs[p[i]];
+                }
+            }
+
+            void sync() noexcept
+            {
+                for(size_t i=0;i<JigAPI::Faded;++i)
+                {
+                    assert(0!=dull[i]);
+                    dull[i]->updateFor(bits);
+                }
+            }
+
+
+
+            const unsigned shift;               //!< log2(range)
+            void * const   entry;               //!< memory
+            size_t         bits;                //!< current number of bits
+            const Plan     plan;                //!< current plan
+            JigAPI * const curr;
+            JigAPI *       dull[JigAPI::Faded];
+            const size_t   range;
+            Jigs           jigs;                //!< all jigs
+            const size_t  &bytes;
+            Block *        next;                //!< for list/pool
+            Block *        prev;                //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Block);
         };
+
+        std::ostream & operator<<(std::ostream &os, const Block &block)
+        {
+            block.curr->display(os);
+            return os;
+        }
+
 
         class Blocks : public Proxy<const Block::Pool>
         {
@@ -296,6 +421,12 @@ Y_UTEST(apex_types)
     Y_SIZEOF(Apex::Block);
     Y_SIZEOF(Apex::Blocks);
 
+    Y_SIZEOF(Jig1);
+    Y_SIZEOF(Jig2);
+    Y_SIZEOF(Jig4);
+    Y_SIZEOF(Jig8);
+    Y_SIZEOF(Jigs);
+
 
     Apex::Factory & F = Apex::Factory::Instance();
 
@@ -313,6 +444,26 @@ Y_UTEST(apex_types)
     F.display();
     F.gc();
     F.display();
+    return 0;
+
+    Apex::Block b(0);
+#if 0
+    const size_t maxBits = b.range * 8;
+    std::cerr << "maxBits=" << maxBits << std::endl;
+    for(size_t i=0;i<=maxBits;++i)
+    {
+        std::cerr << "bits=" << std::setw(4) << i;
+        for(size_t j=0;j<Apex::JigAPI::Plans;++j)
+        {
+            b.jigs[j]->updateFor(i);
+            std::cerr << " | " << b.jigs[j]->words;
+        }
+
+        std::cerr << std::endl;
+    }
+#endif
+
+
 
 
 }
