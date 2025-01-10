@@ -132,19 +132,20 @@ namespace Yttrium
                 for(unsigned i=0;i<JigAPI::Plans;++i)
                     Coerce(jig[i]->words) = 0;
             }
+            
 
-            const unsigned shift; //!< log2(range)
-            void * const   entry; //!< memory
-            size_t         bits;  //!< current number of bits
-            Jig1           jig1;  //!<
-            const size_t &bytes;
-            const size_t &range;
-            Jig2           jig2;  //!<
-            Jig4           jig4;  //!<
-            Jig8           jig8;  //!<
-            JigAPI *       jig[JigAPI::Plans];
-            Block *        next;  //!< for list/pool
-            Block *        prev;  //!< for list
+            const unsigned shift;              //!< log2(range)
+            void * const   entry;              //!< memory
+            size_t         bits;               //!< current number of bits
+            Jig1           jig1;               //!< uint8_t
+            const size_t &bytes;               //!< jig1.words
+            const size_t &range;               //!< jig1.count
+            Jig2           jig2;               //!< uint16_t rep
+            Jig4           jig4;               //!< uint32_t rep
+            Jig8           jig8;               //!< uint64_t rep
+            JigAPI *       jig[JigAPI::Plans]; //!< APIs
+            Block *        next;               //!< for list/pool
+            Block *        prev;               //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Block);
