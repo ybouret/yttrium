@@ -23,7 +23,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! convert a pool into a list
+        //! convert a pool into a list which must be initially empty
         //
         //______________________________________________________________________
         template <typename NODE> static inline
@@ -68,6 +68,26 @@ namespace Yttrium
             Coerce(P.size) = 0;
             P.head = 0;
         };
+
+        //______________________________________________________________________
+        //
+        //
+        //! convert a list into a pool which must be initially empty
+        //
+        //______________________________________________________________________
+        template <typename NODE> static inline
+        void ListToPool(PoolOf<NODE> &P, ListOf<NODE> &L) noexcept
+        {
+            assert(0==P.size);
+            assert(0==P.head);
+
+            P.head         = L.head; L.head = L.tail = 0;
+            Coerce(P.size) = L.size; Coerce(L.size)  = 0;
+            
+            for(NODE *node=P.head;node;node=node->next)
+                node->prev = 0;
+        }
+
     };
 
 }

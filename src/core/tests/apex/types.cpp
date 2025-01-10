@@ -11,6 +11,7 @@
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/utils.hpp"
 #include "y/data/rework.hpp"
+#include "y/sort/merge.hpp"
 
 #include <cstring>
 
@@ -180,6 +181,12 @@ namespace Yttrium
             void gc() noexcept {
                 Block::List L;
                 Rework::PoolToList(L,my);
+                MergeSort::Call(L,ListOps::IncreasingAddresses<Block>);
+                ListOps::CheckIncreasingAddresses(L);
+                const size_t maxSize = 1 + (L.size>>1);
+                while(L.size>maxSize) delete L.popTail();
+                Rework::ListToPool(my,L);
+
             }
 
 
@@ -221,9 +228,7 @@ namespace Yttrium
 
             void gc() noexcept {
                 for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
-                {
                     blocks[shift].gc();
-                }
             }
 
             void display() const {
@@ -295,12 +300,17 @@ Y_UTEST(apex_types)
 
     {
         Block::List b;
-        for(size_t iter=0;iter<100;++iter)
+        for(size_t iter=0;iter<20;++iter)
         {
             b.pushTail( F.acquire( ran.in(0,10) ) );
         }
         while(b.size) F.release(b.popTail());
     }
+
+    F.display();
+    F.gc();
+    F.display();
+    F.gc();
     F.display();
 
 
