@@ -10,6 +10,8 @@
 #include "y/type/proxy.hpp"
 #include "y/memory/out-of-reach.hpp"
 #include "y/type/utils.hpp"
+#include "y/data/rework.hpp"
+
 #include <cstring>
 
 namespace Yttrium
@@ -175,6 +177,11 @@ namespace Yttrium
                 my.store(block)->ldz();
             }
 
+            void gc() noexcept {
+                Block::List L;
+                Rework::PoolToList(L,my);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);
@@ -187,12 +194,55 @@ namespace Yttrium
 
         Y_PROXY_IMPL(Blocks,my)
 
-        class Factory
+        class Factory : public Singleton<Factory>
         {
         public:
+            static const char * const      CallSign;
+            static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 27;
             static const unsigned PossibleShifts = Block::MaxShift-Block::MinShift+1;
             static const unsigned BytesPerBlocks = sizeof(Blocks);
             static const unsigned WorkspaceBytes = BytesPerBlocks * PossibleShifts;
+
+
+            Block * acquire(const unsigned shift)
+            {
+                Y_LOCK(access);
+                if(shift<=Block::MinShift) return blocks[Block::MinShift].query();
+                if(shift>Block::MaxShift) throw Specific::Exception(CallSign,"shift overflow");
+                return blocks[shift].query();
+            }
+
+            void release(Block * const block) noexcept {
+                assert(block!=0);
+                assert(block->shift>=Block::MinShift);
+                assert(block->shift<=Block::MaxShift);
+                blocks[block->shift].store(block);
+            }
+
+            void gc() noexcept {
+                for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
+                {
+                    blocks[shift].gc();
+                }
+            }
+
+            void display() const {
+                std::cerr << callSign() << " content:" << std::endl;
+                for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
+                {
+                    const Blocks &B = blocks[shift];
+                    if(B->size<=0) continue;
+                    std::cerr << "#2^" << std::setw(2) << shift << " : " << std::setw(8) << B->size << std::endl;
+                }
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Factory);
+            friend class Singleton<Factory>;
+
+            Blocks * const blocks;
+            void   *       wksp[Y_WORDS_GEQ(WorkspaceBytes)];
+
 
             explicit Factory() noexcept :
             blocks(0),
@@ -221,15 +271,9 @@ namespace Yttrium
                 Coerce(blocks) = 0;
                 memset(wksp,0,sizeof(wksp));
             }
-
-            
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Factory);
-            Blocks * const blocks;
-            void   *       wksp[Y_WORDS_GEQ(WorkspaceBytes)];
         };
 
+        const char * const Factory:: CallSign = "Apex::Factory";
 
     }
 }
@@ -237,15 +281,28 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Apex;
 
+#include "y/random/park-miller.hpp"
+
 Y_UTEST(apex_types)
 {
 
+    Random::ParkMiller ran;
     Y_SIZEOF(Apex::Block);
     Y_SIZEOF(Apex::Blocks);
 
-    Apex::Block block(0);
 
-    Apex::Factory F;
+    Apex::Factory & F = Apex::Factory::Instance();
+
+    {
+        Block::List b;
+        for(size_t iter=0;iter<100;++iter)
+        {
+            b.pushTail( F.acquire( ran.in(0,10) ) );
+        }
+        while(b.size) F.release(b.popTail());
+    }
+    F.display();
+
 
 }
 Y_UDONE()
