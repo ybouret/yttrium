@@ -13,6 +13,7 @@
 #include "y/data/rework.hpp"
 #include "y/sort/merge.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/calculus/bit-count.hpp"
 
 #include <cstring>
 
@@ -47,8 +48,10 @@ namespace Yttrium
         public:
             virtual ~JigAPI() noexcept {}
 
-            virtual void updateFor(const size_t bits) noexcept = 0;
-            virtual void display(std::ostream &) const         = 0;
+            virtual void   updateFor(const size_t bits) noexcept = 0;
+            virtual size_t upgrade()                    noexcept = 0;
+            virtual void   display(std::ostream &)      const    = 0;
+
 
             Y_OSTREAM_PROTO(JigAPI);
 
@@ -80,6 +83,7 @@ namespace Yttrium
         public:
             static const unsigned                         WordShift = PLAN;
             static const unsigned                         WordBytes = (1 << WordShift);
+            static const unsigned                         WordBits  = WordBytes << 3;
             typedef typename UnsignedInt<WordBytes>::Type Word;
 
             inline explicit Jig(void * const entry, const size_t range) noexcept :
@@ -98,6 +102,7 @@ namespace Yttrium
             }
 
             virtual void display(std::ostream &os)  const  {
+                os << '[';
                 if(words<=0)
                 {
                     const Word zero = 0;
@@ -107,8 +112,12 @@ namespace Yttrium
                 {
                     size_t i = words;
                     while(i-- > 0)
+                    {
                         os << Hexadecimal(word[i]);
+                        if(i>0) os << ' ';
+                    }
                 }
+                os << ']';
             }
 
             virtual void updateFor(const size_t bits) noexcept
@@ -116,7 +125,31 @@ namespace Yttrium
                 Coerce(words) = BytesToWords( (Y_ALIGN_ON(8,bits)) >> 3 );
             }
 
+            virtual size_t upgrade() noexcept
+            {
+                size_t &num = (Coerce(words) = count);
+                size_t  msi = num-1;
+                Word    msw = 0;
 
+                while(num>0)
+                {
+                    msw = word[msi];
+                    if(msw>0) break;
+                    --num;
+                    --msi;
+                }
+
+                if(num<=0)
+                {
+                    std::cerr << "zero" << std::endl;
+                    return 0;
+                }
+                else
+                {
+                    std::cerr << "word[" << msi << "]=" << Hexadecimal(msw) << std::endl;
+                    return msi * WordBits + BitCount::For(msw);
+                }
+            }
 
 
 
@@ -168,6 +201,8 @@ namespace Yttrium
                 return as<Plan1>();
             }
 
+
+
             virtual ~Jigs() noexcept
             {
 
@@ -182,27 +217,59 @@ namespace Yttrium
 
 
 
-        class Block : public Quantized
+        class DataBlock : public Quantized
         {
         public:
             static const unsigned    MinRange = 4 * sizeof(natural_t);
             static const unsigned    MinShift = iLog2<MinRange>::Value;
             static const unsigned    MaxShift = Base2<size_t>::MaxShift;
-            typedef CxxListOf<Block> List;
-            typedef CxxPoolOf<Block> Pool;
 
             static const size_t One = 1;
+        protected:
 
-            explicit Block(const unsigned _shift) :
+            explicit DataBlock(const unsigned _shift) :
             shift( Max(_shift,MinShift) ),
             entry( Memory::Archon::Acquire( Coerce(shift) ) ),
             bits(0),
             plan(Plan1),
             curr(0),
             dull(),
-            range( One << shift ),
-            jigs(entry,range),
-            bytes(jigs.as<Plan1>().words),
+            range( One << shift )
+            {
+                assert( Memory::OutOfReach::Are0(entry,range) );
+            }
+
+        public:
+            virtual ~DataBlock() noexcept
+            {
+                Memory::Archon::Release(entry,shift);
+            }
+
+            const unsigned shift;               //!< log2(range)
+            void * const   entry;               //!< memory
+            size_t         bits;                //!< current number of bits
+            const Plan     plan;                //!< current plan
+            JigAPI * const curr;                //!< current API
+            JigAPI *       dull[JigAPI::Faded]; //!< other dull API
+            const size_t   range;               //!< 2^shift
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(DataBlock);
+        };
+
+        class Block : public DataBlock, public Jigs
+        {
+        public:
+
+            typedef CxxListOf<Block> List;
+            typedef CxxPoolOf<Block> Pool;
+
+            static const size_t One = 1;
+
+            explicit Block(const unsigned _shift) :
+            DataBlock(_shift),
+            Jigs(entry,range),
+            bytes(as<Plan1>().words),
             next(0),
             prev(0)
             {
@@ -212,7 +279,6 @@ namespace Yttrium
 
             virtual ~Block() noexcept
             {
-                Memory::Archon::Release(entry,shift);
             }
 
             Y_OSTREAM_PROTO(Block);
@@ -221,28 +287,27 @@ namespace Yttrium
             //! set all to zero, keep plan
             void ldz() noexcept
             {
-
                 Coerce(bits) = 0;
                 memset(entry,0,range);
-                for(unsigned i=0;i<JigAPI::Plans;++i) {
-                    Coerce(jigs[Plan(i)].words) = 0;
-                }
+                Coerce(curr->words) = 0;
+                for(size_t i=0;i<JigAPI::Faded;++i) Coerce(dull[i]->words) = 0;
             }
 
             void relink() noexcept {
                 // set current plan
-                Coerce( curr ) = &jigs[plan];
+                Jigs &self = *this;
+                Coerce( curr ) = &self[plan];
 
                 // store foreign plans
                 const Plan * const p = JigAPI::Dull[plan];
                 for(size_t i=0;i<JigAPI::Faded;++i)
-                {
-                    dull[i] = &jigs[p[i]];
-                }
+                    dull[i] = &self[p[i]];
+
             }
 
             void sync() noexcept
             {
+                Coerce(bits) = curr->upgrade();
                 for(size_t i=0;i<JigAPI::Faded;++i)
                 {
                     assert(0!=dull[i]);
@@ -250,16 +315,6 @@ namespace Yttrium
                 }
             }
 
-
-
-            const unsigned shift;               //!< log2(range)
-            void * const   entry;               //!< memory
-            size_t         bits;                //!< current number of bits
-            const Plan     plan;                //!< current plan
-            JigAPI * const curr;
-            JigAPI *       dull[JigAPI::Faded];
-            const size_t   range;
-            Jigs           jigs;                //!< all jigs
             const size_t  &bytes;
             Block *        next;                //!< for list/pool
             Block *        prev;                //!< for list
@@ -443,9 +498,9 @@ Y_UTEST(apex_types)
     F.display();
     F.gc();
     F.display();
-    
+
     Apex::Block b(0);
-#if 1
+#if 0
     const size_t maxBits = b.range * 8;
     std::cerr << "maxBits=" << maxBits << std::endl;
     for(size_t i=0;i<=maxBits;++i)
@@ -453,7 +508,7 @@ Y_UTEST(apex_types)
         std::cerr << "bits=" << std::setw(4) << i;
         for(size_t j=0;j<Apex::JigAPI::Plans;++j)
         {
-            Apex::JigAPI &jig = b.jigs[ Apex::Plan(j) ];
+            Apex::JigAPI &jig = b[ Apex::Plan(j) ];
             jig.updateFor(i);
             std::cerr << " | " << jig.words;
         }
@@ -462,7 +517,11 @@ Y_UTEST(apex_types)
     }
 #endif
 
+    b.as<Plan1>().word[0] = 12;
+    b.sync();
 
+    std::cerr << "b="    << b      << std::endl;
+    std::cerr << "bits=" << b.bits << std::endl;
 
 
 }
