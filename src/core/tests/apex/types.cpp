@@ -9,8 +9,8 @@
 #include "y/data/pool/cxx.hpp"
 #include "y/type/proxy.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/type/utils.hpp"
 #include <cstring>
-#include <cerrno>
 
 namespace Yttrium
 {
@@ -31,7 +31,7 @@ namespace Yttrium
         class JigAPI
         {
         public:
-            static const size_t Plans = 4;
+            static const unsigned Plans = 4;
 
         protected:
             explicit JigAPI(const size_t _count) noexcept :
@@ -84,13 +84,16 @@ namespace Yttrium
         class Block : public Quantized
         {
         public:
+            static const unsigned MinRange = 4 * sizeof(natural_t);
+            static const unsigned MinShift = iLog2<MinRange>::Value;
+            static const unsigned MaxShift = Base2<size_t>::MaxShift;
             typedef CxxListOf<Block> List;
             typedef CxxPoolOf<Block> Pool;
 
             static const size_t One = 1;
 
-            explicit Block(unsigned _shift) :
-            shift(_shift),
+            explicit Block(const unsigned _shift) :
+            shift( Max(_shift,MinShift) ),
             entry( Memory::Archon::Acquire( Coerce(shift) ) ),
             bits(0),
             jig1(entry, One << shift ),
@@ -107,7 +110,7 @@ namespace Yttrium
                 jig[Plan2] = &jig2;
                 jig[Plan4] = &jig4;
                 jig[Plan8] = &jig8;
-                
+
                 assert( Memory::OutOfReach::Are0(entry,range) );
             }
 
@@ -122,7 +125,9 @@ namespace Yttrium
             void ldz() noexcept
             {
                 Coerce(bits) = 0;
-                //memset(entry,0,range);
+                memset(entry,0,range);
+                for(unsigned i=0;i<JigAPI::Plans;++i)
+                    Coerce(jig[i]->words) = 0;
             }
 
             const unsigned shift; //!< log2(range)
@@ -150,8 +155,8 @@ namespace Yttrium
             my(),
             shift(_shift)
             {
-                assert(shift>=Memory::Archon::MinShift);
-                assert(shift<=Base2<size_t>::MaxShift);
+                assert(shift>=Block::MinShift);
+                assert(shift<=Block::MaxShift);
             }
 
             virtual ~Blocks() noexcept {}
@@ -159,7 +164,7 @@ namespace Yttrium
             Block * query() {
                 Block * const block = (my.size>0) ? my.query() : new Block(shift);
                 assert( shift == block->shift );
-                //assert( Memory::OutOfReach::Are0(block->entry, block->range) );
+                assert( Memory::OutOfReach::Are0(block->entry, block->range) );
                 return block;
             }
 
@@ -182,6 +187,48 @@ namespace Yttrium
 
         Y_PROXY_IMPL(Blocks,my)
 
+        class Factory
+        {
+        public:
+            static const unsigned PossibleShifts = Block::MaxShift-Block::MinShift+1;
+            static const unsigned BytesPerBlocks = sizeof(Blocks);
+            static const unsigned WorkspaceBytes = BytesPerBlocks * PossibleShifts;
+
+            explicit Factory() noexcept :
+            blocks(0),
+            wksp()
+            {
+                Y_USHOW(Block::MinShift);
+                Y_USHOW(Block::MaxShift);
+
+                Y_USHOW(PossibleShifts);
+                Y_USHOW(BytesPerBlocks);
+                Y_USHOW(WorkspaceBytes);
+                Y_SIZEOF(wksp);
+
+                memset(wksp,0,sizeof(wksp));
+                Coerce(blocks) = static_cast<Blocks *>( Memory::OutOfReach::Addr(wksp) ) - Block::MinShift;
+                for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
+                {
+                    new ( &blocks[shift] ) Blocks(shift);
+                }
+            }
+
+            virtual ~Factory() noexcept
+            {
+                for(unsigned shift=Block::MaxShift;shift>=Block::MinShift;--shift)
+                    Destruct( &blocks[shift] );
+                Coerce(blocks) = 0;
+                memset(wksp,0,sizeof(wksp));
+            }
+
+            
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Factory);
+            Blocks * const blocks;
+            void   *       wksp[Y_WORDS_GEQ(WorkspaceBytes)];
+        };
 
 
     }
@@ -198,6 +245,7 @@ Y_UTEST(apex_types)
 
     Apex::Block block(0);
 
+    Apex::Factory F;
 
 }
 Y_UDONE()

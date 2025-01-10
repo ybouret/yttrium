@@ -14,7 +14,7 @@ namespace Yttrium
         std::cerr << "sizeof(" << className << ")";
         for(size_t i=length;i<Width;++i) std::cerr << ' ';
         std::cerr << " = ";
-        std::cerr << std::setw(6) << classSize << std::endl;
+        std::cerr << std::setw(18) << classSize << std::endl;
         std::cerr.flush();
     }
 
