@@ -14,13 +14,35 @@ namespace Yttrium
 
         namespace Conservation
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Collection of Warden for all acts of a Mix
+            //
+            //
+            //__________________________________________________________________
             class Wardens : public Proxy<const Warden::List>
             {
             public:
-                explicit Wardens(const Mix &);  
-                virtual ~Wardens() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Wardens(const Mix &); //!< setup
+                virtual ~Wardens() noexcept;   //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! apply each warden and update topLevel injected
                 void run(XMLog &      xml,
                          XWritable &  C,
                          const Level  L,
@@ -30,8 +52,8 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Wardens);
                 Y_PROXY_DECL();
                 Warden::List my;
-                const Squad &squad;
-                
+                const Squad &squad; //!< used to zero injected
+
             };
         }
     }

@@ -20,20 +20,40 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        typedef Small::  CoopHeavyList<Cursor> CrList; //!< alias
-        typedef CrList:: ProxyType             CrBank; //!< alias
-        typedef CrList:: NodeType              CrNode; //!< alias
+        typedef Small::  CoopHeavyList<Cursor> CrRepo; //!< alias
+        typedef CrRepo:: ProxyType             CrBank; //!< alias
+        typedef CrRepo:: NodeType              CrNode; //!< alias
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Banks for cursors and associated species
+        //
+        //
+        //______________________________________________________________________
         class XBanks
         {
         public:
-            XBanks();
-            ~XBanks() noexcept;
-            XBanks(const XBanks &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            XBanks();                        //!< setup
+            ~XBanks() noexcept;              //!< cleanup
+            XBanks(const XBanks &) noexcept; //!< duplicate
 
-            SBank  species;
-            CrBank cursors;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SBank  species; //!< shared species bank
+            CrBank cursors; //!< shared cursors bank
 
         private:
             Y_DISABLE_ASSIGN(XBanks);
@@ -47,7 +67,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Cursors : public Proxy<const CrList>
+        class Cursors : public Proxy<const CrRepo>
         {
         public:
             //__________________________________________________________________
@@ -81,7 +101,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(Cursors);
             Y_PROXY_DECL();
 
-            CrList my;
+            CrRepo my;
             SBank  sb;
 
             void atTail(const Species &, const xReal &);

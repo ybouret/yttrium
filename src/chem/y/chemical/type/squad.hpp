@@ -97,6 +97,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! load zero for each species
             template <typename ARRAY> inline
             void ldz(ARRAY &arr, const Level L) const
             {

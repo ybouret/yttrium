@@ -14,6 +14,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+
+
         //______________________________________________________________________
         //
         //
@@ -71,8 +74,9 @@ namespace Yttrium
             void checkFusion();
 
         public:
-            XBanks       xbanks;
-            const size_t maxOrder; //!< max order of hybrid equilibrium
+            XBanks        xbanks;   //!< shared banks for associated algorithms
+            const size_t  maxOrder; //!< max order of hybrid equilibrium
+            const SDuplex involved; //!< all involved species
         };
 
     }

@@ -12,19 +12,38 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! base class for multiple species at one given value
+        //
+        //
+        //______________________________________________________________________
         class Marker : public Proxy<const SRepo>
         {
         public:
-            explicit Marker(const SBank & _sbank) noexcept;
-            Marker(const Marker &);
-            virtual ~Marker() noexcept;
-            Y_OSTREAM_PROTO(Marker);    //!< dispay
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Marker(const SBank & _sbank) noexcept; //!< setup
+            virtual ~Marker()                     noexcept; //!< cleanup
+            Marker(const Marker &);                         //!< duplicate
+            Y_OSTREAM_PROTO(Marker);                        //!< dispay
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
         protected:
-            SRepo srepo;
-            xReal value;
-            
+            SRepo srepo; //!< repository
+            xReal value; //!< shared value amongst species
+
         private:
             Y_DISABLE_ASSIGN(Marker);
             Y_PROXY_DECL();

@@ -19,7 +19,8 @@ namespace Yttrium
         Proxy<const Mix::List>(),
         my(),
         xbanks(),
-        maxOrder(0)
+        maxOrder(0),
+        involved()
         {
             Y_XML_SECTION(xml,CallSign);
 
@@ -66,9 +67,16 @@ namespace Yttrium
                 Coerce((**mix).hallmark) = ++hallmark;
                 mix->buildConfiguration(xml,eqs,xbanks);
                 InSituMax( Coerce(maxOrder), mix->order.size() );
+                for(const SNode *sn = (*mix)->species.head; sn; sn=sn->next)
+                {
+                    Coerce(involved.book) += **sn;
+                }
             }
 
+            Coerce(involved).compile();
             Y_XML_COMMENT(xml, "maxOrder = " << maxOrder);
+            Y_XML_COMMENT(xml, "involved = " << involved.list.size);
+
         }
 
 

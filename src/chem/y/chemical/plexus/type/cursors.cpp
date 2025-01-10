@@ -25,7 +25,7 @@ namespace Yttrium
         }
 
         Cursors:: Cursors(const XBanks &_) noexcept:
-        Proxy<const CrList>(),
+        Proxy<const CrRepo>(),
         my(_.cursors),
         sb(_.species)
         {
@@ -35,7 +35,7 @@ namespace Yttrium
 
 
         Cursors:: Cursors(const Cursors &_) :
-        Proxy<const CrList>(),
+        Proxy<const CrRepo>(),
         my(_.my),
         sb(_.sb)
         {
