@@ -220,7 +220,7 @@ namespace Yttrium
         class DataBlock : public Quantized
         {
         public:
-            static const unsigned    MinRange = 4 * sizeof(natural_t);
+            static const unsigned    MinRange = 2 * sizeof(natural_t);
             static const unsigned    MinShift = iLog2<MinRange>::Value;
             static const unsigned    MaxShift = Base2<size_t>::MaxShift;
 
@@ -284,7 +284,7 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Block);
 
 
-            //! set all to zero, keep plan
+            //! set all to zero, keep plan for futrure use
             void ldz() noexcept
             {
                 Coerce(bits) = 0;
@@ -293,18 +293,24 @@ namespace Yttrium
                 for(size_t i=0;i<JigAPI::Faded;++i) Coerce(dull[i]->words) = 0;
             }
 
+            //! set curr and dull from plan
             void relink() noexcept {
+                //--------------------------------------------------------------
                 // set current plan
+                //--------------------------------------------------------------
                 Jigs &self = *this;
                 Coerce( curr ) = &self[plan];
 
+                //--------------------------------------------------------------
                 // store foreign plans
+                //--------------------------------------------------------------
                 const Plan * const p = JigAPI::Dull[plan];
                 for(size_t i=0;i<JigAPI::Faded;++i)
                     dull[i] = &self[p[i]];
 
             }
 
+            //! compute bits from current plan and update dull
             void sync() noexcept
             {
                 Coerce(bits) = curr->upgrade();
