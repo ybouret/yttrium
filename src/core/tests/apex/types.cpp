@@ -39,11 +39,14 @@ namespace Yttrium
             static const unsigned Plans = 4;
             static const unsigned Faded = Plans-1;
             static const Plan     Dull[Plans][Faded];
+            typedef void         (*Alter)(void *, const void *);
+            static const Alter     Table[Plans][Plans];
 
         protected:
             explicit JigAPI(const size_t _count) noexcept :
             words(0), count(_count)
             {
+                assert(IsPowerOfTwo(count));
             }
         public:
             virtual ~JigAPI() noexcept {}
@@ -71,6 +74,8 @@ namespace Yttrium
             { Plan1, Plan2, Plan4 },
         };
 
+
+
         std::ostream & operator<<(std::ostream &os, const JigAPI &J)
         {
             J.display(os);
@@ -90,6 +95,8 @@ namespace Yttrium
             JigAPI(range >> WordShift),
             word( static_cast<Word *>(entry) )
             {
+                assert( IsPowerOfTwo(range) );
+
             }
 
             inline virtual ~Jig() noexcept
@@ -163,6 +170,29 @@ namespace Yttrium
         typedef Jig<Plan4> Jig4;
         typedef Jig<Plan8> Jig8;
 
+        static inline void _1_to_2(void * const       target,
+                                   const void * const source) noexcept
+        {
+
+        }
+
+        template <typename PROC> inline
+        JigAPI::Alter _p2a(PROC proc) noexcept {
+            union {
+                PROC          p;
+                JigAPI::Alter a;
+            } alias = { proc };
+            return alias.a;
+        }
+
+        const JigAPI::Alter JigAPI:: Table[Plans][Plans] =
+        {
+            { _p2a(_1_to_2),0,0,0},
+            {0,0,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
+        };
+
         class Jigs {
         public:
             static const size_t JigSize = sizeof(Jig1);
@@ -212,8 +242,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Jigs);
             char * const addr;
             void *       wksp[ Y_WORDS_GEQ(Measure) ];
-
         };
+
+
 
 
 
@@ -319,6 +350,11 @@ namespace Yttrium
                     assert(0!=dull[i]);
                     dull[i]->updateFor(bits);
                 }
+            }
+
+            void to(const Plan target) noexcept
+            {
+
             }
 
             const size_t  &bytes;
