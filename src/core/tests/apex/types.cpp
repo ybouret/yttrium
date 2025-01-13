@@ -148,12 +148,12 @@ namespace Yttrium
 
                 if(num<=0)
                 {
-                    std::cerr << "zero" << std::endl;
+                    //std::cerr << "zero" << std::endl;
                     return 0;
                 }
                 else
                 {
-                    std::cerr << "word[" << msi << "]=" << Hexadecimal(msw) << std::endl;
+                    //std::cerr << "word[" << msi << "]=" << Hexadecimal(msw) << std::endl;
                     return msi * WordBits + BitCount::For(msw);
                 }
             }
@@ -170,11 +170,66 @@ namespace Yttrium
         typedef Jig<Plan4> Jig4;
         typedef Jig<Plan8> Jig8;
 
-        static inline void _1_to_2(void * const       target,
-                                   const void * const source) noexcept
+
+        // compact TARGET=large, SOURCE=small
+        template <typename TARGET, typename SOURCE>
+        inline TARGET Compact(const SOURCE * &src ) noexcept
         {
+            static const unsigned targetBytes   = sizeof(TARGET);
+            static const unsigned sourceBytes   = sizeof(SOURCE);
+            static const unsigned ratio         = targetBytes/sourceBytes;
+            static const unsigned bitsPerSource = sourceBytes << 3;
+
+            assert(0!=src);
+
+            TARGET w = static_cast<const TARGET>( *(src++) );
+            for(size_t i=1;i<ratio;++i)
+                w |= static_cast<const TARGET>( *(src++) ) << (i*bitsPerSource);
+
+            return w;
+        }
+
+        //! Scatter TARGET=largr, SOURCE=small
+        template <typename TARGET, typename SOURCE>
+        inline void Scatter(TARGET * &tgt, const SOURCE w ) noexcept
+        {
+            static const unsigned targetBytes   = sizeof(TARGET);
+            static const unsigned sourceBytes   = sizeof(SOURCE);
+            static const unsigned ratio         = targetBytes/sourceBytes;
+            static const unsigned bitsPerTarget = targetBytes << 3;
+
+            assert(0!=tgt);
+
 
         }
+
+
+
+        template <Plan TARGET_PLAN,Plan SOURCE_PLAN> inline
+        void compact(void *       const targetAddr,
+                     const void * const sourceAddr) noexcept
+        {
+            assert(0!=targetAddr);
+            assert(0!=sourceAddr);
+            typedef Jig<TARGET_PLAN>          TARGET_JIG;
+            typedef Jig<SOURCE_PLAN>          SOURCE_JIG;
+            typedef typename TARGET_JIG::Word TARGET_WORD;
+            typedef typename SOURCE_JIG::Word SOURCE_WORD;
+            TARGET_JIG       &  target = *static_cast<TARGET_JIG       *>(targetAddr);
+            const SOURCE_JIG &  source = *static_cast<const SOURCE_JIG *>(sourceAddr);
+            TARGET_WORD *       tgt    = target.word;
+            const SOURCE_WORD * src    = source.word;
+            for(size_t i=target.words;i>0;--i)
+                *(tgt++) = Compact<TARGET_WORD,SOURCE_WORD>(src);
+        }
+
+
+
+
+
+
+
+
 
         template <typename PROC> inline
         JigAPI::Alter _p2a(PROC proc) noexcept {
@@ -187,7 +242,7 @@ namespace Yttrium
 
         const JigAPI::Alter JigAPI:: Table[Plans][Plans] =
         {
-            { _p2a(_1_to_2),0,0,0},
+            { 0, _p2a(compact<Plan2,Plan1>),0,0},
             {0,0,0,0},
             {0,0,0,0},
             {0,0,0,0}
@@ -408,7 +463,6 @@ namespace Yttrium
                 const size_t maxSize = 1 + (L.size>>1);
                 while(L.size>maxSize) delete L.popTail();
                 Rework::ListToPool(my,L);
-
             }
 
 
@@ -559,12 +613,22 @@ Y_UTEST(apex_types)
     }
 #endif
 
-    b.as<Plan1>().word[0] = 12;
+    b.as<Plan1>().word[0] = 0x12;
+    b.as<Plan1>().word[1] = 0x0a;
+    b.as<Plan1>().word[2] = 0xe0;
     b.sync();
 
     std::cerr << "b="    << b      << std::endl;
     std::cerr << "bits=" << b.bits << std::endl;
 
+
+    compact<Plan2,Plan1>(&b.as<Plan2>(),&b.as<Plan1>());
+    Coerce(b.plan) = Plan2;
+    b.relink();
+    std::cerr << "b=" << b << std::endl;
+    std::cerr << "bits=" << b.bits << std::endl;
+    const size_t originalBits = b.bits;
+    Y_CHECK( originalBits == b.as<Plan2>().upgrade());
 
 }
 Y_UDONE()
