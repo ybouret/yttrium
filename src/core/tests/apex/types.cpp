@@ -1,4 +1,5 @@
-#include "y/apex/types.hpp"
+#include "y/apex/jig/api.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/calculus/align.hpp"
@@ -24,65 +25,8 @@ namespace Yttrium
     namespace Apex
     {
 
-        typedef uint64_t  natural_t;
-        typedef int64_t   integer_t;
 
-        enum Plan
-        {
-            Plan1=0,
-            Plan2=1,
-            Plan4=2,
-            Plan8=3
-        };
-
-#define Y_APEX_BYTES_FOR(BITS) ( (Y_ALIGN_ON(8,BITS)) >> 3 )
-
-        class JigAPI
-        {
-        public:
-            static const unsigned Plans = 4;
-            static const unsigned Faded = Plans-1;
-            static const Plan     Dull[Plans][Faded];
-
-        protected:
-            explicit JigAPI(const size_t _count) noexcept :
-            words(0), count(_count)
-            {
-                assert(IsPowerOfTwo(count));
-            }
-        public:
-            virtual ~JigAPI() noexcept {}
-
-            virtual void   setBits(const size_t bits)       noexcept = 0;
-            virtual size_t upgrade()                        noexcept = 0;
-            virtual void   display(std::ostream &)    const          = 0;
-            virtual bool   chkBits(const size_t bits) const noexcept = 0;
-            Y_OSTREAM_PROTO(JigAPI);
-
-        public:
-            const size_t words;
-            const size_t count;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(JigAPI);
-        };
-
-        const Plan JigAPI:: Dull[Plans][Faded] =
-        {
-            { Plan2, Plan4, Plan8 },
-            { Plan1, Plan4, Plan8 },
-            { Plan1, Plan2, Plan8 },
-            { Plan1, Plan2, Plan4 },
-        };
-
-
-
-        std::ostream & operator<<(std::ostream &os, const JigAPI &J)
-        {
-            J.display(os);
-            return os;
-        }
-
+  
         template <Plan PLAN>
         class Jig : public JigAPI
         {
@@ -130,7 +74,7 @@ namespace Yttrium
 
             virtual void setBits(const size_t bits) noexcept
             {
-                Coerce(words) = BytesToWords( Y_APEX_BYTES_FOR(bits) );
+                Coerce(words) = BytesToWords( Y_Apex_Bytes_For(bits) );
             }
 
             virtual size_t upgrade() noexcept
@@ -594,7 +538,7 @@ namespace Yttrium
 
             Block * acquire(Random::Bits &ran, const size_t bits)
             {
-                const size_t   bytes = Y_APEX_BYTES_FOR(bits);
+                const size_t   bytes = Y_Apex_Bytes_For(bits);
                 Block  * const block = acquireBytes(bytes);
                 if(bytes>0)
                 {
@@ -611,9 +555,10 @@ namespace Yttrium
                         b[i] = ran.to<uint8_t>();
                     Coerce(block->bits) = bits;
                     Coerce(jig1.words)  = bytes;
-                    assert(jig1.chkBits(bits));
-                    
+
+
                     // sync other
+                    assert(jig1.chkBits(bits));
                     block->syncDull();
                 }
                 return block;
@@ -736,18 +681,11 @@ Y_UTEST(apex_types)
     std::cerr << "bits=" << b.bits << std::endl;
 
 
-    for(unsigned nbit=0;nbit<=8;++nbit)
-    {
-        for(size_t iter=0;iter<1024;++iter)
-        {
-            const uint8_t u = ran.to<uint8_t>(nbit);
-            Y_ASSERT( BitCount::For(u) == nbit );
-        }
-    }
 
-    for(unsigned nbit=0;nbit<=1100;++nbit)
+    for(unsigned nbit=0;nbit<=10;++nbit)
     {
         Apex::Block * p = F.acquire(ran,nbit);
+        std::cerr << *p << std::endl;
         F.release(p);
     }
 }

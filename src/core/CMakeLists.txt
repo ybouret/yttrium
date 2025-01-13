@@ -79,6 +79,7 @@ fft
 fft/xbitrev
 tow
 apex
+apex/jig
 kemp
 kemp/element
 kemp/natural
