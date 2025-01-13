@@ -14,6 +14,7 @@
 #include "y/sort/merge.hpp"
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
+#include "y/check/static.hpp"
 
 #include <cstring>
 
@@ -49,11 +50,10 @@ namespace Yttrium
         public:
             virtual ~JigAPI() noexcept {}
 
-            virtual void   updateFor(const size_t bits) noexcept = 0;
-            virtual size_t upgrade()                    noexcept = 0;
-            virtual void   display(std::ostream &)      const    = 0;
-
-
+            virtual void   setBits(const size_t bits)       noexcept = 0;
+            virtual size_t upgrade()                        noexcept = 0;
+            virtual void   display(std::ostream &)    const          = 0;
+            virtual bool   chkBits(const size_t bits) const noexcept = 0;
             Y_OSTREAM_PROTO(JigAPI);
 
         public:
@@ -125,7 +125,7 @@ namespace Yttrium
                 os << ']';
             }
 
-            virtual void updateFor(const size_t bits) noexcept
+            virtual void setBits(const size_t bits) noexcept
             {
                 Coerce(words) = BytesToWords( (Y_ALIGN_ON(8,bits)) >> 3 );
             }
@@ -146,16 +146,35 @@ namespace Yttrium
 
                 if(num<=0)
                 {
-                    //std::cerr << "zero" << std::endl;
                     return 0;
                 }
                 else
                 {
-                    //std::cerr << "word[" << msi << "]=" << Hexadecimal(msw) << std::endl;
                     return msi * WordBits + BitCount::For(msw);
                 }
             }
 
+#define Y_APEX_JIG_ASSERT(EXPR) do { if( !(EXPR) ) { std::cerr << "Jig<" << PLAN << "> failure '" << #EXPR << "'" << std::endl; return false; } } while(false)
+            inline bool chkBits(const size_t bits) const noexcept {
+
+                Y_APEX_JIG_ASSERT(words<=count);
+
+                for(size_t i=words+1;i<count;++i) {
+                    Y_APEX_JIG_ASSERT(0==word[i]);
+                }
+
+                if(words>0) {
+                    const size_t msi = words-1;
+                    const Word   msw = word[msi];
+                    Y_APEX_JIG_ASSERT(0!=msw);
+                    Y_APEX_JIG_ASSERT(bits==WordBits*msi+BitCount::For(msw));
+                }
+                else
+                {
+                    Y_APEX_JIG_ASSERT(0==bits);
+                }
+                return true;
+            }
 
 
             Word * const word;
@@ -173,6 +192,7 @@ namespace Yttrium
         template <typename TARGET, typename SOURCE>
         inline TARGET Compact(const SOURCE * &src ) noexcept
         {
+            Y_STATIC_CHECK(sizeof(TARGET)>sizeof(SOURCE),BadConfig);
             static const unsigned targetBytes   = sizeof(TARGET);
             static const unsigned sourceBytes   = sizeof(SOURCE);
             static const unsigned ratio         = targetBytes/sourceBytes;
@@ -191,6 +211,7 @@ namespace Yttrium
         template <typename TARGET, typename SOURCE>
         inline void Scatter(TARGET * &tgt, SOURCE w ) noexcept
         {
+            Y_STATIC_CHECK(sizeof(TARGET)<sizeof(SOURCE),BadConfig);
             static const unsigned targetBytes   = sizeof(TARGET);
             static const unsigned sourceBytes   = sizeof(SOURCE);
             static const unsigned ratio         = targetBytes/sourceBytes;
@@ -349,6 +370,7 @@ namespace Yttrium
             {
                 relink();
                 assert( Memory::OutOfReach::Are0(entry,range) );
+                assert( curr->chkBits(bits) );
             }
 
             virtual ~Block() noexcept
@@ -391,12 +413,14 @@ namespace Yttrium
                 for(size_t i=0;i<JigAPI::Faded;++i)
                 {
                     assert(0!=dull[i]);
-                    dull[i]->updateFor(bits);
+                    dull[i]->setBits(bits);
                 }
             }
 
+            //! change representation
             void to(const Plan target) noexcept
             {
+                assert(curr->chkBits(bits));
                 switch(plan) {
 
                         // SOURCE=Plan1
@@ -407,6 +431,7 @@ namespace Yttrium
                             case Plan4: compact( as<Plan4>(), as<Plan1>() ); break;
                             case Plan8: compact( as<Plan8>(), as<Plan1>() ); break;
                         }
+                        break;
 
 
                         // SOURCE=Plan2
@@ -417,12 +442,13 @@ namespace Yttrium
                             case Plan4: compact( as<Plan4>(), as<Plan2>() ); break;
                             case Plan8: compact( as<Plan8>(), as<Plan2>() ); break;
                         }
+                        break;
 
                 }
 
                 Coerce(plan) = target;
                 relink();
-
+                assert(curr->chkBits(bits));
             }
 
             const size_t  &bytes;
@@ -626,21 +652,24 @@ Y_UTEST(apex_types)
     }
 #endif
 
+    std::cerr << "Plan1" << std::endl;
     b.as<Plan1>().word[0] = 0x12;
     b.as<Plan1>().word[1] = 0x0a;
     b.as<Plan1>().word[2] = 0xe0;
     b.sync();
-
     std::cerr << "b="    << b      << std::endl;
     std::cerr << "bits=" << b.bits << std::endl;
 
 
+    std::cerr << "Plan2" << std::endl;
     b.to(Plan2);
     std::cerr << "b=" << b << std::endl;
     std::cerr << "bits=" << b.bits << std::endl;
-    const size_t originalBits = b.bits;
-    Y_CHECK( originalBits == b.as<Plan2>().upgrade());
 
+    std::cerr << "Plan1" << std::endl;
+    b.to(Plan1);
+    std::cerr << "b=" << b << std::endl;
+    std::cerr << "bits=" << b.bits << std::endl;
 }
 Y_UDONE()
 
