@@ -1,4 +1,5 @@
 #include "y/apex/jig/jigs.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -19,6 +20,7 @@ namespace Yttrium
 
         Jigs:: ~Jigs() noexcept
         {
+            memset(wksp,0,sizeof(wksp));
         }
 
         JigAPI & Jigs:: operator[](const Plan plan) noexcept {
