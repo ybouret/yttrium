@@ -14,15 +14,15 @@ namespace Yttrium
     {
         class Block;
 
-        class Natural
+        class Natural : public Number
         {
         public:
             Natural(const natural_t);
             virtual ~Natural() noexcept;
+            Natural(const Natural &);
             Y_OSTREAM_PROTO(Natural);
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Natural);
             mutable Block *block;
         };
 

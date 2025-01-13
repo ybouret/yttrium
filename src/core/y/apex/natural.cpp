@@ -32,6 +32,13 @@ namespace Yttrium
             block = 0;
         }
 
+        Natural:: Natural(const Natural &_) :
+        block( _Factory().acquireBytes(_.block->bytes) )
+        {
+            
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Natural &n) {
             const Block::Briefly change(Plan1,*n.block);
             os << *n.block;
