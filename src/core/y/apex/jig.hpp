@@ -43,16 +43,13 @@ namespace Yttrium
 
             virtual void display(std::ostream &os)  const  {
                 os << '[';
-                if(words<=0)
-                {
+                if(words<=0) {
                     const Word zero = 0;
                     os << Hexadecimal(zero);
                 }
-                else
-                {
+                else {
                     size_t i = words;
-                    while(i-- > 0)
-                    {
+                    while(i-- > 0) {
                         os << Hexadecimal(word[i]);
                         if(i>0) os << ' ';
                     }
