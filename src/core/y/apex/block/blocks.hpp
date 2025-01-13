@@ -12,16 +12,35 @@ namespace Yttrium
 {
     namespace Apex
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! pool of blocks with same shift/range
+        //
+        //
+        //______________________________________________________________________
         class Blocks : public Proxy<const Block::Pool>
         {
         public:
-            explicit Blocks(const unsigned _shift) noexcept;
-            virtual ~Blocks() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Blocks(const unsigned _shift) noexcept; //!< setup
+            virtual ~Blocks() noexcept;                      //!< cleanup
 
-            Block * query();
-            void    store(Block * const block) noexcept;
-            void    gc() noexcept;
-
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Block * query();                             //!< cached/new block
+            void    store(Block * const block) noexcept; //!< store and cleanup
+            void    gc() noexcept;                       //!< order and keep half
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);
@@ -29,7 +48,13 @@ namespace Yttrium
             Block::Pool my;
 
         public:
-            const unsigned shift;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const unsigned shift; //!< common shift
 
         };
 

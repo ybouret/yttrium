@@ -10,17 +10,19 @@ namespace Yttrium
     namespace Apex
     {
 
-        typedef uint64_t  natural_t;
-        typedef int64_t   integer_t;
+        typedef uint64_t  natural_t; //!< alias
+        typedef int64_t   integer_t; //!< alias
 
+        //! how data if planned
         enum Plan
         {
-            Plan1=0,
-            Plan2=1,
-            Plan4=2,
-            Plan8=3
+            Plan1=0, //!< uint8_t
+            Plan2=1, //!< uint16_t
+            Plan4=2, //!< uint32_t
+            Plan8=3  //!< uint64_t
         };
 
+        //! helper to convert bits to aligned byte(s)
 #define Y_Apex_Bytes_For(BITS) ( (Y_ALIGN_ON(8,BITS)) >> 3 )
 
     }

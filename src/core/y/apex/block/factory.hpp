@@ -13,23 +13,41 @@ namespace Yttrium
 {
     namespace Apex
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Global cache of blocks
+        //
+        //
+        //______________________________________________________________________
         class Factory : public Singleton<Factory>
         {
         public:
-            static const char * const      CallSign;
-            static const AtExit::Longevity LifeTime       = AtExit::MaximumLongevity - 27;
-            static const unsigned          PossibleShifts = Block::MaxShift-Block::MinShift+1;
-            static const unsigned          BytesPerBlocks = sizeof(Blocks);
-            static const unsigned          WorkspaceBytes = BytesPerBlocks * PossibleShifts;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const      CallSign;                                           //!< "Apex::Factory"
+            static const AtExit::Longevity LifeTime       = AtExit::MaximumLongevity - 27;     //!< alias
+            static const unsigned          PossibleShifts = Block::MaxShift-Block::MinShift+1; //!< alias
+            static const unsigned          BytesPerBlocks = sizeof(Blocks);                    //!< alias
+            static const unsigned          WorkspaceBytes = BytesPerBlocks * PossibleShifts;   //!< linear memory
 
-            Block * acquire(const unsigned shift);
-            Block * acquireBytes(size_t bytes);
-            Block * acquire(Random::Bits &ran, const size_t bits);
-            void    release(Block * const) noexcept;
-
-            void gc()      noexcept;
-            void display() const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Block * acquire(const unsigned shift);                 //!< acquire for a given shift
+            Block * acquireBytes(size_t bytes);                    //!< acquire for given bytes
+            Block * acquire(Random::Bits &ran, const size_t bits); //!< exactly bits
+            void    release(Block * const) noexcept;               //!< release in cache
+            void gc()      noexcept; //!< gc on each shift
+            void display() const;    //!< display status
 
 
 

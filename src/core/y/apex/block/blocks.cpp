@@ -2,6 +2,7 @@
 #include "y/apex/block/blocks.hpp"
 #include "y/data/rework.hpp"
 #include "y/sort/merge.hpp"
+#include "y/data/list/cxx.hpp"
 
 namespace Yttrium
 {
@@ -24,7 +25,7 @@ namespace Yttrium
 
 
         void Blocks:: gc() noexcept {
-            Block::List L;
+            CxxListOf<Block> L;
             Rework::PoolToList(L,my);
             MergeSort::Call(L,ListOps::IncreasingAddresses<Block>);
             ListOps::CheckIncreasingAddresses(L);

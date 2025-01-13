@@ -26,21 +26,7 @@ Y_UTEST(apex_types)
 
 
     Apex::Factory & F = Apex::Factory::Instance();
-
-    {
-        Block::List b;
-        for(size_t iter=0;iter<20;++iter)
-        {
-            b.pushTail( F.acquire( ran.in(0,10) ) );
-        }
-        while(b.size) F.release(b.popTail());
-    }
-
-    F.display();
-    F.gc();
-    F.display();
-    F.gc();
-    F.display();
+    
 
     Apex::Block b(0);
 #if 0

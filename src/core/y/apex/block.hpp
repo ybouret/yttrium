@@ -7,26 +7,47 @@
 
 #include "y/apex/jig/jigs.hpp"
 #include "y/apex/block/data.hpp"
-#include "y/data/list/cxx.hpp"
 #include "y/data/pool/cxx.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Data + representation
+        //
+        //
+        //______________________________________________________________________
         class Block : public DataBlock, public Jigs
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxPoolOf<Block> Pool; //!< alias
 
-            typedef CxxListOf<Block> List;
-            typedef CxxPoolOf<Block> Pool;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Block(const unsigned _shift); //!< setup with shift
+            virtual ~Block() noexcept;             //!< cleanup
+            Y_OSTREAM_PROTO(Block);                //!< display current
 
-            static const size_t One = 1;
-
-            explicit Block(const unsigned _shift);
-            virtual ~Block() noexcept;
-            Y_OSTREAM_PROTO(Block);
-
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! set all to zero, keep plan for futrure use
             void ldz() noexcept;
@@ -37,15 +58,21 @@ namespace Yttrium
             //! sync dull after manual setting of curr
             void syncDull() noexcept;
 
-            //! compute bits from current plan and update dull
+            //! compute bits from current plan and syncDull
             void sync() noexcept;
 
             //! change representation
             void to(const Plan target) noexcept;
 
-            const size_t  &bytes;
-            Block *        next;                //!< for list/pool
-            Block *        prev;                //!< for list
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t  &bytes; //!< jig1.bytes
+            Block *        next;  //!< for list/pool
+            Block *        prev;  //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Block);

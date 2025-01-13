@@ -12,21 +12,47 @@ namespace Yttrium
 {
     namespace Apex
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Memory for Block
+        //
+        //
+        //______________________________________________________________________
         class DataBlock : public Quantized
         {
         public:
-            static const size_t      MinRange = 2 * sizeof(natural_t);
-            static const unsigned    MinShift = iLog2<MinRange>::Value;
-            static const unsigned    MaxShift = Base2<size_t>::MaxShift;
-            static const size_t      MaxBytes = Base2<size_t>::MaxPowerOfTwo;
-            static const size_t      One      = 1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t      MinRange = 2 * sizeof(natural_t);          //!< alias
+            static const unsigned    MinShift = iLog2<MinRange>::Value;         //!< alias
+            static const unsigned    MaxShift = Base2<size_t>::MaxShift;        //!< alias
+            static const size_t      MaxBytes = Base2<size_t>::MaxPowerOfTwo;   //!< alias
+            static const size_t      One      = 1;                              //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit DataBlock(const unsigned _shift);
+            explicit DataBlock(const unsigned _shift); //!< setup
 
         public:
-            virtual ~DataBlock() noexcept;
+            virtual ~DataBlock() noexcept;            //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const unsigned shift;               //!< log2(range)
             void * const   entry;               //!< memory
             const size_t   bits;                //!< current number of bits
