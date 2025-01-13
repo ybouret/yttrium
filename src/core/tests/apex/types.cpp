@@ -1,4 +1,4 @@
-#include "y/apex/block.hpp"
+#include "y/apex/block/blocks.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/calculus/base2.hpp"
@@ -24,55 +24,7 @@ namespace Yttrium
     {
 
         
-        class Blocks : public Proxy<const Block::Pool>
-        {
-        public:
-            explicit Blocks(const unsigned _shift) noexcept :
-            Proxy<const Block::Pool>(),
-            my(),
-            shift(_shift)
-            {
-                assert(shift>=Block::MinShift);
-                assert(shift<=Block::MaxShift);
-            }
-
-            virtual ~Blocks() noexcept {}
-
-            Block * query() {
-                Block * const block = (my.size>0) ? my.query() : new Block(shift);
-                assert( shift == block->shift );
-                assert( Memory::OutOfReach::Are0(block->entry, block->range) );
-                return block;
-            }
-
-            void store(Block * const block) noexcept
-            {
-                assert(0!=block);
-                assert(block->shift==shift);
-                my.store(block)->ldz();
-            }
-
-            void gc() noexcept {
-                Block::List L;
-                Rework::PoolToList(L,my);
-                MergeSort::Call(L,ListOps::IncreasingAddresses<Block>);
-                ListOps::CheckIncreasingAddresses(L);
-                const size_t maxSize = 1 + (L.size>>1);
-                while(L.size>maxSize) delete L.popTail();
-                Rework::ListToPool(my,L);
-            }
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Blocks);
-            Y_PROXY_DECL();
-            Block::Pool my;
-        public:
-            const unsigned shift;
-
-        };
-
-        Y_PROXY_IMPL(Blocks,my)
+      
 
         class Factory : public Singleton<Factory>
         {
