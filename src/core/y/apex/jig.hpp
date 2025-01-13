@@ -142,6 +142,13 @@ namespace Yttrium
                 return true;
             }
 
+#if 0
+            void duplicate(const Jig &other) noexcept {
+                assert(other.words<=count);
+                assert(0==words);
+                memcpy(word,other.word,(words=other.words)*WordBytes);
+            }
+#endif
             //__________________________________________________________________
             //
             //

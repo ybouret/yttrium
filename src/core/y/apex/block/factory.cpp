@@ -41,6 +41,14 @@ namespace Yttrium
             return blocks[shift].query();
         }
 
+        Block * Factory:: duplicate(const Block * const other)
+        {
+            Block * const block = acquireBytes(other->bytes);
+            return block;
+        }
+
+
+
         Block * Factory:: acquireBytes(size_t bytes) {
             if(bytes>Block::MaxBytes) throw Specific::Exception(CallSign,"bytes overflow");
             return acquire( Base2<size_t>::LogFor(bytes) );
