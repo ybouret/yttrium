@@ -444,6 +444,28 @@ namespace Yttrium
                         }
                         break;
 
+
+                        // SOURCE=Plan4
+                    case Plan4 :
+                        switch(target) {
+                            case Plan1: scatter( as<Plan1>(), as<Plan4>() ); break;
+                            case Plan2: scatter( as<Plan1>(), as<Plan4>() ); break;
+                            case Plan4: return;
+                            case Plan8: compact( as<Plan8>(), as<Plan4>() ); break;
+                        }
+                        break;
+
+                        // SOURCE=Plan8
+                    case Plan8 :
+                        switch(target) {
+                            case Plan1: scatter( as<Plan1>(), as<Plan8>() ); break;
+                            case Plan2: scatter( as<Plan1>(), as<Plan8>() ); break;
+                            case Plan4: scatter( as<Plan1>(), as<Plan8>() ); break;
+                            case Plan8: return;
+                        }
+                        break;
+
+
                 }
 
                 Coerce(plan) = target;
