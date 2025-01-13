@@ -32,6 +32,12 @@ namespace Yttrium
             block = 0;
         }
 
+        std::ostream & operator<<(std::ostream &os, const Natural &n) {
+            const Block::Briefly change(Plan1,*n.block);
+            os << *n.block;
+            return os;
+        }
+
     }
 
 }

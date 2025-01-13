@@ -32,6 +32,18 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxPoolOf<Block> Pool; //!< alias
 
+            class Briefly
+            {
+            public:
+                Briefly(const Plan which, Block &block) noexcept;
+                ~Briefly() noexcept;
+            private:
+                const Plan plan;
+                Block     &host;
+                Y_DISABLE_COPY_AND_ASSIGN(Briefly);
+            };
+
+
             //__________________________________________________________________
             //
             //

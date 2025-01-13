@@ -9,6 +9,19 @@ namespace Yttrium
     namespace Apex
     {
 
+        Block:: Briefly:: Briefly(const Plan which, Block &block) noexcept :
+        plan(block.plan),
+        host(block)
+        {
+            block.to(which);
+        }
+
+        Block:: Briefly:: ~Briefly() noexcept
+        {
+            host.to(plan);
+        }
+
+
         Block:: Block(const unsigned _shift) :
         DataBlock(_shift),
         Jigs(entry,range),

@@ -6,6 +6,7 @@
 
 #include "y/apex/number.hpp"
 #include "y/apex/types.hpp"
+#include "y/ostream-proto.hpp"
 
 namespace Yttrium
 {
@@ -18,10 +19,11 @@ namespace Yttrium
         public:
             Natural(const natural_t);
             virtual ~Natural() noexcept;
-
+            Y_OSTREAM_PROTO(Natural);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Natural);
-            Block *block;
+            mutable Block *block;
         };
 
     }
