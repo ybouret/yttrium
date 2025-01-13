@@ -692,6 +692,17 @@ Y_UTEST(apex_types)
     b.to(Plan1);
     std::cerr << "b=" << b << std::endl;
     std::cerr << "bits=" << b.bits << std::endl;
+
+
+    for(unsigned nbit=0;nbit<=8;++nbit)
+    {
+        for(size_t iter=0;iter<1024;++iter)
+        {
+            const uint8_t u = ran.to<uint8_t>(nbit);
+            Y_ASSERT( BitCount::For(u) == nbit );
+        }
+    }
+
 }
 Y_UDONE()
 

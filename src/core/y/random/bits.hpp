@@ -78,7 +78,7 @@ namespace Yttrium
             bool   choice()              noexcept; //!< 50/50 choice
             int    intSgn()              noexcept; //!< {-1,1} 50/50
 
-            //! integral type on exactly nbit
+            //! integral type on EXACSTLY nbit
             template <typename T> inline T to(unsigned nbit) noexcept
             {
                 assert(nbit<=sizeof(T)*8);
