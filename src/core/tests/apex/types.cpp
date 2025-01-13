@@ -39,8 +39,6 @@ namespace Yttrium
             static const unsigned Plans = 4;
             static const unsigned Faded = Plans-1;
             static const Plan     Dull[Plans][Faded];
-            typedef void         (*Alter)(void *, const void *);
-            static const Alter     Table[Plans][Plans];
 
         protected:
             explicit JigAPI(const size_t _count) noexcept :
@@ -189,34 +187,34 @@ namespace Yttrium
             return w;
         }
 
-        //! Scatter TARGET=largr, SOURCE=small
+        //! Scatter TARGET=small, SOURCE=large
         template <typename TARGET, typename SOURCE>
-        inline void Scatter(TARGET * &tgt, const SOURCE w ) noexcept
+        inline void Scatter(TARGET * &tgt, SOURCE w ) noexcept
         {
             static const unsigned targetBytes   = sizeof(TARGET);
             static const unsigned sourceBytes   = sizeof(SOURCE);
             static const unsigned ratio         = targetBytes/sourceBytes;
             static const unsigned bitsPerTarget = targetBytes << 3;
+            static const SOURCE   mask = static_cast<SOURCE>( IntegerFor<TARGET>::Maximum );
+
 
             assert(0!=tgt);
-
+            for(size_t i=ratio;i>0;--i)
+            {
+                *(tgt++) = static_cast<TARGET>(w & mask);
+                w >>= bitsPerTarget;
+            }
 
         }
 
 
 
-        template <Plan TARGET_PLAN,Plan SOURCE_PLAN> inline
-        void compact(void *       const targetAddr,
-                     const void * const sourceAddr) noexcept
+        template <typename TARGET_JIG, typename SOURCE_JIG> inline
+        void compact(TARGET_JIG       & target,
+                     const SOURCE_JIG & source) noexcept
         {
-            assert(0!=targetAddr);
-            assert(0!=sourceAddr);
-            typedef Jig<TARGET_PLAN>          TARGET_JIG;
-            typedef Jig<SOURCE_PLAN>          SOURCE_JIG;
             typedef typename TARGET_JIG::Word TARGET_WORD;
             typedef typename SOURCE_JIG::Word SOURCE_WORD;
-            TARGET_JIG       &  target = *static_cast<TARGET_JIG       *>(targetAddr);
-            const SOURCE_JIG &  source = *static_cast<const SOURCE_JIG *>(sourceAddr);
             TARGET_WORD *       tgt    = target.word;
             const SOURCE_WORD * src    = source.word;
             for(size_t i=target.words;i>0;--i)
@@ -224,29 +222,21 @@ namespace Yttrium
         }
 
 
-
-
-
-
-
-
-
-        template <typename PROC> inline
-        JigAPI::Alter _p2a(PROC proc) noexcept {
-            union {
-                PROC          p;
-                JigAPI::Alter a;
-            } alias = { proc };
-            return alias.a;
+        template <typename TARGET_JIG, typename SOURCE_JIG> inline
+        void scatter(TARGET_JIG       & target,
+                     const SOURCE_JIG & source) noexcept
+        {
+            typedef typename TARGET_JIG::Word TARGET_WORD;
+            typedef typename SOURCE_JIG::Word SOURCE_WORD;
+            TARGET_WORD *       tgt    = target.word;
+            const SOURCE_WORD * src    = source.word;
+            for(size_t i=source.words;i>0;--i)
+            {
+                Scatter( tgt, *(src++) );
+            }
         }
 
-        const JigAPI::Alter JigAPI:: Table[Plans][Plans] =
-        {
-            { 0, _p2a(compact<Plan2,Plan1>),0,0},
-            {0,0,0,0},
-            {0,0,0,0},
-            {0,0,0,0}
-        };
+
 
         class Jigs {
         public:
@@ -285,8 +275,6 @@ namespace Yttrium
                 }
                 return as<Plan1>();
             }
-
-
 
             virtual ~Jigs() noexcept
             {
@@ -409,6 +397,31 @@ namespace Yttrium
 
             void to(const Plan target) noexcept
             {
+                switch(plan) {
+
+                        // SOURCE=Plan1
+                    case Plan1 :
+                        switch(target) {
+                            case Plan1: return;
+                            case Plan2: compact( as<Plan2>(), as<Plan1>() ); break;
+                            case Plan4: compact( as<Plan4>(), as<Plan1>() ); break;
+                            case Plan8: compact( as<Plan8>(), as<Plan1>() ); break;
+                        }
+
+
+                        // SOURCE=Plan2
+                    case Plan2 :
+                        switch(target) {
+                            case Plan1: scatter( as<Plan1>(), as<Plan2>() ); break;
+                            case Plan2: return;
+                            case Plan4: compact( as<Plan4>(), as<Plan2>() ); break;
+                            case Plan8: compact( as<Plan8>(), as<Plan2>() ); break;
+                        }
+
+                }
+
+                Coerce(plan) = target;
+                relink();
 
             }
 
@@ -622,9 +635,7 @@ Y_UTEST(apex_types)
     std::cerr << "bits=" << b.bits << std::endl;
 
 
-    compact<Plan2,Plan1>(&b.as<Plan2>(),&b.as<Plan1>());
-    Coerce(b.plan) = Plan2;
-    b.relink();
+    b.to(Plan2);
     std::cerr << "b=" << b << std::endl;
     std::cerr << "bits=" << b.bits << std::endl;
     const size_t originalBits = b.bits;
