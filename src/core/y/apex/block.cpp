@@ -141,7 +141,7 @@ namespace Yttrium
             }
         }
 
-        void Block:: to(const Plan target) noexcept
+        Block & Block:: to(const Plan target) noexcept
         {
             assert(curr->chkBits(bits));
             switch(plan) {
@@ -149,7 +149,7 @@ namespace Yttrium
                     // SOURCE=Plan1
                 case Plan1 :
                     switch(target) {
-                        case Plan1: return;
+                        case Plan1: return *this;
                         case Plan2: compact( as<Plan2>(), as<Plan1>() ); break;
                         case Plan4: compact( as<Plan4>(), as<Plan1>() ); break;
                         case Plan8: compact( as<Plan8>(), as<Plan1>() ); break;
@@ -161,7 +161,7 @@ namespace Yttrium
                 case Plan2 :
                     switch(target) {
                         case Plan1: scatter( as<Plan1>(), as<Plan2>() ); break;
-                        case Plan2: return;
+                        case Plan2: return *this;
                         case Plan4: compact( as<Plan4>(), as<Plan2>() ); break;
                         case Plan8: compact( as<Plan8>(), as<Plan2>() ); break;
                     }
@@ -173,7 +173,7 @@ namespace Yttrium
                     switch(target) {
                         case Plan1: scatter( as<Plan1>(), as<Plan4>() ); break;
                         case Plan2: scatter( as<Plan1>(), as<Plan4>() ); break;
-                        case Plan4: return;
+                        case Plan4: return *this;
                         case Plan8: compact( as<Plan8>(), as<Plan4>() ); break;
                     }
                     break;
@@ -184,7 +184,7 @@ namespace Yttrium
                         case Plan1: scatter( as<Plan1>(), as<Plan8>() ); break;
                         case Plan2: scatter( as<Plan1>(), as<Plan8>() ); break;
                         case Plan4: scatter( as<Plan1>(), as<Plan8>() ); break;
-                        case Plan8: return;
+                        case Plan8: return *this;
                     }
                     break;
 
@@ -194,6 +194,7 @@ namespace Yttrium
             Coerce(plan) = target;
             relink();
             assert(curr->chkBits(bits));
+            return *this;
         }
     }
 

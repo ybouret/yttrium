@@ -46,8 +46,8 @@ namespace Yttrium
             Block * acquireBytes(size_t bytes);                    //!< acquire for given bytes
             Block * acquire(Random::Bits &ran, const size_t bits); //!< exactly bits
             void    release(Block * const) noexcept;               //!< release in cache
-            void gc()      noexcept; //!< gc on each shift
-            void display() const;    //!< display status
+            void    gc()      noexcept;                            //!< gc on each shift
+            void    display() const;                               //!< display status
 
 
 

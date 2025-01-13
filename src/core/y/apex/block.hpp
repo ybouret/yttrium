@@ -62,7 +62,14 @@ namespace Yttrium
             void sync() noexcept;
 
             //! change representation
-            void to(const Plan target) noexcept;
+            Block & to(const Plan target) noexcept;
+
+            //! return transformed representation
+            template <Plan PLAN> inline
+            Jig<PLAN> & make() noexcept {
+                return to(PLAN).as<PLAN>();
+            }
+
 
             //__________________________________________________________________
             //
