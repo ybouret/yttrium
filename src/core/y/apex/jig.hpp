@@ -16,17 +16,40 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! helper for sanity check
 #define Y_APEX_JIG_ASSERT(EXPR) do { if( !(EXPR) ) { std::cerr << "Jig<" << PLAN << "> failure '" << #EXPR << "'" << std::endl; return false; } } while(false)
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Jig based on Plan
+        //
+        //
+        //______________________________________________________________________
         template <Plan PLAN>
         class Jig : public JigAPI
         {
         public:
-            static const unsigned                         WordShift = PLAN;
-            static const unsigned                         WordBytes = (1 << WordShift);
-            static const unsigned                         WordBits  = WordBytes << 3;
-            typedef typename UnsignedInt<WordBytes>::Type Word;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned                         WordShift = PLAN;             //!< alias
+            static const unsigned                         WordBytes = (1 << WordShift); //!< alias
+            static const unsigned                         WordBits  = WordBytes << 3;   //!< alias
+            typedef typename UnsignedInt<WordBytes>::Type Word;                         //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup from user's memory
             inline explicit Jig(void * const entry,
                                 const size_t range) noexcept :
             JigAPI(range >> WordShift), word( static_cast<Word *>(entry) )
@@ -34,13 +57,30 @@ namespace Yttrium
                 assert( IsPowerOfTwo(range) );
             }
 
+            //! cleanup
             inline virtual ~Jig() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! convert bytes to words
             static inline size_t BytesToWords(const size_t bytes) noexcept
             {
                 return  (Y_ALIGN_TO(Word,bytes)) >> WordShift;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+
+            //! Hexadecimal display
             virtual void display(std::ostream &os)  const  {
                 os << '[';
                 if(words<=0) {
@@ -57,35 +97,30 @@ namespace Yttrium
                 os << ']';
             }
 
+            //! recompute words from bits
             virtual void setBits(const size_t bits) noexcept
             {
                 Coerce(words) = BytesToWords( Y_Apex_Bytes_For(bits) );
             }
 
+            //! upgrade using most significant word
             virtual size_t upgrade() noexcept
             {
                 size_t &num = (Coerce(words) = count);
                 size_t  msi = num-1;
                 Word    msw = 0;
 
-                while(num>0)
-                {
+                while(num>0) {
                     msw = word[msi];
                     if(msw>0) break;
                     --num;
                     --msi;
                 }
 
-                if(num<=0)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return msi * WordBits + BitCount::For(msw);
-                }
+                return num <=0 ? 0 : msi * WordBits + BitCount::For(msw);
             }
 
+            //! sanity check
             virtual bool chkBits(const size_t bits) const noexcept {
 
                 Y_APEX_JIG_ASSERT(words<=count);
@@ -107,8 +142,14 @@ namespace Yttrium
                 return true;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Word * const word; //!< user's memory
 
-            Word * const word;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Jig);
         };

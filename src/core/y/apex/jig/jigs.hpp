@@ -11,55 +11,75 @@ namespace Yttrium
 {
     namespace Apex
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        // Global Definitions
+        //
+        //
+        //______________________________________________________________________
+        typedef Jig<Plan1> Jig1; //!< alias
+        typedef Jig<Plan2> Jig2; //!< alias
+        typedef Jig<Plan4> Jig4; //!< alias
+        typedef Jig<Plan8> Jig8; //!< alias
 
-        typedef Jig<Plan1> Jig1;
-        typedef Jig<Plan2> Jig2;
-        typedef Jig<Plan4> Jig4;
-        typedef Jig<Plan8> Jig8;
-
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! set of jigs
+        //
+        //
+        //______________________________________________________________________
         class Jigs {
         public:
-            static const size_t JigSize = sizeof(Jig1);
-            static const size_t Measure = JigAPI::Plans * JigSize;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t JigSize = sizeof(Jig1);             //!< size for any Jig
+            static const size_t Measure = JigAPI::Plans * JigSize;  //!< memory for all Jigs
 
-            explicit Jigs(void * const entry,  const size_t range) noexcept :
-            addr(0),
-            wksp()
-            {
-                Coerce(addr) = static_cast<char *>( Memory::OutOfReach::Addr( &wksp[0] ) );
-                char  *p = addr;
-                new (p)            Jig1(entry,range);
-                new (p += JigSize) Jig2(entry,range);
-                new (p += JigSize) Jig4(entry,range);
-                new (p += JigSize) Jig8(entry,range);
-            }
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
+            //! setup jigs from shared memory
+            explicit Jigs(void * const entry,  const size_t range) noexcept;
+
+            //! cleanup jigs
+            virtual ~Jigs() noexcept;
+
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! return chosen Jig
             template <Plan PLAN> inline
             Jig<PLAN> & as() noexcept {
                 return *(Jig<PLAN> *) &addr[JigSize*PLAN];
             }
 
+            //! return chosen Jig, const
             template <Plan PLAN> inline
             const Jig<PLAN> & as() const noexcept {
                 return *(const Jig<PLAN> *) &addr[JigSize*PLAN];
             }
 
+            //! API selection
+            JigAPI & operator[](const Plan plan) noexcept;
 
-            JigAPI & operator[](const Plan plan) noexcept {
-                switch(plan) {
-                    case Plan1: break;
-                    case Plan2: return as<Plan2>();
-                    case Plan4: return as<Plan4>();
-                    case Plan8: return as<Plan8>();
-                }
-                return as<Plan1>();
-            }
 
-            virtual ~Jigs() noexcept
-            {
-
-            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Jigs);
