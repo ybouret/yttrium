@@ -15,6 +15,7 @@
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
 #include "y/check/static.hpp"
+#include "y/random/park-miller.hpp"
 
 #include <cstring>
 
@@ -33,6 +34,8 @@ namespace Yttrium
             Plan4=2,
             Plan8=3
         };
+
+#define Y_APEX_BYTES_FOR(BITS) ( (Y_ALIGN_ON(8,BITS)) >> 3 )
 
         class JigAPI
         {
@@ -127,7 +130,7 @@ namespace Yttrium
 
             virtual void setBits(const size_t bits) noexcept
             {
-                Coerce(words) = BytesToWords( (Y_ALIGN_ON(8,bits)) >> 3 );
+                Coerce(words) = BytesToWords( Y_APEX_BYTES_FOR(bits) );
             }
 
             virtual size_t upgrade() noexcept
@@ -315,9 +318,10 @@ namespace Yttrium
         class DataBlock : public Quantized
         {
         public:
-            static const unsigned    MinRange = 2 * sizeof(natural_t);
+            static const size_t      MinRange = 2 * sizeof(natural_t);
             static const unsigned    MinShift = iLog2<MinRange>::Value;
             static const unsigned    MaxShift = Base2<size_t>::MaxShift;
+            static const size_t      MaxBytes = Base2<size_t>::MaxPowerOfTwo;
 
             static const size_t One = 1;
         protected:
@@ -342,7 +346,7 @@ namespace Yttrium
 
             const unsigned shift;               //!< log2(range)
             void * const   entry;               //!< memory
-            size_t         bits;                //!< current number of bits
+            const size_t   bits;                //!< current number of bits
             const Plan     plan;                //!< current plan
             JigAPI * const curr;                //!< current API
             JigAPI *       dull[JigAPI::Faded]; //!< other dull API
@@ -406,15 +410,20 @@ namespace Yttrium
 
             }
 
-            //! compute bits from current plan and update dull
-            void sync() noexcept
+            void syncDull() noexcept
             {
-                Coerce(bits) = curr->upgrade();
                 for(size_t i=0;i<JigAPI::Faded;++i)
                 {
                     assert(0!=dull[i]);
                     dull[i]->setBits(bits);
                 }
+            }
+
+            //! compute bits from current plan and update dull
+            void sync() noexcept
+            {
+                Coerce(bits) = curr->upgrade();
+                syncDull();
             }
 
             //! change representation
@@ -556,6 +565,11 @@ namespace Yttrium
                 return blocks[shift].query();
             }
 
+            Block * acquireBytes(size_t bytes) {
+                if(bytes>Block::MaxBytes) throw Specific::Exception(CallSign,"bytes overflow");
+                return acquire( Base2<size_t>::LogFor(bytes) );
+            }
+
             void release(Block * const block) noexcept {
                 assert(block!=0);
                 assert(block->shift>=Block::MinShift);
@@ -577,6 +591,35 @@ namespace Yttrium
                     std::cerr << "#2^" << std::setw(2) << shift << " : " << std::setw(8) << B->size << std::endl;
                 }
             }
+
+            Block * acquire(Random::Bits &ran, const size_t bits)
+            {
+                const size_t   bytes = Y_APEX_BYTES_FOR(bits);
+                Block  * const block = acquireBytes(bytes);
+                if(bytes>0)
+                {
+                    const size_t   msindx = bytes-1;
+                    const unsigned msbits = static_cast<unsigned>(bits - (msindx<<3));
+                    assert(msbits>=1);
+                    assert(msbits<=8);
+
+                    // formatting jig1
+                    Jig1 &          jig1 = block->as<Plan1>();
+                    uint8_t * const b    = jig1.word;
+                    b[msindx] = ran.to<uint8_t>(msbits);
+                    for(size_t i=0;i<msindx;++i)
+                        b[i] = ran.to<uint8_t>();
+                    Coerce(block->bits) = bits;
+                    Coerce(jig1.words)  = bytes;
+                    assert(jig1.chkBits(bits));
+                    
+                    // sync other
+                    block->syncDull();
+                }
+                return block;
+
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Factory);
@@ -623,7 +666,6 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Apex;
 
-#include "y/random/park-miller.hpp"
 
 Y_UTEST(apex_types)
 {
@@ -703,6 +745,11 @@ Y_UTEST(apex_types)
         }
     }
 
+    for(unsigned nbit=0;nbit<=1100;++nbit)
+    {
+        Apex::Block * p = F.acquire(ran,nbit);
+        F.release(p);
+    }
 }
 Y_UDONE()
 
