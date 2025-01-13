@@ -43,8 +43,7 @@ namespace Yttrium
 
         Block * Factory:: duplicate(const Block * const other)
         {
-            Block * const block = acquireBytes(other->bytes);
-            return block;
+            return acquireBytes(other->bytes)->duplicate(other);
         }
 
 

@@ -82,6 +82,9 @@ namespace Yttrium
                 return to(PLAN).as<PLAN>();
             }
 
+            Block * duplicate(const Block * const block) noexcept;
+            
+
 
             //__________________________________________________________________
             //

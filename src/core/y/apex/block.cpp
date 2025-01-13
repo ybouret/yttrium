@@ -78,6 +78,26 @@ namespace Yttrium
 
         }
 
+        Block * Block:: duplicate(const Block * const block) noexcept
+        {
+            assert(range>=block->bytes);
+            switch(block->plan) {
+                case Plan1: memcpy(entry,block->entry,block->as<Plan1>().words);                 break;
+                case Plan2: memcpy(entry,block->entry,block->as<Plan2>().words*Jig2::WordBytes); break;
+                case Plan4: memcpy(entry,block->entry,block->as<Plan4>().words*Jig4::WordBytes); break;
+                case Plan8: memcpy(entry,block->entry,block->as<Plan8>().words*Jig8::WordBytes); break;
+            }
+            Coerce(as<Plan1>().words) = block->as<Plan1>().words;
+            Coerce(as<Plan2>().words) = block->as<Plan2>().words;
+            Coerce(as<Plan4>().words) = block->as<Plan4>().words;
+            Coerce(as<Plan8>().words) = block->as<Plan8>().words;
+            Coerce(bits) = block->bits;
+            Coerce(plan) = block->plan;
+            relink();
+            return this;
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Block &block)
         {
             block.curr->display(os);

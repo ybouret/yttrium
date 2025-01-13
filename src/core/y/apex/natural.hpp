@@ -20,6 +20,7 @@ namespace Yttrium
             Natural(const natural_t);
             virtual ~Natural() noexcept;
             Natural(const Natural &);
+            Natural & operator=(const Natural &);
             Y_OSTREAM_PROTO(Natural);
             
         private:

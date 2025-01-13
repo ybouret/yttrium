@@ -33,7 +33,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(const Natural &_) :
-        block( _Factory().acquireBytes(_.block->bytes) )
+        block( _Factory().duplicate(_.block) )
         {
             
         }
@@ -44,6 +44,15 @@ namespace Yttrium
             os << *n.block;
             return os;
         }
+
+        Natural & Natural:: operator=(const Natural &other)
+        {
+            Natural _(other);
+            Swap(block,_.block);
+            return *this;
+        }
+
+
 
     }
 
