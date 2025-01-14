@@ -29,7 +29,8 @@ namespace Yttrium
         Jigs(entry,range),
         bytes(as<Plan1>().words),
         next(0),
-        prev(0)
+        prev(0),
+        nref(0)
         {
             relink();
             assert( Memory::OutOfReach::Are0(entry,range) );
@@ -38,6 +39,23 @@ namespace Yttrium
 
         Block:: ~Block() noexcept
         {
+            assert(0==quantity());
+        }
+
+        void Block:: withhold() noexcept
+        {
+            ++nref;
+        }
+
+        bool Block:: liberate() noexcept
+        {
+            assert(nref>0);
+            return (--nref <= 0);
+        }
+
+        size_t Block:: quantity() const noexcept
+        {
+            return nref;
         }
 
         void Block:: ldz() noexcept
@@ -84,13 +102,9 @@ namespace Yttrium
 
         Block * Block:: duplicate(const Block * const block) noexcept
         {
-            assert(range>=block->bytes);
-            switch(block->plan) {
-                case Plan1: memcpy(entry,block->entry,block->as<Plan1>().words);                 break;
-                case Plan2: memcpy(entry,block->entry,block->as<Plan2>().words*Jig2::WordBytes); break;
-                case Plan4: memcpy(entry,block->entry,block->as<Plan4>().words*Jig4::WordBytes); break;
-                case Plan8: memcpy(entry,block->entry,block->as<Plan8>().words*Jig8::WordBytes); break;
-            }
+            const size_t request = block->as<Plan8>().words*Jig8::WordBytes;
+            assert(range>=request);
+            memcpy(entry,block->entry,request);
             Coerce(as<Plan1>().words) = block->as<Plan1>().words;
             Coerce(as<Plan2>().words) = block->as<Plan2>().words;
             Coerce(as<Plan4>().words) = block->as<Plan4>().words;
@@ -234,19 +248,23 @@ namespace Yttrium
             return *this;
         }
 
-        uint32_t Block:: crc32() const noexcept
+        uint32_t Block:: tag32() const noexcept
         {
             uint32_t crc = 0;
             crc = CRC32::Run(crc,shift);
             crc = CRC32::Run(crc,entry);
             crc = CRC32::Run(crc,bits);
             crc = CRC32::Run(crc,plan);
-            crc = CRC32::Run(crc,range);
             crc = CRC32::Run(crc,as<Plan1>().words);
             crc = CRC32::Run(crc,as<Plan2>().words);
             crc = CRC32::Run(crc,as<Plan4>().words);
             crc = CRC32::Run(crc,as<Plan8>().words);
             return crc;
+        }
+
+        uint32_t Block:: crc32() const noexcept
+        {
+            return CRC32::Run( tag32(), range );
         }
 
     }

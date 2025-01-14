@@ -8,6 +8,7 @@
 #include "y/apex/jig/jigs.hpp"
 #include "y/apex/block/data.hpp"
 #include "y/data/pool/cxx.hpp"
+#include "y/counted.hpp"
 
 namespace Yttrium
 {
@@ -38,10 +39,11 @@ namespace Yttrium
                 Briefly(const Plan which, Block &block) noexcept;
                 ~Briefly() noexcept;
             private:
-                const Plan plan;
-                Block     &host;
+                const Plan  plan;
+                Block     & host;
                 Y_DISABLE_COPY_AND_ASSIGN(Briefly);
             };
+            
 
 
             //__________________________________________________________________
@@ -61,7 +63,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! set all to zero, keep plan for futrure use
+            //! set all to zero, reset to plan1
             void ldz() noexcept;
 
             //! set curr and dull from plan
@@ -82,11 +84,14 @@ namespace Yttrium
                 return to(PLAN).as<PLAN>();
             }
 
-            uint32_t crc32() const noexcept;
-
-            Block * duplicate(const Block * const block) noexcept;
+            uint32_t tag32() const noexcept; //!< crc WITHOUT range
+            uint32_t crc32() const noexcept; //!< crc WITH    range
             
+            Block *  duplicate(const Block * const block) noexcept;
 
+            void   withhold() noexcept;         //!< ++nref
+            bool   liberate() noexcept;         //!< --nref<=0
+            size_t quantity() const noexcept;   //!< nref
 
             //__________________________________________________________________
             //
@@ -97,9 +102,10 @@ namespace Yttrium
             const size_t  &bytes; //!< jig1.bytes
             Block *        next;  //!< for list/pool
             Block *        prev;  //!< for list
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Block);
+            size_t         nref;
+
         };
 
       

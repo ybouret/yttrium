@@ -1,4 +1,6 @@
 #include "y/apex/block/factory.hpp"
+#include "y/apex/block/ptr.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 
@@ -24,7 +26,7 @@ Y_UTEST(apex_types)
 
 
     Apex::Factory & F = Apex::Factory::Instance();
-    
+
 
     Apex::Block b(0);
 #if 0
@@ -64,37 +66,35 @@ Y_UTEST(apex_types)
     std::cerr << "bits=" << b.bits << std::endl;
 
 
-
     for(unsigned nbit=0;nbit<=1000;++nbit)
     {
-        Apex::Block * p = F.acquire(ran,nbit);
-        try {
-            std::cerr << *p << std::endl;
-            Y_ASSERT(Plan1==p->plan);
+        Apex::BlockPtr  p = F.acquire(ran,nbit);
+        Y_ASSERT(Plan1==p->plan);
 
-            for(unsigned i=0;i<JigAPI::Plans;++i)
+        for(unsigned i=0;i<JigAPI::Plans;++i)
+        {
+            const Plan     source = Plan(i);
+            const uint32_t c32    = p->to(source).crc32();
+            const uint32_t t32    = p->tag32();
+
+            // test change
+            for(unsigned j=0;j<JigAPI::Plans;++j)
             {
-                const Plan     source = Plan(i);
-                const uint32_t src32  = p->to(source).crc32();
-
-                for(unsigned j=0;j<JigAPI::Plans;++j)
-                {
-                    const Plan target = Plan(j);
-                    p->to(target);
-                    std::cerr << *p << std::endl;
-                    p->to(source);
-                    Y_ASSERT(src32==p->crc32());
-                }
+                const Plan target = Plan(j);
+                p->to(target);
+                p->to(source);
+                Y_ASSERT(c32==p->crc32());
+                Y_ASSERT(t32==p->tag32());
             }
 
-            F.release(p);
-        }
-        catch(...)
-        {
-            F.release(p);
-            throw;
+            // test duplication
+            Apex::BlockPtr q = F.duplicate( & *p );
+
         }
     }
+
+    F.display();
+
 }
 Y_UDONE()
 
