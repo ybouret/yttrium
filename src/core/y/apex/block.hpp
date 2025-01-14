@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Apex_Block_Included
@@ -33,11 +31,18 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxPoolOf<Block> Pool; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! briefly convert block to desired plan
+            //
+            //__________________________________________________________________
             class Briefly
             {
             public:
-                Briefly(const Plan which, Block &block) noexcept;
-                ~Briefly() noexcept;
+                Briefly(const Plan which, const Block &) noexcept; //!< change
+                ~Briefly()                               noexcept; //!< restore
+
             private:
                 const Plan  plan;
                 Block     & host;
@@ -63,20 +68,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! set all to zero, reset to plan1
-            void ldz() noexcept;
 
-            //! set curr and dull from plan
-            void relink() noexcept;
-
-            //! sync dull after manual setting of curr
-            void syncDull() noexcept;
-
-            //! compute bits from current plan and syncDull
-            void sync() noexcept;
-
-            //! change representation
-            Block & to(const Plan target) noexcept;
+            void    ldz()             noexcept; //!< set all to zero, reset to plan1
+            void    relink()          noexcept; //!< set curr and dull from plan
+            void    syncDull()        noexcept; //!< sync dull after manual setting of curr
+            void    sync()            noexcept; //!< compute bits from current plan and syncDull
+            Block & to(const Plan)    noexcept; //!< change representation
 
             //! return transformed representation
             template <Plan PLAN> inline
@@ -84,14 +81,14 @@ namespace Yttrium
                 return to(PLAN).as<PLAN>();
             }
 
-            uint32_t tag32() const noexcept; //!< crc WITHOUT range
-            uint32_t crc32() const noexcept; //!< crc WITH    range
-            
-            Block *  duplicate(const Block * const block) noexcept;
+            uint32_t tag32()                  const noexcept; //!< crc WITHOUT entry,shift,range
+            uint32_t crc32()                  const noexcept; //!< crc WITH    entry,shift,range
+            Block *  duplicate(const Block * const) noexcept; //!< full duplication
+            void     withhold()                     noexcept; //!< ++nref
+            bool     liberate()                     noexcept; //!< --nref<=0
+            size_t   quantity()               const noexcept; //!< nref
 
-            void   withhold() noexcept;         //!< ++nref
-            bool   liberate() noexcept;         //!< --nref<=0
-            size_t quantity() const noexcept;   //!< nref
+            friend bool operator==(const Block &lhs, const Block &rhs) noexcept;
 
             //__________________________________________________________________
             //

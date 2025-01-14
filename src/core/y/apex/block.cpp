@@ -11,11 +11,11 @@ namespace Yttrium
     namespace Apex
     {
 
-        Block:: Briefly:: Briefly(const Plan which, Block &block) noexcept :
+        Block:: Briefly:: Briefly(const Plan which, const Block &block) noexcept :
         plan(block.plan),
-        host(block)
+        host( Coerce(block) )
         {
-            block.to(which);
+            host.to(which);
         }
 
         Block:: Briefly:: ~Briefly() noexcept
@@ -112,6 +112,7 @@ namespace Yttrium
             Coerce(bits) = block->bits;
             Coerce(plan) = block->plan;
             relink();
+            assert(tag32()==block->tag32());
             return this;
         }
 
@@ -251,8 +252,6 @@ namespace Yttrium
         uint32_t Block:: tag32() const noexcept
         {
             uint32_t crc = 0;
-            crc = CRC32::Run(crc,shift);
-            crc = CRC32::Run(crc,entry);
             crc = CRC32::Run(crc,bits);
             crc = CRC32::Run(crc,plan);
             crc = CRC32::Run(crc,as<Plan1>().words);
@@ -264,7 +263,11 @@ namespace Yttrium
 
         uint32_t Block:: crc32() const noexcept
         {
-            return CRC32::Run( tag32(), range );
+            uint32_t crc = tag32();
+            crc = CRC32::Run(crc,shift);
+            crc = CRC32::Run(crc,entry);
+            crc = CRC32::Run(crc,range );
+            return crc;
         }
 
     }

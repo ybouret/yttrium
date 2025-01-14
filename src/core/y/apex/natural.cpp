@@ -18,6 +18,7 @@ namespace Yttrium
         typedef Jig<NaturalPlan> NaturalJig;
 
         Natural:: Natural(const natural_t value) :
+        Number(),
         block( _Factory().acquire(NaturalShift) )
         {
             block->make<NaturalPlan>().word[0] = value;
@@ -33,6 +34,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(const Natural &_) :
+        Number(),
         block( _Factory().duplicate(_.block) )
         {
             

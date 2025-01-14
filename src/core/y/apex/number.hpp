@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! base class for numbers
         class Number
         {
         protected:

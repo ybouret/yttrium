@@ -11,17 +11,25 @@ namespace Yttrium
 {
     namespace Apex
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! reference counted pointer, using factory to release
+        //
+        //
+        //______________________________________________________________________
         class BlockPtr : public Core::Ptr
         {
         public:
-            BlockPtr(Block * const block) noexcept;
-            BlockPtr(const BlockPtr &)     noexcept;
-            virtual ~BlockPtr() noexcept;
+            BlockPtr(Block * const block) noexcept; //!< setup, withhold
+            BlockPtr(const BlockPtr &)    noexcept; //!< copy,  withold
+            virtual ~BlockPtr()           noexcept; //!< liberate, may release
 
-            Block *       operator->() noexcept;
-            const Block * operator->() const noexcept;
-            Block &       operator*()  noexcept;
-            const Block & operator*()  const noexcept;
+            Block *       operator->()       noexcept; //!< access
+            Block &       operator*()        noexcept; //!< access
+            const Block * operator->() const noexcept; //!< access
+            const Block & operator*()  const noexcept; //!< access
 
 
         private:
