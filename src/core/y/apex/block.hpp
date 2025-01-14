@@ -88,8 +88,7 @@ namespace Yttrium
             bool     liberate()                     noexcept; //!< --nref<=0
             size_t   quantity()               const noexcept; //!< nref
 
-            friend bool operator==(const Block &lhs, const Block &rhs) noexcept;
-
+            
             //__________________________________________________________________
             //
             //

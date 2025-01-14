@@ -15,7 +15,7 @@ namespace Yttrium
 
         static const unsigned    NaturalShift = iLog2Of<natural_t>::Value;
         static const Plan        NaturalPlan  = Plan(NaturalShift);
-        typedef Jig<NaturalPlan> NaturalJig;
+       // typedef Jig<NaturalPlan> NaturalJig;
 
         Natural:: Natural(const natural_t value) :
         Number(),

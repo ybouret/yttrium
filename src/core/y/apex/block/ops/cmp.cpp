@@ -18,6 +18,7 @@ namespace Yttrium
             assert(l.words == r.words);
             const Jig8::Word *L = l.word;
             const Jig8::Word *R = r.word;
+            
             for(size_t i=l.words;i>0;--i) {
                 if( *(L++) != *(R++) ) return false;
             }
