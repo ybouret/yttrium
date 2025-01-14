@@ -82,6 +82,8 @@ namespace Yttrium
                 return to(PLAN).as<PLAN>();
             }
 
+            uint32_t crc32() const noexcept;
+
             Block * duplicate(const Block * const block) noexcept;
             
 

@@ -28,6 +28,15 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //! updated current crc from args
+        //______________________________________________________________________
+        template <typename T>
+        static uint32_t Run(uint32_t crc, const T & args) noexcept {
+            return Run(crc, &args, sizeof(T) );
+        }
+
+        //______________________________________________________________________
+        //
         //! crc32 of a block
         //______________________________________________________________________
         static uint32_t Of(const void *addr, size_t size) noexcept;

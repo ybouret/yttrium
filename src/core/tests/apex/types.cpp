@@ -1,7 +1,5 @@
 #include "y/apex/block/factory.hpp"
-
 #include "y/utest/run.hpp"
-
 #include "y/random/park-miller.hpp"
 
 
@@ -67,11 +65,35 @@ Y_UTEST(apex_types)
 
 
 
-    for(unsigned nbit=0;nbit<=10;++nbit)
+    for(unsigned nbit=0;nbit<=1000;++nbit)
     {
         Apex::Block * p = F.acquire(ran,nbit);
-        std::cerr << *p << std::endl;
-        F.release(p);
+        try {
+            std::cerr << *p << std::endl;
+            Y_ASSERT(Plan1==p->plan);
+
+            for(unsigned i=0;i<JigAPI::Plans;++i)
+            {
+                const Plan     source = Plan(i);
+                const uint32_t src32  = p->to(source).crc32();
+
+                for(unsigned j=0;j<JigAPI::Plans;++j)
+                {
+                    const Plan target = Plan(j);
+                    p->to(target);
+                    std::cerr << *p << std::endl;
+                    p->to(source);
+                    Y_ASSERT(src32==p->crc32());
+                }
+            }
+
+            F.release(p);
+        }
+        catch(...)
+        {
+            F.release(p);
+            throw;
+        }
     }
 }
 Y_UDONE()

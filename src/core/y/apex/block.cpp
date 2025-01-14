@@ -1,8 +1,10 @@
-
-
 #include "y/apex/block.hpp"
 #include "y/check/static.hpp"
+#include "y/check/crc32.hpp"
+
 #include <cstring>
+
+
 
 namespace Yttrium
 {
@@ -41,7 +43,9 @@ namespace Yttrium
         void Block:: ldz() noexcept
         {
             Coerce(bits) = 0;
+            Coerce(plan) = Plan1;
             memset(entry,0,range);
+            relink();
             Coerce(curr->words) = 0;
             for(size_t i=0;i<JigAPI::Faded;++i) Coerce(dull[i]->words) = 0;
         }
@@ -229,6 +233,22 @@ namespace Yttrium
             assert(curr->chkBits(bits));
             return *this;
         }
+
+        uint32_t Block:: crc32() const noexcept
+        {
+            uint32_t crc = 0;
+            crc = CRC32::Run(crc,shift);
+            crc = CRC32::Run(crc,entry);
+            crc = CRC32::Run(crc,bits);
+            crc = CRC32::Run(crc,plan);
+            crc = CRC32::Run(crc,range);
+            crc = CRC32::Run(crc,as<Plan1>().words);
+            crc = CRC32::Run(crc,as<Plan2>().words);
+            crc = CRC32::Run(crc,as<Plan4>().words);
+            crc = CRC32::Run(crc,as<Plan8>().words);
+            return crc;
+        }
+
     }
 
 }

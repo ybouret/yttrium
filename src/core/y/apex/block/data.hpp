@@ -46,7 +46,7 @@ namespace Yttrium
 
         public:
             virtual ~DataBlock() noexcept;            //!< cleanup
-
+            
             //__________________________________________________________________
             //
             //
