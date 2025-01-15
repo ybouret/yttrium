@@ -11,6 +11,7 @@ Y_CreateLibrary(y
 concurrent/quark
 concurrent/split
 concurrent/thread
+concurrent/mutex
 concurrent/topology
 concurrent/loop
 concurrent/loop/simt
@@ -47,6 +48,7 @@ codec/base64
 data
 data/list
 data/pool
+data/gc
 data/small
 data/small/proxy
 data/small/proto

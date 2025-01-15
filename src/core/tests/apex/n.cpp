@@ -11,5 +11,8 @@ Y_UTEST(apex_n)
     Natural n(1025);
 
     std::cerr << n << std::endl;
+
+    Y_SIZEOF(Natural);
+
 }
 Y_UDONE()

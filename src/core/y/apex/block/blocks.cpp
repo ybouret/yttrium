@@ -28,7 +28,7 @@ namespace Yttrium
             CxxListOf<Block> L;
             Rework::PoolToList(L,my);
             MergeSort::Call(L,ListOps::IncreasingAddresses<Block>);
-            ListOps::CheckIncreasingAddresses(L);
+            assert(ListOps::CheckIncreasingAddresses(L));
             const size_t maxSize = 1 + (L.size>>1);
             while(L.size>maxSize) delete L.popTail();
             Rework::ListToPool(my,L);

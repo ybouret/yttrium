@@ -85,6 +85,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(data_solo_heavy_list);
     Y_UTEST(data_coop_heavy_list);
     Y_UTEST(data_ranked);
+    Y_UTEST(data_gc);
 
 
     Y_UTEST(calculus_ilog2);
