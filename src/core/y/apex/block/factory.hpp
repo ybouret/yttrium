@@ -8,6 +8,7 @@
 #include "y/apex/block/blocks.hpp"
 #include "y/singleton.hpp"
 #include "y/random/bits.hpp"
+#include "y/concurrent/mutex/qpool.hpp"
 
 namespace Yttrium
 {
@@ -47,7 +48,7 @@ namespace Yttrium
             Block * acquire(Random::Bits &ran, const size_t bits); //!< exactly bits
             Block * duplicate(const Block * const);                //!< duplicate block
             void    release(Block * const)  noexcept;              //!< release in cache
-            void    gc(const size_t cycles) noexcept;              //!< gc on each shift
+            void    gc(const size_t cycles) noexcept;              //!< gc on each shift + mutexes
             void    display() const;                               //!< display status
 
 
@@ -58,7 +59,9 @@ namespace Yttrium
             explicit Factory() noexcept;
             virtual ~Factory() noexcept;
 
-            Blocks * const blocks;
+            Blocks * const         blocks;
+            Concurrent::QMutexPool mutexes;
+            
             void   *       wksp[Y_WORDS_GEQ(WorkspaceBytes)];
 
 

@@ -8,9 +8,9 @@ namespace Yttrium
     {
 
 
-        QMutexPool:: QMutexPool() noexcept :
+        QMutexPool:: QMutexPool(const char * const id) noexcept :
         Proxy<const QMutexPoolType>(),
-        Identifiable(),
+        label(id),
         my()
         {
         }
@@ -28,7 +28,7 @@ namespace Yttrium
 
         QMutex * QMutexPool:: query()
         {
-            return (my.size > 0) ? my.query() : new QMutex( callSign() );
+            return (my.size > 0) ? my.query() : new QMutex(label);
         }
 
         void QMutexPool:: gc(const size_t cycles) noexcept

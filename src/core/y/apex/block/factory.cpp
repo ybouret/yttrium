@@ -13,6 +13,7 @@ namespace Yttrium
 
         Factory:: Factory() noexcept :
         blocks(0),
+        mutexes(CallSign),
         wksp()
         {
 
