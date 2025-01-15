@@ -1,5 +1,6 @@
 
 #include "y/concurrent/mutex/qpool.hpp"
+#include "y/data/gc/cxx-pool.hpp"
 
 namespace Yttrium
 {
@@ -28,6 +29,11 @@ namespace Yttrium
         QMutex * QMutexPool:: query()
         {
             return (my.size > 0) ? my.query() : new QMutex( callSign() );
+        }
+
+        void QMutexPool:: gc(const size_t cycles) noexcept
+        {
+            CxxPoolGC::Cycle(my,cycles);
         }
 
 

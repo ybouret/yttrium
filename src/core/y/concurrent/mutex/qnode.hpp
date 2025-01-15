@@ -12,14 +12,34 @@ namespace Yttrium
 {
     namespace Concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Quantized Dynamic Mutex
+        //
+        //
+        //______________________________________________________________________
         class QMutex : public Quantized, public Mutex
         {
         public:
-            explicit QMutex(const char * const=0) noexcept;
-            virtual ~QMutex() noexcept;
-            QMutex *next;
-            QMutex *prev;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit QMutex(const char * const=0) noexcept; //!< setup
+            virtual ~QMutex() noexcept;                     //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            QMutex *next; //!< for list/pool
+            QMutex *prev; //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QMutex);

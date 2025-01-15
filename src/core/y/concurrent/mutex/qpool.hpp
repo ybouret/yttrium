@@ -15,19 +15,46 @@ namespace Yttrium
     namespace Concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! base type pour QMutexPool
+        //
+        //______________________________________________________________________
         typedef CxxPoolOf<QMutex> QMutexPoolType;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Pool of Quantized Mutexes
+        //
+        //
+        //______________________________________________________________________
         class QMutexPool : public Proxy<const QMutexPoolType>, public Identifiable
         {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
         protected:
-            explicit QMutexPool() noexcept;
+            explicit QMutexPool() noexcept; //!< setup
 
         public:
-            virtual ~QMutexPool() noexcept;
+            virtual ~QMutexPool() noexcept; //!< cleanup
 
-            QMutex * query();
-            void     store(QMutex * const) noexcept;
-            void     gc()                   noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
+            QMutex * query();                          //!< query/create with callSign()
+            void     store(QMutex * const)   noexcept; //!< store
+            void     gc(const size_t cycles) noexcept; //!< GC
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QMutexPool);

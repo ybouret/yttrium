@@ -61,9 +61,9 @@ namespace Yttrium
             blocks[block->shift].store(block);
         }
 
-        void Factory:: gc() noexcept {
+        void Factory:: gc(const size_t cycles) noexcept {
             for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
-                blocks[shift].gc();
+                blocks[shift].gc(cycles);
         }
 
         void Factory:: display() const {

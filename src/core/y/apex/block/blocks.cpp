@@ -2,7 +2,7 @@
 #include "y/apex/block/blocks.hpp"
 #include "y/data/rework.hpp"
 #include "y/sort/merge.hpp"
-#include "y/data/list/cxx.hpp"
+#include "y/data/gc/cxx-pool.hpp"
 
 namespace Yttrium
 {
@@ -24,14 +24,8 @@ namespace Yttrium
         Y_PROXY_IMPL(Blocks,my)
 
 
-        void Blocks:: gc() noexcept {
-            CxxListOf<Block> L;
-            Rework::PoolToList(L,my);
-            MergeSort::Call(L,ListOps::IncreasingAddresses<Block>);
-            assert(ListOps::CheckIncreasingAddresses(L));
-            const size_t maxSize = 1 + (L.size>>1);
-            while(L.size>maxSize) delete L.popTail();
-            Rework::ListToPool(my,L);
+        void Blocks:: gc(const size_t cycles) noexcept {
+            CxxPoolGC:: Cycle(my,cycles);
         }
 
         Block * Blocks:: query() {

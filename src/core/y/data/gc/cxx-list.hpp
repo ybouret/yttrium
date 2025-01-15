@@ -10,14 +10,25 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! GC for CxxList
+    //
+    //
+    //__________________________________________________________________________
     struct CxxListGC
     {
+
+        //! compute new max size, always keep one element if possible
         template <typename NODE>
         static inline size_t NewMaxSize(const Linked<NODE> &L) noexcept {
             const size_t guess = L.size>>1;
             return guess <= 1 ? 1 : guess;
         }
 
+        //! reduce size after memory ordering
         template <typename NODE> static inline
         void Cycle(CxxListOf<NODE> &L, size_t cycles) noexcept {
             MergeSort::Call(L,ListOps::IncreasingAddresses<NODE>);
@@ -26,6 +37,7 @@ namespace Yttrium
             }
         }
 
+        //! delete about half the nodes with higher addresses
         template <typename NODE>
         static inline size_t CutOrdered(CxxListOf<NODE> &L) noexcept {
             assert(ListOps::CheckIncreasingAddresses(L));

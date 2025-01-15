@@ -40,7 +40,7 @@ namespace Yttrium
             //__________________________________________________________________
             Block * query();                             //!< cached/new block
             void    store(Block * const block) noexcept; //!< store and cleanup
-            void    gc() noexcept;                       //!< order and keep half
+            void    gc(const size_t cycles)    noexcept; //!< apply GC
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);

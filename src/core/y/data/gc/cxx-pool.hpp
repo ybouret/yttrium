@@ -12,8 +12,17 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! GC for CxxPool
+    //
+    //
+    //__________________________________________________________________________
     struct CxxPoolGC
     {
+        //! reduce size after memory ordering
         template <typename NODE> static inline
         void Cycle(CxxPoolOf<NODE> &P, const size_t cycles) noexcept {
             CxxListOf<NODE> L;
