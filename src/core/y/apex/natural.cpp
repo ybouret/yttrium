@@ -19,7 +19,7 @@ namespace Yttrium
 
         Natural:: Natural(const natural_t value) :
         Number(),
-        block( _Factory().acquire(NaturalShift) )
+        block( _Factory().query(NaturalShift) )
         {
             block->make<NaturalPlan>().word[0] = value;
             block->sync();
@@ -29,7 +29,7 @@ namespace Yttrium
         {
             assert(0!=block);
             static Factory &factory = Factory::Location();
-            factory.release(block);
+            factory.store(block);
             block = 0;
         }
 

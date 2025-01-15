@@ -35,7 +35,7 @@ Y_UTEST(apex_types)
 
     for(unsigned nbit=0;nbit<=1000;++nbit)
     {
-        Apex::BlockPtr  p = F.acquire(ran,nbit);
+        Apex::BlockPtr  p = F.query(ran,nbit);
         Y_ASSERT(Plan1==p->plan);
 
         for(unsigned i=0;i<JigAPI::Plans;++i)

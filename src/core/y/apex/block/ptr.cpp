@@ -20,7 +20,7 @@ namespace Yttrium
             static Factory &factory = Factory::Location();
             if(host->liberate())
             {
-                factory.release(host);
+                factory.store(host);
             }
             Coerce(host) = 0;
         }

@@ -34,28 +34,28 @@ namespace Yttrium
         }
 
 
-        Block * Factory:: acquire(const unsigned shift)
+        Block * Factory:: query(const unsigned shift)
         {
             Y_LOCK(access);
             if(shift<=Block::MinShift) return blocks[Block::MinShift].query();
-            if(shift>Block::MaxShift) throw Specific::Exception(CallSign,"shift overflow");
+            if(shift>Block::MaxShift)  throw  Specific::Exception(CallSign,"shift overflow");
             return blocks[shift].query();
         }
 
         Block * Factory:: duplicate(const Block * const other)
         {
-            return acquireBytes(other->bytes)->duplicate(other);
+            return queryBytes(other->bytes)->duplicate(other);
         }
 
 
 
-        Block * Factory:: acquireBytes(size_t bytes) {
+        Block * Factory:: queryBytes(size_t bytes) {
             if(bytes>Block::MaxBytes) throw Specific::Exception(CallSign,"bytes overflow");
-            return acquire( Base2<size_t>::LogFor(bytes) );
+            return query( Base2<size_t>::LogFor(bytes) );
         }
 
 
-        void Factory:: release(Block * const block) noexcept {
+        void Factory:: store(Block * const block) noexcept {
             assert(block!=0);
             assert(block->shift>=Block::MinShift);
             assert(block->shift<=Block::MaxShift);
@@ -65,6 +65,7 @@ namespace Yttrium
         void Factory:: gc(const size_t cycles) noexcept {
             for(unsigned shift=Block::MinShift;shift<=Block::MaxShift;++shift)
                 blocks[shift].gc(cycles);
+            mutexes.gc(cycles);
         }
 
         void Factory:: display() const {
@@ -77,10 +78,10 @@ namespace Yttrium
             }
         }
 
-        Block * Factory:: acquire(Random::Bits &ran, const size_t bits)
+        Block * Factory:: query(Random::Bits &ran, const size_t bits)
         {
             const size_t   bytes = Y_Apex_Bytes_For(bits);
-            Block  * const block = acquireBytes(bytes);
+            Block  * const block = queryBytes(bytes);
             if(bytes>0)
             {
                 const size_t   msindx = bytes-1;

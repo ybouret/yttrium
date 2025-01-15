@@ -14,6 +14,8 @@ namespace Yttrium
 {
     namespace Apex
     {
+        typedef Concurrent::Mutex Mutex;
+
         //______________________________________________________________________
         //
         //
@@ -43,13 +45,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Block * acquire(const unsigned shift);                 //!< acquire for a given shift
-            Block * acquireBytes(size_t bytes);                    //!< acquire for given bytes
-            Block * acquire(Random::Bits &ran, const size_t bits); //!< exactly bits
+            Block * query(const unsigned shift);                 //!< query for a given shift
+            Block * queryBytes(size_t bytes);                    //!< acquire for given bytes
+            Block * query(Random::Bits &ran, const size_t bits); //!< exactly bits
             Block * duplicate(const Block * const);                //!< duplicate block
-            void    release(Block * const)  noexcept;              //!< release in cache
+            void    store(Block * const)  noexcept;              //!< release in cache
             void    gc(const size_t cycles) noexcept;              //!< gc on each shift + mutexes
             void    display() const;                               //!< display status
+
 
 
 
