@@ -1,9 +1,10 @@
 #include "y/apex/block/factory.hpp"
 #include "y/apex/block/ptr.hpp"
-#include "y/concurrent/mutex/qnode.hpp"
+#include "y/concurrent/mutex/qpool.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
+
 
 
 using namespace Yttrium;

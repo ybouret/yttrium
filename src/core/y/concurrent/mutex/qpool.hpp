@@ -60,7 +60,6 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(QMutexPool);
             Y_PROXY_DECL();
             QMutexPoolType my;
-
         };
 
     }
