@@ -47,7 +47,7 @@ namespace Yttrium
             Block * query(const unsigned shift);                 //!< query for a given shift
             Block * queryBytes(size_t bytes);                    //!< acquire for given bytes
             Block * query(Random::Bits &ran, const size_t bits); //!< exactly bits
-            Block * duplicate(const Block * const);              //!< duplicate block
+            Block * duplicate(const Block &);                    //!< duplicate block
             void    store(Block * const)  noexcept;              //!< release in cache
             void    gc(const size_t cycles) noexcept;            //!< gc on each shift + mutexes
             void    display() const;                             //!< display status

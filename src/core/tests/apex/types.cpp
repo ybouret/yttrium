@@ -55,7 +55,7 @@ Y_UTEST(apex_types)
             }
 
             // test duplication
-            Apex::BlockPtr q = F.duplicate( & *p );
+            Apex::BlockPtr q = F.duplicate( *p );
             Y_ASSERT(q->plan==p->plan);
             Y_ASSERT(q->tag32() == p->tag32() );
         }

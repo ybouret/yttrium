@@ -27,15 +27,12 @@ namespace Yttrium
 
         Natural:: ~Natural() noexcept
         {
-            assert(0!=block);
-            static Factory &factory = Factory::Location();
-            factory.store(block);
-            block = 0;
+
         }
 
-        Natural:: Natural(const Natural &_) :
+        Natural:: Natural(const Natural &other) :
         Number(),
-        block( _Factory().duplicate(_.block) )
+        block( _Factory().duplicate( * other.block) )
         {
             
         }
@@ -49,8 +46,8 @@ namespace Yttrium
 
         Natural & Natural:: operator=(const Natural &other)
         {
-            Natural _(other);
-            Swap(block,_.block);
+            Natural temp(other);
+            block.swp(temp.block);
             return *this;
         }
 

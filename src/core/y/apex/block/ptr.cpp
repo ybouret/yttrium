@@ -58,6 +58,12 @@ namespace Yttrium
             return *host;
         }
 
+        void BlockPtr:: swp(BlockPtr &other) noexcept
+        {
+            CoerceSwap(host,other.host);
+        }
+
+
     }
 
 }

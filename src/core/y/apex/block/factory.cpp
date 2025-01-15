@@ -42,9 +42,9 @@ namespace Yttrium
             return blocks[shift].query();
         }
 
-        Block * Factory:: duplicate(const Block * const other)
+        Block * Factory:: duplicate(const Block &other)
         {
-            return queryBytes(other->bytes)->duplicate(other);
+            return queryBytes(other.bytes)->duplicate( &other );
         }
 
 

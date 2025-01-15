@@ -5,7 +5,7 @@
 #define Y_Apex_Natural_Included 1
 
 #include "y/apex/number.hpp"
-#include "y/apex/types.hpp"
+#include "y/apex/block/ptr.hpp"
 #include "y/ostream-proto.hpp"
 
 namespace Yttrium
@@ -24,7 +24,7 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Natural);
             
         private:
-            mutable Block *block;
+            mutable BlockPtr block;
         };
 
     }
