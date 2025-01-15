@@ -1,21 +1,21 @@
 
-#include "y/apex/block/ptr.hpp"
+#include "y/apex/block/mtx.hpp"
 #include "y/apex/block/factory.hpp"
 
 namespace Yttrium
 {
     namespace Apex
     {
-        BlockPtr:: BlockPtr(Block * const block) noexcept :
+        MutexPtr:: MutexPtr(Mutex * const mtx) noexcept :
         Core::Ptr(),
-        host(block)
+        host(mtx)
         {
-            assert(0!=block);
+            assert(0!=mtx);
             assert( Factory::Exists() );
             host->withhold();
         }
 
-        BlockPtr:: ~BlockPtr() noexcept
+        MutexPtr:: ~MutexPtr() noexcept
         {
             assert(0!=host);
             static Factory &factory = Factory::Location();
@@ -27,7 +27,7 @@ namespace Yttrium
         }
 
 
-        BlockPtr:: BlockPtr(const BlockPtr &_) noexcept :
+        MutexPtr:: MutexPtr(const MutexPtr &_) noexcept :
         Core::Ptr(),
         host(_.host)
         {
@@ -35,31 +35,29 @@ namespace Yttrium
             host->withhold();
         }
 
-        Block * BlockPtr:: operator->() noexcept {
+        MutexType * MutexPtr:: operator->() noexcept {
             assert(0!=host);
             return host;
         }
 
-        Block & BlockPtr:: operator*()  noexcept
+        MutexType & MutexPtr:: operator*()  noexcept
         {
             assert(0!=host);
             return *host;
         }
 
 
-        const Block * BlockPtr:: operator->() const noexcept {
+        const MutexType * MutexPtr:: operator->() const noexcept {
             assert(0!=host);
             return host;
         }
 
-        const Block & BlockPtr:: operator*() const noexcept
+        const MutexType & MutexPtr:: operator*() const noexcept
         {
             assert(0!=host);
             return *host;
         }
-
     }
 
 }
-
 

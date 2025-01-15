@@ -107,6 +107,17 @@ namespace Yttrium
 
         }
 
+        Mutex * Factory:: query()
+        {
+            return mutexes.query();
+        }
+
+        void Factory:: store(Mutex * const mtx) noexcept
+        {
+            assert(0!=mtx);
+            mutexes.store(mtx);
+        }
+
     }
 
 }

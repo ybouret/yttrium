@@ -14,7 +14,6 @@ namespace Yttrium
 {
     namespace Apex
     {
-        typedef Concurrent::QMutex Mutex;
 
         //______________________________________________________________________
         //
@@ -53,6 +52,8 @@ namespace Yttrium
             void    gc(const size_t cycles) noexcept;            //!< gc on each shift + mutexes
             void    display() const;                             //!< display status
 
+            Mutex * query();
+            void    store(Mutex * const) noexcept;
 
 
 
