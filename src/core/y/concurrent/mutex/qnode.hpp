@@ -7,6 +7,7 @@
 
 #include "y/concurrent/mutex.hpp"
 #include "y/quantized.hpp"
+#include "y/counted.hpp"
 
 namespace Yttrium
 {
@@ -20,7 +21,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class QMutex : public Quantized, public Mutex
+        class QMutex : public Quantized, public Mutex, public Counted
         {
         public:
             //__________________________________________________________________

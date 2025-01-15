@@ -63,8 +63,7 @@ Y_UTEST(apex_types)
 
     F.display();
 
-    Y_SIZEOF(Concurrent::Mutex);
-    Y_SIZEOF(Concurrent::QMutex);
+    Y_SIZEOF(Mutex);
 
 }
 Y_UDONE()
