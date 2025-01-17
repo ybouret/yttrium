@@ -11,14 +11,14 @@ namespace Yttrium
     namespace Apex
     {
 
-        Block:: Briefly:: Briefly(const Plan which, const Block &block) noexcept :
+        Block:: Momentary:: Momentary(const Plan which, const Block &block) noexcept :
         plan(block.plan),
         host( Coerce(block) )
         {
             host.to(which);
         }
 
-        Block:: Briefly:: ~Briefly() noexcept
+        Block:: Momentary:: ~Momentary() noexcept
         {
             host.to(plan);
         }

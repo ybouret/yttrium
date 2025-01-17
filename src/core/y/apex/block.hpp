@@ -37,16 +37,16 @@ namespace Yttrium
             //! briefly convert block to desired plan
             //
             //__________________________________________________________________
-            class Briefly
+            class Momentary
             {
             public:
-                Briefly(const Plan which, const Block &) noexcept; //!< change
-                ~Briefly()                               noexcept; //!< restore
+                explicit Momentary(const Plan which, const Block &) noexcept; //!< change
+                virtual ~Momentary()                               noexcept; //!< restore
 
             private:
                 const Plan  plan;
                 Block     & host;
-                Y_DISABLE_COPY_AND_ASSIGN(Briefly);
+                Y_DISABLE_COPY_AND_ASSIGN(Momentary);
             };
             
 
@@ -104,7 +104,18 @@ namespace Yttrium
 
         };
 
-      
+        template <Plan PLAN>
+        class MakeMomentary : public Block::Momentary
+        {
+        public:
+            inline explicit MakeMomentary(const Block &block) noexcept :
+            Block::Momentary(PLAN,block) {}
+            inline virtual ~MakeMomentary() noexcept {}
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(MakeMomentary);
+        };
+
+
 
     }
 
