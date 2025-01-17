@@ -32,7 +32,7 @@ namespace Yttrium
             const Block * operator->() const noexcept; //!< access
             const Block & operator*()  const noexcept; //!< access
 
-            void          swp(BlockPtr &) noexcept;
+            void          swp(BlockPtr &) noexcept;    //!< no-throw exchange pointees
 
         private:
             Y_DISABLE_ASSIGN(BlockPtr);

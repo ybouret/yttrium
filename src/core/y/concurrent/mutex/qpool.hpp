@@ -49,7 +49,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            QMutex * query();   //!< query/create
+            QMutex * query();                          //!< query/create
             void     store(QMutex * const)   noexcept; //!< store
             void     gc(const size_t cycles) noexcept; //!< GC
 
@@ -59,7 +59,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const char * const label;
+            const char * const label; //!< label for mutexes
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QMutexPool);

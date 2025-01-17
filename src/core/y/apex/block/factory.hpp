@@ -52,8 +52,8 @@ namespace Yttrium
             void    gc(const size_t cycles) noexcept;            //!< gc on each shift + mutexes
             void    display() const;                             //!< display status
 
-            Mutex * query();
-            void    store(Mutex * const) noexcept;
+            Mutex * query();                       //!< query/create a mutex
+            void    store(Mutex * const) noexcept; //!< store an unused mutex
 
 
 
