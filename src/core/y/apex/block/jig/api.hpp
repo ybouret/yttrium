@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_Apex_Jig_API_Included
-#define Y_Apex_Jig_API_Included 1
+#ifndef Y_Apex_Block_Jig_API_Included
+#define Y_Apex_Block_Jig_API_Included 1
 
 #include "y/apex/types.hpp"
 #include "y/ostream-proto.hpp"

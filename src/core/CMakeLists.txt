@@ -83,6 +83,8 @@ tow
 apex
 apex/block
 apex/block/jig
+apex/block/ops
+apex/n
 kemp
 kemp/element
 kemp/natural

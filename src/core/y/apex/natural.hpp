@@ -18,13 +18,25 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
+
+            class AutoLock {
+            public:
+                AutoLock(const Natural &) noexcept;
+                ~AutoLock()               noexcept;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(AutoLock);
+                const Natural &host;
+            };
+
+
             Natural(const natural_t);
             virtual ~Natural() noexcept;
             Natural(const Natural &);
             Natural & operator=(const Natural &);
             Y_OSTREAM_PROTO(Natural);
 
-            Lockable & operator*() const noexcept;
+            Lockable & operator*()  const noexcept;
+            Lockable * operator->() const noexcept;
 
         private:
             mutable BlockPtr block;

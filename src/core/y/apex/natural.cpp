@@ -7,6 +7,17 @@ namespace Yttrium
     namespace Apex
     {
 
+        Natural:: AutoLock:: AutoLock(const Natural &n) noexcept :
+        host(n)
+        {
+            host->lock();
+        }
+
+        Natural:: AutoLock:: ~AutoLock() noexcept {
+            host->unlock();
+        }
+
+
         static inline Factory & _Factory()
         {
             static Factory & _ = Factory::Instance();
@@ -40,6 +51,12 @@ namespace Yttrium
         Lockable & Natural:: operator*() const noexcept
         {
             return *mutex;
+        }
+
+        
+        Lockable * Natural::operator->() const noexcept
+        {
+            return & *mutex;
         }
 
 

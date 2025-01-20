@@ -1,8 +1,7 @@
-
 //! \file
 
-#ifndef Y_Apex_Jigs_Included
-#define Y_Apex_Jigs_Included 1
+#ifndef Y_Apex_Block_Jigs_Included
+#define Y_Apex_Block_Jigs_Included 1
 
 #include "y/apex/block/jig.hpp"
 #include "y/memory/out-of-reach.hpp"
