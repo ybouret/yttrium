@@ -126,7 +126,7 @@ namespace Yttrium
 
         // compact TARGET=large, SOURCE=small
         template <typename TARGET, typename SOURCE>
-        inline TARGET Compact(const SOURCE * &src ) noexcept
+        inline TARGET Compact(const SOURCE * &src) noexcept
         {
             Y_STATIC_CHECK(sizeof(TARGET)>sizeof(SOURCE),BadConfig);
             static const unsigned targetBytes   = sizeof(TARGET);
