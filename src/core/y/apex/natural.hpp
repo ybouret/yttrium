@@ -15,9 +15,22 @@ namespace Yttrium
     {
         class Block;
 
+        enum AddOps
+        {
+            Add8_1,
+            Add8_2,
+            Add8_4,
+
+            Add4_1,
+            Add4_2,
+
+            Add2_1
+        };
+
         class Natural : public Number
         {
         public:
+
             class AutoLock {
             public:
                 AutoLock(const Natural &) noexcept;
@@ -37,7 +50,10 @@ namespace Yttrium
 
             Lockable & operator*()  const noexcept;
             Lockable * operator->() const noexcept;
-            
+
+
+            Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
+
         private:
             mutable BlockPtr block;
             mutable MutexPtr mutex;
