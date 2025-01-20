@@ -3,7 +3,7 @@
 #ifndef Y_Apex_Block_Included
 #define Y_Apex_Block_Included 1
 
-#include "y/apex/jig/jigs.hpp"
+#include "y/apex/block/jig/jigs.hpp"
 #include "y/apex/block/data.hpp"
 #include "y/data/pool/cxx.hpp"
 #include "y/counted.hpp"

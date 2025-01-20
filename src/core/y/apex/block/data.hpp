@@ -4,7 +4,7 @@
 #ifndef Y_Apex_Block_Data_Included
 #define Y_Apex_Block_Data_Included 1
 
-#include "y/apex/jig/api.hpp"
+#include "y/apex/block/jig/api.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/quantized.hpp"
 

@@ -1,5 +1,5 @@
 
-#include "y/apex/jig/api.hpp"
+#include "y/apex/block/jig/api.hpp"
 #include "y/calculus/base2.hpp"
 
 namespace Yttrium

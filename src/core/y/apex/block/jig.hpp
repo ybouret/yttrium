@@ -4,7 +4,7 @@
 #ifndef Y_Apex_Jig_Included
 #define Y_Apex_Jig_Included 1
 
-#include "y/apex/jig/api.hpp"
+#include "y/apex/block/jig/api.hpp"
 #include "y/type/ints.hpp"
 #include "y/calculus/base2.hpp"
 #include "y/calculus/bit-count.hpp"
