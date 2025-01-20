@@ -8,10 +8,12 @@ using namespace Apex;
 
 Y_UTEST(apex_n)
 {
-    Natural n(1025);
-    Natural p(10);
-    
+    Natural n = 1025;
+
     std::cerr << n << std::endl;
+    n = 111;
+    std::cerr << n << std::endl;
+
 
     Y_SIZEOF(Natural);
 
