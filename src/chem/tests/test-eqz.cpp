@@ -183,8 +183,7 @@ namespace Yttrium
             return os;
         }
 
-        //typedef Small::CoopHeavyList<Boundaries> BndList;
-
+        
 
         class Equalizer
         {
