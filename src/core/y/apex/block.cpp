@@ -1,7 +1,7 @@
 #include "y/apex/block.hpp"
 #include "y/check/static.hpp"
 #include "y/check/crc32.hpp"
-
+#include "y/calculus/byte-count.hpp"
 #include <cstring>
 
 
@@ -248,6 +248,48 @@ namespace Yttrium
             assert(curr->chkBits(bits));
             return *this;
         }
+
+        
+        const void * Block:: To(const Plan p, natural_t &n, size_t &w) noexcept
+        {
+            const size_t bytes = ByteCount::For(n);
+
+            union {
+                uint64_t u8;
+                uint32_t u4[2];
+                uint16_t u2[4];
+                uint8_t  u1[8];
+            } alias = { n };
+
+            switch(p)
+            {
+                case Plan1: w = bytes;
+                {
+                    uint8_t *p = alias.u1;
+                    Scatter(p,n);
+                    n = alias.u8;
+                } break;
+
+                case Plan2: w = Y_ALIGN2(bytes) >> 1;
+                {
+                    uint16_t *p = alias.u2;
+                    Scatter(p,n);
+                    n = alias.u8;
+                } break;
+
+                case Plan4: w = Y_ALIGN4(bytes) >> 2;
+                {
+                    uint32_t *p = alias.u4;
+                    Scatter(p,n);
+                    n = alias.u8;
+                } break;
+
+                case Plan8: w = Y_ALIGN8(bytes) >> 3;
+                    break;
+            }
+            return &n;
+        }
+
 
         uint32_t Block:: tag32() const noexcept
         {

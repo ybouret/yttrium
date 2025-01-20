@@ -12,6 +12,8 @@ namespace Yttrium
 {
     namespace Apex
     {
+
+
         //______________________________________________________________________
         //
         //
@@ -88,7 +90,8 @@ namespace Yttrium
             bool     liberate()                     noexcept; //!< --nref<=0
             size_t   quantity()               const noexcept; //!< nref
 
-            
+            static const void * To(const Plan p, natural_t &n, size_t &w) noexcept;
+
             //__________________________________________________________________
             //
             //

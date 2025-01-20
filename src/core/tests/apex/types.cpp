@@ -65,6 +65,28 @@ Y_UTEST(apex_types)
 
     Y_SIZEOF(Mutex);
 
+
+    for(unsigned bits=0;bits<=18;++bits)
+    {
+        const uint64_t n0 = ran.to<uint64_t>(bits);
+        std::cerr << Hexadecimal(n0) << "/" << bits << std::endl;
+        for(unsigned p=0;p<JigAPI::Plans;++p)
+        {
+            uint64_t           n  = n0;
+            size_t             w  = 0;
+            const Plan         P  = Plan(p);
+            const void * const q  = Block::To(P,n,w);
+            Y_ASSERT(q==&n);
+            switch(P)
+            {
+                case Plan1: Hexadecimal::Display(std::cerr << "\t", (const uint8_t  *)q, w) << "#" << w << std::endl; break;
+                case Plan2: Hexadecimal::Display(std::cerr << "\t", (const uint16_t *)q, w) << "#" << w << std::endl; break;
+                case Plan4: Hexadecimal::Display(std::cerr << "\t", (const uint32_t *)q, w) << "#" << w << std::endl; break;
+                case Plan8: Hexadecimal::Display(std::cerr << "\t", (const uint64_t *)q, w) << "#" << w << std::endl; break;
+            }
+        }
+    }
+
 }
 Y_UDONE()
 

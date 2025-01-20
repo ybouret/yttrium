@@ -18,7 +18,6 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
-
             class AutoLock {
             public:
                 AutoLock(const Natural &) noexcept;
@@ -38,7 +37,7 @@ namespace Yttrium
 
             Lockable & operator*()  const noexcept;
             Lockable * operator->() const noexcept;
-
+            
         private:
             mutable BlockPtr block;
             mutable MutexPtr mutex;
