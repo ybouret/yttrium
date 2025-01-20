@@ -33,6 +33,7 @@ namespace Yttrium
             virtual ~Natural() noexcept;
             Natural(const Natural &);
             Natural & operator=(const Natural &);
+            Natural & operator=(const natural_t)  noexcept;
             Y_OSTREAM_PROTO(Natural);
 
             Lockable & operator*()  const noexcept;

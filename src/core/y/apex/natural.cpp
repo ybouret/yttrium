@@ -27,12 +27,12 @@ namespace Yttrium
         static const unsigned    NaturalShift = iLog2Of<natural_t>::Value;
         static const Plan        NaturalPlan  = Plan(NaturalShift);
 
-        Natural:: Natural(const natural_t value) :
+        Natural:: Natural(const natural_t n) :
         Number(),
         block( _Factory().query(NaturalShift) ),
         mutex( _Factory().query() )
         {
-            block->make<NaturalPlan>().word[0] = value;
+            block->make<NaturalPlan>().word[0] = n;
             block->sync();
         }
 
@@ -47,6 +47,9 @@ namespace Yttrium
         {
             
         }
+
+
+
 
         Lockable & Natural:: operator*() const noexcept
         {
@@ -74,7 +77,12 @@ namespace Yttrium
             return *this;
         }
 
-
+        Natural & Natural:: operator=(const natural_t n)  noexcept
+        {
+            block->make<NaturalPlan>().word[0] = n;
+            block->sync();
+            return *this;
+        }
 
     }
 
