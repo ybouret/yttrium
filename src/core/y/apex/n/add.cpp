@@ -41,13 +41,14 @@ namespace Yttrium
                 static Factory &factory = Factory::Instance();
                 const size_t    resSize = bigSize+1;
                 Block * const   block   = factory.queryBytes( resSize * sizeof(WordType) );
-                try {
-                    const uint64_t mark = (0!=ell) ? WallTime::Ticks() : 0;
+                try
+                {
                     {
                         JigType  & jig = block->make<PLAN>(); assert(block->curr == &jig);
                         WordType * sum = jig.word;
                         CoreType   acc = 0;
 
+                        const uint64_t mark = (0!=ell) ? WallTime::Ticks() : 0;
                         for(size_t i=0;i<litSize;++i)
                         {
                             acc   += static_cast<const CoreType>(litWord[i]) + static_cast<const CoreType>(bigWord[i]);
@@ -63,10 +64,10 @@ namespace Yttrium
                         }
 
                         sum[bigSize] = static_cast<const WordType>(acc);
+                        if(0!=ell) *ell += WallTime::Ticks() - mark;
                     }
-                    
+
                     block->sync();
-                    if(0!=ell) *ell += WallTime::Ticks() - mark;
                     return block;
                 }
                 catch(...)

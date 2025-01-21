@@ -41,37 +41,63 @@ namespace Yttrium
             //------------------------------------------------------------------
             // sort routine
             //------------------------------------------------------------------
-            size_t   inc = 1;
-            do
             {
-                inc *=3;
-                ++inc;
-            }
-            while( inc <= n );
-            do
-            {
-                inc /= 3;
-                for( size_t i=inc+1;i<=n;++i)
+                size_t   inc = 1;
+                do
                 {
-                    const size_t   t = idx[i];
-                    const T       &v = arr[t];
-                    size_t         j = i;
-                    size_t         d = j-inc;
-                    assert( t      <= n );
-                    assert( idx[d] <= n );
-                    while( compare( v, arr[ idx[d] ] ) == Negative )
+                    inc *=3;
+                    ++inc;
+                }
+                while( inc <= n );
+                do
+                {
+                    inc /= 3;
+                    for( size_t i=inc+1;i<=n;++i)
                     {
-                        idx[j] = idx[d];
-                        j = d;
-                        if( j <= inc )
-                            break;
-                        d -= inc;
+                        const size_t   t = idx[i];
+                        const T       &v = arr[t];
+                        size_t         j = i;
+                        size_t         d = j-inc;
+                        assert( t      <= n );
+                        assert( idx[d] <= n );
+                        while( compare( v, arr[ idx[d] ] ) == Negative )
+                        {
+                            idx[j] = idx[d];
+                            j = d;
+                            if( j <= inc )
+                                break;
+                            d -= inc;
+                        }
+                        idx[ j ] = t;
                     }
-                    idx[ j ] = t;
+                }
+                while( inc > 1 );
+            }
+
+            assert( Check(idx,compare,arr) );
+        }
+
+        template <typename T,typename FUNC> static inline
+        bool Check(const Readable<size_t> &idx,
+                   FUNC                   &compare,
+                   const Readable<T>      &arr)
+        {
+            const size_t n = idx.size(); assert( arr.size() == idx.size() );
+            for(size_t i=1;i<n;++i) {
+                const SignType s = compare( arr[ idx[i] ], arr[ idx[i+1] ]);
+                switch( s )
+                {
+                    case __Zero__:
+                    case Negative:
+                        break;
+                    case Positive:
+                        return false;
                 }
             }
-            while( inc > 1 );
+            return true;
         }
+
+
 
         //______________________________________________________________________
         //
