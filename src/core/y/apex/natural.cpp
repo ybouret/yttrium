@@ -22,12 +22,17 @@ namespace Yttrium
 
         const AddOps Natural:: AddOpsTable[NumAddOps] =
         {
-            Add8_1,
-            Add8_2,
-            Add8_4,
-            Add4_1,
-            Add4_2,
-            Add2_1
+            Y_Apex_AddOps_List
+        };
+
+        const char * const Natural:: AddOpsLabel[NumAddOps] =
+        {
+            "Add8_1",
+            "Add8_2",
+            "Add8_4",
+            "Add4_1",
+            "Add4_2",
+            "Add2_1"
         };
 
         static inline Factory & _Factory()
@@ -115,6 +120,13 @@ namespace Yttrium
             block->sync();
             return *this;
         }
+
+        uint64_t Natural:: lsw() const noexcept
+        {
+            volatile AutoLock guard(*this);
+            return block->make<Plan8>().word[0];
+        }
+
 
     }
 

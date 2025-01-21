@@ -16,24 +16,26 @@ namespace Yttrium
     {
         class Block;
 
+#define Y_Apex_AddOps_List \
+/**/           Add8_1,     \
+/**/           Add8_2,     \
+/**/           Add8_4,     \
+/**/           Add4_1,     \
+/**/           Add4_2,     \
+/**/           Add2_1
+
         enum AddOps
         {
-            Add8_1,
-            Add8_2,
-            Add8_4,
-
-            Add4_1,
-            Add4_2,
-
-            Add2_1
+            Y_Apex_AddOps_List
         };
 
         class Natural : public Number
         {
         public:
             static const char * const CallSign;
-            static const unsigned     NumAddOps = Add2_1+1;
+            static const unsigned     NumAddOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1;
             static const AddOps       AddOpsTable[NumAddOps];
+            static const char * const AddOpsLabel[NumAddOps];
 
             class AutoLock {
             public:
@@ -55,12 +57,15 @@ namespace Yttrium
 
             Lockable & operator*()  const noexcept;
             Lockable * operator->() const noexcept;
-
-
-            Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
-
             Block &       _block() noexcept;
             const Block & _block() const noexcept;
+
+            uint64_t      lsw() const noexcept;
+
+
+            static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
+
+
 
         private:
             mutable BlockPtr block;

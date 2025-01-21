@@ -92,7 +92,13 @@ namespace Yttrium
                 const LightArray<T>  arr( (typename TypeTraits<T>::MutableType *)data, size);
                 Make(idx,comp,arr);
             }
-            for(size_t i=0;i<size;++i) --indx[i];
+            for(size_t i=0;i<size;++i)
+            {
+                assert(indx[i]>=1);
+                assert(indx[i]<=size);
+                --indx[i];
+                assert(indx[i]<size);
+            }
         }
 
 

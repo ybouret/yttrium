@@ -63,7 +63,7 @@ namespace Yttrium
         //
         //______________________________________________________________________
         ETA    eta;    //!< time related
-        size_t width;  //!< number of chars fir bar
+        size_t width;  //!< number of chars for bar
         size_t cycle;  //!< cycle counter for animation
         bool   ended;  //!< completed or not
 
