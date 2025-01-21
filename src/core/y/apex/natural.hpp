@@ -8,6 +8,7 @@
 #include "y/apex/block/ptr.hpp"
 #include "y/apex/block/mtx.hpp"
 #include "y/ostream-proto.hpp"
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -30,6 +31,9 @@ namespace Yttrium
         class Natural : public Number
         {
         public:
+            static const char * const CallSign;
+            static const unsigned     NumAddOps = Add2_1+1;
+            static const AddOps       AddOpsTable[NumAddOps];
 
             class AutoLock {
             public:
@@ -42,6 +46,7 @@ namespace Yttrium
 
 
             Natural(const natural_t);
+            Natural(Random::Bits &, const size_t);
             virtual ~Natural() noexcept;
             Natural(const Natural &);
             Natural & operator=(const Natural &);
@@ -53,6 +58,9 @@ namespace Yttrium
 
 
             Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
+
+            Block &       _block() noexcept;
+            const Block & _block() const noexcept;
 
         private:
             mutable BlockPtr block;

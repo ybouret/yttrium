@@ -3,6 +3,7 @@
 #include "y/apex/block/factory.hpp"
 #include "y/check/static.hpp"
 #include "y/system/wtime.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -62,8 +63,8 @@ namespace Yttrium
                         }
 
                         sum[bigSize] = static_cast<const WordType>(acc);
-
                     }
+                    
                     block->sync();
                     if(0!=ell) *ell += WallTime::Ticks() - mark;
                     return block;
@@ -119,6 +120,7 @@ namespace Yttrium
                 }
 
             }
+            throw Specific::Exception(CallSign, "corrupted addOps");
             return 0;
         }
 
