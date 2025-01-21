@@ -78,10 +78,9 @@ Y_UTEST(apex_add)
                 std::cerr <<  std::setw(11) << here.c_str();
                 for(unsigned i=0;i<Natural::NumAddOps;++i)
                 {
-                    const long double speed = static_cast<long double>(cycles)/chrono(tmx[i]);
                     char pfx = ' ';
                     if(0==idx[i]) pfx='*';
-                    std::cerr << "|"  << pfx << HumanReadable( uint64_t(speed) );
+                    std::cerr << "|"  << pfx << HumanReadable( uint64_t(spd[i]) );
                 }
                 std::cerr << std::endl;
 
