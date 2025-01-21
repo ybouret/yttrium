@@ -8,6 +8,7 @@
 #include "y/string.hpp"
 #include "y/text/human-readable.hpp"
 #include "y/sort/indexing.hpp"
+#include "y/text/ascii/convert.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -23,7 +24,11 @@ Y_UTEST(apex_add)
 {
     Random::ParkMiller ran;
 
-    const unsigned maxBits=64;
+    unsigned        maxBits  = 1024;
+    double         duration = 0.1;
+    if(argc>1)     duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
+
+
     uint64_t      tmx[Natural::NumAddOps] = { 0 };
     double        spd[Natural::NumAddOps] = { 0 };
     size_t        idx[Natural::NumAddOps] = { 0 };
@@ -33,9 +38,9 @@ Y_UTEST(apex_add)
     {
         const String fn = "apex-add.dat";
         OutputFile::Overwrite(fn);
-        for(unsigned lbits=0;lbits<=maxBits; lbits += 8)
+        for(unsigned lbits=1;lbits<=maxBits; lbits <<=1)
         {
-            for(unsigned rbits=lbits;rbits<=maxBits; rbits += 8)
+            for(unsigned rbits=lbits;rbits<=maxBits; rbits <<=1)
             {
                 const uint64_t ini    = WallTime::Ticks();
                 uint64_t       end    = ini;
@@ -61,25 +66,32 @@ Y_UTEST(apex_add)
                     end    = WallTime::Ticks();
                     timing = chrono(end-ini);
                 }
-                while(  timing < 0.1 );
+                while(  timing < duration );
+
+                for(unsigned i=0;i<Natural::NumAddOps;++i)
+                {
+                    spd[i] = double( static_cast<long double>(cycles)/chrono(tmx[i]) );
+                }
+
                 AppendFile fp(fn);
                 fp("%u %u", unsigned(lbits), unsigned(rbits));
                 for(unsigned i=0;i<Natural::NumAddOps;++i)
                 {
-                    const  double speed = spd[i] = double( static_cast<long double>(cycles)/chrono(tmx[i]) );
-                    fp(" %.15g", double(speed));
+                    fp(" %.15g", spd[i]);
                 }
                 fp << "\n";
 
                 Indexing::Tableau(idx, Natural::NumAddOps, CompareSpeed, spd);
 
+                
 
                 const String here = Formatted::Get("%u.%u",lbits,rbits);
                 std::cerr <<  std::setw(11) << here.c_str();
+                const size_t best = idx[0];
                 for(unsigned i=0;i<Natural::NumAddOps;++i)
                 {
                     char pfx = ' ';
-                    if(0==idx[i]) pfx='*';
+                    if(best==i) pfx='*';
                     std::cerr << "|"  << pfx << HumanReadable( uint64_t(spd[i]) );
                 }
                 std::cerr << std::endl;

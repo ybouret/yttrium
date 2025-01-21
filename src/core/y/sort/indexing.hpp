@@ -27,9 +27,9 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T,typename FUNC> static inline
-        void Make(Writable<size_t>  &idx,
-                  FUNC              &compare,
-                  const Readable<T> &arr) noexcept
+        void Make(Writable<size_t>  & idx,
+                  FUNC              & cmp,
+                  const Readable<T> & arr) noexcept
         {
 
             //------------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace Yttrium
                         size_t         d = j-inc;
                         assert( t      <= n );
                         assert( idx[d] <= n );
-                        while( compare( v, arr[ idx[d] ] ) == Negative )
+                        while( cmp( v, arr[ idx[d] ] ) == Negative )
                         {
                             idx[j] = idx[d];
                             j = d;
@@ -74,7 +74,16 @@ namespace Yttrium
                 while( inc > 1 );
             }
 
-            assert( Check(idx,compare,arr) );
+#if 0
+            std::cerr << "idx:";
+            for(unsigned i=1;i<=n;++i)
+            {
+                std::cerr << " " << arr[ idx[i] ] << "@" << idx[i];
+            }
+            std::cerr << std::endl;
+#endif
+            
+            assert( Check(idx,cmp,arr) );
         }
 
         template <typename T,typename FUNC> static inline
@@ -84,7 +93,10 @@ namespace Yttrium
         {
             const size_t n = idx.size(); assert( arr.size() == idx.size() );
             for(size_t i=1;i<n;++i) {
-                const SignType s = compare( arr[ idx[i] ], arr[ idx[i+1] ]);
+                const size_t   ilo = idx[i];
+                const size_t   ihi = idx[i+1];
+                const SignType s = compare( arr[ ilo ], arr[ ihi ]);
+                //std::cerr << "compare(@" << ilo << "=" << arr[ilo] << ",@" << ihi << "=" << arr[ihi] << ")" << std::endl;
                 switch( s )
                 {
                     case __Zero__:
@@ -118,6 +130,7 @@ namespace Yttrium
                 const LightArray<T>  arr( (typename TypeTraits<T>::MutableType *)data, size);
                 Make(idx,comp,arr);
             }
+            
             for(size_t i=0;i<size;++i)
             {
                 assert(indx[i]>=1);
