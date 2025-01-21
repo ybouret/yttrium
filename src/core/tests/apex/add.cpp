@@ -24,7 +24,7 @@ Y_UTEST(apex_add)
 {
     Random::ParkMiller ran;
 
-    unsigned        maxBits  = 1024;
+    unsigned       maxBits  = 1024;
     double         duration = 0.1;
     if(argc>1)     duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
 

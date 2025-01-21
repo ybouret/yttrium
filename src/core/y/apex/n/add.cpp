@@ -48,7 +48,8 @@ namespace Yttrium
                         WordType * sum = jig.word;
                         CoreType   acc = 0;
 
-                        const uint64_t mark = (0!=ell) ? WallTime::Ticks() : 0;
+                        const bool     watch = 0!=ell;
+                        const uint64_t mark  = watch ? WallTime::Ticks() : 0;
                         for(size_t i=0;i<litSize;++i)
                         {
                             acc   += static_cast<const CoreType>(litWord[i]) + static_cast<const CoreType>(bigWord[i]);
@@ -64,7 +65,7 @@ namespace Yttrium
                         }
 
                         sum[bigSize] = static_cast<const WordType>(acc);
-                        if(0!=ell) *ell += WallTime::Ticks() - mark;
+                        if(watch) *ell += WallTime::Ticks() - mark;
                     }
 
                     block->sync();

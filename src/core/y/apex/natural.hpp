@@ -36,6 +36,7 @@ namespace Yttrium
             static const unsigned     NumAddOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1;
             static const AddOps       AddOpsTable[NumAddOps];
             static const char * const AddOpsLabel[NumAddOps];
+            static AddOps             AddOpsChoice;
 
             class AutoLock {
             public:
