@@ -9,6 +9,7 @@
 #include "y/apex/block/mtx.hpp"
 #include "y/ostream-proto.hpp"
 #include "y/random/bits.hpp"
+#include "y/type/signs.hpp"
 
 namespace Yttrium
 {
@@ -74,6 +75,9 @@ namespace Yttrium
             friend bool operator!=(const Natural & lhs, const Natural & rhs) noexcept;
             friend bool operator!=(const Natural & lhs, const natural_t rhs) noexcept;
             friend bool operator!=(const natural_t lhs, const Natural & rhs) noexcept;
+
+            static SignType Compare(const Natural & lhs, const Natural &rhs) noexcept;
+
 
             // Additions
             static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
