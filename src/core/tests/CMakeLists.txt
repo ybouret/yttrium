@@ -64,6 +64,7 @@ add_test(main:quantized test-core quantized)
 add_test(main:endian    test-core endian)
 add_test(main:rtti      test-core rtti)
 add_test(main:eta       test-core eta)
+add_test(main:uname     test-core uname)
 
 #text
 add_test(text:plural         test-core text_plural)
