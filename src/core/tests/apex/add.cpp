@@ -32,7 +32,9 @@ Y_UTEST(apex_add)
     uint64_t      tmx[Natural::NumAddOps] = { 0 };
     double        spd[Natural::NumAddOps] = { 0 };
     size_t        idx[Natural::NumAddOps] = { 0 };
+    size_t        bin[Natural::NumAddOps] = { 0 };
     Y_STATIC_ZARR(tmx);
+    Y_STATIC_ZARR(bin);
 
     WallTime chrono;
     {
@@ -91,7 +93,11 @@ Y_UTEST(apex_add)
                 for(unsigned i=0;i<Natural::NumAddOps;++i)
                 {
                     char pfx = ' ';
-                    if(best==i) pfx='*';
+                    if(best==i)
+                    {
+                        pfx='*';
+                        ++bin[i];
+                    }
                     std::cerr << "|"  << pfx << HumanReadable( uint64_t(spd[i]) );
                 }
                 std::cerr << std::endl;
@@ -105,6 +111,20 @@ Y_UTEST(apex_add)
             std::cerr << "|   " << Natural::AddOpsLabel[i];
         }
         std::cerr << std::endl;
+        size_t ntot = 0;
+        for(size_t i=0;i<Natural::NumAddOps;++i)
+        {
+            ntot += bin[i];
+        }
+
+        for(size_t i=0;i<Natural::NumAddOps;++i)
+        {
+            std::cerr << "\t--> " << Natural::AddOpsLabel[i] << " @ ";
+            const double percent = floor( double(bin[i]) * 10000.0 / double(ntot) + 0.5) / 100;
+            std::cerr << Formatted::Get("%6.02f%%",percent);
+            std::cerr << std::endl;
+        }
+
     }
 }
 Y_UDONE()
