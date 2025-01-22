@@ -16,6 +16,8 @@ namespace Yttrium
     {
         class Block;
 
+        Y_SHALLOW_DECL(AsBlock);
+
 #define Y_Apex_AddOps_List \
 /**/           Add8_1,     \
 /**/           Add8_2,     \
@@ -66,9 +68,8 @@ namespace Yttrium
 
             static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
 
-
-
         private:
+            Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;
             mutable MutexPtr mutex;
         };

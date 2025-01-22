@@ -7,6 +7,9 @@ namespace Yttrium
     namespace Apex
     {
 
+        Y_SHALLOW_IMPL(AsBlock);
+
+
         Natural:: AutoLock:: AutoLock(const Natural &n) noexcept :
         host(n)
         {
@@ -60,6 +63,14 @@ namespace Yttrium
         {
             assert(nbit==block->bits);
         }
+
+        Natural:: Natural(Block * const userBlock, const AsBlock_ &) :
+        block( userBlock ),
+        mutex( _Factory().query() )
+        {
+            
+        }
+
 
 
         Natural:: ~Natural() noexcept {
