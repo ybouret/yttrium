@@ -87,6 +87,8 @@ Y_UTEST(apex_types)
         }
     }
 
+    Y_SIZEOF(void *);
+    Y_SIZEOF(ptrdiff_t);
 }
 Y_UDONE()
 

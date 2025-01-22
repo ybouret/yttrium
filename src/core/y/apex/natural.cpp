@@ -23,6 +23,9 @@ namespace Yttrium
 
         const char * const Natural:: CallSign = "Apex::Natural";
 
+
+        AddOps Natural:: AddOpsPrime = Add8_4;
+
         const AddOps Natural:: AddOpsTable[NumAddOps] =
         {
             Y_Apex_AddOps_List
@@ -68,7 +71,7 @@ namespace Yttrium
         block( userBlock ),
         mutex( _Factory().query() )
         {
-            
+
         }
 
 
