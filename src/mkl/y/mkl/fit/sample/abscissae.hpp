@@ -62,9 +62,15 @@ namespace Yttrium
                     Indexing::Make(indx,Compare,abscissae());
                 }
 
-                //! inline comparator
+#if 0
                 static inline int Compare(const Abscissa &lhs, const Abscissa &rhs) noexcept {
                     return lhs < rhs ? -1 : ( rhs < lhs ? 1 : 0);
+                }
+#endif
+                
+                //! inline comparator
+                static inline SignType Compare(const Abscissa &lhs, const Abscissa &rhs) noexcept {
+                    return Sign::Of(lhs,rhs);
                 }
 
                 //______________________________________________________________
