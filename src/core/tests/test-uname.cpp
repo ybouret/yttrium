@@ -12,7 +12,7 @@
 
 using namespace Yttrium;
 
-#define SHOW_FIELD(NAME) std::cerr << #NAME << " : " << buf.NAME << std::endl
+#define SHOW_FIELD(NAME) std::cerr << "\t"<<  #NAME << " : " << buf.NAME << std::endl
 
 Y_UTEST(uname)
 {
@@ -32,6 +32,23 @@ Y_UTEST(uname)
     }
 #endif
     
+#if defined(Y_WIN)
+	SYSTEM_INFO buf;
+	std::cerr << "GetSystemInfo:" << std::endl;
+	::GetSystemInfo(&buf);
+	SHOW_FIELD(dwNumberOfProcessors);
+	SHOW_FIELD(dwPageSize);
+	SHOW_FIELD(dwProcessorType);
+	SHOW_FIELD(wProcessorArchitecture);
+#if 0
+	std::cerr << "GetNativeSystemInfo:" << std::endl;
+	::GetNativeSystemInfo(&buf);
+	SHOW_FIELD(dwNumberOfProcessors);
+	SHOW_FIELD(dwPageSize);
+	SHOW_FIELD(dwProcessorType);
+	SHOW_FIELD(wProcessorArchitecture);
+#endif
+#endif
 }
 Y_UDONE()
 
