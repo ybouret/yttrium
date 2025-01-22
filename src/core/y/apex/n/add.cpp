@@ -126,6 +126,79 @@ namespace Yttrium
             return 0;
         }
 
+        Block * Natural:: Add(Block &lhs, Block &rhs)
+        {
+            return Add(lhs,rhs,AddOpsPrime,0);
+        }
+
+        Block * Natural:: Add(Block &lhs, natural_t rhs) {
+            typedef Jig4::Word Word;
+            const   Jig4      &l = lhs.make<Plan4>();
+            size_t             w = 0;
+            const void * const q = Block::To(Plan4,rhs,w);
+            return JigAdd<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w,0);
+        }
+
+
+        Natural operator+(const Natural &lhs, const Natural &rhs)
+        {
+            volatile Natural::AutoLock L(lhs);
+            volatile Natural::AutoLock R(rhs);
+            return Natural( Natural::Add(*lhs.block,*rhs.block), AsBlock );
+        }
+        
+        Natural operator+(const Natural &lhs, const natural_t rhs)
+        {
+            volatile Natural::AutoLock L(lhs);
+            return Natural( Natural::Add(*lhs.block,rhs), AsBlock );
+        }
+
+        Natural operator+(const natural_t lhs, const Natural  &rhs)
+        {
+            volatile Natural::AutoLock R(rhs);
+            return Natural( Natural::Add(*rhs.block,lhs), AsBlock );
+        }
+
+        Natural & Natural:: operator+=(const Natural &rhs)
+        {
+            volatile Natural::AutoLock R(rhs);
+            {
+                BlockPtr res( Natural::Add(*block,*rhs.block) );
+                block.swp(res);
+            }
+            return *this;
+        }
+
+        
+        Natural & Natural:: operator+=(const natural_t rhs)
+        {
+            BlockPtr res( Natural::Add(*block,rhs) );
+            block.swp(res);
+            return *this;
+        }
+
+        void Natural:: incr()
+        {
+            typedef Jig4::Word Word;
+            static const Word rhs = 0x01;
+            Jig4             &lhs = block->make<Plan4>();
+            BlockPtr res(  JigAdd<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1,0) );
+            block.swp(res);
+        }
+
+        Natural & Natural:: operator++()
+        {
+            incr();
+            return *this;
+        }
+
+        Natural Natural:: operator++(int)
+        {
+            const Natural old(*this);
+            incr();
+            return old;
+        }
+
     }
 
 }

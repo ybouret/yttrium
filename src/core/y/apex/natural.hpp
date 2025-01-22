@@ -50,6 +50,7 @@ namespace Yttrium
             };
 
 
+            // C++
             Natural(const natural_t);
             Natural(Random::Bits &, const size_t);
             virtual ~Natural() noexcept;
@@ -58,15 +59,36 @@ namespace Yttrium
             Natural & operator=(const natural_t)  noexcept;
             Y_OSTREAM_PROTO(Natural);
 
+            // access
             Lockable & operator*()  const noexcept;
             Lockable * operator->() const noexcept;
             Block &       _block() noexcept;
             const Block & _block() const noexcept;
-
             uint64_t      lsw() const noexcept;
 
+            // comparisons
+            friend bool operator==(const Natural & lhs, const Natural & rhs) noexcept;
+            friend bool operator==(const Natural & lhs, const natural_t rhs) noexcept;
+            friend bool operator==(const natural_t lhs, const Natural & rhs) noexcept;
 
+            friend bool operator!=(const Natural & lhs, const Natural & rhs) noexcept;
+            friend bool operator!=(const Natural & lhs, const natural_t rhs) noexcept;
+            friend bool operator!=(const natural_t lhs, const Natural & rhs) noexcept;
+
+            // Additions
             static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
+            static Block *Add(Block &lhs, Block &rhs);
+            static Block *Add(Block &lhs, natural_t rhs);
+
+            friend Natural operator+(const Natural & lhs, const Natural & rhs);
+            friend Natural operator+(const Natural & lhs, const natural_t rhs);
+            friend Natural operator+(const natural_t lhs, const Natural & rhs);
+
+            Natural & operator+=(const Natural & rhs);
+            Natural & operator+=(const natural_t rhs);
+            void      incr();
+            Natural & operator++();
+            Natural   operator++(int);
 
         private:
             Natural(Block * const, const AsBlock_ &);
