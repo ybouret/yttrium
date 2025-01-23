@@ -142,6 +142,15 @@ Y_UTEST(apex_n)
             Y_ASSERT( s == L+R);
             Y_ASSERT( s == l+R);
             Y_ASSERT( s == L+r);
+            {
+                Natural tmp = L;
+                Y_ASSERT(s == (tmp+=R));
+                tmp = L;
+                Y_ASSERT(s == (tmp+=r));
+            }
+
+
+
         }
         Natural I = ran.to<uint64_t>(lbits);
         std::cerr << "I   = " << I   << std::endl;

@@ -173,6 +173,16 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural & operator++();
             Natural   operator++(int);
 
+            //__________________________________________________________________
+            //
+            //
+            // Subtractions
+            //
+            //__________________________________________________________________
+            static Block *Sub(Block &lhs, Block &rhs, const AddOps addOps);
+            friend Natural operator-(const Natural & lhs, const Natural & rhs);
+
+
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;

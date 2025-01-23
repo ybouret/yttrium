@@ -26,7 +26,7 @@ namespace Yttrium
                         const size_t           rn,
                         uint64_t * const       ell)
             {
-                Y_STATIC_CHECK(sizeof(WordType)<sizeof(CoreType),InvalidPlan);
+                Y_STATIC_CHECK(sizeof(WordType)<sizeof(CoreType),InvalidAddPlan);
                 return (ln>=rn) ? Impl(lw,ln,rw,rn,ell) : Impl(rw,rn,lw,ln,ell);
             }
 
