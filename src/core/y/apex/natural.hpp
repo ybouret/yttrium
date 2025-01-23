@@ -78,6 +78,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static const Ops          OpsTable[NumOps];  //!< aliases
             static const char * const OpsLabel[NumOps];  //!< named
             static Ops                AddOps;            //!< default Add/Sub Ops
+            static Ops                MulOps;            //!< default Mul     Ops
 
             //__________________________________________________________________
             //
@@ -169,7 +170,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             friend Natural operator+(const Natural & lhs, const natural_t rhs); //!< lhs+rhs
             friend Natural operator+(const natural_t lhs, const Natural & rhs); //!< lhs+rhs
 
-            Natural   operator+() const;
+            Natural   operator+() const;               //!< unary +
             Natural & operator+=(const Natural & rhs); //!< += rhs
             Natural & operator+=(const natural_t rhs); //!< += rhs
             void      incr();                          //!< +=1
@@ -208,9 +209,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
             static Block *Add(Block &lhs, Block &   rhs);                      //!< default add
             static Block *Add(Block &lhs, natural_t rhs);                      //!< hybrid default add
+
             static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps); //!< lhs-rhs
             static Block *Sub(Block &   lhs, natural_t rhs);                   //!< lhs-rhs
             static Block *Sub(natural_t lhs, Block &   rhs);                   //!< lhs-rhs
+
+            static Block *Mul(Block &lhs, Block &   rhs);                      //!< default add
+
         };
 
     }
