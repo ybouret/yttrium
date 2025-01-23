@@ -104,7 +104,7 @@ namespace Yttrium
                 }
 
             }
-            throw Specific::Exception(CallSign, "corrupted addOps");
+            throw Specific::Exception(CallSign, "corrupted mulOps");
             return 0;
         }
 
@@ -113,6 +113,53 @@ namespace Yttrium
             return Mul(lhs,rhs,MulOps,0);
         }
 
+
+        Block * Natural:: Mul(Block &lhs, natural_t rhs)
+        {
+            typedef Jig4::Word Word;
+            const   Jig4      &l = lhs.make<Plan4>();
+            size_t             w = 0;
+            const void * const q = Block::To(Plan4,rhs,w);
+            return JigMul<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w,0);
+        }
+
+
+        Natural operator*(const Natural &lhs, const Natural &rhs)
+        {
+            volatile Natural::AutoLock L(lhs);
+            volatile Natural::AutoLock R(rhs);
+            return Natural( Natural::Mul(*lhs.block,*rhs.block), AsBlock );
+        }
+
+        Natural operator*(const Natural &lhs, const natural_t rhs)
+        {
+            volatile Natural::AutoLock L(lhs);
+            return Natural( Natural::Mul(*lhs.block,rhs), AsBlock );
+        }
+
+        Natural operator*(const natural_t lhs, const Natural  &rhs)
+        {
+            volatile Natural::AutoLock R(rhs);
+            return Natural( Natural::Mul(*rhs.block,lhs), AsBlock );
+        }
+
+        Natural & Natural:: operator*=(const Natural &rhs)
+        {
+            volatile Natural::AutoLock R(rhs);
+            {
+                BlockPtr res( Natural::Mul(*block,*rhs.block) );
+                block.swp(res);
+            }
+            return *this;
+        }
+
+
+        Natural & Natural:: operator*=(const natural_t rhs)
+        {
+            BlockPtr res( Natural::Mul(*block,rhs) );
+            block.swp(res);
+            return *this;
+        }
     }
 
 }

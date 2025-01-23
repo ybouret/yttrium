@@ -201,6 +201,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
 
+            friend Natural operator*(const Natural & lhs, const Natural & rhs); //!< lhs*rhs
+            friend Natural operator*(const Natural & lhs, const natural_t rhs); //!< lhs*rhs
+            friend Natural operator*(const natural_t lhs, const Natural & rhs); //!< lhs*rhs
+
+            Natural & operator*=(const Natural & rhs); //!< *= rhs
+            Natural & operator*=(const natural_t rhs); //!< *= rhs
 
         private:
             Natural(Block * const, const AsBlock_ &);
@@ -215,6 +221,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static Block *Sub(natural_t lhs, Block &   rhs);                   //!< lhs-rhs
 
             static Block *Mul(Block &lhs, Block &   rhs);                      //!< default add
+            static Block *Mul(Block &lhs, natural_t rhs);                      //!< lhs*rhs
 
         };
 

@@ -25,6 +25,8 @@ namespace Yttrium
 
 
         Ops Natural:: AddOps = Ops8_4;
+        Ops Natural:: MulOps = Ops8_4;
+        
 
         const Ops Natural:: OpsTable[NumOps] =
         {

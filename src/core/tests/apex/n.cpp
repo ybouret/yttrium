@@ -208,5 +208,24 @@ Y_UTEST(apex_n)
     }
 
 
+    std::cerr << "Mul 64bits" << std::endl;
+    for(unsigned lbits=0;lbits<=31;++lbits)
+    {
+        for(unsigned rbits=0;rbits<=32;++rbits)
+        {
+            const uint64_t l = ran.to<uint64_t>(lbits);
+            const uint64_t r = ran.to<uint64_t>(rbits);
+            const uint64_t p = l*r;
+            const Natural  L = l;
+            const Natural  R = r;
+            Y_ASSERT(L*R == p);
+            Y_ASSERT(L*r == p);
+            Y_ASSERT(l*R == p);
+
+        }
+
+    }
+
+
 }
 Y_UDONE()
