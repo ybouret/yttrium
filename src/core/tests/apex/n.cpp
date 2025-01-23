@@ -17,8 +17,13 @@ Y_UTEST(apex_n)
         const uint64_t u = ran.to<uint64_t>(bits);
         const Natural  n = u;
         Y_ASSERT(n._block().bits == bits);
+        Y_ASSERT(n.lsw() == u );
+        
         Y_ASSERT( n == u );
         Y_ASSERT( u == n );
+        Y_ASSERT( ! (n!=u) );
+        Y_ASSERT( ! (u!=n) );
+
     }
 
 
