@@ -19,14 +19,14 @@ namespace Yttrium
         {
             volatile Natural::AutoLock L(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
-            return (l.words == 1) && (rhs == l.word[0]);
+            return (l.words <= 1) && (rhs == l.word[0]);
         }
 
         bool operator==(const natural_t lhs, const Natural & rhs) noexcept
         {
             volatile Natural::AutoLock R(rhs);
             const Jig8 &r  = rhs.block->make<Plan8>();
-            return (r.words == 1) && (lhs == r.word[0]);
+            return (r.words <= 1) && (lhs == r.word[0]);
         }
 
 

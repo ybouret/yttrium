@@ -11,16 +11,16 @@ using namespace Apex;
 Y_UTEST(apex_n)
 {
     Random::ParkMiller ran;
-    Natural n = 1025;
+    for(unsigned bits=0;bits<=64;++bits)
+    {
 
-    std::cerr << n << std::endl;
-    n = 111;
-    std::cerr << n << std::endl;
+        const uint64_t u = ran.to<uint64_t>(bits);
+        const Natural  n = u;
+        Y_ASSERT(n._block().bits == bits);
+        Y_ASSERT( n == u );
+        Y_ASSERT( u == n );
+    }
 
-
-    Y_SIZEOF(Natural);
-
-    
 
 
 
