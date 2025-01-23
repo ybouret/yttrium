@@ -195,5 +195,18 @@ Y_UTEST(apex_n)
 
     }
 
+    std::cerr << "Add/Sub Full" << std::endl;
+    for(size_t iter=0;iter<10000;++iter)
+    {
+        const Natural a(ran,ran.in<size_t>(0,4096));
+        const Natural b(ran,ran.in<size_t>(0,4096));
+        const Natural c = a+b;
+        { Natural tmp = a; Y_ASSERT( c == (tmp+=b) ); }
+        { Natural tmp = b; Y_ASSERT( c == (tmp+=a) ); }
+        Y_ASSERT(c-b==a);
+        Y_ASSERT(c-a==b);
+    }
+
+
 }
 Y_UDONE()
