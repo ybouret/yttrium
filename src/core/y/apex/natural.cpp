@@ -24,21 +24,21 @@ namespace Yttrium
         const char * const Natural:: CallSign = "Apex::Natural";
 
 
-        AddOps Natural:: AddOpsPrime = Add8_4;
+        Ops Natural:: AddOps = Ops8_4;
 
-        const AddOps Natural:: AddOpsTable[NumAddOps] =
+        const Ops Natural:: OpsTable[NumOps] =
         {
-            Y_Apex_AddOps_List
+            Y_Apex_Ops_List
         };
 
-        const char * const Natural:: AddOpsLabel[NumAddOps] =
+        const char * const Natural:: OpsLabel[NumOps] =
         {
-            "Add8_1",
-            "Add8_2",
-            "Add8_4",
-            "Add4_1",
-            "Add4_2",
-            "Add2_1"
+            "Ops8_1",
+            "Ops8_2",
+            "Ops8_4",
+            "Ops4_1",
+            "Ops4_2",
+            "Ops2_1"
         };
 
         static inline Factory & _Factory()

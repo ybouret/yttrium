@@ -85,41 +85,41 @@ namespace Yttrium
             
         }
 
-        Block * Natural:: Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell)
+        Block * Natural:: Add(Block &lhs, Block &rhs, const Ops addOps, uint64_t * const ell)
         {
             switch(addOps)
             {
-                case Add2_1: {
+                case Ops2_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigAdd<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
                 }
 
-                case Add4_1: {
+                case Ops4_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigAdd<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
                 }
 
-                case Add8_1: {
+                case Ops8_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigAdd<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
                 }
 
-                case Add4_2: {
+                case Ops4_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
                     return JigAdd<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
                 }
 
-                case Add8_2: {
+                case Ops8_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
                     return JigAdd<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
                 }
 
-                case Add8_4: {
+                case Ops8_4: {
                     const  Jig4 &l = lhs.make<Plan4>();
                     const  Jig4 &r = rhs.make<Plan4>();
                     return JigAdd<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words,ell);
@@ -132,7 +132,7 @@ namespace Yttrium
 
         Block * Natural:: Add(Block &lhs, Block &rhs)
         {
-            return Add(lhs,rhs,AddOpsPrime,0);
+            return Add(lhs,rhs,AddOps,0);
         }
 
         Block * Natural:: Add(Block &lhs, natural_t rhs) {
@@ -201,6 +201,11 @@ namespace Yttrium
             const Natural old(*this);
             incr();
             return old;
+        }
+
+        Natural Natural:: operator+() const
+        {
+            return Natural(*this);
         }
 
     }

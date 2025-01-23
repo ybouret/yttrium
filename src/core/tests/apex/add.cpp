@@ -29,10 +29,10 @@ Y_UTEST(apex_add)
     if(argc>1)     duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
 
 
-    uint64_t      tmx[Natural::NumAddOps] = { 0 };
-    double        spd[Natural::NumAddOps] = { 0 };
-    size_t        idx[Natural::NumAddOps] = { 0 };
-    size_t        bin[Natural::NumAddOps] = { 0 };
+    uint64_t      tmx[Natural::NumOps] = { 0 };
+    double        spd[Natural::NumOps] = { 0 };
+    size_t        idx[Natural::NumOps] = { 0 };
+    size_t        bin[Natural::NumOps] = { 0 };
     Y_STATIC_ZARR(tmx);
     Y_STATIC_ZARR(bin);
 
@@ -53,9 +53,9 @@ Y_UTEST(apex_add)
                     ++cycles;
                     Natural  lhs(ran,lbits);
                     Natural  rhs(ran,rbits);
-                    for(unsigned i=0;i<Natural::NumAddOps;++i)
+                    for(unsigned i=0;i<Natural::NumOps;++i)
                     {
-                        AddOps   addOps = Natural::AddOpsTable[i];
+                        Ops      addOps = Natural::OpsTable[i];
                         BlockPtr sum    = Natural::Add(lhs._block(), rhs._block(), addOps, &tmx[i]);
                         if(lbits<=63&&rbits<=63)
                         {
@@ -70,27 +70,27 @@ Y_UTEST(apex_add)
                 }
                 while(  timing < duration );
 
-                for(unsigned i=0;i<Natural::NumAddOps;++i)
+                for(unsigned i=0;i<Natural::NumOps;++i)
                 {
                     spd[i] = double( static_cast<long double>(cycles)/chrono(tmx[i]) );
                 }
 
                 AppendFile fp(fn);
                 fp("%u %u", unsigned(lbits), unsigned(rbits));
-                for(unsigned i=0;i<Natural::NumAddOps;++i)
+                for(unsigned i=0;i<Natural::NumOps;++i)
                 {
                     fp(" %.15g", spd[i]);
                 }
                 fp << "\n";
 
-                Indexing::Tableau(idx, Natural::NumAddOps, CompareSpeed, spd);
+                Indexing::Tableau(idx, Natural::NumOps, CompareSpeed, spd);
 
                 
 
                 const String here = Formatted::Get("%u.%u",lbits,rbits);
                 std::cerr <<  std::setw(11) << here.c_str();
                 const size_t best = idx[0];
-                for(unsigned i=0;i<Natural::NumAddOps;++i)
+                for(unsigned i=0;i<Natural::NumOps;++i)
                 {
                     char pfx = ' ';
                     if(best==i)
@@ -106,20 +106,20 @@ Y_UTEST(apex_add)
         }
 
         std::cerr << "           ";
-        for(unsigned i=0;i<Natural::NumAddOps;++i)
+        for(unsigned i=0;i<Natural::NumOps;++i)
         {
-            std::cerr << "|   " << Natural::AddOpsLabel[i];
+            std::cerr << "|   " << Natural::OpsLabel[i];
         }
         std::cerr << std::endl;
         size_t ntot = 0;
-        for(size_t i=0;i<Natural::NumAddOps;++i)
+        for(size_t i=0;i<Natural::NumOps;++i)
         {
             ntot += bin[i];
         }
 
-        for(size_t i=0;i<Natural::NumAddOps;++i)
+        for(size_t i=0;i<Natural::NumOps;++i)
         {
-            std::cerr << "\t--> " << Natural::AddOpsLabel[i] << " @ ";
+            std::cerr << "\t--> " << Natural::OpsLabel[i] << " @ ";
             const double percent = floor( double(bin[i]) * 10000.0 / double(ntot) + 0.5) / 100;
             std::cerr << Formatted::Get("%6.02f%%",percent);
             std::cerr << std::endl;

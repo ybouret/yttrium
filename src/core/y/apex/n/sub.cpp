@@ -103,41 +103,41 @@ namespace Yttrium
             
         }
 
-        Block * Natural:: Sub(Block &lhs, Block &rhs, const AddOps addOps)
+        Block * Natural:: Sub(Block &lhs, Block &rhs, const Ops addOps)
         {
             switch(addOps)
             {
-                case Add2_1: {
+                case Ops2_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigSub<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
-                case Add4_1: {
+                case Ops4_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigSub<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
-                case Add8_1: {
+                case Ops8_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
                     return JigSub<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
-                case Add4_2: {
+                case Ops4_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
                     return JigSub<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
-                case Add8_2: {
+                case Ops8_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
                     return JigSub<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
-                case Add8_4: {
+                case Ops8_4: {
                     const  Jig4 &l = lhs.make<Plan4>();
                     const  Jig4 &r = rhs.make<Plan4>();
                     return JigSub<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words);
@@ -154,7 +154,7 @@ namespace Yttrium
         {
             volatile Natural::AutoLock L(lhs);
             volatile Natural::AutoLock R(rhs);
-            return Natural( Natural::Sub(*lhs.block, *rhs.block, Natural::AddOpsPrime), AsBlock );
+            return Natural( Natural::Sub(*lhs.block, *rhs.block, Natural::AddOps), AsBlock );
         }
 
         Block * Natural:: Sub(Block &lhs, natural_t rhs)
@@ -191,7 +191,7 @@ namespace Yttrium
         {
             volatile Natural::AutoLock R(rhs);
             {
-                BlockPtr tmp( Sub(*block, *rhs.block, Natural::AddOpsPrime ) );
+                BlockPtr tmp( Sub(*block, *rhs.block, Natural::AddOps ) );
                 block.swp(tmp);
             }
             return *this;

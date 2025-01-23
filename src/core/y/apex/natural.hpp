@@ -22,16 +22,16 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! list of AddOps
+        //! list of  Ops
         //
         //______________________________________________________________________
-#define Y_Apex_AddOps_List \
-/**/           Add8_1,     \
-/**/           Add8_2,     \
-/**/           Add8_4,     \
-/**/           Add4_1,     \
-/**/           Add4_2,     \
-/**/           Add2_1
+#define Y_Apex_Ops_List \
+/**/           Ops8_1,  \
+/**/           Ops8_2,  \
+/**/           Ops8_4,  \
+/**/           Ops4_1,  \
+/**/           Ops4_2,  \
+/**/           Ops2_1
 
         //______________________________________________________________________
         //
@@ -39,7 +39,7 @@ namespace Yttrium
         //! Named adding operation style
         //
         //______________________________________________________________________
-        enum AddOps { Y_Apex_AddOps_List };
+        enum Ops { Y_Apex_Ops_List };
 
 
         //! helper to implement comparisons
@@ -74,10 +74,10 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< Apex::Natural
-            static const unsigned     NumAddOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1; //!< card(AddOps)
-            static const AddOps       AddOpsTable[NumAddOps]; //!< aliases
-            static const char * const AddOpsLabel[NumAddOps]; //!< named
-            static AddOps             AddOpsPrime;            //!< default Add/Sub style
+            static const unsigned     NumOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1; //!< card(AddOps)
+            static const Ops          OpsTable[NumOps];  //!< aliases
+            static const char * const OpsLabel[NumOps];  //!< named
+            static Ops                AddOps;            //!< default Add/Sub Ops
 
             //__________________________________________________________________
             //
@@ -163,12 +163,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
 
             //! add with optional timing
-            static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
+            static Block *Add(Block &lhs, Block &rhs, const Ops addOps, uint64_t * const ell);
 
             friend Natural operator+(const Natural & lhs, const Natural & rhs); //!< lhs+rhs
             friend Natural operator+(const Natural & lhs, const natural_t rhs); //!< lhs+rhs
             friend Natural operator+(const natural_t lhs, const Natural & rhs); //!< lhs+rhs
 
+            Natural   operator+() const;
             Natural & operator+=(const Natural & rhs); //!< += rhs
             Natural & operator+=(const natural_t rhs); //!< += rhs
             void      incr();                          //!< +=1
@@ -191,15 +192,23 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural & operator--();                    //!< --this
             Natural   operator--(int);                 //!< this--
 
+            //__________________________________________________________________
+            //
+            //
+            // Multiplication
+            //
+            //__________________________________________________________________
+            static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
+
+
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;
             mutable MutexPtr mutex;
 
-            static Block *Add(Block &lhs, Block &   rhs); //!< default add
-            static Block *Add(Block &lhs, natural_t rhs); //!< hybrid default add
-
-            static Block *Sub(Block &   lhs, Block &   rhs, const AddOps addOps); //!< lhs-rhs
+            static Block *Add(Block &lhs, Block &   rhs);                      //!< default add
+            static Block *Add(Block &lhs, natural_t rhs);                      //!< hybrid default add
+            static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps); //!< lhs-rhs
             static Block *Sub(Block &   lhs, natural_t rhs);                   //!< lhs-rhs
             static Block *Sub(natural_t lhs, Block &   rhs);                   //!< lhs-rhs
         };
