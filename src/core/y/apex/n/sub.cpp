@@ -11,92 +11,97 @@ namespace Yttrium
 {
     namespace Apex
     {
-        template <
-        Plan CORE,
-        Plan PLAN
-        > struct JigSub {
-            typedef typename Jig<CORE>::SignedWord CarryType;
-            typedef          Jig<PLAN>             JigType;
-            typedef typename JigType::Word         WordType;
-            static const unsigned                  WordBits = sizeof(WordType) << 3;
-            static const CarryType                 Radix    = CarryType(1) << WordBits;
 
-            static inline
-            Block * Get(const WordType * const lw,
-                        const size_t           ln,
-                        const WordType * const rw,
-                        const size_t           rn)
-            {
-                Y_STATIC_CHECK(sizeof(WordType)<sizeof(CarryType),InvalidSubPlan);
-
-                if(rn>ln)
-                    throw Libc::Exception(EDOM, "Apex::Sub(lhs<rhs) Level-1");
-
-                static Factory &factory = Factory::Instance();
-                Block * const   block   = factory.queryBytes( ln * sizeof(WordType) );
-
-                try
+        namespace
+        {
+            template <
+            Plan CORE,
+            Plan PLAN
+            > struct JigSub {
+                typedef typename Jig<CORE>::SignedWord CarryType;
+                typedef          Jig<PLAN>             JigType;
+                typedef typename JigType::Word         WordType;
+                static const unsigned                  WordBits = sizeof(WordType) << 3;
+                static const CarryType                 Radix    = CarryType(1) << WordBits;
+                
+                static inline
+                Block * Get(const WordType * const lw,
+                            const size_t           ln,
+                            const WordType * const rw,
+                            const size_t           rn)
                 {
-                    JigType  &       j   = block->make<PLAN>(); assert(block->curr == &j);
-                    WordType * const d   = j.word;
-                    CarryType        cr  = 0;
-
-                    //----------------------------------------------------------
-                    //
-                    // common size
-                    //
-                    //----------------------------------------------------------
-                    for(size_t i=0;i<rn;++i)
+                    Y_STATIC_CHECK(sizeof(WordType)<sizeof(CarryType),InvalidSubPlan);
+                    
+                    if(rn>ln)
+                        throw Libc::Exception(EDOM, "Apex::Sub(lhs<rhs) Level-1");
+                    
+                    static Factory &factory = Factory::Instance();
+                    Block * const   block   = factory.queryBytes( ln * sizeof(WordType) );
+                    
+                    try
                     {
-                        cr += static_cast<CarryType>( lw[i] ) - static_cast<CarryType>( rw[i] );
+                        JigType  &       j   = block->make<PLAN>(); assert(block->curr == &j);
+                        WordType * const d   = j.word;
+                        CarryType        cr  = 0;
+                        
+                        //----------------------------------------------------------
+                        //
+                        // common size
+                        //
+                        //----------------------------------------------------------
+                        for(size_t i=0;i<rn;++i)
+                        {
+                            cr += static_cast<CarryType>( lw[i] ) - static_cast<CarryType>( rw[i] );
+                            if(cr<0)
+                            {
+                                d[i] = static_cast<WordType>(cr+Radix);
+                                cr  = -1;
+                            }
+                            else
+                            {
+                                d[i] = static_cast<WordType>(cr);
+                                cr  = 0;
+                            }
+                        }
+                        
+                        //----------------------------------------------------------
+                        //
+                        // propagate carry
+                        //
+                        //----------------------------------------------------------
+                        for(size_t i=rn;i<ln;++i)
+                        {
+                            cr += static_cast<CarryType>( lw[i] );
+                            if(cr<0)
+                            {
+                                d[i] = static_cast<WordType>(cr+Radix);
+                                cr   = -1;
+                            }
+                            else
+                            {
+                                d[i] = static_cast<WordType>(cr);
+                                cr   = 0;
+                            }
+                        }
+                        
                         if(cr<0)
-                        {
-                            d[i] = static_cast<WordType>(cr+Radix);
-                            cr  = -1;
-                        }
-                        else
-                        {
-                            d[i] = static_cast<WordType>(cr);
-                            cr  = 0;
-                        }
+                            throw Libc::Exception(EDOM, "Apex::Sub(lhs<rhs) Level-2");
+                        
+                        
+                        block->sync();
+                        return block;
+                        
                     }
-
-                    //----------------------------------------------------------
-                    //
-                    // propagate carry
-                    //
-                    //----------------------------------------------------------
-                    for(size_t i=rn;i<ln;++i)
+                    catch(...)
                     {
-                        cr += static_cast<CarryType>( lw[i] );
-                        if(cr<0)
-                        {
-                            d[i] = static_cast<WordType>(cr+Radix);
-                            cr   = -1;
-                        }
-                        else
-                        {
-                            d[i] = static_cast<WordType>(cr);
-                            cr   = 0;
-                        }
+                        factory.store(block);
+                        throw;
                     }
-
-                    if(cr<0)
-                        throw Libc::Exception(EDOM, "Apex::Sub(lhs<rhs) Level-2");
-
-
-                    block->sync();
-                    return block;
-
                 }
-                catch(...)
-                {
-                    factory.store(block);
-                    throw;
-                }
-            }
-
-        };
+                
+            };
+            
+        }
 
         Block * Natural:: Sub(Block &lhs, Block &rhs, const AddOps addOps)
         {
@@ -148,7 +153,7 @@ namespace Yttrium
         Natural operator-(const Natural & lhs, const Natural & rhs)
         {
             volatile Natural::AutoLock L(lhs);
-            volatile Natural::AutoLock R(lhs);
+            volatile Natural::AutoLock R(rhs);
             return Natural( Natural::Sub(*lhs.block, *rhs.block, Natural::AddOpsPrime), AsBlock );
         }
 
@@ -180,6 +185,46 @@ namespace Yttrium
         {
             volatile Natural::AutoLock R(rhs);
             return Natural( Natural::Sub(lhs, *rhs.block), AsBlock );
+        }
+
+        Natural & Natural:: operator-=(const Natural & rhs)
+        {
+            volatile Natural::AutoLock R(rhs);
+            {
+                BlockPtr tmp( Sub(*block, *rhs.block, Natural::AddOpsPrime ) );
+                block.swp(tmp);
+            }
+            return *this;
+        }
+
+        Natural & Natural:: operator-=(const natural_t rhs)
+        {
+            BlockPtr tmp( Sub(*block,rhs) );
+            block.swp(tmp);
+            return *this;
+        }
+
+        void Natural:: decr()
+        {
+            typedef Jig4::Word Word;
+            static const Word rhs = 0x01;
+            Jig4             &lhs = block->make<Plan4>();
+            BlockPtr res(  JigSub<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1) );
+            block.swp(res);
+        }
+
+
+        Natural & Natural:: operator--()
+        {
+            decr();
+            return *this;
+        }
+
+        Natural Natural:: operator--(int)
+        {
+            const Natural old(*this);
+            decr();
+            return old;
         }
 
     }

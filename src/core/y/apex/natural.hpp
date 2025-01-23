@@ -187,6 +187,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             friend Natural operator-(const Natural & lhs, const natural_t rhs);
             friend Natural operator-(const natural_t lhs, const Natural & rhs);
 
+            Natural & operator-=(const Natural & rhs);
+            Natural & operator-=(const natural_t rhs);
+            void      decr();
+            Natural & operator--();
+            Natural   operator--(int);
 
         private:
             Natural(Block * const, const AsBlock_ &);
