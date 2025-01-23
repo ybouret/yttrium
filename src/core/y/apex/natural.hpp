@@ -19,8 +19,12 @@ namespace Yttrium
 
         Y_SHALLOW_DECL(AsBlock); //!< alias
 
-        
+        //______________________________________________________________________
+        //
+        //
         //! list of AddOps
+        //
+        //______________________________________________________________________
 #define Y_Apex_AddOps_List \
 /**/           Add8_1,     \
 /**/           Add8_2,     \
@@ -31,12 +35,24 @@ namespace Yttrium
 
         //______________________________________________________________________
         //
+        //
         //! Named adding operation style
+        //
         //______________________________________________________________________
-        enum AddOps
-        {
-            Y_Apex_AddOps_List
-        };
+        enum AddOps { Y_Apex_AddOps_List };
+
+
+#define Y_Apex_Natural_Op(OP,LHS,RHS,MATCHES,RESULT) \
+/**/ inline friend \
+/**/ bool  operator OP (const LHS lhs, const RHS rhs) noexcept {\
+/**/   return RESULT MATCHES Natural::Compare(lhs,rhs); \
+/**/ }
+
+#define Y_Apex_Natural_Ops(OP,MATCHES,RESULT) \
+Y_Apex_Natural_Op(OP,Natural &, Natural &, MATCHES, RESULT) \
+Y_Apex_Natural_Op(OP,Natural &, natural_t, MATCHES, RESULT) \
+Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
+
 
         //______________________________________________________________________
         //
@@ -131,8 +147,12 @@ namespace Yttrium
             static SignType Compare(const Natural & lhs, const natural_t rhs) noexcept; //! Sign::Of(lhs,rhs)
             static SignType Compare(const natural_t lhs, const Natural & rhs) noexcept; //! Sign::Of(lhs,rhs)
 
-
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+            Y_Apex_Natural_Ops(<, ==,Negative)
+            Y_Apex_Natural_Ops(>, ==,Positive)
+            Y_Apex_Natural_Ops(<=,!=,Positive)
+            Y_Apex_Natural_Ops(>=,!=,Negative)
+#endif
             //__________________________________________________________________
             //
             //
