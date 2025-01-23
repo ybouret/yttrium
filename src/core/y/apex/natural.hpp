@@ -42,13 +42,15 @@ namespace Yttrium
         enum AddOps { Y_Apex_AddOps_List };
 
 
-#define Y_Apex_Natural_Op(OP,LHS,RHS,MATCHES,RESULT) \
-/**/ inline friend \
-/**/ bool  operator OP (const LHS lhs, const RHS rhs) noexcept {\
-/**/   return RESULT MATCHES Natural::Compare(lhs,rhs); \
+        //! helper to implement comparisons
+#define Y_Apex_Natural_Op(OP,LHS,RHS,MATCHES,RESULT)             \
+/**/ inline friend                                               \
+/**/ bool  operator OP (const LHS lhs, const RHS rhs) noexcept { \
+/**/   return RESULT MATCHES Natural::Compare(lhs,rhs);          \
 /**/ }
 
-#define Y_Apex_Natural_Ops(OP,MATCHES,RESULT) \
+        //! helper to implement comparisons
+#define Y_Apex_Natural_Ops(OP,MATCHES,RESULT)               \
 Y_Apex_Natural_Op(OP,Natural &, Natural &, MATCHES, RESULT) \
 Y_Apex_Natural_Op(OP,Natural &, natural_t, MATCHES, RESULT) \
 Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
@@ -143,9 +145,9 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             // Comparisons
             //__________________________________________________________________
-            static SignType Compare(const Natural & lhs, const Natural & rhs) noexcept; //! Sign::Of(lhs,rhs)
-            static SignType Compare(const Natural & lhs, const natural_t rhs) noexcept; //! Sign::Of(lhs,rhs)
-            static SignType Compare(const natural_t lhs, const Natural & rhs) noexcept; //! Sign::Of(lhs,rhs)
+            static SignType Compare(const Natural & lhs, const Natural & rhs) noexcept; //!< Sign::Of(lhs,rhs)
+            static SignType Compare(const Natural & lhs, const natural_t rhs) noexcept; //!< Sign::Of(lhs,rhs)
+            static SignType Compare(const natural_t lhs, const Natural & rhs) noexcept; //!< Sign::Of(lhs,rhs)
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Apex_Natural_Ops(<, ==,Negative)
@@ -159,19 +161,19 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Additions
             //
             //__________________________________________________________________
-            static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
-            static Block *Add(Block &lhs, Block &rhs);
-            static Block *Add(Block &lhs, natural_t rhs);
+            static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell); //!< add with optional timing
+            static Block *Add(Block &lhs, Block &   rhs); //!< default add
+            static Block *Add(Block &lhs, natural_t rhs); //!< hybrid default add
 
-            friend Natural operator+(const Natural & lhs, const Natural & rhs);
-            friend Natural operator+(const Natural & lhs, const natural_t rhs);
-            friend Natural operator+(const natural_t lhs, const Natural & rhs);
+            friend Natural operator+(const Natural & lhs, const Natural & rhs); //!< lhs+rhs
+            friend Natural operator+(const Natural & lhs, const natural_t rhs); //!< lhs+rhs
+            friend Natural operator+(const natural_t lhs, const Natural & rhs); //!< lhs+rhs
 
-            Natural & operator+=(const Natural & rhs);
-            Natural & operator+=(const natural_t rhs);
-            void      incr();
-            Natural & operator++();
-            Natural   operator++(int);
+            Natural & operator+=(const Natural & rhs); //!< += rhs
+            Natural & operator+=(const natural_t rhs); //!< += rhs
+            void      incr();                          //!< +=1
+            Natural & operator++();                    //!< ++this
+            Natural   operator++(int);                 //!< this++
 
             //__________________________________________________________________
             //
@@ -179,19 +181,19 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Subtractions
             //
             //__________________________________________________________________
-            static Block *Sub(Block &lhs, Block &rhs, const AddOps addOps);
-            static Block *Sub(Block &lhs, natural_t rhs);
-            static Block *Sub(natural_t lhs, Block &rhs);
+            static Block *Sub(Block &lhs, Block &rhs, const AddOps addOps); //!< lhs-rhs
+            static Block *Sub(Block &lhs, natural_t rhs);                   //!< lhs-rhs
+            static Block *Sub(natural_t lhs, Block &rhs);                   //!< lhs-rhs
 
-            friend Natural operator-(const Natural & lhs, const Natural & rhs);
-            friend Natural operator-(const Natural & lhs, const natural_t rhs);
-            friend Natural operator-(const natural_t lhs, const Natural & rhs);
+            friend Natural operator-(const Natural & lhs, const Natural & rhs); //!< lhs-rhs
+            friend Natural operator-(const Natural & lhs, const natural_t rhs); //!< lhs-rhs
+            friend Natural operator-(const natural_t lhs, const Natural & rhs); //!< lhs-rhs
 
-            Natural & operator-=(const Natural & rhs);
-            Natural & operator-=(const natural_t rhs);
-            void      decr();
-            Natural & operator--();
-            Natural   operator--(int);
+            Natural & operator-=(const Natural & rhs); //!< -= rhs
+            Natural & operator-=(const natural_t rhs); //!< -= rhs
+            void      decr();                          //!< -=1
+            Natural & operator--();                    //!< --this
+            Natural   operator--(int);                 //!< this--
 
         private:
             Natural(Block * const, const AsBlock_ &);

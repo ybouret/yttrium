@@ -41,7 +41,7 @@ namespace Yttrium
             static const unsigned                         WordBytes = (1 << WordShift); //!< alias
             static const unsigned                         WordBits  = WordBytes << 3;   //!< alias
             typedef typename UnsignedInt<WordBytes>::Type Word;                         //!< alias
-            typedef typename SignedInt<WordBytes>::Type   SignedWord;
+            typedef typename SignedInt<WordBytes>::Type   SignedWord;                   //!< alias
 
             //__________________________________________________________________
             //
