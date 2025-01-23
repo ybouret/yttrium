@@ -129,6 +129,24 @@ Y_UTEST(apex_n)
 
     }
 
+    std::cerr << "Add 64-bits" << std::endl;
+    for(unsigned lbits=0;lbits<=63;++lbits)
+    {
+        for(unsigned rbits=0;rbits<=63;++rbits)
+        {
+            const uint64_t l = ran.to<uint64_t>(lbits);
+            const uint64_t r = ran.to<uint64_t>(rbits);
+            const uint64_t s = l+r;
+            const Natural  L = l;
+            const Natural  R = r;
+            Y_ASSERT( s == L+R);
+            Y_ASSERT( s == l+R);
+            Y_ASSERT( s == L+r);
+        }
+    }
+
+
+
 
 
 }
