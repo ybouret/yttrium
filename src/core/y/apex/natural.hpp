@@ -111,19 +111,23 @@ namespace Yttrium
             //
             // Equality
             //__________________________________________________________________
-            friend bool operator==(const Natural & lhs, const Natural & rhs) noexcept;
-            friend bool operator==(const Natural & lhs, const natural_t rhs) noexcept;
-            friend bool operator==(const natural_t lhs, const Natural & rhs) noexcept;
+            friend bool operator==(const Natural & lhs, const Natural & rhs) noexcept; //!< lhs == rhs
+            friend bool operator==(const Natural & lhs, const natural_t rhs) noexcept; //!< lhs == rhs
+            friend bool operator==(const natural_t lhs, const Natural & rhs) noexcept; //!< lhs == rhs
 
             //__________________________________________________________________
             //
             // Different
             //__________________________________________________________________
-            friend bool operator!=(const Natural & lhs, const Natural & rhs) noexcept;
-            friend bool operator!=(const Natural & lhs, const natural_t rhs) noexcept;
-            friend bool operator!=(const natural_t lhs, const Natural & rhs) noexcept;
+            friend bool operator!=(const Natural & lhs, const Natural & rhs) noexcept; //!< lhs != rhs
+            friend bool operator!=(const Natural & lhs, const natural_t rhs) noexcept; //!< lhs != rhs
+            friend bool operator!=(const natural_t lhs, const Natural & rhs) noexcept; //!< lhs != rhs
 
-            static SignType Compare(const Natural & lhs, const Natural &rhs) noexcept;
+            //__________________________________________________________________
+            //
+            // Comparisons
+            //__________________________________________________________________
+            static SignType Compare(const Natural & lhs, const Natural &rhs) noexcept; //! Sign::Of(lhs,rhs)
 
 
             //__________________________________________________________________
