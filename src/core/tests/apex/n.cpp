@@ -11,19 +11,22 @@ using namespace Apex;
 Y_UTEST(apex_n)
 {
     Random::ParkMiller ran;
-    for(unsigned bits=0;bits<=64;++bits)
+    for(unsigned ubits=0;ubits<=64;++ubits)
     {
 
-        const uint64_t u = ran.to<uint64_t>(bits);
-        const Natural  n = u;
-        Y_ASSERT(n._block().bits == bits);
-        Y_ASSERT(n.lsw() == u );
-        
-        Y_ASSERT( n == u );
-        Y_ASSERT( u == n );
-        Y_ASSERT( ! (n!=u) );
-        Y_ASSERT( ! (u!=n) );
+        for(size_t uter=0;uter<1024;++uter)
+        {
+            const uint64_t u = ran.to<uint64_t>(ubits);
+            const Natural  U = u;
+            Y_ASSERT(U._block().bits == ubits);
+            Y_ASSERT(U.lsw() == u );
 
+            Y_ASSERT( U == u );
+            Y_ASSERT( u == U );
+            Y_ASSERT( ! (U!=u) );
+            Y_ASSERT( ! (u!=U) );
+
+        }
     }
 
 
