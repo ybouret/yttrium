@@ -18,7 +18,7 @@ namespace Yttrium
         //
         //
         //
-        //! Data + representation
+        //! Data + representations
         //
         //
         //______________________________________________________________________
@@ -33,23 +33,6 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxPoolOf<Block> Pool; //!< alias
 
-            //__________________________________________________________________
-            //
-            //
-            //! briefly convert block to desired plan
-            //
-            //__________________________________________________________________
-            class Momentary
-            {
-            public:
-                explicit Momentary(const Plan which, const Block &) noexcept; //!< change
-                virtual ~Momentary()                               noexcept; //!< restore
-
-            private:
-                const Plan  plan;
-                Block     & host;
-                Y_DISABLE_COPY_AND_ASSIGN(Momentary);
-            };
             
 
 
@@ -69,8 +52,6 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-
-
             void    ldz()             noexcept; //!< set all to zero, reset to plan1
             void    relink()          noexcept; //!< set curr and dull from plan
             void    syncDull()        noexcept; //!< sync dull after manual setting of curr
@@ -90,6 +71,7 @@ namespace Yttrium
             bool     liberate()                     noexcept; //!< --nref<=0
             size_t   quantity()               const noexcept; //!< nref
 
+            //! in-place natural representation as required plan
             static const void * To(const Plan p, natural_t &n, size_t &w) noexcept;
 
             //__________________________________________________________________
@@ -107,16 +89,7 @@ namespace Yttrium
 
         };
 
-        template <Plan PLAN>
-        class MakeMomentary : public Block::Momentary
-        {
-        public:
-            inline explicit MakeMomentary(const Block &block) noexcept :
-            Block::Momentary(PLAN,block) {}
-            inline virtual ~MakeMomentary() noexcept {}
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(MakeMomentary);
-        };
+        
 
 
 

@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Apex_Number_Included
@@ -11,6 +9,7 @@ namespace Yttrium
 {
     namespace Apex
     {
+
 
         //! base class for numbers
         class Number

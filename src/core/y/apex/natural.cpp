@@ -116,7 +116,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Natural &n) {
             Y_LOCK(*n);
-            const Block::Momentary change(Plan1,*n.block);
+            n.block->to(Plan1);
             os << *n.block;
             return os;
         }

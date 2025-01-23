@@ -86,18 +86,21 @@ namespace Yttrium
             assert( Check(idx,cmp,arr) );
         }
 
+        //______________________________________________________________________
+        //
+        //! check that indexing is valid, mostly to debug
+        //______________________________________________________________________
         template <typename T,typename FUNC> static inline
         bool Check(const Readable<size_t> &idx,
-                   FUNC                   &compare,
+                   FUNC                   &cmp,
                    const Readable<T>      &arr)
         {
             const size_t n = idx.size(); assert( arr.size() == idx.size() );
             for(size_t i=1;i<n;++i) {
                 const size_t   ilo = idx[i];
                 const size_t   ihi = idx[i+1];
-                const SignType s = compare( arr[ ilo ], arr[ ihi ]);
-                //std::cerr << "compare(@" << ilo << "=" << arr[ilo] << ",@" << ihi << "=" << arr[ihi] << ")" << std::endl;
-                switch( s )
+                const SignType sgn = cmp( arr[ ilo ], arr[ ihi ]);
+                switch( sgn )
                 {
                     case __Zero__:
                     case Negative:

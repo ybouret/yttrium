@@ -17,8 +17,10 @@ namespace Yttrium
     {
         class Block;
 
-        Y_SHALLOW_DECL(AsBlock);
+        Y_SHALLOW_DECL(AsBlock); //!< alias
 
+        
+        //! list of AddOps
 #define Y_Apex_AddOps_List \
 /**/           Add8_1,     \
 /**/           Add8_2,     \
@@ -27,51 +29,96 @@ namespace Yttrium
 /**/           Add4_2,     \
 /**/           Add2_1
 
+        //______________________________________________________________________
+        //
+        //! Named adding operation style
+        //______________________________________________________________________
         enum AddOps
         {
             Y_Apex_AddOps_List
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Natural
+        //
+        //
+        //______________________________________________________________________
         class Natural : public Number
         {
         public:
-            static const char * const CallSign;
-            static const unsigned     NumAddOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1;
-            static const AddOps       AddOpsTable[NumAddOps];
-            static const char * const AddOpsLabel[NumAddOps];
-            static AddOps             AddOpsPrime;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< Apex::Natural
+            static const unsigned     NumAddOps = (JigAPI::Plans * (JigAPI::Plans-1) ) >> 1; //!< card(AddOps)
+            static const AddOps       AddOpsTable[NumAddOps]; //!< aliases
+            static const char * const AddOpsLabel[NumAddOps]; //!< named
+            static AddOps             AddOpsPrime;            //!< default Add/Sub style
 
+            //__________________________________________________________________
+            //
+            //! scoped lock
+            //__________________________________________________________________
             class AutoLock {
             public:
-                AutoLock(const Natural &) noexcept;
-                ~AutoLock()               noexcept;
+                AutoLock(const Natural &) noexcept; //!< lock mutable mutex
+                ~AutoLock()               noexcept; //!< unlock
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(AutoLock);
                 const Natural &host;
             };
 
-
+            //__________________________________________________________________
+            //
+            //
             // C++
-            Natural(const natural_t);
-            Natural(Random::Bits &, const size_t);
-            virtual ~Natural() noexcept;
-            Natural(const Natural &);
-            Natural & operator=(const Natural &);
-            Natural & operator=(const natural_t)  noexcept;
-            Y_OSTREAM_PROTO(Natural);
+            //
+            //__________________________________________________________________
+            Natural(const natural_t);                       //!< setup as natural
+            Natural(Random::Bits &, const size_t);          //!< setup with given random bits
+            virtual ~Natural() noexcept;                    //!< cleanup
+            Natural(const Natural &);                       //!< duplicate
+            Natural & operator=(const Natural &);           //!< assign
+            Natural & operator=(const natural_t)  noexcept; //!< assign natural
+            Y_OSTREAM_PROTO(Natural);                       //!< output
 
-            // access
-            Lockable & operator*()  const noexcept;
-            Lockable * operator->() const noexcept;
-            Block &       _block() noexcept;
-            const Block & _block() const noexcept;
-            uint64_t      lsw() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Access
+            //
+            //__________________________________________________________________
+            Lockable & operator*()  const noexcept; //!< access internal mutex
+            Lockable * operator->() const noexcept; //!< access internal mutex
+            uint64_t      lsw()     const noexcept; //!< least significant 64bits word
+            Block &       _block()        noexcept; //!< internal block
+            const Block & _block()  const noexcept; //!< internal const block
 
-            // comparisons
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            // Equality
+            //__________________________________________________________________
             friend bool operator==(const Natural & lhs, const Natural & rhs) noexcept;
             friend bool operator==(const Natural & lhs, const natural_t rhs) noexcept;
             friend bool operator==(const natural_t lhs, const Natural & rhs) noexcept;
 
+            //__________________________________________________________________
+            //
+            // Different
+            //__________________________________________________________________
             friend bool operator!=(const Natural & lhs, const Natural & rhs) noexcept;
             friend bool operator!=(const Natural & lhs, const natural_t rhs) noexcept;
             friend bool operator!=(const natural_t lhs, const Natural & rhs) noexcept;
@@ -79,7 +126,12 @@ namespace Yttrium
             static SignType Compare(const Natural & lhs, const Natural &rhs) noexcept;
 
 
+            //__________________________________________________________________
+            //
+            //
             // Additions
+            //
+            //__________________________________________________________________
             static Block *Add(Block &lhs, Block &rhs, const AddOps addOps, uint64_t * const ell);
             static Block *Add(Block &lhs, Block &rhs);
             static Block *Add(Block &lhs, natural_t rhs);
