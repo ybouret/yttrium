@@ -29,7 +29,14 @@ namespace Yttrium
             return (r.words <= 1) && (lhs == r.word[0]);
         }
 
+    }
 
+}
+
+namespace Yttrium
+{
+    namespace Apex
+    {
 
         bool operator!=(const Natural &lhs, const Natural &rhs) noexcept
         {
@@ -55,6 +62,15 @@ namespace Yttrium
             const Jig8 &r  = rhs.block->make<Plan8>();
             return (r.words > 1) && (lhs != r.word[0]);
         }
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Apex
+    {
 
 
         SignType Natural:: Compare(const Natural & lhs, const Natural &rhs) noexcept
@@ -85,6 +101,24 @@ namespace Yttrium
 
             return __Zero__;
         }
+
+        SignType Natural:: Compare(const Natural & lhs, const natural_t rhs) noexcept
+        {
+
+            volatile Natural::AutoLock L(lhs);
+            const Jig8 &l = lhs.block->make<Plan8>();
+
+            if(l.words <= 1 )
+            {
+                return Sign::Of(l.word[0],rhs);
+            }
+            else
+            {
+                return Positive;
+            }
+        }
+
+
 
     }
 
