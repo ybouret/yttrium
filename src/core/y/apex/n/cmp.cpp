@@ -104,7 +104,6 @@ namespace Yttrium
 
         SignType Natural:: Compare(const Natural & lhs, const natural_t rhs) noexcept
         {
-
             volatile Natural::AutoLock L(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
 
@@ -116,6 +115,21 @@ namespace Yttrium
             {
                 return Positive;
             }
+        }
+
+        SignType Natural:: Compare(const natural_t lhs, const Natural & rhs) noexcept
+        {
+            volatile Natural::AutoLock R(rhs);
+            const Jig8 &r = rhs.block->make<Plan8>();
+            if(r.words<=1)
+            {
+                return Sign::Of(lhs,r.word[0]);
+            }
+            else
+            {
+                return Negative;
+            }
+
         }
 
 

@@ -53,16 +53,19 @@ Y_UTEST(apex_n)
                         case Negative:
                             Y_ASSERT(Negative == Natural::Compare(U,V));
                             Y_ASSERT(Negative == Natural::Compare(U,v));
+                            Y_ASSERT(Negative == Natural::Compare(u,V));
                             break;
 
                         case __Zero__:
                             Y_ASSERT(__Zero__ == Natural::Compare(U,V));
                             Y_ASSERT(__Zero__ == Natural::Compare(U,v));
+                            Y_ASSERT(__Zero__ == Natural::Compare(u,V));
                             break;
 
                         case Positive:
                             Y_ASSERT(Positive == Natural::Compare(U,V));
                             Y_ASSERT(Positive == Natural::Compare(U,v));
+                            Y_ASSERT(Positive == Natural::Compare(u,V));
                             break;
                     }
                 }

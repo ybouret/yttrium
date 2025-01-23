@@ -129,6 +129,7 @@ namespace Yttrium
             //__________________________________________________________________
             static SignType Compare(const Natural & lhs, const Natural & rhs) noexcept; //! Sign::Of(lhs,rhs)
             static SignType Compare(const Natural & lhs, const natural_t rhs) noexcept; //! Sign::Of(lhs,rhs)
+            static SignType Compare(const natural_t lhs, const Natural & rhs) noexcept; //! Sign::Of(lhs,rhs)
 
 
 
