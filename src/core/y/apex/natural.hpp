@@ -180,7 +180,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             static Block *Sub(Block &lhs, Block &rhs, const AddOps addOps);
+            static Block *Sub(Block &lhs, natural_t rhs);
+            static Block *Sub(natural_t lhs, Block &rhs);
+
             friend Natural operator-(const Natural & lhs, const Natural & rhs);
+            friend Natural operator-(const Natural & lhs, const natural_t rhs);
+            friend Natural operator-(const natural_t lhs, const Natural & rhs);
 
 
         private:

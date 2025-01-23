@@ -167,8 +167,24 @@ Y_UTEST(apex_n)
     }
     std::cerr << std::endl;
 
-    
-
+    std::cerr << "Sub 64-bits" << std::endl;
+    for(unsigned lbits=0;lbits<=64;++lbits)
+    {
+        for(unsigned rbits=0;rbits<=lbits;++rbits)
+        {
+            uint64_t l = ran.to<uint64_t>(lbits);
+            uint64_t r = ran.to<uint64_t>(rbits);
+            if(r>l) Swap(l,r);
+            Y_ASSERT(l>=r);
+            const Natural L = l;
+            const Natural R = r;
+            Y_ASSERT(L>=R);
+            const uint64_t d = l-r;
+            Y_ASSERT(L-R == d);
+            Y_ASSERT(l-R == d);
+            Y_ASSERT(L-r == d);
+        }
+    }
 
 }
 Y_UDONE()
