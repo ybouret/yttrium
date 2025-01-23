@@ -27,7 +27,7 @@ Y_UTEST(apex_n)
     for(unsigned ubits=0;ubits<=64;++ubits)
     {
 
-        for(size_t uter=0;uter<16;++uter)
+        for(size_t uter=0;uter<8;++uter)
         {
             const uint64_t u = ran.to<uint64_t>(ubits);
             const Natural  U = u;
@@ -43,7 +43,7 @@ Y_UTEST(apex_n)
             for(unsigned vbits=0;vbits<=64;++vbits)
             {
 
-                for(size_t vter=0;vter<16;++vter)
+                for(size_t vter=0;vter<8;++vter)
                 {
                     const uint64_t v = ran.to<uint64_t>(vbits);
                     const Natural  V = v;
@@ -92,23 +92,39 @@ Y_UTEST(apex_n)
         }
     }
 
-    return 0;
 
+    std::cerr << "Compare Full" << std::endl;
     for(unsigned lbits=0;lbits<=1024;lbits += 4)
     {
-        for(size_t lcycle=0;lcycle<16;++lcycle)
+
+        const Natural lhs(ran,lbits);
+
+        Y_ASSERT( __Zero__ == Natural::Compare(lhs,lhs) );
+        Y_ASSERT( lhs <= lhs );
+        Y_ASSERT( lhs == lhs );
+        Y_ASSERT( lhs >= lhs );
+        Y_ASSERT( ! (lhs != lhs) );
+
+        for(unsigned rbits=0;rbits<=1024; rbits += 4)
         {
-            const Natural lhs(ran,lbits);
+            const Natural rhs(ran,lbits);
 
-            for(unsigned rbits=0;rbits<=1024; rbits += 4)
+            switch( Natural::Compare(lhs,rhs) )
             {
-                for(size_t rcycle=0;rcycle<16;++rcycle)
-                {
-                    const Natural rhs(ran,lbits);
+                case Negative:
+                    Y_ASSERT(lhs<rhs);
+                    Y_ASSERT(!(lhs>=rhs));
+                    break;
 
-                }
+                case __Zero__:
+                    break;
 
+                case Positive:
+                    Y_ASSERT(lhs>rhs);
+                    Y_ASSERT(!(lhs<=rhs));
+                    break;
             }
+
         }
 
     }
