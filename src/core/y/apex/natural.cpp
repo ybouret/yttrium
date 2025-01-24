@@ -8,6 +8,7 @@ namespace Yttrium
     {
 
         Y_SHALLOW_IMPL(AsBlock);
+        Y_SHALLOW_IMPL(Exp2);
 
 
         Natural:: AutoLock:: AutoLock(const Natural &n) noexcept :
@@ -143,7 +144,23 @@ namespace Yttrium
             return block->make<Plan8>().word[0];
         }
 
-        
+
+        static inline
+        size_t BytesForBits(size_t nbit) noexcept
+        {
+            ++nbit;
+            return Y_ALIGN8(nbit) >> 3;
+        }
+
+        Natural:: Natural(const Exp2_ &, const size_t nbit) :
+        Number(),
+        block( _Factory().queryBytes( BytesForBits(nbit) ) ),
+        mutex( _Factory().query() )
+        {
+            static const uint8_t _bit[8] = { 1,2,4,8,16,32,64,128 };
+            block->make<Plan1>().word[nbit >> 3] = _bit[nbit &  7];
+            block->sync();
+        }
 
 
     }

@@ -18,7 +18,8 @@ namespace Yttrium
         class Block;
 
         Y_SHALLOW_DECL(AsBlock); //!< alias
-
+        Y_SHALLOW_DECL(Exp2);    //!< alias
+        
         //______________________________________________________________________
         //
         //
@@ -166,16 +167,15 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //! add with optional timing
             static Block *Add(Block &lhs, Block &rhs, const Ops addOps, uint64_t * const ell);
 
-            friend Natural operator+(const Natural & lhs, const Natural & rhs); //!< lhs+rhs
-            friend Natural operator+(const Natural & lhs, const natural_t rhs); //!< lhs+rhs
-            friend Natural operator+(const natural_t lhs, const Natural & rhs); //!< lhs+rhs
-
-            Natural   operator+() const;               //!< unary +
-            Natural & operator+=(const Natural & rhs); //!< += rhs
-            Natural & operator+=(const natural_t rhs); //!< += rhs
+            friend Natural operator +  (const Natural & lhs, const Natural & rhs); //!< lhs+rhs
+            friend Natural operator +  (const Natural & lhs, const natural_t rhs); //!< lhs+rhs
+            friend Natural operator +  (const natural_t lhs, const Natural & rhs); //!< lhs+rhs
+            Natural        operator +  () const;               //!< unary +
+            Natural &      operator += (const Natural & rhs); //!< += rhs
+            Natural &      operator += (const natural_t rhs); //!< += rhs
+            Natural &      operator ++ ();                    //!< ++this
+            Natural        operator ++ (int);                 //!< this++
             void      incr();                          //!< +=1
-            Natural & operator++();                    //!< ++this
-            Natural   operator++(int);                 //!< this++
 
             //__________________________________________________________________
             //
@@ -183,15 +183,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Subtractions
             //
             //__________________________________________________________________
-            friend Natural operator-(const Natural & lhs, const Natural & rhs); //!< lhs-rhs
-            friend Natural operator-(const Natural & lhs, const natural_t rhs); //!< lhs-rhs
-            friend Natural operator-(const natural_t lhs, const Natural & rhs); //!< lhs-rhs
-
-            Natural & operator-=(const Natural & rhs); //!< -= rhs
-            Natural & operator-=(const natural_t rhs); //!< -= rhs
+            friend Natural operator -  (const Natural & lhs, const Natural & rhs); //!< lhs-rhs
+            friend Natural operator -  (const Natural & lhs, const natural_t rhs); //!< lhs-rhs
+            friend Natural operator -  (const natural_t lhs, const Natural & rhs); //!< lhs-rhs
+            Natural &      operator -= (const Natural & rhs); //!< -= rhs
+            Natural &      operator -= (const natural_t rhs); //!< -= rhs
+            Natural &      operator -- ();                    //!< --this
+            Natural        operator -- (int);                 //!< this--
             void      decr();                          //!< -=1
-            Natural & operator--();                    //!< --this
-            Natural   operator--(int);                 //!< this--
 
             //__________________________________________________________________
             //
@@ -201,12 +200,19 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
 
-            friend Natural operator*(const Natural & lhs, const Natural & rhs); //!< lhs*rhs
-            friend Natural operator*(const Natural & lhs, const natural_t rhs); //!< lhs*rhs
-            friend Natural operator*(const natural_t lhs, const Natural & rhs); //!< lhs*rhs
+            friend Natural operator *  (const Natural & lhs, const Natural & rhs); //!< lhs*rhs
+            friend Natural operator *  (const Natural & lhs, const natural_t rhs); //!< lhs*rhs
+            friend Natural operator *  (const natural_t lhs, const Natural & rhs); //!< lhs*rhs
+            Natural &      operator *= (const Natural & rhs); //!< *= rhs
+            Natural &      operator *= (const natural_t rhs); //!< *= rhs
 
-            Natural & operator*=(const Natural & rhs); //!< *= rhs
-            Natural & operator*=(const natural_t rhs); //!< *= rhs
+            //__________________________________________________________________
+            //
+            //
+            // Bits
+            //
+            //__________________________________________________________________
+            Natural(const Exp2_ &, const size_t nbit); //!< 2^nbit
 
         private:
             Natural(Block * const, const AsBlock_ &);

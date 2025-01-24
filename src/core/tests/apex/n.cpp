@@ -129,6 +129,14 @@ Y_UTEST(apex_n)
 
     }
 
+
+    std::cerr << "Exp2" << std::endl;
+    for(size_t ibit=0;ibit<=128;++ibit)
+    {
+        const Natural n(Exp2,ibit);
+        std::cerr << "2^" << ibit << " = " << n << std::endl;
+    }
+
     std::cerr << "Add 64-bits" << std::endl;
     for(unsigned lbits=0;lbits<=63;++lbits)
     {
