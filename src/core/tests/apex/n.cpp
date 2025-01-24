@@ -241,6 +241,12 @@ Y_UTEST(apex_n)
     }
 
     {
+        Natural n = 16;
+        n._shr(1);
+        Y_ASSERT(8==n);
+    }
+
+    {
         Natural n(ran,80);
         std::cerr << n << std::endl;
         while(n>0)

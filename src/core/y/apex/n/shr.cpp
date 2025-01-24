@@ -7,7 +7,6 @@ namespace Yttrium
     {
         Natural & Natural:: _shr(const size_t nbit) noexcept
         {
-            std::cerr << "_shr(" << nbit << ") for #bits=" << block->bits << std::endl;
             if(nbit<=0)
             {
                 return *this;
@@ -23,23 +22,23 @@ namespace Yttrium
                 else
                 {
                     block->to(Plan1);
-                    const size_t newBits = bits-nbit;
-                    size_t       target  = newBits;
-                    size_t       source  = bits;
-                    std::cerr << "newBits=" << newBits << std::endl;
-                    while(target-- > 0 )
+                    const size_t newBits = bits - nbit;
+                    for(size_t target=0,source=nbit;target<newBits;++target,++source)
                     {
-                        if( block->get(--source) )
-                        {
+                        if(block->get(source)) {
                             block->set(target);
                         }
-                        else
-                        {
+                        else {
                             block->clr_(target);
                         }
-                        block->clr_(source);
                     }
+
+                    for(size_t source=newBits;source<bits;++source)
+                        block->clr_(source);
+
+
                     block->sync();
+                    assert(newBits==block->bits);
                     return *this;
                 }
             }
