@@ -44,6 +44,23 @@ namespace Yttrium
             }
         }
 
+        Natural & Natural:: _shr() noexcept
+        {
+            const size_t bits = block->bits;
+            if(bits<=64)
+            {
+                Jig8 &jig = block->make<Plan8>(); assert(jig.words<=1);
+                jig.word[0] >>= 1;
+            }
+            else
+            {
+
+            }
+            block->sync();
+            assert(bits<=0 || bits-1 == block->bits);
+            return *this;
+        }
+
     }
 
 }

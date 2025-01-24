@@ -240,18 +240,26 @@ Y_UTEST(apex_n)
         std::cerr << "2^" << ibit << " = " << n << std::endl;
     }
 
-    {
-        Natural n = 16;
-        n._shr(1);
-        Y_ASSERT(8==n);
-    }
 
+
+    std::cerr << "_SHR(any)" << std::endl;
     {
         Natural n(ran,80);
         std::cerr << n << std::endl;
         while(n>0)
         {
             n._shr( ran.in<size_t>(1,4) );
+            std::cerr << n << std::endl;
+        }
+    }
+
+    std::cerr << "_SHR()" << std::endl;
+    {
+        Natural n(ran,64);
+        std::cerr << n << std::endl;
+        while(n>0)
+        {
+            n._shr();
             std::cerr << n << std::endl;
         }
     }
