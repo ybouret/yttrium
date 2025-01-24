@@ -255,7 +255,7 @@ Y_UTEST(apex_n)
 
     std::cerr << "_SHR()" << std::endl;
     {
-        Natural n(ran,64);
+        Natural n(ran,80);
         std::cerr << n << std::endl;
         while(n>0)
         {

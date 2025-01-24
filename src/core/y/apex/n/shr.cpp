@@ -54,7 +54,16 @@ namespace Yttrium
             }
             else
             {
-
+                Jig1 &          jig = block->make<Plan1>();
+                uint8_t * const wrd = jig.word;
+                const size_t    msw = jig.words-1;
+                for(size_t i=0,j=1;i<msw;++i,++j)
+                {
+                    uint8_t &w = wrd[i];
+                    w >>= 1;
+                    if( 0 != (wrd[j] & 0x1) ) w |= 128;
+                }
+                wrd[msw] >>= 1;
             }
             block->sync();
             assert(bits<=0 || bits-1 == block->bits);
