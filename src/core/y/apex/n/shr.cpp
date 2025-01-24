@@ -1,5 +1,6 @@
 
 #include "y/apex/natural.hpp"
+#include "y/apex/block/factory.hpp"
 
 namespace Yttrium
 {
@@ -69,6 +70,58 @@ namespace Yttrium
             assert(bits<=0 || bits-1 == block->bits);
             return *this;
         }
+
+
+        Natural  Natural:: shr(const size_t nbit) const
+        {
+            if(nbit<=0) {
+                return Natural(*this);
+            }
+            else
+            {
+                const size_t bits = block->bits;
+                if(nbit>=bits)
+                {
+                    return Natural(0);
+                }
+                else
+                {
+                    assert(Factory::Exists());
+
+                    static Factory & factory = Factory::Location();
+                    const size_t     newBits  = bits-nbit;
+                    Block *          newBlock = factory.queryBytes( Y_ALIGN8(newBits) >> 3 );
+
+                    {
+                        volatile AutoLock lck(*this);
+                        block->to(Plan1);
+                        newBlock->to(Plan1);
+                        for(size_t target=0,source=nbit;target<newBits;++target,++source)
+                        {
+                            if(block->get(source))
+                                newBlock->set(target);
+                        }
+                    }
+
+
+                    newBlock->sync(); assert(newBits==newBlock->bits);
+                    return Natural(newBlock,AsBlock);
+                }
+            }
+        }
+
+
+        Natural operator>>(const Natural &lhs, const size_t n)
+        {
+            return lhs.shr(n);
+        }
+
+        Natural & Natural:: operator>>=(const size_t n) noexcept
+        {
+            _shr(n);
+            return *this;
+        }
+
 
     }
 

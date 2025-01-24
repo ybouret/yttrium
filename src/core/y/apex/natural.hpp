@@ -219,7 +219,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural(const Exp2_ &, const size_t nbit);  //!< 2^nbit
             Natural & _shr(const size_t nbit) noexcept; //!< in place right shift
             Natural & _shr() noexcept;                  //!< in place right shift 1
+            Natural   shr(const size_t nbit) const;
 
+            friend Natural operator>>(const Natural &,const size_t);
+            Natural &      operator>>=(const size_t) noexcept;
+            
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;
