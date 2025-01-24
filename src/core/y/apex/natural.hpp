@@ -120,8 +120,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Block &       _block()        noexcept; //!< internal block
             const Block & _block()  const noexcept; //!< internal const block
             Natural &     xch(Natural &)  noexcept; //!< no-throw exchange
-            size_t        bits()    const noexcept;
-            
+            size_t        bits()    const noexcept; //!< current bits
+
             //__________________________________________________________________
             //
             //
@@ -211,6 +211,15 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural &      operator *= (const natural_t rhs); //!< *= rhs
             Natural        sqr() const;                       //!< this * this
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Division
+            //
+            //__________________________________________________________________
+            static Natural Div(const Natural &num, const Natural &den);
+
             //__________________________________________________________________
             //
             //
@@ -219,18 +228,24 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural(const Exp2_ &, const size_t nbit);  //!< 2^nbit
 
+            //__________________________________________________________________
+            //
             // shr
+            //__________________________________________________________________
             Natural & _shr(const size_t nbit) noexcept; //!< in place right shift
             Natural & _shr() noexcept;                  //!< in place right shift 1
-            Natural   shr(const size_t nbit) const;
+            Natural   shr(const size_t nbit) const;     //!< this >> nbit
 
-            friend Natural operator>>(const Natural &,const size_t);
-            Natural &      operator>>=(const size_t) noexcept;
+            friend Natural operator>>(const Natural &,const size_t); //!< this.shr(nbit)
+            Natural &      operator>>=(const size_t) noexcept;       //!< this._shr(nbit)
 
+            //__________________________________________________________________
+            //
             // shl
-            Natural shl(const size_t nbit) const;
-            friend Natural operator<<(const Natural &,const size_t);
-            Natural &      operator<<=(const size_t);
+            //__________________________________________________________________
+            Natural        shl(const size_t nbit) const;             //!< left shift
+            friend Natural operator<<(const Natural &,const size_t); //!< left shift
+            Natural &      operator<<=(const size_t);                //!< left shift
 
         private:
             Natural(Block * const, const AsBlock_ &);
