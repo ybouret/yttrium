@@ -129,6 +129,8 @@ Y_UTEST(apex_n)
 
     }
 
+    
+
 
     std::cerr << "Exp2" << std::endl;
     for(size_t ibit=0;ibit<=128;++ibit)
@@ -229,7 +231,9 @@ Y_UTEST(apex_n)
             Y_ASSERT(L*R == p);
             Y_ASSERT(L*r == p);
             Y_ASSERT(l*R == p);
-
+            const Natural L2 = L.sqr();
+            Y_ASSERT(L*L == L2);
+            Y_ASSERT(l*l == L2);
         }
 
     }

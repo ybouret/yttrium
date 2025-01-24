@@ -162,6 +162,12 @@ namespace Yttrium
             block->sync();
         }
 
+        Natural & Natural:: xch(Natural &other)  noexcept
+        {
+            block.swp(other.block);
+            return *this;
+        }
+
 
     }
 

@@ -34,7 +34,7 @@ namespace Yttrium
             static const unsigned    MaxShift = Base2<size_t>::MaxShift;        //!< alias
             static const size_t      MaxBytes = Base2<size_t>::MaxPowerOfTwo;   //!< alias
             static const size_t      One      = 1;                              //!< alias
-
+            
             //__________________________________________________________________
             //
             //
@@ -46,7 +46,16 @@ namespace Yttrium
 
         public:
             virtual ~DataBlock() noexcept;            //!< cleanup
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void set(const size_t ibit) noexcept;       //!< iff plan=Plan1
+            bool get(const size_t ibit) const noexcept; //!< iff plan=Plan1
+
             //__________________________________________________________________
             //
             //

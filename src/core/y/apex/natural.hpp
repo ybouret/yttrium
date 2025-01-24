@@ -119,6 +119,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             uint64_t      lsw()     const noexcept; //!< least significant 64bits word
             Block &       _block()        noexcept; //!< internal block
             const Block & _block()  const noexcept; //!< internal const block
+            Natural &     xch(Natural &)  noexcept; //!< no-throw exchange
 
             //__________________________________________________________________
             //
@@ -198,6 +199,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Multiplication
             //
             //__________________________________________________________________
+
+            //! multiplication with optional timing
             static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
 
             friend Natural operator *  (const Natural & lhs, const Natural & rhs); //!< lhs*rhs
@@ -205,6 +208,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             friend Natural operator *  (const natural_t lhs, const Natural & rhs); //!< lhs*rhs
             Natural &      operator *= (const Natural & rhs); //!< *= rhs
             Natural &      operator *= (const natural_t rhs); //!< *= rhs
+            Natural        sqr() const;                       //!< this * this
 
             //__________________________________________________________________
             //

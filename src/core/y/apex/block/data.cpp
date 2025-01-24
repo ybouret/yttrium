@@ -31,6 +31,31 @@ namespace Yttrium
             Coerce(bits)  = 0;
             memset(dull,0,sizeof(dull));
         }
+
+
+        namespace
+        {
+            static const uint8_t _bit[8] = { 1,2,4,8,16,32,64,128 };
+        }
+
+        void DataBlock:: set(const size_t ibit) noexcept
+        {
+            assert(Plan1==plan);
+            assert(ibit<bits);
+            static_cast<uint8_t *>(entry)[ibit>>3] |= _bit[ibit&7];
+        }
+
+        bool DataBlock:: get(const size_t ibit) const noexcept
+        {
+            assert(Plan1==plan);
+            assert(ibit<bits);
+            return 0 != (static_cast<const uint8_t *>(entry)[ibit>>3] & _bit[ibit&7] );
+        }
+        
+
+        
+
+
     }
 
 }
