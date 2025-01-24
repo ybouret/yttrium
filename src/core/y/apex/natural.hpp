@@ -216,7 +216,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Bits
             //
             //__________________________________________________________________
-            Natural(const Exp2_ &, const size_t nbit); //!< 2^nbit
+            Natural(const Exp2_ &, const size_t nbit);  //!< 2^nbit
+            Natural & _shr(const size_t nbit) noexcept; //!< in place right shift
 
         private:
             Natural(Block * const, const AsBlock_ &);

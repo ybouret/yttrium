@@ -303,9 +303,8 @@ namespace Yttrium
 
         void  Block:: clr(const size_t ibit) noexcept
         {
-            static const uint8_t _msk[8] = { 255-1,255-2,255-4,255-8,255-16,255-32,255-64,255-128 };
-            assert(ibit<bits);
-            make<Plan1>().word[ibit>>3] &= _msk[ibit&7];
+            to(Plan1);
+            clr_(ibit);
             sync();
         }
     }

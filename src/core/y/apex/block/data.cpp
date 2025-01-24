@@ -52,8 +52,14 @@ namespace Yttrium
             return 0 != (static_cast<const uint8_t *>(entry)[ibit>>3] & _bit[ibit&7] );
         }
         
+        void  DataBlock:: clr_(const size_t ibit) noexcept
+        {
+            static const uint8_t _msk[8] = { 255-1,255-2,255-4,255-8,255-16,255-32,255-64,255-128 };
+            assert(Plan1==plan);
+            assert(ibit<bits);
+            static_cast<uint8_t *>(entry)[ibit>>3] &= _msk[ibit&7];
+        }
 
-        
 
 
     }
