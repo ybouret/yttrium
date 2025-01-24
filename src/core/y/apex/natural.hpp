@@ -120,7 +120,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Block &       _block()        noexcept; //!< internal block
             const Block & _block()  const noexcept; //!< internal const block
             Natural &     xch(Natural &)  noexcept; //!< no-throw exchange
-
+            size_t        bits()    const noexcept;
+            
             //__________________________________________________________________
             //
             //
@@ -172,11 +173,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             friend Natural operator +  (const Natural & lhs, const natural_t rhs); //!< lhs+rhs
             friend Natural operator +  (const natural_t lhs, const Natural & rhs); //!< lhs+rhs
             Natural        operator +  () const;               //!< unary +
-            Natural &      operator += (const Natural & rhs); //!< += rhs
-            Natural &      operator += (const natural_t rhs); //!< += rhs
-            Natural &      operator ++ ();                    //!< ++this
-            Natural        operator ++ (int);                 //!< this++
-            void      incr();                          //!< +=1
+            Natural &      operator += (const Natural & rhs);  //!< += rhs
+            Natural &      operator += (const natural_t rhs);  //!< += rhs
+            Natural &      operator ++ ();                     //!< ++this
+            Natural        operator ++ (int);                  //!< this++
+            void           incr();                             //!< +=1
 
             //__________________________________________________________________
             //
@@ -191,7 +192,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural &      operator -= (const natural_t rhs); //!< -= rhs
             Natural &      operator -- ();                    //!< --this
             Natural        operator -- (int);                 //!< this--
-            void      decr();                          //!< -=1
+            void           decr();                            //!< -=1
 
             //__________________________________________________________________
             //
@@ -217,13 +218,20 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             Natural(const Exp2_ &, const size_t nbit);  //!< 2^nbit
+
+            // shr
             Natural & _shr(const size_t nbit) noexcept; //!< in place right shift
             Natural & _shr() noexcept;                  //!< in place right shift 1
             Natural   shr(const size_t nbit) const;
 
             friend Natural operator>>(const Natural &,const size_t);
             Natural &      operator>>=(const size_t) noexcept;
-            
+
+            // shl
+            Natural shl(const size_t nbit) const;
+            friend Natural operator<<(const Natural &,const size_t);
+            Natural &      operator<<=(const size_t);
+
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;

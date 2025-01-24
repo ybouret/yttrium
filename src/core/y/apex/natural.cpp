@@ -168,6 +168,10 @@ namespace Yttrium
             return *this;
         }
 
+        size_t Natural:: bits() const noexcept
+        {
+            return block->bits;
+        }
 
     }
 

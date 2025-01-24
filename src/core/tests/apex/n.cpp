@@ -282,11 +282,21 @@ Y_UTEST(apex_n)
         std::cerr << n << std::endl;
         while(n>0)
         {
-            n >>= ran.in<size_t>(1,4);;
+            n >>= ran.in<size_t>(1,4);
             std::cerr << n << std::endl;
         }
     }
 
+    std::cerr << "shl" << std::endl;
+    {
+        Natural n(ran,20);
+        std::cerr << n << std::endl;
+        while(n.bits()<=100)
+        {
+            n = (n.shl(ran.in<size_t>(1,4) ));
+            std::cerr << n << std::endl;
+        }
+    }
 
 
 }
