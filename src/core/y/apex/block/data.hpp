@@ -53,8 +53,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void set(const size_t ibit) noexcept;       //!< iff plan=Plan1
-            bool get(const size_t ibit) const noexcept; //!< iff plan=Plan1
+            void set_(const size_t ibit) noexcept;       //!< iff plan=Plan1, no sync!!
+            bool get_(const size_t ibit) const noexcept; //!< iff plan=Plan1
             void clr_(const size_t ibit) noexcept;      //!< iff plan=Plan1, no sync!!
 
             //__________________________________________________________________

@@ -264,5 +264,30 @@ Y_UTEST(apex_n)
         }
     }
 
+    std::cerr << ">>" << std::endl;
+    {
+        Natural n(ran,80);
+        std::cerr << n << std::endl;
+        while(n>0)
+        {
+            n = (n >> ran.in<size_t>(1,4) );
+            std::cerr << n << std::endl;
+        }
+    }
+
+
+    std::cerr << ">>=" << std::endl;
+    {
+        Natural n(ran,80);
+        std::cerr << n << std::endl;
+        while(n>0)
+        {
+            n >>= ran.in<size_t>(1,4);;
+            std::cerr << n << std::endl;
+        }
+    }
+
+
+
 }
 Y_UDONE()

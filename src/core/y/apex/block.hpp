@@ -74,8 +74,7 @@ namespace Yttrium
             //! in-place natural representation as required plan
             static const void * To(const Plan p, natural_t &n, size_t &w) noexcept;
 
-            //! clear ibit<bits and update
-            void clr(const size_t ibit) noexcept;
+            
 
 
             //__________________________________________________________________

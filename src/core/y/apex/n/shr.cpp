@@ -26,8 +26,8 @@ namespace Yttrium
                     const size_t newBits = bits - nbit;
                     for(size_t target=0,source=nbit;target<newBits;++target,++source)
                     {
-                        if(block->get(source)) {
-                            block->set(target);
+                        if(block->get_(source)) {
+                            block->set_(target);
                         }
                         else {
                             block->clr_(target);
@@ -91,15 +91,15 @@ namespace Yttrium
                     static Factory & factory = Factory::Location();
                     const size_t     newBits  = bits-nbit;
                     Block *          newBlock = factory.queryBytes( Y_ALIGN8(newBits) >> 3 );
-
+                    
                     {
                         volatile AutoLock lck(*this);
                         block->to(Plan1);
                         newBlock->to(Plan1);
                         for(size_t target=0,source=nbit;target<newBits;++target,++source)
                         {
-                            if(block->get(source))
-                                newBlock->set(target);
+                            if(block->get_(source))
+                                newBlock->set_(target);
                         }
                     }
 

@@ -300,13 +300,7 @@ namespace Yttrium
             return crc;
         }
 
-
-        void  Block:: clr(const size_t ibit) noexcept
-        {
-            to(Plan1);
-            clr_(ibit);
-            sync();
-        }
+        
     }
 
 }
