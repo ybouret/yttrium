@@ -157,8 +157,8 @@ namespace Yttrium
         block( _Factory().queryBytes( BytesForBits(nbit) ) ),
         mutex( _Factory().query() )
         {
-            static const uint8_t _bit[8] = { 1,2,4,8,16,32,64,128 };
-            block->make<Plan1>().word[nbit >> 3] = _bit[nbit &  7];
+            block->to(Plan1);
+            block->set_(nbit); 
             block->sync();
         }
 

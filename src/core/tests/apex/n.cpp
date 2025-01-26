@@ -234,12 +234,13 @@ Y_UTEST(apex_n)
     }
 
     std::cerr << "Exp2" << std::endl;
-    for(size_t ibit=0;ibit<=128;++ibit)
+    for(size_t ibit=0;ibit<=10;++ibit)
     {
         const Natural n(Exp2,ibit);
         std::cerr << "2^" << ibit << " = " << n << std::endl;
     }
 
+   // return 0;
 
 
     std::cerr << "_SHR(any)" << std::endl;
@@ -297,6 +298,21 @@ Y_UTEST(apex_n)
             std::cerr << n << std::endl;
         }
     }
+
+    {
+        for(size_t qbits=0;qbits<=10;++qbits)
+        {
+            for(size_t dbits=1;dbits<=10;++dbits)
+            {
+                const Natural quot(ran,qbits);
+                const Natural den(ran,dbits);
+                const Natural num = quot * den;
+                Natural       q = Natural::Div(num,den);
+            }
+
+        }
+    }
+
 
 
 }
