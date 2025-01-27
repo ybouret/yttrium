@@ -255,6 +255,28 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural & operator%=(const Natural &);
             Natural & operator%=(const natural_t);
 
+
+            //__________________________________________________________________
+            //
+            //
+            // LDiv
+            //
+            //__________________________________________________________________
+
+            //! num = quot * den + rem
+            static void LDiv(Natural &quot, Natural &rem, const Natural &num, const Natural &den);
+
+            //__________________________________________________________________
+            //
+            //
+            // GCD
+            //
+            //__________________________________________________________________
+
+
+            static Natural GCD_(const Natural &a, const Natural &b); //!< GCD_(a>0,b>0)
+            static Natural GCD(const Natural &a, const Natural &b);  //!< safe GCD
+
             //__________________________________________________________________
             //
             //

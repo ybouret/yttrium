@@ -375,6 +375,14 @@ Y_UTEST(apex_n)
         _SHOW(0xabcdef12);
     }
 
+    std::cerr << "GCD" << std::endl;
+    {
+        const Natural a = 24;
+        const Natural b = 12;
+        const Natural g = Natural::GCD(a,b);
+        std::cerr << "gcd=" << g << std::endl;
+    }
+
 
 
 }
