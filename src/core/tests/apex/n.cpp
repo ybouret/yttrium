@@ -299,6 +299,7 @@ Y_UTEST(apex_n)
         }
     }
 
+    std::cerr << "Div 64-bits" << std::endl;
     {
         for(size_t qbits=0;qbits<=10;++qbits)
         {
