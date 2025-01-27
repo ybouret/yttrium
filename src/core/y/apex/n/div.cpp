@@ -1,6 +1,7 @@
 #include "y/apex/natural.hpp"
 #include "y/system/exception.hpp"
 #include "y/type/utils.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
