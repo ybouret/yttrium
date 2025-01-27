@@ -298,6 +298,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             String toHex() const;
+            String toDec() const;
 
         private:
             Natural(Block * const, const AsBlock_ &);

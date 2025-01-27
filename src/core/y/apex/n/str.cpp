@@ -40,5 +40,21 @@ namespace Yttrium
             }
             return res;
         }
+
+        String Natural:: toDec() const
+        {
+            String res;
+            if(block->bits<=0)
+            {
+                res = '0';
+            }
+            else
+            {
+                const Natural _10 = 10;
+            }
+            return res;
+        }
+
+
     }
 }
