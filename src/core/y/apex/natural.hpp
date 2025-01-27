@@ -10,6 +10,7 @@
 #include "y/ostream-proto.hpp"
 #include "y/random/bits.hpp"
 #include "y/type/signs.hpp"
+#include "y/string.hpp"
 
 namespace Yttrium
 {
@@ -289,7 +290,15 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const;
             Natural abs()  const;
-            
+
+            //__________________________________________________________________
+            //
+            //
+            // String conversion
+            //
+            //__________________________________________________________________
+            String toHex() const;
+
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;

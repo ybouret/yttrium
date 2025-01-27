@@ -360,6 +360,22 @@ Y_UTEST(apex_n)
         std::cerr <<  n << " => " << s << std::endl;
     }
 
+    std::cerr << "ToHex" << std::endl;
+#define _SHOW(value) n = value; std::cerr << Hexadecimal(value) << " => " << n.toHex() << std::endl;
+    {
+        Natural n = 0;
+        _SHOW(0);
+        _SHOW(0xa);
+        _SHOW(0xab);
+        _SHOW(0xabc);
+        _SHOW(0xabcd);
+        _SHOW(0xabcde);
+        _SHOW(0xabcdef);
+        _SHOW(0xabcdef1);
+        _SHOW(0xabcdef12);
+    }
+
+
 
 }
 Y_UDONE()
