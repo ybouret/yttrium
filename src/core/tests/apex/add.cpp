@@ -9,6 +9,8 @@
 #include "y/text/human-readable.hpp"
 #include "y/sort/indexing.hpp"
 #include "y/text/ascii/convert.hpp"
+#include "y/container/cxx/array.hpp"
+#include "y/mkl/antelope/add.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -24,7 +26,7 @@ Y_UTEST(apex_add)
 {
     Random::ParkMiller ran;
 
-    unsigned       maxBits  = 2048;
+    unsigned       maxBits  = 4096;
     double         duration = 0.1;
     if(argc>1)     duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
 
@@ -35,6 +37,9 @@ Y_UTEST(apex_add)
     size_t        bin[Natural::NumOps] = { 0 };
     Y_STATIC_ZARR(tmx);
     Y_STATIC_ZARR(bin);
+
+    typedef Vector<double> SVec;
+    CxxArray<SVec>         svec(Natural::NumOps);
 
     WallTime chrono;
     {
@@ -78,12 +83,14 @@ Y_UTEST(apex_add)
                 if(lbits==rbits)
                 {
                     AppendFile fp(fn);
-                    fp("%u", unsigned(lbits));
+                    fp("%15g", log2(double(lbits)) );
                     for(unsigned i=0;i<Natural::NumOps;++i)
                     {
                         fp(" %.15g", log10(spd[i]) );
+                        svec[i+1].pushTail( log10(spd[i]) );
                     }
                     fp << "\n";
+
                 }
 
                 Indexing::Tableau(idx, Natural::NumOps, CompareSpeed, spd);
@@ -120,11 +127,14 @@ Y_UTEST(apex_add)
             ntot += bin[i];
         }
 
+        MKL::Antelope::Add<double> xadd;
         for(size_t i=0;i<Natural::NumOps;++i)
         {
             std::cerr << "\t--> " << Natural::OpsLabel[i] << " @ ";
             const double percent = floor( double(bin[i]) * 10000.0 / double(ntot) + 0.5) / 100;
             std::cerr << Formatted::Get("%6.02f%%",percent);
+            const double score   = xadd.average( svec[i+1] );
+            std::cerr << " score = " << std::setw(15) << score;
             std::cerr << std::endl;
         }
         std::cerr << "plot";
