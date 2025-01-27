@@ -267,6 +267,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             friend Natural operator<<(const Natural &,const size_t); //!< left shift
             Natural &      operator<<=(const size_t);                //!< left shift
 
+            //__________________________________________________________________
+            //
+            //
+            // Calculus
+            //
+            //__________________________________________________________________
+            Natural sqrt() const;
+
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;

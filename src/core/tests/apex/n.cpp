@@ -271,7 +271,7 @@ Y_UTEST(apex_n)
         std::cerr << "2^" << ibit << " = " << n << std::endl;
     }
 
-   // return 0;
+    // return 0;
 
 
     std::cerr << "_SHR(any)" << std::endl;
@@ -346,6 +346,13 @@ Y_UTEST(apex_n)
         }
     }
 
+    std::cerr << "Sqrt" << std::endl;
+    for(size_t bits=0;bits<=100;bits += ran.in<size_t>(1,8) )
+    {
+        const Natural n(ran,bits);
+        const Natural s = n.sqrt();
+        std::cerr <<  n << " => " << s << std::endl;
+    }
 
 
 }
