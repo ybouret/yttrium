@@ -44,8 +44,11 @@ namespace Yttrium
                 }
             }
 
-            //std::cerr << "num=" << num.lsw() << " / den=" << den.lsw() << " : probe=" << probe.lsw() << std::endl;
+            assert(probe>num);
+            assert(shift>0);
 
+            Natural upper = Natural(Exp2,shift);   assert(upper*den>num);
+            Natural lower = Natural(Exp2,shift-1); assert(lower*den<num);
             return Natural(0);
         }
 
