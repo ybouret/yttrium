@@ -13,7 +13,11 @@ namespace Yttrium
         
         Natural Natural:: Div(const Natural &num, const Natural &den)
         {
-
+            //------------------------------------------------------------------
+            //
+            // process den.bits()
+            //
+            //------------------------------------------------------------------
             const size_t denBits = den.bits();
             switch( denBits )
             {
@@ -23,32 +27,43 @@ namespace Yttrium
                     break;
             }
 
+            //------------------------------------------------------------------
+            //
+            // process num.bits()
+            //
+            //------------------------------------------------------------------
             const size_t numBits = num.bits();
-
             if(numBits<denBits) return 0;
 
-            assert(numBits>=denBits);
+            //------------------------------------------------------------------
+            //
+            // bracket quotient by shift
+            //
+            //------------------------------------------------------------------
             size_t   shift = numBits-denBits;
-            Natural  probe = den.shl(shift);
-
             {
-            PROBE:
-                switch( Compare(probe,num) )
+                Natural  probe = den.shl(shift);
                 {
-                    case __Zero__: return Natural(Exp2,shift);
-                    case Negative:
-                        ++shift;
-                        probe <<= 1;
-                        goto PROBE;
-                    case Positive: break;
+                PROBE:
+                    switch( Compare(probe,num) )
+                    {
+                        case __Zero__: return Natural(Exp2,shift);
+                        case Negative:
+                            ++shift;
+                            probe <<= 1;
+                            goto PROBE;
+                        case Positive: break;
+                    }
                 }
+                assert(probe>num);
+                assert(shift>0);
             }
-
-            assert(probe>num);
-            assert(shift>0);
 
             Natural upper = Natural(Exp2,shift);   assert(upper*den>num);
             Natural lower = Natural(Exp2,shift-1); assert(lower*den<num);
+
+
+
             return Natural(0);
         }
 
