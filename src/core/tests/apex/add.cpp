@@ -75,13 +75,16 @@ Y_UTEST(apex_add)
                     spd[i] = double( static_cast<long double>(cycles)/chrono(tmx[i]) );
                 }
 
-                AppendFile fp(fn);
-                fp("%u %u", unsigned(lbits), unsigned(rbits));
-                for(unsigned i=0;i<Natural::NumOps;++i)
+                if(lbits==rbits)
                 {
-                    fp(" %.15g", spd[i]);
+                    AppendFile fp(fn);
+                    fp("%u", unsigned(lbits));
+                    for(unsigned i=0;i<Natural::NumOps;++i)
+                    {
+                        fp(" %.15g", log10(spd[i]) );
+                    }
+                    fp << "\n";
                 }
-                fp << "\n";
 
                 Indexing::Tableau(idx, Natural::NumOps, CompareSpeed, spd);
 
@@ -124,7 +127,20 @@ Y_UTEST(apex_add)
             std::cerr << Formatted::Get("%6.02f%%",percent);
             std::cerr << std::endl;
         }
+        std::cerr << "plot";
+        for(unsigned i=0;i<Natural::NumOps;++i)
+        {
+            if(i>0) std::cerr << ",";
+            std::cerr << " '";
+            if(i==0) std::cerr << fn;
+            std::cerr << "' u 1:" << i+2 << " w lp";
+        }
+        std::cerr << std::endl;
 
     }
+
+
+
+
 }
 Y_UDONE()

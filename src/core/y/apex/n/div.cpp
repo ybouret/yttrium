@@ -76,10 +76,10 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // bracket quotient by shift
+            // bracket quotient by shift > 0
             //
             //------------------------------------------------------------------
-            assert(num>den);              // num > 2^0 * den
+            assert(num>den); // num > 2^0 * den
             size_t       shift = Max<size_t>(num.bits()-denBits,1);
             {
                 Natural  probe = den.shl(shift);
