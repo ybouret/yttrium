@@ -63,7 +63,7 @@ namespace Yttrium
             return res;
         }
 
-#if 1
+#if 0
         std::ostream & operator<<(std::ostream &os, const Natural &n) {
             Y_LOCK(*n);
             n.block->to(Plan1);

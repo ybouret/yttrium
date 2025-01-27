@@ -345,7 +345,8 @@ Y_UTEST(apex_n)
             {
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
-                const Natural rem(ran,ran.lt(dbits));
+                Natural rem = 0;
+                for(unsigned cycle=0;cycle<2;++cycle)
                 {
                     const Natural num = quot * den + rem;
                     const Natural q   = Natural::Div(num,den);
@@ -360,6 +361,8 @@ Y_UTEST(apex_n)
                     Natural::Div(Q,R,num,den);
                     Y_ASSERT(quot==Q);
                     Y_ASSERT(rem ==R);
+
+                    rem = Natural(ran,ran.lt(dbits));
                 }
             }
         }

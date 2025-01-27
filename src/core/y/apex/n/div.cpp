@@ -52,7 +52,7 @@ namespace Yttrium
                 case 0: // error
                     throw Libc::Exception(EDOM, "%s Division By Zero",CallSign);
 
-                case 1: // unit denominator
+                case 1: // unit denominator => quotient=num, remain=0
                     assert(1==den);
                     return num;
 
@@ -61,11 +61,15 @@ namespace Yttrium
                     break;
             }
 
-
+            //------------------------------------------------------------------
+            //
+            // process comparison
+            //
+            //------------------------------------------------------------------
             switch( Compare(num,den) )
             {
-                case Negative: return 0; // early return
-                case __Zero__: return 1; // early return
+                case Negative: return 0; // early return, quotient=0, remain=num
+                case __Zero__: return 1; // early return, quotient=1, remain=0
                 case Positive:
                     break;
             }
@@ -76,8 +80,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             assert(num>den);              // num > 2^0 * den
-            const size_t numBits = num.bits(); assert(numBits>=denBits);
-            size_t       shift   = Max<size_t>(numBits-denBits,1);
+            size_t       shift = Max<size_t>(num.bits()-denBits,1);
             {
                 Natural  probe = den.shl(shift);
                 {
@@ -85,8 +88,7 @@ namespace Yttrium
                     switch( Compare(probe,num) )
                     {
                         case __Zero__:
-                            // specific case
-                            return Natural(Exp2,shift);
+                            return Natural(Exp2,shift);  // early return, quotient = 2^shift, remain=0
 
                         case Negative:
                             ++shift;
@@ -101,36 +103,37 @@ namespace Yttrium
                 assert(shift>0);
             }
 
-
             //------------------------------------------------------------------
             //
             // Bissection
             //
             //------------------------------------------------------------------
-            Natural upper = Natural(Exp2,shift);   assert(upper*den>num);
-            Natural lower = Natural(Exp2,shift-1); assert(lower*den<num);
-            do
+            Natural     lower = Natural(Exp2,shift-1); assert(lower*den<num);
             {
-                Natural        middle = upper+lower; middle._shr();
+                Natural upper = Natural(Exp2,shift);   assert(upper*den>num);
+                do
                 {
-                    const Natural  probe  = middle * den;
-                    switch( Compare(probe,num) )
+                    Natural        middle = upper+lower; middle._shr();
                     {
-                        case Negative: lower.xch(middle); break; // lower <- middle
-                        case __Zero__: return middle;            // exact value
-                        case Positive: upper.xch(middle); break; // upper <- middle
+                        const Natural  probe  = middle * den;
+                        switch( Compare(probe,num) )
+                        {
+                            case Negative: lower.xch(middle); break; // lower <- middle
+                            case __Zero__: return middle;            // early return, quotient=middle, remain=0
+                            case Positive: upper.xch(middle); break; // upper <- middle
+                        }
                     }
+                    assert(lower<=upper);
                 }
-                assert(lower<=upper);
+                while(upper-lower>1);
             }
-            while(upper-lower>1);
 
             //------------------------------------------------------------------
             //
             // done!
             //
             //------------------------------------------------------------------
-            return lower;
+            return lower; // quotient=lower, remain=num-lower*den
         }
 
     }
