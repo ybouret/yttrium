@@ -119,12 +119,7 @@ namespace Yttrium
         }
 
 
-        std::ostream & operator<<(std::ostream &os, const Natural &n) {
-            Y_LOCK(*n);
-            n.block->to(Plan1);
-            os << *n.block;
-            return os;
-        }
+     
 
         Natural & Natural:: operator=(const Natural &other)
         {

@@ -16,6 +16,12 @@ Y_UTEST(apex_n)
 {
     Random::ParkMiller ran;
 
+    {
+        const Natural lhs = 8;
+        const Natural rhs = 10;
+        const Natural q = Natural::Div(lhs,rhs);
+    }
+
     std::cerr << "Set/Assign 64-bits" << std::endl;
     for(unsigned iter=0;iter<1024;++iter)
     {
@@ -339,15 +345,21 @@ Y_UTEST(apex_n)
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
                 const Natural rem(ran,ran.lt(dbits));
-                const Natural num = quot * den + rem;
-                const Natural q = Natural::Div(num,den);
-                const Natural m = Natural::Mod(num,den);
-                Y_ASSERT(q==quot);
-                Y_ASSERT(m==rem);
-                Y_ASSERT(num/den==quot);
-                Y_ASSERT(num%den==rem);
-                { Natural n = num; Y_ASSERT( quot == (n/=den) ); }
-                { Natural n = num; Y_ASSERT( rem  == (n%=den) ); }
+                {
+                    const Natural num = quot * den + rem;
+                    const Natural q   = Natural::Div(num,den);
+                    const Natural m   = Natural::Mod(num,den);
+                    Y_ASSERT(q==quot);
+                    Y_ASSERT(m==rem);
+                    Y_ASSERT(num/den==quot);
+                    Y_ASSERT(num%den==rem);
+                    { Natural n = num; Y_ASSERT( quot == (n/=den) ); }
+                    { Natural n = num; Y_ASSERT( rem  == (n%=den) ); }
+                    Natural Q = 0, R=0;
+                    Natural::Div(Q,R,num,den);
+                    Y_ASSERT(quot==Q);
+                    Y_ASSERT(rem ==R);
+                }
             }
         }
     }
@@ -382,6 +394,7 @@ Y_UTEST(apex_n)
         Natural n = 0;
         _SHOW(0);
         _SHOW(7);
+        _SHOW(8);
         _SHOW(10);
         _SHOW(13);
         _SHOW(234);

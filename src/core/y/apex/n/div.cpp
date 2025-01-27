@@ -70,11 +70,14 @@ namespace Yttrium
             size_t   shift = numBits-denBits;
             {
                 Natural  probe = den.shl(shift);
+                std::cerr << "probe=" << probe << "/ num=" << num << std::endl;
                 {
                 PROBE:
                     switch( Compare(probe,num) )
                     {
-                        case __Zero__: return Natural(Exp2,shift);
+                        case __Zero__:
+                            return Natural(Exp2,shift);
+
                         case Negative:
                             ++shift;
                             probe <<= 1;

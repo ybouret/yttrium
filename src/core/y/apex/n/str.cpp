@@ -53,15 +53,41 @@ namespace Yttrium
                 const Natural _10  = 10;
                 Natural       n    = *this; assert(n>0);
                 while(n>0) {
-                    const Natural r = n % _10;
+                    Natural      q=0,r=0;
+                    Natural::Div(q,r,n,_10);
                     res += '0' + unsigned( r.lsw() );
-                    n /= _10;
+                    n.xch(q);
                 }
                 res.reverse();
             }
             return res;
         }
 
+#if 1
+        std::ostream & operator<<(std::ostream &os, const Natural &n) {
+            Y_LOCK(*n);
+            n.block->to(Plan1);
+            os << *n.block;
+
+            return os;
+        }
+#else
+        std::ostream & operator<<(std::ostream &os, const Natural &n)
+        {
+            if( os.flags() & std::ios_base::hex )
+            {
+                os << n.toHex();
+            }
+            else
+            {
+                os << n.toDec();
+            }
+
+
+            return os;
+        }
+#endif
+        
 
     }
 }

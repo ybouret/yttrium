@@ -259,12 +259,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             //
             //
-            // LDiv
+            // Div/Mod
             //
             //__________________________________________________________________
 
             //! num = quot * den + rem
-            static void LDiv(Natural &quot, Natural &rem, const Natural &num, const Natural &den);
+            static void Div(Natural &quot, Natural &rem, const Natural &num, const Natural &den);
 
             //__________________________________________________________________
             //
