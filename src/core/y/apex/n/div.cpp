@@ -8,15 +8,6 @@ namespace Yttrium
     namespace Apex
     {
 
-        static inline
-        Natural DivAlgo(const Natural &num,
-                        const Natural &den,
-                        const size_t   lowerShift)
-        {
-            assert( den.shl(lowerShift) < num );
-
-            return 0;
-        }
 
 
         
@@ -34,23 +25,26 @@ namespace Yttrium
 
             const size_t numBits = num.bits();
 
-            switch( Sign::Of(numBits,denBits) )
+            if(numBits<denBits) return 0;
+
+            assert(numBits>=denBits);
+            size_t   shift = numBits-denBits;
+            Natural  probe = den.shl(shift);
+
             {
-                case Negative:
-                    assert(numBits<denBits);
-                    assert(num<den);
-                    return 0;
-
-                case Positive:
-                    assert(numBits>denBits);
-                    assert(num>den);
-                    assert( den.shl(numBits-denBits-1) < num );
-                    return DivAlgo(num,den,numBits-denBits-1);
-
-                case __Zero__:
-                    break;
+            PROBE:
+                switch( Compare(probe,num) )
+                {
+                    case __Zero__: return Natural(Exp2,shift);
+                    case Negative:
+                        ++shift;
+                        probe <<= 1;
+                        goto PROBE;
+                    case Positive: break;
+                }
             }
 
+            //std::cerr << "num=" << num.lsw() << " / den=" << den.lsw() << " : probe=" << probe.lsw() << std::endl;
 
             return Natural(0);
         }
