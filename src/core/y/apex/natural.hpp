@@ -111,6 +111,15 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             //
             //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual size_t       serialize(OutputStream &) const; //!< [Serializable] bytes
+            virtual const char * callSign()       const noexcept; //!< [Identifiable] CallSign
+
+            //__________________________________________________________________
+            //
+            //
             // Access
             //
             //__________________________________________________________________

@@ -23,6 +23,8 @@ namespace Yttrium
 
 
         const char * const Natural:: CallSign = "Apex::Natural";
+        const char * Natural:: callSign() const noexcept { return CallSign; }
+
 
 
         Ops Natural:: AddOps = Ops8_4;

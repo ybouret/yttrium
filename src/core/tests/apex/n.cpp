@@ -299,16 +299,17 @@ Y_UTEST(apex_n)
         }
     }
 
-    std::cerr << "Div 64-bits" << std::endl;
+    std::cerr << "Division" << std::endl;
     {
-        for(size_t qbits=0;qbits<=64;++qbits)
+        for(size_t qbits=0;qbits<=256; qbits += ran.in<size_t>(1,8) )
         {
-            for(size_t dbits=1;dbits<=64;++dbits)
+            for(size_t dbits=1;dbits<=256; dbits += ran.in<size_t>(1,8))
             {
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
                 const Natural num = quot * den;
-                Natural       q = Natural::Div(num,den);
+                const Natural q = Natural::Div(num,den);
+                Y_ASSERT(q==quot);
             }
 
         }

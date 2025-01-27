@@ -59,12 +59,35 @@ namespace Yttrium
                 assert(shift>0);
             }
 
+            //------------------------------------------------------------------
+            //
+            // Bissection
+            //
+            //------------------------------------------------------------------
             Natural upper = Natural(Exp2,shift);   assert(upper*den>num);
             Natural lower = Natural(Exp2,shift-1); assert(lower*den<num);
+            do
+            {
+                Natural        middle = upper+lower; middle._shr();
+                {
+                    const Natural  probe  = middle * den;
+                    switch( Compare(probe,num) )
+                    {
+                        case Negative: lower.xch(middle); break; // lower <- middle
+                        case __Zero__: return middle;            // exact value
+                        case Positive: upper.xch(middle); break; // upper <- middle
+                    }
+                }
+                assert(lower<=upper);
+            }
+            while(upper-lower>1);
 
-
-
-            return Natural(0);
+            //------------------------------------------------------------------
+            //
+            // done!
+            //
+            //------------------------------------------------------------------
+            return lower;
         }
 
     }

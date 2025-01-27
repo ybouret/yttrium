@@ -4,6 +4,8 @@
 #define Y_Apex_Number_Included 1
 
 #include "y/apex/types.hpp"
+#include "y/stream/serializable.hpp"
+#include "y/type/identifiable.hpp"
 
 namespace Yttrium
 {
@@ -12,7 +14,7 @@ namespace Yttrium
 
 
         //! base class for numbers
-        class Number
+        class Number : public Serializable, public Identifiable
         {
         protected:
             explicit Number() noexcept;
