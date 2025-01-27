@@ -233,12 +233,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
 
             //! Division function
-            static Natural Div(const Natural &num, const Natural &den);
-            friend Natural operator/(const Natural &, const Natural &);
-            friend Natural operator/(const natural_t, const Natural &);
-            friend Natural operator/(const Natural &, const natural_t);
-            Natural & operator/=(const Natural &);
-            Natural & operator/=(const natural_t);
+            static Natural Div(const Natural &num, const Natural &den); //!< num/den
+            friend Natural operator/(const Natural &, const Natural &); //!< division
+            friend Natural operator/(const natural_t, const Natural &); //!< division
+            friend Natural operator/(const Natural &, const natural_t); //!< division
+            Natural & operator/=(const Natural &);                      //!< in place division
+            Natural & operator/=(const natural_t);                      //!< in place division
 
             //__________________________________________________________________
             //
@@ -248,12 +248,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
 
             //! Modulus function
-            static Natural Mod(const Natural &num, const Natural &den);
-            friend Natural operator%(const Natural &, const Natural &);
-            friend Natural operator%(const natural_t, const Natural &);
-            friend Natural operator%(const Natural &, const natural_t);
-            Natural & operator%=(const Natural &);
-            Natural & operator%=(const natural_t);
+            static Natural Mod(const Natural &num, const Natural &den); //!< num%den
+            friend Natural operator%(const Natural &, const Natural &); //!< modulus
+            friend Natural operator%(const natural_t, const Natural &); //!< modulus
+            friend Natural operator%(const Natural &, const natural_t); //!< modulus
+            Natural & operator%=(const Natural &);                      //!< in place modulus
+            Natural & operator%=(const natural_t);                      //!< in place modulus
 
 
             //__________________________________________________________________
@@ -310,8 +310,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Calculus
             //
             //__________________________________________________________________
-            Natural sqrt() const;
-            Natural abs()  const;
+            Natural sqrt() const; //!< interger square-root
+            Natural abs()  const; //!< |*this|
 
             //__________________________________________________________________
             //
@@ -319,8 +319,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // String conversion
             //
             //__________________________________________________________________
-            String toHex() const;
-            String toDec() const;
+            String toHex() const; //!< to hexadecimal string
+            String toDec() const; //!< to decimal string
 
         private:
             Natural(Block * const, const AsBlock_ &);

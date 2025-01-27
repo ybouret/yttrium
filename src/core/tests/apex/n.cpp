@@ -375,6 +375,18 @@ Y_UTEST(apex_n)
         _SHOW(0xabcdef12);
     }
 
+#undef _SHOW
+#define _SHOW(value) n = value; std::cerr << natural_t(value) << " => " << n.toDec() << std::endl;
+    std::cerr << "ToDec" << std::endl;
+    {
+        Natural n = 0;
+        _SHOW(0);
+        _SHOW(7);
+        _SHOW(10);
+        _SHOW(13);
+        _SHOW(234);
+    }
+
     std::cerr << "GCD" << std::endl;
     {
         const Natural a = 24;

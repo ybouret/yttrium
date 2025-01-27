@@ -50,7 +50,14 @@ namespace Yttrium
             }
             else
             {
-                const Natural _10 = 10;
+                const Natural _10  = 10;
+                Natural       n    = *this; assert(n>0);
+                while(n>0) {
+                    const Natural r = n % _10;
+                    res += '0' + unsigned( r.lsw() );
+                    n /= _10;
+                }
+                res.reverse();
             }
             return res;
         }
