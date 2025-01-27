@@ -330,7 +330,7 @@ Y_UTEST(apex_n)
         }
     }
 
-    std::cerr << "Division" << std::endl;
+    std::cerr << "Division/Modulus" << std::endl;
     {
         for(size_t qbits=0;qbits<=256; qbits += ran.in<size_t>(1,8) )
         {
@@ -341,6 +341,7 @@ Y_UTEST(apex_n)
                 const Natural num = quot * den;
                 const Natural q = Natural::Div(num,den);
                 Y_ASSERT(q==quot);
+                const Natural m = Natural::Mod(num,den);
             }
 
         }
