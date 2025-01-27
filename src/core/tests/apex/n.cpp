@@ -301,9 +301,9 @@ Y_UTEST(apex_n)
 
     std::cerr << "Div 64-bits" << std::endl;
     {
-        for(size_t qbits=0;qbits<=10;++qbits)
+        for(size_t qbits=0;qbits<=64;++qbits)
         {
-            for(size_t dbits=1;dbits<=10;++dbits)
+            for(size_t dbits=1;dbits<=64;++dbits)
             {
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
