@@ -7,6 +7,37 @@ namespace Yttrium
     namespace Apex
     {
 
+        Natural operator%(const Natural &lhs, const Natural &rhs)
+        {
+            return Natural::Mod(lhs,rhs);
+        }
+
+        Natural operator%(const natural_t lhs, const Natural &rhs)
+        {
+            const Natural _(lhs);
+            return Natural::Mod(_,rhs);
+        }
+
+
+        Natural operator%(const Natural &lhs, const natural_t rhs)
+        {
+            const Natural _(rhs);
+            return Natural::Mod(lhs,_);
+        }
+
+        Natural & Natural:: operator%=(const Natural &rhs)
+        {
+            { Natural res = Mod(*this,rhs); xch(res); }
+            return *this;
+        }
+
+        Natural & Natural:: operator%=(const natural_t rhs)
+        {
+            { const Natural _(rhs); Natural res = Mod(*this,_); xch(res); }
+            return *this;
+        }
+
+
         Natural Natural:: Mod(const Natural &num, const Natural &den)
         {
             //------------------------------------------------------------------
@@ -29,7 +60,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const size_t numBits = num.bits();
-            if(numBits<denBits) return 0;
+            if(numBits<denBits) return num;
 
             //------------------------------------------------------------------
             //
@@ -43,7 +74,7 @@ namespace Yttrium
                 PROBE:
                     switch( Compare(probe,num) )
                     {
-                        case __Zero__: return 0;
+                        case __Zero__: return 0; // exact multiple
                         case Negative:
                             ++shift;
                             probe <<= 1;

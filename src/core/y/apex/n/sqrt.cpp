@@ -18,6 +18,11 @@ namespace Yttrium
             }
             return x0;
         }
+
+        Natural Natural:: abs()  const
+        {
+            return *this;
+        }
     }
 
 }

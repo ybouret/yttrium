@@ -118,8 +118,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const; //!< [Serializable] bytes
             virtual const char * callSign()       const noexcept; //!< [Identifiable] CallSign
-            static  Natural      Read(InputStream &);
-            
+            static  Natural      Read(InputStream &);             //!< read from serialized
+
             //__________________________________________________________________
             //
             //
@@ -230,7 +230,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Division
             //
             //__________________________________________________________________
+
+            //! Division function
             static Natural Div(const Natural &num, const Natural &den);
+            friend Natural operator/(const Natural &, const Natural &);
+            friend Natural operator/(const natural_t, const Natural &);
+            friend Natural operator/(const Natural &, const natural_t);
+            Natural & operator/=(const Natural &);
+            Natural & operator/=(const natural_t);
 
             //__________________________________________________________________
             //
@@ -238,7 +245,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Modulus
             //
             //__________________________________________________________________
+
+            //! Modulus function
             static Natural Mod(const Natural &num, const Natural &den);
+            friend Natural operator%(const Natural &, const Natural &);
+            friend Natural operator%(const natural_t, const Natural &);
+            friend Natural operator%(const Natural &, const natural_t);
+            Natural & operator%=(const Natural &);
+            Natural & operator%=(const natural_t);
 
             //__________________________________________________________________
             //
@@ -274,7 +288,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             Natural sqrt() const;
-
+            Natural abs()  const;
+            
         private:
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;

@@ -43,7 +43,7 @@ namespace Yttrium
             volatile Natural::AutoLock L(lhs);
             volatile Natural::AutoLock R(rhs);
             const Jig1 &l = lhs.block->make<Plan1>(); const size_t n = l.words;
-            const Jig1 &r = rhs.block->make<Plan1>(); if(n!=r.words) return false;
+            const Jig1 &r = rhs.block->make<Plan1>(); if(n!=r.words) return true;
             return 0 != memcmp(l.word,r.word,n);
         }
 

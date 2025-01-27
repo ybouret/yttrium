@@ -338,12 +338,13 @@ Y_UTEST(apex_n)
             {
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
-                const Natural num = quot * den;
+                const Natural rem(ran,ran.lt(dbits));
+                const Natural num = quot * den + rem;
                 const Natural q = Natural::Div(num,den);
-                Y_ASSERT(q==quot);
                 const Natural m = Natural::Mod(num,den);
+                Y_ASSERT(q==quot);
+                Y_ASSERT(m==rem);
             }
-
         }
     }
 
