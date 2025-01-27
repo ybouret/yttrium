@@ -11,7 +11,7 @@ namespace Yttrium
 #if 1
             quot = Div(num,den);
             rem  = num-quot * den;
-#endif
+#else
             try
             {
                 //--------------------------------------------------------------
@@ -115,7 +115,7 @@ namespace Yttrium
                 rem.block->ldz();
                 throw;
             }
-
+#endif
         }
 
     }

@@ -1,5 +1,6 @@
 #include "y/apex/natural.hpp"
 #include "y/system/exception.hpp"
+#include "y/type/utils.hpp"
 
 namespace Yttrium
 {
@@ -48,46 +49,58 @@ namespace Yttrium
             const size_t denBits = den.bits();
             switch( denBits )
             {
-                case 0: throw Libc::Exception(EDOM, "%s Division By Zero",CallSign);
-                case 1: assert(1==den); return num;
-                default:
+                case 0: // error
+                    throw Libc::Exception(EDOM, "%s Division By Zero",CallSign);
+
+                case 1: // unit denominator
+                    assert(1==den);
+                    return num;
+
+                default: // generic case
+                    assert(den>1);
                     break;
             }
 
-            //------------------------------------------------------------------
-            //
-            // process num.bits()
-            //
-            //------------------------------------------------------------------
-            const size_t numBits = num.bits();
-            if(numBits<denBits) return 0;
+
+            switch( Compare(num,den) )
+            {
+                case Negative: return 0; // early return
+                case __Zero__: return 1; // early return
+                case Positive:
+                    break;
+            }
 
             //------------------------------------------------------------------
             //
             // bracket quotient by shift
             //
             //------------------------------------------------------------------
-            size_t   shift = numBits-denBits;
+            assert(num>den);              // num > 2^0 * den
+            const size_t numBits = num.bits(); assert(numBits>=denBits);
+            size_t       shift   = Max<size_t>(numBits-denBits,1);
             {
                 Natural  probe = den.shl(shift);
-                std::cerr << "probe=" << probe << "/ num=" << num << std::endl;
                 {
                 PROBE:
                     switch( Compare(probe,num) )
                     {
                         case __Zero__:
+                            // specific case
                             return Natural(Exp2,shift);
 
                         case Negative:
                             ++shift;
                             probe <<= 1;
                             goto PROBE;
-                        case Positive: break;
+
+                        case Positive:
+                            break;
                     }
                 }
                 assert(probe>num);
                 assert(shift>0);
             }
+
 
             //------------------------------------------------------------------
             //

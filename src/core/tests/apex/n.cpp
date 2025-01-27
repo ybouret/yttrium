@@ -20,6 +20,7 @@ Y_UTEST(apex_n)
         const Natural lhs = 8;
         const Natural rhs = 10;
         const Natural q = Natural::Div(lhs,rhs);
+        
     }
 
     std::cerr << "Set/Assign 64-bits" << std::endl;
