@@ -332,9 +332,9 @@ Y_UTEST(apex_n)
 
     std::cerr << "Division/Modulus" << std::endl;
     {
-        for(size_t qbits=0;qbits<=256; qbits += ran.in<size_t>(1,8) )
+        for(size_t qbits=0;qbits<=256; qbits += ran.in<size_t>(4,10) )
         {
-            for(size_t dbits=1;dbits<=256; dbits += ran.in<size_t>(1,8))
+            for(size_t dbits=1;dbits<=256; dbits += ran.in<size_t>(4,10))
             {
                 const Natural quot(ran,qbits);
                 const Natural den(ran,dbits);
@@ -344,6 +344,10 @@ Y_UTEST(apex_n)
                 const Natural m = Natural::Mod(num,den);
                 Y_ASSERT(q==quot);
                 Y_ASSERT(m==rem);
+                Y_ASSERT(num/den==quot);
+                Y_ASSERT(num%den==rem);
+                { Natural n = num; Y_ASSERT( quot == (n/=den) ); }
+                { Natural n = num; Y_ASSERT( rem  == (n%=den) ); }
             }
         }
     }
