@@ -13,6 +13,8 @@
 
 namespace Yttrium
 {
+    class InputStream;
+    
     namespace Apex
     {
         class Block;
@@ -116,7 +118,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             virtual size_t       serialize(OutputStream &) const; //!< [Serializable] bytes
             virtual const char * callSign()       const noexcept; //!< [Identifiable] CallSign
-
+            static  Natural      Read(InputStream &);
+            
             //__________________________________________________________________
             //
             //
@@ -228,6 +231,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
             static Natural Div(const Natural &num, const Natural &den);
+
+            //__________________________________________________________________
+            //
+            //
+            // Modulus
+            //
+            //__________________________________________________________________
+            static Natural Mod(const Natural &num, const Natural &den);
 
             //__________________________________________________________________
             //

@@ -2,6 +2,10 @@
 #include "y/apex/natural.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
+#include "y/stream/libc/output.hpp"
+#include "y/stream/libc/input.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/string.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -129,7 +133,34 @@ Y_UTEST(apex_n)
 
     }
 
-    
+    std::cerr << "Serialize" << std::endl;
+    {
+        const String    fn = "n.dat";
+        Vector<Natural> v;
+        size_t          written = 0;
+        {
+            OutputFile fp(fn);
+            for(size_t i=10+ran.leq(100);i>0;--i)
+            {
+                const Natural n(ran,ran.leq(4000));
+                written += n.serialize(fp);
+                v << n;
+            }
+        }
+        std::cerr << "Written Bytes = " << written << std::endl;
+
+        {
+            InputFile fp(fn);
+            size_t    i=0;
+            while( fp.ready() )
+            {
+                ++i;
+                Y_ASSERT(i<=v.size());
+                const Natural n = Natural::Read(fp);
+                Y_ASSERT(n == v[i]);
+            }
+        }
+    }
 
 
 
