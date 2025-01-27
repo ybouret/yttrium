@@ -35,9 +35,9 @@ namespace Yttrium
                 
             private:
                 static inline
-                Block * Impl(const WordType * const bigWord,
+                Block * Impl(const WordType *       bigWord,
                              const size_t           bigSize,
-                             const WordType * const litWord,
+                             const WordType *       litWord,
                              const size_t           litSize,
                              uint64_t * const       ell)
                 {
@@ -53,21 +53,21 @@ namespace Yttrium
                             
                             const bool     watch = 0!=ell;
                             const uint64_t mark  = watch ? WallTime::Ticks() : 0;
-                            for(size_t i=0;i<litSize;++i)
+                            for(size_t i=litSize;i>0;--i)
                             {
-                                acc   += static_cast<const CoreType>(litWord[i]) + static_cast<const CoreType>(bigWord[i]);
-                                sum[i] = static_cast<const WordType>(acc);
+                                acc     += static_cast<const CoreType>(*(litWord++)) + static_cast<const CoreType>(*(bigWord++));
+                                *(sum++) = static_cast<const WordType>(acc);
                                 acc  >>= WordBits;
                             }
                             
-                            for(size_t i=litSize;i<bigSize;++i)
+                            for(size_t i=bigSize-litSize;i>0;--i)
                             {
-                                acc   += static_cast<const CoreType>(bigWord[i]);
-                                sum[i] = static_cast<const WordType>(acc);
+                                acc     += static_cast<const CoreType>(*(bigWord++));
+                                *(sum++) = static_cast<const WordType>(acc);
                                 acc  >>= WordBits;
                             }
                             
-                            sum[bigSize] = static_cast<const WordType>(acc);
+                            *sum = static_cast<const WordType>(acc);
                             if(watch) *ell += WallTime::Ticks() - mark;
                         }
                         
