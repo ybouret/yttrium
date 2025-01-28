@@ -42,7 +42,7 @@ Y_UTEST(apex_n)
         {
             const uint64_t u = ran.to<uint64_t>(ubits);
             const Natural  U = u;
-            Y_ASSERT(U._block().bits == ubits);
+            Y_ASSERT(U->bits == ubits);
             Y_ASSERT(U.lsw() == u );
 
             Y_ASSERT( U == u );
@@ -330,7 +330,7 @@ Y_UTEST(apex_n)
     {
         Natural n(ran,20);
         std::cerr << n << std::endl;
-        while(n.bits()<=100)
+        while(n->bits<=100)
         {
             n = (n.shl(ran.in<size_t>(1,4) ));
             std::cerr << n << std::endl;

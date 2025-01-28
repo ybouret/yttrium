@@ -61,7 +61,7 @@ Y_UTEST(apex_add)
                     for(unsigned i=0;i<Natural::NumOps;++i)
                     {
                         Ops      addOps = Natural::OpsTable[i];
-                        BlockPtr sum    = Natural::Add(lhs._block(), rhs._block(), addOps, &tmx[i]);
+                        BlockPtr sum    = Natural::Add( *lhs, *rhs, addOps, &tmx[i]);
                         if(lbits<=63&&rbits<=63)
                         {
                             const uint64_t l64 = lhs.lsw();

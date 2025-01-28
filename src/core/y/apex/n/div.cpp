@@ -47,7 +47,7 @@ namespace Yttrium
             // process den.bits()
             //
             //------------------------------------------------------------------
-            const size_t denBits = den.bits();
+            const size_t denBits = den->bits;
             switch( denBits )
             {
                 case 0: // error
@@ -81,7 +81,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             assert(num>den); // num > 2^0 * den
-            size_t       shift = Max<size_t>(num.bits()-denBits,1);
+            size_t       shift = Max<size_t>(num->bits-denBits,1);
             {
                 Natural  probe = den.shl(shift);
                 {

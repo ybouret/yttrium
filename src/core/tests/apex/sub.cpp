@@ -51,7 +51,7 @@ Y_UTEST(apex_sub)
                 for(unsigned i=0;i<Natural::NumOps;++i)
                 {
                     const Ops         ops = Natural::OpsTable[i];
-                    volatile BlockPtr blk( Natural::Sub(lhs._block(), rhs._block(), ops, &tmx[i]) );
+                    volatile BlockPtr blk( Natural::Sub( *lhs, *rhs, ops, &tmx[i]) );
                 }
 
 

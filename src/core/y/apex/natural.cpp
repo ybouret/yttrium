@@ -12,13 +12,12 @@ namespace Yttrium
 
 
         Natural:: AutoLock:: AutoLock(const Natural &n) noexcept :
-        host(n)
-        {
-            host->lock();
+        host(n) {
+            host.access().lock();
         }
 
         Natural:: AutoLock:: ~AutoLock() noexcept {
-            host->unlock();
+            host.access().unlock();
         }
 
 
@@ -51,6 +50,9 @@ namespace Yttrium
             static Factory & _ = Factory::Instance();
             return _;
         }
+
+        Y_PROXY_IMPL(Natural, *block)
+
 
         static const unsigned    NaturalShift = iLog2Of<natural_t>::Value;
         static const Plan        NaturalPlan  = Plan(NaturalShift);
@@ -94,30 +96,14 @@ namespace Yttrium
         }
 
 
-
-
-        Lockable & Natural:: operator*() const noexcept
+        Lockable & Natural:: access() const noexcept
         {
             return *mutex;
         }
 
+
+
         
-        Lockable * Natural::operator->() const noexcept
-        {
-            return & *mutex;
-        }
-
-
-        Block &       Natural:: _block() noexcept
-        {
-            return *block;
-        }
-
-        const Block & Natural:: _block() const noexcept
-        {
-            return *block;
-        }
-
 
      
 
@@ -165,11 +151,13 @@ namespace Yttrium
             return *this;
         }
 
+#if 0
         size_t Natural:: bits() const noexcept
         {
             return block->bits;
         }
-
+#endif
+        
     }
 
 }

@@ -11,6 +11,7 @@
 #include "y/random/bits.hpp"
 #include "y/type/signs.hpp"
 #include "y/string.hpp"
+#include "y/type/proxy.hpp"
 
 namespace Yttrium
 {
@@ -68,7 +69,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
         //
         //
         //______________________________________________________________________
-        class Natural : public Number
+        class Natural : public Number, public Proxy<Block>
         {
         public:
             //__________________________________________________________________
@@ -127,13 +128,9 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Access
             //
             //__________________________________________________________________
-            Lockable & operator*()  const noexcept; //!< access internal mutex
-            Lockable * operator->() const noexcept; //!< access internal mutex
+            Lockable & access()     const noexcept; //!< internal mutex access
             uint64_t      lsw()     const noexcept; //!< least significant 64bits word
-            Block &       _block()        noexcept; //!< internal block
-            const Block & _block()  const noexcept; //!< internal const block
             Natural &     xch(Natural &)  noexcept; //!< no-throw exchange
-            size_t        bits()    const noexcept; //!< current bits
 
             //__________________________________________________________________
             //
@@ -324,6 +321,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             String toDec() const; //!< to decimal string
 
         private:
+            Y_PROXY_DECL();
             Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;
             mutable MutexPtr mutex;

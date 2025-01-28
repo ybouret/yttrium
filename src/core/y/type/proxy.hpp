@@ -34,10 +34,20 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        inline Interface *      operator->()       noexcept { return & surrogate(); } //!< access
         inline ConstInterface * operator->() const noexcept { return & surrogate(); } //!< access
-        inline Interface &      operator*()        noexcept { return   surrogate(); } //!< access
         inline ConstInterface & operator*()  const noexcept { return   surrogate(); } //!< access
+
+        inline Interface * operator->() noexcept
+        {
+            ConstInterface & _ = surrogate();
+            return (Interface *) &_;
+        } //!< access
+
+        inline Interface & operator*() noexcept {
+            ConstInterface & _ = surrogate();
+            return (Interface &)_;
+        } //!< access
+
 
         //! forward display call
         inline friend std::ostream & operator<<(std::ostream &os, const Proxy &self) { return os << self.surrogate(); }

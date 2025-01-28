@@ -17,7 +17,7 @@ namespace Yttrium
                 A.xch(B);
 
             assert(A>=B);
-            while(B.bits()>0)
+            while(B->bits>0)
             {
                 Natural r = Mod(A,B);
                 A.xch(B);
