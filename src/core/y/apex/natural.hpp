@@ -274,7 +274,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
             static Natural GCD_(const Natural &a, const Natural &b); //!< GCD_(a>0,b>0)
             static Natural GCD(const Natural &a, const Natural &b);  //!< safe GCD
-            static void    Simplify(Natural &num, Natural &den);
+            static void    Simplify(Natural &num, Natural &den);     //!< simplify num/den
 
             //__________________________________________________________________
             //

@@ -89,6 +89,7 @@ namespace Yttrium
 
         Natural:: Natural(const Natural &other) :
         Number(),
+        Proxy<Block>(),
         block( _Factory().duplicate(*other.block) ),
         mutex( _Factory().query() )
         {
@@ -101,11 +102,6 @@ namespace Yttrium
             return *mutex;
         }
 
-
-
-        
-
-     
 
         Natural & Natural:: operator=(const Natural &other)
         {
