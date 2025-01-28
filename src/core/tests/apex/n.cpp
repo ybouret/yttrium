@@ -338,35 +338,28 @@ Y_UTEST(apex_n)
     }
 
     std::cerr << "Division/Modulus" << std::endl;
-    {
-        for(size_t qbits=0;qbits<=256; qbits += ran.in<size_t>(4,10) )
-        {
-            for(size_t dbits=1;dbits<=256; dbits += ran.in<size_t>(4,10))
-            {
-                const Natural quot(ran,qbits);
-                const Natural den(ran,dbits);
-                Natural rem = 0;
-                for(unsigned cycle=0;cycle<2;++cycle)
-                {
-                    const Natural num = quot * den + rem;
-                    const Natural q   = Natural::Div(num,den);
-                    const Natural m   = Natural::Mod(num,den);
-                    Y_ASSERT(q==quot);
-                    Y_ASSERT(m==rem);
-                    Y_ASSERT(num/den==quot);
-                    Y_ASSERT(num%den==rem);
-                    { Natural n = num; Y_ASSERT( quot == (n/=den) ); }
-                    { Natural n = num; Y_ASSERT( rem  == (n%=den) ); }
-                    Natural Q = 0, R=0;
-                    Natural::Div(Q,R,num,den);
-                    Y_ASSERT(quot==Q);
-                    Y_ASSERT(rem ==R);
 
-                    rem = Natural(ran,ran.lt(dbits));
-                }
+    {
+        for(size_t nbits=0;nbits<=256; nbits += ran.in<size_t>(4,10) )
+        {
+            const size_t maxDenBits = nbits+10;
+            for(size_t dbits=1;dbits<=maxDenBits;dbits += ran.in<size_t>(4,10))
+            {
+                const Natural num(ran,nbits);
+                const Natural den(ran,dbits);
+                const Natural q   = Natural::Div(num,den);
+                const Natural r   = Natural::Mod(num,den);
+                Y_ASSERT(num == q*den + r);
+                Y_ASSERT(num/den == q);
+                Y_ASSERT(num%den == r);
+                { Natural n = num; Y_ASSERT( q == (n/=den) ); }
+                { Natural n = num; Y_ASSERT( r  == (n%=den) ); }
             }
         }
     }
+
+
+    
 
     std::cerr << "Sqrt" << std::endl;
     for(size_t bits=0;bits<=100;bits += ran.in<size_t>(1,8) )

@@ -53,7 +53,7 @@ namespace Yttrium
                 case 0: // error
                     throw Libc::Exception(EDOM, "%s Division By Zero",CallSign);
 
-                case 1: // unit denominator => quotient=num, remain=0
+                case 1: // unit denominator => quotient=num, remainder=0
                     assert(1==den);
                     return num;
 
@@ -69,8 +69,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             switch( Compare(num,den) )
             {
-                case Negative: return 0; // early return, quotient=0, remain=num
-                case __Zero__: return 1; // early return, quotient=1, remain=0
+                case Negative: return 0; // early return, quotient=0, remainder=num
+                case __Zero__: return 1; // early return, quotient=1, remainder=0
                 case Positive:
                     break;
             }

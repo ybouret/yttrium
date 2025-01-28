@@ -189,7 +189,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural        operator ++ (int);                  //!< this++
             void           incr();                             //!< +=1
             SignType       _sgn() const noexcept;              //!< w.r.t 0
-            
+
             //__________________________________________________________________
             //
             //
@@ -223,6 +223,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural &      operator *= (const natural_t rhs); //!< *= rhs
             Natural        sqr() const;                       //!< this * this
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Division/Modulus
+            //
+            //__________________________________________________________________
+             
 
             //__________________________________________________________________
             //
