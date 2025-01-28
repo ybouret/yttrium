@@ -26,9 +26,9 @@ namespace Yttrium
                 static const CarryType                 Radix    = CarryType(1) << WordBits;
                 
                 static inline
-                Block * Get(const WordType * const lw,
+                Block * Get(const WordType *       lw,
                             const size_t           ln,
-                            const WordType * const rw,
+                            const WordType *       rw,
                             const size_t           rn,
                             uint64_t * const       ell)
                 {
@@ -43,7 +43,7 @@ namespace Yttrium
                     try
                     {
                         JigType  &       j   = block->make<PLAN>(); assert(block->curr == &j);
-                        WordType * const d   = j.word;
+                        WordType *       d   = j.word;
                         CarryType        cr  = 0;
                         const bool       watch = (0!=ell);
                         const uint64_t   ini   = watch ? WallTime::Ticks() : 0;
@@ -53,18 +53,18 @@ namespace Yttrium
                         // common size
                         //
                         //----------------------------------------------------------
-                        for(size_t i=0;i<rn;++i)
+                        for(size_t i=rn;i>0;--i)
                         {
-                            cr += static_cast<CarryType>( lw[i] ) - static_cast<CarryType>( rw[i] );
+                            cr += static_cast<CarryType>( *(lw++) ) - static_cast<CarryType>( *(rw++) );
                             if(cr<0)
                             {
-                                d[i] = static_cast<WordType>(cr+Radix);
-                                cr  = -1;
+                                *(d++) = static_cast<WordType>(cr+Radix);
+                                cr     = -1;
                             }
                             else
                             {
-                                d[i] = static_cast<WordType>(cr);
-                                cr  = 0;
+                                *(d++)  = static_cast<WordType>(cr);
+                                cr      = 0;
                             }
                         }
                         
@@ -73,18 +73,18 @@ namespace Yttrium
                         // propagate carry
                         //
                         //----------------------------------------------------------
-                        for(size_t i=rn;i<ln;++i)
+                        for(size_t i=ln-rn;i>0;--i)
                         {
-                            cr += static_cast<CarryType>( lw[i] );
+                            cr += static_cast<CarryType>( *(lw++) );
                             if(cr<0)
                             {
-                                d[i] = static_cast<WordType>(cr+Radix);
-                                cr   = -1;
+                                *(d++)  = static_cast<WordType>(cr+Radix);
+                                cr      = -1;
                             }
                             else
                             {
-                                d[i] = static_cast<WordType>(cr);
-                                cr   = 0;
+                                *(d++)  = static_cast<WordType>(cr);
+                                cr      = 0;
                             }
                         }
                         
