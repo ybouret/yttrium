@@ -287,6 +287,7 @@ Y_UTEST_DECL(256)
 
     Y_UTEST(apex_types);
     Y_UTEST(apex_add);
+    Y_UTEST(apex_sub);
     Y_UTEST(apex_n);
 
 }

@@ -198,6 +198,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Subtractions
             //
             //__________________________________________________________________
+            static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps, uint64_t * const ell); //!< lhs-rhs, with optional timing
             friend Natural operator -  (const Natural & lhs, const Natural & rhs); //!< lhs-rhs
             friend Natural operator -  (const Natural & lhs, const natural_t rhs); //!< lhs-rhs
             friend Natural operator -  (const natural_t lhs, const Natural & rhs); //!< lhs-rhs
@@ -330,7 +331,6 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static Block *Add(Block &lhs, Block &   rhs);                      //!< default add
             static Block *Add(Block &lhs, natural_t rhs);                      //!< hybrid default add
 
-            static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps); //!< lhs-rhs
             static Block *Sub(Block &   lhs, natural_t rhs);                   //!< lhs-rhs
             static Block *Sub(natural_t lhs, Block &   rhs);                   //!< lhs-rhs
 
