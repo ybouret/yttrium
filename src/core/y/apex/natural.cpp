@@ -68,6 +68,7 @@ namespace Yttrium
 
         Natural:: Natural(Random::Bits &ran, const size_t nbit):
         Number(),
+        Proxy<Block>(),
         block( _Factory().query(ran,nbit) ),
         mutex( _Factory().query() )
         {
@@ -75,6 +76,8 @@ namespace Yttrium
         }
 
         Natural:: Natural(Block * const userBlock, const AsBlock_ &) :
+        Number(),
+        Proxy<Block>(),
         block( userBlock ),
         mutex( _Factory().query() )
         {

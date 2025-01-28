@@ -208,6 +208,11 @@ namespace Yttrium
             return Natural(*this);
         }
 
+        SignType Natural:: _sgn() const noexcept
+        {
+            return block->bits <=0 ? __Zero__ : Positive;
+        }
+
     }
 
 }

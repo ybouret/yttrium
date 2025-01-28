@@ -188,7 +188,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural &      operator ++ ();                     //!< ++this
             Natural        operator ++ (int);                  //!< this++
             void           incr();                             //!< +=1
-
+            SignType       _sgn() const noexcept;              //!< w.r.t 0
+            
             //__________________________________________________________________
             //
             //
@@ -289,7 +290,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // shr
             //__________________________________________________________________
             Natural & _shr(const size_t nbit) noexcept; //!< in place right shift
-            Natural & _shr() noexcept;                  //!< in place right shift 1
+            Natural & _shr() noexcept;                  //!< in place right shift 1, aka /= 2
             Natural   shr(const size_t nbit) const;     //!< this >> nbit
 
             friend Natural operator>>(const Natural &,const size_t); //!< this.shr(nbit)
