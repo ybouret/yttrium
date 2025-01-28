@@ -146,26 +146,26 @@ namespace Yttrium
 
         Natural operator+(const Natural &lhs, const Natural &rhs)
         {
-            volatile Natural::AutoLock L(lhs);
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(lhs);
+            Y_Apex_Lock(rhs);
             return Natural( Natural::Add(*lhs.block,*rhs.block), AsBlock );
         }
         
         Natural operator+(const Natural &lhs, const natural_t rhs)
         {
-            volatile Natural::AutoLock L(lhs);
+            Y_Apex_Lock(lhs);
             return Natural( Natural::Add(*lhs.block,rhs), AsBlock );
         }
 
-        Natural operator+(const natural_t lhs, const Natural  &rhs)
+        Natural operator+(const natural_t lhs, const Natural &rhs)
         {
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(rhs);
             return Natural( Natural::Add(*rhs.block,lhs), AsBlock );
         }
 
         Natural & Natural:: operator+=(const Natural &rhs)
         {
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(rhs);
             {
                 BlockPtr res( Natural::Add(*block,*rhs.block) );
                 block.swp(res);

@@ -100,7 +100,7 @@ virtual bool doTryLock() noexcept
     //! create the guard name
 #define Y_LOCK__(X,Y) X##Y
 
-    //! instantiace the guard name
+    //! instantiate the guard name
 #define Y_LOCK_(HOST,ID) volatile Yttrium::ScopedLock Y_LOCK__(__guard,ID)(HOST)
 
     //! use a local ScopedLock to lock HOST

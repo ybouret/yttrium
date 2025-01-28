@@ -339,6 +339,16 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
         };
 
+
+        //! create the guard name
+#define Y_Apex_Lock__(X,Y) X##Y
+
+        //! instantiate the guard name
+#define Y_Apex_Lock_(HOST,ID) volatile Yttrium::Apex::Natural::AutoLock Y_Apex_Lock__(__guard,ID)(HOST)
+
+        //! use a local AutoLock to lock HOST
+#define Y_Apex_Lock(HOST) Y_Apex_Lock_(HOST,__LINE__)
+
     }
 
 }

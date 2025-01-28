@@ -8,8 +8,8 @@ namespace Yttrium
 
         bool operator==(const Natural &lhs, const Natural &rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(lhs);
+            Y_Apex_Lock(rhs);
             const Jig1 &l = lhs.block->make<Plan1>(); const size_t n = l.words;
             const Jig1 &r = rhs.block->make<Plan1>(); if(n!=r.words) return false;
             return 0 == memcmp(l.word,r.word,n);
@@ -17,14 +17,14 @@ namespace Yttrium
 
         bool operator==(const Natural & lhs, const natural_t rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
+            Y_Apex_Lock(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
             return (l.words <= 1) && (rhs == l.word[0]);
         }
 
         bool operator==(const natural_t lhs, const Natural & rhs) noexcept
         {
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(rhs);
             const Jig8 &r  = rhs.block->make<Plan8>();
             return (r.words <= 1) && (lhs == r.word[0]);
         }
@@ -40,8 +40,8 @@ namespace Yttrium
 
         bool operator!=(const Natural &lhs, const Natural &rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(lhs);
+            Y_Apex_Lock(rhs);
             const Jig1 &l = lhs.block->make<Plan1>(); const size_t n = l.words;
             const Jig1 &r = rhs.block->make<Plan1>(); if(n!=r.words) return true;
             return 0 != memcmp(l.word,r.word,n);
@@ -50,7 +50,7 @@ namespace Yttrium
 
         bool operator!=(const Natural & lhs, const natural_t rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
+            Y_Apex_Lock(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
             return (l.words > 1) || (rhs != l.word[0]);
         }
@@ -58,7 +58,7 @@ namespace Yttrium
 
         bool operator!=(const natural_t lhs, const Natural & rhs) noexcept
         {
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(rhs);
             const Jig8 &r  = rhs.block->make<Plan8>();
             return (r.words > 1) && (lhs != r.word[0]);
         }
@@ -75,8 +75,8 @@ namespace Yttrium
 
         SignType Natural:: Compare(const Natural & lhs, const Natural &rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(lhs);
+            Y_Apex_Lock(rhs);
             const Jig8 &l = lhs.block->make<Plan8>();
             const Jig8 &r = rhs.block->make<Plan8>();
 
@@ -104,7 +104,7 @@ namespace Yttrium
 
         SignType Natural:: Compare(const Natural & lhs, const natural_t rhs) noexcept
         {
-            volatile Natural::AutoLock L(lhs);
+            Y_Apex_Lock(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
 
             if(l.words <= 1 )
@@ -119,7 +119,7 @@ namespace Yttrium
 
         SignType Natural:: Compare(const natural_t lhs, const Natural & rhs) noexcept
         {
-            volatile Natural::AutoLock R(rhs);
+            Y_Apex_Lock(rhs);
             const Jig8 &r = rhs.block->make<Plan8>();
             if(r.words<=1)
             {
