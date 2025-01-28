@@ -1,5 +1,6 @@
 #include "y/apex/natural.hpp"
-
+#include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -29,9 +30,9 @@ namespace Yttrium
 
         Natural Natural::GCD(const Natural &a, const Natural &b)
         {
-            if(a<=0)
+            if(a->bits<=0)
             {
-                if(b<=0)
+                if(b->bits<=0)
                 {
                     return 1;
                 }
@@ -43,7 +44,7 @@ namespace Yttrium
             else
             {
                 assert(a>0);
-                if(b<=0)
+                if(b->bits<=0)
                 {
                     return a;
                 }
@@ -51,6 +52,36 @@ namespace Yttrium
                 {
                     assert(b>0);
                     return GCD_(a,b);
+                }
+            }
+        }
+
+        void Natural:: Simplify(Natural &num, Natural &den)
+        {
+            switch(den->bits)
+            {
+                case 0: assert(0==den); throw Libc::Exception(EDOM,"Natural Simplify by Zero");
+                case 1: assert(1==den); return;
+                default:
+                    break;
+            }
+            assert(den>1);
+
+            if(num->bits<=1)
+            {
+                den = 1;
+            }
+            else
+            {
+                assert(num>1);
+                const Natural g = GCD_(num,den);
+                if(g->bits>1)
+                {
+                    assert(g>1);
+                    Natural N = num/g;
+                    Natural D = den/g;
+                    N.xch(num);
+                    D.xch(den);
                 }
             }
         }

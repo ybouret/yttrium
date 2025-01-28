@@ -126,7 +126,7 @@ namespace Yttrium
                     }
                     assert(lower<=upper);
                 }
-                while(upper-lower>1);
+                while( (upper-lower)->bits > 1);
             }
 
             //------------------------------------------------------------------
