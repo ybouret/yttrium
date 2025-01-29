@@ -89,9 +89,9 @@ Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
             //__________________________________________________________________
             //
             //
-            // comparison
+            // comparisons
             //
-            //_________________________________________________________________
+            //__________________________________________________________________
             friend bool operator==(const Integer & lhs, const Integer & rhs) noexcept; //!< equality
             friend bool operator==(const Integer & lhs, const integer_t rhs) noexcept; //!< equality
             friend bool operator==(const integer_t lhs, const Integer & rhs) noexcept; //!< equality
@@ -117,6 +117,14 @@ Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
             Y_Apex_Integer_Ops(<=,!=,Positive)
             Y_Apex_Integer_Ops(>=,!=,Negative)
 #endif
+
+            //__________________________________________________________________
+            //
+            //
+            // Additions
+            //
+            //__________________________________________________________________
+            static Integer Add(const Integer &, const Integer &);
 
             //__________________________________________________________________
             //

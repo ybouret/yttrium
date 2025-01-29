@@ -56,6 +56,34 @@ Y_UTEST(apex_z)
 
     }
 
+    std::cerr << "Serialize" << std::endl;
+    {
+        const String    fn = "n.dat";
+        Vector<Integer> v;
+        size_t          written = 0;
+        {
+            OutputFile fp(fn);
+            for(size_t i=10+ran.leq(100);i>0;--i)
+            {
+                const Integer z(ran,ran.leq(4000));
+                written += z.serialize(fp);
+                v << z;
+            }
+        }
+        std::cerr << "Written Bytes = " << written << std::endl;
+
+        {
+            InputFile fp(fn);
+            size_t    i=0;
+            while( fp.ready() )
+            {
+                ++i;
+                Y_ASSERT(i<=v.size());
+                const Integer z = Integer::Read(fp);
+                Y_ASSERT(z == v[i]);
+            }
+        }
+    }
 
 
 }
