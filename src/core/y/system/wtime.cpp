@@ -13,6 +13,11 @@
 #include <time.h>
 #include <sys/time.h>
 #include <cerrno>
+#    define Y_CLOCK_ID CLOCK_REALTIME
+#    if defined(Y_SunOS)
+#        undef  Y_CLOCK_ID
+#        define Y_CLOCK_ID CLOCK_HIGHRES
+#    endif
 #endif
 
 #if defined(Y_WIN)
@@ -53,7 +58,7 @@ namespace Yttrium
     uint64_t WallTime:: Ticks()
     {
         struct timespec tp  = { 0, 0 };
-        const int       err = clock_gettime( CLOCK_REALTIME, &tp );
+        const int       err = clock_gettime( Y_CLOCK_ID, &tp );
         if(err!=0)
             throw Libc::Exception( errno, "clock_gettime" );
         return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
@@ -65,7 +70,7 @@ namespace Yttrium
         static const long double nano = 1.0e-9L;
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
-        const int       err = clock_getres(CLOCK_REALTIME,&tp);
+        const int       err = clock_getres(Y_CLOCK_ID,&tp);
         if(err!=0) throw Libc::Exception( errno, "clock_getres" );
         std::cerr << "tp: " << tp.tv_sec << "s  " << tp.tv_nsec << " ns" << std::endl;
         return  nano * static_cast<long double>(__giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec));
