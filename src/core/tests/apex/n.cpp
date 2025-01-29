@@ -354,7 +354,14 @@ Y_UTEST(apex_n)
         Y_ASSERT(num%den == r);
         { Natural n = num; Y_ASSERT( q == (n/=den) ); }
         { Natural n = num; Y_ASSERT( r  == (n%=den) ); }
+        {
+            Natural quot=0,rem=0;
+            Natural::Div(quot,rem,num,den);
+            Y_ASSERT(q==quot);
+            Y_ASSERT(r==rem);
+        }
         (std::cerr << '.').flush();
+
     }
     std::cerr << ']' << std::endl;
 

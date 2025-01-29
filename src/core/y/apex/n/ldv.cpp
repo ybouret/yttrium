@@ -8,8 +8,11 @@ namespace Yttrium
 
         void Natural:: Div(Natural &quot, Natural &rem, const Natural &num, const Natural &den)
         {
-            quot = Div(num,den);
-            rem  = num-quot * den;
+            DivModArg retBoth = { &rem };
+            quot = DivMod(num,den,&retBoth);
+            
+            //quot = Div(num,den);
+            //rem  = num-quot * den;
         }
 
     }

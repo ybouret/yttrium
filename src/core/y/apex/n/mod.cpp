@@ -40,8 +40,8 @@ namespace Yttrium
 
         Natural Natural:: Mod(const Natural &num, const Natural &den)
         {
-            const Natural quot = Div(num,den);
-            return num-quot*den;
+            DivModArg retMod = { 0 };
+            return DivMod(num,den,&retMod);
         }
 
     }
