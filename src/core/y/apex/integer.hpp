@@ -26,7 +26,37 @@ Y_Apex_Integer_Op(OP,Integer &, Integer &, MATCHES, RESULT) \
 Y_Apex_Integer_Op(OP,Integer &, integer_t, MATCHES, RESULT) \
 Y_Apex_Integer_Op(OP,integer_t, Integer &, MATCHES, RESULT) \
 Y_Apex_Integer_Op(OP,Integer &, Natural &, MATCHES, RESULT) \
-Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT) 
+Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
+
+
+#define Y_Apex_Integer_Binary_Wrapper(FCN) \
+static inline Integer FCN(const Integer & lhs, const integer_t rhs) { const Integer _(rhs); return FCN(lhs,_); } \
+static inline Integer FCN(const integer_t lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); } \
+static inline Integer FCN(const Integer & lhs, const Natural & rhs) { const Integer _(rhs); return FCN(lhs,_); } \
+static inline Integer FCN(const Natural & lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); }
+
+#define Y_Apex_Integer_Binary_Operator(OP,LHS,RHS,FCN) \
+friend inline Integer operator OP (const LHS lhs, const RHS rhs) { return Integer:: FCN(lhs,rhs); }
+
+#define Y_Apex_Integer_Binary_Operators(OP,FCN)               \
+Y_Apex_Integer_Binary_Operator(OP, Integer &, Integer &, FCN) \
+Y_Apex_Integer_Binary_Operator(OP, Integer &, integer_t, FCN) \
+Y_Apex_Integer_Binary_Operator(OP, integer_t, Integer &, FCN) \
+Y_Apex_Integer_Binary_Operator(OP, Integer &, Natural &, FCN) \
+Y_Apex_Integer_Binary_Operator(OP, Natural &, Integer &, FCN)
+
+#define Y_Apex_Integer_Unary_Operator(OP,RHS,FCN) \
+inline Integer & operator OP##= (const RHS rhs) { Integer _( FCN(*this,rhs) ); xch(_); return *this; }
+
+#define Y_Apex_Integer_Unary_Operators(OP,FCN)   \
+Y_Apex_Integer_Unary_Operator(OP,Integer &,FCN)  \
+Y_Apex_Integer_Unary_Operator(OP,integer_t,FCN)  \
+Y_Apex_Integer_Unary_Operator(OP,Natural &,FCN)
+
+
+#define Y_Apex_Integer_Operators(OP,FCN) \
+Y_Apex_Integer_Binary_Operators(OP,FCN) \
+Y_Apex_Integer_Unary_Operators(OP,FCN)
 
         //______________________________________________________________________
         //
@@ -126,8 +156,10 @@ Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
             //__________________________________________________________________
             Integer operator+() const;
             static Integer Add(const Integer &, const Integer &);
-
-
+            Integer &      operator ++ ();                     //!< ++this
+            Integer        operator ++ (int);                  //!< this++
+            void           incr();                             //!< +=1
+            
             //__________________________________________________________________
             //
             //
@@ -135,6 +167,10 @@ Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
             //
             //__________________________________________________________________
             Integer operator-() const;
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+            Y_Apex_Integer_Operators(+,Add)
+#endif
 
             //__________________________________________________________________
             //
@@ -144,6 +180,9 @@ Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
             //__________________________________________________________________
             const SignType s; //!< sign
             const Natural  n; //!< synchronized natural
+
+        private:
+            Y_Apex_Integer_Binary_Wrapper(Add)
         };
 
     }

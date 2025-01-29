@@ -12,6 +12,11 @@ using namespace Yttrium;
 using namespace Apex;
 
 
+static inline integer_t z64(Random::Bits &ran)
+{
+    const integer_t z = ran.to<uint64_t>( unsigned(ran.lt(63)) );
+    return ran.choice() ? z : -z;
+}
 
 Y_UTEST(apex_z)
 {
@@ -20,7 +25,7 @@ Y_UTEST(apex_z)
     std::cerr << "Assign/Comparison 64 Bits" << std::endl;
     for(size_t iter=0;iter<1000;++iter)
     {
-        integer_t       z = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) z=-z;
+        const integer_t z = z64(ran);
         const Integer   Z = z;
         //std::cerr << Z << " / " << z << std::endl;
 
@@ -33,9 +38,9 @@ Y_UTEST(apex_z)
         Y_ASSERT( __Zero__ == Integer::Compare(z,Z) );
 
 
-        integer_t      w = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) w=-w;
-        const Integer  W = w;
-        const SignType s = Sign::Of(z,w);
+        const integer_t  w = z64(ran);
+        const Integer    W = w;
+        const SignType   s = Sign::Of(z,w);
         Y_ASSERT( s == Integer::Compare(Z,W) );
         Y_ASSERT( s == Integer::Compare(z,W) );
         Y_ASSERT( s == Integer::Compare(Z,w) );
@@ -82,6 +87,33 @@ Y_UTEST(apex_z)
                 const Integer z = Integer::Read(fp);
                 Y_ASSERT(z == v[i]);
             }
+        }
+    }
+
+
+    std::cerr << "Add 64" << std::endl;
+
+    for(size_t iter=0;iter<1000;++iter)
+    {
+        const integer_t a = z64(ran);
+        const integer_t b = z64(ran);
+        const integer_t sum = a+b;
+        const Integer   A = a;
+        const Integer   B = b;
+        const Integer   Sum = A+B;
+        Y_ASSERT(Sum==sum);
+        Y_ASSERT(Sum==A+b);
+        Y_ASSERT(Sum==a+B);
+        if(b>=0)
+        {
+            const Natural U = b;
+            Y_ASSERT(Sum==A+U);
+        }
+
+        if(a>=0)
+        {
+            const Natural U = a;
+            Y_ASSERT(Sum==U+B);
         }
     }
 
