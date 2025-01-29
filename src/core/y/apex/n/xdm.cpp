@@ -101,7 +101,7 @@ namespace Yttrium
             // bracket quotient by shift > 0
             //
             //------------------------------------------------------------------
-            assert(num>den); // num > 2^0 * den
+            assert(num>den); // implies num > 2^0 * den
             size_t       shift = Max<size_t>(num->bits-denBits,1);
             {
                 Natural  probe = den.shl(shift);
@@ -111,7 +111,7 @@ namespace Yttrium
                     {
                         case __Zero__: // early return, quotient = 2^shift, remainder=0
                             XDM_RETURN(Natural(Exp2,shift),0);
-                            
+
                         case Negative:
                             ++shift;
                             probe <<= 1;
@@ -141,7 +141,7 @@ namespace Yttrium
                         switch( Compare(probe,num) )
                         {
                             case Negative: lower.xch(middle); break; // lower <- middle
-                            case __Zero__: return middle;            // early return, quotient=middle, remain=0
+                            case __Zero__: XDM_RETURN(middle,0);     // early return, quotient=middle, remain=0
                             case Positive: upper.xch(middle); break; // upper <- middle
                         }
                     }
@@ -155,7 +155,9 @@ namespace Yttrium
             // done!
             //
             //------------------------------------------------------------------
-            return lower; // quotient=lower, remain=num-lower*den
+
+            // quotient=lower, remain=num-lower*den
+            XDM_RETURN(lower,num-lower*den);
         }
     }
 
