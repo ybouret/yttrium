@@ -74,12 +74,20 @@ namespace Yttrium
             //
             //_________________________________________________________________
             friend bool operator==(const Integer & lhs, const Integer & rhs) noexcept; //!< equality
-            friend bool operator==(const Integer & lhs, const natural_t rhs) noexcept; //!< equality
+            friend bool operator==(const Integer & lhs, const integer_t rhs) noexcept; //!< equality
             friend bool operator==(const integer_t lhs, const Integer & rhs) noexcept; //!< equality
+            friend bool operator==(const Integer & lhs, const Natural & rhs) noexcept; //!< equality
+            friend bool operator==(const Natural & lhs, const Integer & rhs) noexcept; //!< equality
 
             friend bool operator!=(const Integer & lhs, const Integer & rhs) noexcept; //!< difference
-            friend bool operator!=(const Integer & lhs, const natural_t rhs) noexcept; //!< difference
+            friend bool operator!=(const Integer & lhs, const integer_t rhs) noexcept; //!< difference
             friend bool operator!=(const integer_t lhs, const Integer & rhs) noexcept; //!< difference
+            friend bool operator==(const Integer & lhs, const Natural & rhs) noexcept; //!< difference
+            friend bool operator==(const Natural & lhs, const Integer & rhs) noexcept; //!< difference
+
+            static SignType Compare(const Integer & lhs, const Integer & rhs) noexcept; //!< comparison
+            static SignType Compare(const Integer & lhs, const integer_t rhs) noexcept; //!< comparison
+            static SignType Compare(const integer_t lhs, const Integer & rhs) noexcept; //!< comparison
 
             //__________________________________________________________________
             //
