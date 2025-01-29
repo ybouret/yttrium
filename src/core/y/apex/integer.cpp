@@ -1,11 +1,20 @@
 
 #include "y/apex/integer.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
 
     namespace Apex
     {
+
+        const char * const Integer:: CallSign = "Apex::Integer";
+        
+        const char * Integer:: callSign() const noexcept
+        {
+            return CallSign;
+        }
+
         static inline
         natural_t z2n(const SignType  s,
                       const integer_t z) noexcept
@@ -21,6 +30,7 @@ namespace Yttrium
         }
 
         Integer:: Integer(const integer_t z) :
+        Number(),
         s( Sign::Of(z) ),
         n( z2n(s,z) )
         {
@@ -29,7 +39,65 @@ namespace Yttrium
         Integer:: ~Integer() noexcept
         {
         }
+
+        Integer:: Integer(const Integer &z) :
+        Number(),
+        s(z.s),
+        n(z.n)
+        {
+        }
+
+        Integer:: Integer(const Natural &u) :
+        Number(),
+        s( u._sgn() ),
+        n( u )
+        {
+        }
         
+        Integer:: Integer(const SignType theSign, const Natural &u) :
+        Number(),
+        s( theSign ),
+        n( u )
+        {
+            switch( s )
+            {
+                case __Zero__:
+                    if(n>0)  throw Specific::Exception(CallSign,"invalid positive absolute value");
+                    break;
+
+                case Negative:
+                case Positive:
+                    if(n==0) throw Specific:: Exception(CallSign,"invalid null absolute value");
+                    break;
+            }
+        }
+
+        Integer & Integer:: xch( Integer &_ ) noexcept
+        {
+            CoerceSwap(_.s,s);
+            Coerce(_.n).xch( Coerce(n) );
+            return *this;
+        }
+
+
+        Integer & Integer:: operator=(const Integer &z)
+        {
+            Integer _(z);
+            return xch(_);
+        }
+
+        Integer & Integer:: operator=(const integer_t z)
+        {
+            Integer _(z);
+            return xch(_);
+        }
+
+        Integer & Integer:: operator=(const Natural &u)
+        {
+            Integer _(u);
+            return xch(_);
+        }
+
 
     }
 
