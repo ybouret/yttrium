@@ -117,6 +117,19 @@ Y_UTEST(apex_z)
         }
     }
 
+    for(Integer z=-5;z<=5;++z)
+    {
+        std::cerr << " " << z;
+    }
+    std::cerr << std::endl;
+
+    for(Integer z=-5;z<=5;z++)
+    {
+        std::cerr << " " << z;
+    }
+    std::cerr << std::endl;
+
+
 
 }
 Y_UDONE()
