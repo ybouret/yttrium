@@ -24,6 +24,20 @@ Y_UTEST(apex_z)
         integer_t       z = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) z=-z;
         const Integer   Z = z;
         std::cerr << Z << " / " << z << std::endl;
+
+        Y_ASSERT( Z == z  );
+        Y_ASSERT( z == Z  );
+        Y_ASSERT( !(z!=Z) );
+        Y_ASSERT( !(Z!=z) );
+        Y_ASSERT( __Zero__ == Integer::Compare(Z,Z) );
+        Y_ASSERT( __Zero__ == Integer::Compare(Z,z) );
+        Y_ASSERT( __Zero__ == Integer::Compare(z,Z) );
+
+
+        integer_t w = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) w=-w;
+        const SignType s = Sign::Of(z,w);
+
+
     }
 
 

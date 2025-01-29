@@ -150,8 +150,8 @@ namespace Yttrium
                 case ZN_Signs:
                     return Positive;
 
-                case NN_Signs: return Natural::Compare(rhs,lhs.n); // opposite compare n
-                case PP_Signs: return Natural::Compare(lhs.n,rhs); // directly compare n
+                case NN_Signs: return Natural::Compare(static_cast<natural_t>(-rhs),lhs.n); // opposite compare n
+                case PP_Signs: return Natural::Compare(lhs.n,static_cast<natural_t>(rhs));  // directly compare n
                 case ZZ_Signs: break;
             }
             return __Zero__;
@@ -171,8 +171,8 @@ namespace Yttrium
                 case ZN_Signs:
                     return Positive;
 
-                case NN_Signs: return Natural::Compare(rhs.n,lhs); // opposite compare n
-                case PP_Signs: return Natural::Compare(lhs,rhs.n); // directly compare n
+                case NN_Signs: return Natural::Compare(rhs.n,static_cast<natural_t>(-lhs)); // opposite compare n
+                case PP_Signs: return Natural::Compare(static_cast<natural_t>(lhs),rhs.n); // directly compare n
                 case ZZ_Signs: break;
             }
             return __Zero__;
