@@ -117,7 +117,7 @@ namespace Yttrium
     long double WallTime:: operator()(const uint64_t u) const noexcept
     {
         const long double res = *freq * static_cast<long double>(u);
-        std::cerr << "u=" << u << "=>" << res << std::endl;
+       //std::cerr << "u=" << u << "=>" << res << std::endl;
         return res;
     }
 
