@@ -112,12 +112,11 @@ namespace Yttrium
 
     WallTime:: WallTime() : freq( WallTimeCalibrate() )
     {
-        //std::cerr << "freq=" << freq << std::endl;
     }
 
     long double WallTime:: operator()(const uint64_t u) const noexcept
     {
-        return *freq * u;
+        return *freq * static_cast<long double>(u);
     }
 
     void WallTime:: wait(const double nsec) const

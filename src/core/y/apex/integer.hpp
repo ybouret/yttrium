@@ -12,6 +12,22 @@ namespace Yttrium
     namespace Apex
     {
 
+
+        //! helper to implement comparisons
+#define Y_Apex_Integer_Op(OP,LHS,RHS,MATCHES,RESULT)             \
+/**/ inline friend                                               \
+/**/ bool  operator OP (const LHS lhs, const RHS rhs) noexcept { \
+/**/   return RESULT MATCHES Integer::Compare(lhs,rhs);          \
+/**/ }
+
+        //! helper to implement comparisons
+#define Y_Apex_Integer_Ops(OP,MATCHES,RESULT)               \
+Y_Apex_Integer_Op(OP,Integer &, Integer &, MATCHES, RESULT) \
+Y_Apex_Integer_Op(OP,Integer &, integer_t, MATCHES, RESULT) \
+Y_Apex_Integer_Op(OP,integer_t, Integer &, MATCHES, RESULT) \
+Y_Apex_Integer_Op(OP,Integer &, Natural &, MATCHES, RESULT) \
+Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT) 
+
         //______________________________________________________________________
         //
         //
@@ -93,6 +109,14 @@ namespace Yttrium
             static SignType Compare(const integer_t lhs, const Integer & rhs) noexcept; //!< comparison
             static SignType Compare(const Integer & lhs, const Natural & rhs) noexcept; //!< comparison
             static SignType Compare(const Natural & lhs, const Integer & rhs) noexcept; //!< comparison
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+            Y_Apex_Integer_Ops(<, ==,Negative)
+            Y_Apex_Integer_Ops(>, ==,Positive)
+            Y_Apex_Integer_Ops(<=,!=,Positive)
+            Y_Apex_Integer_Ops(>=,!=,Negative)
+#endif
 
             //__________________________________________________________________
             //
