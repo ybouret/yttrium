@@ -61,6 +61,8 @@ Y_Apex_Natural_Op(OP,Natural &, natural_t, MATCHES, RESULT) \
 Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
 
+
+
         //______________________________________________________________________
         //
         //
@@ -230,7 +232,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Division/Modulus
             //
             //__________________________________________________________________
-             
+            struct DivModArg {
+                Natural *rem;
+            };
+
+            static Natural DivMod(const Natural &num, const Natural &den, DivModArg * const arg);
+
 
             //__________________________________________________________________
             //

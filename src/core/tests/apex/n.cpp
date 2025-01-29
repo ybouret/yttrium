@@ -339,24 +339,24 @@ Y_UTEST(apex_n)
 
     std::cerr << "Division/Modulus" << std::endl;
 
+    std::cerr << '[';
+    for(size_t iter=0;iter<64;++iter)
     {
-        for(size_t nbits=0;nbits<=256; nbits += ran.in<size_t>(4,10) )
-        {
-            const size_t maxDenBits = nbits+10;
-            for(size_t dbits=1;dbits<=maxDenBits;dbits += ran.in<size_t>(4,10))
-            {
-                const Natural num(ran,nbits);
-                const Natural den(ran,dbits);
-                const Natural q   = Natural::Div(num,den);
-                const Natural r   = Natural::Mod(num,den);
-                Y_ASSERT(num == q*den + r);
-                Y_ASSERT(num/den == q);
-                Y_ASSERT(num%den == r);
-                { Natural n = num; Y_ASSERT( q == (n/=den) ); }
-                { Natural n = num; Y_ASSERT( r  == (n%=den) ); }
-            }
-        }
+        const size_t nbits = ran.in<size_t>(0,4000);
+        const size_t dbits = ran.in<size_t>(1,4500);
+
+        const Natural num(ran,nbits);
+        const Natural den(ran,dbits);
+        const Natural q   = Natural::Div(num,den);
+        const Natural r   = Natural::Mod(num,den);
+        Y_ASSERT(num == q*den + r);
+        Y_ASSERT(num/den == q);
+        Y_ASSERT(num%den == r);
+        { Natural n = num; Y_ASSERT( q == (n/=den) ); }
+        { Natural n = num; Y_ASSERT( r  == (n%=den) ); }
+        (std::cerr << '.').flush();
     }
+    std::cerr << ']' << std::endl;
 
 
     
