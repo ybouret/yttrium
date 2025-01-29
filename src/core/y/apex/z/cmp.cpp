@@ -125,6 +125,16 @@ namespace Yttrium
             }
             return __Zero__;
         }
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+
 
         SignType Integer:: Compare(const Integer & lhs, const integer_t rhs) noexcept
         {
@@ -168,6 +178,39 @@ namespace Yttrium
             return __Zero__;
         }
 
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+
+        SignType Integer:: Compare(const Integer & lhs, const Natural & rhs) noexcept
+        {
+            switch(lhs.s)
+            {
+                case Negative: return Negative;
+                case Positive:
+                case __Zero__:
+                    break;
+            }
+            return Natural::Compare(lhs.n,rhs);
+        }
+
+        SignType Integer:: Compare(const Natural & lhs, const Integer & rhs) noexcept
+        {
+            switch(rhs.s)
+            {
+                case Negative: return Positive;
+                case Positive:
+                case __Zero__:
+                    break;
+            }
+            return Natural::Compare(lhs,rhs.n);
+        }
     }
 
 }

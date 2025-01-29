@@ -99,6 +99,33 @@ namespace Yttrium
         }
 
 
+        Integer:: Integer(Random::Bits &ran, const size_t nbit) :
+        s( __Zero__ ),
+        n(ran,nbit)
+        {
+            if( Positive == (Coerce(s) = n._sgn()) )
+            {
+                if( ran.choice() ) Coerce(s) = Negative;
+            }
+
+        }
+
+        String Integer:: toDec() const
+        {
+            switch( s )
+            {
+                case __Zero__: break;
+                case Positive: return n.toDec();
+                case Negative: return '-' + n.toDec();
+            }
+            return '0';
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Integer &z)
+        {
+            return os << z.toDec();
+        }
+
     }
 
 }

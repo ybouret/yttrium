@@ -370,4 +370,6 @@ add_test(apex:types test_core apex_type)
 add_test(apex:add   test-core apex_add)
 add_test(apex:sub   test-core apex_sub)
 add_test(apex:n     test-core apex_n)
+add_test(apex:z     test-core apex_z)
+
 

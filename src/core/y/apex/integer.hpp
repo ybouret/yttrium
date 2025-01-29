@@ -48,6 +48,8 @@ namespace Yttrium
             Integer & operator=(const integer_t );    //!< assign
             Integer & operator=(const Natural  &);    //!< assign
             virtual ~Integer() noexcept;              //!< cleanup
+            Integer(Random::Bits &, const size_t);    //!< with random sign
+            Y_OSTREAM_PROTO(Integer);
 
             //__________________________________________________________________
             //
@@ -56,6 +58,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             Integer & xch( Integer & ) noexcept; //!< no-throw exchange
+            String    toDec() const;
 
             //__________________________________________________________________
             //
@@ -88,6 +91,8 @@ namespace Yttrium
             static SignType Compare(const Integer & lhs, const Integer & rhs) noexcept; //!< comparison
             static SignType Compare(const Integer & lhs, const integer_t rhs) noexcept; //!< comparison
             static SignType Compare(const integer_t lhs, const Integer & rhs) noexcept; //!< comparison
+            static SignType Compare(const Integer & lhs, const Natural & rhs) noexcept; //!< comparison
+            static SignType Compare(const Natural & lhs, const Integer & rhs) noexcept; //!< comparison
 
             //__________________________________________________________________
             //
