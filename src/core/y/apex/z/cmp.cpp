@@ -172,7 +172,7 @@ namespace Yttrium
                     return Positive;
 
                 case NN_Signs: return Natural::Compare(rhs.n,static_cast<natural_t>(-lhs)); // opposite compare n
-                case PP_Signs: return Natural::Compare(static_cast<natural_t>(lhs),rhs.n); // directly compare n
+                case PP_Signs: return Natural::Compare(static_cast<natural_t>(lhs),rhs.n);  // directly compare n
                 case ZZ_Signs: break;
             }
             return __Zero__;

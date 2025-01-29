@@ -19,11 +19,11 @@ Y_UTEST(apex_z)
 
     std::cerr << "Assign/Comparison" << std::endl;
 
-    for(size_t iter=0;iter<10;++iter)
+    for(size_t iter=0;iter<1000;++iter)
     {
         integer_t       z = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) z=-z;
         const Integer   Z = z;
-        std::cerr << Z << " / " << z << std::endl;
+        //std::cerr << Z << " / " << z << std::endl;
 
         Y_ASSERT( Z == z  );
         Y_ASSERT( z == Z  );
@@ -34,8 +34,12 @@ Y_UTEST(apex_z)
         Y_ASSERT( __Zero__ == Integer::Compare(z,Z) );
 
 
-        integer_t w = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) w=-w;
+        integer_t      w = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) w=-w;
+        const Integer  W = w;
         const SignType s = Sign::Of(z,w);
+        Y_ASSERT( s == Integer::Compare(Z,W) );
+        Y_ASSERT( s == Integer::Compare(z,W) );
+        Y_ASSERT( s == Integer::Compare(Z,w) );
 
 
     }
