@@ -1,4 +1,3 @@
-
 #include "y/apex/integer.hpp"
 
 namespace Yttrium
