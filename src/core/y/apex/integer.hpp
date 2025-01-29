@@ -29,10 +29,10 @@ namespace Yttrium
             // Definition
             //
             //__________________________________________________________________
-            static const char * const CallSign;
-            static const uint8_t Is__Zero__ = 0x00;
-            static const uint8_t IsPositive = 0x01;
-            static const uint8_t IsNegative = 0x02;
+            static const char * const CallSign;        //!< Apex::Integert
+            static const uint8_t Is__Zero__ = 0x00;    //!< alias
+            static const uint8_t IsPositive = 0x01;    //!< alias
+            static const uint8_t IsNegative = 0x02;    //!< alias
 
             //__________________________________________________________________
             //
@@ -40,14 +40,14 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Integer(const integer_t z);
-            Integer(const Integer &);
-            Integer(const Natural &);
-            Integer(const SignType, const Natural &);
-            Integer & operator=(const Integer  &);
-            Integer & operator=(const integer_t );
-            Integer & operator=(const Natural  &);
-            virtual ~Integer() noexcept;
+            Integer(const integer_t z);               //!< setup
+            Integer(const Integer &);                 //!< duplicate
+            Integer(const Natural &);                 //!< setup
+            Integer(const SignType, const Natural &); //!< setup
+            Integer & operator=(const Integer  &);    //!< assign
+            Integer & operator=(const integer_t );    //!< assign
+            Integer & operator=(const Natural  &);    //!< assign
+            virtual ~Integer() noexcept;              //!< cleanup
 
             //__________________________________________________________________
             //
@@ -55,7 +55,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            Integer & xch( Integer & ) noexcept;
+            Integer & xch( Integer & ) noexcept; //!< no-throw exchange
 
             //__________________________________________________________________
             //
@@ -63,18 +63,23 @@ namespace Yttrium
             // Interface
             //
             //__________________________________________________________________
-            virtual const char * callSign()       const noexcept;
-            virtual size_t       serialize(OutputStream &) const;
-            static  Integer      Read(InputStream &);
+            virtual const char * callSign()       const noexcept; //!< CallSign
+            virtual size_t       serialize(OutputStream &) const; //!< mark+n
+            static  Integer      Read(InputStream &);             //!< retriver serialized
 
             //__________________________________________________________________
             //
             //
             // comparison
             //
-            //__________________________________________________________________
-            friend bool operator==(const Integer &lhs, const Integer &rhs) noexcept;
-            friend bool operator!=(const Integer &lhs, const Integer &rhs) noexcept;
+            //_________________________________________________________________
+            friend bool operator==(const Integer & lhs, const Integer & rhs) noexcept; //!< equality
+            friend bool operator==(const Integer & lhs, const natural_t rhs) noexcept; //!< equality
+            friend bool operator==(const integer_t lhs, const Integer & rhs) noexcept; //!< equality
+
+            friend bool operator!=(const Integer & lhs, const Integer & rhs) noexcept; //!< difference
+            friend bool operator!=(const Integer & lhs, const natural_t rhs) noexcept; //!< difference
+            friend bool operator!=(const integer_t lhs, const Integer & rhs) noexcept; //!< difference
 
             //__________________________________________________________________
             //
