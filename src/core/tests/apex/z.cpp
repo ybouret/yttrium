@@ -17,8 +17,7 @@ Y_UTEST(apex_z)
 {
     Random::ParkMiller ran;
 
-    std::cerr << "Assign/Comparison" << std::endl;
-
+    std::cerr << "Assign/Comparison 64 Bits" << std::endl;
     for(size_t iter=0;iter<1000;++iter)
     {
         integer_t       z = ran.to<uint64_t>( unsigned(ran.lt(64)) ); if(ran.choice()) z=-z;
@@ -40,6 +39,19 @@ Y_UTEST(apex_z)
         Y_ASSERT( s == Integer::Compare(Z,W) );
         Y_ASSERT( s == Integer::Compare(z,W) );
         Y_ASSERT( s == Integer::Compare(Z,w) );
+
+        if(w>=0)
+        {
+            const Natural N = w;
+            Y_ASSERT( s == Integer::Compare(Z,N) );
+        }
+
+        if(z>=0)
+        {
+            const Natural N = z;
+            Y_ASSERT( s == Integer::Compare(N,W) );
+        }
+
 
 
     }
