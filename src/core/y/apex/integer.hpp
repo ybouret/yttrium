@@ -167,9 +167,20 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             //
             //__________________________________________________________________
             Integer operator-() const;
+            static Integer Sub(const Integer &, const Integer &);
+            Integer &      operator -- ();                     //!< --this
+            Integer        operator -- (int);                  //!< this--
+            void           decr();                             //!< -=1
 
+            //__________________________________________________________________
+            //
+            //
+            // Operators
+            //
+            //__________________________________________________________________
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Apex_Integer_Operators(+,Add)
+            Y_Apex_Integer_Operators(-,Sub)
 #endif
 
             //__________________________________________________________________
