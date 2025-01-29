@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Apex_Natural_Included
@@ -336,6 +335,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             String toHex() const; //!< to hexadecimal string
             String toDec() const; //!< to decimal string
+
+            //__________________________________________________________________
+            //
+            //
+            // integral type conversion
+            //
+            //__________________________________________________________________
 
         private:
             Y_PROXY_DECL();
