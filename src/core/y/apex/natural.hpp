@@ -231,10 +231,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Division/Modulus
             //
             //__________________________________________________________________
+
+            //! helper to drive DivMod function
             struct DivModArg {
-                Natural *rem;
+                Natural *rem; //!< optional remainder to store
             };
 
+            //! swiss-army knife DivMod
             static Natural DivMod(const Natural &num, const Natural &den, DivModArg * const arg);
 
 

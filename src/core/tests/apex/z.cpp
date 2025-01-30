@@ -18,6 +18,12 @@ static inline integer_t z64(Random::Bits &ran)
     return ran.choice() ? z : -z;
 }
 
+static inline integer_t z32(Random::Bits &ran)
+{
+    const integer_t z = ran.to<uint64_t>( unsigned(ran.lt(31)) );
+    return ran.choice() ? z : -z;
+}
+
 Y_UTEST(apex_z)
 {
     Random::ParkMiller ran;
@@ -196,7 +202,17 @@ Y_UTEST(apex_z)
     }
 
 
-
+    std::cerr << "Mul64" << std::endl;
+    for(size_t cycle=0;cycle<10000;++cycle)
+    {
+        const integer_t a = z32(ran);
+        const integer_t b = z32(ran);
+        const integer_t p = a*b;
+        const Integer   A = a;
+        const Integer   B = b;
+        const Integer   P = A*B;
+        Y_ASSERT(p==P);
+    }
 
 
 
