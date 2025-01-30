@@ -34,3 +34,46 @@ namespace Yttrium
     }
 
 }
+
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+
+        Integer Integer:: Mul(const Integer &lhs, const integer_t rhs)
+        {
+            switch( Sign::MakePair(lhs.s, Sign::Of(rhs) ) )
+            {
+                case ZN_Signs:
+                case ZP_Signs:
+                case ZZ_Signs:
+                case PZ_Signs:
+                case NZ_Signs:
+                    break;
+
+                case NP_Signs:
+                case PP_Signs:
+                { Integer _ = lhs;   Coerce(_.n) *= static_cast<natural_t>(rhs); return _; }
+
+                case NN_Signs:
+                case PN_Signs:
+                { Integer _ = -lhs; Coerce(_.n) *= static_cast<natural_t>(-rhs); return _; }
+
+
+            }
+
+            return Integer(0);
+        }
+
+        Integer Integer:: Mul(const integer_t lhs, const Integer &rhs)
+        {
+            return Mul(rhs,lhs);
+        }
+
+
+    }
+
+}
+

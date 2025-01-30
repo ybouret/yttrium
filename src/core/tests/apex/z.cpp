@@ -212,6 +212,8 @@ Y_UTEST(apex_z)
         const Integer   B = b;
         const Integer   P = A*B;
         Y_ASSERT(p==P);
+        Y_ASSERT(P == A*b);
+        Y_ASSERT(P == b*A);
     }
 
 
