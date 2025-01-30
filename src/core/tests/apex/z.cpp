@@ -214,6 +214,19 @@ Y_UTEST(apex_z)
         Y_ASSERT(p==P);
         Y_ASSERT(P == A*b);
         Y_ASSERT(P == b*A);
+
+        if(a>=0)
+        {
+            const Natural U = a;
+            Y_ASSERT(P==U*B);
+        }
+
+        if(b>=0)
+        {
+            const Natural U = b;
+            Y_ASSERT(P==A*U);
+        }
+
     }
 
 

@@ -77,3 +77,36 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+
+        Integer Integer:: Mul(const Integer &lhs, const Natural &rhs)
+        {
+            if(rhs->bits<=0)
+            {
+                assert(0==rhs);
+                return Integer(0);
+            }
+            else
+            {
+                switch(lhs.s)
+                {
+                    case __Zero__: break; // => 0
+                    case Positive:
+                    case Negative: { Integer _ = lhs; Coerce(_.n) *= rhs; return _; }
+                }
+                return Integer(0);
+            }
+        }
+
+        Integer Integer:: Mul(const Natural &lhs, const Integer &rhs)
+        {
+            return Mul(rhs,lhs);
+        }
+
+    }
+
+}
