@@ -29,11 +29,13 @@ Y_Apex_Integer_Op(OP,Integer &, Natural &, MATCHES, RESULT) \
 Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
 
 
+#if 0
 #define Y_Apex_Integer_Binary_Wrapper(FCN) \
 static inline Integer FCN(const Integer & lhs, const integer_t rhs) { const Integer _(rhs); return FCN(lhs,_); } \
 static inline Integer FCN(const integer_t lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); } \
 static inline Integer FCN(const Integer & lhs, const Natural & rhs) { const Integer _(rhs); return FCN(lhs,_); } \
 static inline Integer FCN(const Natural & lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); }
+#endif
 
 #define Y_Apex_Integer_Binary_Operator(OP,LHS,RHS,FCN) \
 friend inline Integer operator OP (const LHS lhs, const RHS rhs) { return Integer:: FCN(lhs,rhs); }
@@ -193,7 +195,11 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             const Natural  n; //!< synchronized natural
 
         private:
-            Y_Apex_Integer_Binary_Wrapper(Add)
+            static Integer Add(const Integer &, const integer_t);
+            static Integer Add(const integer_t, const Integer &);
+            static Integer Add(const Integer &, const Natural &);
+            static Integer Add(const Natural &, const Integer &);
+
         };
 
     }
