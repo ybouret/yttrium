@@ -29,13 +29,12 @@ Y_Apex_Integer_Op(OP,Integer &, Natural &, MATCHES, RESULT) \
 Y_Apex_Integer_Op(OP,Natural &, Integer &, MATCHES, RESULT)
 
 
-#if 0
 #define Y_Apex_Integer_Binary_Wrapper(FCN) \
-static inline Integer FCN(const Integer & lhs, const integer_t rhs) { const Integer _(rhs); return FCN(lhs,_); } \
-static inline Integer FCN(const integer_t lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); } \
-static inline Integer FCN(const Integer & lhs, const Natural & rhs) { const Integer _(rhs); return FCN(lhs,_); } \
-static inline Integer FCN(const Natural & lhs, const Integer & rhs) { const Integer _(lhs); return FCN(_,rhs); }
-#endif
+static Integer FCN(const Integer & lhs, const Integer & rhs);\
+static Integer FCN(const Integer & lhs, const integer_t rhs);\
+static Integer FCN(const integer_t lhs, const Integer & rhs);\
+static Integer FCN(const Integer & lhs, const Natural & rhs);\
+static Integer FCN(const Natural & lhs, const Integer & rhs)
 
 #define Y_Apex_Integer_Binary_Operator(OP,LHS,RHS,FCN) \
 friend inline Integer operator OP (const LHS lhs, const RHS rhs) { return Integer:: FCN(lhs,rhs); }
@@ -81,6 +80,8 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             static const uint8_t Is__Zero__ = 0x00;    //!< alias
             static const uint8_t IsPositive = 0x01;    //!< alias
             static const uint8_t IsNegative = 0x02;    //!< alias
+
+
 
             //__________________________________________________________________
             //
@@ -156,11 +157,10 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             // Additions
             //
             //__________________________________________________________________
-            Integer operator+() const;
-            static Integer Add(const Integer &, const Integer &);
-            Integer &      operator ++ ();                     //!< ++this
-            Integer        operator ++ (int);                  //!< this++
-            void           incr();                             //!< +=1
+            Integer operator+() const;          //!< unary +
+            Integer &      operator ++ ();      //!< ++this
+            Integer        operator ++ (int);   //!< this++
+            void           incr();              //!< +=1
             
             //__________________________________________________________________
             //
@@ -168,11 +168,10 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             // Subtraction
             //
             //__________________________________________________________________
-            Integer operator-() const;
-            static Integer Sub(const Integer &, const Integer &);
-            Integer &      operator -- ();                     //!< --this
-            Integer        operator -- (int);                  //!< this--
-            void           decr();                             //!< -=1
+            Integer        operator-() const; //!< unary -
+            Integer &      operator -- ();    //!< --this
+            Integer        operator -- (int); //!< this--
+            void           decr();            //!< -=1
 
             //__________________________________________________________________
             //
@@ -195,11 +194,9 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             const Natural  n; //!< synchronized natural
 
         private:
-            static Integer Add(const Integer &, const integer_t);
-            static Integer Add(const integer_t, const Integer &);
-            static Integer Add(const Integer &, const Natural &);
-            static Integer Add(const Natural &, const Integer &);
-
+            Y_Apex_Integer_Binary_Wrapper(Add);
+            Y_Apex_Integer_Binary_Wrapper(Sub);
+            
         };
 
     }

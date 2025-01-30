@@ -117,7 +117,7 @@ Y_UTEST(apex_z)
         }
     }
 
-    if(false)
+    //if(false)
     {
         std::cerr << "Sub 64" << std::endl;
         
@@ -128,10 +128,10 @@ Y_UTEST(apex_z)
             const integer_t dif = a-b;
             const Integer   A = a;
             const Integer   B = b;
-            const Integer   Dif = A+B;
+            const Integer   Dif = A-B;
             Y_ASSERT(Dif==dif);
-            Y_ASSERT(Dif==A+b);
-            Y_ASSERT(Dif==a+B);
+            Y_ASSERT(Dif==A-b);
+            Y_ASSERT(Dif==a-B);
             if(b>=0)
             {
                 const Natural U = b;
