@@ -60,8 +60,6 @@ namespace Yttrium
                 case NN_Signs:
                 case PN_Signs:
                 { Integer _ = -lhs; Coerce(_.n) *= static_cast<natural_t>(-rhs); return _; }
-
-
             }
 
             return Integer(0);

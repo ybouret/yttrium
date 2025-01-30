@@ -187,6 +187,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Operators(+,Add)
             Y_Apex_Integer_Operators(-,Sub)
             Y_Apex_Integer_Operators(*,Mul)
+            Y_Apex_Integer_Operators(/,Div)
 #endif
 
             //__________________________________________________________________
@@ -202,6 +203,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Binary_Wrapper(Add);
             Y_Apex_Integer_Binary_Wrapper(Sub);
             Y_Apex_Integer_Binary_Wrapper(Mul);
+            Y_Apex_Integer_Binary_Wrapper(Div);
 
         };
 

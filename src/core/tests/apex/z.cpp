@@ -226,9 +226,20 @@ Y_UTEST(apex_z)
             const Natural U = b;
             Y_ASSERT(P==A*U);
         }
-
     }
 
+    std::cerr << "Div64" << std::endl;
+    for(size_t cycle=0;cycle<10000;++cycle)
+    {
+        const integer_t a = z64(ran);
+        integer_t       b = z64(ran);
+        while(0==b)     b = z64(ran);
+        const integer_t q = a/b;
+        const Integer   A = a;
+        const Integer   B = b;
+        const Integer   Q = A/B;
+        Y_ASSERT(Q==q);
+    }
 
 
 }
