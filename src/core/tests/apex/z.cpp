@@ -117,11 +117,9 @@ Y_UTEST(apex_z)
         }
     }
 
-    //if(false)
+    std::cerr << "Sub 64" << std::endl;
     {
-        std::cerr << "Sub 64" << std::endl;
-        
-        for(size_t iter=0;iter<1000;++iter)
+        for(size_t iter=0;iter<10000;++iter)
         {
             const integer_t a = z64(ran);
             const integer_t b = z64(ran);
@@ -170,6 +168,35 @@ Y_UTEST(apex_z)
         std::cerr << " " << z;
     }
     std::cerr << std::endl;
+
+
+    std::cerr << "Add/Sub" << std::endl;
+
+    for(size_t cycle=0;cycle<10000;++cycle)
+    {
+        const Integer A(ran, ran.lt(5000) );
+        {
+            const Integer B(ran, ran.lt(5000) );
+            const Integer S = A+B;
+            Y_ASSERT(S-A==B);
+            Y_ASSERT(S-B==A);
+        }
+        {
+            const integer_t b = z64(ran);
+            const Integer   S = A+b;
+            Y_ASSERT(S-b==A);
+            Y_ASSERT(b-S==-A);
+        }
+        {
+            const Natural N(ran, ran.lt(5000) );
+            const Integer S = A+N;
+            Y_ASSERT(S-N==A);
+            Y_ASSERT(N-S==-A);
+        }
+    }
+
+
+
 
 
 
