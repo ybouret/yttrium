@@ -239,6 +239,13 @@ Y_UTEST(apex_z)
         const Integer   B = b;
         const Integer   Q = A/B;
         Y_ASSERT(Q==q);
+
+        if(b>0)
+        {
+            const Natural U = b;
+            Y_ASSERT(A/U==Q);
+        }
+
     }
 
 

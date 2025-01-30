@@ -329,6 +329,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const; //!< interger square-root
             Natural abs()  const; //!< |*this|
+            template <typename T>
+            static T RatioAs(const Natural &num, const Natural &den);
 
             //__________________________________________________________________
             //
