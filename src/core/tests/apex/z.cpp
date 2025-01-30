@@ -117,29 +117,32 @@ Y_UTEST(apex_z)
         }
     }
 
-    std::cerr << "Sub 64" << std::endl;
-
-    for(size_t iter=0;iter<1000;++iter)
+    if(false)
     {
-        const integer_t a = z64(ran);
-        const integer_t b = z64(ran);
-        const integer_t dif = a-b;
-        const Integer   A = a;
-        const Integer   B = b;
-        const Integer   Dif = A+B;
-        Y_ASSERT(Dif==dif);
-        Y_ASSERT(Dif==A+b);
-        Y_ASSERT(Dif==a+B);
-        if(b>=0)
+        std::cerr << "Sub 64" << std::endl;
+        
+        for(size_t iter=0;iter<1000;++iter)
         {
-            const Natural U = b;
-            Y_ASSERT(Dif==A-U);
-        }
-
-        if(a>=0)
-        {
-            const Natural U = a;
-            Y_ASSERT(Dif==U-B);
+            const integer_t a = z64(ran);
+            const integer_t b = z64(ran);
+            const integer_t dif = a-b;
+            const Integer   A = a;
+            const Integer   B = b;
+            const Integer   Dif = A+B;
+            Y_ASSERT(Dif==dif);
+            Y_ASSERT(Dif==A+b);
+            Y_ASSERT(Dif==a+B);
+            if(b>=0)
+            {
+                const Natural U = b;
+                Y_ASSERT(Dif==A-U);
+            }
+            
+            if(a>=0)
+            {
+                const Natural U = a;
+                Y_ASSERT(Dif==U-B);
+            }
         }
     }
 

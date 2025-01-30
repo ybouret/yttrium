@@ -126,3 +126,137 @@ namespace Yttrium
     }
 
 }
+
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+        Integer Integer:: Add(const Integer &lhs, const Natural &rhs)
+        {
+
+            if(rhs->bits<=0)
+            {
+                return lhs;
+            }
+            else
+            {
+                assert(rhs>0);
+                switch(lhs.s)
+                {
+                    case Positive: { Integer _(lhs); Coerce(_.n) += rhs; return _; }
+                    case __Zero__: return Integer(Positive,rhs);
+                    case Negative:
+                        break;
+                }
+                assert(lhs<0);
+                switch( Natural::Compare(lhs.n,rhs) )
+                {
+                    case Negative: // |lhs| < n
+                    {
+                        const Natural delta = rhs - lhs.n; assert(delta>0);
+                        return Integer(Positive,delta);
+                    }
+                    case Positive: // |lhs| > n
+                    {
+                        const Natural delta = lhs.n - rhs;
+                        return Integer(Negative,delta);
+                    }
+                    case __Zero__: break; // =>0
+                }
+                return Integer(0);
+            }
+
+        }
+
+        Integer Integer:: Add(const Natural &lhs, const Integer &rhs)
+        {
+            return Add(rhs,lhs);
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+        Integer Integer:: Add(const Integer &lhs, const integer_t rhs)
+        {
+            switch( Sign::MakePair(lhs.s, Sign::Of(rhs ) ) )
+            {
+                case ZN_Signs:
+                case ZP_Signs:
+                    assert(0==lhs);
+                    assert(0!=rhs);
+                    return Integer(rhs);
+
+                case NZ_Signs:
+                case PZ_Signs:
+                    assert(0!=lhs);
+                    assert(0==rhs);
+                    return lhs;
+
+                case PP_Signs: { Integer _(lhs); Coerce(_.n) += static_cast<natural_t>( rhs); return _; }
+                case NN_Signs: { Integer _(lhs); Coerce(_.n) += static_cast<natural_t>(-rhs); return _; }
+
+                case PN_Signs: {
+                    assert(lhs>0);
+                    assert(rhs<0);
+                    const Natural & l = lhs.n;
+                    const natural_t n = static_cast<natural_t>(-rhs);
+                    switch( Natural::Compare(l,n) )
+                    {
+                        case Negative: { // lhs < |rhs| => Negative
+                            const Natural delta = n - l;
+                            return Integer(Negative,delta);
+                        }
+
+                        case __Zero__:
+                            break; // lhs = |rhs| => zero
+
+                        case Positive: { // lhs > |rhs| => positive
+                            const Natural delta = l - n;
+                            return Integer(Positive,delta);
+                        }
+                    }
+                } break; // => 0
+
+                case NP_Signs: {
+                    assert(lhs<0);
+                    assert(rhs>0);
+                    const Natural & l = lhs.n;
+                    const natural_t n = static_cast<natural_t>(rhs);
+                    switch( Natural::Compare(l,n) )
+                    {
+                        case Negative: { // lhs < |rhs| => Positive
+                            const Natural delta = n - l;
+                            return Integer(Positive,delta);
+                        }
+
+                        case __Zero__:
+                            break; // lhs = |rhs| => zero
+
+                        case Positive: { // lhs > |rhs| => Negative
+                            const Natural delta = l - n;
+                            return Integer(Negative,delta);
+                        }
+                    }
+                } break; // => 0
+
+
+                case ZZ_Signs:
+                    break; // => 0
+            }
+            return Integer(0);
+        }
+
+        Integer Integer:: Add(const integer_t lhs, const Integer &rhs)
+        {
+            return Add(rhs,lhs);
+        }
+    }
+
+}
