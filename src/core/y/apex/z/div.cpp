@@ -39,6 +39,7 @@ namespace Yttrium
 
     namespace Apex
     {
+
         Integer Integer:: Div(const Integer &lhs, const Natural &rhs)
         {
             switch(rhs->bits)
@@ -70,6 +71,36 @@ namespace Yttrium
             return takeOpposite ? -Integer(q) : Integer(q);
         }
 
+    }
+
+}
+
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+        static inline Integer MakeDiv(const bool      takeOpposite,
+                                      const Integer & lhs,
+                                      const natural_t rhs)
+        {
+            assert(0!=rhs);
+            const Natural q = lhs.n/rhs;
+            return takeOpposite ? -Integer(q) : Integer(q);
+        }
+
+        Integer Integer:: Div(const Integer &lhs, const integer_t rhs)
+        {
+
+            switch( Sign::Of(rhs) )
+            {
+                case __Zero__: break; // => throw
+                case Positive: return MakeDiv(Negative == lhs.s, lhs, static_cast<natural_t>( rhs) );
+                case Negative: return MakeDiv(Positive == lhs.s, lhs, static_cast<natural_t>(-rhs) );
+
+            }
+            throw Specific::Exception(CallSign, "Integer/integer_t Division By Zero");
+        }
     }
 
 }
