@@ -85,6 +85,7 @@ apex/block
 apex/block/jig
 apex/n
 apex/z
+apex/q
 kemp
 kemp/element
 kemp/natural

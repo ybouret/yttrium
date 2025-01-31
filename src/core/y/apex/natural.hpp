@@ -431,6 +431,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 }
             }
 
+            
 
         private:
             Y_PROXY_DECL();

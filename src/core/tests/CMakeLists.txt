@@ -372,5 +372,6 @@ add_test(apex:sub   test-core apex_sub)
 add_test(apex:n     test-core apex_n)
 add_test(apex:z     test-core apex_z)
 add_test(apex:conv  test-core apex_conv)
+add_test(apex:q     test-core apex_q)
 
 
