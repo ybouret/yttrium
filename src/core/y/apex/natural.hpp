@@ -113,8 +113,10 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural(Random::Bits &, const size_t);          //!< setup with given random bits
             virtual ~Natural() noexcept;                    //!< cleanup
             Natural(const Natural &);                       //!< duplicate
+            Natural(const String &);                        //!< parse
             Natural & operator=(const Natural &);           //!< assign
             Natural & operator=(const natural_t)  noexcept; //!< assign natural
+            Natural & operator=(const String &);            //!< parse
             Y_OSTREAM_PROTO(Natural);                       //!< output
 
             //__________________________________________________________________
@@ -292,8 +294,6 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // GCD
             //
             //__________________________________________________________________
-
-
             static Natural GCD_(const Natural &a, const Natural &b); //!< GCD_(a>0,b>0)
             static Natural GCD(const Natural &a, const Natural &b);  //!< safe GCD
             static void    Simplify(Natural &num, Natural &den);     //!< simplify num/den
@@ -342,8 +342,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // String conversion
             //
             //__________________________________________________________________
-            String toHex() const; //!< to hexadecimal string
-            String toDec() const; //!< to decimal string
+            String    toHex() const; //!< to hexadecimal string
+            String    toDec() const; //!< to decimal string
+            Natural & toHex(const char * const text, const size_t       size);
+            Natural & toDec(const char * const text, const size_t       size);
+
 
             //__________________________________________________________________
             //
@@ -384,16 +387,17 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                     }
                 }
 
-                std::cerr << "res=" << res << "+" << r << "/" << den << std::endl;
+                //std::cerr << "res=" << res << "+" << r << "/" << den << std::endl;
 
                 T pos = Tenth;
                 for(unsigned i=0;i<Digits;++i, pos *= Tenth)
                 {
+                    if(r->bits<=0) break;
                     N.xch(r);
                     N *= 10;
                     Div(q,r,N,den);
                     res += pos * static_cast<T>(q.block->make<Plan1>().word[0]);
-                    std::cerr << "q=" << q << ", r=" << r << std::endl;
+                    //std::cerr << "q=" << q << ", r=" << r << std::endl;
                 }
 
                 return res;

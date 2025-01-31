@@ -1,5 +1,6 @@
 #include "y/apex/natural.hpp"
 #include "y/text/hexadecimal.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -87,7 +88,43 @@ namespace Yttrium
             return os;
         }
 #endif
-        
+
+       
+        Natural & Natural:: toHex(const char *const text, const size_t size)
+        {
+            assert(0!=text);
+            assert(size>0);
+            block->ldz();
+            Natural &self = *this;
+            for(size_t i=0;i<size;++i)
+            {
+                const char c = text[i];
+                const int  h = Hexadecimal::ToDecimal(text[i]);
+                if(h<0) throw Specific::Exception(CallSign, "Invalid Hexadecimal char '%c'", c);
+                self <<= 4;
+                self += h;
+            }
+            return *this;
+        }
+
+        Natural & Natural:: toDec(const char *const text, const size_t size)
+        {
+            assert(0!=text);
+            assert(size>0);
+            block->ldz();
+            const Natural ten  = 10;
+            Natural     & self = *this;
+            for(size_t i=0;i<size;++i)
+            {
+                const char c = text[i];
+                if( !isdigit(c) ) throw Specific::Exception(CallSign,"Invladic Decimal char '%c'",c);
+                self *= 10;
+                self += c-'0';
+            }
+
+            return *this;
+        }
+
 
     }
 }

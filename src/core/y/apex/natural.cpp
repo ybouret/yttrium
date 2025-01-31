@@ -28,7 +28,7 @@ namespace Yttrium
 
         Ops Natural:: AddOps = Ops8_4;
         Ops Natural:: MulOps = Ops8_4;
-        
+
 
         const Ops Natural:: OpsTable[NumOps] =
         {
@@ -96,7 +96,7 @@ namespace Yttrium
         block( _Factory().duplicate(*other.block) ),
         mutex( _Factory().query() )
         {
-            
+
         }
 
 
@@ -140,7 +140,7 @@ namespace Yttrium
         mutex( _Factory().query() )
         {
             block->to(Plan1);
-            block->set_(nbit); 
+            block->set_(nbit);
             block->sync();
         }
 
@@ -150,13 +150,47 @@ namespace Yttrium
             return *this;
         }
 
-#if 0
-        size_t Natural:: bits() const noexcept
+    }
+
+}
+
+
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        Natural:: Natural(const String &s) :
+        Number(),
+        block( _Factory().query(NaturalShift) ),
+        mutex( _Factory().query() )
         {
-            return block->bits;
+            block->make<NaturalPlan>().word[0] = 0;
+            block->sync();
+
+            const char *c = s.c_str();
+            size_t      n = s.size(); if(n<=0) throw Specific::Exception(CallSign,"=Empty String");
+            if(n>=2 && '0' == c[0] && 'x' == c[1] )
+            {
+                // parse hex
+                n -= 2; if(n<=0) throw Specific::Exception(CallSign,"Empty HexaDecimal String");
+                c += 2;
+                (void) toHex(c,n);
+            }
+            else
+            {
+                // parse dec
+                (void) toDec(c,n);
+            }
         }
-#endif
-        
+
+        Natural & Natural:: operator=(const String &s)
+        {
+            { Natural _(s); xch(_); }
+            return *this;
+        }
     }
 
 }
