@@ -391,7 +391,6 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                     }
                 }
 
-                //std::cerr << "res=" << res << "+" << r << "/" << den << std::endl;
 
                 T pos = Tenth;
                 for(unsigned i=0;i<Digits;++i, pos *= Tenth)
@@ -401,12 +400,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                     N *= 10;
                     Div(q,r,N,den);
                     res += pos * static_cast<T>(q.block->make<Plan1>().word[0]);
-                    //std::cerr << "q=" << q << ", r=" << r << std::endl;
                 }
 
                 return res;
             }
 
+
+            //! try cast to given value
             template <typename T>
             bool tryCast(T &target) const
             {
