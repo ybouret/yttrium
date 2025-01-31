@@ -258,5 +258,18 @@ Y_UTEST(apex_z)
     }
 
 
+    std::cerr << "Mul/Div" << std::endl;
+    for(size_t cycle=0;cycle<100;++cycle)
+    {
+        const Integer A(ran,ran.lt(2000));
+        Integer       B(ran,ran.lt(2000));
+        while( 0 == B ) B = Integer(ran,ran.lt(2000));
+        const Integer P = A*B;
+        Y_ASSERT(P/A==B);
+        Y_ASSERT(P/B==A);
+        if(A>0) Y_ASSERT(P/A.n==B);
+        if(P>0) Y_ASSERT(P.n/B==A);
+    }
+
 }
 Y_UDONE()
