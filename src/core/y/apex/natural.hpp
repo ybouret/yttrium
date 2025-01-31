@@ -407,6 +407,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 return res;
             }
 
+            template <typename T>
+            bool tryCast(T &target) const
+            {
+                static const bool Signed = IsSigned<T>::Value;
+                typedef typename UnsignedInt<sizeof(T)>::Type UType;
+            }
+
+
         private:
             Y_PROXY_DECL();
             Natural(Block * const, const AsBlock_ &);
