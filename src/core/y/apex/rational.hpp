@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Apex
     {
 
+
         class Rational : public Number
         {
         public:
@@ -35,7 +36,13 @@ namespace Yttrium
             //
             virtual const char * callSign() const noexcept;
             virtual size_t       serialize(OutputStream &) const;
+            static  Rational     Read(InputStream &);
 
+
+            // comparison
+            friend bool operator==(const Rational &, const Rational &) noexcept;
+            friend bool operator!=(const Rational &, const Rational &) noexcept;
+            
 
 
             // Members
@@ -43,7 +50,7 @@ namespace Yttrium
             const Natural denom;
 
         private:
-
+            
         };
     }
 
