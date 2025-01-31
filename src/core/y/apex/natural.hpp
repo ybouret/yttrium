@@ -62,9 +62,15 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
 
         template <typename T> struct RealDigits;
-        template <> struct RealDigits<float>       { static const unsigned Count = FLT_DIG;  };
-        template <> struct RealDigits<double>      { static const unsigned Count = DBL_DIG;  };
-        template <> struct RealDigits<long double> { static const unsigned Count = LDBL_DIG; };
+
+        //! digits for float
+        template <> struct RealDigits<float>       { static const unsigned Count = FLT_DIG; /*!< FLT_DIG */  };
+
+        //! digits for double
+        template <> struct RealDigits<double>      { static const unsigned Count = DBL_DIG;  /*!< DBL_DIG */};
+
+        //! digits for long double
+        template <> struct RealDigits<long double> { static const unsigned Count = LDBL_DIG; /*!< LDBL_DIG */};
 
         //______________________________________________________________________
         //
@@ -344,8 +350,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             String    toHex() const; //!< to hexadecimal string
             String    toDec() const; //!< to decimal string
-            Natural & toHex(const char * const text, const size_t       size);
-            Natural & toDec(const char * const text, const size_t       size);
+            Natural & toHex(const char * const text, const size_t size); //!< to Hex
+            Natural & toDec(const char * const text, const size_t size); //!< to Dec
 
 
             //__________________________________________________________________
@@ -358,11 +364,9 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             //
             //
-            // floating type conversion
+            //! floating type conversion
             //
             //__________________________________________________________________
-
-
             template <typename T>
             static inline T Ratio(const Natural &num, const Natural &den)
             {
