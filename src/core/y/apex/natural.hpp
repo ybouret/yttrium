@@ -410,8 +410,25 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             template <typename T>
             bool tryCast(T &target) const
             {
-                static const bool Signed = IsSigned<T>::Value;
-                typedef typename UnsignedInt<sizeof(T)>::Type UType;
+                static const unsigned RawSize = sizeof(T);
+                static const unsigned RawBits = RawSize << 3;
+                static const bool     Signed  = IsSigned<T>::Value;
+                static const unsigned MaxBits = Signed ? RawBits-1 : RawBits;
+                static const Plan     ThePlan = Plan( iLog2Of<T>::Value );
+                typedef typename      Jig<ThePlan>::Word Word;
+
+                if(block->bits>MaxBits) {
+                    return false;
+                }
+                else
+                {
+                    union {
+                        Word word;
+                        T    type;
+                    } alias = { block->make<ThePlan>().word[0] };
+                    target = alias.type;
+                    return true;
+                }
             }
 
 
