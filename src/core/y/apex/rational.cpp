@@ -111,7 +111,14 @@ namespace Yttrium
         denom(1)
         {
         }
-        
+
+        Rational::  Rational(const Integer &n, const Natural &d) :
+        Number(),
+        numer(n),
+        denom(d)
+        {
+            simplify();
+        }
 
 
     }

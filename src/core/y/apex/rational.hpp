@@ -20,10 +20,8 @@ namespace Yttrium
             Rational(const Rational &);
             Rational(const Natural  &);
             Rational(const Integer  &);
-
             Rational(const integer_t, const natural_t);
-
-
+            Rational(const Integer &, const Natural &);
             virtual ~Rational() noexcept;
 
             Rational & operator=(const Rational &);
