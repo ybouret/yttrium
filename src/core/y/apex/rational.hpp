@@ -42,7 +42,7 @@ namespace Yttrium
             // comparison
             friend bool operator==(const Rational &, const Rational &) noexcept;
             friend bool operator!=(const Rational &, const Rational &) noexcept;
-            
+
 
 
             // Members
