@@ -366,7 +366,7 @@ add_test(codec:b64 test-core codec_b64)
 add_test(codec:u64 test-core codec_u64)
 
 #apex
-add_test(apex:types test_core apex_type)
+add_test(apex:types test-core apex_types)
 add_test(apex:add   test-core apex_add)
 add_test(apex:sub   test-core apex_sub)
 add_test(apex:n     test-core apex_n)
