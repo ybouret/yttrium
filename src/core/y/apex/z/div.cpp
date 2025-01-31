@@ -59,10 +59,15 @@ namespace Yttrium
 
         Integer Integer:: Div(const Natural &lhs, const Integer &rhs)
         {
+            bool takeOpposite = false;
             switch(rhs.s)
             {
                 case __Zero__: throw Specific::Exception(CallSign, "Natural/Integer Division By Zero");
+                case Positive: break;
+                case Negative: takeOpposite = true; break;
             }
+            const Natural q = lhs/rhs.n;
+            return takeOpposite ? -Integer(q) : Integer(q);
         }
 
     }
