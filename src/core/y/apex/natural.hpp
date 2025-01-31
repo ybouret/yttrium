@@ -11,6 +11,7 @@
 #include "y/type/signs.hpp"
 #include "y/string.hpp"
 #include "y/type/proxy.hpp"
+#include <cfloat>
 
 namespace Yttrium
 {
@@ -60,7 +61,10 @@ Y_Apex_Natural_Op(OP,Natural &, natural_t, MATCHES, RESULT) \
 Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
 
-
+        template <typename T> struct RealDigits;
+        template <> struct RealDigits<float>       { static const unsigned Count = FLT_DIG;  };
+        template <> struct RealDigits<double>      { static const unsigned Count = DBL_DIG;  };
+        template <> struct RealDigits<long double> { static const unsigned Count = LDBL_DIG; };
 
         //______________________________________________________________________
         //
@@ -329,8 +333,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const; //!< interger square-root
             Natural abs()  const; //!< |*this|
-            template <typename T>
-            static T RatioAs(const Natural &num, const Natural &den);
+
+
 
             //__________________________________________________________________
             //
@@ -347,6 +351,53 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // integral type conversion
             //
             //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //
+            // floating type conversion
+            //
+            //__________________________________________________________________
+
+
+            template <typename T>
+            static inline T Ratio(const Natural &num, const Natural &den)
+            {
+                static const unsigned Digits = RealDigits<T>::Count;
+                static const T        Factor = 256;
+                static const T        Tenth  = 0.1;
+
+                Natural N = num;
+                Natural q = 0, r=0;
+
+                T res = 0;
+
+                Div(q,r,N,den);
+                {
+                    const Jig1 &jig = q.block->make<Plan1>();
+                    const uint8_t * const b = jig.word;
+                    size_t                n = jig.words;
+                    while(n-- > 0 )
+                    {
+                        res *= Factor;
+                        res += b[n];
+                    }
+                }
+
+                std::cerr << "res=" << res << "+" << r << "/" << den << std::endl;
+
+                T pos = Tenth;
+                for(unsigned i=0;i<Digits;++i, pos *= Tenth)
+                {
+                    N.xch(r);
+                    N *= 10;
+                    Div(q,r,N,den);
+                    res += pos * static_cast<T>(q.block->make<Plan1>().word[0]);
+                    std::cerr << "q=" << q << ", r=" << r << std::endl;
+                }
+
+                return res;
+            }
 
         private:
             Y_PROXY_DECL();

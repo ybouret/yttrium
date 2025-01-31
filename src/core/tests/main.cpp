@@ -290,6 +290,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_sub);
     Y_UTEST(apex_n);
     Y_UTEST(apex_z);
+    Y_UTEST(apex_conv);
 
 }
 Y_UTEST_EXEC()
