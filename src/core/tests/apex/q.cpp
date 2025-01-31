@@ -45,9 +45,16 @@ Y_UTEST(apex_q)
         Y_CHECK(!(one!=_1));
     }
 
+
+    std::cerr << "Comparisons" << std::endl;
     for(size_t cycle=0;cycle<10;++cycle)
     {
+        const Rational lhs(ran,31,31);
+        const Rational rhs(ran,31,31);
 
+        std::cerr << lhs << " | " << rhs << std::endl;
+        Y_ASSERT( __Zero__ == Rational::Compare(lhs,lhs) );
+        Y_ASSERT( Rational::Compare(rhs,lhs) == Sign::Opposite( Rational::Compare(lhs,rhs) ) );
     }
 
 }
