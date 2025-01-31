@@ -253,6 +253,7 @@ Y_UTEST(apex_z)
         }
 
         Y_ASSERT(A/b==Q);
+        Y_ASSERT(a/B==Q);
 
     }
 

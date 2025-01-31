@@ -105,3 +105,38 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+
+    namespace Apex
+    {
+
+
+        Integer Integer:: Div(const integer_t lhs, const Integer &rhs)
+        {
+
+            switch( Sign::MakePair( Sign::Of(lhs), rhs.s) )
+            {
+                case ZN_Signs:
+                case ZP_Signs:
+                    return Integer(0);
+
+                case PP_Signs: { const Natural q = static_cast<uint64_t>( lhs)/rhs.n; return  Integer(q); }
+                case NN_Signs: { const Natural q = static_cast<uint64_t>(-lhs)/rhs.n; return  Integer(q); }
+                case PN_Signs: { const Natural q = static_cast<uint64_t>( lhs)/rhs.n; return -Integer(q); }
+                case NP_Signs: { const Natural q = static_cast<uint64_t>(-lhs)/rhs.n; return -Integer(q); }
+
+                case NZ_Signs:
+                case PZ_Signs:
+                case ZZ_Signs:
+                    break; // => throw
+            }
+            throw Specific::Exception(CallSign, "integer_t/Integer Division By Zero");
+
+        }
+    }
+
+}
+
+
+
