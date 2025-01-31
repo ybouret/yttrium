@@ -52,7 +52,7 @@ namespace Yttrium
         {
             Y_Apex_Lock(lhs);
             const Jig8 &l = lhs.block->make<Plan8>();
-            return (l.words > 1) || (rhs != l.word[0]);
+            return (l.words>1) || (rhs != l.word[0]);
         }
 
 
@@ -60,7 +60,7 @@ namespace Yttrium
         {
             Y_Apex_Lock(rhs);
             const Jig8 &r  = rhs.block->make<Plan8>();
-            return (r.words > 1) && (lhs != r.word[0]);
+            return (r.words>1) || (lhs != r.word[0]);
         }
 
     }

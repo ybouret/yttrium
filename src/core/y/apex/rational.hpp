@@ -23,6 +23,7 @@ namespace Yttrium
             Rational(const Integer  &);
             Rational(const integer_t, const natural_t);
             Rational(const Integer &, const Natural &);
+            Rational(Random::Bits &ran, const size_t nbits, const size_t dbits);
             virtual ~Rational() noexcept;
 
             Rational & operator=(const Rational &);
@@ -39,10 +40,20 @@ namespace Yttrium
             static  Rational     Read(InputStream &);
 
 
-            // comparison
+            // comparisons
             friend bool operator==(const Rational &, const Rational &) noexcept;
+
+            friend bool operator==(const Rational &, const integer_t ) noexcept;
+            friend bool operator==(const integer_t , const Rational &) noexcept;
+            friend bool operator==(const Rational &, const Integer  &) noexcept;
+            friend bool operator==(const Integer  &, const Rational &) noexcept;
+
             friend bool operator!=(const Rational &, const Rational &) noexcept;
 
+            friend bool operator!=(const Rational &, const integer_t ) noexcept;
+            friend bool operator!=(const integer_t , const Rational &) noexcept;
+            friend bool operator!=(const Rational &, const Integer  &) noexcept;
+            friend bool operator!=(const Integer  &, const Rational &) noexcept;
 
 
             // Members

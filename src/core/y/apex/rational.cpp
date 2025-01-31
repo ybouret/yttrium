@@ -120,7 +120,13 @@ namespace Yttrium
             simplify();
         }
 
-
+        Rational:: Rational(Random::Bits &ran, const size_t nbits, const size_t dbits) :
+        Number(),
+        numer(ran,nbits),
+        denom(ran,dbits<=1 ? 1 : dbits)
+        {
+            simplify();
+        }
     }
 
 

@@ -67,7 +67,7 @@ namespace Yttrium
     {
         bool operator!=(const Integer &lhs, const Integer &rhs) noexcept
         {
-            return (lhs.s != rhs.s) || (lhs.n == rhs.n);
+            return (lhs.s != rhs.s) || (lhs.n != rhs.n);
         }
 
         bool operator!=(const Integer & lhs, const integer_t rhs) noexcept
