@@ -72,7 +72,7 @@ namespace Yttrium
     namespace Apex
     {
 
-        static inline SignType qqCompare(const bool takeOpposite,
+        static inline SignType QQCompare(const bool takeOpposite,
                                          const Rational &lhs,
                                          const Rational &rhs)
         {
@@ -93,8 +93,8 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return qqCompare(false, lhs, rhs);
-                case NN_Signs: return qqCompare(true,  lhs, rhs);
+                case PP_Signs: return QQCompare(false, lhs, rhs);
+                case NN_Signs: return QQCompare(true,  lhs, rhs);
 
                 case PZ_Signs:
                 case PN_Signs:
@@ -116,7 +116,7 @@ namespace Yttrium
 {
     namespace Apex
     {
-        static inline SignType qzCompare(const bool takeOpposite,
+        static inline SignType QZCompare(const bool takeOpposite,
                                          const Rational &q,
                                          const Integer &z)
         {
@@ -130,13 +130,13 @@ namespace Yttrium
             switch( Sign::MakePair(q.numer.s,z.s) )
             {
 
-                case NZ_Signs: 
+                case NZ_Signs:
                 case NP_Signs:
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return qzCompare(false, q, z);
-                case NN_Signs: return qzCompare(true, q, z);
+                case PP_Signs: return QZCompare(false, q, z);
+                case NN_Signs: return QZCompare(true, q, z);
 
                 case PZ_Signs:
                 case PN_Signs:
@@ -155,6 +155,52 @@ namespace Yttrium
             return Sign::Opposite( Compare(q,z) );
         }
 
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        static inline SignType QzCompare(const bool takeOpposite,
+                                         const Rational &q,
+                                         const integer_t z)
+        {
+            const Integer R = q.denom * z;
+            const Integer D = q.numer - R;
+            return takeOpposite ? Sign::Opposite(D.s) : D.s;
+        }
+
+        SignType Rational:: Compare(const Rational &q, const integer_t z)
+        {
+            switch( Sign::MakePair(q.numer.s, Sign::Of(z)) )
+            {
+
+                case NZ_Signs:
+                case NP_Signs:
+                case ZP_Signs:
+                    return Negative;
+
+                case PP_Signs: return QzCompare(false, q, z);
+                case NN_Signs: return QzCompare(true, q, z);
+
+                case PZ_Signs:
+                case PN_Signs:
+                case ZN_Signs:
+                    return Positive;
+
+                case ZZ_Signs:
+                    assert(1==q.denom);
+                    break; // => __Zero__
+            }
+            return __Zero__;
+        }
+
+        SignType Rational:: Compare(const integer_t z,  const Rational &q)
+        {
+            return Sign::Opposite( Compare(q,z) );
+        }
     }
 }
 

@@ -11,57 +11,98 @@ namespace Yttrium
     namespace Apex
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Rational = Integer / Natural
+        //
+        //
+        //______________________________________________________________________
         class Rational : public Number
         {
         public:
-            static const char * const CallSign;
-
-            Rational(const integer_t );
-            Rational(const Rational &);
-            Rational(const Natural  &);
-            Rational(const Integer  &);
-            Rational(const integer_t, const natural_t);
-            Rational(const Integer &, const Natural &);
-            Rational(Random::Bits &ran, const size_t nbits, const size_t dbits);
-            virtual ~Rational() noexcept;
-
-            Rational & operator=(const Rational &);
-            Rational & operator=(const integer_t );
-
-            Y_OSTREAM_PROTO(Rational);
-
-            Rational & xch(Rational &q);
-            void       simplify();
-
+            //__________________________________________________________________
             //
-            virtual const char * callSign() const noexcept;
-            virtual size_t       serialize(OutputStream &) const;
-            static  Rational     Read(InputStream &);
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Apex::Rational"
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            Rational(const integer_t );                 //!< setup
+            Rational(const Rational &);                 //!< setup
+            Rational(const Natural  &);                 //!< setup
+            Rational(const Integer  &);                 //!< setup
+            Rational(const integer_t, const natural_t); //!< setup
+            Rational(const Integer &, const Natural &); //!< setup
+            Rational(Random::Bits &ran, const size_t nbits, const size_t dbits); //!< setu[
+            virtual ~Rational() noexcept; //!< cleanup
+
+            Rational & operator=(const Rational &); //!< assign
+            Rational & operator=(const integer_t ); //!< assign
+            Y_OSTREAM_PROTO(Rational);              //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Rational & xch(Rational &q); //!< no-throw exchange
+            void       simplify();       //!< manual simplify
+
+            //__________________________________________________________________
+            //
+            //
+            // Interface
+            //
+            //__________________________________________________________________
+            virtual const char * callSign()       const noexcept;  //!< CallSign
+            virtual size_t       serialize(OutputStream &) const;  //!< numer+denom
+            static  Rational     Read(InputStream &);              //!< reload serialized
 
 
-            // comparisons
-            friend bool operator==(const Rational &, const Rational &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Comparisons
+            //
+            //__________________________________________________________________
+            friend bool operator==(const Rational &, const Rational &) noexcept; //!< ==
 
-            friend bool operator==(const Rational &, const integer_t ) noexcept;
-            friend bool operator==(const integer_t , const Rational &) noexcept;
-            friend bool operator==(const Rational &, const Integer  &) noexcept;
-            friend bool operator==(const Integer  &, const Rational &) noexcept;
+            friend bool operator==(const Rational &, const integer_t ) noexcept; //!< ==
+            friend bool operator==(const integer_t , const Rational &) noexcept; //!< ==
+            friend bool operator==(const Rational &, const Integer  &) noexcept; //!< ==
+            friend bool operator==(const Integer  &, const Rational &) noexcept; //!< ==
 
-            friend bool operator!=(const Rational &, const Rational &) noexcept;
+            friend bool operator!=(const Rational &, const Rational &) noexcept; //!< !=
 
-            friend bool operator!=(const Rational &, const integer_t ) noexcept;
-            friend bool operator!=(const integer_t , const Rational &) noexcept;
-            friend bool operator!=(const Rational &, const Integer  &) noexcept;
-            friend bool operator!=(const Integer  &, const Rational &) noexcept;
+            friend bool operator!=(const Rational &, const integer_t ) noexcept; //!< !=
+            friend bool operator!=(const integer_t , const Rational &) noexcept; //!< !=
+            friend bool operator!=(const Rational &, const Integer  &) noexcept; //!< !=
+            friend bool operator!=(const Integer  &, const Rational &) noexcept; //!< !=
 
-            static SignType Compare(const Rational &, const Rational &);
-            static SignType Compare(const Rational &, const Integer  &);
-            static SignType Compare(const Integer  &, const Rational &);
+            static SignType Compare(const Rational &, const Rational &); //!< comparison
+            static SignType Compare(const Rational &, const Integer  &); //!< comparison
+            static SignType Compare(const Integer  &, const Rational &); //!< comparison
+            static SignType Compare(const Rational &, const integer_t ); //!< comparison
+            static SignType Compare(const integer_t,  const Rational &); //!< comparison
 
+            //__________________________________________________________________
+            //
+            //
             // Members
-            const Integer numer;
-            const Natural denom;
+            //
+            //__________________________________________________________________
+            const Integer numer; //!< numerator
+            const Natural denom; //!< denominator
 
         private:
             

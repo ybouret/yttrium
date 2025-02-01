@@ -190,6 +190,15 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Operators(/,Div)
 #endif
 
+            template <typename T>
+            bool tryCast(T &target) const
+            {
+                
+
+                return false;
+            }
+
+
             //__________________________________________________________________
             //
             //
