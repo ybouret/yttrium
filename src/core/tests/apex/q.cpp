@@ -55,7 +55,13 @@ Y_UTEST(apex_q)
         std::cerr << lhs << " | " << rhs << std::endl;
         Y_ASSERT( __Zero__ == Rational::Compare(lhs,lhs) );
         Y_ASSERT( Rational::Compare(rhs,lhs) == Sign::Opposite( Rational::Compare(lhs,rhs) ) );
+
+        const Integer  quot = lhs.numer/lhs.denom;
+        const SignType diff = Rational::Compare(lhs,quot);
+        Y_ASSERT( Sign::Opposite(diff) == Rational::Compare(quot,lhs) );
     }
+
+
 
 }
 Y_UDONE()

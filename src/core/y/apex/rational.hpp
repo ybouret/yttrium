@@ -56,7 +56,8 @@ namespace Yttrium
             friend bool operator!=(const Integer  &, const Rational &) noexcept;
 
             static SignType Compare(const Rational &, const Rational &);
-
+            static SignType Compare(const Rational &, const Integer  &);
+            static SignType Compare(const Integer  &, const Rational &);
 
             // Members
             const Integer numer;

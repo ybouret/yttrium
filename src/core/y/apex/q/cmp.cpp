@@ -62,7 +62,7 @@ namespace Yttrium
         {
             return (1 != b.denom) || (a != b.numer);
         }
-        
+
     }
 
 }
@@ -72,9 +72,9 @@ namespace Yttrium
     namespace Apex
     {
 
-        static inline SignType qCompare(const bool takeOpposite,
-                                        const Rational &lhs,
-                                        const Rational &rhs)
+        static inline SignType qqCompare(const bool takeOpposite,
+                                         const Rational &lhs,
+                                         const Rational &rhs)
         {
             assert(lhs.numer.s == rhs.numer.s);
             const Integer L = lhs.numer * rhs.denom;
@@ -93,8 +93,8 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return qCompare(false, lhs, rhs);
-                case NN_Signs: return qCompare(true,  lhs, rhs);
+                case PP_Signs: return qqCompare(false, lhs, rhs);
+                case NN_Signs: return qqCompare(true,  lhs, rhs);
 
                 case PZ_Signs:
                 case PN_Signs:
@@ -111,3 +111,50 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        static inline SignType qzCompare(const bool takeOpposite,
+                                         const Rational &q,
+                                         const Integer &z)
+        {
+            const Integer R = q.denom * z;
+            const Integer D = q.numer - R;
+            return takeOpposite ? Sign::Opposite(D.s) : D.s;
+        }
+
+        SignType Rational:: Compare(const Rational &q, const Integer  &z)
+        {
+            switch( Sign::MakePair(q.numer.s,z.s) )
+            {
+
+                case NZ_Signs: 
+                case NP_Signs:
+                case ZP_Signs:
+                    return Negative;
+
+                case PP_Signs: return qzCompare(false, q, z);
+                case NN_Signs: return qzCompare(true, q, z);
+
+                case PZ_Signs:
+                case PN_Signs:
+                case ZN_Signs:
+                    return Positive;
+
+                case ZZ_Signs:
+                    assert(1==q.denom);
+                    break; // => __Zero__
+            }
+            return __Zero__;
+        }
+
+        SignType Rational:: Compare(const Integer  &z, const Rational &q)
+        {
+            return Sign::Opposite( Compare(q,z) );
+        }
+
+    }
+}
+
