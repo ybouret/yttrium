@@ -193,9 +193,23 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             template <typename T>
             bool tryCast(T &target) const
             {
-                
+                switch(s)
+                {
+                    case __Zero__: target = 0; return true;
+                    case Positive: return n.tryCast(target);
+                    case Negative:
+                        break;
+                }
 
-                return false;
+                if( ! IsSigned<T>::Value )
+                {
+                    return false;
+                }
+                else
+                {
+                    
+                    return false;
+                }
             }
 
 
