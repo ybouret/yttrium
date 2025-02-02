@@ -74,7 +74,18 @@ namespace Yttrium
             //! in-place natural representation as required plan
             static const void * To(const Plan p, natural_t &n, size_t &w) noexcept;
 
-            
+            template <typename T>
+            inline T cast() noexcept
+            {
+                static const Plan p = Plan( iLog2Of<T>::Value );
+                const Jig<p> &    j = make<p>();
+                union {
+                    typename Jig<p>::Word w;
+                    T                     t;
+                } alias = { j.word[0] };
+                return alias.t;
+            }
+
 
 
             //__________________________________________________________________
