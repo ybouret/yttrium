@@ -15,9 +15,27 @@ namespace Yttrium
             host->withhold();
         }
 
+
+        static inline
+        Block * queryBlock(const size_t bytes)
+        {
+            static Factory &factory = Factory::Instance();
+            return factory.queryBytes(bytes);
+        }
+
+        BlockPtr:: BlockPtr(const size_t bytes,
+                            const AsCapacity_ &) :
+        Core::Ptr(),
+        host( queryBlock(bytes) )
+        {
+            assert(host->range>=bytes);
+            host->withhold();
+        }
+
         BlockPtr:: ~BlockPtr() noexcept
         {
             assert(0!=host);
+            assert(Factory::Exists());
             static Factory &factory = Factory::Location();
             if(host->liberate())
             {

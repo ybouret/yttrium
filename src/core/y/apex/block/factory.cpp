@@ -50,7 +50,9 @@ namespace Yttrium
 
 
         Block * Factory:: queryBytes(size_t bytes) {
-            if(bytes>Block::MaxBytes) throw Specific::Exception(CallSign,"bytes overflow");
+            if(bytes>Block::MaxBytes)
+                throw Specific::Exception(CallSign,"bytes overflow");
+            
             return query( Base2<size_t>::LogFor(bytes) );
         }
 

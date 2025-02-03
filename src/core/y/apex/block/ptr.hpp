@@ -6,6 +6,7 @@
 
 #include "y/apex/block.hpp"
 #include "y/ptr/core.hpp"
+#include "y/type/capacity.hpp"
 
 namespace Yttrium
 {
@@ -23,6 +24,7 @@ namespace Yttrium
         class BlockPtr : public Core::Ptr
         {
         public:
+            BlockPtr(const size_t bytes, const AsCapacity_ &);
             BlockPtr(Block * const block) noexcept; //!< setup, withhold
             BlockPtr(const BlockPtr &)    noexcept; //!< copy,  withold
             virtual ~BlockPtr()           noexcept; //!< liberate, may release
