@@ -3,6 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/system/rtti.hpp"
 #include "y/type/utils.hpp"
+#include <cstdio>
 
 using namespace Yttrium;
 
