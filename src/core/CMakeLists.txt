@@ -80,6 +80,7 @@ string
 fft
 fft/xbitrev
 tow
+dft
 apex
 apex/block
 apex/block/jig
