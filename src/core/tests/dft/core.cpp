@@ -90,7 +90,7 @@ namespace Yttrium
                        const int    isign)
         {
             typedef typename DFT_Real<T>::Type long_T;
-
+            static const long_T  long_PI = MKL::Numeric<long_T>::PI;
             const size_t n = size << 1;
             for(size_t i=1,j=1;i<n;i+=2)
             {
@@ -108,27 +108,32 @@ namespace Yttrium
                 j += m;
             }
 
+            std::cerr << "size=" << size << std::endl;
             size_t mmax=2;
             while(n>mmax)
             {
                 const size_t istep = mmax << 1;
-                const long_T theta = isign*(6.28318530717959/mmax);
+                //const long_T theta = isign*(6.28318530717959/mmax);
+                std::cerr << "\tmmax/2=" << (mmax>>1) << std::endl;
+                const long_T theta = isign*(long_PI/(mmax>>1));
                 long_T       wtemp = sin(0.5*theta);
                 long_T       wpr   = -2.0*wtemp*wtemp;
                 long_T       wpi   = sin(theta);
-                long_T       wr    = 1.0;
-                long_T       wi    = 0.0;
+                long_T       wr    = 1;
+                long_T       wi    = 0;
                 for(size_t m=1;m<mmax;m+=2)
                 {
                     for(size_t i=m;i<=n;i+=istep)
                     {
-                        const size_t j=i+mmax;
-                        const T tempr = static_cast<T>(wr*data[j]  -wi*data[j+1]);
-                        const T tempi = static_cast<T>(wr*data[j+1]+wi*data[j]);
+                        const size_t j  = i+mmax;
+                        const size_t i1 = i+1;
+                        const size_t j1 = j+1;
+                        const T tempr = static_cast<T>(wr*data[j]  - wi*data[j1]);
+                        const T tempi = static_cast<T>(wr*data[j1] + wi*data[j]);
                         data[j]       = data[i]-tempr;
-                        data[j+1]     = data[i+1]-tempi;
+                        data[j1]      = data[i1]-tempi;
                         data[i]      += tempr;
-                        data[i+1]    += tempi;
+                        data[i1]     += tempi;
                     }
                     wr=(wtemp=wr)*wpr-wi*wpi+wr;
                     wi=wi*wpr+wtemp*wpi+wi;
