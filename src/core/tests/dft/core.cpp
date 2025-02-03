@@ -146,6 +146,7 @@ namespace Yttrium
 #include "y/system/wtime.hpp"
 #include "y/text/human-readable.hpp"
 #include "y/text/ascii/convert.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace
 {
@@ -249,8 +250,11 @@ Y_UTEST(dft_core)
         std::cerr << std::endl;
     }
 
+    const String fn = "dft.dat";
+    OutputFile::Overwrite(fn);
+
     const double factor = 1;
-    for(unsigned p=0;p<=3;++p)
+    for(unsigned p=0;p<=10;++p)
     {
         (std::cerr << "2^" << std::setw(2) << p << " = " << std::setw(5) << (1<<p)).flush();
         float  rms32 = 0;
@@ -266,6 +270,10 @@ Y_UTEST(dft_core)
         (std::cerr << " | <ldbl> " << HumanReadable( factor * spdXX ) << " (" << Formatted::Get("%8.3g",double(rmsXX)) << ")").flush();
 
         std::cerr << std::endl;
+
+        AppendFile fp(fn);
+        fp("%u %.15g %.15g %.15g\n", p, log10(spd32), log10(spd64), log10(spdXX) );
+
     }
 
 
