@@ -162,6 +162,93 @@ namespace Yttrium
         {
             Transform(data,size,Table< typename DFT_Real<T>::Type >::NegativeSin);
         }
+
+
+        /**
+         unpack for fft1[1..2n] info fft1[1..2n] and fft2[1..2n]
+         */
+        template <typename T> static inline
+        void Unpack(T fft1[], T fft2[], const size_t n) noexcept
+
+        {
+            static const T half(0.5);
+
+            const size_t nn1 = 1+n;
+            const size_t nn2 = nn1 << 1;
+            const size_t nn3 = 1+nn2;
+
+            fft2[1]=fft1[2];
+            fft1[2]=fft2[2]=0;
+            for(size_t j=3;j<=nn1;j+=2)
+            {
+                const size_t j1 = j+1;
+                const size_t j2 = nn2-j;
+                const size_t j3 = nn3-j;
+                const T rep =  half*(fft1[j]+fft1[j2]);
+                const T rem =  half*(fft1[j]-fft1[j2]);
+                const T aip =  half*(fft1[j1]+fft1[j3]);
+                const T aim =  half*(fft1[j1]-fft1[j3]);
+                fft1[j]     =  rep;
+                fft1[j1]    =  aim;
+                fft1[j2]    =  rep;
+                fft1[j3]    = -aim;
+                fft2[j]     =  aip;
+                fft2[j1]    = -rem;
+                fft2[j2]    =  aip;
+                fft2[j3]    =  rem;
+            }
+        }
+
+        /**
+         Given two real input arrays data1[1..n] and data2[1..n], this routine calls four1 and
+         returns two complex output arrays, fft1[1..2n] and fft2[1..2n], each of complex length
+         n (i.e., real length 2*n), which contain the discrete Fourier transforms of the respective data
+         */
+        template <typename T> static inline
+        void Forward(T fft1[], T fft2[], const T data1[], const T data2[], const size_t n)
+        {
+
+
+            //------------------------------------------------------------------
+            //
+            // pack
+            //
+            //------------------------------------------------------------------
+            {
+                T *target = fft1;
+                const T * source1 = data1;
+                const T * source2 = data2;
+                for(size_t j=n;j>0;--j)
+                {
+                    *(++target) = *(++source1);
+                    *(++target) = *(++source2);
+                }
+            }
+
+#if 0
+            // pack
+            for(size_t j=1,jj=2;j<=n;j++,jj+=2)
+            {
+                fft1[jj-1]= data1[j];
+                fft1[jj]  = data2[j];
+            }
+#endif
+            //------------------------------------------------------------------
+            //
+            // transform
+            //
+            //------------------------------------------------------------------
+            Forward(fft1,n);
+
+            //------------------------------------------------------------------
+            //
+            // unpack
+            //
+            //------------------------------------------------------------------
+            Unpack(fft1,fft2,n);
+
+        }
+
     };
 
 
@@ -330,6 +417,38 @@ double linfit(const Readable<double> &x, const Readable<double> &y)
     return b;
 }
 
+#include "y/random/shuffle.hpp"
+
+template <typename T> static inline
+void TestTwoDFT(const unsigned p,
+                Random::Bits  &ran)
+{
+    const size_t n = 1 << p;
+    Vector<T>    data1(n,0);
+    Vector<T>    data2(n,0);
+    for(size_t i=1;i<=n;++i)
+    {
+        data1[i] = i;
+        data2[i] = i;
+    }
+    Random::Shuffle::Range(data1,ran);
+    Random::Shuffle::Range(data2,ran);
+
+
+    Vector<T> fft1(2*n,0), fft2(2*n,0);
+    DFT::Forward(fft1()-1, fft2()-1, data1()-1, data2()-1, n);
+    DFT::Reverse(fft1()-1,n);
+    DFT::Reverse(fft2()-1,n);
+
+    for(size_t i=1;i<=n;++i)
+    {
+        Y_ASSERT( static_cast<size_t>(floor(fft1[1+(i-1)*2]/n+0.5) ) == static_cast<size_t>( data1[i] ) );
+        Y_ASSERT( static_cast<size_t>(floor(fft2[1+(i-1)*2]/n+0.5) ) == static_cast<size_t>( data2[i] ) );
+
+    }
+
+}
+
 Y_UTEST(dft_core)
 {
     Random::ParkMiller ran;
@@ -339,8 +458,8 @@ Y_UTEST(dft_core)
         duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
     }
 
-    std::cerr << "float => " << RTTI::Name< DFT_Real<float>::Type >() << std::endl;
-    std::cerr << "double => " << RTTI::Name< DFT_Real<double>::Type >() << std::endl;
+    std::cerr << "float       => " << RTTI::Name< DFT_Real<float>::Type >() << std::endl;
+    std::cerr << "double      => " << RTTI::Name< DFT_Real<double>::Type >() << std::endl;
     std::cerr << "long double => " << RTTI::Name< DFT_Real<long double>::Type >() << std::endl;
 
 
@@ -365,11 +484,12 @@ Y_UTEST(dft_core)
         }
     }
 
+    std::cerr << std::endl << "Tables" << std::endl;
     Core::Display(std::cerr, DFT::Table<double>::PositiveSin, 64) << std::endl;
     Core::Display(std::cerr, DFT::Table<double>::NegativeSin, 64) << std::endl;
     Core::Display(std::cerr, DFT::Table<double>::CosMinusOne, 64) << std::endl;
 
-
+    std::cerr << std::endl << "Sample Of Transform" << std::endl;
     if(true)
     {
         for(unsigned p=0;p<6;++p)
@@ -384,13 +504,26 @@ Y_UTEST(dft_core)
             for(size_t i=1;i<=data.size();++i)
             {
                 data[i] = floor( data[i]/n + 0.5);
+                Y_ASSERT(i==static_cast<size_t>(data[i]));
             }
             std::cerr << data << std::endl;
+        }
+
+    }
+
+    std::cerr << std::endl << "Sample Of Two Transforms" << std::endl;
+    {
+        for(unsigned p=0;p<=12;++p)
+        {
+            TestTwoDFT<float>(p, ran);
+            TestTwoDFT<double>(p, ran);
+            TestTwoDFT<long double>(p, ran);
+
         }
     }
 
 
-
+    std::cerr << std::endl << "Scaling..." << std::endl;
     const String fn = "dft.dat";
     OutputFile::Overwrite(fn);
 
