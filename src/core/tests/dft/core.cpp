@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/system/rtti.hpp"
+#include "y/type/utils.hpp"
 
 using namespace Yttrium;
 
@@ -78,19 +79,27 @@ namespace Yttrium
         }
 
 
+        template <typename T> struct Table
+        {
+            static const T PositiveSin[64]; //!<  sin(pi/(2^i))
+            static const T NegativeSin[64]; //!< -sin(pi/(2^i))
+            static const T CosMinusOne[64]; //!< cos(pi/(2^i))-1`
+        };
+
+
         /**
-         - Replaces data[1..2*nn] by its Discrete Fourier transform if isign is input as 1
-         - or replaces data[1..2*nn] by nn times its inverse discrete Fourier transform, if isign is input as −1.
-         - data is a complex array of length nn or, equivalently, a real array of length 2*nn
-         - nn MUSTbe an integer power of 2
+         - Replaces data[1..2*size] :
+         - by its Discrete Fourier transform if SinTable = PositiveSin
+         - by size times its Inverse Discrete Fourier transform if SinTable = NegativeSin
+         - data is a complex array of length size or, equivalently, a real array of length 2*nn
+         - size MUST be an integer power of 2
          */
         template <typename T> static inline
         void Transform(T            data[],
                        const size_t size,
-                       const int    isign)
+                       const typename DFT_Real<T>::Type SinTable[]) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
-            static const long_T  long_PI = MKL::Numeric<long_T>::PI;
             const size_t n = size << 1;
             for(size_t i=1,j=1;i<n;i+=2)
             {
@@ -100,7 +109,7 @@ namespace Yttrium
                     Swap(data[j+1],data[i+1]);
                 }
                 size_t m=size;
-                while (m >= 2 && j > m)
+                while( (m >= 2) && (j > m) )
                 {
                     j -= m;
                     m >>= 1;
@@ -108,17 +117,13 @@ namespace Yttrium
                 j += m;
             }
 
-            //std::cerr << "size=" << size << std::endl;
             size_t mmax=2;
+            size_t indx=0; // mmax/2 = 2^indx
             while(n>mmax)
             {
-                const size_t istep = mmax << 1;
-                //const long_T theta = isign*(6.28318530717959/mmax);
-                //std::cerr << "\tmmax/2=" << (mmax>>1) << std::endl;
-                const long_T theta = isign*(long_PI/(mmax>>1));
-                long_T       wtemp = sin(0.5*theta);
-                long_T       wpr   = -2.0*wtemp*wtemp;
-                long_T       wpi   = sin(theta);
+                const size_t istep = (mmax << 1);
+                long_T       wpr   = Table<long_T>::CosMinusOne[indx];
+                long_T       wpi   = SinTable[indx];
                 long_T       wr    = 1;
                 long_T       wi    = 0;
                 for(size_t m=1;m<mmax;m+=2)
@@ -135,19 +140,108 @@ namespace Yttrium
                         data[i]      += tempr;
                         data[i1]     += tempi;
                     }
-                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                    wi=wi*wpr+wtemp*wpi+wi;
+                    const long_T wt=wr;
+                    wr=wt*wpr-wi*wpi+wt;
+                    wi=wi*wpr+wt*wpi+wi;
                 }
                 mmax=istep;
+                ++indx;
             }
         }
+
+        template <typename T> static inline
+        void Forward(T            data[],
+                     const size_t size) noexcept
+        {
+            Transform(data,size,Table< typename DFT_Real<T>::Type >::PositiveSin);
+        }
+
+        template <typename T> static inline
+        void Reverse(T            data[],
+                     const size_t size) noexcept
+        {
+            Transform(data,size,Table< typename DFT_Real<T>::Type >::NegativeSin);
+        }
     };
+
+
+#define Y_DFT_REP(FIRST) \
+FIRST,       Y_DFT(0x01), Y_DFT(0x02), Y_DFT(0x03), Y_DFT(0x04), Y_DFT(0x05), Y_DFT(0x06), Y_DFT(0x07), \
+Y_DFT(0x08), Y_DFT(0x09), Y_DFT(0x0a), Y_DFT(0x0b), Y_DFT(0x0c), Y_DFT(0x0d), Y_DFT(0x0e), Y_DFT(0x0f), \
+Y_DFT(0x10), Y_DFT(0x11), Y_DFT(0x12), Y_DFT(0x13), Y_DFT(0x14), Y_DFT(0x15), Y_DFT(0x16), Y_DFT(0x17), \
+Y_DFT(0x18), Y_DFT(0x19), Y_DFT(0x1a), Y_DFT(0x1b), Y_DFT(0x1c), Y_DFT(0x1d), Y_DFT(0x1e), Y_DFT(0x1f), \
+Y_DFT(0x20), Y_DFT(0x21), Y_DFT(0x22), Y_DFT(0x23), Y_DFT(0x24), Y_DFT(0x25), Y_DFT(0x26), Y_DFT(0x27), \
+Y_DFT(0x28), Y_DFT(0x29), Y_DFT(0x2a), Y_DFT(0x2b), Y_DFT(0x2c), Y_DFT(0x2d), Y_DFT(0x2e), Y_DFT(0x2f), \
+Y_DFT(0x30), Y_DFT(0x31), Y_DFT(0x32), Y_DFT(0x33), Y_DFT(0x34), Y_DFT(0x35), Y_DFT(0x36), Y_DFT(0x37), \
+Y_DFT(0x38), Y_DFT(0x39), Y_DFT(0x3a), Y_DFT(0x3b), Y_DFT(0x3c), Y_DFT(0x3d), Y_DFT(0x3e), Y_DFT(0x3f)
+
+
+
+#define Y_DFT(i) sin( MKL::Numeric<double>::PI / static_cast<double>( uint64_t(1) << i ) )
+
+    template <>
+    const double DFT::Table<double>::PositiveSin[64] =
+    {
+        Y_DFT_REP(0.0)
+    };
+
+#undef Y_DFT
+
+#define Y_DFT(i) -sin( MKL::Numeric<double>::PI / static_cast<double>( uint64_t(1) << i ) )
+
+    template <>
+    const double DFT::Table<double>::NegativeSin[64] =
+    {
+        Y_DFT_REP(0.0)
+    };
+
+
+#undef Y_DFT
+
+#define Y_DFT(i) cos( MKL::Numeric<double>::PI / static_cast<double>( uint64_t(1) << i ) ) - 1.0
+
+    template <>
+    const double DFT::Table<double>::CosMinusOne[64] =
+    {
+        Y_DFT_REP(-2.0)
+    };
+
+
+#undef Y_DFT
+
+#define Y_DFT(i) sinl( MKL::Numeric<long double>::PI / static_cast<long double>( uint64_t(1) << i ) )
+
+    template <>
+    const long double DFT::Table<long double>::PositiveSin[64] =
+    {
+        Y_DFT_REP(0.0L)
+    };
+
+#undef Y_DFT
+
+#define Y_DFT(i) -sinl( MKL::Numeric<long double>::PI / static_cast<long double>( uint64_t(1) << i ) )
+
+    template <>
+    const long double DFT::Table<long double>::NegativeSin[64] =
+    {
+        Y_DFT_REP(0.0L)
+    };
+
+#undef Y_DFT
+
+#define Y_DFT(i) cosl( MKL::Numeric<long double>::PI / static_cast<long double>( uint64_t(1) << i ) ) - 1.0L
+
+    template <>
+    const long double DFT::Table<long double>::CosMinusOne[64] =
+    {
+        Y_DFT_REP(-2.0L)
+    };
+
 
 }
 
 #include "y/random/park-miller.hpp"
 #include "y/mkl/antelope/add.hpp"
-#include "y/type/utils.hpp"
 #include "y/system/wtime.hpp"
 #include "y/text/human-readable.hpp"
 #include "y/text/ascii/convert.hpp"
@@ -181,8 +275,8 @@ namespace
 
             {
                 const uint64_t ini = WallTime::Ticks();
-                DFT::Transform(data()-1,n,1);
-                DFT::Transform(data()-1,n,-1);
+                DFT::Forward(data()-1,n);
+                DFT::Reverse(data()-1,n);
                 tmx += WallTime::Ticks() - ini;
             }
 
@@ -197,8 +291,7 @@ namespace
         }
         while( ellapsed < duration );
 
-        //std::cerr << "rms=" << rms << std::endl;
-        //std::cerr << "#cycle=" << cycles << " in " << ellapsed << std::endl;
+
 
         return static_cast<double>( static_cast<long double>(cycles) / ellapsed );
     }
@@ -251,42 +344,52 @@ Y_UTEST(dft_core)
     std::cerr << "long double => " << RTTI::Name< DFT_Real<long double>::Type >() << std::endl;
 
 
-    for(unsigned p=0;p<5;++p)
+    if(false)
     {
-        const size_t   n = 1<<p;
-        Vector<float> data(n*2,0);
-        for(size_t i=1;i<=data.size();++i)
-            data[i] = i;
-
-        std::cerr << data << std::endl;
-        DFT::Transform_(data()-1,n,1);
-        DFT::Transform_(data()-1,n,-1);
-        for(size_t i=1;i<=data.size();++i)
+        for(unsigned p=0;p<5;++p)
         {
-            data[i] = floor( data[i]/n + 0.5);
+            const size_t   n = 1<<p;
+            Vector<float> data(n*2,0);
+            for(size_t i=1;i<=data.size();++i)
+                data[i] = i;
+
+            std::cerr << data << std::endl;
+            DFT::Transform_(data()-1,n,1);
+            DFT::Transform_(data()-1,n,-1);
+            for(size_t i=1;i<=data.size();++i)
+            {
+                data[i] = floor( data[i]/n + 0.5);
+            }
+            std::cerr << data << std::endl;
+            std::cerr << std::endl;
         }
-        std::cerr << data << std::endl;
-        std::cerr << std::endl;
     }
 
-    for(unsigned p=0;p<6;++p)
-    {
-        const size_t   n = 1<<p;
-        Vector<float> data(n*2,0);
-        for(size_t i=1;i<=data.size();++i)
-            data[i] = i;
+    Core::Display(std::cerr, DFT::Table<double>::PositiveSin, 64) << std::endl;
+    Core::Display(std::cerr, DFT::Table<double>::NegativeSin, 64) << std::endl;
+    Core::Display(std::cerr, DFT::Table<double>::CosMinusOne, 64) << std::endl;
 
-        std::cerr << data << std::endl;
-        DFT::Transform(data()-1,n,1);
-        //std::cerr << data << std::endl;
-        DFT::Transform(data()-1,n,-1);
-        for(size_t i=1;i<=data.size();++i)
+
+    if(true)
+    {
+        for(unsigned p=0;p<6;++p)
         {
-            data[i] = floor( data[i]/n + 0.5);
+            const size_t   n = 1<<p;
+            Vector<float> data(n*2,0);
+            for(size_t i=1;i<=data.size();++i)
+                data[i] = i;
+
+            DFT::Forward(data()-1,n);
+            DFT::Reverse(data()-1,n);
+            for(size_t i=1;i<=data.size();++i)
+            {
+                data[i] = floor( data[i]/n + 0.5);
+            }
+            std::cerr << data << std::endl;
         }
-        std::cerr << data << std::endl;
-        std::cerr << std::endl;
     }
+
+
 
     const String fn = "dft.dat";
     OutputFile::Overwrite(fn);
@@ -339,6 +442,21 @@ Y_UTEST(dft_core)
     std::cerr << std::endl;
 
 
+
+    std::cerr.flush();
+
+    if(false)
+    {
+        unsigned h = 0;
+        for(size_t i=0;i<8;++i)
+        {
+            for(size_t j=0;j<8;++j,++h)
+            {
+                fprintf(stderr," Y_DFT(0x%02x),",h);
+            }
+            fprintf(stderr," \\\n");
+        }
+    }
 
 }
 Y_UDONE()
