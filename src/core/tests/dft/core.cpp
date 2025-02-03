@@ -79,22 +79,22 @@ namespace Yttrium
 
 
         /**
-         Replaces data[1..2*nn] by its Discrete Fourier transform, if isign is input as 1; or replaces
-         data[1..2*nn] by nn times its inverse discrete Fourier transform, if isign is input as−1.
-         data is a complex array of length nn or, equivalently, a real array of length 2*nn. nn MUST
-         be an integer power of 2
+         - Replaces data[1..2*nn] by its Discrete Fourier transform if isign is input as 1
+         - or replaces data[1..2*nn] by nn times its inverse discrete Fourier transform, if isign is input as −1.
+         - data is a complex array of length nn or, equivalently, a real array of length 2*nn
+         - nn MUSTbe an integer power of 2
          */
         template <typename T>
-        void Transform(T          data[],
-                       size_t     nn,
-                       const int  isign)
+        void Transform(T            data[],
+                       const size_t size,
+                       const int    isign)
         {
             typedef typename DFT_Real<T>::Type long_T;
-            size_t n,mmax,m,j,istep,i;
+            size_t n,m,j,istep,i;
             long_T wtemp,wr,wpr,wpi,wi,theta;
             T tempr,tempi;
 
-            n = nn << 1;
+            n = size << 1;
             j = 1;
             for (i=1;i<n;i+=2)
             {
@@ -103,7 +103,7 @@ namespace Yttrium
                     Swap(data[j],data[i]);
                     Swap(data[j+1],data[i+1]);
                 }
-                m=nn;
+                m=size;
                 while (m >= 2 && j > m)
                 {
                     j -= m;
@@ -112,10 +112,10 @@ namespace Yttrium
                 j += m;
             }
 
-            mmax=2;
+            size_t mmax=2;
             while(n>mmax)
             {
-                istep=mmax << 1;
+                istep = mmax << 1;
                 theta = isign*(6.28318530717959/mmax);
                 wtemp = sin(0.5*theta);
                 wpr   = -2.0*wtemp*wtemp;
@@ -151,7 +151,7 @@ Y_UTEST(dft_core)
     std::cerr << "double => " << RTTI::Name< DFT_Real<double>::Type >() << std::endl;
     std::cerr << "long double => " << RTTI::Name< DFT_Real<long double>::Type >() << std::endl;
 
-    for(unsigned p=0;p<10;++p)
+    for(unsigned p=0;p<5;++p)
     {
         const size_t   n = 1<<p;
         Vector<float> data(n*2,0);
@@ -159,8 +159,16 @@ Y_UTEST(dft_core)
         {
             data[i] = i;
         }
+        std::cerr << data << std::endl;
         DFT::Transform_(data()-1,n,1);
-
+        //std::cerr << data << std::endl;
+        DFT::Transform_(data()-1,n,-1);
+        for(size_t i=1;i<=data.size();++i)
+        {
+            data[i] = floor( data[i]/n + 0.5);
+        }
+        std::cerr << data << std::endl;
+        std::cerr << std::endl;
     }
 }
 Y_UDONE()
