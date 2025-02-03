@@ -90,9 +90,6 @@ namespace Yttrium
                        const int    isign)
         {
             typedef typename DFT_Real<T>::Type long_T;
-            size_t istep;
-            long_T wtemp,wr,wpr,wpi,wi,theta;
-            T tempr,tempi;
 
             const size_t n = size << 1;
             for(size_t i=1,j=1;i<n;i+=2)
@@ -114,24 +111,24 @@ namespace Yttrium
             size_t mmax=2;
             while(n>mmax)
             {
-                istep = mmax << 1;
-                theta = isign*(6.28318530717959/mmax);
-                wtemp = sin(0.5*theta);
-                wpr   = -2.0*wtemp*wtemp;
-                wpi   = sin(theta);
-                wr    = 1.0;
-                wi    = 0.0;
+                const size_t istep = mmax << 1;
+                const long_T theta = isign*(6.28318530717959/mmax);
+                long_T       wtemp = sin(0.5*theta);
+                long_T       wpr   = -2.0*wtemp*wtemp;
+                long_T       wpi   = sin(theta);
+                long_T       wr    = 1.0;
+                long_T       wi    = 0.0;
                 for(size_t m=1;m<mmax;m+=2)
                 {
                     for(size_t i=m;i<=n;i+=istep)
                     {
                         const size_t j=i+mmax;
-                        tempr=wr*data[j]-wi*data[j+1];
-                        tempi=wr*data[j+1]+wi*data[j];
-                        data[j]    = data[i]-tempr;
-                        data[j+1]  = data[i+1]-tempi;
-                        data[i]   += tempr;
-                        data[i+1] += tempi;
+                        const T tempr = static_cast<T>(wr*data[j]  -wi*data[j+1]);
+                        const T tempi = static_cast<T>(wr*data[j+1]+wi*data[j]);
+                        data[j]       = data[i]-tempr;
+                        data[j+1]     = data[i+1]-tempi;
+                        data[i]      += tempr;
+                        data[i+1]    += tempi;
                     }
                     wr=(wtemp=wr)*wpr-wi*wpi+wr;
                     wi=wi*wpr+wtemp*wpi+wi;
@@ -143,12 +140,77 @@ namespace Yttrium
 
 }
 
+#include "y/random/park-miller.hpp"
+#include "y/mkl/antelope/add.hpp"
+#include "y/type/utils.hpp"
+#include "y/system/wtime.hpp"
+#include "y/text/human-readable.hpp"
+#include "y/text/ascii/convert.hpp"
+
+namespace
+{
+    static double duration = 0.01;
+
+    template <typename T> static inline
+    double DFT_Test(const unsigned p,
+                    Random::Bits  &ran,
+                    T             &rms)
+    {
+        const size_t   n = 1<<p;
+        Vector<T>               data(n*2,0), orig(n*2,0);
+        MKL::Antelope::Add<T>  xadd(data.size());
+        WallTime               chrono;
+
+        rms                  = 0;
+        uint64_t    tmx      = 0;
+        size_t      cycles   = 0;
+        long double ellapsed = 0;
+        do
+        {
+            ++cycles;
+            for(size_t i=data.size();i>0;--i)
+            {
+                data[i] = orig[i] = ran.symm<T>();
+            }
+
+            {
+                const uint64_t ini = WallTime::Ticks();
+                DFT::Transform(data()-1,n,1);
+                DFT::Transform(data()-1,n,-1);
+                tmx += WallTime::Ticks() - ini;
+            }
+
+            xadd.free();
+            for(size_t i=data.size();i>0;--i)
+            {
+                xadd << Squared( data[i] / n - orig[i] );
+            }
+            const T tmp = sqrt( xadd.sum() / n );
+            if(tmp>rms) rms = tmp;
+            ellapsed = chrono(tmx);
+        }
+        while( ellapsed < duration );
+
+        //std::cerr << "rms=" << rms << std::endl;
+        //std::cerr << "#cycle=" << cycles << " in " << ellapsed << std::endl;
+
+        return static_cast<double>( static_cast<long double>(cycles) / ellapsed );
+    }
+}
+
 Y_UTEST(dft_core)
 {
+    Random::ParkMiller ran;
+
+    if( argc > 1)
+    {
+        duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
+    }
 
     std::cerr << "float => " << RTTI::Name< DFT_Real<float>::Type >() << std::endl;
     std::cerr << "double => " << RTTI::Name< DFT_Real<double>::Type >() << std::endl;
     std::cerr << "long double => " << RTTI::Name< DFT_Real<long double>::Type >() << std::endl;
+
 
     for(unsigned p=0;p<5;++p)
     {
@@ -159,7 +221,6 @@ Y_UTEST(dft_core)
 
         std::cerr << data << std::endl;
         DFT::Transform_(data()-1,n,1);
-        //std::cerr << data << std::endl;
         DFT::Transform_(data()-1,n,-1);
         for(size_t i=1;i<=data.size();++i)
         {
@@ -187,6 +248,26 @@ Y_UTEST(dft_core)
         std::cerr << data << std::endl;
         std::cerr << std::endl;
     }
+
+    const double factor = 1;
+    for(unsigned p=0;p<=3;++p)
+    {
+        (std::cerr << "2^" << std::setw(2) << p << " = " << std::setw(5) << (1<<p)).flush();
+        float  rms32 = 0;
+        double rms64 = 0;
+        long double rmsXX = 0;
+
+        const double spd32 = DFT_Test<float>(p,ran,rms32);
+        (std::cerr << " | <flt> " << HumanReadable( factor * spd32 ) << " (" << Formatted::Get("%8.3g",double(rms32)) << ")").flush();
+        const double spd64 = DFT_Test<double>(p,ran,rms64);
+        (std::cerr << " | <dbl> " << HumanReadable( factor * spd64 ) << " (" << Formatted::Get("%8.3g",double(rms64)) << ")").flush();
+
+        const double spdXX = DFT_Test<long double>(p,ran,rmsXX);
+        (std::cerr << " | <ldbl> " << HumanReadable( factor * spdXX ) << " (" << Formatted::Get("%8.3g",double(rmsXX)) << ")").flush();
+
+        std::cerr << std::endl;
+    }
+
 
 }
 Y_UDONE()
