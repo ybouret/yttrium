@@ -190,13 +190,14 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Operators(/,Div)
 #endif
 
+
+            //__________________________________________________________________
+            //
+            //! try to cast to given integral type
+            //__________________________________________________________________
             template <typename T>
             bool tryCast(T &target) const
             {
-                //static const unsigned RawSize = sizeof(T);
-                //static const unsigned RawBits = RawSize << 3;
-                //static const bool     Signed  = IsSigned<T>::Value;
-                //static const unsigned MaxBits = Signed ? RawBits-1 : RawBits;
                 switch(s)
                 {
                     case __Zero__: target = 0; return true;
