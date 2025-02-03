@@ -14,6 +14,7 @@ io
 fft
 string
 apex
+dft
 kemp
 tow
 ordered
@@ -374,4 +375,6 @@ add_test(apex:z     test-core apex_z)
 add_test(apex:conv  test-core apex_conv)
 add_test(apex:q     test-core apex_q)
 
+#dft
+add_test(dft:core test-core dft_core)
 
