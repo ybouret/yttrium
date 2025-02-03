@@ -23,8 +23,8 @@ namespace
                     Random::Bits  &ran,
                     T             &rms)
     {
-        const size_t   n = 1<<p;
-        Vector<T>               data(n*2,0), orig(n*2,0);
+        const size_t  n = 1<<p;
+        Vector<T>              data(n*2,0), orig(n*2,0);
         MKL::Antelope::Add<T>  xadd(data.size());
         WallTime               chrono;
 
