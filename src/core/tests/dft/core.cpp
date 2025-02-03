@@ -180,7 +180,7 @@ Y_UTEST(dft_core)
     std::cerr << "double      => " << RTTI::Name< DFT_Real<double>::Type >() << std::endl;
     std::cerr << "long double => " << RTTI::Name< DFT_Real<long double>::Type >() << std::endl;
 
-
+#if 0
     if(false)
     {
         for(unsigned p=0;p<5;++p)
@@ -201,7 +201,8 @@ Y_UTEST(dft_core)
             std::cerr << std::endl;
         }
     }
-
+#endif
+    
     std::cerr << std::endl << "Tables" << std::endl;
     Core::Display(std::cerr, DFT::Table<double>::PositiveSin, 64) << std::endl;
     Core::Display(std::cerr, DFT::Table<double>::NegativeSin, 64) << std::endl;

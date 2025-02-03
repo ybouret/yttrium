@@ -9,75 +9,30 @@
 
 namespace Yttrium
 {
-    template <typename T> struct DFT_Real        { typedef T      Type; };
-    template <>           struct DFT_Real<float> { typedef double Type; };
+    //! inner real for DFT
+    template <typename T> struct DFT_Real        { typedef T      Type; /*!< alias */ };
 
+    //! inner real fo float DFT
+    template <>           struct DFT_Real<float> { typedef double Type; /*!< alias */ };
+
+
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Discrete Fourier Transform
+    //
+    //
+    //__________________________________________________________________________
     struct DFT
     {
 
-        /**
-         Replaces data[1..2*nn] by its Discrete Fourier transform, if isign is input as 1; or replaces
-         data[1..2*nn] by nn times its inverse discrete Fourier transform, if isign is input as−1.
-         data is a complex array of length nn or, equivalently, a real array of length 2*nn. nn MUST
-         be an integer power of 2
-         */
-        static inline
-        void Transform_(float         data[],
-                        unsigned long nn,
-                        const int     isign)
-        {
-            unsigned long n,mmax,m,j,istep,i;
-            double wtemp,wr,wpr,wpi,wi,theta;
-            float tempr,tempi;
-
-            n = nn << 1;
-            j = 1;
-            for (i=1;i<n;i+=2)
-            {
-                if (j > i)
-                {
-                    Swap(data[j],data[i]);
-                    Swap(data[j+1],data[i+1]);
-                }
-                m=nn;
-                while (m >= 2 && j > m)
-                {
-                    j -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-
-            mmax=2;
-            while(n>mmax)
-            {
-                istep=mmax << 1;
-                theta = isign*(6.28318530717959/mmax);
-                wtemp = sin(0.5*theta);
-                wpr   = -2.0*wtemp*wtemp;
-                wpi   = sin(theta);
-                wr    = 1.0;
-                wi    = 0.0;
-                for (m=1;m<mmax;m+=2)
-                {
-                    for (i=m;i<=n;i+=istep)
-                    {
-                        j=i+mmax;
-                        tempr=wr*data[j]-wi*data[j+1];
-                        tempi=wr*data[j+1]+wi*data[j];
-                        data[j]=data[i]-tempr;
-                        data[j+1]=data[i+1]-tempi;
-                        data[i] += tempr;
-                        data[i+1] += tempi;
-                    }
-                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                    wi=wi*wpr+wtemp*wpi+wi;
-                }
-                mmax=istep;
-            }
-        }
-
-
+        //______________________________________________________________________
+        //
+        //
+        //! precomputed trigonometric tables
+        //
+        //______________________________________________________________________
         template <typename T> struct Table
         {
             static const T PositiveSin[64]; //!<  sin(pi/(2^i))
@@ -85,23 +40,32 @@ namespace Yttrium
             static const T CosMinusOne[64]; //!< cos(pi/(2^i))-1`
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! swap two consecutive blocks
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Swap2(T * lhs, T *rhs) {
             { const T t(*lhs); *(lhs++) = *rhs; *(rhs++) = t; }
             { const T t(*lhs); *(lhs)   = *rhs; *rhs     = t; }
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Transform Usin a Sine Table
         /**
          - Replaces data[1..2*size] :
-         - by its Discrete Fourier transform if SinTable = PositiveSin
-         - by size times its Inverse Discrete Fourier transform if SinTable = NegativeSin
-         - data is a complex array of length size or, equivalently, a real array of length 2*nn
-         - size MUST be an integer power of 2
+         - by its              Discrete Fourier transform         if SinTable = PositiveSin
+         - by 'size' times its Inverse Discrete Fourier transform if SinTable = NegativeSin
          */
+        //______________________________________________________________________
+
         template <typename T> static inline
-        void Transform(T            data[],
-                       const size_t size,
+        void Transform(T                                data[],
+                       const size_t                     size,
                        const typename DFT_Real<T>::Type SinTable[]) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
@@ -109,9 +73,7 @@ namespace Yttrium
             for(size_t i=1,j=1;i<n;i+=2)
             {
                 if(j>i)
-                {
                     Swap2(data+i,data+j);
-                }
                 size_t m=size;
                 while( (m >= 2) && (j > m) )
                 {
@@ -153,6 +115,13 @@ namespace Yttrium
             }
         }
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! Forward Discrete Fourier Transform of data[1..2*size]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Forward(T            data[],
                      const size_t size) noexcept
@@ -160,6 +129,12 @@ namespace Yttrium
             Transform(data,size,Table< typename DFT_Real<T>::Type >::PositiveSin);
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Reverse Discrete Fourier Transform of data[1..2*size], times size
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Reverse(T            data[],
                      const size_t size) noexcept
@@ -168,9 +143,12 @@ namespace Yttrium
         }
 
 
-        /**
-         unpack for fft1[1..2n] info fft1[1..2n] and fft2[1..2n]
-         */
+        //______________________________________________________________________
+        //
+        //
+        //! unpack for fft1[1..2n] info fft1[1..2n] and fft2[1..2n]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Unpack(T fft1[], T fft2[], const size_t n) noexcept
 
@@ -209,16 +187,19 @@ namespace Yttrium
             }
         }
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! Two Real DFT at once
         /**
-         Given two real input arrays data1[1..n] and data2[1..n], this routine calls four1 and
-         returns two complex output arrays, fft1[1..2n] and fft2[1..2n], each of complex length
-         n (i.e., real length 2*n), which contain the discrete Fourier transforms of the respective data
+         - real data1[1..size] -> fft1[1..2*size]
+         - real data2[1..size] -> fft2[1..2*size]
          */
+        //______________________________________________________________________
         template <typename T> static inline
         void Forward(T fft1[], T fft2[], const T data1[], const T data2[], const size_t n)
         {
-
-
             //------------------------------------------------------------------
             //
             // pack
@@ -250,9 +231,12 @@ namespace Yttrium
             Unpack(fft1,fft2,n);
         }
 
-        /**
-
-         */
+        //______________________________________________________________________
+        //
+        //
+        //! fft1 *= fft2
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Multiply(T * fft1, const T * fft2, const size_t n) noexcept
         {
