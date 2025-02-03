@@ -193,6 +193,10 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             template <typename T>
             bool tryCast(T &target) const
             {
+                //static const unsigned RawSize = sizeof(T);
+                //static const unsigned RawBits = RawSize << 3;
+                //static const bool     Signed  = IsSigned<T>::Value;
+                //static const unsigned MaxBits = Signed ? RawBits-1 : RawBits;
                 switch(s)
                 {
                     case __Zero__: target = 0; return true;
@@ -207,8 +211,17 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
                 }
                 else
                 {
-                    
-                    return false;
+                    // T is signed, this is negative
+                    static const size_t MaxBits = ( sizeof(T) << 3) - 1;
+                    const Block        &block   = *n;
+                    if(block.bits>MaxBits)
+                        return false;
+                    else
+                    {
+                        Y_Apex_Lock(n);
+                        target = - Coerce(block).cast<T>();
+                        return true;
+                    }
                 }
             }
 

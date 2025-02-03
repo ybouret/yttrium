@@ -74,6 +74,7 @@ namespace Yttrium
             //! in-place natural representation as required plan
             static const void * To(const Plan p, natural_t &n, size_t &w) noexcept;
 
+            //! cat to positive T, assuming bits were checked
             template <typename T>
             inline T cast() noexcept
             {
