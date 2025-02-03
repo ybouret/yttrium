@@ -3,6 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/system/rtti.hpp"
 #include "y/type/utils.hpp"
+#include "y/mkl/complex.hpp"
 
 using namespace Yttrium;
 
@@ -87,6 +88,12 @@ namespace Yttrium
         };
 
 
+        template <typename T> static inline
+        void Swap2(T * lhs, T *rhs) {
+            { const T t(*lhs); *(lhs++) = *rhs; *(rhs++) = t; }
+            { const T t(*lhs); *(lhs)   = *rhs; *rhs     = t; }
+        }
+
         /**
          - Replaces data[1..2*size] :
          - by its Discrete Fourier transform if SinTable = PositiveSin
@@ -105,8 +112,7 @@ namespace Yttrium
             {
                 if(j>i)
                 {
-                    Swap(data[j],data[i]);
-                    Swap(data[j+1],data[i+1]);
+                    Swap2(data+i,data+j);
                 }
                 size_t m=size;
                 while( (m >= 2) && (j > m) )
@@ -135,8 +141,8 @@ namespace Yttrium
                         const size_t j1 = j+1;
                         const T tempr = static_cast<T>(wr*data[j]  - wi*data[j1]);
                         const T tempi = static_cast<T>(wr*data[j1] + wi*data[j]);
-                        data[j]       = data[i]-tempr;
-                        data[j1]      = data[i1]-tempi;
+                        data[j]       = data[i]  - tempr;
+                        data[j1]      = data[i1] - tempi;
                         data[i]      += tempr;
                         data[i1]     += tempi;
                     }
@@ -215,7 +221,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                T *target = fft1;
+                T *       target = fft1;
                 const T * source1 = data1;
                 const T * source2 = data2;
                 for(size_t j=n;j>0;--j)
@@ -246,8 +252,29 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             Unpack(fft1,fft2,n);
-
         }
+
+        /**
+
+         */
+        template <typename T> static inline
+        void Multiply(T * fft1, const T * fft2, const size_t n) noexcept
+        {
+            typedef Complex<T> Cplx;
+
+            for(size_t i=n;i>0;--i)
+            {
+                const Cplx z1(fft1[1],fft1[2]);
+                const Cplx z2(fft2[1],fft2[2]);
+                const Cplx z = Cplx::MultiAlgo(z1,z2);
+                //const Cplx z = Cplx::GaussAlgo(z1,z2);
+                fft2     += 2;
+                *(++fft1) = z.re;
+                *(++fft1) = z.im;
+            }
+        }
+
+
 
     };
 
@@ -351,7 +378,7 @@ namespace
         rms                  = 0;
         uint64_t    tmx      = 0;
         size_t      cycles   = 0;
-        long double ellapsed = 0;
+        uint64_t    out      = chrono.Ticks();
         do
         {
             ++cycles;
@@ -374,12 +401,12 @@ namespace
             }
             const T tmp = sqrt( xadd.sum() / n );
             if(tmp>rms) rms = tmp;
-            ellapsed = chrono(tmx);
+
         }
-        while( ellapsed < duration );
+        while( chrono(chrono.Ticks()-out) < duration );
 
 
-
+        long double ellapsed = chrono(tmx);
         return static_cast<double>( static_cast<long double>(cycles) / ellapsed );
     }
 }
@@ -447,6 +474,44 @@ void TestTwoDFT(const unsigned p,
 
     }
 
+}
+
+template <typename T> static inline
+double TestMultiply(const unsigned pmax, Random::Bits &ran)
+{
+    const String & id = RTTI::Name<T>();
+
+    std::cerr <<  std::setw(16) << id << " speed:";
+    MKL::Antelope::Add<T> xadd;
+    for(unsigned p=0;p<=pmax;++p)
+    {
+        const size_t n = 1 << p;
+        const size_t n2 = 2*n;
+        Vector<T>   fft1(n2,0), fft2(n2,0);
+        WallTime    chrono;
+        uint64_t    tmx    = 0;
+        size_t      cycles = 0;
+        uint64_t    out      = chrono.Ticks();
+        do
+        {
+            ++cycles;
+            for(size_t i=n2;i>0;--i)
+            {
+                fft1[i] = ran.symm<T>();
+                fft2[i] = ran.symm<T>();
+            }
+            const uint64_t ini = chrono.Ticks();
+            DFT::Multiply(fft1()-1,fft2()-1,n);
+            tmx += chrono.Ticks() - ini;
+        } while( chrono(chrono.Ticks()-out) < duration);
+        const long double ell   = chrono(tmx);
+        const double      speed = double( (static_cast<long double>(cycles)*n) / (ell) );
+        (std::cerr << p << '/').flush();
+        xadd << speed;
+    }
+    const double res = xadd.sum() / (1+pmax);
+    std::cerr << " => " << HumanReadable(res) << std::endl;
+    return res;
 }
 
 Y_UTEST(dft_core)
@@ -522,6 +587,14 @@ Y_UTEST(dft_core)
         }
     }
 
+    std::cerr << std::endl << "Multiply..." << std::endl;
+    {
+        TestMultiply<float>(10,ran);
+        TestMultiply<double>(10,ran);
+        TestMultiply<long double>(10,ran);
+
+    }
+
 
     std::cerr << std::endl << "Scaling..." << std::endl;
     const String fn = "dft.dat";
@@ -590,6 +663,8 @@ Y_UTEST(dft_core)
             fprintf(stderr," \\\n");
         }
     }
+
+
 
 }
 Y_UDONE()
