@@ -108,13 +108,13 @@ namespace Yttrium
                 j += m;
             }
 
-            std::cerr << "size=" << size << std::endl;
+            //std::cerr << "size=" << size << std::endl;
             size_t mmax=2;
             while(n>mmax)
             {
                 const size_t istep = mmax << 1;
                 //const long_T theta = isign*(6.28318530717959/mmax);
-                std::cerr << "\tmmax/2=" << (mmax>>1) << std::endl;
+                //std::cerr << "\tmmax/2=" << (mmax>>1) << std::endl;
                 const long_T theta = isign*(long_PI/(mmax>>1));
                 long_T       wtemp = sin(0.5*theta);
                 long_T       wpr   = -2.0*wtemp*wtemp;
@@ -204,6 +204,39 @@ namespace
     }
 }
 
+#include "y/container/matrix.hpp"
+
+static inline
+double linfit(const Readable<double> &x, const Readable<double> &y)
+{
+    assert(x.size()>0);
+    assert(x.size() == y.size() );
+
+    const size_t               n = x.size();
+    MKL::Antelope::Add<double> sum_x, sum_xx, sum_y, sum_xy;
+    for(size_t i=n;i>0;--i)
+    {
+        sum_x  << x[i];
+        sum_xx << Squared(x[i]);
+        sum_y  << y[i];
+        sum_xy << x[i] * y[i];
+    }
+
+    const double S   = n;
+    const double Sx  = sum_x.sum();
+    const double Sxx = sum_xx.sum();
+    const double Sy  = sum_y.sum();
+    const double Sxy = sum_xy.sum();
+
+    const double Delta = S * Sxx - Sx*Sx;
+    const double b = (Sxx*Sy - Sx*Sxy)/Delta;
+    const double a = (S*Sxy - Sx * Sy)/Delta;
+
+    std::cerr << "\t" << a << "*x+(" << b << ")" << std::endl;
+
+    return b;
+}
+
 Y_UTEST(dft_core)
 {
     Random::ParkMiller ran;
@@ -258,13 +291,19 @@ Y_UTEST(dft_core)
     const String fn = "dft.dat";
     OutputFile::Overwrite(fn);
 
-    const double factor = 1;
-    for(unsigned p=0;p<=10;++p)
+    const double   factor = 1;
+    const unsigned pmax   = 16;
+    Matrix<double> speed(3,pmax);
+    Vector<double> log2p(pmax,0);
+
+    for(unsigned p=1;p<=pmax;++p)
     {
         (std::cerr << "2^" << std::setw(2) << p << " = " << std::setw(5) << (1<<p)).flush();
-        float  rms32 = 0;
-        double rms64 = 0;
-        long double rmsXX = 0;
+        const double N     = (1<<p);
+        const double bigO  = N * log(N);
+        float        rms32 = 0;
+        double       rms64 = 0;
+        long double  rmsXX = 0;
 
         const double spd32 = DFT_Test<float>(p,ran,rms32);
         (std::cerr << " | <flt> " << HumanReadable( factor * spd32 ) << " (" << Formatted::Get("%8.3g",double(rms32)) << ")").flush();
@@ -277,9 +316,28 @@ Y_UTEST(dft_core)
         std::cerr << std::endl;
 
         AppendFile fp(fn);
-        fp("%u %.15g %.15g %.15g\n", p, log10(spd32), log10(spd64), log10(spdXX) );
 
+        const double rate32 = log10(spd32/bigO);
+        const double rate64 = log10(spd64/bigO);
+        const double rateXX = log10(spdXX/bigO);
+
+        fp("%u %.15g %.15g %.15g\n", p, rate32, rate64, rateXX);
+
+        log2p[p]    = p;
+        speed[1][p] = rate32;
+        speed[2][p] = rate64;
+        speed[3][p] = rateXX;
     }
+
+    const double b32 = linfit(log2p,speed[1]);
+    const double b64 = linfit(log2p,speed[2]);
+    const double bXX = linfit(log2p,speed[3]);
+
+    const double b = (sizeof(float)*b32+sizeof(double)*b64+sizeof(long double)*bXX)/(sizeof(float)+sizeof(double)+sizeof(long double));
+    std::cerr << std::endl;
+    std::cerr << "\t\tscore=" << Formatted::Get("%.15g",b) << std::endl;
+    std::cerr << std::endl;
+
 
 
 }
