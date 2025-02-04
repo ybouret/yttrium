@@ -87,7 +87,7 @@ namespace Yttrium
                 return alias.t;
             }
 
-            static Block * DFT(Block &lhs, Block &rhs);
+            static Block * FFT(Block &lhs, Block &rhs);
 
             //__________________________________________________________________
             //

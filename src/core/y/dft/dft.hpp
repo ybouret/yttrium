@@ -132,6 +132,20 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
+        //! Forward Discrete Fourier Transform of cplx[1..size]
+        //
+        //______________________________________________________________________
+        template <typename T> static inline
+        void Forward(Complex<T>   cplx[],
+                     const size_t size) noexcept
+        {
+            Transform( &cplx[1].re - 1,size,Table< typename DFT_Real<T>::Type >::PositiveSin);
+
+        }
+
+        //______________________________________________________________________
+        //
+        //
         //! Reverse Discrete Fourier Transform of data[1..2*size], times size
         //
         //______________________________________________________________________
@@ -140,6 +154,19 @@ namespace Yttrium
                      const size_t size) noexcept
         {
             Transform(data,size,Table< typename DFT_Real<T>::Type >::NegativeSin);
+        }
+
+        //______________________________________________________________________
+        //
+        //
+        //! Reverse Discrete Fourier Transform of cplx[1..size]
+        //
+        //______________________________________________________________________
+        template <typename T> static inline
+        void Reverse(Complex<T>   cplx[],
+                     const size_t size) noexcept
+        {
+            Transform( &cplx[1].re - 1,size,Table< typename DFT_Real<T>::Type >::NegativeSin);
         }
 
 
@@ -151,7 +178,6 @@ namespace Yttrium
         //______________________________________________________________________
         template <typename T> static inline
         void Unpack(T fft1[], T fft2[], const size_t n) noexcept
-
         {
             static const T half(0.5);
 
@@ -185,6 +211,12 @@ namespace Yttrium
                 fft2[j2] =  aip;
                 fft2[j3] =  rem;
             }
+        }
+
+        template <typename T> static inline
+        void Unpack(Complex<T> fft1[], Complex<T> fft2[], const size_t n) noexcept
+        {
+            Unpack( &fft1[1].re-1, &fft2[1].re-1, n );
         }
 
 
@@ -298,6 +330,55 @@ namespace Yttrium
                 data[1]=c1*((h1r=data[1])+data[2]);
                 data[2]=c1*(h1r-data[2]);
                //four1(data,n>>1,-1);
+                Reverse(data,n>>1);
+            }
+        }
+
+        template <typename T>
+        static void RealTransform(T data[], const size_t n, const int isign)
+        {
+            typedef typename DFT_Real<T>::Type long_T;
+            size_t i,i1,i2,i3,i4,np3;
+            T c1=0.5,c2,h1r,h1i,h2r,h2i;
+            long_T wr,wi,wpr,wpi,wtemp,theta;
+
+            theta=3.141592653589793/(long_T) (n>>1);
+            if (isign == 1) {
+                c2 = -0.5;
+                Forward(data,n>>1);
+            }
+            else
+            {
+                c2=0.5;
+                theta = -theta;
+            }
+
+            wtemp= sin(0.5*theta);
+            wpr  = -2.0*wtemp*wtemp;
+            wpi  = sin(theta);
+            wr=1.0+wpr;
+            wi=wpi;
+            np3=n+3;
+            for (i=2;i<=(n>>2);i++)
+            {
+                i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
+                h1r=c1*(data[i1]+data[i3]); h1i=c1*(data[i2]-data[i4]);
+                h2r = -c2*(data[i2]+data[i4]);
+                h2i=c2*(data[i1]-data[i3]);
+                data[i1] = h1r+wr*h2r-wi*h2i;
+                data[i2] = h1i+wr*h2i+wi*h2r;
+                data[i3] = h1r-wr*h2r+wi*h2i;
+                data[i4] = -h1i+wr*h2i+wi*h2r;
+                wr=(wtemp=wr)*wpr-wi*wpi+wr;
+                wi=wi*wpr+wtemp*wpi+wi;
+            }
+
+            if (isign == 1) {
+                data[1] = (h1r=data[1])+data[2];
+                data[2] = h1r-data[2];
+            } else {
+                data[1]=c1*((h1r=data[1])+data[2]);
+                data[2]=c1*(h1r-data[2]);
                 Reverse(data,n>>1);
             }
         }

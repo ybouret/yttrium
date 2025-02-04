@@ -436,7 +436,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 }
             }
 
-            static Block *DFT(const Natural &lhs, const Natural &rhs);
+            static Block *FFT(const Natural &lhs, const Natural &rhs);
 
         private:
             Y_PROXY_DECL();
