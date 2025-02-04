@@ -102,10 +102,15 @@ namespace Yttrium
                 b[1] *= a[1];
                 b[2] *= a[2];
                 for(size_t j=3;j<=nn;j+=2) {
+                    Cplx       &zb = *(Cplx *)&b[j];
+                    const Cplx &za = *(Cplx *)&a[j];
+                    zb *= za;
+#if 0
                     const size_t j1 = j+1;
                     const Real   t  = b[j];
                     b[j]  = t*a[j]  - b[j1]*a[j1];
                     b[j1] = t*a[j1] + b[j1]*a[j];
+#endif
                 }
             }
 
@@ -118,11 +123,13 @@ namespace Yttrium
 
 
 
-            const Real RX=256.0;
+            static const Real RX=256.0;
+            static const Real FX=0.00390625;
+
             Real       cy=0.0;
             for(size_t j=nn;j>=1;--j) {
                 const Real t= floor(b[j]/(nn>>1)+cy+0.5);
-                cy=(unsigned long) (t/RX);
+                cy=(unsigned long) (t*FX);
                 b[j]=t-cy*RX;
             }
             if (cy >= RX) throw Specific::Exception("Apex::FFT","precision underflow");
