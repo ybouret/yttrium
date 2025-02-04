@@ -124,7 +124,7 @@ namespace Yttrium
             }
             prod->sync();
             std::cerr << "p=" << *prod << std::endl;
-            
+
             return prod;
         }
     }

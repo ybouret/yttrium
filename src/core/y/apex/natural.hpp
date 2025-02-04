@@ -238,6 +238,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
             //! multiplication with optional timing
             static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
+            static Block *FFT(Block &lhs, Block &rhs, uint64_t * const ell);
 
             friend Natural operator *  (const Natural & lhs, const Natural & rhs); //!< lhs*rhs
             friend Natural operator *  (const Natural & lhs, const natural_t rhs); //!< lhs*rhs
