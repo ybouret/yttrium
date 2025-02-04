@@ -23,8 +23,9 @@ Y_UTEST(apex_dft)
         duration = ASCII::Convert::ToReal<long double>(argv[1],"duration");
     }
 
-    Vector<double> speed;
-    Vector<size_t> nbits;
+    Vector<double> fspeed;
+    Vector<double> mspeed;
+    Vector<size_t> bits;
 
     const String fn = "dft.dat";
     OutputFile::Overwrite(fn);
@@ -52,18 +53,43 @@ Y_UTEST(apex_dft)
             const long double fftSpeed = static_cast<long double>(cycles) / chrono(fftTMX);
             std::cerr << " | mul " << HumanReadable(mulSpeed);
             std::cerr << " | fft " << HumanReadable(fftSpeed);
+            if(fftSpeed>=mulSpeed) std::cerr << " (*)";
+
 
             std::cerr << std::endl;
 
             if(lbits==rbits)
             {
-                nbits << lbits;
-                speed << fftSpeed;
+                bits << lbits;
+                fspeed << fftSpeed;
+                mspeed << mulSpeed;
                 AppendFile fp(fn);
                 fp("%.15g %.15g %.15g\n", log10(double(lbits)), log10(double(fftSpeed)), log10(double(mulSpeed)) );
             }
-
         }
+    }
+
+    const size_t n = bits.size();
+    for(size_t i=1;i<n;++i)
+    {
+        const double f1 = fspeed[i+1];
+        const double m1 = mspeed[i+1];
+
+        if(f1>=m1)
+        {
+            std::cerr << "crossed before " << bits[i+1] << std::endl;
+            const double f0 = fspeed[i];
+            const double m0 = mspeed[i];
+            const double x0 = bits[i];
+            const double x1 = bits[i+1];
+
+            const double num = -( (m0-f0)*x1+(f1-m1)*x0 );
+            const double den = m1-m0-f1+f0;
+            const double xi = floor(num/den+0.5);;
+            std::cerr << "crossover@" << xi << std::endl;
+            break;
+        }
+
     }
 
 
