@@ -63,18 +63,24 @@ namespace Yttrium
                               uint64_t * const ell)
         {
             static Factory & factory = Factory::Instance();
-            const Jig1 & u = lhs.make<Plan1>();
-            const size_t n = u.words; if(n<=0) return factory.query(0);
-            const Jig1 & v = rhs.make<Plan1>();
-            const size_t m = v.words; if(m<=0) return factory.query(0);
+            const Jig1 & u = lhs.make<Plan1>(); const size_t n = u.words; if(n<=0) return factory.query(0);
+            const Jig1 & v = rhs.make<Plan1>(); const size_t m = v.words; if(m<=0) return factory.query(0);
 
             const bool   watch = 0!=ell;
+
+            //------------------------------------------------------------------
+            //
+            //
+            // find nn to emcompass product length
+            //
+            //
+            //------------------------------------------------------------------
             size_t       nn    = 1;
             {
                 const size_t mx    = Max(n,m);
                 while (nn < mx)
                     nn <<= 1;
-                nn <<= 1; // for product size
+                nn <<= 1;
             }
 
             uint64_t ini = 0;
@@ -82,6 +88,12 @@ namespace Yttrium
             {
                 BlockOf<Real> a(nn);
                 if(watch) ini = WallTime::Ticks();
+
+                //--------------------------------------------------------------
+                //
+                // load data
+                //
+                //--------------------------------------------------------------
                 for(size_t i=n;i>0;--i) a[i] = u.word[n-i];
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
@@ -89,6 +101,11 @@ namespace Yttrium
                 Yttrium::DFT::RealTransform(a.item, nn, 1);
                 Yttrium::DFT::RealTransform(b.item, nn, 1);
 
+                //--------------------------------------------------------------
+                //
+                // product
+                //
+                //--------------------------------------------------------------
                 b[1] *= a[1];
                 b[2] *= a[2];
                 for(size_t j=3;j<=nn;j+=2) {
@@ -98,6 +115,12 @@ namespace Yttrium
                     b[j1] = t*a[j1] + b[j1]*a[j];
                 }
             }
+
+            //------------------------------------------------------------------
+            //
+            // reverse
+            //
+            //------------------------------------------------------------------
             Yttrium::DFT::RealTransform(b.item,nn,-1);
 
 
