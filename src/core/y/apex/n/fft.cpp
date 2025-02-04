@@ -37,16 +37,7 @@ namespace Yttrium
 
                 inline T * operator()(void) noexcept { return item; }
 
-                //! load u[0..n-1]
-                template <typename U> inline
-                void load(U *u, const size_t n) noexcept
-                {
-                    T *target = item;
-                    for(size_t i=n;i>0;--i)
-                    {
-                        *(++target) = *(u++);
-                    }
-                }
+
 
             private:
                 BlockPtr     block;
@@ -64,7 +55,7 @@ namespace Yttrium
             return Formatted::Get("0x%x", unsigned( floor(x+0.5)) );
         }
 
-        
+
 
         Block * Block:: FFT(Block &lhs, Block &rhs)
         {
@@ -80,29 +71,30 @@ namespace Yttrium
                 nn <<= 1;
             nn <<= 1; // for product size
 
-            BlockOf<Real> a(nn);
+
             BlockOf<Real> b(nn);
+            {
+                BlockOf<Real> a(nn);
+                for(size_t i=n;i>0;--i) a[i] = u.word[n-i];
+                for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
-            //a.load(u.word,n);
-            //b.load(v.word,m);
-            for(size_t i=n;i>0;--i) a[i] = u.word[n-i];
-            for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
+                std::cerr << "u=" << u << std::endl;
+                std::cerr << "v=" << v << std::endl;
 
-            std::cerr << "u=" << u << std::endl;
-            std::cerr << "v=" << v << std::endl;
+                Core::Display(std::cerr << "a=", &a[1], nn, Real2Hex ) << std::endl;
+                Core::Display(std::cerr << "b=", &b[1], nn, Real2Hex ) << std::endl;
 
-            Core::Display(std::cerr << "a=", &a[1], nn, Real2Hex ) << std::endl;
-            Core::Display(std::cerr << "b=", &b[1], nn, Real2Hex ) << std::endl;
+                Yttrium::DFT::RealTransform(a.item, nn, 1);
+                Yttrium::DFT::RealTransform(b.item, nn, 1);
 
-            Yttrium::DFT::RealTransform(a.item, nn, 1);
-            Yttrium::DFT::RealTransform(b.item, nn, 1);
-
-            b[1] *= a[1];
-            b[2] *= a[2];
-            for(size_t j=3;j<=nn;j+=2) {
-                const Real t = b[j];
-                b[j]  =t*a[j]-b[j+1]*a[j+1];
-                b[j+1]=t*a[j+1]+b[j+1]*a[j];
+                b[1] *= a[1];
+                b[2] *= a[2];
+                for(size_t j=3;j<=nn;j+=2) {
+                    const size_t j1 = j+1;
+                    const Real   t  = b[j];
+                    b[j]  = t*a[j]  - b[j1]*a[j1];
+                    b[j1] = t*a[j1] + b[j1]*a[j];
+                }
             }
             Yttrium::DFT::RealTransform(b.item,nn,-1);
             Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
@@ -129,19 +121,10 @@ namespace Yttrium
                     w[j] = (uint8_t)b[mpn-j];
                 }
 
-                //w[0] = (uint8_t)cy;
-                //for (size_t j=1;j<mpn;j++)
-                  //  w[j]=(uint8_t) b[j];
-
             }
             prod->sync();
             std::cerr << "p=" << *prod << std::endl;
-#if 0
-            w[1]=(unsigned char) cy; Copy answer to output.
-            for (j=2;j<=n+m;j++)
-                w[j]=(unsigned char) b[j-1];
-#endif
-
+            
             return prod;
         }
     }
