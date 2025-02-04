@@ -25,7 +25,7 @@ namespace Yttrium
                 default:
                     break;
             }
-            return sizeof(One);
+            return 8;
         }
 
 
@@ -54,7 +54,7 @@ namespace Yttrium
                 default:
                     break;
             }
-            return sizeof(One);
+            return 16;
         }
 
         unsigned ExactShift<uint32_t>:: Of(const uint32_t x) noexcept
@@ -98,7 +98,7 @@ namespace Yttrium
                 default:
                     break;
             }
-            return sizeof(One);
+            return 32;
         }
 
 
@@ -177,7 +177,7 @@ namespace Yttrium
                 default:
                     break;
             }
-            return sizeof(One);
+            return 64;
         }
     }
 

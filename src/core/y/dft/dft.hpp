@@ -5,6 +5,7 @@
 #define Y_DFT_Included 1
 
 #include "y/mkl/complex.hpp"
+#include "y/calculus/exact-shift.hpp"
 
 
 namespace Yttrium
@@ -285,54 +286,44 @@ namespace Yttrium
             }
         }
 
-
-        static void realft(float data[], const size_t n, const int isign)
+#if 1
+        template <typename T>
+        static void RealTransformCode(T                                data[],
+                                      const T                          c2,
+                                      const typename DFT_Real<T>::Type wpr,
+                                      const typename DFT_Real<T>::Type wpi,
+                                      const size_t                     n) noexcept
         {
-            size_t i,i1,i2,i3,i4,np3;
-            float c1=0.5,c2,h1r,h1i,h2r,h2i;
-            double wr,wi,wpr,wpi,wtemp,theta;
+            typedef typename DFT_Real<T>::Type long_T;
+            static const T c1 = 0.5;
 
-            theta=3.141592653589793/(double) (n>>1);
-            if (isign == 1) {
-                c2 = -0.5;
-                Forward(data,n>>1);
-            }
-            else
+            long_T wr  = 1.0+wpr;
+            long_T wi  = wpi;
+
+            const size_t nq = n>>2;
+            const size_t np3=n+3;
+            for(size_t i=2;i<=nq;++i)
             {
-                c2=0.5;
-                theta = -theta;
-            }
-
-            wtemp= sin(0.5*theta);
-            wpr  = -2.0*wtemp*wtemp;
-            wpi  = sin(theta);
-            wr=1.0+wpr;
-            wi=wpi;
-            np3=n+3;
-            for (i=2;i<=(n>>2);i++)
-            {
-                i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
-                h1r=c1*(data[i1]+data[i3]); h1i=c1*(data[i2]-data[i4]);
-                h2r = -c2*(data[i2]+data[i4]);
-                h2i=c2*(data[i1]-data[i3]);
-                data[i1] = h1r+wr*h2r-wi*h2i;
-                data[i2] = h1i+wr*h2i+wi*h2r;
-                data[i3] = h1r-wr*h2r+wi*h2i;
-                data[i4] = -h1i+wr*h2i+wi*h2r;
-                wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                wi=wi*wpr+wtemp*wpi+wi;
-            }
-
-            if (isign == 1) {
-                data[1] = (h1r=data[1])+data[2];
-                data[2] = h1r-data[2];
-            } else {
-                data[1]=c1*((h1r=data[1])+data[2]);
-                data[2]=c1*(h1r-data[2]);
-               //four1(data,n>>1,-1);
-                Reverse(data,n>>1);
+                const size_t i1 = (i<<1)-1;
+                const size_t i2 = i1+1;
+                const size_t i3 = np3-i2;
+                const size_t i4 = 1+i3;
+                {
+                    const T h1r =  c1*(data[i1]+data[i3]);
+                    const T h1i =  c1*(data[i2]-data[i4]);
+                    const T h2r = -c2*(data[i2]+data[i4]);
+                    const T h2i =  c2*(data[i1]-data[i3]);
+                    data[i1] = h1r+wr*h2r-wi*h2i;
+                    data[i2] = h1i+wr*h2i+wi*h2r;
+                    data[i3] = h1r-wr*h2r+wi*h2i;
+                    data[i4] = -h1i+wr*h2i+wi*h2r;
+                }
+                const long_T wt = wr;
+                wr=wr*wpr-wi*wpi+wr;
+                wi=wi*wpr+wt*wpi+wi;
             }
         }
+#endif
 
         template <typename T>
         static void RealTransform(T            data[],
@@ -341,49 +332,64 @@ namespace Yttrium
         {
             assert(n>=2);
             typedef typename DFT_Real<T>::Type long_T;
-            size_t i,i1,i2,i3,i4;
-            T c1=0.5,c2,h1r,h1i,h2r,h2i;
-            long_T wr,wi,wpr,wpi,wtemp,theta;
+            static const T c1 = 0.5;
+            T c2;
+            long_T wpi;//,wtemp;//,theta;
 
-            const size_t nh = n>>1;
-            theta=3.141592653589793/(long_T) (nh);
+            const size_t   nh = n>>1;
+            const unsigned ns = ExactShift(nh);
             if (isign == 1) {
                 c2 = -0.5;
                 Forward(data,nh);
+                //wtemp = Table<long_T>::PositiveSin[ns+1];
+                wpi   = Table<long_T>::PositiveSin[ns];
             }
             else
             {
-                c2=0.5;
-                theta = -theta;
+                c2    = 0.5;
+                //wtemp = Table<long_T>::NegativeSin[ns+1];
+                wpi   = Table<long_T>::NegativeSin[ns];
             }
+
+            long_T wpr = Table<long_T>::CosMinusOne[ns];
+
+            RealTransformCode(data,c2,wpr,wpi,n);
+
+#if 0
+            long_T wr  = 1.0+wpr;
+            long_T wi  = wpi;
 
             const size_t nq = n>>2;
-            wtemp = sin(0.5*theta);
-            wpr   = -2.0*wtemp*wtemp;
-            wpi   = sin(theta);
-            wr    = 1.0+wpr;
-            wi    = wpi;
             const size_t np3=n+3;
-            for(i=2;i<=nq;++i)
+            for(size_t i=2;i<=nq;++i)
             {
-                i4=1+(i3=np3-(i2=1+(i1=i+i-1)));
-                h1r=c1*(data[i1]+data[i3]);
-                h1i=c1*(data[i2]-data[i4]);
-                h2r = -c2*(data[i2]+data[i4]);
-                h2i=c2*(data[i1]-data[i3]);
-                data[i1] = h1r+wr*h2r-wi*h2i;
-                data[i2] = h1i+wr*h2i+wi*h2r;
-                data[i3] = h1r-wr*h2r+wi*h2i;
-                data[i4] = -h1i+wr*h2i+wi*h2r;
-                wr=(wtemp=wr)*wpr-wi*wpi+wr;
-                wi=wi*wpr+wtemp*wpi+wi;
+                const size_t i1 = (i<<1)-1;
+                const size_t i2 = i1+1;
+                const size_t i3 = np3-i2;
+                const size_t i4 = 1+i3;
+                {
+                    const T h1r =  c1*(data[i1]+data[i3]);
+                    const T h1i =  c1*(data[i2]-data[i4]);
+                    const T h2r = -c2*(data[i2]+data[i4]);
+                    const T h2i =  c2*(data[i1]-data[i3]);
+                    data[i1] = h1r+wr*h2r-wi*h2i;
+                    data[i2] = h1i+wr*h2i+wi*h2r;
+                    data[i3] = h1r-wr*h2r+wi*h2i;
+                    data[i4] = -h1i+wr*h2i+wi*h2r;
+                }
+                const long_T wt=wr;
+                wr=wt*wpr-wi*wpi+wr;
+                wi=wi*wpr+wt*wpi+wi;
             }
+#endif
 
             if (isign == 1) {
-                data[1] = (h1r=data[1])+data[2];
+                const T h1r = data[1];
+                data[1] = h1r+data[2];
                 data[2] = h1r-data[2];
             } else {
-                data[1]=c1*((h1r=data[1])+data[2]);
+                const T h1r = data[1];
+                data[1]=c1*(h1r+data[2]);
                 data[2]=c1*(h1r-data[2]);
                 Reverse(data,nh);
             }
