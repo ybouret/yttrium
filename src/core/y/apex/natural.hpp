@@ -438,10 +438,10 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             }
 
             static Natural FFT(const Natural &lhs, const Natural &rhs);
+            Natural(Block * const, const AsBlock_ &);
 
         private:
             Y_PROXY_DECL();
-            Natural(Block * const, const AsBlock_ &);
             mutable BlockPtr block;
             mutable MutexPtr mutex;
 

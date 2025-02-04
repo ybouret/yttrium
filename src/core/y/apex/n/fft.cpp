@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/dft/dft.hpp"
 #include "y/system/exception.hpp"
+#include "y/system/wtime.hpp"
 
 namespace Yttrium
 {
@@ -57,7 +58,9 @@ namespace Yttrium
 
 
 
-        Block * Block:: FFT(Block &lhs, Block &rhs)
+        Block * Natural:: FFT(Block &          lhs,
+                              Block &          rhs,
+                              uint64_t * const ell)
         {
             static Factory & factory = Factory::Instance();
             const Jig1 & u = lhs.make<Plan1>();
@@ -65,24 +68,23 @@ namespace Yttrium
             const Jig1 & v = rhs.make<Plan1>();
             const size_t m = v.words; if(m<=0) return factory.query(0);
 
-            const size_t mx = Max(n,m);
-            size_t       nn = 1;
-            while (nn < mx)
-                nn <<= 1;
-            nn <<= 1; // for product size
+            const bool   watch = 0!=ell;
+            size_t       nn    = 1;
+            {
+                const size_t mx    = Max(n,m);
+                while (nn < mx)
+                    nn <<= 1;
+                nn <<= 1; // for product size
+            }
 
-
+            uint64_t ini = 0;
             BlockOf<Real> b(nn);
             {
                 BlockOf<Real> a(nn);
+                if(watch) ini = WallTime::Ticks();
                 for(size_t i=n;i>0;--i) a[i] = u.word[n-i];
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
-                std::cerr << "u=" << u << std::endl;
-                std::cerr << "v=" << v << std::endl;
-
-                Core::Display(std::cerr << "a=", &a[1], nn, Real2Hex ) << std::endl;
-                Core::Display(std::cerr << "b=", &b[1], nn, Real2Hex ) << std::endl;
 
                 Yttrium::DFT::RealTransform(a.item, nn, 1);
                 Yttrium::DFT::RealTransform(b.item, nn, 1);
@@ -97,7 +99,7 @@ namespace Yttrium
                 }
             }
             Yttrium::DFT::RealTransform(b.item,nn,-1);
-            Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
+
 
 
             const Real RX=256.0;
@@ -107,11 +109,11 @@ namespace Yttrium
                 cy=(unsigned long) (t/RX);
                 b[j]=t-cy*RX;
             }
-            if (cy >= RX) throw Specific::Exception("Apex::DFT","precision underflow");
-            Core::Display(std::cerr << "b=", &b[1], nn) << std::endl;
-            std::cerr << "cy=" << cy << std::endl;
+            if (cy >= RX) throw Specific::Exception("Apex::FFT","precision underflow");
 
-            const size_t    mpn = m+n;
+
+            if(watch)      *ell += WallTime::Ticks() - ini;
+            const size_t    mpn  = m+n;
             Block *         prod = factory.queryBytes(mpn);
             {
                 uint8_t * const w = prod->make<Plan1>().word-1;
@@ -120,11 +122,8 @@ namespace Yttrium
                 {
                     w[j] = (uint8_t)b[mpn-j];
                 }
-
             }
             prod->sync();
-            std::cerr << "p=" << *prod << std::endl;
-
             return prod;
         }
     }
@@ -139,7 +138,7 @@ namespace Yttrium
         {
             Y_Apex_Lock(lhs);
             Y_Apex_Lock(rhs);
-            return Natural(Block::FFT(*lhs.block,*rhs.block),AsBlock);
+            return Natural( FFT(*lhs.block,*rhs.block,0),AsBlock);
         }
     }
 }
