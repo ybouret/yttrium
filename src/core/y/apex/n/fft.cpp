@@ -126,13 +126,15 @@ namespace Yttrium
             static const Real RX=256.0;
             static const Real FX=0.00390625;
 
-            Real       cy=0.0;
-            for(size_t j=nn;j>=1;--j) {
-                const Real t= floor(b[j]/(nn>>1)+cy+0.5);
-                cy=(unsigned long) (t*FX);
-                b[j]=t-cy*RX;
+            Real       carry  = 0.0;
+            const Real denom = (nn>>1);
+            for(size_t j=nn;j>=1;--j)
+            {
+                const Real t= floor(b[j]/denom+carry+0.5);
+                carry=(unsigned long) (t*FX);
+                b[j]=t-carry*RX;
             }
-            if (cy >= RX) throw Specific::Exception("Apex::FFT","precision underflow");
+            if (carry >= RX) throw Specific::Exception("Apex::FFT","precision underflow");
 
 
             if(watch)      *ell += WallTime::Ticks() - ini;
@@ -140,7 +142,7 @@ namespace Yttrium
             Block *         prod = factory.queryBytes(mpn);
             {
                 uint8_t * const w = prod->make<Plan1>().word-1;
-                w[mpn] = (uint8_t)cy;
+                w[mpn] = (uint8_t)carry;
                 for(size_t j=1;j<mpn;++j)
                 {
                     w[j] = (uint8_t)b[mpn-j];
