@@ -56,6 +56,14 @@ namespace Yttrium
             }
         }
 
+
+        static inline
+        String Real2Hex(const Real x)
+        {
+            const unsigned u = unsigned( floor(x+0.5) );
+            return Formatted::Get("0x%x",u);
+        }
+
         Block * Block:: DFT(Block &lhs, Block &rhs)
         {
             static Factory & factory = Factory::Instance();
@@ -90,7 +98,8 @@ namespace Yttrium
 
             std::cerr << "a=" << a << std::endl;
             std::cerr << "b=" << b << std::endl;
-            Core::Display(std::cerr, &L[1], required) << std::endl;
+            Core::Display(std::cerr, &L[1], required, Real2Hex) << std::endl;
+
 
 
             // transform
