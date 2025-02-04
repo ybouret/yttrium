@@ -193,7 +193,7 @@ namespace Yttrium
                 const size_t j1  = j+1;
                 const size_t j2  = nn2-j;
                 const size_t j3  = nn3-j;
-                
+
                 const T      A   = fft1[j];
                 const T      B   = fft1[j2];
                 const T      rep =  half*(A+B);
@@ -286,13 +286,13 @@ namespace Yttrium
             }
         }
 
-#if 1
-        template <typename T>
-        static void RealTransformCode(T                                data[],
-                                      const T                          c2,
-                                      const typename DFT_Real<T>::Type wpr,
-                                      const typename DFT_Real<T>::Type wpi,
-                                      const size_t                     n) noexcept
+    private:
+        template <typename T> static inline
+        void RealProcess(T                                data[],
+                         const T                          c2,
+                         const typename DFT_Real<T>::Type wpr,
+                         const typename DFT_Real<T>::Type wpi,
+                         const size_t                     n) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
             static const T c1 = 0.5;
@@ -323,71 +323,63 @@ namespace Yttrium
                 wi=wi*wpr+wt*wpi+wi;
             }
         }
-#endif
 
-        template <typename T>
-        static void RealTransform(T            data[],
-                                  const size_t n,
-                                  const int    isign)
+    public:
+        template <typename T> static inline
+        void RealForward(T            data[],
+                         const size_t n)
+        {
+            assert(n>=2);
+            typedef typename DFT_Real<T>::Type long_T;
+            static const T c2 = -0.5;
+
+
+            //------------------------------------------------------------------
+            // prolog
+            //------------------------------------------------------------------
+            const size_t   nh = n>>1;
+            const unsigned ns = ExactShift(nh);
+            Forward(data,nh);
+
+            //------------------------------------------------------------------
+            // process
+            //------------------------------------------------------------------
+            RealProcess(data,c2,Table<long_T>::CosMinusOne[ns],Table<long_T>::PositiveSin[ns],n);
+
+            //------------------------------------------------------------------
+            // epilog
+            //------------------------------------------------------------------
+            {
+                const T h1r = data[1];
+                data[1] = h1r+data[2];
+                data[2] = h1r-data[2];
+            }
+        }
+
+        template <typename T> static inline
+        void RealReverse(T            data[],
+                         const size_t n)
         {
             assert(n>=2);
             typedef typename DFT_Real<T>::Type long_T;
             static const T c1 = 0.5;
-            T c2;
-            long_T wpi;//,wtemp;//,theta;
+            static const T c2 = 0.5;
 
+            //------------------------------------------------------------------
+            // prolog
+            //------------------------------------------------------------------
             const size_t   nh = n>>1;
             const unsigned ns = ExactShift(nh);
-            if (isign == 1) {
-                c2 = -0.5;
-                Forward(data,nh);
-                //wtemp = Table<long_T>::PositiveSin[ns+1];
-                wpi   = Table<long_T>::PositiveSin[ns];
-            }
-            else
+
+            //------------------------------------------------------------------
+            // process
+            //------------------------------------------------------------------
+            RealProcess(data,c2,Table<long_T>::CosMinusOne[ns],Table<long_T>::NegativeSin[ns],n);
+
+            //------------------------------------------------------------------
+            // epilog
+            //------------------------------------------------------------------
             {
-                c2    = 0.5;
-                //wtemp = Table<long_T>::NegativeSin[ns+1];
-                wpi   = Table<long_T>::NegativeSin[ns];
-            }
-
-            long_T wpr = Table<long_T>::CosMinusOne[ns];
-
-            RealTransformCode(data,c2,wpr,wpi,n);
-
-#if 0
-            long_T wr  = 1.0+wpr;
-            long_T wi  = wpi;
-
-            const size_t nq = n>>2;
-            const size_t np3=n+3;
-            for(size_t i=2;i<=nq;++i)
-            {
-                const size_t i1 = (i<<1)-1;
-                const size_t i2 = i1+1;
-                const size_t i3 = np3-i2;
-                const size_t i4 = 1+i3;
-                {
-                    const T h1r =  c1*(data[i1]+data[i3]);
-                    const T h1i =  c1*(data[i2]-data[i4]);
-                    const T h2r = -c2*(data[i2]+data[i4]);
-                    const T h2i =  c2*(data[i1]-data[i3]);
-                    data[i1] = h1r+wr*h2r-wi*h2i;
-                    data[i2] = h1i+wr*h2i+wi*h2r;
-                    data[i3] = h1r-wr*h2r+wi*h2i;
-                    data[i4] = -h1i+wr*h2i+wi*h2r;
-                }
-                const long_T wt=wr;
-                wr=wt*wpr-wi*wpi+wr;
-                wi=wi*wpr+wt*wpi+wi;
-            }
-#endif
-
-            if (isign == 1) {
-                const T h1r = data[1];
-                data[1] = h1r+data[2];
-                data[2] = h1r-data[2];
-            } else {
                 const T h1r = data[1];
                 data[1]=c1*(h1r+data[2]);
                 data[2]=c1*(h1r-data[2]);
@@ -395,7 +387,9 @@ namespace Yttrium
             }
         }
 
-        
+
+
+
 
 
     };

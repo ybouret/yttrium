@@ -91,8 +91,8 @@ namespace Yttrium
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
 
-                DFT::RealTransform(a.item, nn, 1);
-                DFT::RealTransform(b.item, nn, 1);
+                DFT::RealForward(a.item, nn);
+                DFT::RealForward(b.item, nn);
 
                 //--------------------------------------------------------------
                 //
@@ -114,7 +114,7 @@ namespace Yttrium
             // reverse
             //
             //------------------------------------------------------------------
-            DFT::RealTransform(b.item,nn,-1);
+            DFT::RealReverse(b.item,nn);
 
 
 
