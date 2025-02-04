@@ -50,14 +50,7 @@ namespace Yttrium
             };
         }
 
-
-        static inline String Real2Hex(const Real x)
-        {
-            return Formatted::Get("0x%x", unsigned( floor(x+0.5)) );
-        }
-
-
-
+        
         Block * Natural:: FFT(Block &          lhs,
                               Block &          rhs,
                               uint64_t * const ell)
@@ -75,7 +68,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            size_t       nn    = 1;
+            size_t       nn    = 2; // to use RealTransform
             {
                 const size_t mx    = Max(n,m);
                 while (nn < mx)
