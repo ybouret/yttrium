@@ -101,6 +101,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(calculus_gray);
     Y_UTEST(calculus_prime);
     Y_UTEST(calculus_prime32);
+    Y_UTEST(calculus_exact_shift);
 
 
     Y_UTEST(concurrent_mutex);

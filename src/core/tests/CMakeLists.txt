@@ -157,6 +157,7 @@ add_test(calculus:xlog2   test-core calculus_xlog2)
 add_test(calculus:gray    test-core calculus_gray)
 add_test(calculus:prime   test-core calculus_prime)
 add_test(calculus:prime32 test-core calculus_prime32)
+add_test(calculus:xshift  test-core calculus_exact_shift)
 
 
 
