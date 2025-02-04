@@ -64,10 +64,7 @@ namespace Yttrium
             return Formatted::Get("0x%x", unsigned( floor(x+0.5)) );
         }
 
-        static inline String Cplx2Hex(const Cplx z)
-        {
-            return '(' + Real2Hex(z.re) + ',' + Real2Hex(z.im) + ')';
-        }
+        
 
         Block * Block:: FFT(Block &lhs, Block &rhs)
         {
@@ -155,11 +152,11 @@ namespace Yttrium
 {
     namespace Apex
     {
-        Block * Natural:: FFT(const Natural &lhs, const Natural &rhs)
+        Natural Natural:: FFT(const Natural &lhs, const Natural &rhs)
         {
             Y_Apex_Lock(lhs);
             Y_Apex_Lock(rhs);
-            return Block::FFT(*lhs.block,*rhs.block);
+            return Natural(Block::FFT(*lhs.block,*rhs.block),AsBlock);
         }
     }
 }

@@ -14,8 +14,9 @@ Y_UTEST(apex_dft)
         a = argv[1];
         b = argv[2];
     }
-    const BlockPtr ptr( Natural::FFT(a,b) );
-    std::cerr << "p=" << (a*b).toHex() << " = " << (a*b).toDec() << std::endl;
+    const Natural mul = a*b;
+    const Natural dft = Natural::FFT(a,b);
+    std::cerr << "mul=" << mul.toHex() << " / dft=" << dft.toHex() << std::endl;
 }
 Y_UDONE()
 
