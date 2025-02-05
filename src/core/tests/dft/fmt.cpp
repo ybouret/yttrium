@@ -73,6 +73,17 @@ namespace
     }
 }
 
+#include "y/text/plural.hpp"
+
+namespace
+{
+    static const uint16_t Table[3][2] =
+    {
+        { 2,3 },
+        { 5,7 },
+        { 11,13}
+    };
+}
 
 Y_UTEST(dft_fmt)
 {
@@ -95,9 +106,17 @@ Y_UTEST(dft_fmt)
         std::cerr << " maxBits=" << std::setw(2) << maxBits;
         std::cerr << " useBits=" << std::setw(2) << useBits;
         std::cerr << " useWord=" << std::setw(2) << useWord;
-        std::cerr << " useRoom=" << std::setw(7) << useRoom << " bytes";
+        std::cerr << " useRoom=" << std::setw(7) << useRoom << " byte" << Plural::s(useRoom);
         std::cerr << std::endl;
     }
+
+    for(size_t i=0;i<3;++i)
+    {
+        const uint16_t * const t = Table[i];
+        Core::Display(std::cerr,t,2) << std::endl;
+    }
+
+
 }
 Y_UDONE()
 
