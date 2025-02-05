@@ -99,6 +99,17 @@ namespace Yttrium
 
         }
 
+        Natural & Natural:: plan(const Plan p) noexcept
+        {
+            block->to(p);
+            return *this;
+        }
+
+        Natural & Natural:: plan(Random::Bits &ran) noexcept
+        {
+            const unsigned p = ran.in<unsigned>(Plan1,Plan8);
+            return plan( Plan(p) );
+        }
 
         Lockable & Natural:: access() const noexcept
         {

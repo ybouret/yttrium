@@ -49,10 +49,8 @@ Y_UTEST(apex_add)
         {
             for(unsigned rbits=lbits;rbits<=maxBits; rbits <<=1)
             {
-                const uint64_t ini    = WallTime::Ticks();
-                uint64_t       end    = ini;
+                const uint64_t start  = WallTime::Ticks();
                 size_t         cycles = 0;
-                double         timing = 0;
                 do
                 {
                     ++cycles;
@@ -61,7 +59,11 @@ Y_UTEST(apex_add)
                     for(unsigned i=0;i<Natural::NumOps;++i)
                     {
                         Ops      addOps = Natural::OpsTable[i];
-                        BlockPtr sum    = Natural::Add( *lhs, *rhs, addOps, &tmx[i]);
+                        lhs.plan(ran);
+                        rhs.plan(ran);
+                        const    uint64_t mark = WallTime::Ticks();
+                        BlockPtr sum    = Natural::Add( *lhs, *rhs, addOps);
+                        tmx[i] += WallTime::Ticks() - mark;
                         if(lbits<=63&&rbits<=63)
                         {
                             const uint64_t l64 = lhs.lsw();
@@ -70,10 +72,8 @@ Y_UTEST(apex_add)
                             Y_ASSERT( s64 == sum->make<Plan8>().word[0] );
                         }
                     }
-                    end    = WallTime::Ticks();
-                    timing = chrono(end-ini);
                 }
-                while(  timing < duration );
+                while( chrono.since(start) < duration );
 
                 for(unsigned i=0;i<Natural::NumOps;++i)
                 {

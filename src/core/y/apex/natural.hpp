@@ -151,9 +151,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Access
             //
             //__________________________________________________________________
-            Lockable & access()     const noexcept; //!< internal mutex access
-            uint64_t      lsw()     const noexcept; //!< least significant 64bits word
-            Natural &     xch(Natural &)  noexcept; //!< no-throw exchange
+            Lockable & access()     const      noexcept; //!< internal mutex access
+            uint64_t      lsw()     const      noexcept; //!< least significant 64bits word
+            Natural &     xch(Natural &)       noexcept; //!< no-throw exchange
+            Natural &     plan(const Plan p)   noexcept; //!< set internal Plan
+            Natural &     plan(Random::Bits &) noexcept; //!< set internal random plan
 
             //__________________________________________________________________
             //
@@ -200,7 +202,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
 
             //! add with optional timing
-            static Block *Add(Block &lhs, Block &rhs, const Ops addOps, uint64_t * const ell);
+            static Block *Add(Block &lhs, Block &rhs, const Ops addOps);
 
             friend Natural operator +  (const Natural & lhs, const Natural & rhs); //!< lhs+rhs
             friend Natural operator +  (const Natural & lhs, const natural_t rhs); //!< lhs+rhs

@@ -2,7 +2,6 @@
 
 #include "y/apex/block/factory.hpp"
 #include "y/check/static.hpp"
-#include "y/system/wtime.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium
@@ -26,11 +25,10 @@ namespace Yttrium
                 Block * Get(const WordType * const lw,
                             const size_t           ln,
                             const WordType * const rw,
-                            const size_t           rn,
-                            uint64_t * const       ell)
+                            const size_t           rn)
                 {
                     Y_STATIC_CHECK(sizeof(WordType)<sizeof(CoreType),InvalidAddPlan);
-                    return (ln>=rn) ? Impl(lw,ln,rw,rn,ell) : Impl(rw,rn,lw,ln,ell);
+                    return (ln>=rn) ? Impl(lw,ln,rw,rn) : Impl(rw,rn,lw,ln);
                 }
                 
             private:
@@ -38,8 +36,7 @@ namespace Yttrium
                 Block * Impl(const WordType *       bigWord,
                              const size_t           bigSize,
                              const WordType *       litWord,
-                             const size_t           litSize,
-                             uint64_t * const       ell)
+                             const size_t           litSize)
                 {
                     static Factory &factory = Factory::Instance();
                     const size_t    resSize = bigSize+1;
@@ -51,8 +48,6 @@ namespace Yttrium
                             WordType * sum = jig.word;
                             CoreType   acc = 0;
                             
-                            const bool     watch = 0!=ell;
-                            const uint64_t mark  = watch ? WallTime::Ticks() : 0;
                             for(size_t i=litSize;i>0;--i)
                             {
                                 acc     += static_cast<const CoreType>(*(litWord++)) + static_cast<const CoreType>(*(bigWord++));
@@ -68,9 +63,8 @@ namespace Yttrium
                             }
                             
                             *sum = static_cast<const WordType>(acc);
-                            if(watch) *ell += WallTime::Ticks() - mark;
                         }
-                        
+
                         block->sync();
                         return block;
                     }
@@ -85,44 +79,44 @@ namespace Yttrium
             
         }
 
-        Block * Natural:: Add(Block &lhs, Block &rhs, const Ops addOps, uint64_t * const ell)
+        Block * Natural:: Add(Block &lhs, Block &rhs, const Ops addOps)
         {
             switch(addOps)
             {
                 case Ops2_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigAdd<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigAdd<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigAdd<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigAdd<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigAdd<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_4: {
                     const  Jig4 &l = lhs.make<Plan4>();
                     const  Jig4 &r = rhs.make<Plan4>();
-                    return JigAdd<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigAdd<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words);
                 }
 
             }
@@ -132,7 +126,7 @@ namespace Yttrium
 
         Block * Natural:: Add(Block &lhs, Block &rhs)
         {
-            return Add(lhs,rhs,AddOps,0);
+            return Add(lhs,rhs,AddOps);
         }
 
         Block * Natural:: Add(Block &lhs, natural_t rhs) {
@@ -140,7 +134,7 @@ namespace Yttrium
             const   Jig4      &l = lhs.make<Plan4>();
             size_t             w = 0;
             const void * const q = Block::To(Plan4,rhs,w);
-            return JigAdd<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w,0);
+            return JigAdd<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w);
         }
 
 
@@ -186,7 +180,7 @@ namespace Yttrium
             typedef Jig4::Word Word;
             static const Word rhs = 0x01;
             Jig4             &lhs = block->make<Plan4>();
-            BlockPtr res(  JigAdd<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1,0) );
+            BlockPtr res(  JigAdd<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1) );
             block.swp(res);
         }
 
