@@ -520,6 +520,21 @@ namespace Yttrium
         }
 
     private:
+
+#define Y_DFT_RealProcess(DATA)    \
+const T d1  = DATA[i1];            \
+const T d2  = DATA[i2];            \
+const T d3  = DATA[i3];            \
+const T d4  = DATA[i4];            \
+const T h1r =  c1*(d1+d3);         \
+const T h1i =  c1*(d2-d4);         \
+const T h2r = -c2*(d2+d4);         \
+const T h2i =  c2*(d1-d3);         \
+DATA[i1] =  h1r + wr*h2r-wi*h2i; \
+DATA[i2] =  h1i + wr*h2i+wi*h2r; \
+DATA[i3] =  h1r - wr*h2r+wi*h2i; \
+DATA[i4] = -h1i + wr*h2i+wi*h2r
+
         template <typename T> static inline
         void RealProcess(T                                data[],
                          const T                          c2,
@@ -542,19 +557,9 @@ namespace Yttrium
                 const size_t i3 = np3-i2;
                 const size_t i4 = 1+i3;
                 {
-                    const T d1  = data[i1];
-                    const T d2  = data[i2];
-                    const T d3  = data[i3];
-                    const T d4  = data[i4];
-                    const T h1r =  c1*(d1+d3);
-                    const T h1i =  c1*(d2-d4);
-                    const T h2r = -c2*(d2+d4);
-                    const T h2i =  c2*(d1-d3);
-                    data[i1] =  h1r + wr*h2r-wi*h2i;
-                    data[i2] =  h1i + wr*h2i+wi*h2r;
-                    data[i3] =  h1r - wr*h2r+wi*h2i;
-                    data[i4] = -h1i + wr*h2i+wi*h2r;
+                    Y_DFT_RealProcess(data);
                 }
+
                 const long_T wt = wr;
                 wr=(wr*wpr-wi*wpi)+wr;
                 wi=(wi*wpr+wt*wpi)+wi;
@@ -584,32 +589,10 @@ namespace Yttrium
                 const size_t i3 = np3-i2;
                 const size_t i4 = 1+i3;
                 {
-                    const T d1  = data1[i1];
-                    const T d2  = data1[i2];
-                    const T d3  = data1[i3];
-                    const T d4  = data1[i4];
-                    const T h1r =  c1*(d1+d3);
-                    const T h1i =  c1*(d2-d4);
-                    const T h2r = -c2*(d2+d4);
-                    const T h2i =  c2*(d1-d3);
-                    data1[i1] =  h1r + wr*h2r-wi*h2i;
-                    data1[i2] =  h1i + wr*h2i+wi*h2r;
-                    data1[i3] =  h1r - wr*h2r+wi*h2i;
-                    data1[i4] = -h1i + wr*h2i+wi*h2r;
+                    Y_DFT_RealProcess(data1);
                 }
                 {
-                    const T d1  = data2[i1];
-                    const T d2  = data2[i2];
-                    const T d3  = data2[i3];
-                    const T d4  = data2[i4];
-                    const T h1r =  c1*(d1+d3);
-                    const T h1i =  c1*(d2-d4);
-                    const T h2r = -c2*(d2+d4);
-                    const T h2i =  c2*(d1-d3);
-                    data2[i1] =  h1r + wr*h2r-wi*h2i;
-                    data2[i2] =  h1i + wr*h2i+wi*h2r;
-                    data2[i3] =  h1r - wr*h2r+wi*h2i;
-                    data2[i4] = -h1i + wr*h2i+wi*h2r;
+                    Y_DFT_RealProcess(data2);
                 }
                 const long_T wt = wr;
                 wr=(wr*wpr-wi*wpi)+wr;
