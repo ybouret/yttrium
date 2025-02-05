@@ -13,7 +13,7 @@ namespace Yttrium
 
         namespace
         {
-            typedef double Real;
+            typedef double        Real;
             typedef Complex<Real> Cplx;
 
             template <typename T>
@@ -68,7 +68,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            size_t       nn    = 2; // to use RealTransform
+            size_t       nn    = 2; // minimal to use RealTransform
             {
                 const size_t mx    = Max(n,m);
                 while (nn < mx)

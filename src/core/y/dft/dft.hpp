@@ -53,6 +53,25 @@ namespace Yttrium
             { const T t(*lhs); *(lhs)   = *rhs; *rhs     = t; }
         }
 
+        template <typename T> static inline
+        size_t Format(T data[], const size_t size) noexcept
+        {
+            const size_t n = size << 1;
+            for(size_t i=1,j=1;i<n;i+=2)
+            {
+                if(j>i)
+                    Swap2(data+i,data+j);
+                size_t m=size;
+                while( (m >= 2) && (j > m) )
+                {
+                    j -= m;
+                    m >>= 1;
+                }
+                j += m;
+            }
+            return n;
+        }
+
         //______________________________________________________________________
         //
         //
@@ -70,6 +89,8 @@ namespace Yttrium
                        const typename DFT_Real<T>::Type SinTable[]) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
+
+#if 0
             const size_t n = size << 1;
             for(size_t i=1,j=1;i<n;i+=2)
             {
@@ -83,7 +104,9 @@ namespace Yttrium
                 }
                 j += m;
             }
+#endif
 
+            const  size_t n = Format(data,size);
             size_t mmax=2;
             size_t indx=0; // mmax/2 = 2^indx
             while(n>mmax)

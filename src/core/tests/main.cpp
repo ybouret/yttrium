@@ -296,5 +296,6 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_q);
 
     Y_UTEST(dft_core);
+    Y_UTEST(dft_fmt);
 }
 Y_UTEST_EXEC()

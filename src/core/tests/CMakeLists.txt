@@ -379,4 +379,6 @@ add_test(apex:q     test-core apex_q)
 
 #dft
 add_test(dft:core test-core dft_core)
+add_test(dft:fmt  test-core dft_fmt)
+
 
