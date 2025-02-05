@@ -223,7 +223,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
 
             //! low-level subtraction
-            static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps, uint64_t * const ell); //!< lhs-rhs, with optional timing
+            static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps);
             friend Natural operator -  (const Natural & lhs, const Natural & rhs); //!< lhs-rhs
             friend Natural operator -  (const Natural & lhs, const natural_t rhs); //!< lhs-rhs
             friend Natural operator -  (const natural_t lhs, const Natural & rhs); //!< lhs-rhs

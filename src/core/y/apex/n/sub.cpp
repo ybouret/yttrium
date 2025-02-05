@@ -29,8 +29,7 @@ namespace Yttrium
                 Block * Get(const WordType *       lw,
                             const size_t           ln,
                             const WordType *       rw,
-                            const size_t           rn,
-                            uint64_t * const       ell)
+                            const size_t           rn)
                 {
                     Y_STATIC_CHECK(sizeof(WordType)<sizeof(CarryType),InvalidSubPlan);
                     
@@ -45,8 +44,6 @@ namespace Yttrium
                         JigType  &       j   = block->make<PLAN>(); assert(block->curr == &j);
                         WordType *       d   = j.word;
                         CarryType        cr  = 0;
-                        const bool       watch = (0!=ell);
-                        const uint64_t   ini   = watch ? WallTime::Ticks() : 0;
 
                         //----------------------------------------------------------
                         //
@@ -91,7 +88,6 @@ namespace Yttrium
                         if(cr<0)
                             throw Libc::Exception(EDOM, "Apex::Sub(lhs<rhs) Level-2");
 
-                        if(watch) *ell += WallTime::Ticks() - ini;
 
                         block->sync();
                         return block;
@@ -110,45 +106,44 @@ namespace Yttrium
 
         Block * Natural:: Sub(Block    &lhs,
                               Block    &rhs,
-                              const Ops addOps,
-                              uint64_t * const ell)
+                              const Ops addOps)
         {
             switch(addOps)
             {
                 case Ops2_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigSub<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigSub<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigSub<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigSub<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigSub<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_4: {
                     const  Jig4 &l = lhs.make<Plan4>();
                     const  Jig4 &r = rhs.make<Plan4>();
-                    return JigSub<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigSub<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words);
                 }
 
             }
@@ -162,7 +157,7 @@ namespace Yttrium
         {
             volatile Natural::AutoLock L(lhs);
             volatile Natural::AutoLock R(rhs);
-            return Natural( Natural::Sub(*lhs.block, *rhs.block, Natural::AddOps,0), AsBlock);
+            return Natural( Natural::Sub(*lhs.block, *rhs.block, Natural::AddOps), AsBlock);
         }
 
         Block * Natural:: Sub(Block &lhs, natural_t rhs)
@@ -171,7 +166,7 @@ namespace Yttrium
             const   Jig4      &l = lhs.make<Plan4>();
             size_t             w = 0;
             const void * const q = Block::To(Plan4,rhs,w);
-            return JigSub<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w,0);
+            return JigSub<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w);
         }
 
         Block * Natural:: Sub(natural_t lhs, Block &rhs)
@@ -180,7 +175,7 @@ namespace Yttrium
             const   Jig4      &r = rhs.make<Plan4>();
             size_t             w = 0;
             const void * const q = Block::To(Plan4,lhs,w);
-            return JigSub<Plan8,Plan4>::Get(static_cast<const Word *>(q),w,r.word,r.words,0);
+            return JigSub<Plan8,Plan4>::Get(static_cast<const Word *>(q),w,r.word,r.words);
         }
 
         Natural operator-(const Natural & lhs, const natural_t rhs)
@@ -199,7 +194,7 @@ namespace Yttrium
         {
             volatile Natural::AutoLock R(rhs);
             {
-                BlockPtr tmp( Sub(*block,*rhs.block,Natural::AddOps,0) );
+                BlockPtr tmp( Sub(*block,*rhs.block,Natural::AddOps) );
                 block.swp(tmp);
             }
             return *this;
@@ -217,7 +212,7 @@ namespace Yttrium
             typedef Jig4::Word Word;
             static const Word rhs = 0x01;
             Jig4             &lhs = block->make<Plan4>();
-            BlockPtr res(  JigSub<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1,0) );
+            BlockPtr res(  JigSub<Plan8,Plan4>::Get(lhs.word,lhs.words,&rhs,1) );
             block.swp(res);
         }
 

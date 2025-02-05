@@ -48,10 +48,15 @@ Y_UTEST(apex_sub)
                 if(rhs>lhs) lhs.xch(rhs);
                 Y_ASSERT(lhs>=rhs);
 
+                lhs.plan(ran);
+                rhs.plan(ran);
+
                 for(unsigned i=0;i<Natural::NumOps;++i)
                 {
                     const Ops         ops = Natural::OpsTable[i];
-                    volatile BlockPtr blk( Natural::Sub( *lhs, *rhs, ops, &tmx[i]) );
+                    const uint64_t    mark = WallTime::Ticks();
+                    volatile BlockPtr blk( Natural::Sub( *lhs, *rhs, ops) );
+                    tmx[i] += WallTime::Ticks() - mark;
                 }
 
 
