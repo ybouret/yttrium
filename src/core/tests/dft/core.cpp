@@ -117,8 +117,10 @@ namespace
             const bool same1 = (0==memcmp( data1(), copy1(), data1.size() * sizeof(T)));
             if(!same1)
             {
-                std::cerr << "data1=" << data1 << std::endl;
-                std::cerr << "copy1=" << copy1 << std::endl;
+                std::cerr << std::endl;
+                Vector<T> diff(n,0);
+                for(size_t i=1;i<=n;++i) diff[i] = copy1[i] - data1[i];
+                std::cerr << "diff1=" << diff << std::endl;
             }
             Y_ASSERT(same1);
 
