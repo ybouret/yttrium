@@ -518,7 +518,7 @@ namespace Yttrium
                 *(++fft1) = z.im;
             }
         }
-        
+
     private:
         template <typename T> static inline
         void RealProcess(T                                data[],
@@ -542,10 +542,13 @@ namespace Yttrium
                 const size_t i3 = np3-i2;
                 const size_t i4 = 1+i3;
                 {
-                    const T h1r =  c1*(data[i1]+data[i3]);
-                    const T h1i =  c1*(data[i2]-data[i4]);
-                    const T h2r = -c2*(data[i2]+data[i4]);
-                    const T h2i =  c2*(data[i1]-data[i3]);
+                    const T d1  = data[i1];
+                    const T d2  = data[i2];
+                    const T d3  = data[i3];
+                    const T h1r =  c1*(d1+d3);
+                    const T h1i =  c1*(d2-data[i4]);
+                    const T h2r = -c2*(d2+data[i4]);
+                    const T h2i =  c2*(d1-d3);
                     data[i1] = h1r+wr*h2r-wi*h2i;
                     data[i2] = h1i+wr*h2i+wi*h2r;
                     data[i3] = h1r-wr*h2r+wi*h2i;
