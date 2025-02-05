@@ -263,8 +263,10 @@ namespace Yttrium
                         const size_t i1 = i+1;
                         const size_t j1 = j+1;
                         {
-                            const T tempr = static_cast<T>(wr*data[j]  - wi*data[j1]);
-                            const T tempi = static_cast<T>(wr*data[j1] + wi*data[j]);
+                            const T j_re  = data[j];
+                            const T j_im =  data[j1];
+                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
+                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
                             data[j]       = data[i]  - tempr;
                             data[j1]      = data[i1] - tempi;
                             data[i]      += tempr;
