@@ -272,8 +272,8 @@ namespace Yttrium
                         }
                     }
                     const long_T wt=wr;
-                    wr=wt*wpr-wi*wpi+wt;
-                    wi=wi*wpr+wt*wpi+wi;
+                    wr=(wt*wpr-wi*wpi)+wt;
+                    wi=(wi*wpr+wt*wpi)+wi;
                 }
                 mmax=istep;
                 ++indx;
@@ -329,8 +329,8 @@ namespace Yttrium
                         }
                     }
                     const long_T wt=wr;
-                    wr=wt*wpr-wi*wpi+wt;
-                    wi=wi*wpr+wt*wpi+wi;
+                    wr=(wt*wpr-wi*wpi)+wt;
+                    wi=(wi*wpr+wt*wpi)+wi;
                 }
                 mmax=istep;
                 ++indx;
@@ -556,8 +556,8 @@ namespace Yttrium
                     data[i4] = -h1i+wr*h2i+wi*h2r;
                 }
                 const long_T wt = wr;
-                wr=wr*wpr-wi*wpi+wr;
-                wi=wi*wpr+wt*wpi+wi;
+                wr=(wr*wpr-wi*wpi)+wr;
+                wi=(wi*wpr+wt*wpi)+wi;
             }
         }
 
