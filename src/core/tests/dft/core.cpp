@@ -118,11 +118,10 @@ namespace
             const bool same2 = (0 == memcmp( data2(), copy2(), data1.size() * sizeof(T)) );
             if(!same1)
             {
-                std::cerr << std::endl;
                 Vector<T> diff(n,0);
                 for(size_t i=1;i<=n;++i) diff[i] = copy1[i] - data1[i];
                 //std::cerr << "diff1=" << diff << std::endl;
-                std::cerr << "Warning 1" << std::endl;
+                std::cerr << "[Warning 1]";
             }
             if(!same2)
             {
@@ -130,7 +129,7 @@ namespace
                 Vector<T> diff(n,0);
                 for(size_t i=1;i<=n;++i) diff[i] = copy2[i] - data2[i];
                 //std::cerr << "diff2=" << diff << std::endl;
-                std::cerr << "Warning 2" << std::endl;
+                std::cerr << "[Warning 2]" << std::endl;
             }
             //Y_ASSERT(same1);
             //Y_ASSERT(same2);
