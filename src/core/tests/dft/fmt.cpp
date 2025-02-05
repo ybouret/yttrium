@@ -83,6 +83,21 @@ namespace
         { 5,7 },
         { 11,13}
     };
+
+    static void Process(const void * const t, const size_t n)
+    {
+        const uint32_t * const word = static_cast<const uint32_t *>(t);
+        for(size_t i=0;i<n;++i)
+        {
+            union {
+                uint32_t w;
+                uint16_t s[2];
+            } alias = { word[i] };
+            Core::Display(std::cerr,alias.s,2) << std::endl;
+        }
+    }
+
+
 }
 
 Y_UTEST(dft_fmt)
@@ -109,35 +124,56 @@ Y_UTEST(dft_fmt)
         std::cerr << " useRoom=" << std::setw(7) << useRoom << " byte" << Plural::s(useRoom);
         std::cerr << std::endl;
 
-        if(useRoom<65536)
+        if(useRoom>0 && useRoom<65536)
         {
+            const String id  = Formatted::Get("%u", unsigned(size) );
+            const String nn  = Formatted::Get("%u", unsigned(nswp) );
+            const String hdr = "_" + id + ".hpp";
             {
-                const String id = Formatted::Get("_%u", unsigned(size) );
-                const String fn = id + ".hpp";
-                OutputFile   fp(fn);
+
+                OutputFile   fp(hdr);
                 fp << "//! \\file\n";
                 fp << "#ifndef Y_DFT_Fmt" << id << "_Included\n";
                 fp << "#define Y_DFT_Fmt" << id << "_Included\n";
-                fp << "namespace Yttrium {\n";
-
+                fp << "#include \"y/config/starting.hpp\"\n";
+                fp << "namespace Yttrium {\n\n";
+                {
+                    fp << "\tstruct DFT_Fmt" << id << " {\n";
+                    fp << "\t\tstatic const unsigned Count=" << nn << ";     //!< count\n";
+                    fp << "\t\tstatic const uint16_t Table[" << nn << "][2]; //!< table\n";
+                    fp << "\t};\n";
+                }
                 fp << "}\n";
-                fp << "#endif";
+                fp << "#endif\n";
             }
 
+            {
+                const String fn = "_" + id + ".cpp";
+                OutputFile   fp(fn);
+                fp << "#include \"" << hdr  << "\"\n";
+                fp << "namespace Yttrium {\n\n";
+                {
+                    fp << "\tconst uint16_t DFT_Fmt" << id << "::Table[" << nn << "][2] = {\n";
+                    {
+                        for(size_t i=1;i<=nswp;++i)
+                        {
+                            const Swp &swp = swps[i];
+                            fp("\t\t{ 0x%04x, 0x%04x }", unsigned(swp.i), unsigned(swp.j) );
+                            if(i<nswp) fp << ",";
+                            fp << "\n";
+                        }
+                    }
+                    fp << "\t};\n";
+                }
+                fp << "}\n";
+            }
+
+            if(size>=256) break;
         }
 
     }
-
-    for(size_t i=0;i<3;++i)
-    {
-        const uint16_t * const t = Table[i];
-        Core::Display(std::cerr,t,2) << std::endl;
-        union {
-            uint32_t word;
-            uint16_t swap[2];
-        } alias = { *(const uint32_t *)Table[i] };
-        Core::Display(std::cerr,alias.swap,2) << std::endl;
-    }
+    
+    Process(Table,3);
 
 
 }

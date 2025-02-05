@@ -53,6 +53,7 @@ namespace Yttrium
             { const T t(*lhs); *(lhs)   = *rhs; *rhs     = t; }
         }
 
+        //! Format using algorithm
         template <typename T> static inline
         size_t Format(T data[], const size_t size) noexcept
         {
@@ -72,10 +73,26 @@ namespace Yttrium
             return n;
         }
 
+        //! format using precomputed table
+        template <typename T> static inline
+        size_t Format(T                  data[],
+                      const size_t       size,
+                      const void * const swps,
+                      const size_t       nswp) noexcept
+        {
+            const uint32_t * dw = static_cast<const uint32_t *>(swps);
+            for(size_t i=nswp;i>0;--i)
+            {
+                union { const uint32_t u; uint16_t s[2]; } _ = { *(dw++) };
+                Swap2(data+_.s[0],data+_.s[1]);
+            }
+            return size<<1;
+        }
+
         //______________________________________________________________________
         //
         //
-        //! Transform Usin a Sine Table
+        //! Transform Using a Sine Table
         /**
          - Replaces data[1..2*size] :
          - by its              Discrete Fourier transform         if SinTable = PositiveSin
@@ -89,23 +106,6 @@ namespace Yttrium
                        const typename DFT_Real<T>::Type SinTable[]) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
-
-#if 0
-            const size_t n = size << 1;
-            for(size_t i=1,j=1;i<n;i+=2)
-            {
-                if(j>i)
-                    Swap2(data+i,data+j);
-                size_t m=size;
-                while( (m >= 2) && (j > m) )
-                {
-                    j -= m;
-                    m >>= 1;
-                }
-                j += m;
-            }
-#endif
-
             const  size_t n = Format(data,size);
             size_t mmax=2;
             size_t indx=0; // mmax/2 = 2^indx
