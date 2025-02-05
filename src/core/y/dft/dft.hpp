@@ -269,9 +269,7 @@ DATA[i1]     += tempi
                         const size_t j  = i+mmax;
                         const size_t i1 = i+1;
                         const size_t j1 = j+1;
-                        {
-                            Y_DFT_Transform(data);
-                        }
+                        { Y_DFT_Transform(data); }
                     }
                     const long_T wt=wr;
                     wr=(wt*wpr-wi*wpi)+wt;
@@ -309,19 +307,6 @@ DATA[i1]     += tempi
                         const size_t j1 = j+1;
                         { Y_DFT_Transform(data1); }
                         { Y_DFT_Transform(data2); }
-
-#if 0
-                        {
-                            const T j_re  = data2[j];
-                            const T j_im =  data2[j1];
-                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
-                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
-                            data2[j]       = data2[i]  - tempr;
-                            data2[j1]      = data2[i1] - tempi;
-                            data2[i]      += tempr;
-                            data2[i1]     += tempi;
-                        }
-#endif
                     }
                     const long_T wt=wr;
                     wr=(wt*wpr-wi*wpi)+wt;
@@ -582,12 +567,8 @@ DATA[i4] = -h1i + wr*h2i+wi*h2r
                 const size_t i2 = i1+1;
                 const size_t i3 = np3-i2;
                 const size_t i4 = 1+i3;
-                {
-                    Y_DFT_RealProcess(data1);
-                }
-                {
-                    Y_DFT_RealProcess(data2);
-                }
+                { Y_DFT_RealProcess(data1); }
+                { Y_DFT_RealProcess(data2); }
                 const long_T wt = wr;
                 wr=(wr*wpr-wi*wpi)+wr;
                 wi=(wi*wpr+wt*wpi)+wi;
