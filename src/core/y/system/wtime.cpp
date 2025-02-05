@@ -122,9 +122,13 @@ namespace Yttrium
 
     long double WallTime:: operator()(const uint64_t u) const noexcept
     {
-        const long double res = *freq * static_cast<long double>(u);
-       //std::cerr << "u=" << u << "=>" << res << std::endl;
-        return res;
+        return *freq * static_cast<long double>(u);
+
+    }
+
+    long double WallTime:: since(const uint64_t then) const
+    {
+        return *freq * static_cast<long double>( Ticks() - then );
     }
 
     void WallTime:: wait(const double nsec) const

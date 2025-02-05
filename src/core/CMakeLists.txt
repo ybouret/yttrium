@@ -81,6 +81,7 @@ fft
 fft/xbitrev
 tow
 dft
+dft/fmt
 apex
 apex/block
 apex/block/jig

@@ -1,0 +1,12 @@
+#include "_16.hpp"
+namespace Yttrium {
+
+	const uint16_t DFT_Fmt16::Table[6][2] = {
+		{ 0x0003, 0x0011 },
+		{ 0x0005, 0x0009 },
+		{ 0x0007, 0x0019 },
+		{ 0x000b, 0x0015 },
+		{ 0x000f, 0x001d },
+		{ 0x0017, 0x001b }
+	};
+}

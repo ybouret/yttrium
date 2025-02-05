@@ -16,6 +16,8 @@ using namespace Yttrium;
 #include "y/text/hexadecimal.hpp"
 #include "y/calculus/bit-count.hpp"
 
+#include <cstring>
+
 namespace
 {
 
@@ -74,106 +76,177 @@ namespace
 }
 
 #include "y/text/plural.hpp"
+#include "y/random/fill.hpp"
 
 namespace
 {
-    static const uint16_t Table[3][2] =
-    {
-        { 2,3 },
-        { 5,7 },
-        { 11,13}
-    };
 
-    static void Process(const void * const t, const size_t n)
+
+    double duration = 0.2;
+
+
+    static inline void Generate()
     {
-        const uint32_t * const word = static_cast<const uint32_t *>(t);
-        for(size_t i=0;i<n;++i)
+        Random::ParkMiller ran;
+        Vector<Swp>        swps;
+
+        for(unsigned p=0; p <= 16; ++p)
         {
-            union {
-                uint32_t w;
-                uint16_t s[2];
-            } alias = { word[i] };
-            Core::Display(std::cerr,alias.s,2) << std::endl;
+            const size_t size = size_t(1) << p;
+            std::cerr << "size=" << std::setw(5) << size << " = 2^" << std::setw(2) << p << ":";
+            FormatBuild(swps,size);
+            const size_t nswp = swps.size();
+            unsigned maxBits = 0;
+            for(size_t i=nswp;i>0;--i) maxBits = Max(maxBits,swps[i].requiredBits());
+
+            std::cerr << " #" << std::setw(6) << nswp;
+            const unsigned useBits = NextPowerOfTwo( Max<unsigned>(maxBits,8) );
+            const unsigned useWord = useBits/8;
+            const size_t   useRoom = useWord * 2 * nswp;
+
+            std::cerr << " maxBits=" << std::setw(2) << maxBits;
+            std::cerr << " useBits=" << std::setw(2) << useBits;
+            std::cerr << " useWord=" << std::setw(2) << useWord;
+            std::cerr << " useRoom=" << std::setw(7) << useRoom << " byte" << Plural::s(useRoom);
+            std::cerr << std::endl;
+
+            if(useRoom>0 && useRoom<65536)
+            {
+                const String id  = Formatted::Get("%u", unsigned(size) );
+                const String nn  = Formatted::Get("%u", unsigned(nswp) );
+                const String hdr = "_" + id + ".hpp";
+                {
+
+                    OutputFile   fp(hdr);
+                    fp << "//! \\file\n";
+                    fp << "#ifndef Y_DFT_Fmt" << id << "_Included\n";
+                    fp << "#define Y_DFT_Fmt" << id << "_Included\n";
+                    fp << "#include \"y/config/starting.hpp\"\n";
+                    fp << "namespace Yttrium {\n\n";
+                    {
+                        fp << "\tstruct DFT_Fmt" << id << " {\n";
+                        fp << "\t\tstatic const unsigned Count=" << nn << ";     //!< count\n";
+                        fp << "\t\tstatic const uint16_t Table[" << nn << "][2]; //!< table\n";
+                        fp << "\t\tstatic const size_t   Result=" << Formatted::Get( "%u", unsigned(size<<1) ) << "; //!< 2*size\n";
+                        fp << "\t};\n";
+                    }
+                    fp << "}\n";
+                    fp << "#endif\n";
+                }
+
+                {
+                    const String fn = "_" + id + ".cpp";
+                    OutputFile   fp(fn);
+                    fp << "#include \"" << hdr  << "\"\n";
+                    fp << "namespace Yttrium {\n\n";
+                    {
+                        fp << "\tconst uint16_t DFT_Fmt" << id << "::Table[" << nn << "][2] = {\n";
+                        {
+                            for(size_t i=1;i<=nswp;++i)
+                            {
+                                const Swp &swp = swps[i];
+                                fp("\t\t{ 0x%04x, 0x%04x }", unsigned(swp.i), unsigned(swp.j) );
+                                if(i<nswp) fp << ",";
+                                fp << "\n";
+                            }
+                        }
+                        fp << "\t};\n";
+                    }
+                    fp << "}\n";
+                }
+                
+
+            }
+
         }
     }
 
 
+    template <typename T,typename FMT> static inline
+    void TestFMT(Random::Bits &ran)
+    {
+        static const size_t size = FMT::Result/2;
+        Vector<T>    data(FMT::Result,0);
+        for(size_t i=FMT::Result;i>0;--i) data[i] = ran.to<T>();
+        Vector<T>    temp(data);
+        Y_ASSERT( 0 == memcmp(data(),temp(),data.size()*sizeof(T)) );
+
+        DFT::Format(data()-1,size);
+        DFT::Format<T,FMT>(temp()-1);
+        Y_ASSERT( 0 == memcmp(data(),temp(),data.size()*sizeof(T)));
+
+        WallTime chrono;
+        uint64_t tmxRaw = 0;
+        uint64_t tmxTab = 0;
+        uint64_t start = WallTime::Ticks();
+        data.ld(0);
+        T * const entry = data()-1;
+        size_t   cycles = 0;
+        do
+        {
+            ++cycles;
+            {
+                const uint64_t mark = WallTime::Ticks();
+                DFT::Format_(entry,size);
+                tmxRaw += WallTime::Ticks() - mark;
+            }
+            {
+                const uint64_t mark = WallTime::Ticks();
+                DFT::Format<T,FMT>(entry);
+                tmxTab += WallTime::Ticks() - mark;
+            }
+        } while( chrono.since(start) < duration );
+        const long double speedRaw = static_cast<long double>(cycles) / chrono(tmxRaw);
+        const long double speedTab = static_cast<long double>(cycles) / chrono(tmxTab);
+        std::cerr << " raw: " << HumanReadable(speedRaw) << " | tab: " << HumanReadable(speedTab) << std::endl;
+
+
+    }
+
+
+    template <typename FMT>
+    static inline
+    void TestFMT()
+    {
+        std::cerr << "Testing FMT" << FMT::Result/2 << std::endl;
+        Random::ParkMiller ran;
+
+        TestFMT<float,FMT>(ran);
+        TestFMT<double,FMT>(ran);
+        TestFMT<long double,FMT>(ran);
+
+    }
 }
+
+
+
 
 Y_UTEST(dft_fmt)
 {
-    Vector<Swp> swps;
 
-    for(unsigned p=0; p <= 16; ++p)
+    if(argc>1)
     {
-        const size_t size = size_t(1) << p;
-        std::cerr << "size=" << std::setw(5) << size << " = 2^" << std::setw(2) << p << ":";
-        FormatBuild(swps,size);
-        const size_t nswp = swps.size();
-        unsigned maxBits = 0;
-        for(size_t i=nswp;i>0;--i) maxBits = Max(maxBits,swps[i].requiredBits());
-
-        std::cerr << " #" << std::setw(6) << nswp;
-        const unsigned useBits = NextPowerOfTwo( Max<unsigned>(maxBits,8) );
-        const unsigned useWord = useBits/8;
-        const size_t   useRoom = useWord * 2 * nswp;
-
-        std::cerr << " maxBits=" << std::setw(2) << maxBits;
-        std::cerr << " useBits=" << std::setw(2) << useBits;
-        std::cerr << " useWord=" << std::setw(2) << useWord;
-        std::cerr << " useRoom=" << std::setw(7) << useRoom << " byte" << Plural::s(useRoom);
-        std::cerr << std::endl;
-
-        if(useRoom>0 && useRoom<65536)
-        {
-            const String id  = Formatted::Get("%u", unsigned(size) );
-            const String nn  = Formatted::Get("%u", unsigned(nswp) );
-            const String hdr = "_" + id + ".hpp";
-            {
-
-                OutputFile   fp(hdr);
-                fp << "//! \\file\n";
-                fp << "#ifndef Y_DFT_Fmt" << id << "_Included\n";
-                fp << "#define Y_DFT_Fmt" << id << "_Included\n";
-                fp << "#include \"y/config/starting.hpp\"\n";
-                fp << "namespace Yttrium {\n\n";
-                {
-                    fp << "\tstruct DFT_Fmt" << id << " {\n";
-                    fp << "\t\tstatic const unsigned Count=" << nn << ";     //!< count\n";
-                    fp << "\t\tstatic const uint16_t Table[" << nn << "][2]; //!< table\n";
-                    fp << "\t};\n";
-                }
-                fp << "}\n";
-                fp << "#endif\n";
-            }
-
-            {
-                const String fn = "_" + id + ".cpp";
-                OutputFile   fp(fn);
-                fp << "#include \"" << hdr  << "\"\n";
-                fp << "namespace Yttrium {\n\n";
-                {
-                    fp << "\tconst uint16_t DFT_Fmt" << id << "::Table[" << nn << "][2] = {\n";
-                    {
-                        for(size_t i=1;i<=nswp;++i)
-                        {
-                            const Swp &swp = swps[i];
-                            fp("\t\t{ 0x%04x, 0x%04x }", unsigned(swp.i), unsigned(swp.j) );
-                            if(i<nswp) fp << ",";
-                            fp << "\n";
-                        }
-                    }
-                    fp << "\t};\n";
-                }
-                fp << "}\n";
-            }
-
-            if(size>=256) break;
-        }
-
+        duration = ASCII::Convert::ToReal<double>(argv[1],"duration");
     }
-    
-    Process(Table,3);
+
+    if(false)
+        Generate();
+
+
+    TestFMT<DFT_Fmt4>();
+    TestFMT<DFT_Fmt8>();
+    TestFMT<DFT_Fmt16>();
+    TestFMT<DFT_Fmt32>();
+    TestFMT<DFT_Fmt64>();
+    TestFMT<DFT_Fmt128>();
+    TestFMT<DFT_Fmt256>();
+    TestFMT<DFT_Fmt512>();
+    TestFMT<DFT_Fmt1024>();
+    TestFMT<DFT_Fmt2048>();
+    TestFMT<DFT_Fmt4096>();
+    TestFMT<DFT_Fmt8192>();
+    TestFMT<DFT_Fmt16384>();
+    TestFMT<DFT_Fmt32768>();
 
 
 }

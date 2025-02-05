@@ -34,12 +34,13 @@ namespace Yttrium
         // Methods
         //
         //______________________________________________________________________
-        static uint64_t Ticks();                               //!< system's ticks
-        static uint64_t LockedTicks();                         //!< with locking
-        long double operator()(const uint64_t) const noexcept; //!< ticks to seconds
-        void wait(const double nsec) const;                    //!< self loop
-        void lockedWait(const double nsec) const;              //!< self loop
-        
+        static uint64_t Ticks();                                   //!< system's ticks
+        static uint64_t LockedTicks();                             //!< with locking
+        long double     operator()(const uint64_t) const noexcept; //!< ticks to seconds
+        void            wait(const double nsec)             const; //!< self loop
+        void            lockedWait(const double nsec)       const; //!< self loop
+        long double     since(const uint64_t)               const; //!< ellapsed since mark
+
         //______________________________________________________________________
         //
         //

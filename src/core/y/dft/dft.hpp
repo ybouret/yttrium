@@ -7,6 +7,23 @@
 #include "y/mkl/complex.hpp"
 #include "y/calculus/exact-shift.hpp"
 
+#include "y/dft/fmt/_4.hpp"
+#include "y/dft/fmt/_8.hpp"
+#include "y/dft/fmt/_16.hpp"
+#include "y/dft/fmt/_32.hpp"
+#include "y/dft/fmt/_64.hpp"
+#include "y/dft/fmt/_128.hpp"
+#include "y/dft/fmt/_256.hpp"
+#include "y/dft/fmt/_512.hpp"
+#include "y/dft/fmt/_1024.hpp"
+#include "y/dft/fmt/_2048.hpp"
+#include "y/dft/fmt/_4096.hpp"
+#include "y/dft/fmt/_8192.hpp"
+#include "y/dft/fmt/_16384.hpp"
+#include "y/dft/fmt/_32768.hpp"
+
+#include "y/calculus/align.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -48,14 +65,17 @@ namespace Yttrium
         //
         //______________________________________________________________________
         template <typename T> static inline
-        void Swap2(T * lhs, T *rhs) {
-            { const T t(*lhs); *(lhs++) = *rhs; *(rhs++) = t; }
-            { const T t(*lhs); *(lhs)   = *rhs; *rhs     = t; }
+        void Swap2(T * const lhs, T * const rhs) noexcept {
+            static const size_t           Request = 2 * sizeof(T);
+            const void         *          tmp[ Y_WORDS_GEQ(Request) ];
+            memcpy(tmp,lhs,Request);
+            memcpy(lhs,rhs,Request);
+            memcpy(rhs,tmp,Request);
         }
 
         //! Format using algorithm
         template <typename T> static inline
-        size_t Format(T data[], const size_t size) noexcept
+        size_t Format_(T data[], const size_t size) noexcept
         {
             const size_t n = size << 1;
             for(size_t i=1,j=1;i<n;i+=2)
@@ -73,21 +93,141 @@ namespace Yttrium
             return n;
         }
 
-        //! format using precomputed table
+        //! Format using algorithm
         template <typename T> static inline
-        size_t Format(T                  data[],
-                      const size_t       size,
-                      const void * const swps,
-                      const size_t       nswp) noexcept
+        size_t Format_(T data1[], T data2[], const size_t size) noexcept
         {
-            const uint32_t * dw = static_cast<const uint32_t *>(swps);
-            for(size_t i=nswp;i>0;--i)
+            const size_t n = size << 1;
+            for(size_t i=1,j=1;i<n;i+=2)
             {
-                union { const uint32_t u; uint16_t s[2]; } _ = { *(dw++) };
-                Swap2(data+_.s[0],data+_.s[1]);
+                if(j>i)
+                {
+                    Swap2(data1+i,data1+j);
+                    Swap2(data2+i,data2+j);
+                }
+                size_t m=size;
+                while( (m >= 2) && (j > m) )
+                {
+                    j -= m;
+                    m >>= 1;
+                }
+                j += m;
             }
-            return size<<1;
+            return n;
         }
+
+        
+
+        struct SwapInfo { uint16_t i; uint16_t j; };
+
+        template <typename T, typename FMT> static inline
+        size_t Format(T data[]) noexcept
+        {
+            static const SwapInfo * const InfoTab = (const SwapInfo *)& FMT::Table[0][0];
+            static const size_t           Request = 2 * sizeof(T);
+            const void         *          tmp[ Y_WORDS_GEQ(Request) ];
+
+            for(size_t i=0;i<FMT::Count;++i)
+            {
+                const SwapInfo info = InfoTab[i];
+                T * const      lhs  = data+info.i;
+                T * const      rhs  = data+info.j;
+                memcpy(tmp,lhs,Request);
+                memcpy(lhs,rhs,Request);
+                memcpy(rhs,tmp,Request);
+            }
+            return FMT::Result;
+        }
+
+        template <typename T, typename FMT> static inline
+        size_t Format(T data1[], T data2[]) noexcept
+        {
+            static const SwapInfo * const InfoTab = (const SwapInfo *)& FMT::Table[0][0];
+            static const size_t           Request = 2 * sizeof(T);
+            const void         *          tmp[ Y_WORDS_GEQ(Request) ];
+
+            for(size_t i=0;i<FMT::Count;++i)
+            {
+                const SwapInfo info = InfoTab[i];
+                {
+                    T * const      lhs  = data1+info.i;
+                    T * const      rhs  = data1+info.j;
+                    memcpy(tmp,lhs,Request);
+                    memcpy(lhs,rhs,Request);
+                    memcpy(rhs,tmp,Request);
+                }
+                {
+                    T * const      lhs  = data2+info.i;
+                    T * const      rhs  = data2+info.j;
+                    memcpy(tmp,lhs,Request);
+                    memcpy(lhs,rhs,Request);
+                    memcpy(rhs,tmp,Request);
+                }
+            }
+            return FMT::Result;
+        }
+
+
+
+#define Y_DFT_Format(N) case N: return Format<T,DFT_Fmt##N>(data)
+
+        template <typename T> static inline
+        size_t Format(T data[], const size_t size) noexcept
+        {
+            switch(size)
+            {
+                    Y_DFT_Format(4);
+                    Y_DFT_Format(8);
+                    Y_DFT_Format(16);
+                    Y_DFT_Format(32);
+                    Y_DFT_Format(64);
+                    Y_DFT_Format(128);
+                    Y_DFT_Format(256);
+                    Y_DFT_Format(512);
+                    Y_DFT_Format(1024);
+                    Y_DFT_Format(2048);
+                    Y_DFT_Format(4096);
+                    Y_DFT_Format(8192);
+                    Y_DFT_Format(16384);
+                    Y_DFT_Format(32768);
+                default:
+                    break;
+            }
+            return Format_(data,size);
+        }
+
+
+#define Y_DFT_Format2(N) case N: return Format<T,DFT_Fmt##N>(data1,data2)
+
+        template <typename T> static inline
+        size_t Format(T data1[], T data2[], const size_t size) noexcept
+        {
+            return Format_(data1,data2,size);
+
+            switch(size)
+            {
+                    Y_DFT_Format2(4);
+                    Y_DFT_Format2(8);
+                    Y_DFT_Format2(16);
+                    Y_DFT_Format2(32);
+                    Y_DFT_Format2(64);
+                    Y_DFT_Format2(128);
+                    Y_DFT_Format2(256);
+                    Y_DFT_Format2(512);
+                    Y_DFT_Format2(1024);
+                    Y_DFT_Format2(2048);
+                    Y_DFT_Format2(4096);
+                    Y_DFT_Format2(8192);
+                    Y_DFT_Format2(16384);
+                    Y_DFT_Format2(32768);
+                default:
+                    break;
+            }
+            return Format_(data1,data2,size);
+        }
+
+
+
 
         //______________________________________________________________________
         //
@@ -99,7 +239,6 @@ namespace Yttrium
          - by 'size' times its Inverse Discrete Fourier transform if SinTable = NegativeSin
          */
         //______________________________________________________________________
-
         template <typename T> static inline
         void Transform(T                                data[],
                        const size_t                     size,
@@ -108,7 +247,7 @@ namespace Yttrium
             typedef typename DFT_Real<T>::Type long_T;
             const  size_t n = Format(data,size);
             size_t mmax=2;
-            size_t indx=0; // mmax/2 = 2^indx
+            size_t indx=0;
             while(n>mmax)
             {
                 const size_t istep = (mmax << 1);
@@ -123,12 +262,14 @@ namespace Yttrium
                         const size_t j  = i+mmax;
                         const size_t i1 = i+1;
                         const size_t j1 = j+1;
-                        const T tempr = static_cast<T>(wr*data[j]  - wi*data[j1]);
-                        const T tempi = static_cast<T>(wr*data[j1] + wi*data[j]);
-                        data[j]       = data[i]  - tempr;
-                        data[j1]      = data[i1] - tempi;
-                        data[i]      += tempr;
-                        data[i1]     += tempi;
+                        {
+                            const T tempr = static_cast<T>(wr*data[j]  - wi*data[j1]);
+                            const T tempi = static_cast<T>(wr*data[j1] + wi*data[j]);
+                            data[j]       = data[i]  - tempr;
+                            data[j1]      = data[i1] - tempi;
+                            data[i]      += tempr;
+                            data[i1]     += tempi;
+                        }
                     }
                     const long_T wt=wr;
                     wr=wt*wpr-wi*wpi+wt;
