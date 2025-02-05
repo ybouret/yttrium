@@ -114,7 +114,14 @@ namespace
             DFT::RealForward(copy1()-1,n);
             DFT::RealForward(copy2()-1,n);
 
-            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            const bool same1 = (0==memcmp( data1(), copy1(), data1.size() * sizeof(T)));
+            if(!same1)
+            {
+                std::cerr << "data1=" << data1 << std::endl;
+                std::cerr << "copy1=" << copy1 << std::endl;
+            }
+            Y_ASSERT(same1);
+
             Y_ASSERT( 0 == memcmp( data2(), copy2(), data1.size() * sizeof(T) ));
         }
         std::cerr << std::endl;
