@@ -91,8 +91,12 @@ namespace Yttrium
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
 
+#if 0
                 DFT::RealForward(a.item, nn);
                 DFT::RealForward(b.item, nn);
+#else
+                DFT::RealForward(a.item,b.item,nn);
+#endif
 
                 //--------------------------------------------------------------
                 //
@@ -102,10 +106,11 @@ namespace Yttrium
                 b[1] *= a[1];
                 b[2] *= a[2];
                 for(size_t j=3;j<=nn;j+=2) {
+#if 1
                     Cplx       &zb = *(Cplx *)&b[j];
                     const Cplx &za = *(Cplx *)&a[j];
                     zb *= za;
-#if 0
+#else
                     const size_t j1 = j+1;
                     const Real   t  = b[j];
                     b[j]  = t*a[j]  - b[j1]*a[j1];

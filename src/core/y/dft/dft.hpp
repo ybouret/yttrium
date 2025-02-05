@@ -353,7 +353,7 @@ namespace Yttrium
         //______________________________________________________________________
         //
         //
-        //! Forward Discrete Fourier Transform of data[1..2*size]
+        //! Forward Discrete Fourier Transform of data[1|2][1..2*size]
         //
         //______________________________________________________________________
         template <typename T> static inline
