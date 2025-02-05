@@ -201,7 +201,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
 
-            //! add with optional timing
+            //! low-level addition
             static Block *Add(Block &lhs, Block &rhs, const Ops addOps);
 
             friend Natural operator +  (const Natural & lhs, const Natural & rhs); //!< lhs+rhs
@@ -221,6 +221,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Subtractions
             //
             //__________________________________________________________________
+
+            //! low-level subtraction
             static Block *Sub(Block &   lhs, Block &   rhs, const Ops addOps, uint64_t * const ell); //!< lhs-rhs, with optional timing
             friend Natural operator -  (const Natural & lhs, const Natural & rhs); //!< lhs-rhs
             friend Natural operator -  (const Natural & lhs, const natural_t rhs); //!< lhs-rhs
@@ -238,9 +240,11 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
 
-            //! multiplication with optional timing
-            static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell);
-            static Block *FFT(Block &lhs, Block &rhs, uint64_t * const ell);
+            //! low-level long multiplication
+            static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps);
+
+            //! low-level FFT multiplication
+            static Block *FFT(Block &lhs, Block &rhs);
 
             friend Natural operator *  (const Natural & lhs, const Natural & rhs); //!< lhs*rhs
             friend Natural operator *  (const Natural & lhs, const natural_t rhs); //!< lhs*rhs

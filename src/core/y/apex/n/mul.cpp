@@ -28,8 +28,7 @@ namespace Yttrium
                 Block * Get(const WordType * const a,
                             const size_t           p,
                             const WordType *       b,
-                            const size_t           q,
-                            uint64_t * const       ell)
+                            const size_t           q)
                 {
                     Y_STATIC_CHECK(sizeof(WordType)<sizeof(CoreType),InvalidMulPlan);
                     static Factory & factory = Factory::Instance();
@@ -37,8 +36,6 @@ namespace Yttrium
                     if(p<=0||q<=0) return factory.query(0);
                     Block * const  block   = factory.queryBytes( (p+q) * WordSize );
                     WordType *     product = block->make<PLAN>().word;
-                    const bool     watch   = 0!=ell;
-                    const uint64_t mark    = watch ? WallTime::Ticks() : 0;
                     for(size_t j=q;j>0;--j,++product)
                     {
                         const CoreType B     = static_cast<CoreType>(*(b++));
@@ -52,8 +49,6 @@ namespace Yttrium
                         product[p] =  static_cast<WordType>(carry);
                     }
 
-                    if(watch) *ell += WallTime::Ticks() - mark;
-
                     block->sync();
                     return block;
 
@@ -63,44 +58,44 @@ namespace Yttrium
 
         }
 
-        Block * Natural:: Mul(Block &lhs, Block &rhs, const Ops mulOps, uint64_t * const ell)
+        Block * Natural:: Mul(Block &lhs, Block &rhs, const Ops mulOps)
         {
             switch(mulOps)
             {
                 case Ops2_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigMul<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan2,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigMul<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan4,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_1: {
                     const Jig1 &l = lhs.make<Plan1>();
                     const Jig1 &r = rhs.make<Plan1>();
-                    return JigMul<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan8,Plan1>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops4_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigMul<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan4,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_2: {
                     const Jig2 &l = lhs.make<Plan2>();
                     const Jig2 &r = rhs.make<Plan2>();
-                    return JigMul<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan8,Plan2>::Get(l.word,l.words,r.word,r.words);
                 }
 
                 case Ops8_4: {
                     const  Jig4 &l = lhs.make<Plan4>();
                     const  Jig4 &r = rhs.make<Plan4>();
-                    return JigMul<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words,ell);
+                    return JigMul<Plan8,Plan4>::Get(l.word,l.words,r.word,r.words);
                 }
 
             }
@@ -110,7 +105,7 @@ namespace Yttrium
 
         Block * Natural:: Mul(Block &lhs, Block & rhs)
         {
-            return Mul(lhs,rhs,MulOps,0);
+            return Mul(lhs,rhs,MulOps);
         }
 
 
@@ -120,7 +115,7 @@ namespace Yttrium
             const   Jig4      &l = lhs.make<Plan4>();
             size_t             w = 0;
             const void * const q = Block::To(Plan4,rhs,w);
-            return JigMul<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w,0);
+            return JigMul<Plan8,Plan4>::Get(l.word,l.words,static_cast<const Word *>(q),w);
         }
 
 

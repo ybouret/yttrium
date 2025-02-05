@@ -3,7 +3,6 @@
 #include "y/type/utils.hpp"
 #include "y/dft/dft.hpp"
 #include "y/system/exception.hpp"
-#include "y/system/wtime.hpp"
 
 namespace Yttrium
 {
@@ -52,14 +51,12 @@ namespace Yttrium
 
         
         Block * Natural:: FFT(Block &          lhs,
-                              Block &          rhs,
-                              uint64_t * const ell)
+                              Block &          rhs)
         {
             static Factory & factory = Factory::Instance();
             const Jig1 & u = lhs.make<Plan1>(); const size_t n = u.words; if(n<=0) return factory.query(0);
             const Jig1 & v = rhs.make<Plan1>(); const size_t m = v.words; if(m<=0) return factory.query(0);
 
-            const bool   watch = 0!=ell;
 
             //------------------------------------------------------------------
             //
@@ -79,11 +76,9 @@ namespace Yttrium
                 --nmul;
             }
 
-            uint64_t ini = 0;
             BlockOf<Real> b(nn);
             {
                 BlockOf<Real> a(nn);
-                if(watch) ini = WallTime::Ticks();
 
                 //--------------------------------------------------------------
                 //
@@ -138,7 +133,6 @@ namespace Yttrium
             if (carry >= 256.0) throw Specific::Exception("Apex::FFT","precision underflow");
 
 
-            if(watch)      *ell += WallTime::Ticks() - ini;
             const size_t    mpn  = m+n;
             Block *         prod = factory.queryBytes(mpn);
             {
@@ -164,7 +158,7 @@ namespace Yttrium
         {
             Y_Apex_Lock(lhs);
             Y_Apex_Lock(rhs);
-            return Natural( FFT(*lhs.block,*rhs.block,0),AsBlock);
+            return Natural(FFT(*lhs.block,*rhs.block),AsBlock);
         }
     }
 }

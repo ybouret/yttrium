@@ -37,19 +37,34 @@ Y_UTEST(apex_dft)
         for(size_t rbits=lbits;rbits<=maxBits;rbits <<= 1 )
         {
             (std::cerr << std::setw(5) << lbits << '.' << std::setw(5) << rbits).flush();
-            const Natural lhs(ran,lbits);
-            const Natural rhs(ran,rbits);
-            const uint64_t outTMX = WallTime::Ticks();
-            uint64_t      mulTMX = 0;
-            uint64_t      fftTMX = 0;
-            size_t        cycles = 0;
+
+            const uint64_t started = WallTime::Ticks();
+            uint64_t       mulTMX = 0;
+            uint64_t       fftTMX = 0;
+            size_t         cycles = 0;
             do
             {
+                Natural lhs(ran,lbits);
+                Natural rhs(ran,rbits);
+                lhs.plan(ran);
+                rhs.plan(ran);
                 ++cycles;
-                const Natural mul( Natural::Mul( Coerce(*lhs), Coerce(*rhs), Natural::MulOps, &mulTMX), AsBlock );
-                const Natural fft( Natural::FFT( Coerce(*lhs), Coerce(*rhs), &fftTMX),                  AsBlock );
+
+                // timing long multiplication
+                const uint64_t mmark = WallTime::Ticks();
+                const Natural mul( Natural::Mul( Coerce(*lhs), Coerce(*rhs), Natural::MulOps), AsBlock );
+                mulTMX += WallTime::Ticks() - mmark;
+
+                // timing FFT multiplication
+                const uint64_t fmark = WallTime::Ticks();
+                const Natural fft( Natural::FFT( Coerce(*lhs), Coerce(*rhs) ), AsBlock );
+                fftTMX += WallTime::Ticks() - fmark;
+
+
                 Y_ASSERT(mul==fft);
-            } while( chrono( WallTime::Ticks() - outTMX) < duration );
+            } while( chrono.since(started) < duration );
+
+
             const long double mulSpeed = static_cast<long double>(cycles) / chrono(mulTMX);
             const long double fftSpeed = static_cast<long double>(cycles) / chrono(fftTMX);
             std::cerr << " | mul " << HumanReadable(mulSpeed);
