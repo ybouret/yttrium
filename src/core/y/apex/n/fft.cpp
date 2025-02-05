@@ -91,7 +91,7 @@ namespace Yttrium
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
 
-#if 0
+#if 1
                 DFT::RealForward(a.item, nn);
                 DFT::RealForward(b.item, nn);
 #else
