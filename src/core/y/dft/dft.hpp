@@ -559,10 +559,10 @@ namespace Yttrium
 /**/ const T h1i =  c1*(d2-d4);         \
 /**/ const T h2r = -c2*(d2+d4);         \
 /**/ const T h2i =  c2*(d1-d3);         \
-/**/ DATA[i1] =  h1r + wr*h2r-wi*h2i; \
-/**/ DATA[i2] =  h1i + wr*h2i+wi*h2r; \
-/**/ DATA[i3] =  h1r - wr*h2r+wi*h2i; \
-/**/ DATA[i4] = -h1i + wr*h2i+wi*h2r
+/**/ DATA[i1] =  h1r + (wr*h2r-wi*h2i); \
+/**/ DATA[i2] =  h1i + (wr*h2i+wi*h2r); \
+/**/ DATA[i3] =  h1r - (wr*h2r-wi*h2i); \
+/**/ DATA[i4] = -h1i + (wr*h2i+wi*h2r)
 #endif
 
         template <typename T> static inline

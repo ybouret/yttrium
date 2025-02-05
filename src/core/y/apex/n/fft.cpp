@@ -15,41 +15,6 @@ namespace Yttrium
             typedef double        Real;
             typedef Complex<Real> Cplx;
 
-#if 0
-            template <typename T>
-            class BlockOf
-            {
-            public:
-                explicit BlockOf(const size_t n) :
-                block(n*sizeof(T),AsCapacity),
-                size(n),
-                item( static_cast<T *>(block->entry) - 1)
-                {
-                    assert(block->range>=n*sizeof(T));
-                    assert( IsPowerOfTwo(n) );
-                }
-
-                inline T & operator[](const size_t indx) noexcept
-                {
-                    assert(indx>=1);
-                    assert(indx<=size);
-                    return item[indx];
-                }
-
-                inline T * operator()(void) noexcept { return item; }
-
-
-
-            private:
-                BlockPtr     block;
-            public:
-                const size_t size;
-                T * const    item; // [1..size]
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(BlockOf);
-            };
-#endif
-
         }
 
         
@@ -79,6 +44,7 @@ namespace Yttrium
                 --nmul;
             }
 
+            
             BlockPtr     blk( factory.queryBytes( (nn << 1) * sizeof(Real)  ) ); assert(blk->range >= (nn<<1) * sizeof(Real) );
             Real * const b = static_cast<Real *>(blk->entry) - 1;
             {
