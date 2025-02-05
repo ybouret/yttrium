@@ -71,26 +71,50 @@ namespace
     {
         const size_t  n = 1<<p;
         std::cerr << RTTI::Name<T>() << " / " << n << std::endl;
-        Vector<T> data1(n*2,0);
-        Vector<T> data2(n*2,0);
-        Vector<T> copy1(n*2,0);
-        Vector<T> copy2(n*2,0);
-
-        for(size_t i=data1.size();i>0;--i)
         {
-            data1[i] = data2[i] = copy1[i] = copy2[i] = ran.symm<T>();
+            Vector<T> data1(n*2,0);
+            Vector<T> data2(n*2,0);
+            Vector<T> copy1(n*2,0);
+            Vector<T> copy2(n*2,0);
+
+            for(size_t i=data1.size();i>0;--i)
+            {
+                data1[i] = data2[i] = copy1[i] = copy2[i] = ran.symm<T>();
+            }
+
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+
+            DFT::Forward(data1()-1,data2()-1,n);
+            DFT::Forward(copy1()-1,n);
+            DFT::Forward(copy2()-1,n);
+
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
         }
 
-        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
 
-        DFT::Forward(data1()-1,data2()-1,n);
-        DFT::Forward(copy1()-1,n);
-        DFT::Forward(copy2()-1,n);
+        {
+            Vector<T> data1(n,0);
+            Vector<T> data2(n,0);
+            Vector<T> copy1(n,0);
+            Vector<T> copy2(n,0);
 
-        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            for(size_t i=data1.size();i>0;--i)
+            {
+                data1[i] = data2[i] = copy1[i] = copy2[i] = ran.symm<T>();
+            }
 
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+
+            DFT::RealForward(data1()-1, data2()-1, n);
+            DFT::RealForward(copy1()-1,n);
+            DFT::RealForward(copy2()-1,n);
+
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+        }
 
 
 
@@ -270,7 +294,6 @@ Y_UTEST(dft_core)
             TestTwoDFT<float>(p, ran);
             TestTwoDFT<double>(p, ran);
             TestTwoDFT<long double>(p, ran);
-
         }
     }
 
@@ -357,7 +380,6 @@ Y_UTEST(dft_core)
     {
         DFT_TestDual<float>(p,ran);
         DFT_TestDual<double>(p,ran);
-
     }
 
 
