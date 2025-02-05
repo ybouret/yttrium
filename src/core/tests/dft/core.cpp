@@ -121,14 +121,16 @@ namespace
                 std::cerr << std::endl;
                 Vector<T> diff(n,0);
                 for(size_t i=1;i<=n;++i) diff[i] = copy1[i] - data1[i];
-                std::cerr << "diff1=" << diff << std::endl;
+                //std::cerr << "diff1=" << diff << std::endl;
+                std::cerr << "Warning 1" << std::endl;
             }
             if(!same2)
             {
                 std::cerr << std::endl;
                 Vector<T> diff(n,0);
                 for(size_t i=1;i<=n;++i) diff[i] = copy2[i] - data2[i];
-                std::cerr << "diff2=" << diff << std::endl;
+                //std::cerr << "diff2=" << diff << std::endl;
+                std::cerr << "Warning 2" << std::endl;
             }
             //Y_ASSERT(same1);
             //Y_ASSERT(same2);

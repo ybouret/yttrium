@@ -550,10 +550,10 @@ namespace Yttrium
                     const T h1i =  c1*(d2-d4);
                     const T h2r = -c2*(d2+d4);
                     const T h2i =  c2*(d1-d3);
-                    data[i1] = h1r+wr*h2r-wi*h2i;
-                    data[i2] = h1i+wr*h2i+wi*h2r;
-                    data[i3] = h1r-wr*h2r+wi*h2i;
-                    data[i4] = -h1i+wr*h2i+wi*h2r;
+                    data[i1] =  h1r + (wr*h2r-wi*h2i);
+                    data[i2] =  h1i + (wr*h2i+wi*h2r);
+                    data[i3] =  h1r - (wr*h2r+wi*h2i);
+                    data[i4] = -h1i + (wr*h2i+wi*h2r);
                 }
                 const long_T wt = wr;
                 wr=(wr*wpr-wi*wpi)+wr;
@@ -592,10 +592,10 @@ namespace Yttrium
                     const T h1i =  c1*(d2-d4);
                     const T h2r = -c2*(d2+d4);
                     const T h2i =  c2*(d1-d3);
-                    data1[i1] = h1r+wr*h2r-wi*h2i;
-                    data1[i2] = h1i+wr*h2i+wi*h2r;
-                    data1[i3] = h1r-wr*h2r+wi*h2i;
-                    data1[i4] = -h1i+wr*h2i+wi*h2r;
+                    data1[i1] =  h1r + (wr*h2r-wi*h2i);
+                    data1[i2] =  h1i + (wr*h2i+wi*h2r);
+                    data1[i3] =  h1r - (wr*h2r+wi*h2i);
+                    data1[i4] = -h1i + (wr*h2i+wi*h2r);
                 }
                 {
                     const T d1  = data2[i1];
@@ -606,14 +606,14 @@ namespace Yttrium
                     const T h1i =  c1*(d2-d4);
                     const T h2r = -c2*(d2+d4);
                     const T h2i =  c2*(d1-d3);
-                    data2[i1] = h1r+wr*h2r-wi*h2i;
-                    data2[i2] = h1i+wr*h2i+wi*h2r;
-                    data2[i3] = h1r-wr*h2r+wi*h2i;
-                    data2[i4] = -h1i+wr*h2i+wi*h2r;
+                    data2[i1] =  h1r + (wr*h2r-wi*h2i);
+                    data2[i2] =  h1i + (wr*h2i+wi*h2r);
+                    data2[i3] =  h1r - (wr*h2r+wi*h2i);
+                    data2[i4] = -h1i + (wr*h2i+wi*h2r);
                 }
                 const long_T wt = wr;
-                wr=wr*wpr-wi*wpi+wr;
-                wi=wi*wpr+wt*wpi+wi;
+                wr=(wr*wpr-wi*wpi)+wr;
+                wi=(wi*wpr+wt*wpi)+wi;
             }
         }
 
