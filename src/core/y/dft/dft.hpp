@@ -202,8 +202,6 @@ namespace Yttrium
         template <typename T> static inline
         size_t Format(T data1[], T data2[], const size_t size) noexcept
         {
-            //return Format_(data1,data2,size);
-
             switch(size)
             {
                     Y_DFT_Format2(4);
@@ -520,7 +518,7 @@ namespace Yttrium
                 *(++fft1) = z.im;
             }
         }
-
+        
     private:
         template <typename T> static inline
         void RealProcess(T                                data[],
