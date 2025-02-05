@@ -15,7 +15,7 @@ namespace Yttrium
             host->withhold();
         }
 
-
+#if 0
         static inline
         Block * queryBlock(const size_t bytes)
         {
@@ -31,6 +31,7 @@ namespace Yttrium
             assert(host->range>=bytes);
             host->withhold();
         }
+#endif
 
         BlockPtr:: ~BlockPtr() noexcept
         {

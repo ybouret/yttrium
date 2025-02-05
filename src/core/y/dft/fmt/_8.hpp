@@ -4,6 +4,7 @@
 #include "y/config/starting.hpp"
 namespace Yttrium {
 
+	//! Format8
 	struct DFT_Fmt8 {
 		static const unsigned Count=2;     //!< count
 		static const uint16_t Table[2][2]; //!< table

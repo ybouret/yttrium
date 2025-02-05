@@ -4,6 +4,7 @@
 #include "y/config/starting.hpp"
 namespace Yttrium {
 
+	//! Format4096
 	struct DFT_Fmt4096 {
 		static const unsigned Count=2016;     //!< count
 		static const uint16_t Table[2016][2]; //!< table

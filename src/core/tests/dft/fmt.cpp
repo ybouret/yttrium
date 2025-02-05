@@ -124,6 +124,7 @@ namespace
                     fp << "#include \"y/config/starting.hpp\"\n";
                     fp << "namespace Yttrium {\n\n";
                     {
+                        fp << "\t//! Format" << id << "\n";
                         fp << "\tstruct DFT_Fmt" << id << " {\n";
                         fp << "\t\tstatic const unsigned Count=" << nn << ";     //!< count\n";
                         fp << "\t\tstatic const uint16_t Table[" << nn << "][2]; //!< table\n";

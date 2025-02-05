@@ -4,6 +4,7 @@
 #include "y/config/starting.hpp"
 namespace Yttrium {
 
+	//! Format512
 	struct DFT_Fmt512 {
 		static const unsigned Count=240;     //!< count
 		static const uint16_t Table[240][2]; //!< table

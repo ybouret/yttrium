@@ -73,7 +73,12 @@ namespace Yttrium
             memcpy(rhs,tmp,Request);
         }
 
-        //! Format using algorithm
+        //______________________________________________________________________
+        //
+        //
+        //! Format using fallback algorithm
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Format_(T data[], const size_t size) noexcept
         {
@@ -93,7 +98,12 @@ namespace Yttrium
             return n;
         }
 
-        //! Format using algorithm
+        //______________________________________________________________________
+        //
+        //
+        //! Dual Format using fallback algorithm
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Format_(T data1[], T data2[], const size_t size) noexcept
         {
@@ -117,15 +127,22 @@ namespace Yttrium
         }
 
         
-
+    private:
         struct SwapInfo { uint16_t i; uint16_t j; };
+    public:
 
+        //______________________________________________________________________
+        //
+        //
+        //! Format using precomputed table
+        //
+        //______________________________________________________________________
         template <typename T, typename FMT> static inline
         size_t Format(T data[]) noexcept
         {
             static const SwapInfo * const InfoTab = (const SwapInfo *)& FMT::Table[0][0];
             static const size_t           Request = 2 * sizeof(T);
-            const void         *          tmp[ Y_WORDS_GEQ(Request) ];
+            void         *                tmp[ Y_WORDS_GEQ(Request) ];
 
             for(size_t i=0;i<FMT::Count;++i)
             {
@@ -139,6 +156,12 @@ namespace Yttrium
             return FMT::Result;
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Dual Format using precomputed table
+        //
+        //______________________________________________________________________
         template <typename T, typename FMT> static inline
         size_t Format(T data1[], T data2[]) noexcept
         {
@@ -169,11 +192,19 @@ namespace Yttrium
 
 
 
-#define Y_DFT_Format(N) case N: return Format<T,DFT_Fmt##N>(data)
 
+        //______________________________________________________________________
+        //
+        //
+        //! Format Data Dispatcher
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Format(T data[], const size_t size) noexcept
         {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#define     Y_DFT_Format(N) case N: return Format<T,DFT_Fmt##N>(data)
+#endif
             switch(size)
             {
                     Y_DFT_Format(4);
@@ -197,13 +228,20 @@ namespace Yttrium
         }
 
 
-#define Y_DFT_Format2(N) case N: return Format<T,DFT_Fmt##N>(data1,data2)
-
+        //______________________________________________________________________
+        //
+        //
+        //! Dual Format Data Disatcher
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         size_t Format(T data1[], T data2[], const size_t size) noexcept
         {
             switch(size)
             {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#define             Y_DFT_Format2(N) case N: return Format<T,DFT_Fmt##N>(data1,data2)
+#endif
                     Y_DFT_Format2(4);
                     Y_DFT_Format2(8);
                     Y_DFT_Format2(16);
@@ -225,17 +263,17 @@ namespace Yttrium
         }
 
 
-
-#define Y_DFT_Transform(DATA) \
-const T j_re  = DATA[j];                            \
-const T j_im =  DATA[j1];                           \
-const T tempr = static_cast<T>(wr*j_re - wi*j_im);  \
-const T tempi = static_cast<T>(wr*j_im + wi*j_re);  \
-DATA[j]       = DATA[i]  - tempr;                   \
-DATA[j1]      = DATA[i1] - tempi;                   \
-DATA[i]      += tempr;                              \
-DATA[i1]     += tempi
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#define Y_DFT_Transform(DATA)                             \
+/**/  const T j_re  = DATA[j];                            \
+/**/  const T j_im =  DATA[j1];                           \
+/**/  const T tempr = static_cast<T>(wr*j_re - wi*j_im);  \
+/**/  const T tempi = static_cast<T>(wr*j_im + wi*j_re);  \
+/**/  DATA[j]       = DATA[i]  - tempr;                   \
+/**/  DATA[j1]      = DATA[i1] - tempi;                   \
+/**/  DATA[i]      += tempr;                              \
+/**/  DATA[i1]     += tempi
+#endif
         //______________________________________________________________________
         //
         //
@@ -280,7 +318,12 @@ DATA[i1]     += tempi
             }
         }
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! Dual Transform Using a Sine Table
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Transform(T                                data1[],
                        T                                data2[],
@@ -333,7 +376,7 @@ DATA[i1]     += tempi
         //______________________________________________________________________
         //
         //
-        //! Forward Discrete Fourier Transform of data[1|2][1..2*size]
+        //! Dual Forward Discrete Fourier Transform of data[1|2][1..2*size]
         //
         //______________________________________________________________________
         template <typename T> static inline
@@ -427,6 +470,12 @@ DATA[i1]     += tempi
             }
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Unpack for complexes
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void Unpack(Complex<T> fft1[], Complex<T> fft2[], const size_t n) noexcept
         {
@@ -500,20 +549,21 @@ DATA[i1]     += tempi
         }
 
     private:
-
-#define Y_DFT_RealProcess(DATA)    \
-const T d1  = DATA[i1];            \
-const T d2  = DATA[i2];            \
-const T d3  = DATA[i3];            \
-const T d4  = DATA[i4];            \
-const T h1r =  c1*(d1+d3);         \
-const T h1i =  c1*(d2-d4);         \
-const T h2r = -c2*(d2+d4);         \
-const T h2i =  c2*(d1-d3);         \
-DATA[i1] =  h1r + wr*h2r-wi*h2i; \
-DATA[i2] =  h1i + wr*h2i+wi*h2r; \
-DATA[i3] =  h1r - wr*h2r+wi*h2i; \
-DATA[i4] = -h1i + wr*h2i+wi*h2r
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#define Y_DFT_RealProcess(DATA)         \
+/**/ const T d1  = DATA[i1];            \
+/**/ const T d2  = DATA[i2];            \
+/**/ const T d3  = DATA[i3];            \
+/**/ const T d4  = DATA[i4];            \
+/**/ const T h1r =  c1*(d1+d3);         \
+/**/ const T h1i =  c1*(d2-d4);         \
+/**/ const T h2r = -c2*(d2+d4);         \
+/**/ const T h2i =  c2*(d1-d3);         \
+/**/ DATA[i1] =  h1r + wr*h2r-wi*h2i; \
+/**/ DATA[i2] =  h1i + wr*h2i+wi*h2r; \
+/**/ DATA[i3] =  h1r - wr*h2r+wi*h2i; \
+/**/ DATA[i4] = -h1i + wr*h2i+wi*h2r
+#endif
 
         template <typename T> static inline
         void RealProcess(T                                data[],
@@ -576,6 +626,13 @@ DATA[i4] = -h1i + wr*h2i+wi*h2r
         }
 
     public:
+
+        //______________________________________________________________________
+        //
+        //
+        //! DFT of data[1..n>=2]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void RealForward(T            data[],
                          const size_t n) noexcept
@@ -607,6 +664,12 @@ DATA[i4] = -h1i + wr*h2i+wi*h2r
             }
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Dual Real DFT of data1[1..n>=2], data2[1..n]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void RealForward(T            data1[],
                          T            data2[],
@@ -646,7 +709,12 @@ DATA[i4] = -h1i + wr*h2i+wi*h2r
         }
 
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! Reverse DFT of data[1..n>=2]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         void RealReverse(T            data[],
                          const size_t n)

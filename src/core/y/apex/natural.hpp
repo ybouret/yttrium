@@ -443,8 +443,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 }
             }
 
-            static Natural FFT(const Natural &lhs, const Natural &rhs);
-            Natural(Block * const, const AsBlock_ &);
+            static Natural FFT(const Natural &lhs, const Natural &rhs); //!< FFT product
+            Natural(Block * const, const AsBlock_ &);                   //!< manual setting
 
         private:
             Y_PROXY_DECL();
