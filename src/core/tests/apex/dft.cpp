@@ -49,13 +49,14 @@ Y_UTEST(apex_dft)
                 lhs.plan(ran);
                 rhs.plan(ran);
                 ++cycles;
-
                 // timing long multiplication
                 const uint64_t mmark = WallTime::Ticks();
                 const Natural mul( Natural::Mul( Coerce(*lhs), Coerce(*rhs), Natural::MulOps), AsBlock );
                 mulTMX += WallTime::Ticks() - mmark;
 
                 // timing FFT multiplication
+                lhs.plan(ran);
+                rhs.plan(ran);
                 const uint64_t fmark = WallTime::Ticks();
                 const Natural fft( Natural::FFT( Coerce(*lhs), Coerce(*rhs) ), AsBlock );
                 fftTMX += WallTime::Ticks() - fmark;
