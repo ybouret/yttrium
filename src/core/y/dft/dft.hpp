@@ -226,6 +226,15 @@ namespace Yttrium
 
 
 
+#define Y_DFT_Transform(DATA) \
+const T j_re  = DATA[j];                            \
+const T j_im =  DATA[j1];                           \
+const T tempr = static_cast<T>(wr*j_re - wi*j_im);  \
+const T tempi = static_cast<T>(wr*j_im + wi*j_re);  \
+DATA[j]       = DATA[i]  - tempr;                   \
+DATA[j1]      = DATA[i1] - tempi;                   \
+DATA[i]      += tempr;                              \
+DATA[i1]     += tempi
 
         //______________________________________________________________________
         //
@@ -261,14 +270,7 @@ namespace Yttrium
                         const size_t i1 = i+1;
                         const size_t j1 = j+1;
                         {
-                            const T j_re  = data[j];
-                            const T j_im =  data[j1];
-                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
-                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
-                            data[j]       = data[i]  - tempr;
-                            data[j1]      = data[i1] - tempi;
-                            data[i]      += tempr;
-                            data[i1]     += tempi;
+                            Y_DFT_Transform(data);
                         }
                     }
                     const long_T wt=wr;
@@ -305,18 +307,10 @@ namespace Yttrium
                         const size_t j  = i+mmax;
                         const size_t i1 = i+1;
                         const size_t j1 = j+1;
+                        { Y_DFT_Transform(data1); }
+                        { Y_DFT_Transform(data2); }
 
-                        {
-                            const T j_re  = data1[j];
-                            const T j_im =  data1[j1];
-                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
-                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
-                            data1[j]       = data1[i]  - tempr;
-                            data1[j1]      = data1[i1] - tempi;
-                            data1[i]      += tempr;
-                            data1[i1]     += tempi;
-                        }
-
+#if 0
                         {
                             const T j_re  = data2[j];
                             const T j_im =  data2[j1];
@@ -327,6 +321,7 @@ namespace Yttrium
                             data2[i]      += tempr;
                             data2[i1]     += tempi;
                         }
+#endif
                     }
                     const long_T wt=wr;
                     wr=(wt*wpr-wi*wpi)+wt;
@@ -559,7 +554,6 @@ DATA[i4] = -h1i + wr*h2i+wi*h2r
                 {
                     Y_DFT_RealProcess(data);
                 }
-
                 const long_T wt = wr;
                 wr=(wr*wpr-wi*wpi)+wr;
                 wi=(wi*wpr+wt*wpi)+wi;
