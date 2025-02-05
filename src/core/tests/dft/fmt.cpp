@@ -108,12 +108,35 @@ Y_UTEST(dft_fmt)
         std::cerr << " useWord=" << std::setw(2) << useWord;
         std::cerr << " useRoom=" << std::setw(7) << useRoom << " byte" << Plural::s(useRoom);
         std::cerr << std::endl;
+
+        if(useRoom<65536)
+        {
+            {
+                const String id = Formatted::Get("_%u", unsigned(size) );
+                const String fn = id + ".hpp";
+                OutputFile   fp(fn);
+                fp << "//! \\file\n";
+                fp << "#ifndef Y_DFT_Fmt" << id << "_Included\n";
+                fp << "#define Y_DFT_Fmt" << id << "_Included\n";
+                fp << "namespace Yttrium {\n";
+
+                fp << "}\n";
+                fp << "#endif";
+            }
+
+        }
+
     }
 
     for(size_t i=0;i<3;++i)
     {
         const uint16_t * const t = Table[i];
         Core::Display(std::cerr,t,2) << std::endl;
+        union {
+            uint32_t word;
+            uint16_t swap[2];
+        } alias = { *(const uint32_t *)Table[i] };
+        Core::Display(std::cerr,alias.swap,2) << std::endl;
     }
 
 
