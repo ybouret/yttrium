@@ -70,7 +70,9 @@ namespace
                       Random::Bits  &ran)
     {
         const size_t  n = 1<<p;
-        std::cerr << RTTI::Name<T>() << " / " << n << std::endl;
+        (std::cerr << std::setw(16) << RTTI::Name<T>() << " / " << std::setw(7) << n).flush();
+
+        (std::cerr << " / Complex").flush();
         {
             Vector<T> data1(n*2,0);
             Vector<T> data2(n*2,0);
@@ -83,17 +85,17 @@ namespace
             }
 
             Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data2(), copy2(), data2.size() * sizeof(T) ));
 
             DFT::Forward(data1()-1,data2()-1,n);
             DFT::Forward(copy1()-1,n);
             DFT::Forward(copy2()-1,n);
 
             Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data2(), copy2(), data2.size() * sizeof(T) ));
         }
 
-
+        (std::cerr << " / Real").flush();
         {
             Vector<T> data1(n,0);
             Vector<T> data2(n,0);
@@ -106,16 +108,16 @@ namespace
             }
 
             Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data2(), copy2(), data1.size() * sizeof(T) ));
 
             DFT::RealForward(data1()-1, data2()-1, n);
             DFT::RealForward(copy1()-1,n);
             DFT::RealForward(copy2()-1,n);
 
             Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
-            Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+            Y_ASSERT( 0 == memcmp( data2(), copy2(), data1.size() * sizeof(T) ));
         }
-
+        std::cerr << std::endl;
 
 
     }
