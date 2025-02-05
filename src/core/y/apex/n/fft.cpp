@@ -69,11 +69,14 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             size_t       nn    = 2; // minimal to use RealTransform
+            size_t       nmul  = 0; // nn/2 - 1
             {
-                const size_t mx    = Max(n,m);
+                const size_t mx = Max(n,m);
                 while (nn < mx)
                     nn <<= 1;
+                nmul  = nn;
                 nn <<= 1;
+                --nmul;
             }
 
             uint64_t ini = 0;
@@ -84,14 +87,14 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // load data
+                // load data as byte
                 //
                 //--------------------------------------------------------------
                 for(size_t i=n;i>0;--i) a[i] = u.word[n-i];
                 for(size_t i=m;i>0;--i) b[i] = v.word[m-i];
 
 
-#if 1
+#if 0
                 DFT::RealForward(a.item, nn);
                 DFT::RealForward(b.item, nn);
 #else
@@ -105,17 +108,13 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 b[1] *= a[1];
                 b[2] *= a[2];
-                for(size_t j=3;j<=nn;j+=2) {
-#if 1
-                    Cplx       &zb = *(Cplx *)&b[j];
-                    const Cplx &za = *(Cplx *)&a[j];
-                    zb *= za;
-#else
-                    const size_t j1 = j+1;
-                    const Real   t  = b[j];
-                    b[j]  = t*a[j]  - b[j1]*a[j1];
-                    b[j1] = t*a[j1] + b[j1]*a[j];
-#endif
+                {
+                    Cplx *      lhs = (Cplx *)       &b[1];
+                    const Cplx *rhs = (const Cplx *) &a[1];
+                    for(size_t j=nmul;j>0;--j) {
+                        *(++lhs) *= *(++rhs);
+                    }
+
                 }
             }
 
@@ -128,18 +127,15 @@ namespace Yttrium
 
 
 
-            static const Real RX=256.0;
-            static const Real FX=0.00390625;
-
             Real       carry  = 0.0;
             const Real denom = (nn>>1);
-            for(size_t j=nn;j>=1;--j)
+            for(size_t j=nn;j>0;--j)
             {
-                const Real t= floor(b[j]/denom+carry+0.5);
-                carry=(unsigned long) (t*FX);
-                b[j]=t-carry*RX;
+                const Real t = floor(b[j]/denom+carry+0.5);
+                carry=(unsigned long) (t*0.00390625);
+                *(uint8_t *) &b[j] = static_cast<uint8_t>(t-carry*256.0);
             }
-            if (carry >= RX) throw Specific::Exception("Apex::FFT","precision underflow");
+            if (carry >= 256.0) throw Specific::Exception("Apex::FFT","precision underflow");
 
 
             if(watch)      *ell += WallTime::Ticks() - ini;
@@ -150,7 +146,7 @@ namespace Yttrium
                 w[mpn] = (uint8_t)carry;
                 for(size_t j=1;j<mpn;++j)
                 {
-                    w[j] = (uint8_t)b[mpn-j];
+                    w[j] = *(const uint8_t *) &b[mpn-j];
                 }
             }
             prod->sync();

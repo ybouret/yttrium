@@ -30,8 +30,8 @@ Y_UTEST(apex_dft)
     const String fn = "dft.dat";
     OutputFile::Overwrite(fn);
 
-    const size_t minBits = 128;
-    const size_t maxBits = 16384;
+    const size_t minBits = 256;
+    const size_t maxBits = 32768;
     for(size_t lbits=minBits;lbits<=maxBits;lbits <<= 1)
     {
         for(size_t rbits=lbits;rbits<=maxBits;rbits <<= 1 )
