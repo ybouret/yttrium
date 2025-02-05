@@ -23,7 +23,8 @@ namespace
                     Random::Bits  &ran,
                     T             &rms)
     {
-        const size_t  n = 1<<p;
+
+        const size_t           n = 1<<p;
         Vector<T>              data(n*2,0), orig(n*2,0);
         MKL::Antelope::Add<T>  xadd(data.size());
         WallTime               chrono;
@@ -61,6 +62,38 @@ namespace
 
         long double ellapsed = chrono(tmx);
         return static_cast<double>( static_cast<long double>(cycles) / ellapsed );
+    }
+
+
+    template <typename T> static inline
+    void DFT_TestDual(const unsigned p,
+                      Random::Bits  &ran)
+    {
+        const size_t  n = 1<<p;
+        std::cerr << RTTI::Name<T>() << " / " << n << std::endl;
+        Vector<T> data1(n*2,0);
+        Vector<T> data2(n*2,0);
+        Vector<T> copy1(n*2,0);
+        Vector<T> copy2(n*2,0);
+
+        for(size_t i=data1.size();i>0;--i)
+        {
+            data1[i] = data2[i] = copy1[i] = copy2[i] = ran.symm<T>();
+        }
+
+        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+
+        DFT::Forward(data1()-1,data2()-1,n);
+        DFT::Forward(copy1()-1,n);
+        DFT::Forward(copy2()-1,n);
+
+        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+        Y_ASSERT( 0 == memcmp( data1(), copy1(), data1.size() * sizeof(T) ));
+
+
+
+
     }
 }
 
@@ -316,6 +349,15 @@ Y_UTEST(dft_core)
             }
             fprintf(stderr," \\\n");
         }
+    }
+
+    std::cerr << "Testing Dual" << std::endl;
+
+    for(unsigned p=1;p<=20;++p)
+    {
+        DFT_TestDual<float>(p,ran);
+        DFT_TestDual<double>(p,ran);
+
     }
 
 

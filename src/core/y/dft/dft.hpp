@@ -202,7 +202,7 @@ namespace Yttrium
         template <typename T> static inline
         size_t Format(T data1[], T data2[], const size_t size) noexcept
         {
-            return Format_(data1,data2,size);
+            //return Format_(data1,data2,size);
 
             switch(size)
             {
@@ -283,6 +283,62 @@ namespace Yttrium
         }
 
 
+        template <typename T> static inline
+        void Transform(T                                data1[],
+                       T                                data2[],
+                       const size_t                     size,
+                       const typename DFT_Real<T>::Type SinTable[]) noexcept
+        {
+            typedef typename DFT_Real<T>::Type long_T;
+            const  size_t n = Format(data1,data2,size);
+            size_t mmax=2;
+            size_t indx=0;
+            while(n>mmax)
+            {
+                const size_t istep = (mmax << 1);
+                long_T       wpr   = Table<long_T>::CosMinusOne[indx];
+                long_T       wpi   = SinTable[indx];
+                long_T       wr    = 1;
+                long_T       wi    = 0;
+                for(size_t m=1;m<mmax;m+=2)
+                {
+                    for(size_t i=m;i<=n;i+=istep)
+                    {
+                        const size_t j  = i+mmax;
+                        const size_t i1 = i+1;
+                        const size_t j1 = j+1;
+
+                        {
+                            const T j_re  = data1[j];
+                            const T j_im =  data1[j1];
+                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
+                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
+                            data1[j]       = data1[i]  - tempr;
+                            data1[j1]      = data1[i1] - tempi;
+                            data1[i]      += tempr;
+                            data1[i1]     += tempi;
+                        }
+
+                        {
+                            const T j_re  = data2[j];
+                            const T j_im =  data2[j1];
+                            const T tempr = static_cast<T>(wr*j_re - wi*j_im);
+                            const T tempi = static_cast<T>(wr*j_im + wi*j_re);
+                            data2[j]       = data2[i]  - tempr;
+                            data2[j1]      = data2[i1] - tempi;
+                            data2[i]      += tempr;
+                            data2[i1]     += tempi;
+                        }
+                    }
+                    const long_T wt=wr;
+                    wr=wt*wpr-wi*wpi+wt;
+                    wi=wi*wpr+wt*wpi+wi;
+                }
+                mmax=istep;
+                ++indx;
+            }
+        }
+
         //______________________________________________________________________
         //
         //
@@ -296,6 +352,19 @@ namespace Yttrium
             Transform(data,size,Table< typename DFT_Real<T>::Type >::PositiveSin);
         }
 
+        //______________________________________________________________________
+        //
+        //
+        //! Forward Discrete Fourier Transform of data[1..2*size]
+        //
+        //______________________________________________________________________
+        template <typename T> static inline
+        void Forward(T            data1[],
+                     T            data2[],
+                     const size_t size) noexcept
+        {
+            Transform(data1,data2,size,Table< typename DFT_Real<T>::Type >::PositiveSin);
+        }
         //______________________________________________________________________
         //
         //
