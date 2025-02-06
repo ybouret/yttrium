@@ -167,7 +167,8 @@ namespace Yttrium
                                          const Rational &q,
                                          const integer_t z)
         {
-            const Integer R = q.denom * z;
+            const Integer Z = z;
+            const Integer R = q.denom * Z;
             const Integer D = q.numer - R;
             return takeOpposite ? Sign::Opposite(D.s) : D.s;
         }

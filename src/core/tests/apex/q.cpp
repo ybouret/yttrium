@@ -47,7 +47,7 @@ Y_UTEST(apex_q)
 
 
     std::cerr << "Comparisons" << std::endl;
-    for(size_t cycle=0;cycle<10;++cycle)
+    for(size_t cycle=0;cycle<100;++cycle)
     {
         const Rational lhs(ran,ran.lt(32),1+ran.leq(30));
         const Rational rhs(ran,ran.lt(32),1+ran.leq(30));
@@ -60,13 +60,11 @@ Y_UTEST(apex_q)
         const SignType diff = Rational::Compare(lhs,quot);
         Y_ASSERT( Sign::Opposite(diff) == Rational::Compare(quot,lhs) );
 
-        std::cerr << "quot = " << quot << std::endl;
         const integer_t z = quot.cast<integer_t>("quot");
-        std::cerr << "z    = " << z << std::endl;
         Y_ASSERT(z==quot);
         Y_ASSERT(quot==z);
-        std::cerr << "diff=" << Sign::ToChar(diff) << std::endl;
         Y_ASSERT(diff == Rational::Compare(lhs,z) );
+        Y_ASSERT(Sign::Opposite(diff) == Rational::Compare(z,lhs) );
 
     }
 
