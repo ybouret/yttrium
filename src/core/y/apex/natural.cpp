@@ -202,6 +202,12 @@ namespace Yttrium
             { Natural _(s); xch(_); }
             return *this;
         }
+
+        void Natural:: raiseOverflowFor(const char * const msg) const
+        {
+            throw Specific::Exception(CallSign,"Overflow for '%s'", msg ? msg : Core::Unknown);
+        }
+
     }
 
 }

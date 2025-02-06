@@ -195,7 +195,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             //
             //! try to cast to given integral type
             //__________________________________________________________________
-            template <typename T>
+            template <typename T> inline
             bool tryCast(T &target) const
             {
                 switch(s) {
@@ -220,6 +220,14 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
                 }
             }
 
+            template <typename T> inline
+            T cast(const char * const variable) const
+            {
+                T res(0);
+                if(!tryCast(res)) raiseOverflowFor(variable);
+                return res;
+            }
+
 
             //__________________________________________________________________
             //
@@ -235,7 +243,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Binary_Wrapper(Sub);
             Y_Apex_Integer_Binary_Wrapper(Mul);
             Y_Apex_Integer_Binary_Wrapper(Div);
-
+            void raiseOverflowFor(const char * const msg) const;
         };
 
     }

@@ -443,6 +443,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 }
             }
 
+            template <typename T> inline
+            T cast(const char * const variable) const
+            {
+                T res(0);
+                if(!tryCast(res)) raiseOverflowFor(variable);
+                return res;
+            }
+
             static Natural FFT(const Natural &lhs, const Natural &rhs); //!< FFT product
             Natural(Block * const, const AsBlock_ &);                   //!< manual setting
 
@@ -459,6 +467,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
             static Block *Mul(Block &lhs, Block &   rhs);                      //!< default add
             static Block *Mul(Block &lhs, natural_t rhs);                      //!< lhs*rhs
+
+            void raiseOverflowFor(const char * const msg) const;
 
         };
 

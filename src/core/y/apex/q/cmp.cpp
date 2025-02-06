@@ -183,7 +183,7 @@ namespace Yttrium
                     return Negative;
 
                 case PP_Signs: return QzCompare(false, q, z);
-                case NN_Signs: return QzCompare(true, q, z);
+                case NN_Signs: return QzCompare(true,  q, z);
 
                 case PZ_Signs:
                 case PN_Signs:

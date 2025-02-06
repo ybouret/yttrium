@@ -126,6 +126,12 @@ namespace Yttrium
             return os << z.toDec();
         }
 
+
+        void Integer:: raiseOverflowFor(const char * const msg) const
+        {
+            throw Specific::Exception(CallSign,"Overflow for '%s'", msg ? msg : Core::Unknown);
+        }
+
     }
 
 }
