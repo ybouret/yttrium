@@ -19,17 +19,15 @@ namespace Yttrium
 /**/ }
 
         //! helper to implement comparisons
-#define Y_Apex_Rational_Ops(OP,MATCHES,RESULT)               \
+#define Y_Apex_Rational_Ops(OP,MATCHES,RESULT)                  \
 Y_Apex_Rational_Op(OP, Rational &, Rational &, MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Rational &, integer_t , MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, integer_t , Rational &, MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Rational &, Integer & , MATCHES, RESULT) \
-Y_Apex_Rational_Op(OP, Integer  &, Rational &, MATCHES, RESULT)
-
-#if 0
+Y_Apex_Rational_Op(OP, Integer  &, Rational &, MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Rational &, Natural & , MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
-#endif
+
 
         //______________________________________________________________________
         //
@@ -114,6 +112,9 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             static SignType Compare(const Integer  &, const Rational &); //!< comparison
             static SignType Compare(const Rational &, const integer_t ); //!< comparison
             static SignType Compare(const integer_t,  const Rational &); //!< comparison
+
+            static SignType Compare(const Rational &, const Natural  &); //!< comparison
+            static SignType Compare(const Natural  &, const Rational &); //!< comparison
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Apex_Rational_Ops(<, ==,Negative)

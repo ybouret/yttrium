@@ -66,6 +66,10 @@ Y_UTEST(apex_q)
         Y_ASSERT(diff == Rational::Compare(lhs,z) );
         Y_ASSERT(Sign::Opposite(diff) == Rational::Compare(z,lhs) );
 
+        const Natural n = quot.n;
+        const SignType naturalDiff = Rational::Compare(lhs,n);
+        Y_ASSERT( Sign::Opposite(naturalDiff) == Rational::Compare(n,lhs) );
+
     }
 
 

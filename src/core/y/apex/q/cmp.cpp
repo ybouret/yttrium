@@ -205,3 +205,27 @@ namespace Yttrium
     }
 }
 
+namespace Yttrium
+{
+    namespace Apex
+    {
+        SignType Rational:: Compare(const Rational &q, const Natural  &n)
+        {
+            switch(q.numer.s)
+            {
+                case Negative: return Negative;
+                case __Zero__: return n->bits<=0 ? __Zero__ : Negative;
+                case Positive:
+                    break;
+            }
+            const Natural R = q.denom * n;
+            const Integer D = q.numer - R;
+            return D.s;
+        }
+
+        SignType Rational:: Compare(const Natural  &n, const Rational &q)
+        {
+            return Sign::Opposite( Compare(q,n) );
+        }
+    }
+}
