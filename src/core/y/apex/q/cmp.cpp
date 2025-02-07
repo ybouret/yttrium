@@ -72,19 +72,6 @@ namespace Yttrium
     namespace Apex
     {
 
-        static inline SignType QQCompare(const bool takeOpposite,
-                                         const Rational &lhs,
-                                         const Rational &rhs)
-        {
-            std::cerr << "QQCompare(" << takeOpposite << "," << lhs << "," << rhs << ")" << std::endl;
-            
-            assert(lhs.numer.s == rhs.numer.s);
-            const Integer L = lhs.numer * rhs.denom;
-            const Integer R = rhs.numer * lhs.denom;
-            const Integer D = L-R;
-            return takeOpposite ? Sign::Opposite(D.s) : D.s;
-        }
-
         SignType Rational:: Compare(const Rational &lhs, const Rational &rhs)
         {
             switch( Sign::MakePair(lhs.numer.s,rhs.numer.s) )
@@ -95,8 +82,13 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return QQCompare(false, lhs, rhs);
-                case NN_Signs: return QQCompare(true,  lhs, rhs);
+                case PP_Signs:
+                case NN_Signs: {
+                    const Integer L = lhs.numer * rhs.denom;
+                    const Integer R = rhs.numer * lhs.denom;
+                    const Integer D = L-R;
+                    return D.s;
+                }
 
                 case PZ_Signs:
                 case PN_Signs:
