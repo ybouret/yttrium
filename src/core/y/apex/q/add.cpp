@@ -6,7 +6,11 @@ namespace Yttrium
 {
     namespace Apex
     {
-       
+        Rational Rational:: operator+() const
+        {
+            return *this;
+        }
+
     }
     
 }
