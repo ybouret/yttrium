@@ -2,11 +2,13 @@
 #include "y/apex/rational.hpp"
 #include "y/system/exception.hpp"
 #include "y/container/algo/crop.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
     namespace Apex
     {
+
         Rational Rational:: Parse(const String &str)
         {
             String data = str;
