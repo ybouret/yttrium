@@ -131,5 +131,18 @@ Y_UTEST(apex_q)
     }
     std::cerr << std::endl;
 
+    for(Rational q=-2; q <= 2; q++)
+    {
+        std::cerr << " " << q;
+    }
+    std::cerr << std::endl;
+
+
+    std::cerr << "Subtractions" << std::endl;
+    for(Rational q(8,3); q >= -2; --q)
+    {
+        std::cerr << " " << q;
+    }
+    std::cerr << std::endl;
 }
 Y_UDONE()

@@ -162,7 +162,10 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             // Subtractions
             //
             //__________________________________________________________________
-            Rational operator-() const; //!< unary -
+            Rational operator-() const;     //!< unary -
+            void decr();                    //!< +=1
+            Rational &      operator -- ();       //!< --this
+            Rational        operator -- (int);    //!< this--
 
             //__________________________________________________________________
             //

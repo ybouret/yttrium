@@ -16,8 +16,8 @@ namespace Yttrium
             switch(numer.s)
             {
                 case __Zero__: {
-                    assert(1==denom); Integer _1(1); Coerce(numer).xch(_1);
-                    assert( 1 == Natural::GCD(numer.n,denom) );
+                    assert(1==denom);
+                    Coerce(numer) = 1;
                 } break;
 
                 case Positive:
@@ -29,7 +29,7 @@ namespace Yttrium
                     Integer num = numer + denom;
                     switch(num.s)
                     {
-                        case __Zero__: Coerce(denom) = 1; ; break;
+                        case __Zero__: Coerce(denom) = 1;  break; // use num==0
                         case Negative:
                         case Positive:
                             break;

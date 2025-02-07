@@ -86,10 +86,15 @@ namespace Yttrium
             return xch(_);
         }
 
-        Integer & Integer:: operator=(const integer_t z)
+        Integer & Integer:: operator=(const integer_t z) noexcept
         {
-            Integer _(z);
-            return xch(_);
+            switch( Coerce(s) = Sign::Of(z) )
+            {
+                case __Zero__: Coerce(n) = 0; break;
+                case Positive: Coerce(n) = static_cast<natural_t>(z); break;
+                case Negative: Coerce(n) = static_cast<natural_t>(-z); break;
+            }
+            return*this;
         }
 
         Integer & Integer:: operator=(const Natural &u)
@@ -133,7 +138,7 @@ namespace Yttrium
         }
 
 
-        
+
     }
 
 }

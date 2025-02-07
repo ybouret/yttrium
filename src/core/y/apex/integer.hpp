@@ -99,7 +99,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Integer(const SignType, const Natural &); //!< setup
             Integer(const String &);                  //!< parse/assign
             Integer & operator=(const Integer  &);    //!< assign
-            Integer & operator=(const integer_t );    //!< assign
+            Integer & operator=(const integer_t ) noexcept; //!< assign
             Integer & operator=(const Natural  &);    //!< assign
             Integer & operator=(const String   &);    //!< parse/assign
             virtual ~Integer() noexcept;              //!< cleanup
