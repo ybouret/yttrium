@@ -11,39 +11,45 @@ using namespace Apex;
 
 
 
+static inline void TestPair(const Rational &lhs, const Rational &rhs)
+{
+    std::cerr << "lhs=" << lhs << " = " << lhs.cast<float>()       << std::endl;
+    std::cerr << "rhs=" << rhs << " = " << rhs.cast<long double>() << std::endl;
+
+    const SignType dif = Rational::Compare(lhs,rhs);
+    std::cerr << "dif='" << Sign::ToChar(dif) << "'" << std::endl;
+
+    if(rhs.denom==1)
+    {
+        Y_CHECK( dif == Rational::Compare(lhs,rhs.numer) );
+        Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer,lhs) );
+
+        if(rhs.numer>=0)
+        {
+            Y_CHECK( dif == Rational::Compare(lhs,rhs.numer.n) );
+            Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer.n,lhs) );
+
+        }
+        integer_t z = 0;
+        if( rhs.numer.tryCast(z) )
+        {
+            Y_CHECK( dif == Rational::Compare(lhs,z) );
+            Y_CHECK( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
+        }
+
+    }
+}
+
 Y_UTEST(apex_q)
 {
     Random::ParkMiller ran;
 
     if(argc>2)
     {
-        Rational lhs = String(argv[1]);
-        Rational rhs = String(argv[2]);
-        std::cerr << "lhs=" << lhs << " = " << lhs.cast<float>()       << std::endl;
-        std::cerr << "rhs=" << rhs << " = " << rhs.cast<long double>() << std::endl;
-
-        const SignType dif = Rational::Compare(lhs,rhs);
-        std::cerr << "dif='" << Sign::ToChar(dif) << "'" << std::endl;
-
-        if(rhs.denom==1)
-        {
-            Y_CHECK( dif == Rational::Compare(lhs,rhs.numer) );
-            Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer,lhs) );
-
-            if(rhs.numer>=0)
-            {
-                Y_CHECK( dif == Rational::Compare(lhs,rhs.numer.n) );
-                Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer.n,lhs) );
-
-            }
-            integer_t z = 0;
-            if( rhs.numer.tryCast(z) )
-            {
-                Y_CHECK( dif == Rational::Compare(lhs,z) );
-                Y_CHECK( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
-            }
-
-        }
+        const Rational lhs = String(argv[1]);
+        const Rational rhs = String(argv[2]);
+        TestPair(lhs,rhs);
+        TestPair(rhs,lhs);
 
 
 
