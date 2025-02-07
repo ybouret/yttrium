@@ -152,6 +152,9 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             //
             //__________________________________________________________________
             Rational operator+() const; //!< unary +
+            void incr();                //!< +=1
+            Rational &      operator ++ ();                     //!< ++this
+            Rational        operator ++ (int);                  //!< this++
 
             //__________________________________________________________________
             //

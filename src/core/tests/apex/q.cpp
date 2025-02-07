@@ -50,9 +50,6 @@ Y_UTEST(apex_q)
         const Rational rhs = String(argv[2]);
         TestPair(lhs,rhs);
         TestPair(rhs,lhs);
-
-
-
         return 0;
     }
 
@@ -113,6 +110,26 @@ Y_UTEST(apex_q)
     }
 
 
+    std::cerr << "Additions" << std::endl;
+
+    for(Rational q(-8,3); q <= 2; ++q)
+    {
+        std::cerr << " " << q;
+    }
+    std::cerr << std::endl;
+
+    for(Rational q(-8,3); q <= 2; q++)
+    {
+        std::cerr << " " << q;
+    }
+    std::cerr << std::endl;
+
+
+    for(Rational q=-2; q <= 2; ++q)
+    {
+        std::cerr << " " << q;
+    }
+    std::cerr << std::endl;
 
 }
 Y_UDONE()
