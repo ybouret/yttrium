@@ -13,11 +13,11 @@ using namespace Apex;
 
 static inline void TestPair(const Rational &lhs, const Rational &rhs)
 {
-    std::cerr << "lhs=" << lhs << " = " << lhs.cast<float>()       << std::endl;
-    std::cerr << "rhs=" << rhs << " = " << rhs.cast<long double>() << std::endl;
+    std::cerr << "lhs = " << lhs << " = " << lhs.cast<float>()       << std::endl;
+    std::cerr << "rhs = " << rhs << " = " << rhs.cast<long double>() << std::endl;
 
     const SignType dif = Rational::Compare(lhs,rhs);
-    std::cerr << "dif='" << Sign::ToChar(dif) << "'" << std::endl;
+    std::cerr << "dif = '" << Sign::ToChar(dif) << "'" << std::endl;
     Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs,lhs) );
 
     const Rational sum = lhs + rhs;
