@@ -110,14 +110,7 @@ namespace Yttrium
 {
     namespace Apex
     {
-        static inline SignType QZCompare(const bool takeOpposite,
-                                         const Rational &q,
-                                         const Integer &z)
-        {
-            const Integer R = q.denom * z;
-            const Integer D = q.numer - R;
-            return takeOpposite ? Sign::Opposite(D.s) : D.s;
-        }
+
 
         SignType Rational:: Compare(const Rational &q, const Integer  &z)
         {
@@ -129,8 +122,12 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return QZCompare(false, q, z);
-                case NN_Signs: return QZCompare(true,  q, z);
+                case PP_Signs:
+                case NN_Signs:  {
+                    const Integer R = q.denom * z;
+                    const Integer D = q.numer - R;
+                    return D.s;
+                }
 
                 case PZ_Signs:
                 case PN_Signs:
@@ -157,17 +154,6 @@ namespace Yttrium
 {
     namespace Apex
     {
-        static inline SignType QzCompare(const bool takeOpposite,
-                                         const Rational &q,
-                                         const integer_t z)
-        {
-            assert(z!=0);
-            std::cerr << "QzCompare(" << takeOpposite << "," << q << "," << z << ")" << std::endl;
-            const Integer Z = z;
-            const Integer R = q.denom * Z;
-            const Integer D = q.numer - R;
-            return takeOpposite ? Sign::Opposite(D.s) : D.s;
-        }
 
         SignType Rational:: Compare(const Rational &q, const integer_t z)
         {
@@ -179,8 +165,13 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: return QzCompare(false, q, z);
-                case NN_Signs: return QzCompare(true,  q, z);
+                case PP_Signs: 
+                case NN_Signs: {
+                    const Integer Z = z;
+                    const Integer R = q.denom * Z;
+                    const Integer D = q.numer - R;
+                    return D.s;
+                }
 
                 case PZ_Signs:
                 case PN_Signs:
