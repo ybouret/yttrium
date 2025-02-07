@@ -97,9 +97,11 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Integer(const Integer &);                 //!< duplicate
             Integer(const Natural &);                 //!< setup
             Integer(const SignType, const Natural &); //!< setup
+            Integer(const String &);                  //!< parse/assign
             Integer & operator=(const Integer  &);    //!< assign
             Integer & operator=(const integer_t );    //!< assign
             Integer & operator=(const Natural  &);    //!< assign
+            Integer & operator=(const String   &);    //!< parse/assign
             virtual ~Integer() noexcept;              //!< cleanup
             Integer(Random::Bits &, const size_t);    //!< with random sign
             Y_OSTREAM_PROTO(Integer);                 //!< output as decimal string
@@ -112,6 +114,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             //__________________________________________________________________
             Integer & xch( Integer & ) noexcept; //!< no-throw exchange
             String    toDec() const;             //!< to decimal string
+            Integer   Parse(const String &);     //!< parse
 
             //__________________________________________________________________
             //

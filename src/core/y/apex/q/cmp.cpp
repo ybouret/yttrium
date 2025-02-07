@@ -167,6 +167,7 @@ namespace Yttrium
                                          const Rational &q,
                                          const integer_t z)
         {
+            assert(z!=0);
             const Integer Z = z;
             const Integer R = q.denom * Z;
             const Integer D = q.numer - R;

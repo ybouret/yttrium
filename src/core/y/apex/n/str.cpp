@@ -117,7 +117,7 @@ namespace Yttrium
             for(size_t i=0;i<size;++i)
             {
                 const char c = text[i];
-                if( !isdigit(c) ) throw Specific::Exception(CallSign,"Invladic Decimal char '%c'",c);
+                if( !isdigit(c) ) throw Specific::Exception(CallSign,"Invalad Decimal char '%c'",c);
                 self *= 10;
                 self += c-'0';
             }

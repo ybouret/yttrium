@@ -60,11 +60,14 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             Rational(const Integer  &);                 //!< setup
             Rational(const integer_t, const natural_t); //!< setup
             Rational(const Integer &, const Natural &); //!< setup
-            Rational(Random::Bits &ran, const size_t nbits, const size_t dbits); //!< setu[
+            Rational(Random::Bits &ran, const size_t nbits, const size_t dbits); //!< setup
+            Rational(const String &);
             virtual ~Rational() noexcept; //!< cleanup
+
 
             Rational & operator=(const Rational &); //!< assign
             Rational & operator=(const integer_t ); //!< assign
+            Rational & operator=(const String   &); //!< parse/assign
             Y_OSTREAM_PROTO(Rational);              //!< display
 
             //__________________________________________________________________
@@ -73,8 +76,9 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             // Methods
             //
             //__________________________________________________________________
-            Rational & xch(Rational &q); //!< no-throw exchange
-            void       simplify();       //!< manual simplify
+            Rational &      xch(Rational &q);      //!< no-throw exchange
+            void            simplify();            //!< manual simplify
+            static Rational Parse(const String &);
 
             //__________________________________________________________________
             //

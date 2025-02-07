@@ -15,7 +15,13 @@ Y_UTEST(apex_q)
 {
     Random::ParkMiller ran;
 
-    std::cerr << Rational(12,3) << std::endl;
+    if(argc>1)
+    {
+        Rational lhs( argv[1] );
+        std::cerr << "lhs=" << lhs << std::endl;
+        return 0;
+    }
+
 
     {
         const Rational half(1,2);
