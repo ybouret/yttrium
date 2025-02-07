@@ -49,3 +49,24 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Rational Rational:: Sub(const Rational &a, const Rational &b)
+        {
+            const Integer num = a.numer * b.denom - b.numer * a.denom;
+            switch( num.s )
+            {
+                case __Zero__: return Rational(0);
+                case Negative:
+                case Positive:
+                    break;
+            }
+            const Natural den = a.denom * b.denom;
+            return Rational(num,den);
+        }
+    }
+
+}

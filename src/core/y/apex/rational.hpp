@@ -204,6 +204,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             //__________________________________________________________________
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
             Y_Apex_Rational_Operators(+,Add)
+            Y_Apex_Rational_Operators(-,Sub)
 #endif
             
             //__________________________________________________________________
@@ -217,6 +218,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
 
         private:
             Y_Apex_Rational_Binary_Wrapper(Add);
+            Y_Apex_Rational_Binary_Wrapper(Sub);
         };
     }
 

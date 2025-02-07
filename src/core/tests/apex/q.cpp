@@ -18,25 +18,29 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
 
     const SignType dif = Rational::Compare(lhs,rhs);
     std::cerr << "dif='" << Sign::ToChar(dif) << "'" << std::endl;
+    Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs,lhs) );
+
+    const Rational sum = lhs + rhs;
+    Y_ASSERT(lhs == sum-rhs);
+    Y_ASSERT(rhs == sum-lhs);
 
     if(rhs.denom==1)
     {
-        Y_CHECK( dif == Rational::Compare(lhs,rhs.numer) );
-        Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer,lhs) );
+        Y_ASSERT( dif == Rational::Compare(lhs,rhs.numer) );
+        Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs.numer,lhs) );
 
         if(rhs.numer>=0)
         {
-            Y_CHECK( dif == Rational::Compare(lhs,rhs.numer.n) );
-            Y_CHECK( Sign::Opposite(dif) == Rational::Compare(rhs.numer.n,lhs) );
+            Y_ASSERT( dif == Rational::Compare(lhs,rhs.numer.n) );
+            Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs.numer.n,lhs) );
 
         }
         integer_t z = 0;
         if( rhs.numer.tryCast(z) )
         {
-            Y_CHECK( dif == Rational::Compare(lhs,z) );
-            Y_CHECK( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
+            Y_ASSERT( dif == Rational::Compare(lhs,z) );
+            Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
         }
-
     }
 }
 
@@ -93,25 +97,12 @@ Y_UTEST(apex_q)
         Y_ASSERT( __Zero__ == Rational::Compare(lhs,lhs) );
         Y_ASSERT( Rational::Compare(rhs,lhs) == Sign::Opposite( Rational::Compare(lhs,rhs) ) );
 
-        const Integer  quot = lhs.numer/lhs.denom;
-        const SignType diff = Rational::Compare(lhs,quot);
-        Y_ASSERT( Sign::Opposite(diff) == Rational::Compare(quot,lhs) );
-
-        const integer_t z = quot.cast<integer_t>("quot");
-        Y_ASSERT(z==quot);
-        Y_ASSERT(quot==z);
-        Y_ASSERT(diff == Rational::Compare(lhs,z) );
-        Y_ASSERT(Sign::Opposite(diff) == Rational::Compare(z,lhs) );
-
-        const Natural n = quot.n;
-        const SignType naturalDiff = Rational::Compare(lhs,n);
-        Y_ASSERT( Sign::Opposite(naturalDiff) == Rational::Compare(n,lhs) );
+        TestPair(lhs,rhs);
 
     }
 
 
-    std::cerr << "Additions" << std::endl;
-
+    std::cerr << "Incr" << std::endl;
     for(Rational q(-8,3); q <= 2; ++q)
     {
         std::cerr << " " << q;
@@ -138,7 +129,7 @@ Y_UTEST(apex_q)
     std::cerr << std::endl;
 
 
-    std::cerr << "Subtractions" << std::endl;
+    std::cerr << "Decr" << std::endl;
     for(Rational q(8,3); q >= -2; --q)
     {
         std::cerr << " " << q;
@@ -161,6 +152,9 @@ Y_UTEST(apex_q)
         std::cerr << " " << q;
     }
     std::cerr << std::endl;
+
+    std::cerr << "Add/Div" << std::endl;
+
 
 }
 Y_UDONE()
