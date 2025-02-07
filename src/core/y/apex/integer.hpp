@@ -112,9 +112,9 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             // Methods
             //
             //__________________________________________________________________
-            Integer & xch( Integer & ) noexcept; //!< no-throw exchange
-            String    toDec() const;             //!< to decimal string
-            Integer   Parse(const String &);     //!< parse
+            Integer &      xch( Integer & ) noexcept; //!< no-throw exchange
+            String         toDec() const;             //!< to decimal string
+            static Integer Parse(const String &);     //!< parse
 
             //__________________________________________________________________
             //

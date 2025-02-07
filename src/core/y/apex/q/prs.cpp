@@ -21,9 +21,16 @@ namespace Yttrium
             if( '(' == data.head() )
             {
                 if( ')' != data.tail() ) throw Specific::Exception(CallSign,"Missing Right Paren in String");
-                const char * const divSign = strchr(data.c_str(),'/');
+                char * const divSign = (char *)strchr(data.c_str(),'/');
                 if(!divSign) throw Specific::Exception(CallSign,"Missing Div Sign in String");
-                throw Specific::Exception(CallSign,"not done yet");
+
+                *divSign    = 0;
+                data.tail() = 0;
+                const String  ns = &data[2];
+                const String  ds = divSign+1;
+                const Integer nz = Integer::Parse(ns);
+                const Natural dn = Natural(ds);
+                return Rational(nz,dn);
             }
             else
             {
