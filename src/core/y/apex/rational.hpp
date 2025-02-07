@@ -130,6 +130,24 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
             //__________________________________________________________________
             //
             //
+            // to real
+            //
+            //__________________________________________________________________
+            template <typename T> inline
+            T cast() const
+            {
+                switch(numer.s)
+                {
+                    case __Zero__: break;
+                    case Positive: return  Natural::Ratio<T>(numer.n,denom);
+                    case Negative: return -Natural::Ratio<T>(numer.n,denom);
+                }
+                return 0;
+            }
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________

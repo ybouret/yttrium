@@ -42,9 +42,7 @@ namespace Yttrium
 
 
         Rational::Rational(const String &s) :
-        Number(),
-        numer(0),
-        denom(1)
+        Number(), numer(0), denom(1)
         {
             Rational _ = Parse(s);
             (void) xch(_);
