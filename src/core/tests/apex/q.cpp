@@ -26,8 +26,9 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
 
     if(rhs.denom==1)
     {
-        Y_ASSERT( dif == Rational::Compare(lhs,rhs.numer) );
-        Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs.numer,lhs) );
+        const Integer &Z = rhs.numer;
+        Y_ASSERT( dif == Rational::Compare(lhs,Z) );
+        Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(Z,lhs) );
 
         if(rhs.numer>=0)
         {
