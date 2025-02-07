@@ -70,3 +70,31 @@ namespace Yttrium
     }
 
 }
+
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Rational Rational:: Sub(const Rational &a, const Integer &b)
+        {
+            const Integer num = a.numer - b * a.denom;
+            switch( num.s )
+            {
+                case __Zero__: return Rational(0);
+                case Negative:
+                case Positive:
+                    break;
+            }
+            return Rational(num,a.denom);
+        }
+
+        Rational Rational:: Sub(const Integer &a, const Rational &b)
+        {
+            Rational _( Sub(b,a) );
+            Sign::ReplaceByOpposite( Coerce(_.numer.s) );
+            return _;
+        }
+    }
+
+}

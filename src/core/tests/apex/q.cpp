@@ -30,10 +30,17 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
         Y_ASSERT( dif == Rational::Compare(lhs,Z) );
         Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(Z,lhs) );
 
+        Y_ASSERT(sum == lhs+Z);
+        Y_ASSERT(sum == Z+lhs);
+
+        Y_ASSERT(lhs == sum-Z);
+        Y_ASSERT(-lhs == Z-sum);
+
         if(rhs.numer>=0)
         {
-            Y_ASSERT( dif == Rational::Compare(lhs,rhs.numer.n) );
-            Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs.numer.n,lhs) );
+            const Natural &N = rhs.numer.n;
+            Y_ASSERT( dif == Rational::Compare(lhs,N) );
+            Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(N,lhs) );
 
         }
         integer_t z = 0;

@@ -74,6 +74,32 @@ namespace Yttrium
             const Natural den = a.denom * b.denom;
             return Rational(num,den);
         }
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Rational Rational:: Add(const Rational &a, const Integer &b)
+        {
+            const Integer num = a.numer + b * a.denom;
+            switch( num.s )
+            {
+                case __Zero__: return Rational(0);
+                case Negative:
+                case Positive:
+                    break;
+            }
+            return Rational(num,a.denom);
+        }
+
+        Rational Rational:: Add(const Integer &a, const Rational &b)
+        {
+            return Add(b,a);
+        }
     }
 
 }
