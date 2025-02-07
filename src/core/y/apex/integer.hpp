@@ -58,7 +58,7 @@ Y_Apex_Integer_Unary_Operator(OP,Integer &,FCN)  \
 Y_Apex_Integer_Unary_Operator(OP,integer_t,FCN)  \
 Y_Apex_Integer_Unary_Operator(OP,Natural &,FCN)
 
-        //! implement all operators fron a binary function
+        //! implement all operators from a binary function
 #define Y_Apex_Integer_Operators(OP,FCN) \
 Y_Apex_Integer_Binary_Operators(OP,FCN)  \
 Y_Apex_Integer_Unary_Operators(OP,FCN)
