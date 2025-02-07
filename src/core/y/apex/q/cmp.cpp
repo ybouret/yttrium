@@ -76,6 +76,8 @@ namespace Yttrium
                                          const Rational &lhs,
                                          const Rational &rhs)
         {
+            std::cerr << "QQCompare(" << takeOpposite << "," << lhs << "," << rhs << ")" << std::endl;
+            
             assert(lhs.numer.s == rhs.numer.s);
             const Integer L = lhs.numer * rhs.denom;
             const Integer R = rhs.numer * lhs.denom;
@@ -136,7 +138,7 @@ namespace Yttrium
                     return Negative;
 
                 case PP_Signs: return QZCompare(false, q, z);
-                case NN_Signs: return QZCompare(true, q, z);
+                case NN_Signs: return QZCompare(true,  q, z);
 
                 case PZ_Signs:
                 case PN_Signs:
@@ -168,6 +170,7 @@ namespace Yttrium
                                          const integer_t z)
         {
             assert(z!=0);
+            std::cerr << "QzCompare(" << takeOpposite << "," << q << "," << z << ")" << std::endl;
             const Integer Z = z;
             const Integer R = q.denom * Z;
             const Integer D = q.numer - R;
