@@ -32,7 +32,9 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
 #define Y_Apex_Rational_Binary_Wrapper(FCN) \
 static Rational FCN(const Rational &, const Rational &); \
 static Rational FCN(const Rational &, const Integer  &); \
-static Rational FCN(const Integer  &, const Rational &)
+static Rational FCN(const Integer  &, const Rational &);\
+static Rational FCN(const Rational &, const integer_t ); \
+static Rational FCN(const integer_t,  const Rational &)
 
         //! implement operator from a binary function
 #define Y_Apex_Rational_Binary_Operator(OP,LHS,RHS,FCN) \
@@ -43,6 +45,8 @@ friend inline Rational operator OP (const LHS lhs, const RHS rhs) { return Ratio
 Y_Apex_Rational_Binary_Operator(OP, Rational &, Rational &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Rational &, Integer  &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Integer  &, Rational &, FCN) \
+Y_Apex_Rational_Binary_Operator(OP, Rational &, integer_t,  FCN) \
+Y_Apex_Rational_Binary_Operator(OP, integer_t,  Rational &, FCN) 
 
 #define Y_Apex_Rational_Unary_Operator(OP,RHS,FCN) \
 inline Rational & operator OP##= (const RHS rhs) { Rational _( FCN(*this,rhs) ); xch(_); return *this; }

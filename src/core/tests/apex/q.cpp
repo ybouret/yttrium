@@ -41,13 +41,15 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             const Natural &N = rhs.numer.n;
             Y_ASSERT( dif == Rational::Compare(lhs,N) );
             Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(N,lhs) );
-
         }
+
         integer_t z = 0;
         if( rhs.numer.tryCast(z) )
         {
             Y_ASSERT( dif == Rational::Compare(lhs,z) );
             Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
+
+            //Y_ASSERT(lhs == sum - z );
         }
     }
 }
