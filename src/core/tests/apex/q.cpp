@@ -49,7 +49,7 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             Y_ASSERT( dif == Rational::Compare(lhs,z) );
             Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(z,lhs) );
 
-            //Y_ASSERT(lhs == sum - z );
+            Y_ASSERT(sum == lhs + z);
         }
     }
 }

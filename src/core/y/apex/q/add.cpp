@@ -103,3 +103,20 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Rational Rational:: Add(const Rational &a, const integer_t b)
+        {
+
+        }
+
+        Rational Rational:: Add(const integer_t a, const Rational &b)
+        {
+            return Add(b,a);
+        }
+    }
+
+}
