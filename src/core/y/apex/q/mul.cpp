@@ -100,3 +100,40 @@ namespace Yttrium
     }
 
 }
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+
+        Rational Rational:: Mul(const Rational &a, const Natural &b)
+        {
+            switch(b->bits)
+            {
+                case 0: return 0;
+                case 1: return a;
+                default:
+                    break;
+            }
+            assert(b>1);
+
+            switch(a.numer.s)
+            {
+                case __Zero__: return 0;
+                case Positive:
+                case Negative:
+                    break;
+            }
+
+            const Integer num = a.numer * b; assert(0!=num);
+            return Rational(num,a.denom);
+        }
+
+
+        Rational Rational:: Mul(const Natural &a, const Rational &b)
+        {
+            return Mul(b,a);
+        }
+    }
+}
