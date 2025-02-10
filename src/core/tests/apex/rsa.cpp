@@ -1,5 +1,5 @@
 
-#include "y/apex/modular.hpp"
+#include "y/apex/api/modular.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/system/wtime.hpp"

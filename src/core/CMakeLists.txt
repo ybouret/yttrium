@@ -89,6 +89,7 @@ apex/block/jig
 apex/n
 apex/z
 apex/q
+apex/api
 kemp
 kemp/element
 kemp/natural

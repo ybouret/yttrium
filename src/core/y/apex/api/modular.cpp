@@ -1,5 +1,5 @@
 
-#include "y/apex/modular.hpp"
+#include "y/apex/api/modular.hpp"
 #include "y/apex/integer.hpp"
 #include "y/system/exception.hpp"
 
