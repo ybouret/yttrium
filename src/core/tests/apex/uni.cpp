@@ -46,7 +46,7 @@ Y_UTEST(apex_uni)
 
                 (std::cerr << "v=" << v).flush();
                 const Natural nrm2 = Univocal::MakeSigned(v);
-                //std::cerr << " => " << v << " @" << nrm2 <<std::endl;
+                std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
     }

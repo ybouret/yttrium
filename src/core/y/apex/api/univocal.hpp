@@ -118,12 +118,26 @@ namespace Yttrium
                     // untouched
                     //----------------------------------------------------------
                     for(size_t i=s;i>0;--i) {
-                        const Natural y = arr[i];
+                        const T      &x = arr[i]; if(x<=0) continue;
+                        const Natural y = x;
                         res += y.sqr();
                     }
                 }
                 return res;
             }
+
+
+            static
+            bool MustSwapSigns(const size_t p, const size_t n, const SignType f) noexcept
+            {
+                assert(f!=__Zero__);
+                return n>p || (n==p && f == Negative);
+            }
+
+            static const unsigned Untouched = 0x00;
+            static const unsigned Normalize = 0x01;
+            static const unsigned SwapSigns = 0x02;
+
 
 
             //! Signed Integral
@@ -220,9 +234,63 @@ namespace Yttrium
                         break;
                 }
 
-                Natural res = 0;
-                
 
+
+                Natural  res    = 0;
+                unsigned                 flags  = Untouched;
+                if(g>1)                  flags |= Normalize;
+                if(MustSwapSigns(p,n,f)) flags |= SwapSigns;
+
+                switch(flags)
+                {
+                    case SwapSigns:
+                        for(size_t i=s;i>0;--i) {
+                            T &x = arr[i];
+                            switch(Sign::Of(x))
+                            {
+                                case __Zero__: continue;
+                                case Positive: { const Natural y =  static_cast<U>(x);  x=-x; res += y.sqr(); } continue;
+                                case Negative: { const Natural y =  static_cast<U>(-x); x=-x; res += y.sqr(); } continue;
+                            }
+                        }
+                        break;
+
+                    case Normalize:
+                        for(size_t i=s;i>0;--i) {
+                            T &x = arr[i];
+                            switch(Sign::Of(x))
+                            {
+                                case __Zero__: continue;
+                                case Positive: { const Natural y =  static_cast<U>(   x/=g );  res += y.sqr(); } continue;
+                                case Negative: { const Natural y =  static_cast<U>( -(x/=g) ); res += y.sqr(); } continue;
+                            }
+                        }
+                        break;
+
+                    case Normalize|SwapSigns:
+                        for(size_t i=s;i>0;--i) {
+                            T &x = arr[i];
+                            switch(Sign::Of(x))
+                            {
+                                case __Zero__: continue;
+                                case Positive: { const Natural y =  static_cast<U>(   x/=g );  x=-x; res += y.sqr(); } continue;
+                                case Negative: { const Natural y =  static_cast<U>( -(x/=g) ); x=-x; res += y.sqr(); } continue;
+                            }
+                        }
+                        break;
+
+                    default:
+                        assert(Untouched==flags);
+                        for(size_t i=s;i>0;--i) {
+                            const T &x = arr[i];
+                            switch(Sign::Of(x))
+                            {
+                                case __Zero__: continue;
+                                case Positive: { const Natural y = static_cast<U>(x);  res += y.sqr(); } continue;
+                                case Negative: { const Natural y = static_cast<U>(-x); res += y.sqr(); } continue;
+                            }
+                        }
+                }
 
                 return res;
             }
