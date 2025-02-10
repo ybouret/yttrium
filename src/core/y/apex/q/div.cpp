@@ -155,6 +155,39 @@ namespace Yttrium
             Coerce(res.numer.s) = s;
             return res;
         }
+
+
+        Rational Rational:: Div(const integer_t a, const Rational &b)
+        {
+            SignType s = __Zero__;
+
+            switch( Sign::MakePair(Sign::Of(a),b.numer.s))
+            {
+                case NZ_Signs:
+                case PZ_Signs:
+                case ZZ_Signs:
+                    throw Specific::Exception(CallSign, "integert_t/Rational division by zero");
+
+                case ZN_Signs:
+                case ZP_Signs:
+                    return 0;
+
+                case NN_Signs:
+                case PP_Signs:
+                    s = Positive;
+                    break;
+
+                case NP_Signs:
+                case PN_Signs:
+                    s = Negative;
+                    break;
+            }
+
+            const Natural num = static_cast<natural_t>(a>0?a:-a) * b.denom;  assert(0!=num);
+            Rational      res(num,b.numer.n);
+            Coerce(res.numer.s) = s;
+            return res;
+        }
     }
 
 }
