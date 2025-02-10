@@ -10,17 +10,19 @@ Y_UTEST(kemp_modular)
     const apn q = 11;
 #endif
 
-    const apn p   = 67;
-    const apn q   = 107;
+    const apn p   = 11;
+    const apn q   = 17;
     const apn n   = p * q;
     const apn phi = (p-1)*(q-1);
+    const apn lam = Kemp::Natural::LCM(p-1,q-1);
     const apn e   = 7;
-    const apn d   = Kemp::Modular::Inv(e,phi);
-    
+    const apn d   = Kemp::Modular::Inv(e,lam);
+
     std::cerr << "p   = " << std::setw(20) << p   << std::endl;
     std::cerr << "q   = " << std::setw(20) << q   << std::endl;
     std::cerr << "n   = " << std::setw(20) << n   << std::endl;
     std::cerr << "phi = " << std::setw(20) << phi << std::endl;
+    std::cerr << "lam = " << std::setw(20) << lam << std::endl;
     std::cerr << "e   = " << std::setw(20) << e   << std::endl;
     std::cerr << "d   = " << std::setw(20) << d   << std::endl;
 
@@ -29,7 +31,6 @@ Y_UTEST(kemp_modular)
     {
         const apn C = Kemp::Modular::Exp(M,e,n);
         const apn D = Kemp::Modular::Exp(C,d,n);
-        //std::cerr << "M=" << M << " => C=" << C << " => " << D << std::endl;
         Y_ASSERT(D==M);
         (std::cerr << '#').flush();
     }

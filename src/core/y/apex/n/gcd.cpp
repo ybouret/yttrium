@@ -89,7 +89,8 @@ namespace Yttrium
 
         Natural Natural:: LCM(const Natural &a, const Natural b)
         {
-
+            // std::cerr << "LCM(" << a << "," << b << ")" << std::endl;
+            // std::cerr << "|_GCD=" << GCD(a,b) << std::endl;
             return (a*b)/GCD(a,b);
 
         }

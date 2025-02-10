@@ -12,6 +12,7 @@ namespace Yttrium
                              const Natural &e,
                              const Natural &modulus)
         {
+
             Natural base     = b;
             Natural exponent = e;
 

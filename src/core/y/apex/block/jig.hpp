@@ -145,7 +145,7 @@ namespace Yttrium
 
             //! check oddity
             virtual bool isOdd() const noexcept {
-                return 0 != (0x1 && word[0]);
+                return 0 != (0x1 & word[0]);
             }
 
             //__________________________________________________________________

@@ -11,6 +11,7 @@ namespace Yttrium
                              const Natural &e,
                              const Natural &modulus)
         {
+
             Natural base     = b;
             Natural exponent = e;
 
@@ -22,6 +23,7 @@ namespace Yttrium
                     result = (result * base) % modulus;
                 exponent._shr();
                 base = base.sqr() % modulus;
+                
             }
             return result;
         }
