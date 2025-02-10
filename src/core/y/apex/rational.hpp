@@ -32,9 +32,11 @@ Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
 #define Y_Apex_Rational_Binary_Wrapper(FCN) \
 static Rational FCN(const Rational &, const Rational &); \
 static Rational FCN(const Rational &, const Integer  &); \
-static Rational FCN(const Integer  &, const Rational &);\
+static Rational FCN(const Integer  &, const Rational &); \
 static Rational FCN(const Rational &, const integer_t ); \
-static Rational FCN(const integer_t,  const Rational &)
+static Rational FCN(const integer_t,  const Rational &); \
+static Rational FCN(const Rational &, const Natural  &); \
+static Rational FCN(const Natural  &, const Rational &)
 
         //! implement operator from a binary function
 #define Y_Apex_Rational_Binary_Operator(OP,LHS,RHS,FCN) \
@@ -46,7 +48,9 @@ Y_Apex_Rational_Binary_Operator(OP, Rational &, Rational &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Rational &, Integer  &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Integer  &, Rational &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Rational &, integer_t,  FCN) \
-Y_Apex_Rational_Binary_Operator(OP, integer_t,  Rational &, FCN) 
+Y_Apex_Rational_Binary_Operator(OP, integer_t,  Rational &, FCN) \
+Y_Apex_Rational_Binary_Operator(OP, Rational &, Natural  &, FCN) \
+Y_Apex_Rational_Binary_Operator(OP, Natural  &, Rational &, FCN)
 
         //! implement unary operator from a binary function
 #define Y_Apex_Rational_Unary_Operator(OP,RHS,FCN) \

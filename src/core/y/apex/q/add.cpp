@@ -132,3 +132,30 @@ namespace Yttrium
     }
 
 }
+
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Rational Rational:: Add(const Rational &a, const Natural &b)
+        {
+            switch(b->bits)
+            {
+                case 0: return a;
+                case 1: { Rational _(a); _.incr(); return _; }
+                default:
+                    break;
+            }
+            assert(b>0);
+            const Integer num = a.numer + (b*a.denom);
+            return FormQ(num,a.denom);
+        }
+
+
+        Rational Rational:: Add(const Natural &a, const Rational &b)
+        {
+            return Add(b,a);
+        }
+    }
+}

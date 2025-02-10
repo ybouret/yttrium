@@ -45,6 +45,8 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             const Natural &N = rhs.numer.n;
             Y_ASSERT( dif == Rational::Compare(lhs,N) );
             Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(N,lhs) );
+            Y_ASSERT( sum == lhs + N);
+            Y_ASSERT( sum == N + lhs);
         }
 
         integer_t z = 0;
