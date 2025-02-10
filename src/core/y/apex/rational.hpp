@@ -97,6 +97,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Rational(const Integer  &);                 //!< setup
             Rational(const integer_t, const natural_t); //!< setup
             Rational(const Integer &, const Natural &); //!< setup
+            Rational(const Natural &, const Natural &); //!< setup
             Rational(Random::Bits &ran, const size_t nbits, const size_t dbits); //!< setup
             Rational(const String &);                   //!< parse from string
             virtual ~Rational() noexcept; //!< cleanup
@@ -215,8 +216,9 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Y_Apex_Rational_Operators(+,Add)
             Y_Apex_Rational_Operators(-,Sub)
             Y_Apex_Rational_Operators(*,Mul)
+            Y_Apex_Rational_Operators(/,Div)
 #endif
-            
+
             //__________________________________________________________________
             //
             //
@@ -230,6 +232,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Y_Apex_Rational_Binary_Wrapper(Add);
             Y_Apex_Rational_Binary_Wrapper(Sub);
             Y_Apex_Rational_Binary_Wrapper(Mul);
+            Y_Apex_Rational_Binary_Wrapper(Div);
 
         };
     }

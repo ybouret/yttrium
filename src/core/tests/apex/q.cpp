@@ -24,6 +24,11 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
     const Rational prod = lhs * rhs;
     Y_ASSERT(lhs == sum-rhs);
     Y_ASSERT(rhs == sum-lhs);
+    if(prod!=0)
+    {
+        Y_ASSERT(lhs == prod/rhs);
+        Y_ASSERT(rhs == prod/lhs);
+    }
 
     if(rhs.denom==1)
     {
