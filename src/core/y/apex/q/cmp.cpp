@@ -165,11 +165,19 @@ namespace Yttrium
                 case ZP_Signs:
                     return Negative;
 
-                case PP_Signs: 
-                case NN_Signs: {
-                    const Integer Z = z;
-                    const Integer R = q.denom * Z;
+                case PP_Signs:
+                {
+                    assert(z>0);
+                    const Integer R = q.denom * static_cast<natural_t>(z);
                     const Integer D = q.numer - R;
+                    return D.s;
+                }
+
+                case NN_Signs: {
+                    assert(z<0);
+                    const Integer Z = z;
+                    const Integer R = q.denom * static_cast<natural_t>(-z);
+                    const Integer D = q.numer+R;
                     return D.s;
                 }
 
