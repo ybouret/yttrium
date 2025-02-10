@@ -17,7 +17,7 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
     std::cerr << "rhs = " << rhs << " = " << rhs.cast<long double>() << std::endl;
 
     const SignType dif = Rational::Compare(lhs,rhs);
-    std::cerr << "dif = '" << Sign::ToChar(dif) << "'" << std::endl;
+    //std::cerr << "dif = '" << Sign::ToChar(dif) << "'" << std::endl;
     Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs,lhs) );
 
     const Rational sum  = lhs + rhs;
@@ -49,6 +49,8 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             Y_ASSERT( sum == N + lhs);
             Y_ASSERT( lhs == sum-N);
             Y_ASSERT(-lhs == N-sum);
+            Y_ASSERT( prod == lhs * N );
+            Y_ASSERT( prod == N * lhs );
         }
 
         integer_t z = 0;
@@ -113,12 +115,11 @@ Y_UTEST(apex_q)
 
 
     std::cerr << "Comparisons" << std::endl;
-    for(size_t cycle=0;cycle<100;++cycle)
+    for(size_t cycle=0;cycle<1000;++cycle)
     {
         const Rational lhs(ran,ran.lt(32),1+ran.leq(30));
         const Rational rhs(ran,ran.lt(32),1+ran.leq(30));
 
-        std::cerr << lhs << " | " << rhs << std::endl;
         Y_ASSERT( __Zero__ == Rational::Compare(lhs,lhs) );
         Y_ASSERT( Rational::Compare(rhs,lhs) == Sign::Opposite( Rational::Compare(lhs,rhs) ) );
 
