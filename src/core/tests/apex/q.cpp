@@ -20,7 +20,8 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
     std::cerr << "dif = '" << Sign::ToChar(dif) << "'" << std::endl;
     Y_ASSERT( Sign::Opposite(dif) == Rational::Compare(rhs,lhs) );
 
-    const Rational sum = lhs + rhs;
+    const Rational sum  = lhs + rhs;
+    const Rational prod = lhs * rhs;
     Y_ASSERT(lhs == sum-rhs);
     Y_ASSERT(rhs == sum-lhs);
 
@@ -35,6 +36,9 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
 
         Y_ASSERT(lhs == sum-Z);
         Y_ASSERT(-lhs == Z-sum);
+
+        Y_ASSERT(prod == lhs*Z);
+        Y_ASSERT(prod == Z*lhs);
 
         if(rhs.numer>=0)
         {
