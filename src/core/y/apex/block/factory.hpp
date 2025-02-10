@@ -8,6 +8,7 @@
 #include "y/apex/block/blocks.hpp"
 #include "y/singleton.hpp"
 #include "y/random/bits.hpp"
+#include "y/apex/type/mutex.hpp"
 #include "y/concurrent/mutex/qpool.hpp"
 
 namespace Yttrium

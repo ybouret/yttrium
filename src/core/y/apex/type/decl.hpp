@@ -4,7 +4,6 @@
 #define Y_Apex_Types_Included 1
 
 #include "y/calculus/align.hpp"
-#include "y/concurrent/mutex/qnode.hpp"
 
 
 namespace Yttrium
@@ -27,8 +26,6 @@ namespace Yttrium
         //! helper to convert bits to aligned byte(s)
 #define Y_Apex_Bytes_For(BITS) ( (Y_ALIGN_ON(8,BITS)) >> 3 )
 
-        typedef Concurrent::Mutex  MutexType; //!< alias
-        typedef Concurrent::QMutex Mutex;     //!< alias
 
 
     }
