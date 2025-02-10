@@ -377,6 +377,8 @@ add_test(apex:n     test-core apex_n)
 add_test(apex:z     test-core apex_z)
 add_test(apex:conv  test-core apex_conv)
 add_test(apex:q     test-core apex_q)
+add_test(apex:rsa   test-core apex_rsa)
+add_test(apex:uni   test-core apex_uni)
 
 #dft
 add_test(dft:core test-core dft_core)
