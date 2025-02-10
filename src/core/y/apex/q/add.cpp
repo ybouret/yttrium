@@ -1,6 +1,4 @@
-
 #include "y/apex/rational.hpp"
-#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
