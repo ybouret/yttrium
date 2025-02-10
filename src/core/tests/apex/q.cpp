@@ -51,6 +51,8 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
 
             Y_ASSERT(sum == lhs + z);
             Y_ASSERT(sum == z + lhs);
+            Y_ASSERT(lhs == sum-z);
+            Y_ASSERT(-lhs == z-sum);
         }
     }
 }
