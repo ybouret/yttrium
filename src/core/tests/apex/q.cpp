@@ -81,6 +81,17 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             Y_ASSERT(prod == lhs * z);
             Y_ASSERT(prod == z * lhs);
 
+            if(prod!=0)
+            {
+                Y_ASSERT(lhs == prod/z);
+#if 0
+                const Rational q = Z/prod;
+                Y_ASSERT(lhs.numer.s == q.numer.s);
+                Y_ASSERT(lhs.numer.n == q.denom);
+                Y_ASSERT(lhs.denom   == q.numer.n);
+#endif
+            }
+
         }
     }
 }

@@ -32,9 +32,9 @@ namespace Yttrium
                     break;
             }
 
-            const Integer num = a.numer * b.denom; assert(0!=num);
-            const Integer den = a.denom * b.numer; assert(0!=den);
-            Rational      res(num.n,den.n);        assert(0!=res.numer);
+            const Natural num = a.numer.n * b.denom; assert(0!=num);
+            const Natural den = a.denom * b.numer.n; assert(0!=den);
+            Rational      res(num,den);              assert(0!=res.numer);
             Coerce(res.numer.s) = s;
             return res;
         }
@@ -75,8 +75,8 @@ namespace Yttrium
                     break;
             }
             /**/                                assert(a.numer!=0);
-            const Integer den = a.denom * b;    assert(0!=den);
-            Rational      res(a.numer.n,den.n); assert(0!=res.numer);
+            const Natural den = a.denom * b.n;  assert(0!=den);
+            Rational      res(a.numer.n,den);   assert(0!=res.numer);
             Coerce(res.numer.s) = s;
             return res;
         }
@@ -108,7 +108,7 @@ namespace Yttrium
                     break;
             }
 
-            const Integer num = a * b.denom;  assert(0!=num);
+            const Natural num = a.n * b.denom;  assert(0!=num);
             Rational      res(num,b.numer.n);
             Coerce(res.numer.s) = s;
             return res;
@@ -118,4 +118,44 @@ namespace Yttrium
 
 }
 
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        Rational Rational:: Div(const Rational &a, const integer_t b)
+        {
+            SignType        s = __Zero__;
+
+            switch( Sign::MakePair(a.numer.s,Sign::Of(b)) )
+            {
+                case NZ_Signs:
+                case PZ_Signs:
+                case ZZ_Signs:
+                    throw Specific::Exception(CallSign, "Rational/integer_t division by zero");
+
+                case ZN_Signs:
+                case ZP_Signs:
+                    return 0;
+
+                case NN_Signs:
+                case PP_Signs:
+                    s = Positive;
+                    break;
+
+                case NP_Signs:
+                case PN_Signs:
+                    s = Negative;
+                    break;
+            }
+            /**/                                                             assert(a.numer!=0);
+            const Natural den = a.denom * static_cast<natural_t>(b>0?b:-b);  assert(0!=den);
+            Rational      res(a.numer.n,den);                                assert(0!=res.numer);
+            Coerce(res.numer.s) = s;
+            return res;
+        }
+    }
+
+}
 
