@@ -192,3 +192,31 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        Rational Rational:: Div(const Rational &a, const Natural &b)
+        {
+            switch(b->bits)
+            {
+                case 0: throw Specific::Exception(CallSign, "Rational/Natural division by zero");
+                case 1: assert(1==b); return a;
+                default:
+                    break;
+            }
+            switch(a.numer.s)
+            {
+                case __Zero__: return 0;
+                case Negative:
+                case Positive:
+                    break;
+            }
+            const Natural den = a.denom * b;
+            return Rational(a.numer,den);
+        }
+
+    }
+
+}
