@@ -58,7 +58,7 @@ namespace Yttrium
 
         }
 
-        Block * Natural:: Mul(Block &lhs, Block &rhs, const Ops mulOps)
+        Block * Natural:: BFA_Mul(Block &lhs, Block &rhs, const Ops mulOps)
         {
             switch(mulOps)
             {
@@ -103,13 +103,13 @@ namespace Yttrium
             return 0;
         }
 
-        Block * Natural:: Mul(Block &lhs, Block & rhs)
+        Block * Natural:: BFA_Mul(Block &lhs, Block & rhs)
         {
-            return Mul(lhs,rhs,MulOps);
+            return BFA_Mul(lhs,rhs,MulOps);
         }
 
 
-        Block * Natural:: Mul(Block &lhs, natural_t rhs)
+        Block * Natural:: Mul1(Block &lhs, natural_t rhs)
         {
             typedef Jig4::Word Word;
             const   Jig4      &l = lhs.make<Plan4>();
@@ -123,26 +123,26 @@ namespace Yttrium
         {
             volatile Natural::AutoLock L(lhs);
             volatile Natural::AutoLock R(rhs);
-            return Natural( Natural::Mul(*lhs.block,*rhs.block), AsBlock );
+            return Natural( Natural::BFA_Mul(*lhs.block,*rhs.block), AsBlock );
         }
 
         Natural operator*(const Natural &lhs, const natural_t rhs)
         {
             volatile Natural::AutoLock L(lhs);
-            return Natural( Natural::Mul(*lhs.block,rhs), AsBlock );
+            return Natural( Natural::Mul1(*lhs.block,rhs), AsBlock );
         }
 
         Natural operator*(const natural_t lhs, const Natural  &rhs)
         {
             volatile Natural::AutoLock R(rhs);
-            return Natural( Natural::Mul(*rhs.block,lhs), AsBlock );
+            return Natural( Natural::Mul1(*rhs.block,lhs), AsBlock );
         }
 
         Natural & Natural:: operator*=(const Natural &rhs)
         {
             volatile Natural::AutoLock R(rhs);
             {
-                BlockPtr res( Natural::Mul(*block,*rhs.block) );
+                BlockPtr res( Natural::BFA_Mul(*block,*rhs.block) );
                 block.swp(res);
             }
             return *this;
@@ -151,7 +151,7 @@ namespace Yttrium
 
         Natural & Natural:: operator*=(const natural_t rhs)
         {
-            BlockPtr res( Natural::Mul(*block,rhs) );
+            BlockPtr res( Natural::Mul1(*block,rhs) );
             block.swp(res);
             return *this;
         }

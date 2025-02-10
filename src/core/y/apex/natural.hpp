@@ -240,11 +240,14 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //
             //__________________________________________________________________
 
-            //! low-level long multiplication
-            static Block *Mul(Block &lhs, Block &rhs, const Ops mulOps);
 
-            //! low-level FFT multiplication
-            static Block *FFT(Block &lhs, Block &rhs);
+            static Block *BFA_Mul(Block &lhs, Block &rhs, const Ops mulOps); //!< low-level long multiplication with choice
+            static Block *BFA_Mul(Block &lhs, Block &rhs);                   //!< default low-level long multiplication
+            static Block *BFA_Sqr(Block &lhs);                               //!< default low-level square
+
+            static Block *FFT_Mul(Block &lhs, Block &rhs); //!< low-level FFT multiplication
+            static Block *FFT_Sqr(Block &lhs);             //!< low-level FFT square
+
 
             friend Natural operator *  (const Natural & lhs, const Natural & rhs); //!< lhs*rhs
             friend Natural operator *  (const Natural & lhs, const natural_t rhs); //!< lhs*rhs
@@ -466,8 +469,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static Block *Sub(Block &   lhs, natural_t rhs);                   //!< lhs-rhs
             static Block *Sub(natural_t lhs, Block &   rhs);                   //!< lhs-rhs
 
-            static Block *Mul(Block &lhs, Block &   rhs);                      //!< default add
-            static Block *Mul(Block &lhs, natural_t rhs);                      //!< lhs*rhs
+            static Block *Mul1(Block &lhs, natural_t rhs);                      //!< lhs*rhs
 
             
         };

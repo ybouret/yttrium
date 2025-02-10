@@ -47,8 +47,6 @@ namespace Yttrium
                         }
                         product[p] =  static_cast<WordType>(carry);
                     }
-
-
                     block->sync();
                     return block;
 
@@ -56,52 +54,51 @@ namespace Yttrium
 
             };
 
-            static inline Block * GetSquareOf(Block &lhs)
-            {
-                switch(Natural::MulOps)
-                {
-                    case Ops2_1: {
-                        const Jig1 &l = lhs.make<Plan1>();
-                        return JigSqr<Plan2,Plan1>::Get(l.word,l.words);
-                    }
-
-                    case Ops4_1: {
-                        const Jig1 &l = lhs.make<Plan1>();
-                        return JigSqr<Plan4,Plan1>::Get(l.word,l.words);
-                    }
-
-                    case Ops8_1: {
-                        const Jig1 &l = lhs.make<Plan1>();
-                        return JigSqr<Plan8,Plan1>::Get(l.word,l.words);
-                    }
-
-                    case Ops4_2: {
-                        const Jig2 &l = lhs.make<Plan2>();
-                        return JigSqr<Plan4,Plan2>::Get(l.word,l.words);
-                    }
-
-                    case Ops8_2: {
-                        const Jig2 &l = lhs.make<Plan2>();
-                        return JigSqr<Plan8,Plan2>::Get(l.word,l.words);
-                    }
-
-                    case Ops8_4: {
-                        const  Jig4 &l = lhs.make<Plan4>();
-                        return JigSqr<Plan8,Plan4>::Get(l.word,l.words);
-                    }
-
-                }
-                throw Specific::Exception(Natural::CallSign, "corrupted MulOps");
-                return 0;
-            }
         }
 
+        Block * Natural:: BFA_Sqr(Block &lhs)
+        {
+            switch(Natural::MulOps)
+            {
+                case Ops2_1: {
+                    const Jig1 &l = lhs.make<Plan1>();
+                    return JigSqr<Plan2,Plan1>::Get(l.word,l.words);
+                }
 
+                case Ops4_1: {
+                    const Jig1 &l = lhs.make<Plan1>();
+                    return JigSqr<Plan4,Plan1>::Get(l.word,l.words);
+                }
 
+                case Ops8_1: {
+                    const Jig1 &l = lhs.make<Plan1>();
+                    return JigSqr<Plan8,Plan1>::Get(l.word,l.words);
+                }
+
+                case Ops4_2: {
+                    const Jig2 &l = lhs.make<Plan2>();
+                    return JigSqr<Plan4,Plan2>::Get(l.word,l.words);
+                }
+
+                case Ops8_2: {
+                    const Jig2 &l = lhs.make<Plan2>();
+                    return JigSqr<Plan8,Plan2>::Get(l.word,l.words);
+                }
+
+                case Ops8_4: {
+                    const  Jig4 &l = lhs.make<Plan4>();
+                    return JigSqr<Plan8,Plan4>::Get(l.word,l.words);
+                }
+
+            }
+            throw Specific::Exception(Natural::CallSign, "corrupted MulOps");
+            return 0;
+        }
+        
         Natural Natural:: sqr() const
         {
             volatile AutoLock I_lock(*this);
-            return Natural( GetSquareOf(*block), AsBlock );
+            return Natural( BFA_Sqr(*block), AsBlock );
         }
     }
 
