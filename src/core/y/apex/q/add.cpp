@@ -83,9 +83,9 @@ namespace Yttrium
 {
     namespace Apex
     {
-        Rational Rational:: Add(const Rational &a, const Integer &b)
+
+        static inline Rational FormQ(const Integer &num, const Natural &den)
         {
-            const Integer num = a.numer + b * a.denom;
             switch( num.s )
             {
                 case __Zero__: return Rational(0);
@@ -93,7 +93,13 @@ namespace Yttrium
                 case Positive:
                     break;
             }
-            return Rational(num,a.denom);
+            return Rational(num,den);
+        }
+
+        Rational Rational:: Add(const Rational &a, const Integer &b)
+        {
+            const Integer num = a.numer + b * a.denom;
+            return FormQ(num,a.denom);
         }
 
         Rational Rational:: Add(const Integer &a, const Rational &b)
@@ -108,9 +114,17 @@ namespace Yttrium
 {
     namespace Apex
     {
+
+
         Rational Rational:: Add(const Rational &a, const integer_t b)
         {
-            
+            switch( Sign::Of(b) )
+            {
+                case __Zero__: break;
+                case Positive: { const Integer num = a.numer + (static_cast<natural_t>(b)  * a.denom); return FormQ(num,a.denom); }
+                case Negative: { const Integer num = a.numer - (static_cast<natural_t>(-b) * a.denom); return FormQ(num,a.denom); }
+            }
+            return a;
         }
 
         Rational Rational:: Add(const integer_t a, const Rational &b)
