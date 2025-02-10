@@ -67,6 +67,10 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
             if(prod!=0)
             {
                 Y_ASSERT(lhs == prod/N);
+                const Rational q = N/prod;
+                Y_ASSERT(lhs.numer.s == q.numer.s);
+                Y_ASSERT(lhs.numer.n == q.denom);
+                Y_ASSERT(lhs.denom   == q.numer.n);
             }
         }
 
@@ -141,7 +145,7 @@ Y_UTEST(apex_q)
 
 
     std::cerr << "Comparisons" << std::endl;
-    for(size_t cycle=0;cycle<100;++cycle)
+    for(size_t cycle=0;cycle<1000;++cycle)
     {
         const Rational lhs(ran,ran.lt(32),1+ran.leq(30));
         const Rational rhs(ran,ran.lt(32),1+ran.leq(30));
