@@ -45,6 +45,13 @@ static inline void TestPair(const Rational &lhs, const Rational &rhs)
         Y_ASSERT(prod == lhs*Z);
         Y_ASSERT(prod == Z*lhs);
 
+        if(prod!=0)
+        {
+            Y_ASSERT(lhs == prod/Z);
+            const Rational q = Z/prod;
+            Y_ASSERT(lhs.numer.s == q.numer.s);
+        }
+
         if(rhs.numer>=0)
         {
             const Natural &N = rhs.numer.n;
