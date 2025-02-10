@@ -1,5 +1,5 @@
 
-#include "y/apex/number.hpp"
+#include "y/apex/type/number.hpp"
 
 namespace Yttrium
 {

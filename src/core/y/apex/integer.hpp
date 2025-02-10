@@ -223,6 +223,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
                 }
             }
 
+            //! helper to direclty cast variable
             template <typename T> inline
             T cast(const char * const variable) const
             {

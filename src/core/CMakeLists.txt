@@ -83,6 +83,7 @@ tow
 dft
 dft/fmt
 apex
+apex/type
 apex/block
 apex/block/jig
 apex/n

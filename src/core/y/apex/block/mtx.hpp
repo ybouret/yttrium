@@ -5,7 +5,7 @@
 #ifndef Y_Apex_Mutex_Ptr_Included
 #define Y_Apex_Mutex_Ptr_Included 1
 
-#include "y/apex/types.hpp"
+#include "y/apex/type/decl.hpp"
 #include "y/ptr/core.hpp"
 
 namespace Yttrium

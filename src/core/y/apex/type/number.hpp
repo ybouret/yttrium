@@ -3,7 +3,7 @@
 #ifndef Y_Apex_Number_Included
 #define Y_Apex_Number_Included 1
 
-#include "y/apex/types.hpp"
+#include "y/apex/type/decl.hpp"
 #include "y/stream/serializable.hpp"
 #include "y/type/identifiable.hpp"
 

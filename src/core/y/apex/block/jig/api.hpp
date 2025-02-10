@@ -4,7 +4,7 @@
 #ifndef Y_Apex_Block_Jig_API_Included
 #define Y_Apex_Block_Jig_API_Included 1
 
-#include "y/apex/types.hpp"
+#include "y/apex/type/decl.hpp"
 #include "y/ostream-proto.hpp"
 
 namespace Yttrium
