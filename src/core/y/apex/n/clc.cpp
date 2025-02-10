@@ -24,7 +24,12 @@ namespace Yttrium
             return *this;
         }
 
-       
+
+        bool Natural:: isOdd() const noexcept
+        {
+            return block->curr->isOdd();
+        }
+
 
     }
 

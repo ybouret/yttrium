@@ -86,6 +86,13 @@ namespace Yttrium
             }
         }
 
+
+        Natural Natural:: LCM(const Natural &a, const Natural b)
+        {
+
+            return (a*b)/GCD(a,b);
+
+        }
     }
 
 }

@@ -194,6 +194,10 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Y_Apex_Natural_Ops(<=,!=,Positive)
             Y_Apex_Natural_Ops(>=,!=,Negative)
 #endif
+
+            bool isOdd()  const noexcept;
+            bool isEven() const noexcept;
+
             //__________________________________________________________________
             //
             //
@@ -323,6 +327,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static Natural GCD_(const Natural &a, const Natural &b); //!< GCD_(a>0,b>0)
             static Natural GCD(const Natural &a, const Natural &b);  //!< safe GCD
             static void    Simplify(Natural &num, Natural &den);     //!< simplify num/den
+            static Natural LCM(const Natural &a, const Natural b);   //!< |ab|/GCD(a,b)
 
             //__________________________________________________________________
             //
@@ -359,7 +364,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const; //!< interger square-root
             Natural abs()  const; //!< |*this|
-
+            static Natural ModInv(const Natural &a, const Natural &n);
 
 
             //__________________________________________________________________

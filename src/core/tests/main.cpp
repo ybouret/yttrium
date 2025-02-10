@@ -255,7 +255,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(field4d);
     Y_UTEST(fieldmk);
     Y_UTEST(field_layouts);
-    
+
     Y_UTEST(color_rgb);
     Y_UTEST(color_rgba);
     Y_UTEST(color_yuv);
@@ -295,8 +295,10 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_z);
     Y_UTEST(apex_conv);
     Y_UTEST(apex_q);
+    Y_UTEST(apex_rsa);
 
     Y_UTEST(dft_core);
     Y_UTEST(dft_fmt);
 }
 Y_UTEST_EXEC()
+

@@ -56,7 +56,8 @@ namespace Yttrium
             virtual size_t upgrade()                        noexcept = 0; //!< upgrade words from content
             virtual void   display(std::ostream &)    const          = 0; //!< display
             virtual bool   chkBits(const size_t bits) const noexcept = 0; //!< sanity check
-
+            virtual bool   isOdd()                    const noexcept = 0; //!< check least significant bit
+            
             //__________________________________________________________________
             //
             //
