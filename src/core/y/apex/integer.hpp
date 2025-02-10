@@ -141,8 +141,8 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             friend bool operator!=(const Integer & lhs, const Integer & rhs) noexcept; //!< difference
             friend bool operator!=(const Integer & lhs, const integer_t rhs) noexcept; //!< difference
             friend bool operator!=(const integer_t lhs, const Integer & rhs) noexcept; //!< difference
-            friend bool operator==(const Integer & lhs, const Natural & rhs) noexcept; //!< difference
-            friend bool operator==(const Natural & lhs, const Integer & rhs) noexcept; //!< difference
+            friend bool operator!=(const Integer & lhs, const Natural & rhs) noexcept; //!< difference
+            friend bool operator!=(const Natural & lhs, const Integer & rhs) noexcept; //!< difference
 
             static SignType Compare(const Integer & lhs, const Integer & rhs) noexcept; //!< comparison
             static SignType Compare(const Integer & lhs, const integer_t rhs) noexcept; //!< comparison
