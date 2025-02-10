@@ -71,7 +71,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
         //
         //
         //______________________________________________________________________
-        class Integer : public Number
+        class Integer : public Castable
         {
         public:
             //__________________________________________________________________
@@ -228,7 +228,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             T cast(const char * const variable) const
             {
                 T res(0);
-                if(!tryCast(res)) raiseOverflowFor(variable);
+                if(!tryCast(res)) raiseCastOverflowFor(variable);
                 return res;
             }
 
@@ -247,7 +247,6 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Y_Apex_Integer_Binary_Wrapper(Sub);
             Y_Apex_Integer_Binary_Wrapper(Mul);
             Y_Apex_Integer_Binary_Wrapper(Div);
-            void raiseOverflowFor(const char * const msg) const;
         };
 
     }

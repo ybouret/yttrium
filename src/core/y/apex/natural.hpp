@@ -3,7 +3,7 @@
 #ifndef Y_Apex_Natural_Included
 #define Y_Apex_Natural_Included 1
 
-#include "y/apex/type/number.hpp"
+#include "y/apex/type/castable.hpp"
 #include "y/apex/block/ptr.hpp"
 #include "y/apex/block/mtx.hpp"
 #include "y/ostream-proto.hpp"
@@ -90,7 +90,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
         //
         //
         //______________________________________________________________________
-        class Natural : public Number, public Proxy<Block>
+        class Natural : public Castable, public Proxy<Block>
         {
         public:
             //__________________________________________________________________
@@ -443,11 +443,12 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 }
             }
 
+            //! cast to integeral type
             template <typename T> inline
             T cast(const char * const variable) const
             {
                 T res(0);
-                if(!tryCast(res)) raiseOverflowFor(variable);
+                if(!tryCast(res)) raiseCastOverflowFor(variable);
                 return res;
             }
 
@@ -468,8 +469,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             static Block *Mul(Block &lhs, Block &   rhs);                      //!< default add
             static Block *Mul(Block &lhs, natural_t rhs);                      //!< lhs*rhs
 
-            void raiseOverflowFor(const char * const msg) const;
-
+            
         };
 
 

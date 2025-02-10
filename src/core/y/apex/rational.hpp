@@ -28,7 +28,7 @@ Y_Apex_Rational_Op(OP, Integer  &, Rational &, MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Rational &, Natural & , MATCHES, RESULT) \
 Y_Apex_Rational_Op(OP, Natural  &, Rational &, MATCHES, RESULT)
 
-
+        //! helper to declare binary functions
 #define Y_Apex_Rational_Binary_Wrapper(FCN) \
 static Rational FCN(const Rational &, const Rational &); \
 static Rational FCN(const Rational &, const Integer  &); \
@@ -48,6 +48,7 @@ Y_Apex_Rational_Binary_Operator(OP, Integer  &, Rational &, FCN) \
 Y_Apex_Rational_Binary_Operator(OP, Rational &, integer_t,  FCN) \
 Y_Apex_Rational_Binary_Operator(OP, integer_t,  Rational &, FCN) 
 
+        //! implement unary operator from a binary function
 #define Y_Apex_Rational_Unary_Operator(OP,RHS,FCN) \
 inline Rational & operator OP##= (const RHS rhs) { Rational _( FCN(*this,rhs) ); xch(_); return *this; }
 
@@ -93,7 +94,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Rational(const integer_t, const natural_t); //!< setup
             Rational(const Integer &, const Natural &); //!< setup
             Rational(Random::Bits &ran, const size_t nbits, const size_t dbits); //!< setup
-            Rational(const String &);
+            Rational(const String &);                   //!< parse from string
             virtual ~Rational() noexcept; //!< cleanup
 
 
@@ -110,7 +111,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             //__________________________________________________________________
             Rational &      xch(Rational &q);      //!< no-throw exchange
             void            simplify();            //!< manual simplify
-            static Rational Parse(const String &);
+            static Rational Parse(const String &); //!< parse from string
 
             //__________________________________________________________________
             //
@@ -162,7 +163,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             //__________________________________________________________________
             //
             //
-            // to real
+            //! cast to real
             //
             //__________________________________________________________________
             template <typename T> inline

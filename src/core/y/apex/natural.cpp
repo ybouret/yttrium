@@ -58,7 +58,7 @@ namespace Yttrium
         static const Plan        NaturalPlan  = Plan(NaturalShift);
 
         Natural:: Natural(const natural_t n) :
-        Number(),
+        Castable(),
         block( _Factory().query(NaturalShift) ),
         mutex( _Factory().query() )
         {
@@ -67,7 +67,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(Random::Bits &ran, const size_t nbit):
-        Number(),
+        Castable(),
         Proxy<Block>(),
         block( _Factory().query(ran,nbit) ),
         mutex( _Factory().query() )
@@ -76,7 +76,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(Block * const userBlock, const AsBlock_ &) :
-        Number(),
+        Castable(),
         Proxy<Block>(),
         block( userBlock ),
         mutex( _Factory().query() )
@@ -91,7 +91,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(const Natural &other) :
-        Number(),
+        Castable(),
         Proxy<Block>(),
         block( _Factory().duplicate(*other.block) ),
         mutex( _Factory().query() )
@@ -146,7 +146,7 @@ namespace Yttrium
         }
 
         Natural:: Natural(const Exp2_ &, const size_t nbit) :
-        Number(),
+        Castable(),
         block( _Factory().queryBytes( BytesForBits(nbit) ) ),
         mutex( _Factory().query() )
         {
@@ -174,7 +174,7 @@ namespace Yttrium
     {
 
         Natural:: Natural(const String &s) :
-        Number(),
+        Castable(),
         block( _Factory().query(NaturalShift) ),
         mutex( _Factory().query() )
         {
@@ -203,10 +203,7 @@ namespace Yttrium
             return *this;
         }
 
-        void Natural:: raiseOverflowFor(const char * const msg) const
-        {
-            throw Specific::Exception(CallSign,"Overflow for '%s'", msg ? msg : Core::Unknown);
-        }
+
 
     }
 

@@ -38,7 +38,7 @@ namespace Yttrium
         }
 
         Integer:: Integer(const String &str) :
-        Number(), s(__Zero__), n(0)
+        Castable(), s(__Zero__), n(0)
         {
             Integer _ = Parse(str);
             (void) xch(_);

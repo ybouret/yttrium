@@ -30,7 +30,7 @@ namespace Yttrium
         }
 
         Integer:: Integer(const integer_t z) :
-        Number(),
+        Castable(),
         s( Sign::Of(z) ),
         n( z2n(s,z) )
         {
@@ -41,21 +41,21 @@ namespace Yttrium
         }
 
         Integer:: Integer(const Integer &z) :
-        Number(),
+        Castable(),
         s(z.s),
         n(z.n)
         {
         }
 
         Integer:: Integer(const Natural &u) :
-        Number(),
+        Castable(),
         s( u._sgn() ),
         n( u )
         {
         }
         
         Integer:: Integer(const SignType theSign, const Natural &u) :
-        Number(),
+        Castable(),
         s( theSign ),
         n( u )
         {
@@ -132,11 +132,7 @@ namespace Yttrium
         }
 
 
-        void Integer:: raiseOverflowFor(const char * const msg) const
-        {
-            throw Specific::Exception(CallSign,"Overflow for '%s'", msg ? msg : Core::Unknown);
-        }
-
+        
 
 
     }
