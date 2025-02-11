@@ -30,9 +30,10 @@ Y_UTEST(apex_narrow)
                     source[i][j] = ran.in<int>(-2,2);
                 }
             }
-            std::cerr << "source=" << source << std::endl;
+            std::cerr << "source  = " << source << std::endl;
             narrow.down(target,source);
-            std::cerr << "target=" << target << std::endl;
+            std::cerr << "target  = " << target << std::endl;
+            std::cerr << "nonZero = " << narrow << std::endl;
         }
     }
 
