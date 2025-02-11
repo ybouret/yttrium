@@ -15,6 +15,7 @@ namespace Yttrium
         {
 
             static Natural MakeNatural(Writable<Natural> &arr);
+            static Natural MakeInteger(Writable<Integer> &arr);
 
             //! Unsigned Integral
             template <typename T> static inline
