@@ -30,12 +30,12 @@ namespace Yttrium
                     switch( q.numer.s )
                     {
                         case __Zero__: continue;
-                        case Positive: f = Positive; p=1; a=1; l = q.denom; goto FOUND;
-                        case Negative: f = Negative; n=1; a=1; l = q.denom;; goto FOUND;
+                        case Positive: f = Positive; p=1; a=1; l = q.denom; goto FOUND_L;
+                        case Negative: f = Negative; n=1; a=1; l = q.denom; goto FOUND_L;
                     }
                 }
 
-            FOUND:
+            FOUND_L:
                 //----------------------------------------------------------
                 // find other not zero and update gcd
                 //----------------------------------------------------------
@@ -51,25 +51,71 @@ namespace Yttrium
                 }
             }
 
-            if(a<=0) return 0; // all zero
+            switch(a)
+            {
+                case 0:
+                    // all zero
+                    return 0;
+
+                case 1:
+                    // set single to 1
+                    for(size_t i=1;;++i)
+                    {
+                        Rational &q = arr[i];
+                        if( __Zero__ != q.numer.s )
+                        {
+                            q = 1;
+                            break;
+                        }
+                    }
+                    return 1;
+
+                default:
+                    break;
+            }
+
 
             std::cerr << "(l=" << l << ")";
 
-            if(l>1)
+            const bool multiply = l->bits>1;
+            Natural    g        = 0;
             {
-                for(size_t i=s;i>0;--i)
+                size_t i = s;
+                while(i>0)
                 {
-                    Rational &q = arr[i];
+                    Rational &q = arr[i--];
                     switch(q.numer.s)
                     {
                         case __Zero__: continue;
                         case Positive:
                         case Negative:
-                            q *= l; assert(1==q.denom);
-                            break;
+                            if(multiply) { q *=l; assert(1==q.denom); }
+                            g = q.numer.n;
+                            goto FOUND_G;
+                    }
+                }
+
+            FOUND_G:
+                while(i>0)
+                {
+                    Rational &q = arr[i--];
+                    switch(q.numer.s)
+                    {
+                        case __Zero__: continue;
+                        case Positive:
+                        case Negative:
+                            if(multiply) { q *=l; assert(1==q.denom); }
+                            g = Natural::GCD_(g,q.numer.n);
+                            continue;;
                     }
                 }
             }
+            std::cerr << "(g=" << g << ")";
+
+            Natural  res    = 0;
+            unsigned                 flags  = Untouched;
+            if(g->bits>1)            flags |= Normalize;
+            if(MustSwapSigns(p,n,f)) flags |= SwapSigns;
 
             return 0;
         }
