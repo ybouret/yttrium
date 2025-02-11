@@ -4,14 +4,13 @@ namespace Yttrium
 {
     namespace Apex
     {
-        Natural Univocal:: MakeInteger(Writable<Integer> &arr, size_t &nonZero)
+        Natural Univocal:: MakeInteger(Writable<Integer> &arr)
         {
             //--------------------------------------------------------------
             //
             // initialize
             //
             //--------------------------------------------------------------
-            nonZero         = 0;
             const size_t s  = arr.size(); if(s<=0) return 0;
             Natural      g  = 0;
             size_t       p  = 0;
@@ -87,14 +86,12 @@ namespace Yttrium
                             break;
                         }
                     }
-                    nonZero = 1;
                     return 1;
 
                 default:
                     //------------------------------------------------------
                     // generic case
                     //------------------------------------------------------
-                    nonZero = a;
                     break;
             }
 

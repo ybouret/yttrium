@@ -10,9 +10,11 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! default CountNonZero algorithm
         template <typename T>
         struct CountNonZero_
         {
+            //! T is integral type
             static inline
             size_t In(const Readable<T> &arr) noexcept
             {
@@ -23,27 +25,32 @@ namespace Yttrium
             }
         };
 
-
+        //! specialized for Natural
         template <>
         struct CountNonZero_<Natural>
         {
+            //! use bits to test
             static size_t In(const Readable<Natural> &arr) noexcept;
         };
 
+        //! specialized for Integer
         template <>
         struct CountNonZero_<Integer>
         {
+            //! use sign
             static size_t In(const Readable<Integer> &arr) noexcept;
         };
 
+        //! specialized for Rational
         template <>
         struct CountNonZero_<Rational>
         {
+            //! use numerator sign
             static size_t In(const Readable<Rational> &arr) noexcept;
         };
 
 
-
+        //! dispatch counting algorithm
         template <typename T> inline
         size_t CountNonZero(const Readable<T> &arr) noexcept
         {

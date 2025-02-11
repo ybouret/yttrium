@@ -41,43 +41,42 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename T> static inline
-            Natural Make(Writable<T> &arr, size_t &nonZero)
+            Natural Make(Writable<T> &arr)
             {
                 typedef TL3(Natural,Integer,Rational) ListType;
                 static const Int2Type<TL::IndexOf<ListType,T>::Value>   Kind = {};
-                return Make(arr,nonZero,Kind);
+                return Make(arr,Kind);
             }
 
         private:
-            template <typename T> static inline Natural Make(Writable<T> &arr, size_t &nonZero, const Int2Type<0> &) { return MakeNatural(arr,nonZero);  }
-            template <typename T> static inline Natural Make(Writable<T> &arr, size_t &nonZero, const Int2Type<1> &) { return MakeInteger(arr,nonZero);  }
-            template <typename T> static inline Natural Make(Writable<T> &arr, size_t &nonZero, const Int2Type<2> &) { return MakeRational(arr,nonZero); }
-            template <typename T> static inline Natural Make(Writable<T> &arr, size_t &nonZero, const Int2Type< -1 > &)
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<0> &) { return MakeNatural(arr);  }
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<1> &) { return MakeInteger(arr);  }
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<2> &) { return MakeRational(arr); }
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type< -1 > &)
             {
                 static const Int2Type< IsSigned<T>::Value > SignKind = {};
-                return Prim(arr,nonZero,SignKind);
+                return Prim(arr,SignKind);
             }
-            template <typename T> static inline Natural Prim(Writable<T> &arr, size_t &nonZero, const Int2Type<false> &) { return MakeUnsigned(arr,nonZero); }
-            template <typename T> static inline Natural Prim(Writable<T> &arr, size_t &nonZero, const Int2Type<true>  &) { return MakeSigned(arr,nonZero);   }
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<false> &) { return MakeUnsigned(arr); }
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<true>  &) { return MakeSigned(arr);   }
 
 
 
 
         public:
-            static Natural MakeNatural(Writable<Natural>   &arr, size_t &nonZero); //!< make univocal array of Natural
-            static Natural MakeInteger(Writable<Integer>   &arr, size_t &nonZero); //!< make univocal array of Integer
-            static Natural MakeRational(Writable<Rational> &arr, size_t &nonZero); //!< make univocal array of Rational as Integer
+            static Natural MakeNatural(Writable<Natural>   &arr); //!< make univocal array of Natural
+            static Natural MakeInteger(Writable<Integer>   &arr); //!< make univocal array of Integer
+            static Natural MakeRational(Writable<Rational> &arr); //!< make univocal array of Rational as Integer
 
             //! make univocal array of unsigned integrals
             template <typename T> static inline
-            Natural MakeUnsigned(Writable<T> &arr, size_t &nonZero)
+            Natural MakeUnsigned(Writable<T> &arr)
             {
                 //--------------------------------------------------------------
                 //
                 // initialize
                 //
                 //--------------------------------------------------------------
-                nonZero         = 0;
                 const size_t s  = arr.size(); if(s<=0) return 0;
                 T            g  = 0;
                 size_t       p  = 0;
@@ -145,11 +144,9 @@ namespace Yttrium
                                 break;
                             }
                         }
-                        nonZero = 1;
                         return 1;
 
                     default:
-                        nonZero = p;
                         break;
                 }
 
@@ -190,7 +187,7 @@ namespace Yttrium
 
             //! make univocal array of signed integrals
             template <typename T> static inline
-            Natural MakeSigned(Writable<T> &arr, size_t &nonZero)
+            Natural MakeSigned(Writable<T> &arr)
             {
                 typedef typename IntegerFor<T>::UInt::Type U;
                 //--------------------------------------------------------------
@@ -198,7 +195,6 @@ namespace Yttrium
                 // initialize
                 //
                 //--------------------------------------------------------------
-                nonZero         = 0;
                 const size_t s  = arr.size();
                 U            g  = 0;
                 size_t       p  = 0;
@@ -274,14 +270,12 @@ namespace Yttrium
                                 break;
                             }
                         }
-                        nonZero = 1;
                         return 1;
 
                     default:
                         //------------------------------------------------------
                         // generic case
                         //------------------------------------------------------
-                        nonZero = a;
                         break;
                 }
 

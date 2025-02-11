@@ -83,7 +83,7 @@ namespace Yttrium
                         const Readable<U> &src = source[k];
                         MatrixRow<T>      &tgt = target[i];
                         for(size_t j=cols;j>0;--j) tgt[j] = src[j];
-                        Univocal::Make(tgt,good[i]);
+                        (void) Univocal::Make(tgt);
                     }
                 }
             }
