@@ -11,11 +11,14 @@ namespace Yttrium
         {
             QFamily:: ~QFamily() noexcept
             {
+                while(qlist.size>0)
+                    cache->store(qlist.popHead());
             }
 
             QFamily:: QFamily(const Metrics &metrics, const QCache &sharedCache) noexcept :
             Metrics(metrics),
             Proxy<const QVector::List>(),
+            qlist(),
             cache(sharedCache),
             next(0),
             prev(0)

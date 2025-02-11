@@ -2,7 +2,6 @@
 #include "y/apex/api/ortho/vector.hpp"
 #include "y/apex/api/univocal.hpp"
 #include "y/apex/api/count-non-zero.hpp"
-#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -51,10 +50,9 @@ namespace Yttrium
                             case Positive:
                             case Negative:
                                 ++Coerce(ncof);
-                                continue;;
+                                continue;
                         }
                     }
-                    if(ncof<=0) throw Specific::Exception("QVector","Set Null Vector");
                 }
                 catch(...)
                 {

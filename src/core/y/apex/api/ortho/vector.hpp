@@ -4,7 +4,7 @@
 #define Y_Apex_Ortho_Vector_Included 1
 
 #include "y/apex/api/ortho/metrics.hpp"
-#include "y/apex/rational.hpp"
+#include "y/apex/api/univocal.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/data/list/cxx.hpp"
@@ -51,7 +51,33 @@ namespace Yttrium
                 // Methods
                 QVector & ldz() noexcept;
                 void      set(Writable<Rational> &Q);
-                
+
+                template <typename T> inline
+                void raw(const Readable<T> &V)
+                {
+                    assert(V.size()==dimensions);
+                    try {
+                        Writable<const Integer> &_self = *this;
+                        Writable<Integer>       &self  = (Writable<Integer> &) _self;
+                        Coerce(ncof) = 0;
+                        for(size_t i=dimensions;i>0;--i)
+                        {
+                            switch( (self[i] = V[i]).s )
+                            {
+                                case __Zero__: continue;
+                                case Positive:
+                                case Negative: ++Coerce(ncof); continue;
+                            }
+                        }
+                        Coerce(nrm2) = Univocal::Make(self);
+                    }
+                    catch(...)
+                    {
+                        ldz();
+                        throw;
+                    }
+                }
+
 
                 // Members
                 const size_t  ncof; //!< number of non-zero coefficients

@@ -15,7 +15,8 @@ namespace Yttrium
             class QFamily : public Metrics, public Proxy<const QVector::List>
             {
             public:
-                explicit QFamily(const Metrics &metrics, const QCache &sharedCache) noexcept;
+                explicit QFamily(const Metrics &metrics,
+                                 const QCache  &sharedCache) noexcept;
                 QFamily(const QFamily &);
                 virtual ~QFamily() noexcept;
 
