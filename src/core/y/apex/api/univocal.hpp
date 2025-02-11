@@ -14,8 +14,9 @@ namespace Yttrium
         struct Univocal
         {
 
-            static Natural MakeNatural(Writable<Natural> &arr);
-            static Natural MakeInteger(Writable<Integer> &arr);
+            static Natural MakeNatural(Writable<Natural>   &arr);
+            static Natural MakeInteger(Writable<Integer>   &arr);
+            static Natural MakeRational(Writable<Rational> &arr);
 
             //! Unsigned Integral
             template <typename T> static inline
@@ -26,7 +27,7 @@ namespace Yttrium
                 // initialize
                 //
                 //--------------------------------------------------------------
-                const size_t s  = arr.size();
+                const size_t s  = arr.size(); if(s<=0) return 0;
                 T            g  = 0;
                 size_t       p  = 0;
 

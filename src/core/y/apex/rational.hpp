@@ -58,8 +58,10 @@ inline Rational & operator OP##= (const RHS rhs) { Rational _( FCN(*this,rhs) );
 
         //! implement unary operators from a binary function
 #define Y_Apex_Rational_Unary_Operators(OP,FCN)     \
-Y_Apex_Rational_Unary_Operator(OP,Rational &,FCN)  \
-Y_Apex_Rational_Unary_Operator(OP,Integer  &,FCN)
+Y_Apex_Rational_Unary_Operator(OP, Rational &, FCN)   \
+Y_Apex_Rational_Unary_Operator(OP, Integer  &, FCN)   \
+Y_Apex_Rational_Unary_Operator(OP, integer_t , FCN)   \
+Y_Apex_Rational_Unary_Operator(OP, Natural  &, FCN)
 
         //! implement all operators from a binary function
 #define Y_Apex_Rational_Operators(OP,FCN) \

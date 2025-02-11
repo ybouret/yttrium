@@ -92,6 +92,27 @@ Y_UTEST(apex_uni)
         }
     }
 
+    std::cerr << std::endl << "Rational" << std::endl;
+    {
+        for(size_t dim=0;dim<=6;++dim)
+        {
+            Vector<Rational> v(dim,0);
+            for(size_t cycle=0;cycle<=10;++cycle)
+            {
+                for(size_t i=1;i<=dim;++i)
+                {
+                    v[i] = Rational(ran,5,5);
+                    if(ran.to<float>()>0.8) v[i] = 0;
+                    if(ran.choice()) v[i] = -v[i];
+                }
+
+                (std::cerr << "v=" << v).flush();
+                const Natural nrm2 = Univocal::MakeRational(v);
+                std::cerr << " => " << v << " @" << nrm2 <<std::endl;
+            }
+        }
+    }
+
 }
 Y_UDONE()
 
