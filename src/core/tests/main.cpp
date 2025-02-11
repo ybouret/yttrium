@@ -1,7 +1,7 @@
 #include "y/utest/driver.hpp"
 #include "y/config/compiler.h"
 
-Y_UTEST_DECL(256)
+Y_UTEST_DECL(300)
 {
 
 
@@ -297,6 +297,7 @@ Y_UTEST_DECL(256)
     Y_UTEST(apex_q);
     Y_UTEST(apex_rsa);
     Y_UTEST(apex_uni);
+    Y_UTEST(apex_col);
 
     Y_UTEST(dft_core);
     Y_UTEST(dft_fmt);
