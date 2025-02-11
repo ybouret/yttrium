@@ -120,7 +120,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Rational &      xch(Rational &q);      //!< no-throw exchange
             void            simplify();            //!< manual simplify
             static Rational Parse(const String &); //!< parse from string
-
+            
             //__________________________________________________________________
             //
             //

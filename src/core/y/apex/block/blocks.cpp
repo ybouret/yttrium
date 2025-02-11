@@ -35,6 +35,13 @@ namespace Yttrium
             return block;
         }
 
+        Block * Blocks:: tryQuery() noexcept
+        {
+            return (my.size>0) ? my.query() : 0;
+        }
+
+
+
         void Blocks:: store(Block * const block) noexcept
         {
             assert(0!=block);

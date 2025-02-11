@@ -41,7 +41,8 @@ namespace Yttrium
             Block * query();                             //!< cached/new block
             void    store(Block * const block) noexcept; //!< store and cleanup
             void    gc(const size_t cycles)    noexcept; //!< apply GC
-
+            Block *tryQuery()                  noexcept; //!< try got someting
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blocks);
             Y_PROXY_DECL();

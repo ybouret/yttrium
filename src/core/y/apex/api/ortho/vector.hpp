@@ -4,6 +4,9 @@
 #define Y_Apex_Ortho_Vector_Included 1
 
 #include "y/apex/api/ortho/metrics.hpp"
+#include "y/apex/rational.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -11,6 +14,46 @@ namespace Yttrium
     {
         namespace Ortho
         {
+
+            typedef CxxArray<const Integer,Memory::Dyadic> QVectorType;
+
+            class QVector : public Quantized, public Metrics, public QVectorType
+            {
+            public:
+                typedef CxxPoolOf<QVector> Pool;
+
+                class Cache : public Metrics, public Proxy<const Pool>
+                {
+                public:
+                    explicit Cache(const size_t dims) noexcept;
+                    virtual ~Cache()                  noexcept;
+
+                    QVector *query();
+                    void     store(QVector * const) noexcept;
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Cache);
+                    Y_PROXY_DECL();
+                    Pool my;
+                };
+
+                explicit QVector(const size_t dims);
+                virtual ~QVector() noexcept;
+
+                QVector & ldz() noexcept;
+
+                const size_t  ncof; //!< number of non-zero coefficients
+                const Natural nrm2; //!< |this|^2
+
+
+                QVector *next;
+                QVector *prev;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(QVector);
+
+            };
+
 
         }
 

@@ -22,7 +22,7 @@ namespace Yttrium
 
 
         const char * const Natural:: CallSign = "Apex::Natural";
-        const char * Natural:: callSign() const noexcept { return CallSign; }
+        const char *       Natural:: callSign() const noexcept { return CallSign; }
 
 
 
@@ -133,8 +133,24 @@ namespace Yttrium
             return *this;
         }
 
+
+
+
         Natural & Natural:: operator=(const natural_t n)  noexcept
         {
+
+
+            if(block->shift>Block::MinShift)
+            {
+                Block *tmp = _Factory().tryQuerySmall();
+                if(0!=tmp)
+                {
+                    BlockPtr blk(tmp);
+                    blk.swp(block);
+                }
+            }
+
+
             block->make<NaturalPlan>().word[0] = n;
             block->sync();
             return *this;
@@ -145,6 +161,8 @@ namespace Yttrium
             volatile AutoLock guard(*this);
             return block->make<Plan8>().word[0];
         }
+
+
 
 
         static inline

@@ -42,6 +42,13 @@ namespace Yttrium
             return blocks[shift].query();
         }
 
+        Block * Factory:: tryQuerySmall() noexcept
+        {
+            Y_LOCK(access);
+            return blocks[Block::MinShift].tryQuery();
+        }
+
+
         Block * Factory:: duplicate(const Block &other)
         {
             return queryBytes(other.bytes)->duplicate( &other );

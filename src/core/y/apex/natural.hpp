@@ -152,7 +152,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Access
             //
             //__________________________________________________________________
-            Lockable & access()     const      noexcept; //!< internal mutex access
+            Lockable &    access()  const      noexcept; //!< internal mutex access
             uint64_t      lsw()     const      noexcept; //!< least significant 64bits word
             Natural &     xch(Natural &)       noexcept; //!< no-throw exchange
             Natural &     plan(const Plan p)   noexcept; //!< set internal Plan
@@ -467,6 +467,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Y_PROXY_DECL();
             mutable BlockPtr block;
             mutable MutexPtr mutex;
+            void   setBlockTo(const natural_t) noexcept; //!< set block content 
 
             static Block *Add(Block &lhs, Block &   rhs);                      //!< default add
             static Block *Add(Block &lhs, natural_t rhs);                      //!< hybrid default add
