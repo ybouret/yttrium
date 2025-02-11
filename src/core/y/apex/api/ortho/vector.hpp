@@ -7,6 +7,7 @@
 #include "y/apex/rational.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/cxx/array.hpp"
+#include "y/data/list/cxx.hpp"
 
 namespace Yttrium
 {
@@ -20,7 +21,10 @@ namespace Yttrium
             class QVector : public Quantized, public Metrics, public QVectorType
             {
             public:
+
+                // Definitions
                 typedef CxxPoolOf<QVector> Pool;
+                typedef CxxListOf<QVector> List;
 
                 class Cache : public Metrics, public Proxy<const Pool>
                 {
@@ -37,18 +41,23 @@ namespace Yttrium
                     Pool my;
                 };
 
+                // C++
                 explicit QVector(const size_t dims);
                 virtual ~QVector() noexcept;
 
-                QVector & ldz() noexcept;
 
+
+                // Methods
+                QVector & ldz() noexcept;
+                void      set(Writable<Rational> &Q);
+
+
+                // Members
                 const size_t  ncof; //!< number of non-zero coefficients
                 const Natural nrm2; //!< |this|^2
+                QVector *     next;
+                QVector *     prev;
 
-
-                QVector *next;
-                QVector *prev;
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(QVector);
 
