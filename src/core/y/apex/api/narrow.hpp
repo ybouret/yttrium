@@ -17,13 +17,27 @@ namespace Yttrium
     namespace Apex
     {
 
-        typedef Vector<size_t> NarrowVector;
 
-        class Narrow : public NarrowVector
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Narrow Down a matrix to univocal sub-matrix
+        //
+        //
+        //______________________________________________________________________
+        class Narrow
         {
         public:
-            explicit Narrow() noexcept;
-            virtual ~Narrow() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Narrow() noexcept; //!< setup
+            virtual ~Narrow() noexcept; //!< cleanu[
 
             //__________________________________________________________________
             //
@@ -46,8 +60,8 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 // preparing indices
                 //--------------------------------------------------------------
-                NarrowVector &good = *this;
                 good.free();
+                nrm2.free();
                 target.release();
                 const size_t cols = source.cols;
                 const size_t rows = source.rows;
@@ -78,16 +92,12 @@ namespace Yttrium
                     assert(cols>0);
                     target.make(ng,cols);
                     for(size_t i=1;i<=ng;++i)
-                    {
-                        const size_t       k   = good[i];
-                        const Readable<U> &src = source[k];
-                        MatrixRow<T>      &tgt = target[i];
-                        for(size_t j=cols;j>0;--j) tgt[j] = src[j];
-                        (void) Univocal::Make(tgt);
-                    }
+                        nrm2 << Univocal::Make( target[i].ld(source[good[i]]) );;
                 }
             }
 
+            Vector<size_t,Memory::Dyadic>  good;
+            Vector<Natural,Memory::Dyadic> nrm2;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Narrow);

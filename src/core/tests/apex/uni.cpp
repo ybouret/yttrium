@@ -40,7 +40,6 @@ Y_UTEST(apex_uni)
                     v[i] = 0;
                     if(ran.choice()) v[i] = ran.in<unsigned>(1,10);
                 }
-
                 ProcessUnivocal(v);
             }
         }

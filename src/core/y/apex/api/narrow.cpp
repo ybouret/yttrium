@@ -5,7 +5,9 @@ namespace Yttrium
 {
     namespace Apex
     {
-        Narrow:: Narrow() noexcept : NarrowVector()
+        Narrow:: Narrow() noexcept :
+        good(),
+        nrm2()
         {
         }
 
