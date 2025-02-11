@@ -6,14 +6,15 @@ namespace Yttrium
     namespace Apex
     {
 
-        Natural Univocal:: MakeNatural(Writable<Natural> &arr)
+        Natural Univocal:: MakeNatural(Writable<Natural> &arr, size_t &nonZero)
         {
             //--------------------------------------------------------------
             //
             // initialize
             //
             //--------------------------------------------------------------
-            const size_t s  = arr.size();
+            nonZero         = 0;
+            const size_t s  = arr.size(); if(s<=0) return 0;
             Natural      g  = 0;
             size_t       p  = 0;
 
@@ -80,9 +81,11 @@ namespace Yttrium
                             break;
                         }
                     }
+                    nonZero = 1;
                     return 1;
 
                 default:
+                    nonZero = p;
                     break;
             }
 

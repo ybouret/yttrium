@@ -11,6 +11,7 @@ Y_UTEST(apex_uni)
 {
     Random::ParkMiller ran;
 
+    size_t             nonZero = 0;
     std::cerr << std::endl << "unsigned" << std::endl;
     {
         for(size_t dim=0;dim<=6;++dim)
@@ -25,7 +26,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::Make(v);
+                const Natural nrm2 = Univocal::Make(v,nonZero);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -46,7 +47,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::MakeSigned(v);
+                const Natural nrm2 = Univocal::Make(v,nonZero);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -66,7 +67,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::Make(v);
+                const Natural nrm2 = Univocal::Make(v,nonZero);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -88,7 +89,7 @@ Y_UTEST(apex_uni)
 
                 (std::cerr << "v=" << v).flush();
                 //const Natural nrm2 = Univocal::MakeInteger(v);
-                const Natural nrm2 = Univocal::Make(v);
+                const Natural nrm2 = Univocal::Make(v,nonZero);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -109,7 +110,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::Make(v);
+                const Natural nrm2 = Univocal::Make(v,nonZero);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
