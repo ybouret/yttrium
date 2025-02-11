@@ -13,10 +13,10 @@ namespace Yttrium
             QVector:: ~QVector() noexcept {}
 
 
-            QVector:: QVector(const size_t dims) :
+            QVector:: QVector(const Metrics &m) :
             Quantized(),
-            Metrics(dims),
-            QVectorType(dims),
+            Metrics(m),
+            QVectorType(dimensions),
             ncof(0),
             nrm2(0),
             next(0),
@@ -64,6 +64,8 @@ namespace Yttrium
             }
 
 
+
+
         }
 
     }
@@ -83,8 +85,8 @@ namespace Yttrium
 
             }
 
-            QVector:: Cache:: Cache(const size_t dims) noexcept :
-            Metrics(dims),
+            QVector:: Cache:: Cache(const Metrics &m) noexcept :
+            Metrics(m),
             Proxy<const Pool>(),
             my()
             {
@@ -94,7 +96,7 @@ namespace Yttrium
 
             QVector * QVector:: Cache:: query()
             {
-                return my.size <= 0 ? new QVector(dimensions) : my.query();
+                return my.size <= 0 ? new QVector(*this) : my.query();
             }
 
             void QVector:: Cache:: store(QVector * const v) noexcept
@@ -102,6 +104,25 @@ namespace Yttrium
                 assert(0!=v);
                 my.store(v)->ldz();
             }
+
+            QVector * QVector:: Cache:: query(const QVector &V)
+            {
+                QVector *qvec = query();
+                try {
+
+                    Coerce(qvec->ncof) = V.ncof;
+                    Coerce(qvec->nrm2) = V.nrm2;
+                    for(size_t i=dimensions;i>0;--i)
+                        Coerce( (*qvec)[i] ) = V[i];
+                    return qvec;
+                }
+                catch(...)
+                {
+                    store(qvec);
+                    throw;
+                }
+            }
+
 
         }
     }

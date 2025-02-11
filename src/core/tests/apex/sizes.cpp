@@ -1,6 +1,6 @@
 
 
-#include "y/apex/api/ortho/vector.hpp"
+#include "y/apex/api/ortho/family.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -17,6 +17,8 @@ Y_UTEST(apex_sizes)
     std::cerr << "Ortho Types" << std::endl;
     Y_SIZEOF(Ortho::QVector);
     Y_SIZEOF(Ortho::QVector::Cache);
+    Y_SIZEOF(Ortho::QFamily);
+
     std::cerr << std::endl;
 
 }

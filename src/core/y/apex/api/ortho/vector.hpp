@@ -29,11 +29,13 @@ namespace Yttrium
                 class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
                 public:
-                    explicit Cache(const size_t dims) noexcept;
-                    virtual ~Cache()                  noexcept;
+                    explicit Cache(const Metrics &m) noexcept;
+                    virtual ~Cache()                 noexcept;
 
                     QVector *query();
                     void     store(QVector * const) noexcept;
+                    QVector *query(const QVector &);
+
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Cache);
@@ -42,15 +44,14 @@ namespace Yttrium
                 };
 
                 // C++
-                explicit QVector(const size_t dims);
+                explicit QVector(const Metrics &);
                 virtual ~QVector() noexcept;
-
 
 
                 // Methods
                 QVector & ldz() noexcept;
                 void      set(Writable<Rational> &Q);
-
+                
 
                 // Members
                 const size_t  ncof; //!< number of non-zero coefficients
