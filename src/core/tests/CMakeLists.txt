@@ -382,6 +382,8 @@ add_test(apex:rsa   test-core apex_rsa)
 add_test(apex:uni   test-core apex_uni)
 add_test(apex:col   test-core apex_col)
 add_test(apex:narrow test-core apex_narrow)
+add_test(apex:ortho  test-core apex_ortho)
+
 
 
 #dft
