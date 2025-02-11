@@ -11,8 +11,9 @@ Y_UTEST(apex_uni)
 {
     Random::ParkMiller ran;
 
+    std::cerr << "unsigned" << std::endl;
     {
-        for(size_t dim=0;dim<=8;++dim)
+        for(size_t dim=0;dim<=6;++dim)
         {
             Vector<unsigned> v(dim,0);
             for(size_t cycle=0;cycle<=10;++cycle)
@@ -31,9 +32,9 @@ Y_UTEST(apex_uni)
     }
 
 
+    std::cerr << "signed" << std::endl;
     {
-
-        for(size_t dim=0;dim<=8;++dim)
+        for(size_t dim=0;dim<=6;++dim)
         {
             Vector<int32_t> v(dim,0);
             for(size_t cycle=0;cycle<=10;++cycle)

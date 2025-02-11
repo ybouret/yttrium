@@ -127,12 +127,9 @@ namespace Yttrium
             }
 
 
-            static
-            bool MustSwapSigns(const size_t p, const size_t n, const SignType f) noexcept
-            {
-                assert(f!=__Zero__);
-                return n>p || (n==p && f == Negative);
-            }
+            //! n>p || (n==p && f == Negative);
+            static bool MustSwapSigns(const size_t p, const size_t n, const SignType f) noexcept;
+
 
             static const unsigned Untouched = 0x00;
             static const unsigned Normalize = 0x01;
@@ -196,11 +193,11 @@ namespace Yttrium
                     }
                 }
 
-                std::cerr << "a=" << a << ", p=" << p << ", n=" << n << ", f=" << Sign::ToChar(f) << ", g=" << g << std::endl;
+                //std::cerr << "(a=" << a << ", p=" << p << ", n=" << n << ", f=" << Sign::ToChar(f) << ", g=" << g <<")";
 
                 //--------------------------------------------------------------
                 //
-                // act upon topology
+                // act upon signs topology
                 //
                 //--------------------------------------------------------------
                 switch(a)
@@ -241,6 +238,8 @@ namespace Yttrium
                 if(g>1)                  flags |= Normalize;
                 if(MustSwapSigns(p,n,f)) flags |= SwapSigns;
 
+                //std::cerr << "(flags=" << flags <<")";
+
                 switch(flags)
                 {
                     case SwapSigns:
@@ -255,29 +254,31 @@ namespace Yttrium
                         }
                         break;
 
-                    case Normalize:
+                    case Normalize: {
+                        const T den = -static_cast<T>(g); assert( den < -1 );
                         for(size_t i=s;i>0;--i) {
                             T &x = arr[i];
                             switch(Sign::Of(x))
                             {
                                 case __Zero__: continue;
-                                case Positive: { const Natural y =  static_cast<U>(   x/=g );  res += y.sqr(); } continue;
-                                case Negative: { const Natural y =  static_cast<U>( -(x/=g) ); res += y.sqr(); } continue;
+                                case Positive: {  const Natural y =  static_cast<U>(  -(x/=den) ); res += y.sqr(); } continue;
+                                case Negative: {  const Natural y =  static_cast<U>(   (x/=den) ); res += y.sqr(); } continue;
                             }
                         }
-                        break;
+                    } break;
 
-                    case Normalize|SwapSigns:
+                    case Normalize|SwapSigns: {
+                        const T den = -static_cast<T>(g); assert(den < -1);
                         for(size_t i=s;i>0;--i) {
                             T &x = arr[i];
                             switch(Sign::Of(x))
                             {
                                 case __Zero__: continue;
-                                case Positive: { const Natural y =  static_cast<U>(   x/=g );  x=-x; res += y.sqr(); } continue;
-                                case Negative: { const Natural y =  static_cast<U>( -(x/=g) ); x=-x; res += y.sqr(); } continue;
+                                case Positive: { const Natural y =  static_cast<U>( -(x/=den) ); res += y.sqr(); } continue;
+                                case Negative: { const Natural y =  static_cast<U>(  (x/=den) ); res += y.sqr(); } continue;
                             }
                         }
-                        break;
+                    } break;
 
                     default:
                         assert(Untouched==flags);
