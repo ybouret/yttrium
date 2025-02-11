@@ -298,6 +298,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(apex_rsa);
     Y_UTEST(apex_uni);
     Y_UTEST(apex_col);
+    Y_UTEST(apex_narrow);
 
     Y_UTEST(dft_core);
     Y_UTEST(dft_fmt);

@@ -380,6 +380,8 @@ add_test(apex:q     test-core apex_q)
 add_test(apex:rsa   test-core apex_rsa)
 add_test(apex:uni   test-core apex_uni)
 add_test(apex:col   test-core apex_col)
+add_test(apex:narrow test-core apex_narrow)
+
 
 #dft
 add_test(dft:core test-core dft_core)
