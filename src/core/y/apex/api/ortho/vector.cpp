@@ -15,7 +15,9 @@ namespace Yttrium
             Metrics(dims),
             QVectorType(dims),
             ncof(0),
-            nrm2(0)
+            nrm2(0),
+            next(0),
+            prev(0)
             {
             }
 
