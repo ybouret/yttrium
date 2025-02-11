@@ -14,6 +14,8 @@ namespace Yttrium
         struct Univocal
         {
 
+            static Natural MakeNatural(Writable<Natural> &arr);
+
             //! Unsigned Integral
             template <typename T> static inline
             Natural MakeUnsigned(Writable<T> &arr)
