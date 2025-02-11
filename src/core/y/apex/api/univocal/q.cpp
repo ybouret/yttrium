@@ -117,7 +117,18 @@ namespace Yttrium
             if(g->bits>1)            flags |= Normalize;
             if(MustSwapSigns(p,n,f)) flags |= SwapSigns;
 
-            return 0;
+            switch(flags)
+            {
+                default:
+                    assert(Untouched==flags);
+                    for(size_t i=s;i>0;--i)
+                    {
+                        const Rational &q = arr[i]; assert(1==q.denom);
+                        res += q.numer.n.sqr();
+                    }
+            }
+
+            return res;
         }
     }
 
