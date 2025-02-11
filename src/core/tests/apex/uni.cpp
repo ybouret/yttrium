@@ -25,7 +25,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::MakeUnsigned(v);
+                const Natural nrm2 = Univocal::Make(v);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -66,11 +66,12 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::MakeNatural(v);
+                const Natural nrm2 = Univocal::Make(v);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
     }
+
 
     std::cerr << std::endl << "Integer" << std::endl;
     {
@@ -86,7 +87,8 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::MakeInteger(v);
+                //const Natural nrm2 = Univocal::MakeInteger(v);
+                const Natural nrm2 = Univocal::Make(v);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }
@@ -107,7 +109,7 @@ Y_UTEST(apex_uni)
                 }
 
                 (std::cerr << "v=" << v).flush();
-                const Natural nrm2 = Univocal::MakeRational(v);
+                const Natural nrm2 = Univocal::Make(v);
                 std::cerr << " => " << v << " @" << nrm2 <<std::endl;
             }
         }

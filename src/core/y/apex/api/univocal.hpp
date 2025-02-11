@@ -18,6 +18,42 @@ namespace Yttrium
             static Natural MakeInteger(Writable<Integer>   &arr);
             static Natural MakeRational(Writable<Rational> &arr);
 
+
+            template <typename T> static inline
+            Natural Make(Writable<T> &arr)
+            {
+                typedef TL3(Natural,Integer,Rational) ListType;
+                static const int                 TypeIndx = TL::IndexOf<ListType,T>::Value;
+                static const Int2Type<TypeIndx>  TypeKind = {};
+                return Make(arr,TypeKind);
+            }
+
+        private:
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<0> &) { return MakeNatural(arr); }
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<1> &) { return MakeInteger(arr); }
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<2> &) { return MakeRational(arr); }
+
+            template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type< -1 > &)
+            {
+                static const Int2Type< IsSigned<T>::Value > SignKind = {};
+                return Prim(arr,SignKind);
+            }
+
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<true> &)
+            {
+                return MakeSigned(arr);
+            }
+
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<false> &)
+            {
+                return MakeUnsigned(arr);
+            }
+
+
+
+
+        public:
+
             //! Unsigned Integral
             template <typename T> static inline
             Natural MakeUnsigned(Writable<T> &arr)
