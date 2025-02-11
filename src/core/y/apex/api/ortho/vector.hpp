@@ -26,7 +26,7 @@ namespace Yttrium
                 typedef CxxPoolOf<QVector> Pool;
                 typedef CxxListOf<QVector> List;
 
-                class Cache : public Metrics, public Proxy<const Pool>
+                class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
                 public:
                     explicit Cache(const size_t dims) noexcept;
@@ -60,10 +60,9 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(QVector);
-
             };
 
-
+            typedef ArcPtr<QVector::Cache> QCache;
         }
 
     }

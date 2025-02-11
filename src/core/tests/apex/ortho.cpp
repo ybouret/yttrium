@@ -15,9 +15,9 @@ Y_UTEST(apex_ortho)
     Random::ParkMiller ran;
     for(size_t dims=1;dims<=5;++dims)
     {
-        Ortho::QVector::Cache cache(dims);
+        Ortho::QCache         cache = new Ortho::QVector::Cache(dims);
         Ortho::QVector::List  qlist;
-        Ortho::QVector *v = qlist.pushTail( cache.query() );
+        Ortho::QVector *v = qlist.pushTail( cache->query() );
         Y_ASSERT(dims==v->size());
         Y_ASSERT(dims==v->dimensions);
 
