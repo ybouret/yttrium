@@ -20,6 +20,12 @@ Y_UTEST(apex_col)
     b << -2;
     Y_CHECK(Apex::Colinearity::Of(a,b));
 
+    a << 2;
+    b << 4;
+    Y_CHECK(!Apex::Colinearity::Of(a,b));
+    b.tail() = -4;
+    
+    Y_CHECK(Apex::Colinearity::Of(a,b));
 
 }
 Y_UDONE()
