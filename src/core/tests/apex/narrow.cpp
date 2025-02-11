@@ -31,8 +31,8 @@ Y_UTEST(apex_narrow)
                 }
             }
             std::cerr << "source=" << source << std::endl;
-            //narrow.down(target,source);
-            
+            narrow.down(target,source);
+            std::cerr << "target=" << target << std::endl;
         }
     }
 
