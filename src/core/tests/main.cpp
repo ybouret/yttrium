@@ -295,6 +295,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(apex_z);
     Y_UTEST(apex_conv);
     Y_UTEST(apex_q);
+    Y_UTEST(apex_sizes);
     Y_UTEST(apex_rsa);
     Y_UTEST(apex_uni);
     Y_UTEST(apex_col);
