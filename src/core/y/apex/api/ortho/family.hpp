@@ -12,7 +12,7 @@ namespace Yttrium
 
         namespace Ortho
         {
-            class QFamily : public Metrics, public Proxy<const QVector::List>
+            class QFamily : public Quantized, public Metrics, public Proxy<const QVector::List>
             {
             public:
                 explicit QFamily(const Metrics &metrics,
@@ -20,11 +20,32 @@ namespace Yttrium
                 QFamily(const QFamily &);
                 virtual ~QFamily() noexcept;
 
+
+                template <typename T> inline
+                bool initialize(const Readable<T> &first)
+                {
+                    QVector *qvec = cache->query();
+                    try { qvec->raw(first); }
+                    catch(...) { cache->store(qvec); throw; }
+                    if(qvec->ncof>0)
+                    {
+                        (void)qlist.pushTail(qvec);
+                        return true;
+                    }
+                    else
+                    {
+                        cache->store(qvec);
+                        return false;
+                    }
+                }
+
+
             private:
                 Y_DISABLE_ASSIGN(QFamily);
                 Y_PROXY_DECL();
-                QVector::List qlist;
-                QCache        cache;
+                QVector::List                     qlist;
+                CxxArray<Rational,Memory::Dyadic> qproj;
+                QCache                            cache;
 
 
             public:

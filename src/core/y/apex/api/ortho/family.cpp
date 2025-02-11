@@ -19,6 +19,7 @@ namespace Yttrium
             Metrics(metrics),
             Proxy<const QVector::List>(),
             qlist(),
+            qproj(dimensions),
             cache(sharedCache),
             next(0),
             prev(0)
