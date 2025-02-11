@@ -125,6 +125,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // C++
             //
             //__________________________________________________________________
+            Natural();                                      //!< default constructor
             Natural(const natural_t);                       //!< setup as natural
             Natural(Random::Bits &, const size_t);          //!< setup with given random bits
             virtual ~Natural() noexcept;                    //!< cleanup

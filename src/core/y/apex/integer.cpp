@@ -29,6 +29,14 @@ namespace Yttrium
             return 0;
         }
 
+        Integer:: Integer() :
+        Castable(),
+        s(__Zero__),
+        n()
+        {
+        }
+        
+
         Integer:: Integer(const integer_t z) :
         Castable(),
         s( Sign::Of(z) ),

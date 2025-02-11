@@ -25,9 +25,17 @@ namespace Yttrium
         }
 
 
-        Rational:: Rational(const integer_t n) :
+        Rational:: Rational() :
         Number(),
-        numer(n),
+        numer(0),
+        denom(1)
+        {
+        }
+
+
+        Rational:: Rational(const integer_t z) :
+        Number(),
+        numer(z),
         denom(1)
         {
         }

@@ -93,6 +93,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             // C++
             //
             //__________________________________________________________________
+            Integer();                                //!< default constructor
             Integer(const integer_t z);               //!< setup
             Integer(const Integer &);                 //!< duplicate
             Integer(const Natural &);                 //!< setup

@@ -57,6 +57,15 @@ namespace Yttrium
         static const unsigned    NaturalShift = iLog2Of<natural_t>::Value;
         static const Plan        NaturalPlan  = Plan(NaturalShift);
 
+
+        Natural:: Natural() :
+        Castable(),
+        block( _Factory().query(0) ),
+        mutex( _Factory().query()  )
+        {
+
+        }
+
         Natural:: Natural(const natural_t n) :
         Castable(),
         block( _Factory().query(NaturalShift) ),

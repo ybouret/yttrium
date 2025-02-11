@@ -14,6 +14,8 @@ Y_UTEST(apex_narrow)
     Random::ParkMiller ran;
     Narrow             narrow;
 
+    Matrix<Natural> nmat(4,3);
+
     Matrix<Integer> target;
     Matrix<int>     source;
     for(size_t r=1;r<=10;++r)

@@ -93,6 +93,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             // C++
             //
             //__________________________________________________________________
+            Rational();                                 //!< setup
             Rational(const integer_t );                 //!< setup
             Rational(const Rational &);                 //!< setup
             Rational(const Natural  &);                 //!< setup
