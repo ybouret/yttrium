@@ -75,7 +75,7 @@ namespace Yttrium
             }
 
 
-            std::cerr << "(l=" << l << ")";
+            //std::cerr << "(l=" << l << ")";
 
             const bool multiply = l->bits>1;
             Natural    g        = 0;
@@ -110,7 +110,7 @@ namespace Yttrium
                     }
                 }
             }
-            std::cerr << "(g=" << g << ")";
+            //std::cerr << "(g=" << g << ")";
 
             Natural  res    = 0;
             unsigned                 flags  = Untouched;
