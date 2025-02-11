@@ -27,15 +27,22 @@ namespace Yttrium
         template <>
         struct CountNonZero_<Natural>
         {
-            static inline
-            size_t In(const Readable<Natural> &arr) noexcept
-            {
-                size_t res = 0;
-                for(size_t i=arr.size();i>0;--i)
-                    if(arr[i]->bits>0) ++res;
-                return res;
-            }
+            static size_t In(const Readable<Natural> &arr) noexcept;
         };
+
+        template <>
+        struct CountNonZero_<Integer>
+        {
+            static size_t In(const Readable<Integer> &arr) noexcept;
+        };
+
+        template <>
+        struct CountNonZero_<Rational>
+        {
+            static size_t In(const Readable<Rational> &arr) noexcept;
+        };
+
+
 
         template <typename T> inline
         size_t CountNonZero(const Readable<T> &arr) noexcept
