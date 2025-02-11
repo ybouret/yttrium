@@ -119,12 +119,71 @@ namespace Yttrium
 
             switch(flags)
             {
+
+                case SwapSigns:
+                    for(size_t i=s;i>0;--i)
+                    {
+                        Rational &q = arr[i]; assert(1==q.denom);
+                        switch(q.numer.s)
+                        {
+                            case __Zero__:  continue;
+                            case Positive: Coerce(q.numer.s) = Negative; break;
+                            case Negative: Coerce(q.numer.s) = Positive; break;
+                        }
+                        assert(q.numer.n->bits>0);
+                        res += q.numer.n.sqr();
+                    }
+                    break;
+
+                case Normalize:
+                    for(size_t i=s;i>0;--i)
+                    {
+                        Rational &q = arr[i]; assert(1==q.denom);
+                        switch(q.numer.s)
+                        {
+                            case __Zero__:  continue;
+                            case Positive:
+                            case Negative:
+                                break;
+
+                        }
+                        Coerce(q.numer.n) /= g;
+                        assert(q.numer.n->bits>0);
+                        res += q.numer.n.sqr();
+                    }
+                    break;
+
+                case Normalize|SwapSigns:
+                    for(size_t i=s;i>0;--i)
+                    {
+                        Rational &q = arr[i]; assert(1==q.denom);
+                        switch(q.numer.s)
+                        {
+                            case __Zero__:  continue;
+                            case Positive: Coerce(q.numer.s) = Negative; break;
+                            case Negative: Coerce(q.numer.s) = Positive; break;
+
+                        }
+                        Coerce(q.numer.n) /= g;
+                        assert(q.numer.n->bits>0);
+                        res += q.numer.n.sqr();
+                    }
+                    break;
+
                 default:
                     assert(Untouched==flags);
                     for(size_t i=s;i>0;--i)
                     {
                         const Rational &q = arr[i]; assert(1==q.denom);
-                        res += q.numer.n.sqr();
+                        switch(q.numer.s)
+                        {
+                            case __Zero__:  continue;
+                            case Positive:
+                            case Negative:
+                                assert(q.numer.n->bits>0);
+                                res += q.numer.n.sqr();
+                                continue;
+                        }
                     }
             }
 
