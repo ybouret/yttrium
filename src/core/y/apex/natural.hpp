@@ -195,8 +195,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Y_Apex_Natural_Ops(>=,!=,Negative)
 #endif
 
-            bool isOdd()  const noexcept;
-            bool isEven() const noexcept;
+            bool isOdd()  const noexcept; //!< test if odd
+            bool isEven() const noexcept; //!< test if even
 
             //__________________________________________________________________
             //
@@ -364,8 +364,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const; //!< interger square-root
             Natural abs()  const; //!< |*this|
-            static Natural ModInv(const Natural &a, const Natural &n);
-
+            
 
             //__________________________________________________________________
             //

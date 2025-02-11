@@ -11,50 +11,64 @@ namespace Yttrium
     namespace Apex
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Algorithms to produce univocal arrays
+        //
+        //
+        //______________________________________________________________________
         struct Univocal
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const unsigned Untouched = 0x00; //!< left Untouched
+            static const unsigned Normalize = 0x01; //!< must Normalize
+            static const unsigned SwapSigns = 0x02; //!< must SwapSigns
 
-            static Natural MakeNatural(Writable<Natural>   &arr);
-            static Natural MakeInteger(Writable<Integer>   &arr);
-            static Natural MakeRational(Writable<Rational> &arr);
+            //! (n>p) || (n==p && f == Negative);
+            static bool MustSwapSigns(const size_t p, const size_t n, const SignType f) noexcept;
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! call algorithm for given type, return reduced |arr|^2
+            //
+            //__________________________________________________________________
             template <typename T> static inline
             Natural Make(Writable<T> &arr)
             {
                 typedef TL3(Natural,Integer,Rational) ListType;
-                static const int                 TypeIndx = TL::IndexOf<ListType,T>::Value;
-                static const Int2Type<TypeIndx>  TypeKind = {};
-                return Make(arr,TypeKind);
+                static const Int2Type<TL::IndexOf<ListType,T>::Value>   Kind = {};
+                return Make(arr,Kind);
             }
 
         private:
             template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<0> &) { return MakeNatural(arr); }
             template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<1> &) { return MakeInteger(arr); }
             template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type<2> &) { return MakeRational(arr); }
-
             template <typename T> static inline Natural Make(Writable<T> &arr, const Int2Type< -1 > &)
             {
                 static const Int2Type< IsSigned<T>::Value > SignKind = {};
                 return Prim(arr,SignKind);
             }
-
-            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<true> &)
-            {
-                return MakeSigned(arr);
-            }
-
-            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<false> &)
-            {
-                return MakeUnsigned(arr);
-            }
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<true>  &) { return MakeSigned(arr);   }
+            template <typename T> static inline Natural Prim(Writable<T> &arr, const Int2Type<false> &) { return MakeUnsigned(arr); }
 
 
 
 
         public:
+            static Natural MakeNatural(Writable<Natural>   &arr); //!< make univocal array of Natural
+            static Natural MakeInteger(Writable<Integer>   &arr); //!< make univocal array of Integer
+            static Natural MakeRational(Writable<Rational> &arr); //!< make univocal array of Rational as Integer
 
-            //! Unsigned Integral
+            //! make univocal array of unsigned integrals
             template <typename T> static inline
             Natural MakeUnsigned(Writable<T> &arr)
             {
@@ -167,17 +181,11 @@ namespace Yttrium
             }
 
 
-            //! n>p || (n==p && f == Negative);
-            static bool MustSwapSigns(const size_t p, const size_t n, const SignType f) noexcept;
-
-
-            static const unsigned Untouched = 0x00;
-            static const unsigned Normalize = 0x01;
-            static const unsigned SwapSigns = 0x02;
 
 
 
-            //! Signed Integral
+
+            //! make univocal array of signed integrals
             template <typename T> static inline
             Natural MakeSigned(Writable<T> &arr)
             {

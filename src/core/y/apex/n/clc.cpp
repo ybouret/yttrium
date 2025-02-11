@@ -30,6 +30,11 @@ namespace Yttrium
             return block->curr->isOdd();
         }
 
+        bool Natural:: isEven()  const noexcept
+        {
+            return !isOdd();
+        }
+
 
     }
 
