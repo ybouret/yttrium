@@ -22,8 +22,16 @@ Y_UTEST(apex_ortho)
         Y_ASSERT(dims==v->dimensions);
 
         Vector<Rational> q(dims,0);
-        
 
+        for(size_t i=dims;i>0;--i)
+        {
+            q[i] = Rational(ran,5,5);
+        }
+
+        std::cerr << "q=" << q << std::endl;
+        v->set(q);
+        std::cerr << "q=" << q  << std::endl;
+        std::cerr << "v=" << *v << std::endl;
     }
 
 }
