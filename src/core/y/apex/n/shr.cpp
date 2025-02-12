@@ -17,7 +17,7 @@ namespace Yttrium
                 assert(nbit>0);
                 const size_t bits = block->bits;
                 if(nbit>=bits) {
-                    block->ldz();
+                    block->ldz(Plan1);
                     return *this;
                 }
                 else

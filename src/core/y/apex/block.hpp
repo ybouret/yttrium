@@ -52,7 +52,7 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void    ldz()             noexcept; //!< set all to zero, reset to plan1
+            void    ldz(const Plan p) noexcept; //!< set all to zero, reset to plan=p
             void    relink()          noexcept; //!< set curr and dull from plan
             void    syncDull()        noexcept; //!< sync dull after manual setting of curr
             void    sync()            noexcept; //!< compute bits from current plan and syncDull

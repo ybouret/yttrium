@@ -94,7 +94,7 @@ namespace Yttrium
         {
             assert(0!=text);
             assert(size>0);
-            block->ldz();
+            block->ldz(Plan1);
             Natural &self = *this;
             for(size_t i=0;i<size;++i)
             {
@@ -111,7 +111,7 @@ namespace Yttrium
         {
             assert(0!=text);
             assert(size>0);
-            block->ldz();
+            block->ldz(Plan1);
             const Natural ten  = 10;
             Natural     & self = *this;
             for(size_t i=0;i<size;++i)

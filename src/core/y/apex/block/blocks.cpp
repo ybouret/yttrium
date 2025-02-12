@@ -46,7 +46,7 @@ namespace Yttrium
         {
             assert(0!=block);
             assert(block->shift==shift);
-            my.store(block)->ldz();
+            my.store(block)->ldz(Plan1);
         }
 
 

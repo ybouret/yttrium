@@ -139,7 +139,6 @@ namespace Yttrium
         Natural & Natural:: operator=(const natural_t n)  noexcept
         {
 
-
             if(block->shift>Block::MinShift)
             {
                 Block *tmp = _Factory().tryQuerySmall();
@@ -149,7 +148,8 @@ namespace Yttrium
                     blk.swp(block);
                 }
             }
-
+            else
+                block->ldz(NaturalPlan);
 
             block->make<NaturalPlan>().word[0] = n;
             block->sync();

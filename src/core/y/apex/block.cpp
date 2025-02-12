@@ -46,10 +46,10 @@ namespace Yttrium
             return nref;
         }
 
-        void Block:: ldz() noexcept
+        void Block:: ldz(const Plan p) noexcept
         {
             Coerce(bits) = 0;
-            Coerce(plan) = Plan1;
+            Coerce(plan) = p;
             memset(entry,0,range);
             relink();
             Coerce(curr->words) = 0;
