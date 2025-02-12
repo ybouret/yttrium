@@ -24,6 +24,8 @@ namespace Yttrium
             }
 
 
+
+
             void Vector:: ldz() noexcept
             {
                 Coerce(ncof) = 0;
@@ -137,6 +139,8 @@ namespace Yttrium
                     Coerce(qvec->nrm2) = V.nrm2;
                     for(size_t i=dimensions;i>0;--i)
                         Coerce( (*qvec)[i] ) = V[i];
+                    assert( *qvec == V);
+                    assert( __Zero__ == Vector::Compare(V,*qvec) );
                     return qvec;
                 }
                 catch(...)
@@ -146,6 +150,37 @@ namespace Yttrium
                 }
             }
 
+            SignType Vector:: Compare(const Vector &lhs, const Vector &rhs) noexcept
+            {
+                assert(lhs.dimensions==rhs.dimensions);
+                
+                switch( Sign::Of(lhs.ncof,rhs.ncof) )
+                {
+                    case Negative: return Negative;
+                    case Positive: return Positive;
+                    case __Zero__: break;
+                }
+
+                switch( Natural::Compare(lhs.nrm2.n,rhs.nrm2.n) )
+                {
+                    case Negative: return Negative;
+                    case Positive: return Positive;
+                    case __Zero__: break;
+                }
+
+                const size_t n = lhs.dimensions;
+                for(size_t i=1;i<=n;++i)
+                {
+                    switch( Integer::Compare( lhs[i], rhs[i]) )
+                    {
+                        case __Zero__: continue;
+                        case Negative: return Negative;
+                        case Positive: return Positive;
+                    }
+                }
+
+                return __Zero__;
+            }
 
         }
     }

@@ -91,6 +91,8 @@ namespace Yttrium
                 //______________________________________________________________
                 void  ldz() noexcept; //!< reset all
 
+                
+
                 //! transfer compatible vector, return true if not nul vector
                 template <typename T> inline
                 bool set(const Readable<T> &V)
@@ -133,7 +135,9 @@ namespace Yttrium
 
                 //! keep orthogonal to e, return true if not nul vector
                 bool keepOrtho(const Vector &e);
-                
+
+                static SignType Compare(const Vector &lhs, const Vector &rhs) noexcept;
+
                 //______________________________________________________________
                 //
                 //
@@ -155,7 +159,7 @@ namespace Yttrium
             //
             //! shared cache
             //__________________________________________________________________
-            typedef ArcPtr<Vector::Cache> Cache;
+            typedef ArcPtr<Vector::Cache> VCache;
         }
 
     }

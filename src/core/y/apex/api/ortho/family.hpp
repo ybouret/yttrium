@@ -26,12 +26,46 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxPoolOf<Family> Pool;
+
+                class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
+                {
+                public:
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    explicit Cache(const Metrics &, const VCache &) noexcept; //!< setup
+                    virtual ~Cache()                                noexcept; //!< cleanup
+
+                    //__________________________________________________________
+                    //
+                    // Methods
+                    //__________________________________________________________
+                    Family *query();                         //!< query/create
+                    void    store(Family * const) noexcept;  //!< store and reset
+                    Family *query(const Family &);           //!< duplicate
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Cache);
+                    Y_PROXY_DECL();
+                    Pool   my; //!< my pool
+                    VCache vc; //!< shared vectors cache
+                };
+
+
+                //______________________________________________________________
+                //
+                //
                 // C++
                 //
                 //______________________________________________________________
-                explicit Family(const Metrics &, const Cache &) noexcept; //!< setup
-                virtual ~Family() noexcept;                               //!< cleanup
-                Y_OSTREAM_PROTO(Family);                                  //!< display
+                explicit Family(const Metrics &, const VCache &) noexcept; //!< setup
+                virtual ~Family() noexcept;                                //!< cleanup
+                Y_OSTREAM_PROTO(Family);                                   //!< display
 
                 //______________________________________________________________
                 //
@@ -39,6 +73,11 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                static bool AreEqual(const Family &lhs, const Family &rhs) noexcept;
+                friend bool operator==(const Family &lhs, const Family &rhs) noexcept;
+                friend bool operator!=(const Family &lhs, const Family &rhs) noexcept;
+
 
                 //______________________________________________________________
                 //
@@ -68,12 +107,12 @@ namespace Yttrium
 
                     return true;
                 }
+                
+                void expand();          //!< expand with latest workspace
+                void clear()  noexcept; //!< free vectors
+                void prune()  noexcept; //!< clear workspace
+                void reset()  noexcept; //!< free/trim
 
-
-
-                void expand() noexcept; //!< expand with latest workspace
-                void free()   noexcept; //!< reset
-                void trim()   noexcept; //!< clear workspace
 
                 //______________________________________________________________
                 //
@@ -87,12 +126,16 @@ namespace Yttrium
                 Y_PROXY_DECL();
                 Vector::List  qlist; //!< current list
                 Vector *      qwork; //!< current workspace
-                Cache         cache; //!< shared cache
+                VCache        cache; //!< shared cache
 
             public:
                 Family *next; //!< for list/pool
                 Family *prev; //!< for list/pool
             };
+
+
+            typedef ArcPtr<Family::Cache> FCache;
+
         }
     }
 }

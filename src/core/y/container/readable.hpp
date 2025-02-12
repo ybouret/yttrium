@@ -205,7 +205,7 @@ namespace Yttrium
                     case Positive: return Positive;
                 }
             }
-            return Negative; // lhs is prefix of greater rhs
+            return Negative; // lhs is prefix of rhs or greater than rhs
         }
     };
 }

@@ -17,21 +17,30 @@ Y_UTEST(apex_ortho)
     {
         std::cerr << std::endl << "dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
-        Ortho::Cache          cache = new Ortho::Vector::Cache(metrics);
-        Ortho::Family         F(metrics,cache);
-        CxxArray<int> V(dims);
+        Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
+        Ortho::FCache         fcache = new Ortho::Family::Cache(metrics,vcache);
 
-        do {
+        {
+            Ortho::Family         F(metrics,vcache);
+            CxxArray<int> V(dims);
 
+            do {
+                for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
+                if(F.wouldAccept(V))
+                {
+                    F.expand();
+                    std::cerr << "F=" << F << std::endl;
+                }
+            } while(F.quality != Ortho::Generating);
 
-            for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
-            if(F.wouldAccept(V))
             {
-                F.expand();
-                std::cerr << "F=" << F << std::endl;
+                Ortho::Family *f = fcache->query(F);
+                Y_ASSERT(F==*f);
+                fcache->store(f);
             }
-        } while(F.quality != Ortho::Generating);
-
+            std::cerr << "#vcache=" << (*vcache)->size << std::endl;
+        }
+        std::cerr << "#vcache=" << (*vcache)->size << std::endl;
     }
 
 }
