@@ -17,7 +17,7 @@ Y_UTEST(apex_sizes)
     std::cerr << "Ortho Types" << std::endl;
     Y_SIZEOF(Ortho::Vector);
     Y_SIZEOF(Ortho::Vector::Cache);
-    Y_SIZEOF(Ortho::QFamily);
+    Y_SIZEOF(Ortho::Family);
 
     std::cerr << std::endl;
 
