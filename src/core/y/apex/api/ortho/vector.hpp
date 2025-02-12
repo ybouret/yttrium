@@ -16,16 +16,16 @@ namespace Yttrium
         namespace Ortho
         {
 
-            typedef CxxArray<const Integer,Memory::Dyadic> QVectorType;
+            typedef CxxArray<const Integer,Memory::Dyadic> VectorType;
 
-            class QVector : public Quantized, public Metrics, public QVectorType
+            class Vector : public Quantized, public Metrics, public VectorType
             {
             public:
 
                 // Definitions
-                typedef CxxPoolOf<QVector> Pool;
-                typedef CxxListOf<QVector> List;
-                typedef Writable<Integer>  Array;
+                typedef CxxPoolOf<Vector> Pool;
+                typedef ListOf<Vector>    List;
+                typedef Writable<Integer> Array;
 
                 class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
@@ -33,9 +33,9 @@ namespace Yttrium
                     explicit Cache(const Metrics &m) noexcept;
                     virtual ~Cache()                 noexcept;
 
-                    QVector *query();
-                    void     store(QVector * const) noexcept;
-                    QVector *query(const QVector &);
+                    Vector *query();
+                    void    store(Vector * const) noexcept;
+                    Vector *query(const Vector &);
 
 
                 private:
@@ -45,12 +45,12 @@ namespace Yttrium
                 };
 
                 // C++
-                explicit QVector(const Metrics &);
-                virtual ~QVector() noexcept;
-                Y_OSTREAM_PROTO(QVector);
+                explicit Vector(const Metrics &);
+                virtual ~Vector() noexcept;
+                Y_OSTREAM_PROTO(Vector);
 
                 // Methods
-                QVector & ldz() noexcept;
+                void  ldz() noexcept;
 
 
                 template <typename T> inline
@@ -91,7 +91,7 @@ namespace Yttrium
                     return res;
                 }
 
-                bool keepOrtho(const QVector &e)
+                bool keepOrtho(const Vector &e)
                 {
                     assert(e.dimensions==dimensions);
                     try {
@@ -154,16 +154,16 @@ namespace Yttrium
                 // Members
                 const size_t  ncof; //!< number of non-zero coefficients
                 const Integer nrm2; //!< |this|^2, as integer for algebraic operations
-                QVector *     next;
-                QVector *     prev;
+                Vector *     next;
+                Vector *     prev;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(QVector);
+                Y_DISABLE_COPY_AND_ASSIGN(Vector);
                 bool   finalize(Array &self); //!< finalize from ncof
                 Array &get() noexcept;        //!< get aliases
             };
 
-            typedef ArcPtr<QVector::Cache> QCache;
+            typedef ArcPtr<Vector::Cache> Cache;
         }
 
     }

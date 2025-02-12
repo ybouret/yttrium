@@ -9,13 +9,13 @@ namespace Yttrium
     {
         namespace Ortho
         {
-            QVector:: ~QVector() noexcept {}
+            Vector:: ~Vector() noexcept {}
 
 
-            QVector:: QVector(const Metrics &m) :
+            Vector:: Vector(const Metrics &m) :
             Quantized(),
             Metrics(m),
-            QVectorType(dimensions),
+            VectorType(dimensions),
             ncof(0),
             nrm2(0),
             next(0),
@@ -24,7 +24,7 @@ namespace Yttrium
             }
 
 
-            QVector & QVector:: ldz() noexcept
+            void Vector:: ldz() noexcept
             {
                 Coerce(ncof) = 0;
                 Coerce(nrm2) = 0;
@@ -32,16 +32,15 @@ namespace Yttrium
                 {
                     Coerce((*this)[i])  = 0;
                 }
-                return *this;
             }
 
-            QVector:: Array & QVector:: get() noexcept
+            Vector::Array & Vector:: get() noexcept
             {
                 Writable<const Integer> &self = *this;
                 return (Array &)self;
             }
 
-            bool QVector:: finalize(Array &self)
+            bool Vector:: finalize(Array &self)
             {
                 if(ncof<=0)
                 {
@@ -55,9 +54,9 @@ namespace Yttrium
                 }
             }
 
-            std::ostream & operator<<(std::ostream &os, const QVector &v)
+            std::ostream & operator<<(std::ostream &os, const Vector &v)
             {
-                const QVectorType &base = v;
+                const VectorType &base = v;
                 os << base << " //#" << v.ncof << "@" << v.nrm2;
                 return os;
             }
@@ -107,34 +106,34 @@ namespace Yttrium
         namespace Ortho
         {
 
-            QVector:: Cache:: ~Cache() noexcept
+            Vector:: Cache:: ~Cache() noexcept
             {
 
             }
 
-            QVector:: Cache:: Cache(const Metrics &m) noexcept :
+            Vector:: Cache:: Cache(const Metrics &m) noexcept :
             Metrics(m),
             Proxy<const Pool>(),
             my()
             {
             }
 
-            Y_PROXY_IMPL(QVector:: Cache,my)
+            Y_PROXY_IMPL(Vector:: Cache,my)
 
-            QVector * QVector:: Cache:: query()
+            Vector * Vector:: Cache:: query()
             {
-                return my.size <= 0 ? new QVector(*this) : my.query();
+                return my.size <= 0 ? new Vector(*this) : my.query();
             }
 
-            void QVector:: Cache:: store(QVector * const v) noexcept
+            void Vector:: Cache:: store(Vector * const v) noexcept
             {
                 assert(0!=v);
                 my.store(v)->ldz();
             }
 
-            QVector * QVector:: Cache:: query(const QVector &V)
+            Vector * Vector:: Cache:: query(const Vector &V)
             {
-                QVector *qvec = query();
+                Vector *qvec = query();
                 try {
 
                     Coerce(qvec->ncof) = V.ncof;

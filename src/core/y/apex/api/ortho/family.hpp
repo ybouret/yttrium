@@ -12,11 +12,11 @@ namespace Yttrium
 
         namespace Ortho
         {
-            class QFamily : public Quantized, public Metrics, public Proxy<const QVector::List>
+            class QFamily : public Quantized, public Metrics, public Proxy<const Vector::List>
             {
             public:
                 explicit QFamily(const Metrics &metrics,
-                                 const QCache  &sharedCache) noexcept;
+                                 const Cache   &sharedCache) noexcept;
                 QFamily(const QFamily &);
                 virtual ~QFamily() noexcept;
 
@@ -31,14 +31,14 @@ namespace Yttrium
 
                     // check workspace
                     if(!qwork) qwork = cache->query();
-                    QVector   &v     = *qwork;
+                    Vector    &v     = *qwork;
 
                     // initialize
                     if(!v.set(a))
                         return false; // 0 vector
 
                     // remove projection
-                    for(const QVector *basis=qlist.head;basis;basis=basis->next)
+                    for(const Vector *basis=qlist.head;basis;basis=basis->next)
                     {
                         if(!v.keepOrtho(*basis)) return false;
                     }
@@ -53,9 +53,9 @@ namespace Yttrium
             private:
                 Y_DISABLE_ASSIGN(QFamily);
                 Y_PROXY_DECL();
-                QVector::List                     qlist;
-                QVector *                         qwork;
-                QCache                            cache;
+                Vector::List  qlist;
+                Vector *      qwork;
+                Cache         cache;
 
 
             public:

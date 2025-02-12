@@ -32,9 +32,9 @@ namespace Yttrium
                 free();
             }
 
-            QFamily:: QFamily(const Metrics &metrics, const QCache &sharedCache) noexcept :
+            QFamily:: QFamily(const Metrics &metrics, const Cache &sharedCache) noexcept :
             Metrics(metrics),
-            Proxy<const QVector::List>(),
+            Proxy<const Vector::List>(),
             qlist(),
             qwork(0),
             cache(sharedCache),
