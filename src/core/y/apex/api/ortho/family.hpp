@@ -21,14 +21,13 @@ namespace Yttrium
                 virtual ~Family() noexcept;
                 Y_OSTREAM_PROTO(Family);
 
-                Quality      getQuality()     const noexcept;
-                const char * getQualityText() const noexcept;
 
                 template <typename T> inline
                 bool wouldAccept(const Readable<T> &a)
                 {
                     assert(a.size()==dimensions);
 
+                    std::cerr << "wouldAccept " << a << "?" << std::endl;
                     // check dimension
                     if(qlist.size>=dimensions)
                         return false;
@@ -47,13 +46,24 @@ namespace Yttrium
                         if(!v.keepOrtho(*basis)) return false;
                     }
 
-
+                    std::cerr << "kept " << v << std::endl;
                     return true;
                 }
+
+                void expand()
+                {
+                    assert(0!=qwork);
+                    assert(qwork->ncof>0);
+                    assert(qwork->nrm2>0);
+                    assert(qlist.size<dimensions);
+
+                }
+
 
                 void free() noexcept; //!< reset
                 void trim() noexcept; //!< clear workspace
 
+                const Quality quality;
             private:
                 Y_DISABLE_ASSIGN(Family);
                 Y_PROXY_DECL();
@@ -61,6 +71,7 @@ namespace Yttrium
                 Vector *      qwork;
                 Cache         cache;
 
+                
 
             public:
                 Family *next;

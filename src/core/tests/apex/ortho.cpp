@@ -18,10 +18,11 @@ Y_UTEST(apex_ortho)
         std::cerr << std::endl << "dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
         Ortho::Cache          cache = new Ortho::Vector::Cache(metrics);
-        Ortho::Family         family(metrics,cache);
+        Ortho::Family         F(metrics,cache);
         CxxArray<int> V(dims);
         for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
-        if(family.wouldAccept(V))
+        std::cerr << "F=" << F << std::endl;
+        if(F.wouldAccept(V))
         {
 
         }

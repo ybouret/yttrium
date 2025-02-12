@@ -23,6 +23,7 @@ namespace Yttrium
             {
                 while(qlist.size>0)
                     cache->store(qlist.popHead());
+                Coerce(quality) = getQuality(0);
             }
 
 
@@ -35,6 +36,7 @@ namespace Yttrium
             Family:: Family(const Metrics &metrics, const Cache &sharedCache) noexcept :
             Metrics(metrics),
             Proxy<const Vector::List>(),
+            quality( getQuality(0) ),
             qlist(),
             qwork(0),
             cache(sharedCache),
@@ -44,20 +46,13 @@ namespace Yttrium
             }
 
 
-            Quality Family:: getQuality() const noexcept
-            {
-                return  Metrics::getQuality( qlist.size );
-            }
-
-            const char * Family:: getQualityText() const noexcept {
-                return Metrics::QualityText( getQuality() );
-            }
-
+            
             Y_PROXY_IMPL(Family,qlist)
 
 
             std::ostream & operator<<(std::ostream &os, const Family &f)
             {
+                os << Metrics::QualityText(f.quality) << "=";
                 if(f->size<=0)
                 {
                     os << "{}";

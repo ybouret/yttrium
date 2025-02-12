@@ -12,6 +12,7 @@ namespace Yttrium
             {
                 switch(quality)
                 {
+                    case Degenerate: return "Degenerate";
                     case Generating: return "Generating";
                     case Hyperplane: return "Hyperplane";
                     default: break;
@@ -39,16 +40,16 @@ namespace Yttrium
 
             Quality Metrics:: getQuality(const size_t n) const noexcept
             {
-                assert(n>0);
+                if(n<=0) return Degenerate;
+
                 assert(n<=dimensions);
                 if(n>=dimensions)
                     return Generating;
-
-
+                
                 if(n>=concluding)
                     return Hyperplane;
 
-                return Fragmental;
+                return  Fragmental;
 
             }
 

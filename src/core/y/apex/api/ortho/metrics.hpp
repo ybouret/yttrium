@@ -18,6 +18,7 @@ namespace Yttrium
             //__________________________________________________________________
             enum Quality
             {
+                Degenerate, // size = 0
                 Fragmental, // size < dimensions-1
                 Hyperplane, // size == dimensions-1
                 Generating  // size == dimensions
