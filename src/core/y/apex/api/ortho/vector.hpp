@@ -92,6 +92,7 @@ namespace Yttrium
                     return res;
                 }
 
+#if 0
                 //! |e|^2 * a - (a.e) * e
                 template <typename T> inline
                 bool set(const QVector &e, const Readable<T> &a)
@@ -121,7 +122,7 @@ namespace Yttrium
                         throw;
                     }
                 }
-
+#endif
 
 
                 // Members

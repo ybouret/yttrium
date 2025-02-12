@@ -31,7 +31,11 @@ namespace Yttrium
 
                     // check workspace
                     if(!qwork) qwork = cache->query();
-                    
+                    QVector   &v     = *qwork;
+
+                    // initialize
+                    if(!v.set(a)) return false; // 0 vector
+
                     return false;
                 }
 
