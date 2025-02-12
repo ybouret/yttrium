@@ -25,6 +25,7 @@ namespace Yttrium
                 // Definitions
                 typedef CxxPoolOf<QVector> Pool;
                 typedef CxxListOf<QVector> List;
+                typedef Writable<Integer>  Array;
 
                 class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
@@ -50,15 +51,15 @@ namespace Yttrium
 
                 // Methods
                 QVector & ldz() noexcept;
-                void      set(Writable<Rational> &Q);
+                //void      set(Writable<Rational> &Q);
 
+                
                 template <typename T> inline
-                void raw(const Readable<T> &V)
+                bool set(const Readable<T> &V)
                 {
                     assert(V.size()==dimensions);
                     try {
-                        Writable<const Integer> &_self = *this;
-                        Writable<Integer>       &self  = (Writable<Integer> &) _self;
+                        Array &self  = get();
                         Coerce(ncof) = 0;
                         for(size_t i=dimensions;i>0;--i)
                         {
@@ -69,7 +70,50 @@ namespace Yttrium
                                 case Negative: ++Coerce(ncof); continue;
                             }
                         }
-                        Coerce(nrm2) = Univocal::Make(self);
+                        return finalize(self);
+                    }
+                    catch(...)
+                    {
+                        ldz();
+                        throw;
+                    }
+                }
+
+                template <typename T> inline
+                Integer dot(const Readable<T> &a) const
+                {
+                    assert(a.size()==dimensions);
+                    Integer res;
+                    const Readable<const Integer> &self = *this;
+                    for(size_t i=dimensions;i>0;--i)
+                    {
+                        res += self[i] * a[i];
+                    }
+                    return res;
+                }
+
+                //! |e|^2 * a - (a.e) * e
+                template <typename T> inline
+                bool set(const QVector &e, const Readable<T> &a)
+                {
+                    assert(a.size()==dimensions);
+                    assert(e.ncof>0);
+                    assert(e.nrm2>0);
+                    try {
+                        Array &         self = get();
+                        const Integer & wa   = e.nrm2;
+                        const Integer   we   = e.dot(a);
+                        Coerce(ncof) = 0;
+                        for(size_t i=dimensions;i>0;--i)
+                        {
+                            switch( (self[i] = (wa * a[i]) - we * e[i]).s )
+                            {
+                                case __Zero__: continue;
+                                case Positive:
+                                case Negative: ++Coerce(ncof); continue;
+                            }
+                        }
+                        return finalize(self);
                     }
                     catch(...)
                     {
@@ -79,14 +123,17 @@ namespace Yttrium
                 }
 
 
+
                 // Members
                 const size_t  ncof; //!< number of non-zero coefficients
-                const Natural nrm2; //!< |this|^2
+                const Integer nrm2; //!< |this|^2, as integer for algebraic operations
                 QVector *     next;
                 QVector *     prev;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(QVector);
+                bool   finalize(Array &self); //!< finalize from ncof
+                Array &get() noexcept;        //!< get aliases
             };
 
             typedef ArcPtr<QVector::Cache> QCache;

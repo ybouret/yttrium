@@ -20,12 +20,23 @@ namespace Yttrium
                 QFamily(const QFamily &);
                 virtual ~QFamily() noexcept;
 
+                template <typename T> inline
+                bool accept(const Readable<T> &a)
+                {
+                    QVector *qvec = cache->query();
+                    try {
+                        
+                    }
+                    catch(...) { cache->store(qvec); throw; }
+                    return false;
+                }
+
 
                 template <typename T> inline
                 bool initialize(const Readable<T> &first)
                 {
                     QVector *qvec = cache->query();
-                    try { qvec->raw(first); }
+                    try { qvec->set(first); }
                     catch(...) { cache->store(qvec); throw; }
                     if(qvec->ncof>0)
                     {

@@ -35,6 +35,27 @@ namespace Yttrium
                 return *this;
             }
 
+            QVector:: Array & QVector:: get() noexcept
+            {
+                Writable<const Integer> &self = *this;
+                return (Array &)self;
+            }
+
+            bool QVector:: finalize(Array &self)
+            {
+                if(ncof<=0)
+                {
+                    Coerce(nrm2) = 0;
+                    return false;
+                }
+                else
+                {
+                    Coerce(nrm2) = Univocal::Make(self); assert(nrm2>0);
+                    return true;
+                }
+            }
+
+#if 0
             void QVector:: set(Writable<Rational> &Q)
             {
                 assert(Q.size() == dimensions);
@@ -60,7 +81,7 @@ namespace Yttrium
                     throw;
                 }
             }
-
+#endif
 
 
 

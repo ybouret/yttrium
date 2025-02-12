@@ -15,6 +15,7 @@ Y_UTEST(apex_ortho)
     Random::ParkMiller ran;
     for(size_t dims=1;dims<=5;++dims)
     {
+        std::cerr << std::endl << "dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
         Ortho::QCache         cache = new Ortho::QVector::Cache(metrics);
         Ortho::QVector::List  qlist;
@@ -22,17 +23,12 @@ Y_UTEST(apex_ortho)
         Y_ASSERT(dims==v->size());
         Y_ASSERT(dims==v->dimensions);
 
-        Vector<Rational> q(dims,0);
-
-        for(size_t i=dims;i>0;--i)
-        {
-            q[i] = Rational(ran,5,5);
-        }
-
-        std::cerr << "q=" << q << std::endl;
-        v->set(q);
-        std::cerr << "q=" << q  << std::endl;
+        CxxArray<int> V(dims);
+        for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
+        v->set(V);
+        std::cerr << "V=" << V  << std::endl;
         std::cerr << "v=" << *v << std::endl;
+
     }
 
 }
