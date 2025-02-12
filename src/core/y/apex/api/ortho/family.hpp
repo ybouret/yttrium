@@ -12,13 +12,17 @@ namespace Yttrium
 
         namespace Ortho
         {
-            class QFamily : public Quantized, public Metrics, public Proxy<const Vector::List>
+            class Family : public Quantized, public Metrics, public Proxy<const Vector::List>
             {
             public:
-                explicit QFamily(const Metrics &metrics,
-                                 const Cache   &sharedCache) noexcept;
-                QFamily(const QFamily &);
-                virtual ~QFamily() noexcept;
+                explicit Family(const Metrics &metrics,
+                                const Cache   &sharedCache) noexcept;
+                Family(const Family &);
+                virtual ~Family() noexcept;
+                Y_OSTREAM_PROTO(Family);
+
+                Quality      getQuality()     const noexcept;
+                const char * getQualityText() const noexcept;
 
                 template <typename T> inline
                 bool wouldAccept(const Readable<T> &a)
@@ -51,7 +55,7 @@ namespace Yttrium
                 void trim() noexcept; //!< clear workspace
 
             private:
-                Y_DISABLE_ASSIGN(QFamily);
+                Y_DISABLE_ASSIGN(Family);
                 Y_PROXY_DECL();
                 Vector::List  qlist;
                 Vector *      qwork;
@@ -59,8 +63,8 @@ namespace Yttrium
 
 
             public:
-                QFamily *next;
-                QFamily *prev;
+                Family *next;
+                Family *prev;
             };
         }
     }
