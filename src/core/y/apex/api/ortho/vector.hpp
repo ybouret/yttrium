@@ -30,7 +30,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Vector : public Quantized, public Metrics, public VectorType
+            class Vector : public Object, public Metrics, public VectorType
             {
             public:
                 //______________________________________________________________
@@ -133,9 +133,7 @@ namespace Yttrium
 
                 //! keep orthogonal to e, return true if not nul vector
                 bool keepOrtho(const Vector &e);
-
-
-
+                
                 //______________________________________________________________
                 //
                 //

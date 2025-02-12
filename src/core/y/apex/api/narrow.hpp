@@ -17,8 +17,6 @@ namespace Yttrium
     namespace Apex
     {
 
-
-
         //______________________________________________________________________
         //
         //
@@ -37,7 +35,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Narrow() noexcept; //!< setup
-            virtual ~Narrow() noexcept; //!< cleanu[
+            virtual ~Narrow() noexcept; //!< cleanup
 
             //__________________________________________________________________
             //

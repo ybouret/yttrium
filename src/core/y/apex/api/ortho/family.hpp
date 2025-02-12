@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family : public Quantized, public Metrics, public Proxy<const Vector::List>
+            class Family : public Object, public Metrics, public Proxy<const Vector::List>
             {
             public:
                 //______________________________________________________________
