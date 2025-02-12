@@ -34,13 +34,21 @@ namespace Yttrium
                     QVector   &v     = *qwork;
 
                     // initialize
-                    if(!v.set(a)) return false; // 0 vector
+                    if(!v.set(a))
+                        return false; // 0 vector
 
-                    return false;
+                    // remove projection
+                    for(const QVector *basis=qlist.head;basis;basis=basis->next)
+                    {
+                        if(!v.keepOrtho(*basis)) return false;
+                    }
+
+
+                    return true;
                 }
 
-                void free() noexcept;
-                void trim() noexcept;
+                void free() noexcept; //!< reset
+                void trim() noexcept; //!< clear workspace
 
             private:
                 Y_DISABLE_ASSIGN(QFamily);

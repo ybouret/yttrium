@@ -21,7 +21,6 @@ namespace Yttrium
 
             void QFamily:: free() noexcept
             {
-                trim();
                 while(qlist.size>0)
                     cache->store(qlist.popHead());
             }
@@ -29,7 +28,8 @@ namespace Yttrium
 
             QFamily:: ~QFamily() noexcept
             {
-
+                trim();
+                free();
             }
 
             QFamily:: QFamily(const Metrics &metrics, const QCache &sharedCache) noexcept :

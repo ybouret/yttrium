@@ -55,6 +55,14 @@ namespace Yttrium
                 }
             }
 
+            std::ostream & operator<<(std::ostream &os, const QVector &v)
+            {
+                const QVectorType &base = v;
+                os << base << " //#" << v.ncof << "@" << v.nrm2;
+                return os;
+            }
+
+
 #if 0
             void QVector:: set(Writable<Rational> &Q)
             {

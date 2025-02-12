@@ -47,13 +47,12 @@ namespace Yttrium
                 // C++
                 explicit QVector(const Metrics &);
                 virtual ~QVector() noexcept;
-
+                Y_OSTREAM_PROTO(QVector);
 
                 // Methods
                 QVector & ldz() noexcept;
-                //void      set(Writable<Rational> &Q);
 
-                
+
                 template <typename T> inline
                 bool set(const Readable<T> &V)
                 {
@@ -91,6 +90,33 @@ namespace Yttrium
                     }
                     return res;
                 }
+
+                bool keepOrtho(const QVector &e)
+                {
+                    assert(e.dimensions==dimensions);
+                    try {
+                        Array &         a  = get();
+                        const Integer & wa = e.nrm2;
+                        const Integer   we = e.dot(a);
+                        Coerce(ncof) = 0;
+                        for(size_t i=dimensions;i>0;--i)
+                        {
+                            switch( (a[i] = (wa * a[i]) - we * e[i]).s )
+                            {
+                                case __Zero__: continue;
+                                case Positive:
+                                case Negative: ++Coerce(ncof); continue;
+                            }
+                        }
+                        return finalize(a);
+                    }
+                    catch(...)
+                    {
+                        ldz();
+                        throw;
+                    }
+                }
+
 
 #if 0
                 //! |e|^2 * a - (a.e) * e
