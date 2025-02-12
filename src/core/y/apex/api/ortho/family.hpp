@@ -21,41 +21,28 @@ namespace Yttrium
                 virtual ~QFamily() noexcept;
 
                 template <typename T> inline
-                bool accept(const Readable<T> &a)
+                bool wouldAccept(const Readable<T> &a)
                 {
-                    QVector *qvec = cache->query();
-                    try {
-                        
-                    }
-                    catch(...) { cache->store(qvec); throw; }
+                    assert(a.size()==dimensions);
+
+                    // check dimension
+                    if(qlist.size>=dimensions)
+                        return false;
+
+                    // check workspace
+                    if(!qwork) qwork = cache->query();
+                    
                     return false;
                 }
 
-
-                template <typename T> inline
-                bool initialize(const Readable<T> &first)
-                {
-                    QVector *qvec = cache->query();
-                    try { qvec->set(first); }
-                    catch(...) { cache->store(qvec); throw; }
-                    if(qvec->ncof>0)
-                    {
-                        (void)qlist.pushTail(qvec);
-                        return true;
-                    }
-                    else
-                    {
-                        cache->store(qvec);
-                        return false;
-                    }
-                }
-
+                void free() noexcept;
+                void trim() noexcept;
 
             private:
                 Y_DISABLE_ASSIGN(QFamily);
                 Y_PROXY_DECL();
                 QVector::List                     qlist;
-                CxxArray<Rational,Memory::Dyadic> qproj;
+                QVector *                         qwork;
                 QCache                            cache;
 
 

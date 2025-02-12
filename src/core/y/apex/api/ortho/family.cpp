@@ -9,17 +9,33 @@ namespace Yttrium
 
         namespace Ortho
         {
-            QFamily:: ~QFamily() noexcept
+
+            void QFamily:: trim() noexcept
             {
+                if(0!=qwork)
+                {
+                    cache->store(qwork);
+                    qwork = 0;
+                }
+            }
+
+            void QFamily:: free() noexcept
+            {
+                trim();
                 while(qlist.size>0)
                     cache->store(qlist.popHead());
+            }
+
+
+            QFamily:: ~QFamily() noexcept
+            {
+
             }
 
             QFamily:: QFamily(const Metrics &metrics, const QCache &sharedCache) noexcept :
             Metrics(metrics),
             Proxy<const QVector::List>(),
             qlist(),
-            qproj(dimensions),
             cache(sharedCache),
             next(0),
             prev(0)
