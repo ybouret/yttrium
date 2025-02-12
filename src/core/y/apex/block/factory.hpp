@@ -52,8 +52,7 @@ namespace Yttrium
             void    store(Block * const)  noexcept;              //!< release in cache
             void    gc(const size_t cycles) noexcept;            //!< gc on each shift + mutexes
             void    display() const;                             //!< display status
-
-            Block * tryQuerySmall() noexcept;
+            Block * tryQuerySmall() noexcept;                    //!< check if a small block is available
 
 
             Mutex * query();                       //!< query/create a mutex

@@ -7,7 +7,7 @@
 #include "y/apex/api/univocal.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/cxx/array.hpp"
-#include "y/data/list/cxx.hpp"
+#include "y/data/list.hpp"
 
 namespace Yttrium
 {
@@ -16,43 +16,82 @@ namespace Yttrium
         namespace Ortho
         {
 
+            //__________________________________________________________________
+            //
+            //! base type for Vector
+            //__________________________________________________________________
             typedef CxxArray<const Integer,Memory::Dyadic> VectorType;
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Fixed Length Vector
+            //
+            //
+            //__________________________________________________________________
             class Vector : public Quantized, public Metrics, public VectorType
             {
             public:
-
+                //______________________________________________________________
+                //
+                //
                 // Definitions
-                typedef CxxPoolOf<Vector> Pool;
-                typedef ListOf<Vector>    List;
-                typedef Writable<Integer> Array;
+                //
+                //______________________________________________________________
+                typedef CxxPoolOf<Vector> Pool;    //!< alias
+                typedef ListOf<Vector>    List;    //!< alias
+                typedef Writable<Integer> Array;   //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                //! cache of vectors with same metrics
+                //
+                //______________________________________________________________
                 class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
                 public:
-                    explicit Cache(const Metrics &m) noexcept;
-                    virtual ~Cache()                 noexcept;
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    explicit Cache(const Metrics &m) noexcept; //!< setup
+                    virtual ~Cache()                 noexcept; //!< cleanup
 
-                    Vector *query();
-                    void    store(Vector * const) noexcept;
-                    Vector *query(const Vector &);
-
-
+                    //__________________________________________________________
+                    //
+                    // Methods
+                    //__________________________________________________________
+                    Vector *query();                         //!< query/create
+                    void    store(Vector * const) noexcept;  //!< store and reset
+                    Vector *query(const Vector &);           //!< duplicate
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Cache);
                     Y_PROXY_DECL();
                     Pool my;
                 };
 
+                //______________________________________________________________
+                //
+                //
                 // C++
-                explicit Vector(const Metrics &);
-                virtual ~Vector() noexcept;
-                Y_OSTREAM_PROTO(Vector);
+                //
+                //______________________________________________________________
+                explicit Vector(const Metrics &); //!< setup
+                virtual ~Vector() noexcept;       //!< cleanup
+                Y_OSTREAM_PROTO(Vector);          //!< display
 
+                //______________________________________________________________
+                //
+                //
                 // Methods
-                void  ldz() noexcept;
+                //
+                //______________________________________________________________
+                void  ldz() noexcept; //!< reset all
 
-
+                //! transfer compatible vector, return true if not nul vector
                 template <typename T> inline
                 bool set(const Readable<T> &V)
                 {
@@ -78,6 +117,7 @@ namespace Yttrium
                     }
                 }
 
+                //! dot product
                 template <typename T> inline
                 Integer dot(const Readable<T> &a) const
                 {
@@ -91,71 +131,21 @@ namespace Yttrium
                     return res;
                 }
 
-                bool keepOrtho(const Vector &e)
-                {
-                    assert(e.dimensions==dimensions);
-                    try {
-                        Array &         a  = get();
-                        const Integer & wa = e.nrm2;
-                        const Integer   we = e.dot(a);
-                        Coerce(ncof) = 0;
-                        for(size_t i=dimensions;i>0;--i)
-                        {
-                            switch( (a[i] = (wa * a[i]) - we * e[i]).s )
-                            {
-                                case __Zero__: continue;
-                                case Positive:
-                                case Negative: ++Coerce(ncof); continue;
-                            }
-                        }
-                        return finalize(a);
-                    }
-                    catch(...)
-                    {
-                        ldz();
-                        throw;
-                    }
-                }
+                //! keep orthogonal to e, return true if not nul vector
+                bool keepOrtho(const Vector &e);
 
 
-#if 0
-                //! |e|^2 * a - (a.e) * e
-                template <typename T> inline
-                bool set(const QVector &e, const Readable<T> &a)
-                {
-                    assert(a.size()==dimensions);
-                    assert(e.ncof>0);
-                    assert(e.nrm2>0);
-                    try {
-                        Array &         self = get();
-                        const Integer & wa   = e.nrm2;
-                        const Integer   we   = e.dot(a);
-                        Coerce(ncof) = 0;
-                        for(size_t i=dimensions;i>0;--i)
-                        {
-                            switch( (self[i] = (wa * a[i]) - we * e[i]).s )
-                            {
-                                case __Zero__: continue;
-                                case Positive:
-                                case Negative: ++Coerce(ncof); continue;
-                            }
-                        }
-                        return finalize(self);
-                    }
-                    catch(...)
-                    {
-                        ldz();
-                        throw;
-                    }
-                }
-#endif
 
-
+                //______________________________________________________________
+                //
+                //
                 // Members
+                //
+                //______________________________________________________________
                 const size_t  ncof; //!< number of non-zero coefficients
                 const Integer nrm2; //!< |this|^2, as integer for algebraic operations
-                Vector *     next;
-                Vector *     prev;
+                Vector *      next; //!< for list/pool
+                Vector *      prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vector);
@@ -163,6 +153,10 @@ namespace Yttrium
                 Array &get() noexcept;        //!< get aliases
             };
 
+            //__________________________________________________________________
+            //
+            //! shared cache
+            //__________________________________________________________________
             typedef ArcPtr<Vector::Cache> Cache;
         }
 

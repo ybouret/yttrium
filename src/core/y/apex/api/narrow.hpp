@@ -96,8 +96,14 @@ namespace Yttrium
                 }
             }
 
-            Vector<size_t,Memory::Dyadic>  good;
-            Vector<Natural,Memory::Dyadic> nrm2;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Vector<size_t,Memory::Dyadic>  good; //!< indices of each row
+            Vector<Natural,Memory::Dyadic> nrm2; //!< |target|^2 for each row
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Narrow);

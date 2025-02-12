@@ -12,22 +12,43 @@ namespace Yttrium
 
         namespace Ortho
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Family of orthogonal vectors
+            //
+            //
+            //__________________________________________________________________
             class Family : public Quantized, public Metrics, public Proxy<const Vector::List>
             {
             public:
-                explicit Family(const Metrics &metrics,
-                                const Cache   &sharedCache) noexcept;
-                Family(const Family &);
-                virtual ~Family() noexcept;
-                Y_OSTREAM_PROTO(Family);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Family(const Metrics &, const Cache &) noexcept; //!< setup
+                virtual ~Family() noexcept;                               //!< cleanup
+                Y_OSTREAM_PROTO(Family);                                  //!< display
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //______________________________________________________________
+                //
+                //! compute if remaining orthogonal component is not zero
+                //______________________________________________________________
                 template <typename T> inline
                 bool wouldAccept(const Readable<T> &a)
                 {
                     assert(a.size()==dimensions);
 
-                    std::cerr << "wouldAccept " << a << "?" << std::endl;
                     // check dimension
                     if(qlist.size>=dimensions)
                         return false;
@@ -45,40 +66,32 @@ namespace Yttrium
                         if(!qwork->keepOrtho(*basis)) return false;
                     }
 
-                    std::cerr << "kept " << *qwork << std::endl;
                     return true;
                 }
 
-                void expand()
-                {
-                    assert(0!=qwork);
-                    assert(qwork->ncof>0);
-                    assert(qwork->nrm2>0);
-                    assert(qlist.size<dimensions);
-
-                    qlist.pushTail(qwork);
-                    qwork = 0;
-                    Coerce(quality) = getQuality(qlist.size);
-
-                }
 
 
-                void free() noexcept; //!< reset
-                void trim() noexcept; //!< clear workspace
+                void expand() noexcept; //!< expand with latest workspace
+                void free()   noexcept; //!< reset
+                void trim()   noexcept; //!< clear workspace
 
-                const Quality quality;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Quality quality; //!< current quality
             private:
-                Y_DISABLE_ASSIGN(Family);
+                Y_DISABLE_COPY_AND_ASSIGN(Family);
                 Y_PROXY_DECL();
-                Vector::List  qlist;
-                Vector *      qwork;
-                Cache         cache;
-
-
+                Vector::List  qlist; //!< current list
+                Vector *      qwork; //!< current workspace
+                Cache         cache; //!< shared cache
 
             public:
-                Family *next;
-                Family *prev;
+                Family *next; //!< for list/pool
+                Family *prev; //!< for list/pool
             };
         }
     }

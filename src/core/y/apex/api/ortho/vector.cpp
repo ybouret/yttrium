@@ -57,30 +57,28 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Vector &v)
             {
                 const VectorType &base = v;
-                os << base << " //#" << v.ncof << "@" << v.nrm2;
+                os << base << " #" << v.ncof << "@" << v.nrm2;
                 return os;
             }
 
-
-#if 0
-            void QVector:: set(Writable<Rational> &Q)
+            bool Vector:: keepOrtho(const Vector &e)
             {
-                assert(Q.size() == dimensions);
+                assert(e.dimensions==dimensions);
                 try {
-                    Coerce(nrm2) = Univocal::Make(Q);
+                    Array &         a  = get();
+                    const Integer & wa = e.nrm2;
+                    const Integer   we = e.dot(a);
                     Coerce(ncof) = 0;
                     for(size_t i=dimensions;i>0;--i)
                     {
-                        assert(Q[i].denom==1);
-                        switch( (Coerce( (*this)[i] ) = Q[i].numer).s )
+                        switch( (a[i] = (wa * a[i]) - we * e[i]).s )
                         {
                             case __Zero__: continue;
                             case Positive:
-                            case Negative:
-                                ++Coerce(ncof);
-                                continue;
+                            case Negative: ++Coerce(ncof); continue;
                         }
                     }
+                    return finalize(a);
                 }
                 catch(...)
                 {
@@ -88,7 +86,6 @@ namespace Yttrium
                     throw;
                 }
             }
-#endif
 
 
 

@@ -13,7 +13,7 @@ Y_UTEST(apex_ortho)
 {
 
     Random::ParkMiller ran;
-    for(size_t dims=1;dims<=2;++dims)
+    for(size_t dims=1;dims<=6;++dims)
     {
         std::cerr << std::endl << "dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);

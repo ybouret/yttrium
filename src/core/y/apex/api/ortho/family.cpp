@@ -52,21 +52,31 @@ namespace Yttrium
 
             std::ostream & operator<<(std::ostream &os, const Family &f)
             {
-                os << Metrics::QualityText(f.quality) << "=";
-                if(f->size<=0)
+
+                os << "{<" << Metrics::QualityText(f.quality)  << ">";
+                if( f->size> 0)
                 {
-                    os << "{}";
-                }
-                else
-                {
-                    os << '{' << std::endl;
-                    for(const Vector *v=f->head;v;v=v->next)
+                    os << std::endl;
+                    unsigned i = 1;
+                    for(const Vector *v=f->head;v;v=v->next,++i)
                     {
-                        os << '\t' << *v << std::endl;
+                        os << '\t' << "e" << i << "=" << *v << std::endl;
                     }
-                    os << '}' << std::endl;
                 }
+                os << "}";
                 return os;
+            }
+
+            void Family:: expand() noexcept
+            {
+                assert(0!=qwork);
+                assert(qwork->ncof>0);
+                assert(qwork->nrm2>0);
+                assert(qlist.size<dimensions);
+
+                qlist.pushTail(qwork);
+                qwork = 0;
+                Coerce(quality) = getQuality(qlist.size);
             }
         }
     }
