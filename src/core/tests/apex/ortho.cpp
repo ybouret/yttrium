@@ -13,19 +13,24 @@ Y_UTEST(apex_ortho)
 {
 
     Random::ParkMiller ran;
-    for(size_t dims=1;dims<=1;++dims)
+    for(size_t dims=1;dims<=2;++dims)
     {
         std::cerr << std::endl << "dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
         Ortho::Cache          cache = new Ortho::Vector::Cache(metrics);
         Ortho::Family         F(metrics,cache);
         CxxArray<int> V(dims);
-        for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
-        std::cerr << "F=" << F << std::endl;
-        if(F.wouldAccept(V))
-        {
 
-        }
+        do {
+
+
+            for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
+            if(F.wouldAccept(V))
+            {
+                F.expand();
+                std::cerr << "F=" << F << std::endl;
+            }
+        } while(F.quality != Ortho::Generating);
 
     }
 

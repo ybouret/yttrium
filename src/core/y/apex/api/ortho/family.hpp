@@ -34,19 +34,18 @@ namespace Yttrium
 
                     // check workspace
                     if(!qwork) qwork = cache->query();
-                    Vector    &v     = *qwork;
 
                     // initialize
-                    if(!v.set(a))
+                    if(!qwork->set(a))
                         return false; // 0 vector
 
                     // remove projection
                     for(const Vector *basis=qlist.head;basis;basis=basis->next)
                     {
-                        if(!v.keepOrtho(*basis)) return false;
+                        if(!qwork->keepOrtho(*basis)) return false;
                     }
 
-                    std::cerr << "kept " << v << std::endl;
+                    std::cerr << "kept " << *qwork << std::endl;
                     return true;
                 }
 
@@ -56,6 +55,10 @@ namespace Yttrium
                     assert(qwork->ncof>0);
                     assert(qwork->nrm2>0);
                     assert(qlist.size<dimensions);
+
+                    qlist.pushTail(qwork);
+                    qwork = 0;
+                    Coerce(quality) = getQuality(qlist.size);
 
                 }
 
@@ -71,7 +74,7 @@ namespace Yttrium
                 Vector *      qwork;
                 Cache         cache;
 
-                
+
 
             public:
                 Family *next;
