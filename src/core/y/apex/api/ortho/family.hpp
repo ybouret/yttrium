@@ -30,7 +30,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 typedef CxxPoolOf<Family> Pool;
-
+                typedef ListOf<Family>    List;
+                
                 class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
                 {
                 public:

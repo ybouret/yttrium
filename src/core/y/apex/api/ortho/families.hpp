@@ -14,12 +14,19 @@ namespace Yttrium
         namespace Ortho
         {
 
-            class Families  
+            class Families  : public Metrics, public Proxy<const Family::List>
             {
             public:
+                explicit Families(const Metrics &, const FCache &) noexcept;
+                virtual ~Families() noexcept;
+
+                void clear() noexcept;
 
             private:
-
+                Y_DISABLE_COPY_AND_ASSIGN(Families);
+                Y_PROXY_DECL();
+                Family::List my;
+                FCache       fc;
             };
 
         }
