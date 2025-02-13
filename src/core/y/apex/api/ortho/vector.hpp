@@ -89,9 +89,9 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void  ldz() noexcept; //!< reset all
+                void  ldz() noexcept;      //!< reset all
+                void  ld(const Vector &); //!< duplicate
 
-                
 
                 //! transfer compatible vector, return true if not nul vector
                 template <typename T> inline

@@ -20,43 +20,9 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family : public Object, public Metrics, public Proxy<const Vector::List>
+            class Family :  public Metrics, public Proxy<const Vector::List>
             {
             public:
-                //______________________________________________________________
-                //
-                //
-                // Definitions
-                //
-                //______________________________________________________________
-                typedef CxxPoolOf<Family> Pool;
-                typedef ListOf<Family>    List;
-                
-                class Cache : public Object, public Counted, public Metrics, public Proxy<const Pool>
-                {
-                public:
-                    //__________________________________________________________
-                    //
-                    // C++
-                    //__________________________________________________________
-                    explicit Cache(const Metrics &, const VCache &) noexcept; //!< setup
-                    virtual ~Cache()                                noexcept; //!< cleanup
-
-                    //__________________________________________________________
-                    //
-                    // Methods
-                    //__________________________________________________________
-                    Family *query();                         //!< query/create
-                    void    store(Family * const) noexcept;  //!< store and reset
-                    Family *query(const Family &);           //!< duplicate
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Cache);
-                    Y_PROXY_DECL();
-                    Pool   my; //!< my pool
-                    VCache vc; //!< shared vectors cache
-                };
-
 
                 //______________________________________________________________
                 //
@@ -74,10 +40,14 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+                void ld(const Family &F);
 
-                static bool AreEqual(const Family &lhs, const Family &rhs) noexcept;
-                friend bool operator==(const Family &lhs, const Family &rhs) noexcept;
-                friend bool operator!=(const Family &lhs, const Family &rhs) noexcept;
+                bool includes(const Family &sub);
+
+
+
+
+
 
 
                 //______________________________________________________________
@@ -128,15 +98,11 @@ namespace Yttrium
                 Vector::List  qlist; //!< current list
                 Vector *      qwork; //!< current workspace
                 VCache        cache; //!< shared cache
-
-            public:
-                Family *next; //!< for list/pool
-                Family *prev; //!< for list/pool
+                
             };
 
 
-            typedef ArcPtr<Family::Cache> FCache;
-
+            
         }
     }
 }

@@ -2,68 +2,7 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/system/exception.hpp"
 
-namespace Yttrium
-{
-    namespace Apex
-    {
-
-        namespace Ortho
-        {
-
-            Family:: Cache:: Cache(const Metrics &m, const VCache &c) noexcept:
-            Metrics(m),
-            my(),
-            vc(c)
-            {
-
-            }
-
-            Family:: Cache:: ~Cache() noexcept
-            {
-
-            }
-
-            Y_PROXY_IMPL(Family::Cache,my)
-
-            Family * Family:: Cache:: query()
-            {
-                return my.size > 0 ? my.query() : new Family(*this,vc);
-            }
-
-            void Family:: Cache:: store(Family * const F) noexcept
-            {
-                assert(0!=F);
-                assert(dimensions==F->dimensions);
-                my.store(F)->reset();
-            }
-
-            Family * Family:: Cache::query(const Family &F)
-            {
-                Family *D = query();
-
-                try
-                {
-                    for(const Vector *v=F->head;v;v=v->next)
-                    {
-                        D->qlist.pushTail( vc->query(*v) );
-                    }
-                    Coerce(D->quality) = F.quality;
-                    assert( AreEqual(F,*D) );
-                    return D;
-                }
-                catch(...)
-                {
-                    store(D);
-                    throw;
-                }
-            }
-
-        }
-
-    }
-
-}
-
+ 
 namespace Yttrium
 {
     namespace Apex
@@ -105,9 +44,7 @@ namespace Yttrium
             quality( getQuality(0) ),
             qlist(),
             qwork(0),
-            cache(c),
-            next(0),
-            prev(0)
+            cache(c) 
             {
             }
 
@@ -115,36 +52,35 @@ namespace Yttrium
             
             Y_PROXY_IMPL(Family,qlist)
 
-            bool Family:: AreEqual(const Family &lhs, const Family &rhs) noexcept
+            void Family:: ld(const Family &F)
             {
-                assert(lhs.dimensions==rhs.dimensions);
-                if(lhs.qlist.size!=rhs.qlist.size)
-                {
-                    assert(lhs.quality!=rhs.quality);
-                    return false;
+                assert(this != &F);
+                reset();
+                try {
+                    for(const Vector *src=F->head;src;src=src->next)
+                        qlist.pushTail( cache->query(*src) );
+                    Coerce(quality) = F.quality;
                 }
-                else
+                catch(...)
                 {
-                    assert(lhs.quality==rhs.quality);
-                    for(const Vector *l=lhs.qlist.head, *r=rhs.qlist.head;l;l=l->next,r=r->next)
-                    {
-                        assert(0!=l);
-                        assert(0!=r);
-                        if( __Zero__ != Vector::Compare(*l,*r) ) return false;
-                    }
-                    return true;
+                    reset();
+                    throw;
                 }
             }
 
-            bool operator==(const Family &lhs, const Family &rhs) noexcept
+            bool Family:: includes(const Family &sub)
             {
-                return Family::AreEqual(lhs, rhs);
+                if(sub->size>qlist.size) return false;
+                for(const Vector *v=sub->head;v;v=v->next)
+                {
+                    if( wouldAccept(*v) )
+                        return false; // vector not in my space
+                }
+                return true;
             }
 
-            bool operator!=(const Family &lhs, const Family &rhs) noexcept
-            {
-                return !Family::AreEqual(lhs, rhs);
-            }
+
+
 
             std::ostream & operator<<(std::ostream &os, const Family &f)
             {
