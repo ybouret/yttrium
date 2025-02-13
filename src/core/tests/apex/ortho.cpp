@@ -4,6 +4,8 @@
 #include "y/utest/run.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/container/matrix.hpp"
+#include "y/counting/permutation.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -65,31 +67,52 @@ Y_UTEST(apex_ortho)
     }
 
 
+    // checking equivalence
     for(size_t dims=2;dims<=4;++dims)
     {
+        std::cerr << std::endl  << "equivalences in dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
         Ortho::Family         F(metrics,vcache);
 
-        F.generate(ran,dims-1,4);
-        std::cerr << "F=" << F << std::endl;
-        CxxArray<Integer> V(dims), first(dims), extra(dims);
-        do
+        for(size_t sub=1;sub<dims;++sub)
         {
-            GenVec(V,ran,10);
-        } while( !F.wouldAccept(V) );
-        F.fetch(first);
-        std::cerr << first << " <-- " << V << std::endl;
-        for(size_t cycle=0;cycle<10;++cycle)
-        {
+            Matrix<Integer>   M(sub,dims);
+            CxxArray<Integer> V(dims);
+            F.reset();
+            while( F->size < sub )
+            {
+                GenVec(V,ran,5);
+                if(F.wouldAccept(V))
+                {
+                    F.increase();
+                    M[F->size].ld(V);
+                }
+            }
+            std::cerr << "M=" << M << std::endl;
+
+            Permutation perm(sub);
+
+            perm.boot();
             do
             {
-                GenVec(V,ran,10);
-            } while( !F.wouldAccept(V) );
-            F.fetch(extra);
-            std::cerr << extra << " <-- " << V << std::endl;
-            Y_ASSERT(extra==first);
+                std::cerr << "\t" << perm << std::endl;
+                F.reset();
+                for(size_t i=1;i<=sub;++i)
+                {
+                    Y_ASSERT(F.wouldAccept(M[perm[i]]));
+                    F.increase();
+                }
+                std::cerr << "F=" << F << std::endl;
+
+
+            } while(perm.next());
+
+
         }
+
+
+
 
 
 
