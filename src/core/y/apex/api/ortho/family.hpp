@@ -112,8 +112,8 @@ namespace Yttrium
                 {
                     typedef typename OUTPUT::Type      OutputType;
                     typedef TL2(Integer,const Integer) ListType;
-                    static const int Indx = TL::IndexOf<ListType,OutputType>::Value;
-                    std::cerr << "(indx=" << Indx << ")" << std::endl;
+                    static const Int2Type<TL::IndexOf<ListType,OutputType>::Value> Choice = {};
+                    fetch(output,Choice);
                 }
 
 
@@ -132,7 +132,23 @@ namespace Yttrium
                 Vector::List  qlist; //!< current list
                 Vector *      qwork; //!< current workspace
                 VCache        cache; //!< shared cache
-                
+
+                template <typename T> inline
+                void fetch(Writable<T> &target, const Int2Type< -1 > &) const
+                {
+                    fetchPrimitive(target);
+                }
+
+                void fetch(Writable<Integer> &target, const Int2Type<0> &) const
+                {
+                    fetchInteger(target);
+                }
+
+                void fetch(Vector &target, const Int2Type<1> &) const
+                {
+                    fetchVector(target);
+                }
+
             };
 
 

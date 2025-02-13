@@ -36,6 +36,25 @@ namespace Yttrium
                 }
             }
 
+            void Vector:: ld(const Vector &v)
+            {
+                assert(dimensions==v.dimensions);
+                try
+                {
+                    Coerce(ncof) = v.ncof;
+                    Coerce(nrm2) = v.nrm2;
+                    for(size_t i=dimensions;i>0;--i) Coerce( (*this)[i] ) = v[i];
+                    assert( *this == v);
+                    assert( __Zero__ == Vector::Compare(v,*this) );
+                }
+                catch(...)
+                {
+                    ldz();
+                    throw;
+                }
+            }
+
+
             Vector::Array & Vector:: get() noexcept
             {
                 Writable<const Integer> &self = *this;
@@ -132,16 +151,7 @@ namespace Yttrium
             Vector * Vector:: Cache:: query(const Vector &V)
             {
                 Vector *qvec = query();
-                try {
-
-                    Coerce(qvec->ncof) = V.ncof;
-                    Coerce(qvec->nrm2) = V.nrm2;
-                    for(size_t i=dimensions;i>0;--i)
-                        Coerce( (*qvec)[i] ) = V[i];
-                    assert( *qvec == V);
-                    assert( __Zero__ == Vector::Compare(V,*qvec) );
-                    return qvec;
-                }
+                try { qvec->ld(V); return qvec; }
                 catch(...)
                 {
                     store(qvec);

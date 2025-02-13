@@ -8,6 +8,20 @@
 using namespace Yttrium;
 using namespace Apex;
 
+static inline void GenVec(Writable<int> &v, Random::Bits &ran, const unsigned nbit)
+{
+    for(size_t i=v.size();i>0;--i)
+    {
+        v[i] = ran.to<unsigned>(nbit);
+        if(ran.choice()) v[i] = -v[i];
+    }
+}
+
+
+static inline void GenVec(Writable<Integer> &v, Random::Bits &ran, const unsigned nbit)
+{
+    for(size_t i=v.size();i>0;--i) v[i] = Integer(ran,nbit);
+}
 
 Y_UTEST(apex_ortho)
 {
@@ -20,15 +34,15 @@ Y_UTEST(apex_ortho)
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
 
         {
-            Ortho::Family         F(metrics,vcache);
-            Ortho::Family         sub(metrics,vcache);
+            Ortho::Family     F(metrics,vcache);
+            Ortho::Family     sub(metrics,vcache);
             CxxArray<int>     V(dims);
             CxxArray<Integer> Z(dims);
             Ortho::Vector     Q(metrics);
 
 
             do {
-                for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
+                GenVec(V,ran,5);
                 Y_ASSERT(F.includes(sub));
                 if(F.wouldAccept(V))
                 {
@@ -36,7 +50,7 @@ Y_UTEST(apex_ortho)
 
                     F.fetch(Z);
                     F.fetch(Q);
-                    F.fetch(V);
+                    //F.fetch(V);
 
                     F.increase();
                     std::cerr << "F=" << F << std::endl;
@@ -57,8 +71,19 @@ Y_UTEST(apex_ortho)
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
         Ortho::Family         F(metrics,vcache);
 
-        F.generate(ran,dims-1,10);
+        F.generate(ran,dims-1,4);
         std::cerr << "F=" << F << std::endl;
+        CxxArray<Integer> V(dims), first(dims), extra(dims);
+        do
+        {
+            GenVec(V,ran,10);
+        } while( !F.wouldAccept(V) );
+        F.fetch(first);
+
+
+
+
+
 
     }
 
