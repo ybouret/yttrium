@@ -52,7 +52,7 @@ namespace Yttrium
             
             Y_PROXY_IMPL(Family,qlist)
 
-            void Family:: ld(const Family &F)
+            void Family:: recreate(const Family &F)
             {
                 assert(this != &F);
                 reset();
@@ -80,6 +80,22 @@ namespace Yttrium
             }
 
 
+            void Family:: generate(Random::Bits &ran, const size_t dim, size_t bits)
+            {
+                if(bits<=1) bits=1;
+                assert(dim<=dimensions);
+                reset();
+                CxxArray<Integer,Memory::Dyadic> v(dimensions);
+                while(qlist.size<dim)
+                {
+                    for(size_t i=dimensions;i>0;--i) v[i] = Integer(ran,bits);
+                    if( wouldAccept(v) ) increase();
+                }
+
+            }
+
+
+
 
 
             std::ostream & operator<<(std::ostream &os, const Family &f)
@@ -99,7 +115,7 @@ namespace Yttrium
                 return os;
             }
 
-            void Family:: expand()  
+            void Family:: increase()  
             {
                 assert(0!=qwork);
                 assert(qwork->ncof>0);

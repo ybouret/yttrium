@@ -40,10 +40,13 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void ld(const Family &F);
-
+                void recreate(const Family &F);
                 bool includes(const Family &sub);
-
+                void generate(Random::Bits &ran, const size_t dim, const size_t bits);
+                void increase();        //!< increase with latest workspace
+                void clear()  noexcept; //!< free vectors
+                void prune()  noexcept; //!< clear workspace
+                void reset()  noexcept; //!< free/trim
 
 
 
@@ -79,10 +82,7 @@ namespace Yttrium
                     return true;
                 }
                 
-                void expand();          //!< expand with latest workspace
-                void clear()  noexcept; //!< free vectors
-                void prune()  noexcept; //!< clear workspace
-                void reset()  noexcept; //!< free/trim
+
 
 
                 //______________________________________________________________
