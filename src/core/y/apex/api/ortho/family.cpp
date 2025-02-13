@@ -73,7 +73,7 @@ namespace Yttrium
                 if(sub->size>qlist.size) return false;
                 for(const Vector *v=sub->head;v;v=v->next)
                 {
-                    if( wouldAccept(*v) )
+                    if( welcomes(*v) )
                         return false; // vector not in my space
                 }
                 return true;
@@ -89,7 +89,7 @@ namespace Yttrium
                 while(qlist.size<dim)
                 {
                     for(size_t i=dimensions;i>0;--i) v[i] = Integer(ran,bits);
-                    if( wouldAccept(v) ) increase();
+                    if( welcomes(v) ) increase();
                 }
 
             }

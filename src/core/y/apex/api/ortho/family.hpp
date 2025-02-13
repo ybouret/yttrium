@@ -58,7 +58,7 @@ namespace Yttrium
                 //! compute if remaining orthogonal component is not zero
                 //______________________________________________________________
                 template <typename T> inline
-                bool wouldAccept(const Readable<T> &a)
+                bool welcomes(const Readable<T> &a)
                 {
                     assert(a.size()==dimensions);
 

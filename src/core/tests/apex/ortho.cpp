@@ -46,7 +46,7 @@ Y_UTEST(apex_ortho)
             do {
                 GenVec(V,ran,5);
                 Y_ASSERT(F.includes(sub));
-                if(F.wouldAccept(V))
+                if(F.welcomes(V))
                 {
                     sub.recreate(F);
 
@@ -84,7 +84,7 @@ Y_UTEST(apex_ortho)
             while( F->size < sub )
             {
                 GenVec(V,ran,5);
-                if(F.wouldAccept(V))
+                if(F.welcomes(V))
                 {
                     F.increase();
                     M[F->size].ld(V);
@@ -94,7 +94,7 @@ Y_UTEST(apex_ortho)
             do
             {
                 GenVec(V,ran,10);
-            } while( !F.wouldAccept(V) );
+            } while( !F.welcomes(V) );
             F.fetch(first);
             std::cerr << "first=" << first << std::endl;
 
@@ -108,13 +108,13 @@ Y_UTEST(apex_ortho)
                 F.reset();
                 for(size_t i=1;i<=sub;++i)
                 {
-                    Y_ASSERT(F.wouldAccept(M[perm[i]]));
+                    Y_ASSERT(F.welcomes(M[perm[i]]));
                     F.increase();
                 }
                 std::cerr << "F=" << F << std::endl;
 
                 // check that order doesn't matter for next projection
-                Y_ASSERT(F.wouldAccept(V));
+                Y_ASSERT(F.welcomes(V));
                 F.fetch(extra);
                 //std::cerr << "extra=" << extra << std::endl;
                 Y_ASSERT(extra==first);
@@ -126,7 +126,7 @@ Y_UTEST(apex_ortho)
                     do
                     {
                         GenVec(U,ran,10);
-                    } while( !F.wouldAccept(U) );
+                    } while( !F.welcomes(U) );
                     F.fetch(curr);
                     std::cerr << "\t" << curr << " <-- " << V << std::endl;
                     for(size_t iter=0;iter<10;++iter)
@@ -134,7 +134,7 @@ Y_UTEST(apex_ortho)
                         do
                         {
                             GenVec(U,ran,10);
-                        } while( !F.wouldAccept(U) );
+                        } while( !F.welcomes(U) );
                         F.fetch(next);
                         //std::cerr << "\t" << next << " <-- " << V << std::endl;
                         Y_ASSERT(curr==next);
