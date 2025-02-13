@@ -22,7 +22,10 @@ Y_UTEST(apex_ortho)
         {
             Ortho::Family         F(metrics,vcache);
             Ortho::Family         sub(metrics,vcache);
-            CxxArray<int> V(dims);
+            CxxArray<int>     V(dims);
+            CxxArray<Integer> Z(dims);
+            Ortho::Vector     Q(metrics);
+
 
             do {
                 for(size_t i=dims;i>0;--i) V[i] = ran.in<int>(-5,5);
@@ -30,6 +33,11 @@ Y_UTEST(apex_ortho)
                 if(F.wouldAccept(V))
                 {
                     sub.recreate(F);
+
+                    F.fetch(Z);
+                    F.fetch(Q);
+                    F.fetch(V);
+
                     F.increase();
                     std::cerr << "F=" << F << std::endl;
                     Y_ASSERT(F.includes(sub));

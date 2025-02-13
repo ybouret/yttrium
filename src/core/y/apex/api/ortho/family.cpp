@@ -139,6 +139,9 @@ namespace Yttrium
 
 
             }
+
+            const char * const Family:: VectorCoefficient = "Vector Coefficient";
+            
         }
     }
 }

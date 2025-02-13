@@ -81,7 +81,41 @@ namespace Yttrium
 
                     return true;
                 }
-                
+
+
+                void fetchInteger(Writable<Integer> &target) const
+                {
+                    assert(0!=qwork);
+                    assert(target.size()==dimensions);
+                    target.ld(*qwork);
+                }
+
+                void fetchVector(Vector &target) const
+                {
+                    assert(0!=qwork);
+                    assert(target.size()==dimensions);
+                    target.ld(*qwork);
+                }
+
+                static const char * const VectorCoefficient;
+
+                template <typename T>
+                void fetchPrimitive(Writable<T> &target) const
+                {
+                    assert(0!=qwork);
+                    assert(target.size()==dimensions);
+                    for(size_t i=dimensions;i>0;--i) target[i] = (*qwork)[i].cast<T>(VectorCoefficient);
+                }
+
+                template <typename OUTPUT> inline
+                void fetch(OUTPUT &output) const
+                {
+                    typedef typename OUTPUT::Type      OutputType;
+                    typedef TL2(Integer,const Integer) ListType;
+                    static const int Indx = TL::IndexOf<ListType,OutputType>::Value;
+                    std::cerr << "(indx=" << Indx << ")" << std::endl;
+                }
+
 
 
 
