@@ -67,7 +67,7 @@ Y_UTEST(apex_ortho)
 
     for(size_t dims=2;dims<=4;++dims)
     {
-        const Ortho::Metrics metrics(dims);
+        const Ortho::Metrics  metrics(dims);
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
         Ortho::Family         F(metrics,vcache);
 
@@ -79,7 +79,17 @@ Y_UTEST(apex_ortho)
             GenVec(V,ran,10);
         } while( !F.wouldAccept(V) );
         F.fetch(first);
-        std::cerr << first << " <== " << V << std::endl;
+        std::cerr << first << " <-- " << V << std::endl;
+        for(size_t cycle=0;cycle<10;++cycle)
+        {
+            do
+            {
+                GenVec(V,ran,10);
+            } while( !F.wouldAccept(V) );
+            F.fetch(extra);
+            std::cerr << extra << " <-- " << V << std::endl;
+            Y_ASSERT(extra==first);
+        }
 
 
 
