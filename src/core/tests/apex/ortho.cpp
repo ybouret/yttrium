@@ -68,7 +68,7 @@ Y_UTEST(apex_ortho)
 
 
     // checking equivalence
-    for(size_t dims=2;dims<=4;++dims)
+    for(size_t dims=2;dims<=5;++dims)
     {
         std::cerr << std::endl  << "equivalences in dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
@@ -78,7 +78,8 @@ Y_UTEST(apex_ortho)
         for(size_t sub=1;sub<dims;++sub)
         {
             Matrix<Integer>   M(sub,dims);
-            CxxArray<Integer> V(dims);
+            CxxArray<Integer> V(dims),  first(dims), extra(dims);
+
             F.reset();
             while( F->size < sub )
             {
@@ -90,12 +91,19 @@ Y_UTEST(apex_ortho)
                 }
             }
             std::cerr << "M=" << M << std::endl;
+            do
+            {
+                GenVec(V,ran,10);
+            } while( !F.wouldAccept(V) );
+            F.fetch(first);
+            std::cerr << "first=" << first << std::endl;
 
             Permutation perm(sub);
 
             perm.boot();
             do
             {
+                // build a family from a permutation of trials
                 std::cerr << "\t" << perm << std::endl;
                 F.reset();
                 for(size_t i=1;i<=sub;++i)
@@ -105,6 +113,33 @@ Y_UTEST(apex_ortho)
                 }
                 std::cerr << "F=" << F << std::endl;
 
+                // check that order doesn't matter for next projection
+                Y_ASSERT(F.wouldAccept(V));
+                F.fetch(extra);
+                //std::cerr << "extra=" << extra << std::endl;
+                Y_ASSERT(extra==first);
+
+                if(Ortho::Hyperplane == F.quality)
+                {
+                    // check that any final vector is the same...
+                    CxxArray<Integer> U(dims), curr(dims), next(dims);
+                    do
+                    {
+                        GenVec(U,ran,10);
+                    } while( !F.wouldAccept(U) );
+                    F.fetch(curr);
+                    std::cerr << "\t" << curr << " <-- " << V << std::endl;
+                    for(size_t iter=0;iter<10;++iter)
+                    {
+                        do
+                        {
+                            GenVec(U,ran,10);
+                        } while( !F.wouldAccept(U) );
+                        F.fetch(next);
+                        //std::cerr << "\t" << next << " <-- " << V << std::endl;
+                        Y_ASSERT(curr==next);
+                    }
+                }
 
             } while(perm.next());
 
