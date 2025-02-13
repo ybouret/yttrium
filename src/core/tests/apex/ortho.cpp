@@ -79,6 +79,7 @@ Y_UTEST(apex_ortho)
             GenVec(V,ran,10);
         } while( !F.wouldAccept(V) );
         F.fetch(first);
+        std::cerr << first << " <== " << V << std::endl;
 
 
 
