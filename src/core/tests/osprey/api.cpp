@@ -107,10 +107,12 @@ namespace Yttrium
         Y_PROXY_IMPL(ISet,my)
 
         typedef Apex::Ortho::Metrics QMetrics;
+        typedef Apex::Ortho::Vector  QVector;
         typedef Apex::Ortho::Family  QFamily;
         typedef Apex::Ortho::VCache  QVCache;
+        typedef Apex::Ortho::FCache  QFCache;
 
-        class Tribe : public Proxy<const QFamily>
+        class Tribe : public Quantized, public Proxy<const QFamily>
         {
         public:
             typedef CxxListOf<Tribe> List;
@@ -120,16 +122,22 @@ namespace Yttrium
             explicit Tribe(const MATRIX    &data,
                            const size_t     indx,
                            const IndexBank &bank,
-                           const QVCache   &qvcc) :
-            qfamily(qvcc),
+                           const QFCache         &qfcc) :
+            qfamily(0),
+            lastVec(0),
             content(bank,indx),
             residue(bank,data.rows,indx),
+            qfcache(qfcc),
             next(0),
             prev(0)
             {
-                std::cerr << "using " << content << " / " << residue << std::endl;
-                if( qfamily.welcomes(data[indx]) )
-                    qfamily.increase();
+                Coerce(qfamily) = qfcache->query();
+                tryExpandWith(data[indx]);
+            }
+
+            virtual ~Tribe() noexcept
+            {
+                releaseFamily();
             }
 
             Y_OSTREAM_PROTO(Tribe);
@@ -138,16 +146,19 @@ namespace Yttrium
             explicit Tribe(const MATRIX &          data,
                            const Tribe  &          root,
                            const IndexNode * const node) :
-            qfamily(root.qfamily),
+            qfamily(0),
+            lastVec(0),
             content(root.content),
             residue(content->proxy),
+            qfcache(root.qfcache),
             next(0),
             prev(0)
             {
                 const size_t indx = **node;
                 AddToContent(Coerce(content),indx);
                 AddToResidue(Coerce(residue),node);
-                if( qfamily.welcomes(data[indx]) ) qfamily.increase();
+                Coerce(qfamily) = qfcache->query(*root);
+                tryExpandWith(data[indx]);
             }
 
 
@@ -184,29 +195,49 @@ namespace Yttrium
             }
 
         private:
-            QFamily qfamily;
-
+            QFamily * const       qfamily;
         public:
-            const ISet    content;
-            const ISet    residue;
+            const QVector * const lastVec;
+            const ISet            content;
+            const ISet            residue;
+            QFCache               qfcache;
 
             Tribe *next;
             Tribe *prev;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
             Y_PROXY_DECL();
+            void releaseFamily() noexcept
+            {
+                assert(0!=qfamily);
+                qfcache->store( qfamily );
+                Coerce(qfamily) = 0;
+            }
+
+            template <typename ARRAY> inline
+            void tryExpandWith(const ARRAY &a)
+            {
+                try {
+                    Coerce(lastVec) = qfamily->tryIncreaseWith(a);
+                }
+                catch(...)
+                {
+                    releaseFamily();
+                    throw;
+                }
+            }
+
         };
 
-        Y_PROXY_IMPL(Tribe,qfamily)
+        Y_PROXY_IMPL(Tribe,*qfamily)
 
         std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
         {
-            os << tribe.content << ":" << tribe.residue;
+            os << tribe.content << ":" << tribe.residue << *tribe.qfamily;
             return os;
         }
 
 
-#if 1
         class Tribes : public Proxy<const Tribe::List>
         {
         public:
@@ -221,12 +252,12 @@ namespace Yttrium
             template <typename MATRIX> inline
             explicit Tribes(const MATRIX    &data,
                             const IndexBank &bank,
-                            const QVCache   &qvcc) :
+                            const QFCache   &qfcc) :
             my()
             {
                 // initializing
                 for(size_t i=1;i<=data.rows;++i) {
-                    my.pushTail( new Tribe(data,i,bank,qvcc) );
+                    my.pushTail( new Tribe(data,i,bank,qfcc) );
                 }
 
                 // size: Arrange(n,1) = n
@@ -244,6 +275,17 @@ namespace Yttrium
                     tribe->unfold(ng,data);
                 }
                 ng.swapWith(my);
+            }
+
+            void compress() noexcept
+            {
+                Tribe::List store;
+                while(my.size>0)
+                {
+                    Tribe *lhs = my.popHead();
+
+                    store.pushTail(lhs);
+                }
             }
 
 
@@ -275,7 +317,6 @@ namespace Yttrium
             }
             return os;
         }
-#endif
 
     }
 }
@@ -309,10 +350,11 @@ Y_UTEST(osprey)
 
 
 
-    Matrix<int>      mu(6,7);
+    Matrix<int>      mu(4,7);
     Osprey::QMetrics metrics(mu.cols);
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
-    Osprey::Tribes   tribes(mu,bank,vcache);
+    Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
+    Osprey::Tribes   tribes(mu,bank,fcache);
 
     size_t count = 0;
     while( tribes->size > 0 )
@@ -331,5 +373,7 @@ Y_UTEST(osprey)
         std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << Osprey::Tribes::MaxCount(rows) << std::endl;
     }
 
+    Y_SIZEOF(Osprey::QFamily);
+    Y_SIZEOF(Osprey::Tribe);
 }
 Y_UDONE()

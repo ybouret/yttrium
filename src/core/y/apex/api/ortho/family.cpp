@@ -2,7 +2,61 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/system/exception.hpp"
 
- 
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+
+        namespace Ortho
+        {
+            Family:: Cache:: ~Cache() noexcept
+            {
+            }
+
+            Family:: Cache:: Cache(const VCache &_) noexcept :
+            Object(),
+            Counted(),
+            Proxy<const Pool>(),
+            my(),
+            vcache(_)
+            {
+            }
+
+            Y_PROXY_IMPL(Family::Cache, my)
+
+            Family * Family:: Cache:: query()
+            {
+                return my.size>0 ? my.query() : new Family(vcache);
+            }
+
+            void Family:: Cache:: store(Family *const F) noexcept
+            {
+                assert(0!=F);
+                assert(F->dimensions == vcache->dimensions);
+                my.store(F)->reset();
+            }
+
+            Family * Family:: Cache:: query(const Family &F)
+            {
+                Family *res = query();
+                try {
+                    res->recreate(F);
+                    return res;
+                }
+                catch(...)
+                {
+                    store(res);
+                    throw;
+                }
+            }
+
+        }
+
+    }
+
+}
+
 namespace Yttrium
 {
     namespace Apex
@@ -44,7 +98,8 @@ namespace Yttrium
             quality( getQuality(0) ),
             qlist(),
             qwork(0),
-            cache(c) 
+            cache(c),
+            next(0)
             {
             }
 
@@ -54,7 +109,8 @@ namespace Yttrium
             quality(_.quality),
             qlist(),
             qwork(0),
-            cache(_.cache)
+            cache(_.cache),
+            next(0)
             {
                 for(const Vector *v=_->head;v;v=v->next)
                 {
@@ -67,7 +123,6 @@ namespace Yttrium
             
             Y_PROXY_IMPL(Family,qlist)
 
-#if 1
             void Family:: recreate(const Family &F)
             {
                 assert(this != &F);
@@ -83,8 +138,7 @@ namespace Yttrium
                     throw;
                 }
             }
-#endif
-
+            
             bool Family:: includes(const Family &sub)
             {
                 if(sub->size>qlist.size) return false;

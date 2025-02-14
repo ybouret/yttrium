@@ -20,9 +20,35 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family :  public Metrics, public Proxy<const Vector::List>
+            class Family :  public Quantized, public Metrics, public Proxy<const Vector::List>
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxPoolOf<Family> Pool;
+
+                class Cache : public Object, public Counted, public Proxy<const Pool>
+                {
+                public:
+                    explicit Cache(const VCache &) noexcept;
+                    virtual ~Cache()               noexcept;
+
+                    Family *query();
+                    void    store(Family * const) noexcept;
+                    Family *query(const Family &);
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Cache);
+                    Y_PROXY_DECL();
+                    Pool   my;
+                public:
+                    VCache vcache;
+                };
+
 
                 //______________________________________________________________
                 //
@@ -113,6 +139,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const Quality quality; //!< current quality
+
             private:
                 Y_DISABLE_ASSIGN(Family);
                 Y_PROXY_DECL();
@@ -140,9 +167,13 @@ namespace Yttrium
                     assert(target.size()==dimensions);
                     for(size_t i=dimensions;i>0;--i) target[i] = (*qwork)[i].cast<T>(VectorCoefficient);
                 }
+
+            public:
+                Family *next;    //!< for cache
+
             };
 
-
+            typedef ArcPtr<Family::Cache> FCache;
             
         }
     }
