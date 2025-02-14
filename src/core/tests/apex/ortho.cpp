@@ -40,8 +40,8 @@ Y_UTEST(apex_ortho)
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
 
         {
-            Ortho::Family     F(metrics,vcache);
-            Ortho::Family     sub(metrics,vcache);
+            Ortho::Family     F(vcache);
+            Ortho::Family     sub(vcache);
             CxxArray<int>     V(dims);
             CxxArray<Integer> Z(dims);
             Ortho::Vector     Q(metrics);
@@ -77,7 +77,7 @@ Y_UTEST(apex_ortho)
         std::cerr << std::endl  << "equivalences in dims=" << dims << std::endl;
         const Ortho::Metrics  metrics(dims);
         Ortho::VCache         vcache = new Ortho::Vector::Cache(metrics);
-        Ortho::Family         F(metrics,vcache);
+        Ortho::Family         F(vcache);
 
         for(size_t sub=1;sub<dims;++sub)
         {

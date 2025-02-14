@@ -38,8 +38,8 @@ namespace Yttrium
                 reset();
             }
 
-            Family:: Family(const Metrics &m, const VCache &c) noexcept :
-            Metrics(m),
+            Family:: Family(const VCache &c) noexcept :
+            Metrics(*c),
             Proxy<const Vector::List>(),
             quality( getQuality(0) ),
             qlist(),
@@ -47,6 +47,21 @@ namespace Yttrium
             cache(c) 
             {
             }
+
+            Family:: Family(const Family &_) :
+            Metrics(_),
+            Proxy<const Vector::List>(),
+            quality(_.quality),
+            qlist(),
+            qwork(0),
+            cache(_.cache)
+            {
+                for(const Vector *v=_->head;v;v=v->next)
+                {
+                    qlist.pushTail( cache->query(*v) );
+                }
+            }
+
 
 
             

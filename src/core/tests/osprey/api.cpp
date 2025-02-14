@@ -110,12 +110,10 @@ namespace Yttrium
         typedef Apex::Ortho::Family  QFamily;
         typedef Apex::Ortho::VCache  QVCache;
 
-        class Tribe : public QMetrics
+        class Tribe : public Proxy<const QFamily>
         {
         public:
             typedef CxxListOf<Tribe> List;
-
-
 
 
             template <typename MATRIX>
@@ -123,14 +121,15 @@ namespace Yttrium
                            const size_t     indx,
                            const IndexBank &bank,
                            const QVCache   &qvcc) :
-            QMetrics(data.cols),
+            qfamily(qvcc),
             content(bank,indx),
             residue(bank,data.rows,indx),
             next(0),
             prev(0)
             {
-
                 std::cerr << "using " << content << " / " << residue << std::endl;
+                if( qfamily.welcomes(data[indx]) )
+                    qfamily.increase();
             }
 
             Y_OSTREAM_PROTO(Tribe);
@@ -139,7 +138,7 @@ namespace Yttrium
             explicit Tribe(const MATRIX &          data,
                            const Tribe  &          root,
                            const IndexNode * const node) :
-            Metrics(root),
+            qfamily(root.qfamily),
             content(root.content),
             residue(content->proxy),
             next(0),
@@ -182,14 +181,21 @@ namespace Yttrium
 
             }
 
-            const ISet content;
-            const ISet residue;
+        private:
+            QFamily qfamily;
+
+        public:
+            const ISet    content;
+            const ISet    residue;
 
             Tribe *next;
             Tribe *prev;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
+            Y_PROXY_DECL();
         };
+
+        Y_PROXY_IMPL(Tribe,qfamily)
 
         std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
         {

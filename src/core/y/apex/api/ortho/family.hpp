@@ -30,9 +30,10 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Family(const Metrics &, const VCache &) noexcept; //!< setup from metrics
-                virtual ~Family() noexcept;                                //!< cleanup
-                Y_OSTREAM_PROTO(Family);                                   //!< display
+                explicit Family(const VCache &) noexcept; //!< setup from metrics
+                virtual ~Family() noexcept;               //!< cleanup
+                Family(const Family &);                   //!< duplicate
+                Y_OSTREAM_PROTO(Family);                  //!< display
 
                 //______________________________________________________________
                 //
@@ -47,10 +48,6 @@ namespace Yttrium
                 void clear()  noexcept; //!< free vectors
                 void prune()  noexcept; //!< clear workspace
                 void reset()  noexcept; //!< free/trim
-
-
-
-
 
 
                 //______________________________________________________________
@@ -105,7 +102,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const Quality quality; //!< current quality
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Family);
+                Y_DISABLE_ASSIGN(Family);
                 Y_PROXY_DECL();
                 Vector::List  qlist; //!< current list
                 Vector *      qwork; //!< current workspace
