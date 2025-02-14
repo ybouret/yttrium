@@ -8,6 +8,8 @@
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
 
+#include "y/data/list/cxx.hpp"
+
 namespace Yttrium
 {
     namespace Osprey
@@ -29,12 +31,22 @@ namespace Yttrium
             }
 
             explicit ISet(const IndexBank &ibank,
-                          const size_t     dims,
-                          const size_t     nrot) :
+                          const size_t     indx) :
             my(ibank)
             {
-                for(size_t i=1;i<=dims;++i) my << i;
-                for(size_t i=nrot;i>0;--i)  my.rotl();
+                my << indx;
+            }
+
+            explicit ISet(const IndexBank &ibank,
+                          const size_t     dims,
+                          const size_t     excl) :
+            my(ibank)
+            {
+                for(size_t i=1;i<=dims;++i)
+                {
+                    if(i!=excl)
+                        my << i;
+                }
             }
 
             ISet(const ISet &_) :
@@ -51,11 +63,21 @@ namespace Yttrium
                 return false;
             }
 
-            bool insert(const size_t i)
+
+            bool atTail(const size_t i)
             {
                 if(search(i)) return false;
                 my << i;      return true;
             }
+
+            bool atHead(const size_t i)
+            {
+                if(search(i)) return false;
+                my >> i;      return true;
+            }
+
+
+
 
             void shuffle(Random::Bits &ran) noexcept
             {
@@ -91,27 +113,67 @@ namespace Yttrium
         class Tribe : public Object
         {
         public:
+            typedef CxxListOf<Tribe> List;
+
             template <typename MATRIX>
             explicit Tribe(const MATRIX    &data,
-                           const size_t     rank,
+                           const size_t     indx,
                            const IndexBank &bank) :
-            content(bank,data.rows,rank),
-            residue(bank),
+            content(bank,indx),
+            residue(bank,data.rows,indx),
             next(0),
             prev(0)
             {
+
+                std::cerr << "using " << content << " / " << residue << std::endl;
             }
 
-            Tribe(const Tribe &_) :
-            content(_.content),
-            residue(_.residue),
+            template <typename MATRIX>
+            explicit Tribe(const MATRIX &data,
+                           const Tribe  &root,
+                           const IndexNode * const node) :
+            content(root.content),
+            residue(content->proxy),
             next(0),
             prev(0)
             {
+                AddToContent(Coerce(content),**node);
+                AddToResidue(Coerce(residue),node);
             }
 
 
 
+            static inline
+            void AddToContent(ISet &newContent, const size_t newIndex)
+            {
+                if(!newContent.atTail(newIndex)) throw Exception("Bad index");
+            }
+
+            static inline
+            void AddToResidue(ISet &newResidue, const IndexNode * const node)
+            {
+                assert(0==newResidue->size);
+                for(const IndexNode *scan=node->prev;scan;scan=scan->prev)
+                {
+                    if(!newResidue.atHead(**scan)) throw Exception("Bad index");
+                }
+                for(const IndexNode *scan=node->next;scan;scan=scan->next)
+                {
+                    if(!newResidue.atTail(**scan)) throw Exception("Bad index");
+                }
+            }
+
+
+            template <typename MATRIX>
+            void unfold(List &tribes, const MATRIX &data)
+            {
+                // create tribe by residue promotion
+                for(const IndexNode *node=residue->head;node;node=node->next)
+                {
+                    tribes.pushTail( new Tribe(data,*this,node) );
+                }
+
+            }
 
             const ISet content;
             const ISet residue;
@@ -119,26 +181,57 @@ namespace Yttrium
             Tribe *next;
             Tribe *prev;
         private:
-            Y_DISABLE_ASSIGN(Tribe);
+            Y_DISABLE_COPY_AND_ASSIGN(Tribe);
         };
+
+#if 1
+        class Tribes : public Proxy<const Tribe::List>
+        {
+        public:
+
+            template <typename MATRIX> inline
+            explicit Tribes(const MATRIX    &data,
+                            const IndexBank &bank) :
+            my()
+            {
+                for(size_t i=1;i<=data.rows;++i)
+                {
+                    my.pushTail( new Tribe(data,i,bank) );
+                }
+            }
+
+
+            virtual ~Tribes() noexcept {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Tribes);
+            Y_PROXY_DECL();
+
+            Tribe::List my;
+        };
+
+        Y_PROXY_IMPL(Tribes,my)
+#endif
 
     }
 }
 
 using namespace Yttrium;
 
+#include "y/container/matrix.hpp"
+
 Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
-    Osprey::IndexBank  ibank;
+    Osprey::IndexBank  bank;
 
-    { Osprey::ISet _(ibank); }
+    { Osprey::ISet _(bank); }
 
     for(size_t dims=1;dims<=5;++dims)
     {
         for(size_t nrot=0;nrot<dims;++nrot)
         {
-            Osprey::ISet iset(ibank,dims,nrot);
+            Osprey::ISet iset(bank,dims,nrot);
             Osprey::ISet copy(iset);
             Osprey::ISet rset(iset); rset.shuffle(ran);
             std::cerr << iset << " / " << copy << " / " << rset << std::endl;
@@ -147,6 +240,10 @@ Y_UTEST(osprey)
 
         }
     }
+
+    Matrix<int>    mu(5,3);
+    Osprey::Tribes tribes(mu,bank);
+
 
 
 }
