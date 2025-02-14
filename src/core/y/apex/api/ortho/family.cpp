@@ -130,7 +130,7 @@ namespace Yttrium
                 return os;
             }
 
-            void Family:: increase()  
+            const Vector * Family:: increase()
             {
                 assert(0!=qwork);
                 assert(qwork->ncof>0);
@@ -147,12 +147,11 @@ namespace Yttrium
                         switch( Vector::Compare(*(curr->prev),*curr) )
                         {
                             case __Zero__: throw Specific::Exception("Ortho::Family", "unexpected multiple vectors!!");
-                            case Negative: return;
+                            case Negative: break;;
                             case Positive: qlist.towardsHead(curr); goto LOOP;
                         }
+                    return curr;
                 }
-
-
             }
 
             const char * const Family:: VectorCoefficient = "Vector Coefficient";

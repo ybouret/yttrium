@@ -44,10 +44,10 @@ namespace Yttrium
                 void recreate(const Family &F);
                 bool includes(const Family &sub);
                 void generate(Random::Bits &ran, const size_t dim, const size_t bits);
-                void increase();        //!< increase with latest workspace
-                void clear()  noexcept; //!< free vectors
-                void prune()  noexcept; //!< clear workspace
-                void reset()  noexcept; //!< free/trim
+                const Vector * increase();        //!< increase with latest valid workspace
+                void           clear()  noexcept; //!< free vectors
+                void           prune()  noexcept; //!< clear workspace
+                void           reset()  noexcept; //!< free/trim
 
 
                 //______________________________________________________________
@@ -77,6 +77,12 @@ namespace Yttrium
                     }
 
                     return true;
+                }
+
+                template <typename T> inline
+                const Vector *tryIncreaseWith(const Readable<T> &a)
+                {
+                    return welcomes(a) ? increase() : 0;
                 }
 
 

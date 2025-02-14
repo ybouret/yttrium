@@ -144,8 +144,10 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-                AddToContent(Coerce(content),**node);
+                const size_t indx = **node;
+                AddToContent(Coerce(content),indx);
                 AddToResidue(Coerce(residue),node);
+                if( qfamily.welcomes(data[indx]) ) qfamily.increase();
             }
 
 
