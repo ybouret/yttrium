@@ -301,7 +301,7 @@ Y_UTEST(osprey)
 
 
 
-    Matrix<int>     mu(6,7);
+    Matrix<int>      mu(6,7);
     Osprey::QMetrics metrics(mu.cols);
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
     Osprey::Tribes   tribes(mu,bank,vcache);

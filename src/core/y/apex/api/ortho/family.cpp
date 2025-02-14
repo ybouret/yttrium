@@ -141,7 +141,33 @@ namespace Yttrium
             }
 
             const char * const Family:: VectorCoefficient = "Vector Coefficient";
-            
+
+
+            void Family:: fetch(Writable<Integer> &target, const Int2Type<0> &) const
+            {
+                fetchInteger(target);
+            }
+
+            void Family:: fetch(Vector &target, const Int2Type<1> &) const
+            {
+                fetchVector(target);
+            }
+
+            void  Family:: fetchInteger(Writable<Integer> &target) const
+            {
+                assert(0!=qwork);
+                assert(target.size()==dimensions);
+                target.ld(*qwork);
+            }
+
+            void Family:: fetchVector(Vector &target) const
+            {
+                assert(0!=qwork);
+                assert(target.size()==dimensions);
+                target.ld(*qwork);
+            }
+
+
         }
     }
 }

@@ -83,29 +83,7 @@ namespace Yttrium
                 }
 
 
-                void fetchInteger(Writable<Integer> &target) const
-                {
-                    assert(0!=qwork);
-                    assert(target.size()==dimensions);
-                    target.ld(*qwork);
-                }
 
-                void fetchVector(Vector &target) const
-                {
-                    assert(0!=qwork);
-                    assert(target.size()==dimensions);
-                    target.ld(*qwork);
-                }
-
-                static const char * const VectorCoefficient;
-
-                template <typename T>
-                void fetchPrimitive(Writable<T> &target) const
-                {
-                    assert(0!=qwork);
-                    assert(target.size()==dimensions);
-                    for(size_t i=dimensions;i>0;--i) target[i] = (*qwork)[i].cast<T>(VectorCoefficient);
-                }
 
                 template <typename OUTPUT> inline
                 void fetch(OUTPUT &output) const
@@ -133,22 +111,26 @@ namespace Yttrium
                 Vector *      qwork; //!< current workspace
                 VCache        cache; //!< shared cache
 
+
+
+                void fetch(Writable<Integer> &target, const Int2Type<0> &) const;
+                void fetch(Vector &           target, const Int2Type<1> &) const;
+
+                void fetchInteger(Writable<Integer> &target) const;
+                void fetchVector(Vector &target)             const;
+
                 template <typename T> inline
-                void fetch(Writable<T> &target, const Int2Type< -1 > &) const
-                {
+                void fetch(Writable<T> &target, const Int2Type< -1 > &) const {
                     fetchPrimitive(target);
                 }
-
-                void fetch(Writable<Integer> &target, const Int2Type<0> &) const
+                static const char * const VectorCoefficient;
+                template <typename T>
+                void fetchPrimitive(Writable<T> &target) const
                 {
-                    fetchInteger(target);
+                    assert(0!=qwork);
+                    assert(target.size()==dimensions);
+                    for(size_t i=dimensions;i>0;--i) target[i] = (*qwork)[i].cast<T>(VectorCoefficient);
                 }
-
-                void fetch(Vector &target, const Int2Type<1> &) const
-                {
-                    fetchVector(target);
-                }
-
             };
 
 
