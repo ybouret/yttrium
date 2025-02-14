@@ -283,9 +283,20 @@ namespace Yttrium
                 while(my.size>0)
                 {
                     Tribe *lhs = my.popHead();
-
-                    store.pushTail(lhs);
+                    for(const Tribe *rhs=store.head;rhs;rhs=rhs->next)
+                    {
+                        if( ISet::AreEquivalent(lhs->content,rhs->content) )
+                        {
+                            delete lhs;
+                            lhs = 0;
+                            goto DONE;
+                        }
+                    }
+                DONE:
+                    if(0!=lhs)
+                        store.pushTail(lhs);
                 }
+                my.swapWith(store);
             }
 
 
@@ -350,22 +361,43 @@ Y_UTEST(osprey)
 
 
 
-    Matrix<int>      mu(4,7);
+    Matrix<int>      mu(6,7);
     Osprey::QMetrics metrics(mu.cols);
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
-    Osprey::Tribes   tribes(mu,bank,fcache);
-
-    size_t count = 0;
-    while( tribes->size > 0 )
     {
-        count += tribes->size;
-        std::cerr << "tribes=" << tribes << std::endl;
-        std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows,tribes->head->content->size) << std::endl;
-        tribes.generate(mu);
+        Osprey::Tribes   tribes(mu,bank,fcache);
+
+        size_t count = 0;
+        while( tribes->size > 0 )
+        {
+            count += tribes->size;
+            std::cerr << "tribes=" << tribes << std::endl;
+            std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows,tribes->head->content->size) << std::endl;
+            tribes.generate(mu);
+        }
+        std::cerr << std::endl;
+        std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
     }
-    std::cerr << std::endl;
-    std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
+
+    {
+        Osprey::Tribes   tribes(mu,bank,fcache);
+
+        size_t count = 0;
+        while( tribes->size > 0 )
+        {
+            tribes.compress();
+            count += tribes->size;
+            std::cerr << "tribes=" << tribes << std::endl;
+            std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows,tribes->head->content->size) << std::endl;
+            tribes.generate(mu);
+        }
+        std::cerr << std::endl;
+        std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
+    }
+
+
+
 
 
     for(size_t rows=1;rows<=10;++rows)
