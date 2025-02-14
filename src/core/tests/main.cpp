@@ -293,6 +293,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(apex_sqr);
     Y_UTEST(apex_n);
     Y_UTEST(apex_factorial);
+    Y_UTEST(apex_comb);
     Y_UTEST(apex_z);
     Y_UTEST(apex_conv);
     Y_UTEST(apex_q);

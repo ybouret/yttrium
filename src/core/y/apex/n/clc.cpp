@@ -1,5 +1,7 @@
 
 #include "y/apex/natural.hpp"
+#include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -53,6 +55,28 @@ namespace Yttrium
             }
             return f;
         }
+
+        Natural Natural:: Comb(const natural_t n, const natural_t k)
+        {
+            if(k<=0)
+            {
+                return 1;
+            }
+            else
+            {
+                if(k>=n)
+                {
+                    if(k>n) throw Libc::Exception(EDOM,"k=%u>n=%u in Comb", unsigned(k), unsigned(n));
+                    return 1;
+                }
+                else
+                {
+                    assert(k>0); assert(k<n);
+                    return Factorial(n)/Factorial(k)/Factorial(n-k);
+                }
+            }
+        }
+
     }
 
 }

@@ -285,12 +285,15 @@ Y_UTEST(osprey)
     Matrix<int>    mu(5,3);
     Osprey::Tribes tribes(mu,bank);
 
+    size_t count = 0;
     while( tribes->size > 0 )
     {
+        count += tribes->size;
         std::cerr << "tribes=" << tribes << std::endl;
         tribes.generate(mu);
     }
-
+    std::cerr << std::endl;
+    std::cerr << "count(" << mu.rows << ")=" << count << std::endl;
 
 
 
