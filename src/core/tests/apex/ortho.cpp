@@ -7,8 +7,12 @@
 #include "y/container/matrix.hpp"
 #include "y/counting/permutation.hpp"
 
+
+
 using namespace Yttrium;
 using namespace Apex;
+
+
 
 static inline void GenVec(Writable<int> &v, Random::Bits &ran, const unsigned nbit)
 {
@@ -146,18 +150,9 @@ Y_UTEST(apex_ortho)
 
         }
 
-
-
-
-
-
-
-
-
     }
 
-
-
+    
 
 }
 Y_UDONE()

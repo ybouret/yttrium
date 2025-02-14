@@ -15,6 +15,7 @@ fft
 string
 apex
 dft
+osprey
 kemp
 tow
 ordered
@@ -383,6 +384,7 @@ add_test(apex:uni   test-core apex_uni)
 add_test(apex:col   test-core apex_col)
 add_test(apex:narrow test-core apex_narrow)
 add_test(apex:ortho  test-core apex_ortho)
+add_test(apex:osprey test-core apex_osprey)
 
 
 
@@ -390,4 +392,6 @@ add_test(apex:ortho  test-core apex_ortho)
 add_test(dft:core test-core dft_core)
 add_test(dft:fmt  test-core dft_fmt)
 
+#osprey
+add_test(osprey test-core osprey)
 

@@ -301,10 +301,12 @@ Y_UTEST_DECL(300)
     Y_UTEST(apex_col);
     Y_UTEST(apex_narrow);
     Y_UTEST(apex_ortho);
-
+    
 
     Y_UTEST(dft_core);
     Y_UTEST(dft_fmt);
+
+    Y_UTEST(osprey);
 }
 Y_UTEST_EXEC()
 
