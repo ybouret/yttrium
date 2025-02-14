@@ -220,6 +220,7 @@ namespace Yttrium
                 {
                     tribe->unfold(ng,data);
                 }
+                ng.swapWith(my);
             }
 
 
@@ -240,7 +241,9 @@ namespace Yttrium
             if(tribes->size <= 0) os << "{}";
             else
             {
-                os << '{' << std::endl;
+                os << '{';
+                os << " #" << tribes->size;
+                os << std::endl;
                 for(const Tribe *tribe=tribes->head;tribe;tribe=tribe->next)
                 {
                     os << "  " << *tribe << std::endl;
@@ -281,8 +284,14 @@ Y_UTEST(osprey)
 
     Matrix<int>    mu(5,3);
     Osprey::Tribes tribes(mu,bank);
-    std::cerr << "tribes=" << tribes << std::endl;
-    tribes.generate(mu);
+
+    while( tribes->size > 0 )
+    {
+        std::cerr << "tribes=" << tribes << std::endl;
+        tribes.generate(mu);
+    }
+
+
 
 
 

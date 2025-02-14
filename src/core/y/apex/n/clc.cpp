@@ -36,6 +36,23 @@ namespace Yttrium
         }
 
 
+        Natural Natural:: Factorial(const natural_t n)
+        {
+            switch(n)
+            {
+                case 0:
+                case 1:
+                    return 1;
+                default:
+                    break;
+            }
+            Natural f = 2;
+            for(natural_t i=3;i<=n;++i)
+            {
+                f *= i;
+            }
+            return f;
+        }
     }
 
 }
