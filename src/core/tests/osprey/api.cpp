@@ -142,6 +142,9 @@ Y_UTEST(osprey)
             Osprey::ISet copy(iset);
             Osprey::ISet rset(iset); rset.shuffle(ran);
             std::cerr << iset << " / " << copy << " / " << rset << std::endl;
+            Y_ASSERT( Osprey::ISet::AreEqual(iset,copy) );
+            Y_ASSERT( Osprey::ISet::AreEqual(iset,rset) );
+
         }
     }
 
