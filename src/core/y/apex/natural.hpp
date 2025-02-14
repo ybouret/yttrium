@@ -384,13 +384,6 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             //
             //
-            // integral type conversion
-            //
-            //__________________________________________________________________
-
-            //__________________________________________________________________
-            //
-            //
             //! floating type conversion
             //
             //__________________________________________________________________
@@ -432,7 +425,13 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 return res;
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            // integral type conversion
+            //
+            //__________________________________________________________________
+            
             //! try cast to given value
             template <typename T>
             bool tryCast(T &target) const
