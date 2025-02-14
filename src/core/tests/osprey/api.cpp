@@ -128,6 +128,8 @@ namespace Yttrium
                 std::cerr << "using " << content << " / " << residue << std::endl;
             }
 
+            Y_OSTREAM_PROTO(Tribe);
+
             template <typename MATRIX>
             explicit Tribe(const MATRIX &data,
                            const Tribe  &root,
@@ -165,7 +167,7 @@ namespace Yttrium
 
 
             template <typename MATRIX>
-            void unfold(List &tribes, const MATRIX &data)
+            void unfold(List &tribes, const MATRIX &data) const
             {
                 // create tribe by residue promotion
                 for(const IndexNode *node=residue->head;node;node=node->next)
@@ -184,6 +186,13 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
         };
 
+        std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
+        {
+            os << tribe.content << ":" << tribe.residue;
+            return os;
+        }
+
+
 #if 1
         class Tribes : public Proxy<const Tribe::List>
         {
@@ -194,11 +203,25 @@ namespace Yttrium
                             const IndexBank &bank) :
             my()
             {
-                for(size_t i=1;i<=data.rows;++i)
-                {
+                // initializing
+                for(size_t i=1;i<=data.rows;++i) {
                     my.pushTail( new Tribe(data,i,bank) );
                 }
+
             }
+
+            Y_OSTREAM_PROTO(Tribes);
+
+            template <typename MATRIX>
+            void generate(const MATRIX &data)
+            {
+                Tribe::List ng;
+                for(const Tribe *tribe=my.head;tribe;tribe=tribe->next)
+                {
+                    tribe->unfold(ng,data);
+                }
+            }
+
 
 
             virtual ~Tribes() noexcept {}
@@ -211,6 +234,21 @@ namespace Yttrium
         };
 
         Y_PROXY_IMPL(Tribes,my)
+
+        std::ostream & operator<<(std::ostream &os, const Tribes &tribes)
+        {
+            if(tribes->size <= 0) os << "{}";
+            else
+            {
+                os << '{' << std::endl;
+                for(const Tribe *tribe=tribes->head;tribe;tribe=tribe->next)
+                {
+                    os << "  " << *tribe << std::endl;
+                }
+                os << '}' << std::endl;
+            }
+            return os;
+        }
 #endif
 
     }
@@ -243,6 +281,8 @@ Y_UTEST(osprey)
 
     Matrix<int>    mu(5,3);
     Osprey::Tribes tribes(mu,bank);
+    std::cerr << "tribes=" << tribes << std::endl;
+    tribes.generate(mu);
 
 
 
