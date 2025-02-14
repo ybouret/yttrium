@@ -77,6 +77,12 @@ namespace Yttrium
             }
         }
 
+        Natural Natural:: Arrange(const natural_t n, const natural_t k)
+        {
+            if(k>n) throw Libc::Exception(EDOM,"k=%u>n=%u in Arrange", unsigned(k), unsigned(n));
+            return Factorial(n)/Factorial(n-k);
+        }
+
     }
 
 }

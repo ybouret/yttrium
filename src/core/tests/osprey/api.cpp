@@ -77,14 +77,12 @@ namespace Yttrium
             }
 
 
-
-
             void shuffle(Random::Bits &ran) noexcept
             {
                 Random::Shuffle::List(my,ran);
             }
 
-            static bool AreEqual(const ISet &lhs, const ISet &rhs) noexcept
+            static bool AreEquivalent(const ISet &lhs, const ISet &rhs) noexcept
             {
                 if(lhs->size!=rhs->size) return false;
                 for(const IndexNode *node=rhs->head;node;node=node->next)
@@ -109,16 +107,23 @@ namespace Yttrium
         Y_PROXY_IMPL(ISet,my)
 
         typedef Apex::Ortho::Metrics QMetrics;
+        typedef Apex::Ortho::Family  QFamily;
+        typedef Apex::Ortho::VCache  QVCache;
 
-        class Tribe : public Object
+        class Tribe : public QMetrics
         {
         public:
             typedef CxxListOf<Tribe> List;
 
+
+
+
             template <typename MATRIX>
             explicit Tribe(const MATRIX    &data,
                            const size_t     indx,
-                           const IndexBank &bank) :
+                           const IndexBank &bank,
+                           const QVCache   &qvcc) :
+            QMetrics(data.cols),
             content(bank,indx),
             residue(bank,data.rows,indx),
             next(0),
@@ -131,9 +136,10 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Tribe);
 
             template <typename MATRIX>
-            explicit Tribe(const MATRIX &data,
-                           const Tribe  &root,
+            explicit Tribe(const MATRIX &          data,
+                           const Tribe  &          root,
                            const IndexNode * const node) :
+            Metrics(root),
             content(root.content),
             residue(content->proxy),
             next(0),
@@ -142,7 +148,6 @@ namespace Yttrium
                 AddToContent(Coerce(content),**node);
                 AddToResidue(Coerce(residue),node);
             }
-
 
 
             static inline
@@ -198,15 +203,25 @@ namespace Yttrium
         {
         public:
 
+            static Apex::Natural MaxCount(const size_t rows)
+            {
+                Apex::Natural res;
+                for(size_t i=1;i<=rows;++i) res += Apex::Natural::Arrange(rows,i);
+                return res;
+            }
+
             template <typename MATRIX> inline
             explicit Tribes(const MATRIX    &data,
-                            const IndexBank &bank) :
+                            const IndexBank &bank,
+                            const QVCache   &qvcc) :
             my()
             {
                 // initializing
                 for(size_t i=1;i<=data.rows;++i) {
-                    my.pushTail( new Tribe(data,i,bank) );
+                    my.pushTail( new Tribe(data,i,bank,qvcc) );
                 }
+
+                // size: Arrange(n,1) = n
 
             }
 
@@ -258,6 +273,7 @@ namespace Yttrium
 }
 
 using namespace Yttrium;
+using namespace Apex;
 
 #include "y/container/matrix.hpp"
 
@@ -276,27 +292,36 @@ Y_UTEST(osprey)
             Osprey::ISet copy(iset);
             Osprey::ISet rset(iset); rset.shuffle(ran);
             std::cerr << iset << " / " << copy << " / " << rset << std::endl;
-            Y_ASSERT( Osprey::ISet::AreEqual(iset,copy) );
-            Y_ASSERT( Osprey::ISet::AreEqual(iset,rset) );
+            Y_ASSERT( Osprey::ISet::AreEquivalent(iset,copy) );
+            Y_ASSERT( Osprey::ISet::AreEquivalent(iset,rset) );
 
         }
     }
 
-    Matrix<int>    mu(5,3);
-    Osprey::Tribes tribes(mu,bank);
+
+
+
+    Matrix<int>     mu(6,7);
+    Osprey::QMetrics metrics(mu.cols);
+    Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
+    Osprey::Tribes   tribes(mu,bank,vcache);
 
     size_t count = 0;
     while( tribes->size > 0 )
     {
         count += tribes->size;
         std::cerr << "tribes=" << tribes << std::endl;
+        std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows,tribes->head->content->size) << std::endl;
         tribes.generate(mu);
     }
     std::cerr << std::endl;
-    std::cerr << "count(" << mu.rows << ")=" << count << std::endl;
+    std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
 
 
-
+    for(size_t rows=1;rows<=10;++rows)
+    {
+        std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << Osprey::Tribes::MaxCount(rows) << std::endl;
+    }
 
 }
 Y_UDONE()

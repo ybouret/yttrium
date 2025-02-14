@@ -30,7 +30,7 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Family(const Metrics &, const VCache &) noexcept; //!< setup
+                explicit Family(const Metrics &, const VCache &) noexcept; //!< setup from metrics
                 virtual ~Family() noexcept;                                //!< cleanup
                 Y_OSTREAM_PROTO(Family);                                   //!< display
 
