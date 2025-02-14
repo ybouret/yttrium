@@ -18,9 +18,21 @@ Y_UTEST(apex_factorial)
     }
     else
     {
-        for(natural_t n=0;n<=20;++n)
+        for(natural_t n=0;n<=22;++n)
         {
-            std::cerr << std::setw(4) << n << "! = " << Natural::Factorial(n) << std::endl;
+            const Natural f = Natural::Factorial(n);
+            std::cerr << std::setw(4) << n << "! = " << f;
+
+            if(f->bits>32)
+            {
+                std::cerr << "*";
+            }
+
+            if(f->bits>64)
+            {
+                std::cerr << "*";
+            }
+            std::cerr << std::endl;
         }
     }
 
