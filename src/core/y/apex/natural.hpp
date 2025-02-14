@@ -365,7 +365,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             Natural sqrt() const; //!< interger square-root
             Natural abs()  const; //!< |*this|
-            static Natural Factorial(const natural_t);
+            static Natural Factorial(const natural_t n);                  //!< n!
             static Natural Comb(const natural_t n,    const natural_t k); //!< binomial coefficient
             static Natural Arrange(const natural_t n, const natural_t k); //!< arrangement without repetitions
 

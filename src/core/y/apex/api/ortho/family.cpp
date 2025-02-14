@@ -67,6 +67,7 @@ namespace Yttrium
             
             Y_PROXY_IMPL(Family,qlist)
 
+#if 1
             void Family:: recreate(const Family &F)
             {
                 assert(this != &F);
@@ -82,6 +83,7 @@ namespace Yttrium
                     throw;
                 }
             }
+#endif
 
             bool Family:: includes(const Family &sub)
             {

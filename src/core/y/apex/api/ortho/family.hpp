@@ -41,13 +41,15 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void recreate(const Family &F);
-                bool includes(const Family &sub);
-                void generate(Random::Bits &ran, const size_t dim, const size_t bits);
-                const Vector * increase();        //!< increase with latest valid workspace
-                void           clear()  noexcept; //!< free vectors
-                void           prune()  noexcept; //!< clear workspace
-                void           reset()  noexcept; //!< free/trim
+
+                //! generate a random family
+                void           generate(Random::Bits &ran, const size_t dim, const size_t bits);
+                void           recreate(const Family &);    //!< duplicate
+                bool           includes(const Family &sub); //!< check
+                const Vector * increase();                  //!< increase with latest valid workspace
+                void           clear()  noexcept;           //!< free vectors
+                void           prune()  noexcept;           //!< clear workspace
+                void           reset()  noexcept;           //!< free/trim
 
 
                 //______________________________________________________________
@@ -79,6 +81,7 @@ namespace Yttrium
                     return true;
                 }
 
+                //! return last vector upon success, NULL otherwise
                 template <typename T> inline
                 const Vector *tryIncreaseWith(const Readable<T> &a)
                 {
@@ -87,7 +90,10 @@ namespace Yttrium
 
 
 
-
+                //! fetch/cast result upon succesful welcomes
+                /**
+                 \param output array of Integer, Vector or array of primitive integrals
+                 */
                 template <typename OUTPUT> inline
                 void fetch(OUTPUT &output) const
                 {

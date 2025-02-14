@@ -136,6 +136,7 @@ namespace Yttrium
                 //! keep orthogonal to e, return true if not nul vector
                 bool keepOrtho(const Vector &e);
 
+                //! compare by ncof, nrm2 and lexicographic
                 static SignType Compare(const Vector &lhs, const Vector &rhs) noexcept;
 
                 //______________________________________________________________
