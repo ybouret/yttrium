@@ -125,7 +125,36 @@ namespace Yttrium
             return ListOps:: Fetch<const ListOf,const NODE>(*this,indx);
         }
 
-        
+        //! rotate left
+        inline void rotl() noexcept
+        {
+            switch(size)
+            {
+                case 0:
+                case 1:
+                    return;
+                default:
+                    break;
+            }
+            pushTail( popHead() );
+        }
+
+        //! rotate right
+        inline void rotr() noexcept
+        {
+            switch(size)
+            {
+                case 0:
+                case 1:
+                    return;
+                default:
+                    break;
+            }
+            pushHead( popTail() );
+        }
+
+
+
         //______________________________________________________________________
         //
         //
