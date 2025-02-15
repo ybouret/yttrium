@@ -9,35 +9,36 @@
 #include "y/random/park-miller.hpp"
 
 #include "y/data/list/cxx.hpp"
+#include "y/functor.hpp"
 
 namespace Yttrium
 {
     namespace Osprey
     {
 
-        typedef Small::CoopHeavyList<size_t> IndexList; //!< raw list
-        typedef IndexList::NodeType          IndexNode;
-        typedef IndexList::ProxyType         IndexBank;
+        typedef Small::CoopHeavyList<size_t> IList; //!< raw list
+        typedef IList::NodeType              INode; //!< alias
+        typedef IList::ProxyType             IBank; //!< alias
 
 
 
-        class ISet : public Proxy<const IndexList>
+        class ISet : public Proxy<const IList>
         {
         public:
-            explicit ISet(const IndexBank &ibank) noexcept :
-            Proxy<const IndexList>(),
+            explicit ISet(const IBank &ibank) noexcept :
+            Proxy<const IList>(),
             my(ibank)
             {
             }
 
-            explicit ISet(const IndexBank &ibank,
-                          const size_t     indx) :
+            explicit ISet(const IBank &ibank,
+                          const size_t indx) :
             my(ibank)
             {
                 my << indx;
             }
 
-            explicit ISet(const IndexBank &ibank,
+            explicit ISet(const IBank     &ibank,
                           const size_t     dims,
                           const size_t     excl) :
             my(ibank)
@@ -50,13 +51,13 @@ namespace Yttrium
             }
 
             ISet(const ISet &_) :
-            Proxy<const IndexList>(),
+            Proxy<const IList>(),
             my(_.my)
             {}
 
             bool search(const size_t i) const noexcept
             {
-                for(const IndexNode *node=my.head;node;node=node->next)
+                for(const INode *node=my.head;node;node=node->next)
                 {
                     if( i == **node ) return true;
                 }
@@ -77,15 +78,14 @@ namespace Yttrium
             }
 
 
-            void shuffle(Random::Bits &ran) noexcept
-            {
+            void shuffle(Random::Bits &ran) noexcept {
                 Random::Shuffle::List(my,ran);
             }
 
             static bool AreEquivalent(const ISet &lhs, const ISet &rhs) noexcept
             {
                 if(lhs->size!=rhs->size) return false;
-                for(const IndexNode *node=rhs->head;node;node=node->next)
+                for(const INode *node=rhs->head;node;node=node->next)
                 {
                     if( !lhs.search(**node) ) return false;
                 }
@@ -100,7 +100,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(ISet);
             Y_PROXY_DECL();
 
-            IndexList my;
+            IList my;
 
         };
 
@@ -112,6 +112,7 @@ namespace Yttrium
         typedef Apex::Ortho::VCache  QVCache;
         typedef Apex::Ortho::FCache  QFCache;
 
+
         class Tribe : public Quantized, public Proxy<const QFamily>
         {
         public:
@@ -119,10 +120,10 @@ namespace Yttrium
 
 
             template <typename MATRIX>
-            explicit Tribe(const MATRIX    &data,
-                           const size_t     indx,
-                           const IndexBank &bank,
-                           const QFCache         &qfcc) :
+            explicit Tribe(const MATRIX &  data,
+                           const size_t    indx,
+                           const IBank &   bank,
+                           const QFCache & qfcc) :
             qfamily(0),
             lastVec(0),
             content(bank,indx),
@@ -143,9 +144,9 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Tribe);
 
             template <typename MATRIX>
-            explicit Tribe(const MATRIX &          data,
-                           const Tribe  &          root,
-                           const IndexNode * const node) :
+            explicit Tribe(const MATRIX &      data,
+                           const Tribe  &      root,
+                           const INode * const node) :
             qfamily(0),
             lastVec(0),
             content(root.content),
@@ -169,14 +170,14 @@ namespace Yttrium
             }
 
             static inline
-            void AddToResidue(ISet &newResidue, const IndexNode * const node)
+            void AddToResidue(ISet &newResidue, const INode * const node)
             {
                 assert(0==newResidue->size);
-                for(const IndexNode *scan=node->prev;scan;scan=scan->prev)
+                for(const INode *scan=node->prev;scan;scan=scan->prev)
                 {
                     if(!newResidue.atHead(**scan)) throw Exception("Bad index");
                 }
-                for(const IndexNode *scan=node->next;scan;scan=scan->next)
+                for(const INode *scan=node->next;scan;scan=scan->next)
                 {
                     if(!newResidue.atTail(**scan)) throw Exception("Bad index");
                 }
@@ -187,7 +188,7 @@ namespace Yttrium
             void unfold(List &tribes, const MATRIX &data) const
             {
                 // create tribe by residue promotion
-                for(const IndexNode *node=residue->head;node;node=node->next)
+                for(const INode *node=residue->head;node;node=node->next)
                 {
                     tribes.pushTail( new Tribe(data,*this,node) );
                 }
@@ -251,7 +252,7 @@ namespace Yttrium
 
             template <typename MATRIX> inline
             explicit Tribes(const MATRIX    &data,
-                            const IndexBank &bank,
+                            const IBank     &bank,
                             const QFCache   &qfcc) :
             my()
             {
@@ -340,7 +341,7 @@ using namespace Apex;
 Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
-    Osprey::IndexBank  bank;
+    Osprey::IBank      bank;
 
     { Osprey::ISet _(bank); }
 
@@ -361,7 +362,15 @@ Y_UTEST(osprey)
 
 
 
-    Matrix<int>      mu(7,9);
+    Matrix<int>      mu(4,9);
+    for(size_t i=1;i<=mu.rows;++i)
+    {
+        for(size_t j=1;j<=mu.cols;++j)
+        {
+            //mu[i][j] = ran.in<int>(-5,5);
+        }
+    }
+
     Osprey::QMetrics metrics(mu.cols);
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
