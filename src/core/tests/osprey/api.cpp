@@ -106,11 +106,14 @@ namespace Yttrium
 
         Y_PROXY_IMPL(ISet,my)
 
+
+
         typedef Apex::Ortho::Metrics QMetrics;
         typedef Apex::Ortho::Vector  QVector;
         typedef Apex::Ortho::Family  QFamily;
         typedef Apex::Ortho::VCache  QVCache;
         typedef Apex::Ortho::FCache  QFCache;
+
 
 
         class Tribe : public Quantized, public Proxy<const QFamily>
