@@ -64,6 +64,18 @@ namespace Yttrium
                 return false;
             }
 
+            size_t absorbHeadOf(ISet &residue) noexcept
+            {
+                assert(residue->size>0);
+                return ** my.pushHead(residue.my.popHead());
+            }
+
+            void absorb(ISet &residue, const size_t ires) noexcept
+            {
+                my.pushHead( residue.get(ires) );
+            }
+
+
 
             bool atTail(const size_t i)
             {
@@ -99,12 +111,58 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(ISet);
             Y_PROXY_DECL();
-
+            INode *get(const size_t ires) noexcept { return my.pop( my.fetch(ires) ); }
             IList my;
 
         };
 
         Y_PROXY_IMPL(ISet,my)
+
+        class IState
+        {
+        public:
+            //! initialize content with indx, residue with other
+            explicit IState(const IBank     &bank,
+                            const size_t     dims,
+                            const size_t     indx) :
+            content(bank,indx),
+            residue(bank,dims,indx)
+            {
+                assert(dims==content->size+residue->size);
+            }
+
+            // initialize with root and promotion of residue[ires]
+            explicit IState(const IState &root,
+                            const size_t  ires) :
+            content(root.content),
+            residue(root.residue)
+            {
+                content.absorb(residue,ires);
+            }
+
+
+            //! cleanup
+            virtual ~IState() noexcept
+            {
+            }
+
+            // try to promote next residue, return 0 if none
+            size_t promote() noexcept
+            {
+                return residue->size>0 ?  content.absorbHeadOf(residue) : 0;
+            }
+
+
+
+
+            ISet content;
+            ISet residue;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(IState);
+        };
+
+
 
 
 
