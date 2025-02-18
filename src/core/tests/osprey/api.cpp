@@ -105,6 +105,12 @@ namespace Yttrium
                 for(const INode *sub=node->next;sub;sub=sub->next) my << **sub;
             }
 
+            void removeNull(const size_t zid) noexcept
+            {
+                INode *node = my.has(zid); assert(0!=node);
+                my.cutNode(node);
+            }
+
             virtual ~Residue() noexcept
             {
             }
@@ -138,6 +144,9 @@ namespace Yttrium
 
             }
 
+
+
+
             friend std::ostream & operator<<(std::ostream &os, const Posture &self)
             {
                 os << self.content << ':' << self.residue;
@@ -162,6 +171,7 @@ namespace Yttrium
         class Tribe
         {
         public:
+            typedef CxxListOf<Tribe> List;
 
             template <typename MATRIX> inline
             explicit Tribe(const MATRIX  & data,
@@ -171,20 +181,28 @@ namespace Yttrium
             posture(bank,data.rows,indx),
             qfcache(qfcc),
             qfamily(qfcache->query()),
-            lastVec(addQFamilyWith(data[indx]))
+            lastIdx(indx),
+            lastVec(addQFamilyWith(data[lastIdx])),
+            next(0),
+            prev(0)
             {
 
             }
 
-#if 0
             template <typename MATRIX> inline
-            explicit Tribe(const MATRIX  & data,
-                           const Tribe   & root,
+            explicit Tribe(const MATRIX  &     data,
+                           const Tribe   &     root,
                            const INode * const node) :
+            posture(root.posture,node),
+            qfcache(root.qfcache),
+            qfamily(qfcache->query(*root.qfamily)),
+            lastIdx(**node),
+            lastVec(addQFamilyWith(data[lastIdx])),
+            next(0),
+            prev(0)
             {
 
             }
-#endif
 
             virtual ~Tribe() noexcept { releaseQFamily(); }
 
@@ -194,11 +212,23 @@ namespace Yttrium
                 return os;
             }
 
+            template <typename MATRIX> inline
+            void unfold(Tribe::List &tribes, const MATRIX &data)
+            {
+                for(const INode *node=posture.residue->head;node;node=node->next)
+                {
+                    tribes.pushTail( new Tribe(data,*this,node) );
+                }
+            }
+
 
             Posture        posture;
             QFCache        qfcache;
             QFamily       *qfamily;
+            const size_t   lastIdx;
             const QVector *lastVec;
+            Tribe         *next;
+            Tribe         *prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
@@ -228,7 +258,124 @@ namespace Yttrium
 
         };
 
+        typedef Functor<void,TL1(const QVector &)> Callback;
 
+
+        class Tribes : public Proxy<const Tribe::List>
+        {
+        public:
+
+
+            static void Display(const QVector &v)
+            {
+                std::cerr << "\t(+) " << v << std::endl;
+            }
+
+
+            template <typename MATRIX> inline
+            explicit Tribes(  Callback    & proc,
+                            const MATRIX  & data,
+                            const IBank   & bank,
+                            const QFCache & qfcc) :
+            my(),
+            vc(qfcc->vcache),
+            db()
+            {
+                // initialize
+                {
+                    const size_t rows = data.rows;
+                    for(size_t indx=1;indx<=rows;++indx)
+                    {
+                        (void) my.pushTail( new Tribe(data,bank,qfcc,indx) )->lastVec;
+                    }
+                }
+
+                // take care of null vector
+                {
+                    Tribe::List ok;
+                    while(my.size>0)
+                    {
+                        Tribe *tr = my.popHead();
+                        if(0==tr->lastVec)
+                        {
+                            const size_t zid = tr->lastIdx;
+                            No(zid,ok);
+                            No(zid,my);
+                            delete tr;
+                            continue;
+                        }
+                        ok.pushTail(tr);
+                    }
+                    my.swapWith(ok);
+                }
+
+                // first check
+                for(Tribe *tr=my.head;tr;tr=tr->next)
+                {
+                    const QVector *ini = tr->lastVec;
+                    if(0!=ini)
+                    {
+                        const QVector *vec = tryInsert(*ini);
+                        if(0!=vec)
+                        {
+                            proc(*vec);
+                        }
+                    }
+                    else
+                    {
+                        const size_t zid = tr->lastIdx;
+                        assert(tr->posture.content->has(zid));
+                    }
+                }
+            }
+
+            virtual ~Tribes() noexcept
+            { while(db.size>0) vc->store( Coerce(db).popTail() ); }
+
+            friend std::ostream & operator<<(std::ostream &os, const Tribes &self)
+            {
+                if(self.my.size<=0) os << "{}";
+                else
+                {
+                    os << "{ #" << self.my.size << std::endl;
+                    for(const Tribe *tr=self->head;tr;tr=tr->next)
+                    {
+                        os << *tr << std::endl;
+                    }
+                    os << "}";
+
+                }
+                return os;
+            }
+
+            const QVector *tryInsert(const QVector &rhs)
+            {
+                for(const QVector *lhs=db.head;lhs;lhs=lhs->next)
+                {
+                    if( *lhs == rhs ) return 0;
+                }
+                return Coerce(db).pushTail( vc->query(rhs) );
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Tribes);
+            Y_PROXY_DECL();
+            Tribe::List   my;
+            QVCache       vc;
+        public:
+            const QVector::List db;
+
+        private:
+            static void No(const size_t zid, Tribe::List &tribes) noexcept
+            {
+                for(Tribe *tr=tribes.head;tr;tr=tr->next)
+                {
+                    tr->posture.residue.removeNull(zid);
+                }
+            }
+        };
+
+        Y_PROXY_IMPL(Tribes,my)
     }
 
 }
@@ -250,15 +397,19 @@ Y_UTEST(osprey)
             data[i][j] = ran.in<int>(-5,5);
         }
     }
+
+    data[2].ld(0);
     std::cerr << "data=" << data << std::endl;
-    
+
     Osprey::IBank    bank;
     Osprey::QMetrics metrics(data.cols);
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
+    void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
+    Osprey::Callback proc(proc_);
+    Osprey::Tribes tribes(proc,data,bank,fcache);
+    std::cerr << tribes << std::endl;
 
-    Osprey::Tribe tribe(data,bank,fcache,2);
-    std::cerr << tribe << std::endl;
 
 }
 Y_UDONE()
@@ -430,7 +581,6 @@ namespace Yttrium
         typedef Apex::Ortho::FCache  QFCache;
 
 
-        typedef Functor<void,TL1(const QVector &)> Callback;
 
 
         class Tribe : public Quantized, public Proxy<const QFamily>
