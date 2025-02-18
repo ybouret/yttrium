@@ -228,6 +228,7 @@ namespace Yttrium
             {
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
+                    // intercept...
                     tribes.pushTail( new Tribe(data,*this,node) );
                 }
             }
