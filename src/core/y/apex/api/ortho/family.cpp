@@ -172,17 +172,17 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Family &f)
             {
 
-                os << "{<" << Metrics::QualityText(f.quality)  << ">";
+                os << "  {<" << Metrics::QualityText(f.quality)  << ">";
                 if( f->size> 0)
                 {
                     os << std::endl;
                     unsigned i = 1;
                     for(const Vector *v=f->head;v;v=v->next,++i)
                     {
-                        os << '\t' << "e" << i << "=" << *v << std::endl;
+                        os << "    " << "e" << i << "=" << *v << std::endl;
                     }
                 }
-                os << "}";
+                os << "  }";
                 return os;
             }
 

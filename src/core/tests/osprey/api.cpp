@@ -283,7 +283,7 @@ namespace Yttrium
 
         std::ostream& operator<<(std::ostream& os, const Tribe& tribe)
         {
-            os << tribe.posture << *tribe.qfamily;
+            os << tribe.posture << "->" << *tribe.qfamily;
             return os;
         }
 
@@ -315,7 +315,6 @@ namespace Yttrium
 
             Y_OSTREAM_PROTO(Tribes);
 
-#if 0
             template <typename MATRIX>
             void generate(const MATRIX& data)
             {
@@ -327,6 +326,7 @@ namespace Yttrium
                 ng.swapWith(my);
             }
 
+#if 0
             void compress() noexcept
             {
                 Tribe::List store;
@@ -429,6 +429,7 @@ Y_UTEST(osprey)
         Osprey::Tribes   tribes(mu, bank, fcache);
         std::cerr << "tribes=" << tribes << std::endl;
 
+        if(false)
         for(const Osprey::Tribe *tr=tribes->head;tr;tr=tr->next)
         {
             Osprey::Tribe::List sub;
