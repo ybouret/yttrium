@@ -454,7 +454,7 @@ Y_UTEST(osprey)
     }
 
     size_t  rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t  dims = 5; if(argc>2) rows = ASCII::Convert::To<size_t>(argv[2],"dims");
+    size_t  dims = 5; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
 
 
 
