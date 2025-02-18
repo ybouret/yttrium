@@ -16,6 +16,8 @@
 #include "y/hashing/md.hpp"
 #include "y/memory/digest.hpp"
 
+#include "y/container/matrix.hpp"
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -186,6 +188,13 @@ namespace Yttrium
 
             virtual ~Tribe() noexcept { releaseQFamily(); }
 
+            friend std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
+            {
+                os << tribe.posture << " -> " << *tribe.qfamily;
+                return os;
+            }
+
+
             Posture        posture;
             QFCache        qfcache;
             QFamily       *qfamily;
@@ -199,7 +208,9 @@ namespace Yttrium
             {
                 try
                 {
-                    return qfamily->tryIncreaseWith(a);
+                    const QVector *ans = qfamily->tryIncreaseWith(a);
+                    qfamily->withhold();
+                    return ans;
                 }
                 catch(...)
                 {
@@ -226,14 +237,28 @@ Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
 
-    Osprey::IBank      bank;
+    size_t  rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t  dims = 5; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
 
-    Osprey::Posture    posture(bank,8,3);
-    std::cerr << posture << std::endl;
+
+
+    Matrix<int>      data(rows,dims);
+    for (size_t i = 1; i <= data.rows; ++i)
     {
-        Osprey::Posture sub(posture,posture.residue->head);
-        std::cerr << sub << std::endl;
+        for (size_t j = 1; j <= data.cols; ++j)
+        {
+            data[i][j] = ran.in<int>(-5,5);
+        }
     }
+    std::cerr << "data=" << data << std::endl;
+    
+    Osprey::IBank    bank;
+    Osprey::QMetrics metrics(data.cols);
+    Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
+    Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
+
+    Osprey::Tribe tribe(data,bank,fcache,2);
+    std::cerr << tribe << std::endl;
 
 }
 Y_UDONE()
@@ -673,7 +698,6 @@ namespace Yttrium
 using namespace Yttrium;
 using namespace Apex;
 
-#include "y/container/matrix.hpp"
 
 static inline String GroupBy(const size_t n, const String &s)
 {
