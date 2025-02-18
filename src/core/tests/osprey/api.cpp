@@ -11,6 +11,11 @@
 #include "y/functor.hpp"
 
 #include "y/text/ascii/convert.hpp"
+#include "y/stream/hash/output.hpp"
+#include "y/hashing/sha1.hpp"
+#include "y/hashing/md.hpp"
+#include "y/memory/digest.hpp"
+
 
 namespace Yttrium
 {
@@ -229,15 +234,25 @@ namespace Yttrium
             template <typename MATRIX>
             void unfold(List& tribes, const MATRIX& data) const
             {
-                // create tribe by residue promotion
-                //std::cerr << "unfolding from " << posture << std::endl;
                 size_t             ires = 1;
                 for (const INode * node = posture.residue->head; node; node = node->next, ++ires)
                 {
                     tribes.pushTail(new Tribe(data, *this,ires));
-                    //std::cerr << "\tunfolding with indx=" << **node << " @" << ires << " =>" << tribes.tail->posture << std::endl;
                 }
 
+            }
+
+            bool tryReplaceFamilyBy(const Tribe &other) noexcept
+            {
+                if( ISet::AreEquivalent(posture.content,other.posture.content) )
+                {
+                    std::cerr << posture.content << " <=> " << other.posture.content << std::endl;
+                    releaseFamily();
+                    ( Coerce(qfamily) = other.qfamily)->withhold();
+                    return true;
+                }
+                else
+                    return false;
             }
 
         private:
@@ -301,6 +316,7 @@ namespace Yttrium
                 std::cerr << "\t(+) " << v << std::endl;
             }
 
+
             template <typename MATRIX> inline
             explicit Tribes(Callback      &  proc,
                             const MATRIX  &  data,
@@ -349,7 +365,8 @@ namespace Yttrium
 
             template <typename MATRIX>
             void generate(Callback     & proc,
-                          const MATRIX & data)
+                          const MATRIX & data,
+                          const bool     doComp)
             {
                 Tribe::List ng;
                 for (const Tribe* tribe = my.head; tribe; tribe = tribe->next)
@@ -358,34 +375,40 @@ namespace Yttrium
                 }
                 ng.swapWith(my);
                 collect(proc);
+                if(doComp)
+                {
+                    compress();
+                }
+
             }
 
+            //! signature of database
+            Digest signature(Hashing::Function &h) const
+            {
+                h.set();
+                HashingStream fp(h);
+                size_t        cnt = 0;
+                for(const QVector *v=db.head;v;v=v->next)
+                {
+                    cnt += v->serialize(fp);
+                }
+                h.run(&cnt,sizeof(cnt));
+                return Hashing::MD::Of(h);
+            }
 
-
-
-#if 0
             void compress() noexcept
             {
-                Tribe::List store;
-                while (my.size > 0)
+                for(Tribe *curr=my.head;curr;curr=curr->next)
                 {
-                    Tribe* lhs = my.popHead();
-                    for (const Tribe* rhs = store.head; rhs; rhs = rhs->next)
+                    for(Tribe *prev=curr->prev;prev;prev=prev->prev)
                     {
-                        if (ISet::AreEquivalent(lhs->content, rhs->content))
-                        {
-                            delete lhs;
-                            lhs = 0;
+                        if(curr->tryReplaceFamilyBy(*prev))
                             goto DONE;
-                        }
                     }
-                DONE:
-                    if (0 != lhs)
-                        store.pushTail(lhs);
+                    DONE:;
                 }
-                my.swapWith(store);
             }
-#endif
+
 
 
             virtual ~Tribes() noexcept
@@ -441,6 +464,42 @@ static inline String GroupBy(const size_t n, const String &s)
     return res;
 }
 
+
+template <typename MATRIX>
+static inline
+Digest BuildTribes(Hashing::Function & hfcn,
+                   Osprey::Callback    proc,
+                   const MATRIX    &   data,
+                   Osprey::IBank   &   bank,
+                   size_t          &   cacheSize,
+                   const bool          compress)
+{
+    Osprey::QMetrics metrics(data.cols);
+    Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
+    Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
+    {
+        Osprey::Tribes   tribes(proc, data, bank, fcache);
+
+        size_t count = 0;
+        while (tribes->size > 0)
+        {
+            count += tribes->size;
+            std::cerr << "tribes=" << tribes << std::endl;
+            std::cerr << "-------- " << tribes->size << " / " << Natural::Arrange(data.rows, tribes->head->posture.content->size) << std::endl;
+            tribes.generate(proc,data,compress);
+        }
+        std::cerr << std::endl;
+        std::cerr << "count(" << data.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(data.rows) << std::endl;
+
+        cacheSize = (*vcache)->size;
+        for(const Osprey::QVector *v=tribes.db.head;v;v=v->next) {
+            Osprey::Tribes::Display(*v);
+        }
+        std::cerr << "collect=" << tribes.db.size << "/cache=" << cacheSize <<  std::endl;
+        return tribes.signature(hfcn);
+    }
+}
+
 Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
@@ -477,34 +536,15 @@ Y_UTEST(osprey)
         }
     }
 
-    Osprey::QMetrics metrics(mu.cols);
-    Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
-    Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
-
+    Hashing::SHA1 hfcn;
     void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
-    Osprey::Callback           proc(proc_);
-    {
-        Osprey::Tribes   tribes(proc, mu, bank, fcache);
-
-        size_t count = 0;
-        while (tribes->size > 0)
-        {
-            count += tribes->size;
-            std::cerr << "tribes=" << tribes << std::endl;
-            std::cerr << "-------- " << tribes->size << " / " << Natural::Arrange(mu.rows, tribes->head->posture.content->size) << std::endl;
-            tribes.generate(proc,mu);
-        }
-        std::cerr << std::endl;
-        std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
-
-        for(const Osprey::QVector *v=tribes.db.head;v;v=v->next)
-        {
-            Osprey::Tribes::Display(*v);
-        }
-        std::cerr << "collect=" << tribes.db.size << "/cache=" << (*vcache)->size <<  std::endl;
-    }
-
-
+    Osprey::Callback proc(proc_);
+    size_t           cRaw = 0;
+    const Digest     dRaw = BuildTribes(hfcn,proc,mu,bank,cRaw,false);
+    size_t           cCmp = 0;
+    const Digest     dCmp = BuildTribes(hfcn,proc,mu,bank,cCmp,true);
+    std::cerr << "dRaw=" << dRaw << "/" << cRaw <<std::endl;
+    std::cerr << "dCmp=" << dCmp << "/" << cCmp << std::endl;
 
     for (size_t rows = 1; rows <= 16; ++rows)
     {
