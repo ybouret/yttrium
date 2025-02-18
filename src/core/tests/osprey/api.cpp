@@ -10,6 +10,8 @@
 #include "y/data/list/cxx.hpp"
 #include "y/functor.hpp"
 
+#include "y/text/ascii/convert.hpp"
+
 namespace Yttrium
 {
     namespace Osprey
@@ -231,13 +233,12 @@ namespace Yttrium
             void unfold(List& tribes, const MATRIX& data) const
             {
                 // create tribe by residue promotion
-                std::cerr << "unfolding from " << posture << std::endl;
+                //std::cerr << "unfolding from " << posture << std::endl;
                 size_t             ires = 1;
                 for (const INode * node = posture.residue->head; node; node = node->next, ++ires)
                 {
                     tribes.pushTail(new Tribe(data, *this,ires));
-                    std::cerr << "\tunfolding with indx=" << **node << " @" << ires << " =>" << tribes.tail->posture << std::endl;
-
+                    //std::cerr << "\tunfolding with indx=" << **node << " @" << ires << " =>" << tribes.tail->posture << std::endl;
                 }
 
             }
@@ -350,7 +351,8 @@ namespace Yttrium
             }
 
             template <typename MATRIX>
-            void generate(const MATRIX& data)
+            void generate(Callback     & proc,
+                          const MATRIX & data)
             {
                 Tribe::List ng;
                 for (const Tribe* tribe = my.head; tribe; tribe = tribe->next)
@@ -358,6 +360,8 @@ namespace Yttrium
                     tribe->unfold(ng, data);
                 }
                 ng.swapWith(my);
+                collect(proc);
+
             }
 
 
@@ -432,6 +436,7 @@ Y_UTEST(osprey)
     Random::ParkMiller ran;
     Osprey::IBank      bank;
 
+
     { Osprey::ISet _(bank); }
 
     for (size_t dims = 1; dims <= 5; ++dims)
@@ -448,10 +453,12 @@ Y_UTEST(osprey)
         }
     }
 
+    size_t  rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t  dims = 5; if(argc>2) rows = ASCII::Convert::To<size_t>(argv[2],"dims");
 
 
 
-    Matrix<int>      mu(4, 9);
+    Matrix<int>      mu(rows,dims);
     for (size_t i = 1; i <= mu.rows; ++i)
     {
         for (size_t j = 1; j <= mu.cols; ++j)
@@ -468,59 +475,20 @@ Y_UTEST(osprey)
     Osprey::Callback proc(proc_);
     {
         Osprey::Tribes   tribes(proc, mu, bank, fcache);
-        std::cerr << "tribes=" << tribes << std::endl;
-
-        if(false)
-        for(const Osprey::Tribe *tr=tribes->head;tr;tr=tr->next)
-        {
-            Osprey::Tribe::List sub;
-            tr->unfold(sub,mu);
-        }
-
-    }
-
-#if 0
-    {
-        Osprey::Tribes   tribes(mu, bank, fcache);
 
         size_t count = 0;
         while (tribes->size > 0)
         {
             count += tribes->size;
             std::cerr << "tribes=" << tribes << std::endl;
-            std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows, tribes->head->content->size) << std::endl;
-            tribes.generate(mu);
-        }
-        std::cerr << std::endl;
-        std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
-    }
-
-    {
-        Osprey::Tribes   tribes(mu, bank, fcache);
-
-        size_t count = 0;
-        while (tribes->size > 0)
-        {
-            tribes.compress();
-            count += tribes->size;
-            std::cerr << "tribes=" << tribes << std::endl;
-            std::cerr << tribes->size << " / " << Natural::Arrange(mu.rows, tribes->head->content->size) << std::endl;
-            tribes.generate(mu);
+            std::cerr << "-------- " << tribes->size << " / " << Natural::Arrange(mu.rows, tribes->head->posture.content->size) << std::endl;
+            tribes.generate(proc,mu);
         }
         std::cerr << std::endl;
         std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
     }
 
 
-
-
-
-    for (size_t rows = 1; rows <= 10; ++rows)
-    {
-        std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << Osprey::Tribes::MaxCount(rows) << std::endl;
-    }
-
-#endif
 
     for (size_t rows = 1; rows <= 10; ++rows)
     {
