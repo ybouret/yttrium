@@ -77,6 +77,14 @@ namespace Yttrium
                 return *this;
             }
 
+            //! insert with comparison
+            template <typename COMPARE> inline
+            HeavyList & insert(ParamType args, COMPARE &compare)
+            {
+                ListOps::InsertOrdered(*this, proxy->produce(args), compare);
+                return *this;
+            }
+
             //! return hard copy of head content and remove head
             inline Type pullHead()
             {
@@ -97,8 +105,49 @@ namespace Yttrium
                 return res;
             }
 
+            //! check if value matches
+            NodeType *has(ParamType value)
+            {
+                for(NodeType *node=this->head;node;node=node->next)
+                {
+                    if( value == **node ) return node;
+                }
+                return 0;
+            }
 
+            //! check if value matches
+            const NodeType *has(ParamType value) const
+            {
+                for(const NodeType *node=this->head;node;node=node->next)
+                {
+                    if( value == **node ) return node;
+                }
+                return 0;
+            }
 
+            // check is exact same content
+            static inline
+            bool AreEqual(const HeavyList &lhs, const HeavyList &rhs)
+            {
+                if(lhs.size!=rhs.size) return false;
+                for(const NodeType *l=lhs.head, *r=rhs.head;l;l=l->next,r=r->next)
+                {
+                    if( **l != **r ) return false;
+                }
+                return true;
+            }
+
+            //! check if list is a permuation of another one
+            static inline
+            bool ArePermuted(const HeavyList &lhs, const HeavyList &rhs)
+            {
+                if(lhs.size!=rhs.size) return false;
+                for(const NodeType *node=rhs.head;node;node=node->next)
+                {
+                    if(!lhs.has(**node)) return false;
+                }
+                return true;
+            }
 
 
 

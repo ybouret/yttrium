@@ -16,6 +16,229 @@
 #include "y/hashing/md.hpp"
 #include "y/memory/digest.hpp"
 
+using namespace Yttrium;
+using namespace Apex;
+
+namespace Yttrium
+{
+    namespace Osprey
+    {
+        typedef Small::CoopHeavyList<size_t> IList; //!< raw list
+        typedef IList::NodeType              INode; //!< alias
+        typedef IList::ProxyType             IBank; //!< alias
+
+        class IProxy : public Proxy<const IList>
+        {
+        public:
+            virtual ~IProxy() noexcept {}
+            IProxy(const IProxy &_) : my(_.my) {}
+
+        protected:
+            explicit IProxy(const IBank &bank) noexcept : my(bank){}
+            IList my;
+
+        private:
+            Y_DISABLE_ASSIGN(IProxy);
+            Y_PROXY_DECL();
+        };
+
+        Y_PROXY_IMPL(IProxy,my)
+
+        class Content : public IProxy
+        {
+        public:
+            explicit Content(const IBank &bank,
+                             const size_t indx)   :
+            IProxy(bank)
+            {
+                my << indx;
+            }
+
+            Content(const Content &_,
+                    const size_t   indx) :
+            IProxy(_)
+            {
+                *this << indx;
+            }
+
+            Content & operator<<(const size_t indx) {
+                assert( !my.has(indx) );
+                ListOps::InsertOrdered(my,my.proxy->produce(indx), Compare);
+                return *this;
+            }
+
+            virtual ~Content() noexcept
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Content);
+            static SignType Compare(const INode *lhs, const INode *rhs) noexcept
+            {
+                return Sign::Of(**lhs,**rhs);
+            }
+        };
+
+        class Residue : public IProxy
+        {
+        public:
+
+            explicit Residue(const IBank &bank,
+                             const size_t dims,
+                             const size_t excl) :
+            IProxy(bank)
+            {
+                for(size_t i=dims;i>0;--i)
+                {
+                    if(i==excl) continue;
+                    my >> i;
+                }
+            }
+
+            explicit Residue(const IBank &       bank,
+                             const INode * const node) :
+            IProxy(bank)
+            {
+                for(const INode *sub=node->prev;sub;sub=sub->prev) my >> **sub;
+                for(const INode *sub=node->next;sub;sub=sub->next) my << **sub;
+            }
+
+            virtual ~Residue() noexcept
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Residue);
+        };
+
+        class Posture
+        {
+        public:
+            explicit Posture(const IBank &bank,
+                             const size_t dims,
+                             const size_t excl) :
+            content(bank,excl),
+            residue(bank,dims,excl)
+            {
+            }
+
+            explicit Posture(const Posture &     root,
+                             const INode * const node) :
+            content(root.content,**node),
+            residue(root.residue->proxy,node)
+            {
+            }
+
+
+
+            virtual ~Posture() noexcept
+            {
+
+            }
+
+            friend std::ostream & operator<<(std::ostream &os, const Posture &self)
+            {
+                os << self.content << ':' << self.residue;
+                return os;
+            }
+
+            Content content;
+            Residue residue;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Posture);
+        };
+
+
+        typedef Apex::Ortho::Metrics QMetrics;
+        typedef Apex::Ortho::Vector  QVector;
+        typedef Apex::Ortho::Family  QFamily;
+        typedef Apex::Ortho::VCache  QVCache;
+        typedef Apex::Ortho::FCache  QFCache;
+
+
+        class Tribe
+        {
+        public:
+
+            template <typename MATRIX> inline
+            explicit Tribe(const MATRIX  & data,
+                           const IBank   & bank,
+                           const QFCache & qfcc,
+                           const size_t    indx) :
+            posture(bank,data.rows,indx),
+            qfcache(qfcc),
+            qfamily(qfcache->query()),
+            lastVec(addQFamilyWith(data[indx]))
+            {
+
+            }
+
+#if 0
+            template <typename MATRIX> inline
+            explicit Tribe(const MATRIX  & data,
+                           const Tribe   & root,
+                           const INode * const node) :
+            {
+
+            }
+#endif
+
+            virtual ~Tribe() noexcept { releaseQFamily(); }
+
+            Posture        posture;
+            QFCache        qfcache;
+            QFamily       *qfamily;
+            const QVector *lastVec;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Tribe);
+
+            template <typename T>
+            const  QVector * addQFamilyWith(const Readable<T> &a)
+            {
+                try
+                {
+                    return qfamily->tryIncreaseWith(a);
+                }
+                catch(...)
+                {
+                    releaseQFamily();
+                    throw;
+                }
+            }
+            void releaseQFamily() noexcept
+            {
+                assert(0!=qfamily);
+                if(qfamily->liberate())
+                    qfcache->store(qfamily);
+                qfamily = 0;
+            }
+
+        };
+
+
+    }
+
+}
+
+Y_UTEST(osprey)
+{
+    Random::ParkMiller ran;
+
+    Osprey::IBank      bank;
+
+    Osprey::Posture    posture(bank,8,3);
+    std::cerr << posture << std::endl;
+    {
+        Osprey::Posture sub(posture,posture.residue->head);
+        std::cerr << sub << std::endl;
+    }
+
+}
+Y_UDONE()
+
+#if 0
 
 namespace Yttrium
 {
@@ -556,3 +779,6 @@ Y_UTEST(osprey)
     Y_SIZEOF(Osprey::QFamily);
 }
 Y_UDONE()
+
+#endif
+
