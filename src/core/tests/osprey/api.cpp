@@ -1,4 +1,3 @@
-
 #include "y/apex/api/ortho/family.hpp"
 #include "y/utest/run.hpp"
 
@@ -212,7 +211,9 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-
+                Coerce(qfamily) = qfcache->query( *root.qfamily );
+                tryExpandWith(data[**(posture.content->tail)]);
+                //qfamily->withhold();
             }
 
             virtual ~Tribe() noexcept
@@ -227,18 +228,19 @@ namespace Yttrium
 
 
 
-#if 0
             template <typename MATRIX>
             void unfold(List& tribes, const MATRIX& data) const
             {
                 // create tribe by residue promotion
-                for (const INode* node = residue->head; node; node = node->next)
+                std::cerr << "unfolding from " << posture << std::endl;
+                size_t             ires = 1;
+                for (const INode * node = posture.residue->head; node; node = node->next, ++ires)
                 {
-                    tribes.pushTail(new Tribe(data, *this, node));
+                    std::cerr << "\tunfolding with indx=" << **node << " @" << ires << std::endl;
+                    tribes.pushTail(new Tribe(data, *this,ires));
                 }
 
             }
-#endif
 
         private:
             QFamily* const       qfamily;
@@ -252,6 +254,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
             Y_PROXY_DECL();
+
             void releaseFamily() noexcept
             {
                 assert(0 != qfamily);
@@ -375,7 +378,7 @@ namespace Yttrium
             }
             return os;
         }
- 
+
     }
 }
 
@@ -425,6 +428,13 @@ Y_UTEST(osprey)
     {
         Osprey::Tribes   tribes(mu, bank, fcache);
         std::cerr << "tribes=" << tribes << std::endl;
+
+        for(const Osprey::Tribe *tr=tribes->head;tr;tr=tr->next)
+        {
+            Osprey::Tribe::List sub;
+            tr->unfold(sub,mu);
+        }
+
     }
 
 #if 0
