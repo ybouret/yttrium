@@ -482,7 +482,8 @@ Y_UTEST(osprey)
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
 
     void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
-    Osprey::Callback proc(proc_);
+    Osprey::Callback           proc(proc_);
+    CxxListOf<Osprey::QVector> db;
     {
         Osprey::Tribes   tribes(proc, mu, bank, fcache);
 
@@ -496,16 +497,15 @@ Y_UTEST(osprey)
         }
         std::cerr << std::endl;
         std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
-        //std::cerr << "collect=" << tribes.db.size << std::endl;
-        for(const Osprey::QVector *v=tribes.db.head;v;v=v->next)
-        {
-            Osprey::Tribes::Display(*v);
-        }
-        std::cerr << "collect=" << tribes.db.size << std::endl;
 
+        db.swapWith(Coerce(tribes.db));
     }
 
-
+    for(const Osprey::QVector *v=db.head;v;v=v->next)
+    {
+        Osprey::Tribes::Display(*v);
+    }
+    std::cerr << "collect=" << db.size << "/cache=" << (*vcache)->size <<  std::endl;
 
     for (size_t rows = 1; rows <= 16; ++rows)
     {
