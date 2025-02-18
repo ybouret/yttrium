@@ -281,7 +281,9 @@ namespace Yttrium
             vc(qfcc->vcache),
             db()
             {
+                //--------------------------------------------------------------
                 // initialize
+                //--------------------------------------------------------------
                 {
                     const size_t rows = data.rows;
                     for(size_t indx=1;indx<=rows;++indx)
@@ -290,7 +292,9 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
                 // take care of null vector
+                //--------------------------------------------------------------
                 {
                     Tribe::List ok;
                     while(my.size>0)
@@ -309,23 +313,15 @@ namespace Yttrium
                     my.swapWith(ok);
                 }
 
-                // first check
+                //--------------------------------------------------------------
+                // first processing
+                //--------------------------------------------------------------
                 for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
-                    const QVector *ini = tr->lastVec;
-                    if(0!=ini)
-                    {
-                        const QVector *vec = tryInsert(*ini);
-                        if(0!=vec)
-                        {
-                            proc(*vec);
-                        }
-                    }
-                    else
-                    {
-                        const size_t zid = tr->lastIdx;
-                        assert(tr->posture.content->has(zid));
-                    }
+                    assert(0!=tr->lastVec);
+                    const QVector *vec = tryInsert(*(tr->lastVec));
+                    if(0!=vec)
+                        proc(*vec);
                 }
             }
 
