@@ -522,6 +522,10 @@ Y_UTEST(osprey)
 
 #endif
 
+    for (size_t rows = 1; rows <= 10; ++rows)
+    {
+        std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << Osprey::Tribes::MaxCount(rows) << std::endl;
+    }
     Y_SIZEOF(Osprey::QFamily);
 }
 Y_UDONE()
