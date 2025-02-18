@@ -1,4 +1,6 @@
 #include "y/apex/api/ortho/family.hpp"
+#include "y/apex/api/count-non-zero.hpp"
+
 #include "y/utest/run.hpp"
 
 #include "y/data/small/heavy/list/coop.hpp"
@@ -144,6 +146,10 @@ namespace Yttrium
 
             }
 
+            static bool AreEqual(const Posture &lhs, const Posture &rhs) noexcept
+            {
+                return IList::AreEqual(*lhs.content,*rhs.content) && IList::AreEqual(*lhs.residue,*rhs.residue);
+            }
 
 
 
@@ -182,7 +188,7 @@ namespace Yttrium
             qfcache(qfcc),
             qfamily(qfcache->query()),
             lastIdx(indx),
-            lastVec(addQFamilyWith(data[lastIdx])),
+            lastVec(addWith(data[lastIdx])),
             next(0),
             prev(0)
             {
@@ -197,14 +203,19 @@ namespace Yttrium
             qfcache(root.qfcache),
             qfamily(qfcache->query(*root.qfamily)),
             lastIdx(**node),
-            lastVec(addQFamilyWith(data[lastIdx])),
+            lastVec(addWith(data[lastIdx])),
             next(0),
             prev(0)
             {
-
+                if(0==lastVec)
+                {
+                    std::cerr << "root=" << root << std::endl;
+                    std::cerr << std::endl << " Unfolding Dependent Vector!!" << std::endl;
+                    exit(0);
+                }
             }
 
-            virtual ~Tribe() noexcept { releaseQFamily(); }
+            virtual ~Tribe() noexcept { destroy(); }
 
             friend std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
             {
@@ -234,7 +245,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
 
             template <typename T>
-            const  QVector * addQFamilyWith(const Readable<T> &a)
+            const  QVector * addWith(const Readable<T> &a)
             {
                 try
                 {
@@ -244,11 +255,12 @@ namespace Yttrium
                 }
                 catch(...)
                 {
-                    releaseQFamily();
+                    destroy();
                     throw;
                 }
             }
-            void releaseQFamily() noexcept
+
+            void destroy() noexcept
             {
                 assert(0!=qfamily);
                 if(qfamily->liberate())
@@ -278,7 +290,7 @@ namespace Yttrium
 
 
             template <typename MATRIX> inline
-            explicit Tribes(  Callback    & proc,
+            explicit Tribes(Callback      & proc,
                             const MATRIX  & data,
                             const IBank   & bank,
                             const QFCache & qfcc) :
@@ -333,6 +345,7 @@ namespace Yttrium
             virtual ~Tribes() noexcept
             { while(db.size>0) vc->store( Coerce(db).popTail() ); }
 
+
             friend std::ostream & operator<<(std::ostream &os, const Tribes &self)
             {
                 if(self.my.size<=0) os << "{}";
@@ -349,14 +362,31 @@ namespace Yttrium
                 return os;
             }
 
-            const QVector *tryInsert(const QVector &rhs)
+
+            template <typename MATRIX> inline
+            void generate(Callback &     proc,
+                          const MATRIX & data)
             {
-                for(const QVector *lhs=db.head;lhs;lhs=lhs->next)
+                // create new generation
                 {
-                    if( *lhs == rhs ) return 0;
+                    Tribe::List ng;
+                    for(Tribe *tr=my.head;tr;tr=tr->next)
+                    {
+                        tr->unfold(ng,data);
+                    }
+                    my.swapWith(ng);
                 }
-                return Coerce(db).pushTail( vc->query(rhs) );
+
+                // check something happened
+                for(Tribe *tr=my.head;tr;tr=tr->next)
+                {
+                    const QVector * const qv = tr->lastVec;
+
+                }
+
+
             }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribes);
@@ -367,12 +397,24 @@ namespace Yttrium
             const QVector::List db;
 
         private:
+
+            //! remove zid from residue of tribes
             static void No(const size_t zid, Tribe::List &tribes) noexcept
             {
                 for(Tribe *tr=tribes.head;tr;tr=tr->next)
                 {
                     tr->posture.residue.removeNull(zid);
                 }
+            }
+
+            //! try insert vector in database
+            const QVector *tryInsert(const QVector &rhs)
+            {
+                for(const QVector *lhs=db.head;lhs;lhs=lhs->next)
+                {
+                    if( *lhs == rhs ) return 0;
+                }
+                return Coerce(db).pushTail( vc->query(rhs) );
             }
         };
 
@@ -385,9 +427,8 @@ Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
 
-    size_t  rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t  dims = 5; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
-
+    size_t  rows = 5; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t  dims = 6; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
 
 
     Matrix<int>      data(rows,dims);
@@ -399,7 +440,8 @@ Y_UTEST(osprey)
         }
     }
 
-    data[2].ld(0);
+    //data[2].ld(0);
+    data[4].ld(0);
     std::cerr << "data=" << data << std::endl;
 
     Osprey::IBank    bank;
@@ -408,8 +450,17 @@ Y_UTEST(osprey)
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
     void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
     Osprey::Callback proc(proc_);
-    Osprey::Tribes tribes(proc,data,bank,fcache);
-    std::cerr << tribes << std::endl;
+    Osprey::Tribes   tribes(proc,data,bank,fcache);
+
+    size_t count = 0;
+    while(tribes->size)
+    {
+        count += tribes->size;
+        std::cerr << tribes << std::endl;
+        tribes.generate(proc,data);
+    }
+    std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
+
 
 
     for(size_t n=1;n<=16;++n)
