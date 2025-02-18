@@ -123,8 +123,8 @@ namespace Yttrium
         public:
             //! initialize content with indx, residue with other
             explicit Posture(const IBank& bank,
-                            const size_t dims,
-                            const size_t indx) :
+                             const size_t dims,
+                             const size_t indx) :
             content(bank, indx),
             residue(bank, dims, indx)
             {
@@ -132,12 +132,12 @@ namespace Yttrium
             }
 
             // initialize with root and promotion of residue[ires]
-            explicit Posture(const Posture& root,
-                            const size_t  ires) :
+            explicit Posture(const Posture & root,
+                             const size_t    ires) :
             content(root.content),
             residue(root.residue)
             {
-                content.absorb(residue, ires);
+                content.absorb(residue,ires);
             }
 
 
@@ -213,7 +213,6 @@ namespace Yttrium
             {
                 Coerce(qfamily) = qfcache->query( *root.qfamily );
                 tryExpandWith(data[**(posture.content->tail)]);
-                //qfamily->withhold();
             }
 
             virtual ~Tribe() noexcept
@@ -236,8 +235,9 @@ namespace Yttrium
                 size_t             ires = 1;
                 for (const INode * node = posture.residue->head; node; node = node->next, ++ires)
                 {
-                    std::cerr << "\tunfolding with indx=" << **node << " @" << ires << std::endl;
                     tribes.pushTail(new Tribe(data, *this,ires));
+                    std::cerr << "\tunfolding with indx=" << **node << " @" << ires << " =>" << tribes.tail->posture << std::endl;
+
                 }
 
             }
