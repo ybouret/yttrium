@@ -62,7 +62,7 @@ namespace Yttrium
         //
         //! setup with a valid pointer, increasing refcount
         //______________________________________________________________________
-        inline          ArcPtr(Type *ptr) noexcept : Core::ArcPtr(), SelfType(ptr)
+        inline ArcPtr(Type *ptr) noexcept : Core::ArcPtr(), SelfType(ptr)
         {
             NoNull(handle);
             assert(0!=handle);

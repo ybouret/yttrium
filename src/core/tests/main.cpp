@@ -142,6 +142,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(ptr_arc);
     Y_UTEST(ptr_light_string);
     Y_UTEST(ptr_bare);
+    Y_UTEST(ptr_ash);
 
     Y_UTEST(io_char);
     Y_UTEST(io_buffers);

@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family :  public Quantized, public Metrics, public Proxy<const Vector::List>
+            class Family :  public Object,  public Counted, public Metrics, public Proxy<const Vector::List>
             {
             public:
                 //______________________________________________________________
@@ -170,7 +170,6 @@ namespace Yttrium
 
             public:
                 Family *next;    //!< for cache
-
             };
 
             typedef ArcPtr<Family::Cache> FCache;

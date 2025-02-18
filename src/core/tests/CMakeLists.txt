@@ -206,6 +206,7 @@ add_test(ptr:auto         test-core ptr_auto)
 add_test(ptr:arc          test-core ptr_arc)
 add_test(ptr:light-string test-core ptr_light_string)
 add_test(ptr:bare         test-core ptr_bare)
+add_test(ptr:ash          test-core ptr_ash)
 
 #io
 add_test(io:char        test-core io_char)
