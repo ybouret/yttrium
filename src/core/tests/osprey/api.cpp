@@ -225,10 +225,7 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Tribe);
 
 
-
-
-
-
+            
             template <typename MATRIX>
             void unfold(List& tribes, const MATRIX& data) const
             {
@@ -346,7 +343,7 @@ namespace Yttrium
                     const QVector * const rhs = tribe->lastVec;
                     if(0==rhs) continue;
                     if(alreadyHas(rhs)) continue;
-                    proc(*db.pushTail( vc->query(*rhs) ));
+                    proc(* Coerce(db).pushTail( vc->query(*rhs) ));
                 }
             }
 
@@ -361,8 +358,8 @@ namespace Yttrium
                 }
                 ng.swapWith(my);
                 collect(proc);
-
             }
+
 
 
 
@@ -393,15 +390,16 @@ namespace Yttrium
 
             virtual ~Tribes() noexcept
             {
-                while(db.size>0) vc->store(db.popTail());
+                while(db.size>0) vc->store(Coerce(db).popTail());
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribes);
             Y_PROXY_DECL();
             Tribe::List   my;
-            QVector::List db;
             QVCache       vc;
+        public:
+            const QVector::List db;
         };
 
         Y_PROXY_IMPL(Tribes, my)
@@ -430,6 +428,18 @@ using namespace Yttrium;
 using namespace Apex;
 
 #include "y/container/matrix.hpp"
+
+static inline String GroupBy(const size_t n, const String &s)
+{
+    String res;
+    size_t count = 0;
+    for(size_t i=s.size();i>0;--i)
+    {
+        res >> s[i];
+        if(++count==n) { res >> ' '; count=0; }
+    }
+    return res;
+}
 
 Y_UTEST(osprey)
 {
@@ -486,13 +496,23 @@ Y_UTEST(osprey)
         }
         std::cerr << std::endl;
         std::cerr << "count(" << mu.rows << ")=" << count << " / " << Osprey::Tribes::MaxCount(mu.rows) << std::endl;
+        //std::cerr << "collect=" << tribes.db.size << std::endl;
+        for(const Osprey::QVector *v=tribes.db.head;v;v=v->next)
+        {
+            Osprey::Tribes::Display(*v);
+        }
+        std::cerr << "collect=" << tribes.db.size << std::endl;
+
     }
 
 
 
-    for (size_t rows = 1; rows <= 10; ++rows)
+    for (size_t rows = 1; rows <= 16; ++rows)
     {
-        std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << Osprey::Tribes::MaxCount(rows) << std::endl;
+        const Apex::Natural nmax = Osprey::Tribes::MaxCount(rows);
+        const String        nrep = nmax.toDec();
+        const String        ndsp = GroupBy(3,nrep);
+        std::cerr << "MaxCount(" << std::setw(2) << rows << ")=" << std::setw(20) << ndsp  << " (" << nmax->bits << " bits)" << std::endl;
     }
     Y_SIZEOF(Osprey::QFamily);
 }
