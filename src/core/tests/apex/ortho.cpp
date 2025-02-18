@@ -152,6 +152,9 @@ Y_UTEST(apex_ortho)
 
     }
 
+    Y_SIZEOF(Ortho::Vector);
+    Y_SIZEOF(Ortho::Family);
+
     
 
 }

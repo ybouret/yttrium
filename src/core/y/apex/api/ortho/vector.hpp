@@ -9,6 +9,8 @@
 #include "y/container/cxx/array.hpp"
 #include "y/data/list.hpp"
 
+#include "y/stream/output.hpp"
+
 namespace Yttrium
 {
     namespace Apex
@@ -30,7 +32,11 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Vector : public Object, public Metrics, public VectorType
+            class Vector :
+            public Object,
+            public Metrics,
+            public VectorType,
+            public Serializable
             {
             public:
                 //______________________________________________________________
@@ -82,6 +88,21 @@ namespace Yttrium
                 explicit Vector(const Metrics &); //!< setup
                 virtual ~Vector() noexcept;       //!< cleanup
                 Y_OSTREAM_PROTO(Vector);          //!< display
+
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual const char * callSign() const noexcept { return "Ortho::Vector"; }
+                virtual size_t serialize(OutputStream &fp) const
+                {
+                    const size_t sz = size();
+                    size_t res = fp.emitVBR(sz);
+                    for(size_t i=1;i<=sz;++i) res += (*this)[i].serialize(fp);
+                    return res;
+                }
 
                 //______________________________________________________________
                 //
