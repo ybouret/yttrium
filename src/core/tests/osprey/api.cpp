@@ -298,22 +298,56 @@ namespace Yttrium
                 return res;
             }
 
-            template <typename MATRIX> inline
-            explicit Tribes(const MATRIX& data,
-                            const IBank& bank,
-                            const QFCache& qfcc) :
-            my()
+            static void Display(const QVector &v)
             {
-                // initializing
-                for (size_t i = 1; i <= data.rows; ++i) {
+                std::cerr << "\t(+) " << v << std::endl;
+            }
+
+            template <typename MATRIX> inline
+            explicit Tribes(Callback      &  proc,
+                            const MATRIX  &  data,
+                            const IBank   &  bank,
+                            const QFCache &  qfcc) :
+            my(),
+            vc(qfcc->vcache)
+            {
+                // initializing: size = Arrange(n,1) = n
+                for (size_t i = 1; i <= data.rows; ++i)
                     my.pushTail(new Tribe(data, i, bank, qfcc));
-                }
 
-                // size: Arrange(n,1) = n
-
+                // collect initial
+                collect(proc);
             }
 
             Y_OSTREAM_PROTO(Tribes);
+
+
+            bool alreadyHas(const QVector * const rhs) const noexcept
+            {
+                assert(0!=rhs);
+                for(const QVector *   lhs = db.head; lhs; lhs=lhs->next)
+                {
+                    switch( QVector::Compare(*lhs,*rhs) )
+                    {
+                        case __Zero__: return true;
+                        case Negative:
+                        case Positive:
+                            break;
+                    }
+                }
+                return false;
+            }
+
+            void collect(Callback &proc)
+            {
+                for(const Tribe *tribe=my.head;tribe;tribe=tribe->next)
+                {
+                    const QVector * const rhs = tribe->lastVec;
+                    if(0==rhs) continue;
+                    if(alreadyHas(rhs)) continue;
+                    proc(*db.pushTail( vc->query(*rhs) ));
+                }
+            }
 
             template <typename MATRIX>
             void generate(const MATRIX& data)
@@ -325,6 +359,8 @@ namespace Yttrium
                 }
                 ng.swapWith(my);
             }
+
+
 
 #if 0
             void compress() noexcept
@@ -351,13 +387,17 @@ namespace Yttrium
 #endif
 
 
-            virtual ~Tribes() noexcept {}
+            virtual ~Tribes() noexcept
+            {
+                while(db.size>0) vc->store(db.popTail());
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribes);
             Y_PROXY_DECL();
-
-            Tribe::List my;
+            Tribe::List   my;
+            QVector::List db;
+            QVCache       vc;
         };
 
         Y_PROXY_IMPL(Tribes, my)
@@ -424,9 +464,10 @@ Y_UTEST(osprey)
     Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
 
-
+    void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
+    Osprey::Callback proc(proc_);
     {
-        Osprey::Tribes   tribes(mu, bank, fcache);
+        Osprey::Tribes   tribes(proc, mu, bank, fcache);
         std::cerr << "tribes=" << tribes << std::endl;
 
         if(false)
