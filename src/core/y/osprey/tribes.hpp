@@ -32,7 +32,7 @@ namespace Yttrium
             vc(qfcc->vcache),
             db()
             {
-                Y_XML_SECTION_OPT(xml, "Osprey::Tribes","data[" << data.rows << "][" << data.cols << "]");
+                Y_XML_SECTION_OPT(xml, "Osprey::Tribes","data[" << data.rows << "][" << data.cols << "] dimensions=" << vc->dimensions);
                 //--------------------------------------------------------------
                 // initialize all vectors
                 //--------------------------------------------------------------
@@ -54,7 +54,6 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 noReplica(xml,proc);
 
-                Y_XML_COMMENT(xml, "#dim = " << vc->dimensions);
                 Y_XML_COMMENT(xml, "#vec = " << my.size);
             }
 
