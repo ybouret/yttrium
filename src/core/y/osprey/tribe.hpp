@@ -56,12 +56,13 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-                if(0==lastVec)
+                while(0==lastVec)
                 {
-                    std::cerr << "root=" << root << std::endl;
-                    std::cerr << std::endl << " Unfolding Dependent Vector!!" << std::endl;
+                    std::cerr << "found a dependent vector from " << root.posture <<  ", now " << posture << std::endl;
                     exit(0);
                 }
+
+
             }
 
             virtual ~Tribe() noexcept; //!< cleanup
