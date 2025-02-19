@@ -46,7 +46,7 @@ namespace Yttrium
             Proxy<const IList>(),
             my(bank)
             {}
-            
+
             IList my;
 
         private:
@@ -160,25 +160,19 @@ namespace Yttrium
                              const size_t dims,
                              const size_t excl) :
             content(bank,excl),
-            residue(bank,dims,excl),
-            quantum(dims)
+            residue(bank,dims,excl)
             {
-                assert(content->size+residue->size==quantum);
             }
 
             explicit Posture(const Posture &     root,
                              const INode * const node) :
             content(root.content,**node),
-            residue(root.residue->proxy,node),
-            quantum(root.quantum)
+            residue(root.residue->proxy,node)
             {
                 assert(root.residue->owns(node));
                 assert(root.residue->size-1==residue->size);
                 assert(root.content->size+1==content->size);
-                assert(content->size+residue->size==quantum);
             }
-
-
 
 
             virtual ~Posture() noexcept
@@ -193,9 +187,7 @@ namespace Yttrium
 
             void flush() noexcept
             {
-                assert(content->size+residue->size==quantum);
                 content << residue;
-                assert(content->size+residue->size==quantum);
             }
 
             friend std::ostream & operator<<(std::ostream &os, const Posture &self)
@@ -206,7 +198,6 @@ namespace Yttrium
 
             Content      content;
             Residue      residue;
-            const size_t quantum;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Posture);
@@ -448,7 +439,7 @@ namespace Yttrium
                 for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
                     const QVector * const qv = tr->lastVec;
-
+                    
                 }
 
 
