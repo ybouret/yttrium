@@ -477,7 +477,7 @@ Y_UTEST(osprey)
     for(size_t n=1;n<=16;++n)
     {
         const Apex::Natural nmax = Osprey::Tribes::MaxCount(n);
-        std::cerr << n << " -> " << nmax << std::endl;
+        std::cerr << n << " -> " << nmax.toDec(3) << std::endl;
     }
 
 

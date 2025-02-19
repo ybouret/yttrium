@@ -64,6 +64,25 @@ namespace Yttrium
             return res;
         }
 
+        String Natural:: toDec(const unsigned grouping) const
+        {
+
+            const String s   = toDec(); if(grouping<=0) return s;
+            String       res;
+            const size_t num = s.size();
+            unsigned     cnt = 0;
+            for(size_t i=num;i>0;--i)
+            {
+                res >> s[i];
+                if(++cnt==grouping)
+                {
+                    if(i>1) res >> ' ';
+                    cnt=0;
+                }
+            }
+            return res;
+        }
+
 #if 0
         std::ostream & operator<<(std::ostream &os, const Natural &n) {
             Y_LOCK(*n);

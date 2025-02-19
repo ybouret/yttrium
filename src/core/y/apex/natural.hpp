@@ -377,6 +377,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             //__________________________________________________________________
             String    toHex() const; //!< to hexadecimal string
             String    toDec() const; //!< to decimal string
+            String    toDec(const unsigned grouping) const; //!< to decimal string, with grouping
             Natural & toHex(const char * const text, const size_t size); //!< to Hex
             Natural & toDec(const char * const text, const size_t size); //!< to Dec
 
