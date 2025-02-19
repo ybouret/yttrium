@@ -2,7 +2,7 @@
 
 #include "y/utest/run.hpp"
 
-#include "y/osprey/iproxy.hpp"
+#include "y/osprey/residue.hpp"
 
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
@@ -30,47 +30,7 @@ namespace Yttrium
     {
       
 
-        class Residue : public IProxy
-        {
-        public:
-
-            explicit Residue(const IBank &bank,
-                             const size_t dims,
-                             const size_t excl) :
-            IProxy(bank)
-            {
-                for(size_t i=dims;i>0;--i)
-                {
-                    if(i==excl) continue;
-                    my >> i;
-                }
-            }
-
-            explicit Residue(const IBank &       bank,
-                             const INode * const node) :
-            IProxy(bank)
-            {
-                for(const INode *sub=node->prev;sub;sub=sub->prev) my >> **sub;
-                for(const INode *sub=node->next;sub;sub=sub->next) my << **sub;
-            }
-
-            //! remove index of zero
-            void removeNull(const size_t zid) noexcept
-            {
-                INode *node = my.has(zid); assert(0!=node);
-                my.cutNode(node);
-            }
-
-
-
-            virtual ~Residue() noexcept
-            {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Residue);
-            friend class Content;
-        };
+      
 
 
         class Content : public IProxy
