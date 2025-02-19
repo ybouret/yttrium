@@ -1,13 +1,11 @@
-#include "y/apex/api/ortho/family.hpp"
 
 #include "y/utest/run.hpp"
 
-#include "y/osprey/posture.hpp"
+#include "y/osprey/tribe.hpp"
 
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
 
-#include "y/data/list/cxx.hpp"
 #include "y/functor.hpp"
 
 #include "y/text/ascii/convert.hpp"
@@ -33,127 +31,9 @@ namespace Yttrium
 
         
 
-        typedef Apex::Ortho::Metrics QMetrics;
-        typedef Apex::Ortho::Vector  QVector;
-        typedef Apex::Ortho::Family  QFamily;
-        typedef Apex::Ortho::VCache  QVCache;
-        typedef Apex::Ortho::FCache  QFCache;
+    
 
-
-        class Tribe : public Object
-        {
-        public:
-            typedef CxxListOf<Tribe> List;
-
-            //! building from data[indx]
-            template <typename MATRIX> inline
-            explicit Tribe(const MATRIX  & data,
-                           const IBank   & bank,
-                           const QFCache & qfcc,
-                           const size_t    indx) :
-            posture(bank,data.rows,indx),
-            qfcache(qfcc),
-            qfamily(qfcache->query()),
-            lastIdx(indx),
-            lastVec(addWith(data[lastIdx])),
-            next(0),
-            prev(0)
-            {
-
-            }
-
-            // building from node from root's residue
-            template <typename MATRIX> inline
-            explicit Tribe(const MATRIX  &     data,
-                           const Tribe   &     root,
-                           const INode * const node) :
-            posture(root.posture,node),
-            qfcache(root.qfcache),
-            qfamily(qfcache->query(*root.qfamily)),
-            lastIdx(**node),
-            lastVec(addWith(data[lastIdx])),
-            next(0),
-            prev(0)
-            {
-                if(0==lastVec)
-                {
-                    std::cerr << "root=" << root << std::endl;
-                    std::cerr << std::endl << " Unfolding Dependent Vector!!" << std::endl;
-                    exit(0);
-                }
-            }
-
-            virtual ~Tribe() noexcept { destroy(); }
-
-            friend std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
-            {
-                os << tribe.posture << " -> " << *tribe.qfamily;
-                return os;
-            }
-
-            template <typename MATRIX> inline
-            void unfold(XMLog &xml, Tribe::List &tribes, const MATRIX &data)
-            {
-                assert(0!=qfamily);
-
-
-                if(posture.residue->size<=0) return;
-
-                const Ortho::Quality q = qfamily->quality;
-                std::cerr << "Unfolding " << QMetrics::QualityText(q) << " Family" << std::endl;
-                switch(q)
-                {
-                    case Ortho::Degenerate: throw Specific::Exception("Tribe::Unfold","%s family!",QMetrics::QualityText(q));
-                    case Ortho::Generating: return; // nothing to add
-                    case Ortho::Hyperplane:
-                    case Ortho::Fragmental:
-                        break;
-                }
-
-                // generic processing
-                for(const INode *node=posture.residue->head;node;node=node->next)
-                {
-                    tribes.pushTail( new Tribe(data,*this,node) );
-                }
-            }
-
-
-            Posture        posture;
-            QFCache        qfcache;
-            QFamily       *qfamily;
-            const size_t   lastIdx;
-            const QVector *lastVec;
-            Tribe         *next;
-            Tribe         *prev;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Tribe);
-
-            template <typename T>
-            const  QVector * addWith(const Readable<T> &a)
-            {
-                try
-                {
-                    const QVector *ans = qfamily->tryIncreaseWith(a);
-                    qfamily->withhold();
-                    return ans;
-                }
-                catch(...)
-                {
-                    destroy();
-                    throw;
-                }
-            }
-
-            void destroy() noexcept
-            {
-                assert(0!=qfamily);
-                if(qfamily->liberate())
-                    qfcache->store(qfamily);
-                qfamily = 0;
-            }
-
-        };
+      
 
         typedef Functor<void,TL1(const QVector &)> Callback;
 

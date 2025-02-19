@@ -1,10 +1,7 @@
-
 //! \file
-
 
 #ifndef Y_Osprey_Posture_Included
 #define Y_Osprey_Posture_Included 1
-
 
 #include "y/osprey/content.hpp"
 #include "y/osprey/residue.hpp"
