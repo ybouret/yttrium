@@ -59,7 +59,8 @@ namespace Yttrium
                 while(0==lastVec)
                 {
                     std::cerr << "found a dependent vector from " << root.posture <<  ", now " << posture << std::endl;
-                    exit(0);
+                    //exit(0);
+                    break;
                 }
 
 
@@ -90,6 +91,7 @@ namespace Yttrium
                         break;
                 }
 
+                
                 // generic processing
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {

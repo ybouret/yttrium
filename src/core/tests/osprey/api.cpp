@@ -53,21 +53,22 @@ Y_UTEST(osprey)
         }
     }
 
-    //data[2].ld(0);
-    if(rows>=3)
+    if(false)
     {
-        data[3].ld(0);
+        if(rows>=3)
+        {
+            data[3].ld(0);
+        }
+        if(rows>=4)
+        {
+            data[4].ld(data[1]);
+            for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
+        }
+        if(rows>=5)
+        {
+            for(size_t i=data.cols;i>0;--i) data[5][i] = 2 * data[1][i] - 3 * data[2][i];
+        }
     }
-    if(rows>=4)
-    {
-        data[4].ld(data[1]);
-        for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
-    }
-    if(rows>=5)
-    {
-        for(size_t i=data.cols;i>0;--i) data[5][i] = 2 * data[1][i] - 3 * data[2][i];
-    }
-
 
     std::cerr << "data=" << data << std::endl;
 
@@ -87,7 +88,7 @@ Y_UTEST(osprey)
         tribes.generate(xml,proc,data);
     }
     std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
-
+    std::cerr << "found=" << tribes.db.size << std::endl;
 
 
     for(size_t n=1;n<=16;++n)
