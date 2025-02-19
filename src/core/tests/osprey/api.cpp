@@ -344,6 +344,9 @@ namespace Yttrium
                 for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
                     assert(0!=tr->lastVec);
+                    assert(0!=tr->qfamily);
+                    assert((*(tr->qfamily))->size>0);
+                    assert(tr->qfamily->quality != Ortho::Degenerate);
                     const QVector *vec = tryInsert(*(tr->lastVec));
                     if(0!=vec)
                         proc(*vec);
