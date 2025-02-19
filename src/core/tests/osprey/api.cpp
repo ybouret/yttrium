@@ -19,6 +19,7 @@
 #include "y/memory/digest.hpp"
 
 #include "y/container/matrix.hpp"
+#include "y/system/exception.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -228,11 +229,19 @@ namespace Yttrium
             void unfold(Tribe::List &tribes, const MATRIX &data)
             {
                 assert(0!=qfamily);
-                switch(qfamily->quality)
+                if(posture.residue->size<=0) return;
+                
+                const Ortho::Quality q = qfamily->quality;
+                std::cerr << "Unfolding " << QMetrics::QualityText(q) << " Family" << std::endl;
+                switch(q)
                 {
-                    case Ortho::Degenerate:
+                    case Ortho::Degenerate: throw Specific::Exception("Tribe::Unfold","%s family!",QMetrics::QualityText(q));
+                    case Ortho::Generating: return; // nothing to add
+                    case Ortho::Hyperplane:
+                    case Ortho::Fragmental:
                         break;
                 }
+
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
                     // intercept...
