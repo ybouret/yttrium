@@ -79,8 +79,7 @@ namespace Yttrium
                 if(posture.residue->size<=0) return;
                 const Apex::Ortho::Quality q   = qfamily->quality;
                 const char * const         qid = QMetrics::QualityText(q);
-                //Y_XML_SECTION_OPT(xml,"Tribe::Unfold",qid << " family");
-
+                
                 // process according to current quality
                 switch(q)
                 {

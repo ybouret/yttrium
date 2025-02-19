@@ -79,11 +79,20 @@ namespace Yttrium
                     my.swapWith(ng);
                 }
 
-                // check something happened
+                // check if something happened
                 for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
                     const QVector * const qv = tr->lastVec;
+                    if(!qv)
+                    {
 
+                    }
+                    else
+                    {
+                        const QVector *vec = tryInsert(*qv);
+                        if(vec) proc(*vec);
+
+                    }
                 }
 
                 Y_XML_COMMENT(xml,"#generated = " << my.size);
