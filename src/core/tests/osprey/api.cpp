@@ -36,53 +36,27 @@ namespace Yttrium
         {
         public:
             virtual ~IProxy() noexcept {}
-            IProxy(const IProxy &_) : my(_.my) {}
+            IProxy(const IProxy &_) :
+            Proxy<const IList>(),
+            my(_.my)
+            {}
 
         protected:
-            explicit IProxy(const IBank &bank) noexcept : my(bank){}
+            explicit IProxy(const IBank &bank) noexcept :
+            Proxy<const IList>(),
+            my(bank)
+            {}
+            
             IList my;
 
         private:
             Y_DISABLE_ASSIGN(IProxy);
             Y_PROXY_DECL();
+            friend class Content;
         };
 
         Y_PROXY_IMPL(IProxy,my)
 
-        class Content : public IProxy
-        {
-        public:
-            explicit Content(const IBank &bank,
-                             const size_t indx)   :
-            IProxy(bank)
-            {
-                my << indx;
-            }
-
-            Content(const Content &_,
-                    const size_t   indx) :
-            IProxy(_)
-            {
-                *this << indx;
-            }
-
-            Content & operator<<(const size_t indx) {
-                assert( !my.has(indx) );
-                ListOps::InsertOrdered(my,my.proxy->produce(indx), Compare);
-                return *this;
-            }
-
-            virtual ~Content() noexcept
-            {
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Content);
-            static SignType Compare(const INode *lhs, const INode *rhs) noexcept
-            {
-                return Sign::Of(**lhs,**rhs);
-            }
-        };
 
         class Residue : public IProxy
         {
@@ -122,6 +96,63 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Residue);
         };
 
+
+        class Content : public IProxy
+        {
+        public:
+            explicit Content(const IBank &bank,
+                             const size_t indx)   :
+            IProxy(bank)
+            {
+                my << indx;
+            }
+
+            Content(const Content &root,
+                    const size_t   indx) :
+            IProxy(root)
+            {
+                *this << indx;
+                assert(root->size+1==my.size);
+            }
+
+            Content & operator<<(const size_t indx) {
+                assert( !my.has(indx) );
+                ListOps::InsertOrdered(my,my.proxy->produce(indx), Compare);
+                return *this;
+            }
+
+            //! steal residue and renumber
+            Content & operator<<(Residue &residue)
+            {
+                while( residue->size > 0)
+                {
+                    assert( !my.has( ** (residue->head)) );
+                    my.pushTail( residue.my.popHead() );
+                }
+                const size_t dims = my.size;
+                INode *      node = my.head;
+                for(size_t i=1;i<=dims;++i,node=node->next)
+                {
+                    assert(0!=node);
+                    **node = i;
+                }
+                return *this;
+            }
+
+
+            virtual ~Content() noexcept
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Content);
+            static SignType Compare(const INode *lhs, const INode *rhs) noexcept
+            {
+                return Sign::Of(**lhs,**rhs);
+            }
+        };
+
+
         class Posture
         {
         public:
@@ -129,16 +160,24 @@ namespace Yttrium
                              const size_t dims,
                              const size_t excl) :
             content(bank,excl),
-            residue(bank,dims,excl)
+            residue(bank,dims,excl),
+            quantum(dims)
             {
+                assert(content->size+residue->size==quantum);
             }
 
             explicit Posture(const Posture &     root,
                              const INode * const node) :
             content(root.content,**node),
-            residue(root.residue->proxy,node)
+            residue(root.residue->proxy,node),
+            quantum(root.quantum)
             {
+                assert(root.residue->owns(node));
+                assert(root.residue->size-1==residue->size);
+                assert(root.content->size+1==content->size);
+                assert(content->size+residue->size==quantum);
             }
+
 
 
 
@@ -152,7 +191,12 @@ namespace Yttrium
                 return IList::AreEqual(*lhs.content,*rhs.content) && IList::AreEqual(*lhs.residue,*rhs.residue);
             }
 
-
+            void flush() noexcept
+            {
+                assert(content->size+residue->size==quantum);
+                content << residue;
+                assert(content->size+residue->size==quantum);
+            }
 
             friend std::ostream & operator<<(std::ostream &os, const Posture &self)
             {
@@ -160,8 +204,9 @@ namespace Yttrium
                 return os;
             }
 
-            Content content;
-            Residue residue;
+            Content      content;
+            Residue      residue;
+            const size_t quantum;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Posture);
@@ -229,8 +274,10 @@ namespace Yttrium
             void unfold(Tribe::List &tribes, const MATRIX &data)
             {
                 assert(0!=qfamily);
+
+
                 if(posture.residue->size<=0) return;
-                
+
                 const Ortho::Quality q = qfamily->quality;
                 std::cerr << "Unfolding " << QMetrics::QualityText(q) << " Family" << std::endl;
                 switch(q)
@@ -242,9 +289,9 @@ namespace Yttrium
                         break;
                 }
 
+                // generic processing
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
-                    // intercept...
                     tribes.pushTail( new Tribe(data,*this,node) );
                 }
             }
