@@ -1,10 +1,8 @@
 #include "y/apex/api/ortho/family.hpp"
-#include "y/apex/api/count-non-zero.hpp"
 
 #include "y/utest/run.hpp"
 
-#include "y/data/small/heavy/list/coop.hpp"
-#include "y/data/small/light/list/coop.hpp"
+#include "y/osprey/iproxy.hpp"
 
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
@@ -30,47 +28,7 @@ namespace Yttrium
 {
     namespace Osprey
     {
-        typedef Small::CoopHeavyList<size_t> IList; //!< raw list
-        typedef IList::NodeType              INode; //!< alias
-        typedef IList::ProxyType             IBank; //!< alias
-
-        class IProxy : public Proxy<const IList>
-        {
-        public:
-            virtual ~IProxy() noexcept {}
-            IProxy(const IProxy &_) :
-            Proxy<const IList>(),
-            my(_.my)
-            {}
-
-            bool tryRemove(const size_t indx) noexcept
-            {
-                for(INode *node=my.head;node;node=node->next)
-                {
-                    if( indx == **node )
-                    {
-                        my.cutNode(node);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-        protected:
-            explicit IProxy(const IBank &bank) noexcept :
-            Proxy<const IList>(),
-            my(bank)
-            {}
-
-            IList my;
-
-        private:
-            Y_DISABLE_ASSIGN(IProxy);
-            Y_PROXY_DECL();
-        };
-
-        Y_PROXY_IMPL(IProxy,my)
-
+      
 
         class Residue : public IProxy
         {
