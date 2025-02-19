@@ -392,6 +392,7 @@ namespace Yttrium
                         if(0==tr->lastVec)
                         {
                             const size_t zid = tr->lastIdx;
+                            Y_XML_COMMENT(xml, "removing null     data[" << zid << "]");
                             NoNullVec(zid,ok);
                             NoNullVec(zid,my);
                             delete tr;
@@ -420,12 +421,17 @@ namespace Yttrium
                         {
                             const size_t indx = my.head->lastIdx;
                             delete my.popHead();
+                            Y_XML_COMMENT(xml, "removing parallel data[" << indx << "]");
                             NoReplica(indx,primary);
                             NoReplica(indx,my);
                         }
                     }
                     my.swapWith(primary);
                 }
+
+                Y_XML_COMMENT(xml, "#dim = " << vc->dimensions);
+                Y_XML_COMMENT(xml, "#vec = " << my.size);
+
             }
 
             virtual ~Tribes() noexcept
@@ -454,6 +460,7 @@ namespace Yttrium
                           Callback &     proc,
                           const MATRIX & data)
             {
+                Y_XML_SECTION_OPT(xml, "Osprey::Generate", "tribes=" << my.size);
                 // create new generation
                 {
                     Tribe::List ng;
