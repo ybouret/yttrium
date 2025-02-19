@@ -1,5 +1,6 @@
 
 #include "y/osprey/tribe.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {

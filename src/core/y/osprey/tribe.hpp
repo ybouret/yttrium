@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Osprey_Tribe_Included
@@ -8,7 +7,8 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/stream/xmlog.hpp"
-#include "y/system/exception.hpp"
+
+
 namespace Yttrium
 {
     namespace Osprey
