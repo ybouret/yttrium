@@ -52,7 +52,6 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(IProxy);
             Y_PROXY_DECL();
-            friend class Content;
         };
 
         Y_PROXY_IMPL(IProxy,my)
@@ -88,12 +87,15 @@ namespace Yttrium
                 my.cutNode(node);
             }
 
+
+
             virtual ~Residue() noexcept
             {
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Residue);
+            friend class Content;
         };
 
 
@@ -126,15 +128,7 @@ namespace Yttrium
             {
                 while( residue->size > 0)
                 {
-                    assert( !my.has( ** (residue->head)) );
-                    my.pushTail( residue.my.popHead() );
-                }
-                const size_t dims = my.size;
-                INode *      node = my.head;
-                for(size_t i=1;i<=dims;++i,node=node->next)
-                {
-                    assert(0!=node);
-                    **node = i;
+                    ListOps::InsertOrdered(my,residue.my.popHead(),Compare);
                 }
                 return *this;
             }
@@ -283,6 +277,7 @@ namespace Yttrium
                 // generic processing
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
+
                     tribes.pushTail( new Tribe(data,*this,node) );
                 }
             }
@@ -354,7 +349,7 @@ namespace Yttrium
             db()
             {
                 //--------------------------------------------------------------
-                // initialize
+                // initialize all vectors
                 //--------------------------------------------------------------
                 {
                     const size_t rows = data.rows;
@@ -365,7 +360,7 @@ namespace Yttrium
                 }
 
                 //--------------------------------------------------------------
-                // take care of null vector
+                // take care of null vector(s)
                 //--------------------------------------------------------------
                 {
                     Tribe::List ok;
@@ -386,17 +381,27 @@ namespace Yttrium
                 }
 
                 //--------------------------------------------------------------
-                // first processing
+                // process and detect trivially similar vectors
                 //--------------------------------------------------------------
-                for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
-                    assert(0!=tr->lastVec);
-                    assert(0!=tr->qfamily);
-                    assert((*(tr->qfamily))->size>0);
-                    assert(tr->qfamily->quality != Ortho::Degenerate);
-                    const QVector *vec = tryInsert(*(tr->lastVec));
-                    if(0!=vec)
-                        proc(*vec);
+                    Tribe::List primary;
+                    while(my.size>0)
+                    {
+                        assert(0!=my.head->lastVec);
+                        const QVector *vec = tryInsert(*(my.head->lastVec));
+                        if(0!=vec)
+                        {
+                            proc(*vec);
+                            primary.pushTail( my.popHead() );
+                        }
+                        else
+                        {
+                            const size_t indx = my.head->lastIdx;
+                            std::cerr << "Should Remove [" << indx << "]" << std::endl;
+                            delete my.popHead();
+                        }
+                    }
+                    my.swapWith(primary);
                 }
             }
 
@@ -439,7 +444,7 @@ namespace Yttrium
                 for(Tribe *tr=my.head;tr;tr=tr->next)
                 {
                     const QVector * const qv = tr->lastVec;
-                    
+
                 }
 
 
@@ -499,7 +504,8 @@ Y_UTEST(osprey)
     }
 
     //data[2].ld(0);
-    data[4].ld(0);
+    data[3].ld(0);
+    data[4].ld(data[1]); for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
     std::cerr << "data=" << data << std::endl;
 
     Osprey::IBank    bank;
