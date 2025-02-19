@@ -21,6 +21,8 @@
 #include "y/container/matrix.hpp"
 #include "y/system/exception.hpp"
 
+#include "y/stream/xmlog.hpp"
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -40,6 +42,19 @@ namespace Yttrium
             Proxy<const IList>(),
             my(_.my)
             {}
+
+            bool tryRemove(const size_t indx) noexcept
+            {
+                for(INode *node=my.head;node;node=node->next)
+                {
+                    if( indx == **node )
+                    {
+                        my.cutNode(node);
+                        return true;
+                    }
+                }
+                return false;
+            }
 
         protected:
             explicit IProxy(const IBank &bank) noexcept :
@@ -81,6 +96,7 @@ namespace Yttrium
                 for(const INode *sub=node->next;sub;sub=sub->next) my << **sub;
             }
 
+            //! remove index of zero
             void removeNull(const size_t zid) noexcept
             {
                 INode *node = my.has(zid); assert(0!=node);
@@ -127,9 +143,7 @@ namespace Yttrium
             Content & operator<<(Residue &residue)
             {
                 while( residue->size > 0)
-                {
                     ListOps::InsertOrdered(my,residue.my.popHead(),Compare);
-                }
                 return *this;
             }
 
@@ -179,6 +193,12 @@ namespace Yttrium
                 return IList::AreEqual(*lhs.content,*rhs.content) && IList::AreEqual(*lhs.residue,*rhs.residue);
             }
 
+
+            bool tryRemove(const size_t indx) noexcept
+            {
+                return content.tryRemove(indx) || residue.tryRemove(indx);
+            }
+
             void flush() noexcept
             {
                 content << residue;
@@ -205,11 +225,12 @@ namespace Yttrium
         typedef Apex::Ortho::FCache  QFCache;
 
 
-        class Tribe
+        class Tribe : public Object
         {
         public:
             typedef CxxListOf<Tribe> List;
 
+            //! building from data[indx]
             template <typename MATRIX> inline
             explicit Tribe(const MATRIX  & data,
                            const IBank   & bank,
@@ -256,7 +277,7 @@ namespace Yttrium
             }
 
             template <typename MATRIX> inline
-            void unfold(Tribe::List &tribes, const MATRIX &data)
+            void unfold(XMLog &xml, Tribe::List &tribes, const MATRIX &data)
             {
                 assert(0!=qfamily);
 
@@ -277,7 +298,6 @@ namespace Yttrium
                 // generic processing
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
-
                     tribes.pushTail( new Tribe(data,*this,node) );
                 }
             }
@@ -340,7 +360,8 @@ namespace Yttrium
 
 
             template <typename MATRIX> inline
-            explicit Tribes(Callback      & proc,
+            explicit Tribes(XMLog         & xml,
+                            Callback      & proc,
                             const MATRIX  & data,
                             const IBank   & bank,
                             const QFCache & qfcc) :
@@ -348,6 +369,7 @@ namespace Yttrium
             vc(qfcc->vcache),
             db()
             {
+                Y_XML_SECTION_OPT(xml, "Osprey::Tribes","data[" << data.rows << "][" << data.cols << "]");
                 //--------------------------------------------------------------
                 // initialize all vectors
                 //--------------------------------------------------------------
@@ -370,8 +392,8 @@ namespace Yttrium
                         if(0==tr->lastVec)
                         {
                             const size_t zid = tr->lastIdx;
-                            No(zid,ok);
-                            No(zid,my);
+                            NoNullVec(zid,ok);
+                            NoNullVec(zid,my);
                             delete tr;
                             continue;
                         }
@@ -397,8 +419,9 @@ namespace Yttrium
                         else
                         {
                             const size_t indx = my.head->lastIdx;
-                            std::cerr << "Should Remove [" << indx << "]" << std::endl;
                             delete my.popHead();
+                            NoReplica(indx,primary);
+                            NoReplica(indx,my);
                         }
                     }
                     my.swapWith(primary);
@@ -427,7 +450,8 @@ namespace Yttrium
 
 
             template <typename MATRIX> inline
-            void generate(Callback &     proc,
+            void generate(XMLog &        xml,
+                          Callback &     proc,
                           const MATRIX & data)
             {
                 // create new generation
@@ -435,7 +459,7 @@ namespace Yttrium
                     Tribe::List ng;
                     for(Tribe *tr=my.head;tr;tr=tr->next)
                     {
-                        tr->unfold(ng,data);
+                        tr->unfold(xml,ng,data);
                     }
                     my.swapWith(ng);
                 }
@@ -462,13 +486,22 @@ namespace Yttrium
         private:
 
             //! remove zid from residue of tribes
-            static void No(const size_t zid, Tribe::List &tribes) noexcept
+            static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept
             {
                 for(Tribe *tr=tribes.head;tr;tr=tr->next)
                 {
                     tr->posture.residue.removeNull(zid);
                 }
             }
+
+            static void NoReplica(const size_t indx, Tribe::List &tribes)
+            {
+                for(Tribe *tr=tribes.head;tr;tr=tr->next)
+                {
+                    if(!tr->posture.tryRemove(indx)) throw Specific::Exception("Tribes::NoReplica","missing index %u", unsigned(indx));
+                }
+            }
+
 
             //! try insert vector in database
             const QVector *tryInsert(const QVector &rhs)
@@ -489,6 +522,9 @@ namespace Yttrium
 Y_UTEST(osprey)
 {
     Random::ParkMiller ran;
+
+    bool verbose = true;
+    XMLog xml(verbose);
 
     size_t  rows = 5; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
     size_t  dims = 6; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
@@ -514,14 +550,14 @@ Y_UTEST(osprey)
     Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
     void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
     Osprey::Callback proc(proc_);
-    Osprey::Tribes   tribes(proc,data,bank,fcache);
+    Osprey::Tribes   tribes(xml,proc,data,bank,fcache);
 
     size_t count = 0;
     while(tribes->size)
     {
         count += tribes->size;
         std::cerr << tribes << std::endl;
-        tribes.generate(proc,data);
+        tribes.generate(xml,proc,data);
     }
     std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
 
