@@ -195,6 +195,7 @@ namespace Yttrium
 
             }
 
+            // building from node from root's residue
             template <typename MATRIX> inline
             explicit Tribe(const MATRIX  &     data,
                            const Tribe   &     root,
@@ -226,6 +227,12 @@ namespace Yttrium
             template <typename MATRIX> inline
             void unfold(Tribe::List &tribes, const MATRIX &data)
             {
+                assert(0!=qfamily);
+                switch(qfamily->quality)
+                {
+                    case Ortho::Degenerate:
+                        break;
+                }
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
                     // intercept...
