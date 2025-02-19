@@ -54,8 +54,8 @@ Y_UTEST(osprey)
     }
 
     //data[2].ld(0);
-    data[3].ld(0);
-    data[4].ld(data[1]); for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
+    //data[3].ld(0);
+    //data[4].ld(data[1]); for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
     std::cerr << "data=" << data << std::endl;
 
     Osprey::IBank    bank;
