@@ -2,8 +2,7 @@
 
 #include "y/utest/run.hpp"
 
-#include "y/osprey/residue.hpp"
-#include "y/osprey/content.hpp"
+#include "y/osprey/posture.hpp"
 
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
@@ -32,62 +31,7 @@ namespace Yttrium
 
        
 
-        class Posture
-        {
-        public:
-            explicit Posture(const IBank &bank,
-                             const size_t dims,
-                             const size_t excl) :
-            content(bank,excl),
-            residue(bank,dims,excl)
-            {
-            }
-
-            explicit Posture(const Posture &     root,
-                             const INode * const node) :
-            content(root.content,**node),
-            residue(root.residue->proxy,node)
-            {
-                assert(root.residue->owns(node));
-                assert(root.residue->size-1==residue->size);
-                assert(root.content->size+1==content->size);
-            }
-
-
-            virtual ~Posture() noexcept
-            {
-
-            }
-
-            static bool AreEqual(const Posture &lhs, const Posture &rhs) noexcept
-            {
-                return IList::AreEqual(*lhs.content,*rhs.content) && IList::AreEqual(*lhs.residue,*rhs.residue);
-            }
-
-
-            bool tryRemove(const size_t indx) noexcept
-            {
-                return content.tryRemove(indx) || residue.tryRemove(indx);
-            }
-
-            void flush() noexcept
-            {
-                content << residue;
-            }
-
-            friend std::ostream & operator<<(std::ostream &os, const Posture &self)
-            {
-                os << self.content << ':' << self.residue;
-                return os;
-            }
-
-            Content      content;
-            Residue      residue;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Posture);
-        };
-
+        
 
         typedef Apex::Ortho::Metrics QMetrics;
         typedef Apex::Ortho::Vector  QVector;
