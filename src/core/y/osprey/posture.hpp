@@ -10,22 +10,44 @@ namespace Yttrium
 {
     namespace Osprey
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Content+Residue
+        //
+        //
+        //______________________________________________________________________
         class Posture
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with dimensions and first index (excluded from residue)
             explicit Posture(const IBank &bank,
                              const size_t dims,
                              const size_t excl);
 
+            //! duplicate/upgrade
             explicit Posture(const Posture &     root,
                              const INode * const node);
 
+            virtual ~Posture() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Posture);    //!< display
 
-            virtual ~Posture() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
-            Y_OSTREAM_PROTO(Posture);
-
+            //! check equal contents and equivalent residues
             static bool AreEqual(const Posture &lhs, const Posture &rhs) noexcept;
 
             //! try remove in content or residue
@@ -35,9 +57,14 @@ namespace Yttrium
             void flush() noexcept;
 
 
-
-            Content      content;
-            Residue      residue;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Content      content; //!< content (indices used to build family)
+            Residue      residue; //!< residue (indices available)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Posture);

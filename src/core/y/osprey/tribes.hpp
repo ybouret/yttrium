@@ -13,15 +13,44 @@ namespace Yttrium
 {
     namespace Osprey
     {
+        //! callback upon new vector
         typedef Functor<void,TL1(const QVector &)> Callback;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of Tribes per generation
+        //
+        //
+        //______________________________________________________________________
         class Tribes : public Proxy<const Tribe::List>
         {
         public:
-            static Apex::Natural MaxCount(const size_t n);
-            static void          Display(const QVector &);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static Apex::Natural MaxCount(const size_t n); //!< max theoretical combinations
+            static void          Display(const QVector &); //!< for default Callback
 
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //! setup
+            /**
+
+             */
+            //__________________________________________________________________
             template <typename MATRIX> inline
             explicit Tribes(XMLog         & xml,
                             Callback      & proc,
@@ -57,12 +86,19 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "#vec = " << my.size << " in " << vc->dimensions << "d");
             }
 
-            virtual ~Tribes() noexcept;
-            Y_OSTREAM_PROTO(Tribes);
+            virtual ~Tribes() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Tribes);    //!< display
 
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! create new generation
             template <typename MATRIX> inline
             void generate(XMLog &        xml,
                           Callback &     proc,
@@ -72,9 +108,9 @@ namespace Yttrium
                 // create new generation
                 {
                     Tribe::List ng;
-                    for(Tribe *tr=my.head;tr;tr=tr->next)
+                    for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                     {
-                        tr->unfold(xml,ng,data);
+                        tribe->unfold(xml,ng,data);
                     }
                     my.swapWith(ng);
                 }
@@ -105,11 +141,10 @@ namespace Yttrium
             Tribe::List   my;
             QVCache       vc;
         public:
-            const QVector::List db;
+            const QVector::List db; //!< current database of unique vectors
 
         private:
-
-            void noNullVec(XMLog &) noexcept;
+            void noNullVec(XMLog &)    noexcept;
             void noReplica(XMLog &, Callback &);
 
             //! remove zid from residue of tribes

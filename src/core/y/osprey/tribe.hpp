@@ -13,18 +13,44 @@ namespace Yttrium
 {
     namespace Osprey
     {
+        //______________________________________________________________________
+        //
+        //
+        // Aliases
+        //
+        //______________________________________________________________________
+        typedef Apex::Ortho::Metrics QMetrics;  //!< alias
+        typedef Apex::Ortho::Vector  QVector;   //!< alias
+        typedef Apex::Ortho::Family  QFamily;   //!< alias
+        typedef Apex::Ortho::VCache  QVCache;   //!< alias
+        typedef Apex::Ortho::FCache  QFCache;   //!< alias
 
-        typedef Apex::Ortho::Metrics QMetrics;
-        typedef Apex::Ortho::Vector  QVector;
-        typedef Apex::Ortho::Family  QFamily;
-        typedef Apex::Ortho::VCache  QVCache;
-        typedef Apex::Ortho::FCache  QFCache;
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! family built from posture=content+residue
+        //
+        //
+        //______________________________________________________________________
         class Tribe : public Object
         {
         public:
-            typedef CxxListOf<Tribe> List;
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxListOf<Tribe>  List;      //!< alias
+            static const char * const CallSign;  //!< "Osprey::Tribe"
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
             //! building from data[indx]
             template <typename MATRIX> inline
@@ -43,7 +69,7 @@ namespace Yttrium
 
             }
 
-            // building from node from root's residue
+            //! building from node from root's residue
             template <typename MATRIX> inline
             explicit Tribe(const MATRIX  &     data,
                            const Tribe   &     root,
@@ -67,10 +93,17 @@ namespace Yttrium
             }
 
             virtual ~Tribe() noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(Tribe);
+            Y_OSTREAM_PROTO(Tribe);    //!< display
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! unfold next generation
             template <typename MATRIX> inline
             void unfold(XMLog &xml, Tribe::List &tribes, const MATRIX &data)
             {
@@ -99,15 +132,19 @@ namespace Yttrium
                 }
             }
 
-
+            //__________________________________________________________________
+            //
+            //
             // members
-            Posture        posture;
-            QFCache        qfcache;
-            QFamily       *qfamily;
-            const size_t   lastIdx;
-            const QVector *lastVec;
-            Tribe         *next;
-            Tribe         *prev;
+            //
+            //__________________________________________________________________
+            Posture        posture; //!< current posture
+            QFCache        qfcache; //!< shared cache
+            QFamily       *qfamily; //!< current family
+            const size_t   lastIdx; //!< last index in conent
+            const QVector *lastVec; //!< last vector from matrix[lastIdx]
+            Tribe         *next;    //!< for list
+            Tribe         *prev;    //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);

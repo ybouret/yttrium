@@ -13,15 +13,36 @@ namespace Yttrium
     {
         class Residue;
 
+        
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Content of QFamily, ordered
+        //
+        //
+        //______________________________________________________________________
         class Content : public IProxy
         {
         public:
-            explicit Content(const IBank &bank,
-                             const size_t indx);
-
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Content(const IBank &  bank,
+                             const size_t   indx); //!< setup with first index
             explicit Content(const Content &root,
-                             const size_t   indx);
-            virtual ~Content() noexcept;
+                             const size_t   indx); //!< setup from root + index
+            virtual ~Content() noexcept;           //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! append new indx
             Content & operator<<(const size_t indx);

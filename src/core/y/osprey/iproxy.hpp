@@ -16,14 +16,34 @@ namespace Yttrium
         typedef IList::NodeType              INode; //!< alias
         typedef IList::ProxyType             IBank; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Proxy to IList
+        //
+        //
+        //______________________________________________________________________
         class IProxy : public Proxy<const IList>
         {
         public:
-            explicit IProxy(const IBank &) noexcept;
-            virtual ~IProxy()              noexcept;
-            IProxy(const IProxy &);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit IProxy(const IBank &) noexcept; //!< create
+            virtual ~IProxy()              noexcept; //!< cleanup
+            IProxy(const IProxy &);                  //!< duplicate
 
-            bool tryRemove(const size_t indx) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            bool tryRemove(const size_t indx) noexcept; //!< try remove index
 
         protected:
             IList my; //!< my list

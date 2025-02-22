@@ -125,7 +125,7 @@ namespace Yttrium
                 return 0;
             }
 
-            // check is exact same content
+            //! check is exact same content
             static inline
             bool AreEqual(const HeavyList &lhs, const HeavyList &rhs)
             {
@@ -137,7 +137,7 @@ namespace Yttrium
                 return true;
             }
 
-            //! check if list is a permuation of another one
+            //! check if list is a permuation of another one: same size and same items
             static inline
             bool ArePermuted(const HeavyList &lhs, const HeavyList &rhs)
             {

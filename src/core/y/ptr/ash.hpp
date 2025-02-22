@@ -13,14 +13,15 @@ namespace Yttrium
 
     namespace Core
     {
+        //! TDDO
         class AshPtr
         {
         public:
-            explicit AshPtr(const void *);
-            virtual ~AshPtr() noexcept;
+            explicit AshPtr(const void *); //!< TODO
+            virtual ~AshPtr() noexcept;    //!< TODO
 
         protected:
-            size_t * const nref;
+            size_t * const nref; //!< TODO
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AshPtr);
         };

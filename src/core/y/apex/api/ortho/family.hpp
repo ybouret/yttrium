@@ -29,24 +29,44 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxPoolOf<Family> Pool;
+                typedef CxxPoolOf<Family> Pool; //!< alias
 
+
+                //______________________________________________________________
+                //
+                //
+                //! Cache of family
+                //
+                //______________________________________________________________
                 class Cache : public Object, public Counted, public Proxy<const Pool>
                 {
                 public:
-                    explicit Cache(const VCache &) noexcept;
-                    virtual ~Cache()               noexcept;
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    explicit Cache(const VCache &) noexcept; //!< setup with same metrics
+                    virtual ~Cache()               noexcept; //!< cleanup
 
-                    Family *query();
-                    void    store(Family * const) noexcept;
-                    Family *query(const Family &);
+                    //__________________________________________________________
+                    //
+                    // Methods
+                    //__________________________________________________________
+                    Family *query();                        //!< query and empty family
+                    void    store(Family * const) noexcept; //!< store/cleanup
+                    Family *query(const Family &);          //!< query a duplicate
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Cache);
                     Y_PROXY_DECL();
                     Pool   my;
+
                 public:
-                    VCache vcache;
+                    //__________________________________________________________
+                    //
+                    // Members
+                    //__________________________________________________________
+                    VCache vcache; //!< shared vector cache
                 };
 
 
@@ -172,7 +192,7 @@ namespace Yttrium
                 Family *next;    //!< for cache
             };
 
-            typedef ArcPtr<Family::Cache> FCache;
+            typedef ArcPtr<Family::Cache> FCache; //!< alias
             
         }
     }
