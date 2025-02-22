@@ -21,17 +21,7 @@
 using namespace Yttrium;
 using namespace Apex;
 
-namespace Yttrium
-{
-    namespace Osprey
-    {
 
-
-
-       
-    }
-
-}
 
 Y_UTEST(osprey)
 {
