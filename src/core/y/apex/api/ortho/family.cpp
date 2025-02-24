@@ -219,7 +219,7 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Family &f)
             {
 
-                os << "  {<" << Metrics::QualityText(f.quality)  << ">";
+                os << "  {<" << Metrics::QualityText(f.quality)  << "> @weight=" << f.weight();
                 if( f->size> 0)
                 {
                     os << std::endl;

@@ -64,11 +64,12 @@ Y_UTEST(osprey)
 
 
     Matrix<int>      data(rows,dims);
+    const int        amplitude=5;
     for (size_t i = 1; i <= data.rows; ++i)
     {
         for (size_t j = 1; j <= data.cols; ++j)
         {
-            data[i][j] = ran.in<int>(-1,1);
+            data[i][j] = ran.in<int>(-amplitude,amplitude);
         }
     }
 

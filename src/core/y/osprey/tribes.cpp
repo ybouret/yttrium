@@ -106,9 +106,20 @@ namespace Yttrium
         Y_PROXY_IMPL(Tribes,my)
 
 
-        void Tribes:: research(XMLog &xml, Callback &proc, const unsigned flag)
+
+        static inline SignType CompareByWeight(const Tribe * const lhs,
+                                               const Tribe * const rhs) noexcept
+        {
+            return Apex::Natural::Compare(lhs->qfamily->weight(), rhs->qfamily->weight() );
+        }
+
+        void Tribes:: research(XMLog    &xml,
+                               Callback &proc,
+                               const unsigned flag)
         {
             Y_XML_COMMENT(xml,"#generated = " << my.size);
+
+            MergeSort::Call(my,CompareByWeight);
 
             {
                 const bool useBasisReplacement = 0 != (flag & Tribe::UseBasisReplacement);
@@ -144,6 +155,7 @@ namespace Yttrium
                             {
                                 assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
                                 ++replaced;
+                                std::cerr << "replace " << *(tribe->qfamily) << " by " << *(guess->qfamily) << std::endl;
                                 tribe->replaceFamilyBy(*guess);
                                 break;
                             }
