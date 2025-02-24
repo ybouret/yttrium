@@ -94,7 +94,7 @@ Y_UTEST(osprey)
     std::cerr << "data=" << data << std::endl;
     size_t v0=0, f0=0; const Digest h0 = Process(xml,data,0,v0,f0);
     size_t v1=0, f1=0; const Digest h1 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes,v1,f1);
-    size_t v2=0, f2=0; const Digest h2 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes|Osprey::Tribe::UseBasisCompression,v2,f2);
+    size_t v2=0, f2=0; const Digest h2 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes|Osprey::Tribe::UseBasisReplacement,v2,f2);
 
     std::cerr << "h0=" << h0 << " /#v=" << v0 << " /#f=" << f0 << std::endl;
     std::cerr << "h1=" << h1 << " /#v=" << v1 << " /#f=" << f1 << std::endl;

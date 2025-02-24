@@ -109,65 +109,70 @@ namespace Yttrium
         void Tribes:: research(XMLog &xml, Callback &proc, const unsigned flag)
         {
             Y_XML_COMMENT(xml,"#generated = " << my.size);
-            const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
-            size_t     compressed          = 0;
 
-            for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
             {
-                //--------------------------------------------------------------
-                //
-                // check if a new vector was created
-                //
-                //--------------------------------------------------------------
-                {
-                    const QVector * const src = tribe->lastVec;
-                    if(0!=src)
-                    {
-                        const QVector * const tgt = tryInsert(*src);
-                        if(0!=tgt) proc(*tgt);
-                    }
-                }
+                const bool useBasisReplacement = 0 != (flag & Tribe::UseBasisReplacement);
+                size_t     replaced            = 0;
 
-                //--------------------------------------------------------------
-                //
-                // check if possible basis compression
-                //
-                //--------------------------------------------------------------
-                if(useBasisCompression)
+                for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                 {
-                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    //----------------------------------------------------------
+                    //
+                    // check if a new vector was created
+                    //
+                    //----------------------------------------------------------
                     {
-                        assert(guess->qfamily!=tribe->qfamily);
-                        if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        const QVector * const src = tribe->lastVec;
+                        if(0!=src)
                         {
-                            //assert( tribe->qfamily->sameThan( *(guess->qfamily) ) );
-                            ++compressed;
-                            tribe->replaceFamilyBy(*guess);
-                            break;
+                            const QVector * const tgt = tryInsert(*src);
+                            if(0!=tgt) proc(*tgt);
                         }
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // check if possible basis compression
+                    //
+                    //----------------------------------------------------------
+                    if(useBasisReplacement)
+                    {
+                        for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                        {
+                            assert(guess->qfamily!=tribe->qfamily);
+                            if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                            {
+                                //assert( tribe->qfamily->sameThan( *(guess->qfamily) ) );
+                                ++replaced;
+                                tribe->replaceFamilyBy(*guess);
+                                break;
+                            }
 
 #if 1
-                        if( tribe->qfamily->hasSameSpanThan(*(guess->qfamily)) )
-                        {
-                            std::cerr << "---- Same Spans ----" << std::endl;
-                            std::cerr << "tribe=" << *tribe << std::endl;
-                            std::cerr << "guess=" << *guess << std::endl;
-                            throw Exception("Same family with different content!");
-                            break;
-                        }
+                            if( tribe->qfamily->hasSameSpanThan(*(guess->qfamily)) )
+                            {
+                                std::cerr << "---- Same Spans ----" << std::endl;
+                                std::cerr << "tribe=" << *tribe << std::endl;
+                                std::cerr << "guess=" << *guess << std::endl;
+                                throw Exception("Same family with different content!");
+                                break;
+                            }
 #endif
+                        }
                     }
                 }
 
-
-
-
+                if(useBasisReplacement)
+                {
+                    Y_XML_COMMENT(xml, "#replaced = " << replaced);
+                }
 
             }
 
-            if(useBasisCompression)
+
+            if ( 0 != (flag & Tribe::UseBasisCompression) )
             {
-                Y_XML_COMMENT(xml, "#compressed = " << compressed);
+                
             }
 
         }
