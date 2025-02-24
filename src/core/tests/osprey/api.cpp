@@ -24,7 +24,9 @@ namespace
     template <typename MATRIX>
     Digest Process(XMLog &xml,
                    const MATRIX & data,
-                   const unsigned flag)
+                   const unsigned flag,
+                   size_t        &vCard,
+                   size_t        &fCard)
     {
         Osprey::IBank    bank;
         Osprey::QMetrics metrics(data.cols);
@@ -40,9 +42,10 @@ namespace
             count += tribes->size;
             tribes.generate(xml,proc,data,flag);
         }
-        std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
-        std::cerr << "found=" << tribes.db.size << std::endl;
-
+        std::cerr << "count  = " << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
+        std::cerr << "found  = " << tribes.db.size << std::endl;
+        std::cerr << "vcache = " << (vCard=(*vcache)->size) << std::endl;
+        std::cerr << "fcache = " << (fCard=(*fcache)->size) << std::endl;
         Hashing::SHA1 H;
         return tribes.signature(H);
     }
@@ -89,14 +92,13 @@ Y_UTEST(osprey)
     }
 
     std::cerr << "data=" << data << std::endl;
+    size_t v0=0, f0=0; const Digest h0 = Process(xml,data,0,v0,f0);
+    size_t v1=0, f1=0; const Digest h1 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes,v1,f1);
+    size_t v2=0, f2=0; const Digest h2 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes|Osprey::Tribe::UseBasisCompression,v2,f2);
 
-    const Digest h0 = Process(xml,data,0);
-    const Digest h1 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes);
-    const Digest h2 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes|Osprey::Tribe::UseBasisCompression);
-
-    std::cerr << "h0=" << h0 << std::endl;
-    std::cerr << "h1=" << h1 << std::endl;
-    std::cerr << "h2=" << h2 << std::endl;
+    std::cerr << "h0=" << h0 << " /#v=" << v0 << " /#f=" << f0 << std::endl;
+    std::cerr << "h1=" << h1 << " /#v=" << v1 << " /#f=" << f1 << std::endl;
+    std::cerr << "h2=" << h2 << " /#v=" << v2 << " /#f=" << f2 << std::endl;
 
     for(size_t n=1;n<=16;++n)
     {
