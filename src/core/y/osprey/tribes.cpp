@@ -118,12 +118,12 @@ namespace Yttrium
                                const unsigned flag)
         {
             Y_XML_COMMENT(xml,"#generated = " << my.size);
+            size_t     replaced            = 0;
 
+            // order by weight to keep lowest complexity
             MergeSort::Call(my,CompareByWeight);
-
             {
                 const bool useBasisReplacement = 0 != (flag & Tribe::UseBasisReplacement);
-                size_t     replaced            = 0;
 
                 for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                 {
@@ -160,39 +160,56 @@ namespace Yttrium
                                 break;
                             }
 
-#if 1
-                            if( tribe->qfamily->hasSameSpanThan(*(guess->qfamily)) )
-                            {
-                                std::cerr << "---- Same Spans ----" << std::endl;
-                                std::cerr << "tribe=" << *tribe << std::endl;
-                                std::cerr << "guess=" << *guess << std::endl;
-                                throw Exception("Same family with different content!");
-                                break;
-                            }
-#endif
                         }
                     }
                 }
 
-                if(useBasisReplacement)
-                {
-                    Y_XML_COMMENT(xml, "#replaced = " << replaced);
-                }
+
             }
 
 
             if ( 0 != (flag&Tribe::UseBasisCompression) )
             {
                 Tribe::List output;
-                while(my.size>0)
+            CYCLE:
+                if(my.size>0)
                 {
-                    for(Tribe *tribe=output.head;tribe;tribe=tribe->next)
+                    Tribe * const tribe = my.head;
+                    for(Tribe *guess=output.head;guess;guess=guess->next)
                     {
-                        
+                        if(tribe->qfamily == guess->qfamily)
+                        {
+                            // same shared family is replacement only
+                            goto KEEP;
+                        }
+
+                        if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        {
+                            assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
+                            ++replaced;
+                            std::cerr << "replace " << *(tribe->qfamily) << " by " << *(guess->qfamily) << std::endl;
+                            tribe->replaceFamilyBy(*guess);
+                            goto KEEP;
+                        }
+
+
+                        if(guess->qfamily->hasSameSpanThan( *(tribe->qfamily) ) )
+                        {
+                            std::cerr << "---- Same Spans ----" << std::endl;
+                            std::cerr << "tribe=" << *tribe << std::endl;
+                            std::cerr << "guess=" << *guess << std::endl;
+                            throw Exception("Same Spans With Different families!");
+                        }
                     }
+
+                KEEP:
+                    output.pushTail( my.popHead() );
+                    goto CYCLE;
                 }
+                my.swapWith(output);
             }
 
+            Y_XML_COMMENT(xml, "#replaced = " << replaced);
         }
 
 

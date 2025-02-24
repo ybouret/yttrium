@@ -121,7 +121,6 @@ namespace Yttrium
                         tribe->unfold(newGen,data,optimizeHyperplanes);
                     }
                     my.swapWith(newGen);
-                    
                 }
 
                 //--------------------------------------------------------------
