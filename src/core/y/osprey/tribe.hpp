@@ -124,8 +124,22 @@ namespace Yttrium
                 switch(q)
                 {
                     case Apex::Ortho::Degenerate: throwDegenerateFamily(q); return; // error, should not happen
-                    case Apex::Ortho::Generating: posture.flush();          return; // nothing to add
+                    case Apex::Ortho::Generating:                           return; // nothing to add, should be specific to 1D
                     case Apex::Ortho::Hyperplane:
+                        for(const INode *node=posture.residue->head;node;node=node->next)
+                        {
+                            Tribe *tribe = new Tribe(data,*this,node);
+                            if(tribe->lastVec)
+                            {
+                                tribes.pushTail( tribe )->posture.flush();
+                                assert(Apex::Ortho::Generating==tribe->qfamily->quality);
+                                break;
+                            }
+                            else
+                                delete tribe;
+                        }
+                        break;
+
                     case Apex::Ortho::Fragmental:
                         for(const INode *node=posture.residue->head;node;node=node->next)
                             (void) tribes.pushTail( new Tribe(data,*this,node) );

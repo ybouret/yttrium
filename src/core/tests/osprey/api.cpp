@@ -30,8 +30,8 @@ Y_UTEST(osprey)
     bool verbose = true;
     XMLog xml(verbose);
 
-    size_t  rows = 5; //if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t  dims = 6; //if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
+    size_t  rows = 5; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t  dims = 6; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
 
 
     Matrix<int>      data(rows,dims);
@@ -43,9 +43,9 @@ Y_UTEST(osprey)
         }
     }
 
-    if(true)
+    if(false)
     {
-#if 0
+#if 1
         if(rows>=3)
         {
             data[3].ld(0);
@@ -76,7 +76,6 @@ Y_UTEST(osprey)
     while(tribes->size)
     {
         count += tribes->size;
-        std::cerr << tribes << std::endl;
         tribes.generate(xml,proc,data);
     }
     std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
@@ -89,6 +88,7 @@ Y_UTEST(osprey)
         std::cerr << n << " -> " << nmax.toDec(3) << std::endl;
     }
 
+    Y_SIZEOF(Osprey::Tribe);
 
 }
 Y_UDONE()

@@ -105,7 +105,12 @@ namespace Yttrium
                           const MATRIX & data)
             {
                 Y_XML_SECTION_OPT(xml, "Osprey::Generate", "tribes=" << my.size);
+
+                //--------------------------------------------------------------
+                //
                 // create new generation
+                //
+                //--------------------------------------------------------------
                 {
                     Tribe::List newGen;
                     for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
@@ -127,7 +132,6 @@ namespace Yttrium
                     {
                         const QVector *vec = tryInsert(*qv);
                         if(vec) proc(*vec);
-
                     }
                 }
 
