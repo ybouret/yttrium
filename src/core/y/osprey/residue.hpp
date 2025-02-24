@@ -39,6 +39,8 @@ namespace Yttrium
             explicit Residue(const IBank &       bank,
                              const INode * const node);
 
+            Residue(const Residue &); //!< duplicate
+            
             //! cleanup
             virtual ~Residue() noexcept;
 
@@ -54,7 +56,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Residue);
+            Y_DISABLE_ASSIGN(Residue);
             friend class Content;
         };
     }

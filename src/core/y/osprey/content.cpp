@@ -13,6 +13,12 @@ namespace Yttrium
             my << indx;
         }
 
+        Content:: Content(const Content &_) :
+        IProxy(_)
+        {
+        }
+        
+
         Content:: Content(const Content &root,
                          const size_t   indx) :
         IProxy(root)

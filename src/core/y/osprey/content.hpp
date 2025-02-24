@@ -35,6 +35,7 @@ namespace Yttrium
                              const size_t   indx); //!< setup with first index
             explicit Content(const Content &root,
                              const size_t   indx); //!< setup from root + index
+            Content(const Content &);              //!< duplicate
             virtual ~Content() noexcept;           //!< cleanup
 
             //__________________________________________________________________
@@ -52,7 +53,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Content);
+            Y_DISABLE_ASSIGN(Content);
             static SignType Compare(const INode *lhs, const INode *rhs) noexcept;
         };
 

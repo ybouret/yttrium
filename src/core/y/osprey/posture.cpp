@@ -23,6 +23,13 @@ namespace Yttrium
             assert(root.content->size+1==content->size);
         }
 
+        Posture:: Posture(const Posture &root) :
+        content(root.content),
+        residue(root.residue)
+        {
+
+        }
+
         Posture:: ~Posture() noexcept
         {
 

@@ -103,9 +103,14 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            //__________________________________________________________________
+            //
+            //
             //! unfold next generation
+            //
+            //__________________________________________________________________
             template <typename MATRIX> inline
-            void unfold(XMLog &xml, Tribe::List &tribes, const MATRIX &data)
+            void unfold(Tribe::List &tribes, const MATRIX &data)
             {
                 assert(0!=qfamily);
 

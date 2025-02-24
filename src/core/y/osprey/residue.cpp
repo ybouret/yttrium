@@ -5,8 +5,8 @@ namespace Yttrium
     namespace Osprey
     {
         Residue:: Residue(const IBank &bank,
-                         const size_t dims,
-                         const size_t excl) :
+                          const size_t dims,
+                          const size_t excl) :
         IProxy(bank)
         {
             for(size_t i=dims;i>0;--i)
@@ -15,6 +15,12 @@ namespace Yttrium
                 my >> i;
             }
         }
+
+        Residue:: Residue(const Residue &_) :
+        IProxy(_)
+        {
+        }
+
 
         Residue:: Residue(const IBank &       bank,
                           const INode * const node) :

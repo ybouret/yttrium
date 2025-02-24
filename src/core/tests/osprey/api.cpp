@@ -30,8 +30,8 @@ Y_UTEST(osprey)
     bool verbose = true;
     XMLog xml(verbose);
 
-    size_t  rows = 5; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t  dims = 6; if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
+    size_t  rows = 5; //if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t  dims = 6; //if(argc>2) dims = ASCII::Convert::To<size_t>(argv[2],"dims");
 
 
     Matrix<int>      data(rows,dims);
@@ -43,7 +43,7 @@ Y_UTEST(osprey)
         }
     }
 
-    if(false)
+    if(true)
     {
         if(rows>=3)
         {

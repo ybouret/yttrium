@@ -107,12 +107,12 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Osprey::Generate", "tribes=" << my.size);
                 // create new generation
                 {
-                    Tribe::List ng;
+                    Tribe::List newGen;
                     for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                     {
-                        tribe->unfold(xml,ng,data);
+                        tribe->unfold(newGen,data);
                     }
-                    my.swapWith(ng);
+                    my.swapWith(newGen);
                 }
 
                 // check if something happened

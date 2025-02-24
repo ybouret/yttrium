@@ -29,13 +29,16 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup with dimensions and first index (excluded from residue)
-            explicit Posture(const IBank &bank,
-                             const size_t dims,
-                             const size_t excl);
+            Posture(const IBank &bank,
+                    const size_t dims,
+                    const size_t excl);
 
             //! duplicate/upgrade
-            explicit Posture(const Posture &     root,
-                             const INode * const node);
+            Posture(const Posture &     root,
+                    const INode * const node);
+
+            //! duplicate
+            Posture(const Posture &);
 
             virtual ~Posture() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Posture);    //!< display
@@ -67,7 +70,7 @@ namespace Yttrium
             Residue      residue; //!< residue (indices available)
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Posture);
+            Y_DISABLE_ASSIGN(Posture);
         };
     }
 
