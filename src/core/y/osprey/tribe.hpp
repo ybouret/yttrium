@@ -82,16 +82,6 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-                if(0==lastVec)
-                {
-
-                }
-                while(0==lastVec)
-                {
-                    std::cerr << "found a dependent vector from " << root.posture << "+ " << **node << ", now " << posture << std::endl;
-                    exit(0);
-                    break;
-                }
 
             }
 
@@ -147,12 +137,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
-                    Tribe &tribe = *tribes.pushTail( new Tribe(data,*this,node) );
-                    if(0==tribe.lastVec)
-                    {
-                        const Posture dep(posture.content,**node);
-                        std::cerr << "-> dep: " << dep << std::endl;
-                    }
+                    (void) tribes.pushTail( new Tribe(data,*this,node) );
                 }
 
 
