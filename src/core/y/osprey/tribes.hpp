@@ -130,7 +130,6 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 research(xml,proc,flag);
-                Y_XML_COMMENT(xml,"#generated = " << my.size);
             }
 
 

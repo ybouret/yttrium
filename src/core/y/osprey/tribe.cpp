@@ -31,6 +31,12 @@ namespace Yttrium
             throw Specific::Exception(CallSign,"Unfolding %s family!", QVector::QualityText(q));
         }
 
+
+        void Tribe:: replaceFamilyBy(const Tribe &equivalent) noexcept
+        {
+            destroy();
+            (qfamily=equivalent.qfamily)->withhold();
+        }
     }
 
 }

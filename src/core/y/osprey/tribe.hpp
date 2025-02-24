@@ -159,6 +159,8 @@ namespace Yttrium
 
             }
 
+            void replaceFamilyBy(const Tribe &equivalent) noexcept;
+
             //__________________________________________________________________
             //
             //

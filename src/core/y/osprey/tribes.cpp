@@ -107,6 +107,7 @@ namespace Yttrium
 
         void Tribes:: research(XMLog &xml, Callback &proc, const unsigned flag)
         {
+            Y_XML_COMMENT(xml,"#generated = " << my.size);
             const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
             size_t     compressed          = 0;
 
@@ -138,23 +139,22 @@ namespace Yttrium
                         assert(guess->qfamily!=tribe->qfamily);
                         if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
+                            assert( tribe->qfamily->sameThan( *(guess->qfamily)) );
                             ++compressed;
-                            if(tribe->qfamily->liberate()) {
-                                fc->store(tribe->qfamily);
-                            }
-                            (tribe->qfamily = guess->qfamily)->withhold();
+                            tribe->replaceFamilyBy(*guess);
                             break;
+                        }
+
+                        if( tribe->qfamily->sameThan(*(guess->qfamily)) )
+                        {
+                            
                         }
                     }
                 }
 
-                {
-                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
-                    {
-                        if(guess->qfamily==tribe->qfamily) continue;
-                        std::cerr << "comparing families..." << std::endl;
-                    }
-                }
+
+
+
 
             }
 
