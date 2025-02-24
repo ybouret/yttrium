@@ -155,7 +155,7 @@ namespace Yttrium
                             {
                                 assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
                                 ++replaced;
-                                std::cerr << "replace " << *(tribe->qfamily) << " by " << *(guess->qfamily) << std::endl;
+                                Y_XMLOG(xml,"replace " << *(tribe->qfamily) << " by " << *(guess->qfamily));
                                 tribe->replaceFamilyBy(*guess);
                                 break;
                             }
@@ -187,7 +187,7 @@ namespace Yttrium
                         {
                             assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
                             ++replaced;
-                            std::cerr << "replace " << *(tribe->qfamily) << " by " << *(guess->qfamily) << std::endl;
+                            Y_XMLOG(xml,"replace " << *(tribe->qfamily) << " by " << *(guess->qfamily));
                             tribe->replaceFamilyBy(*guess);
                             goto KEEP;
                         }
