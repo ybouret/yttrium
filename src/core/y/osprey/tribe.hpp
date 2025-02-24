@@ -44,6 +44,7 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxListOf<Tribe>  List;      //!< alias
             static const char * const CallSign;  //!< "Osprey::Tribe"
+            static const unsigned     OptimizeHyperplanes = 0x01;
 
             //__________________________________________________________________
             //
@@ -103,8 +104,9 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename MATRIX> inline
-            void unfold(Tribe::List  &tribes,
-                        const MATRIX &data)
+            void unfold(Tribe::List   &tribes,
+                        const MATRIX  &data,
+                        const bool     optimizeHyperplanes)
             {
                 assert(0!=qfamily);
 
@@ -126,26 +128,32 @@ namespace Yttrium
                     case Apex::Ortho::Degenerate: throwDegenerateFamily(q); return; // error, should not happen
                     case Apex::Ortho::Generating: posture.flush();          return; // nothing to add, should be specific to 1D
                     case Apex::Ortho::Hyperplane:
-                        for(const INode *node=posture.residue->head;node;node=node->next)
+                        if(optimizeHyperplanes)
                         {
-                            Tribe *tribe = new Tribe(data,*this,node);
-                            if(tribe->lastVec)
+                            for(const INode *node=posture.residue->head;node;node=node->next)
                             {
-                                tribes.pushTail( tribe )->posture.flush();
-                                assert(Apex::Ortho::Generating==tribe->qfamily->quality);
-                                break;
+                                Tribe *tribe = new Tribe(data,*this,node);
+                                if(tribe->lastVec)
+                                {
+                                    tribes.pushTail( tribe )->posture.flush();
+                                    assert(Apex::Ortho::Generating==tribe->qfamily->quality);
+                                    break;
+                                }
+                                else
+                                    delete tribe;
                             }
-                            else
-                                delete tribe;
+                            return;
                         }
-                        break;
+                        else
+                            break;
 
                     case Apex::Ortho::Fragmental:
-                        for(const INode *node=posture.residue->head;node;node=node->next)
-                            (void) tribes.pushTail( new Tribe(data,*this,node) );
                         break;
                 }
 
+                // default growth
+                for(const INode *node=posture.residue->head;node;node=node->next)
+                    (void) tribes.pushTail( new Tribe(data,*this,node) );
 
 
             }

@@ -61,7 +61,7 @@ namespace Yttrium
             vc(qfcc->vcache),
             db()
             {
-                Y_XML_SECTION_OPT(xml, "Osprey::Tribes","data[" << data.rows << "][" << data.cols << "]" );
+                Y_XML_SECTION_OPT(xml, "Osprey::Tribes","matrix[" << data.rows << "][" << data.cols << "]" );
                 //--------------------------------------------------------------
                 // initialize all vectors
                 //--------------------------------------------------------------
@@ -102,7 +102,8 @@ namespace Yttrium
             template <typename MATRIX> inline
             void generate(XMLog &        xml,
                           Callback &     proc,
-                          const MATRIX & data)
+                          const MATRIX & data,
+                          const unsigned flag)
             {
                 Y_XML_SECTION_OPT(xml, "Osprey::Generate", "tribes=" << my.size);
 
@@ -111,11 +112,13 @@ namespace Yttrium
                 // create new generation
                 //
                 //--------------------------------------------------------------
+
                 {
+                    const bool optimizeHyperplanes = 0 != (flag & Tribe::OptimizeHyperplanes);
                     Tribe::List newGen;
                     for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                     {
-                        tribe->unfold(newGen,data);
+                        tribe->unfold(newGen,data,optimizeHyperplanes);
                     }
                     my.swapWith(newGen);
                 }

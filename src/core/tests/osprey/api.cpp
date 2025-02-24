@@ -22,7 +22,9 @@ using namespace Apex;
 namespace
 {
     template <typename MATRIX>
-    Digest Process(XMLog &xml, const MATRIX &data)
+    Digest Process(XMLog &xml,
+                   const MATRIX & data,
+                   const unsigned flag)
     {
         Osprey::IBank    bank;
         Osprey::QMetrics metrics(data.cols);
@@ -36,7 +38,7 @@ namespace
         while(tribes->size)
         {
             count += tribes->size;
-            tribes.generate(xml,proc,data);
+            tribes.generate(xml,proc,data,0);
         }
         std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
         std::cerr << "found=" << tribes.db.size << std::endl;
@@ -88,9 +90,11 @@ Y_UTEST(osprey)
 
     std::cerr << "data=" << data << std::endl;
 
-    const Digest h0 = Process(xml,data);
-    std::cerr << "h0=" << h0 << std::endl;
+    const Digest h0 = Process(xml,data,0);
+    const Digest h1 = Process(xml,data,Osprey::Tribe::OptimizeHyperplanes);
 
+    std::cerr << "h0=" << h0 << std::endl;
+    std::cerr << "h1=" << h1 << std::endl;
 
     for(size_t n=1;n<=16;++n)
     {
