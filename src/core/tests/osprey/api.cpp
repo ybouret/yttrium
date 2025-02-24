@@ -38,7 +38,7 @@ namespace
         while(tribes->size)
         {
             count += tribes->size;
-            tribes.generate(xml,proc,data,0);
+            tribes.generate(xml,proc,data,flag);
         }
         std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
         std::cerr << "found=" << tribes.db.size << std::endl;
