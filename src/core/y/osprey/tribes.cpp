@@ -135,6 +135,7 @@ namespace Yttrium
                 {
                     for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
                     {
+                        assert(guess->qfamily!=tribe->qfamily);
                         if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
                             ++compressed;

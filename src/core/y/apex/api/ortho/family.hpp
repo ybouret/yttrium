@@ -92,11 +92,11 @@ namespace Yttrium
                 void           generate(Random::Bits &ran, const size_t dim, const size_t bits);
                 void           recreate(const Family &);    //!< duplicate
                 bool           includes(const Family &);    //!< check if sub-family is included in this span
+                bool           sameThan(const Family &);    //!< check same spam 
                 const Vector * increase();                  //!< increase with latest valid workspace
                 void           clear()  noexcept;           //!< free vectors
                 void           prune()  noexcept;           //!< clear workspace
                 void           reset()  noexcept;           //!< free/trim
-
 
 
                 //______________________________________________________________

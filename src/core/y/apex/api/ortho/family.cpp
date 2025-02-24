@@ -141,13 +141,28 @@ namespace Yttrium
             
             bool Family:: includes(const Family &sub)
             {
-                //if(sub->size>qlist.size) return false;
+                if(sub->size>qlist.size) return false;
                 for(const Vector *v=sub->head;v;v=v->next)
                 {
                     if( welcomes(*v) )
                         return false; // vector not in my space
                 }
                 return true;
+            }
+
+            bool Family:: sameThan(const Family &rhs)
+            {
+                if((*this)->size!=rhs->size)
+                    return false;
+                else
+                {
+                    for(const Vector *vec=rhs->head;vec;vec=vec->next)
+                    {
+                        if( welcomes(*vec) )
+                            return false; // vector not in my space
+                    }
+                    return true;
+                }
             }
 
 
