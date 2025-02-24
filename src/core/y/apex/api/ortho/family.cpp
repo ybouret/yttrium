@@ -152,7 +152,7 @@ namespace Yttrium
 
             bool Family:: sameThan(const Family &rhs)
             {
-                if((*this)->size!=rhs->size)
+                if(qlist.size!=rhs->size)
                     return false;
                 else
                 {

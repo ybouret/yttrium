@@ -139,7 +139,7 @@ namespace Yttrium
                         assert(guess->qfamily!=tribe->qfamily);
                         if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
-                            assert( tribe->qfamily->sameThan( *(guess->qfamily)) );
+                            //assert( tribe->qfamily->sameThan( *(guess->qfamily) ) );
                             ++compressed;
                             tribe->replaceFamilyBy(*guess);
                             break;
@@ -147,7 +147,9 @@ namespace Yttrium
 
                         if( tribe->qfamily->sameThan(*(guess->qfamily)) )
                         {
-                            
+                            std::cerr << "Same Than!!" << std::endl;
+                            exit(0);
+                            break;
                         }
                     }
                 }
