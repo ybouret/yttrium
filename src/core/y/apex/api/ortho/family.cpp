@@ -150,19 +150,44 @@ namespace Yttrium
                 return true;
             }
 
-            bool Family:: sameThan(const Family &rhs)
+            
+
+            bool Family:: isAnalogousTo(const Family &sub)
             {
-                if(qlist.size!=rhs->size)
+                if(qlist.size!=sub->size)
                     return false;
                 else
                 {
-                    for(const Vector *vec=rhs->head;vec;vec=vec->next)
+
+
+                    for(const Vector *vec=sub->head;vec;vec=vec->next)
                     {
                         if( welcomes(*vec) )
                             return false; // vector not in my space
                     }
                     return true;
                 }
+            }
+
+            bool Family:: isIdenticalTo(const Family &sub)
+            {
+                if(qlist.size!=sub->size)
+                    return false;
+                else
+                {
+                    for(const Vector *lhs=qlist.head,*rhs=sub->head;lhs;lhs=lhs->next,rhs=rhs->next)
+                    {
+                        assert(0!=lhs);
+                        assert(0!=rhs);
+                        if(*lhs!=*rhs) return false;
+                    }
+                    return true;
+                }
+            }
+
+            bool Family:: hasSameSpanThan(const Family &sub)
+            {
+                return isIdenticalTo(sub) || isAnalogousTo(sub);
             }
 
 
