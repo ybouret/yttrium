@@ -141,16 +141,16 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribes);
             Y_PROXY_DECL();
-            Tribe::List   my;
-            QFCache       fc;
-            QVCache       vc;
+            Tribe::List         my; //!< current list
+            QFCache             fc; //!< shared family cache
+            QVCache             vc; //!< shared vector cache
         public:
             const QVector::List db; //!< current database of unique vectors
 
         private:
-            void noNullVec(XMLog &)    noexcept; //!< initial no null vector
-            void noReplica(XMLog &, Callback &); //!< initial no replica
-            void research(XMLog &xml, Callback &proc, const unsigned flag); //!< post new generation
+            void noNullVec(XMLog &)    noexcept;                //!< initial no null vector
+            void noReplica(XMLog &, Callback &);                //!< initial no replica
+            void research(XMLog &, Callback &, const unsigned); //!< post new generation
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;
