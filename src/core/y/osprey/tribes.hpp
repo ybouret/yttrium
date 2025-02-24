@@ -129,7 +129,10 @@ namespace Yttrium
                 // check if something happened
                 //
                 //--------------------------------------------------------------
-                research(xml,proc,flag);
+                if(my.size>0)
+                    research(xml,proc,flag);
+                else
+                    finalize();
             }
 
 
@@ -150,7 +153,8 @@ namespace Yttrium
             void noNullVec(XMLog &)    noexcept;                //!< initial no null vector
             void noReplica(XMLog &, Callback &);                //!< initial no replica
             void research(XMLog &, Callback &, const unsigned); //!< post new generation
-
+            void finalize();
+            
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;
 

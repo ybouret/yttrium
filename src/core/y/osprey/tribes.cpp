@@ -1,6 +1,7 @@
 
 #include "y/osprey/tribes.hpp"
 #include "y/system/exception.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -170,6 +171,19 @@ namespace Yttrium
             }
 
         }
+
+
+        static inline SignType QVectorCompare(const QVector * const lhs,
+                                              const QVector * const rhs) noexcept
+        {
+            return QVector:: Compare(*lhs,*rhs);
+        }
+
+        void Tribes:: finalize()
+        {
+            MergeSort::Call(Coerce(db),QVectorCompare);
+        }
+
     }
 
 }
