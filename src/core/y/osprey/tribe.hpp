@@ -127,18 +127,11 @@ namespace Yttrium
                     case Apex::Ortho::Generating: posture.flush();          return; // nothing to add
                     case Apex::Ortho::Hyperplane:
                     case Apex::Ortho::Fragmental:
+                        for(const INode *node=posture.residue->head;node;node=node->next)
+                            (void) tribes.pushTail( new Tribe(data,*this,node) );
                         break;
                 }
 
-                //--------------------------------------------------------------
-                //
-                // generic processing
-                //
-                //--------------------------------------------------------------
-                for(const INode *node=posture.residue->head;node;node=node->next)
-                {
-                    (void) tribes.pushTail( new Tribe(data,*this,node) );
-                }
 
 
             }
