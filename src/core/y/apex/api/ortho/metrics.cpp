@@ -13,7 +13,7 @@ namespace Yttrium
                 switch(quality)
                 {
                     case Degenerate: return "Degenerate";
-                    case Generating: return "Generating";
+                    case Foundation: return "Foundation";
                     case Hyperplane: return "Hyperplane";
                     default: break;
                 }
@@ -44,7 +44,7 @@ namespace Yttrium
 
                 assert(n<=dimensions);
                 if(n>=dimensions)
-                    return Generating;
+                    return Foundation;
                 
                 if(n>=concluding)
                     return Hyperplane;

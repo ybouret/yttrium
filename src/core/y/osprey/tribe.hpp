@@ -127,7 +127,7 @@ namespace Yttrium
                 switch(q)
                 {
                     case Apex::Ortho::Degenerate: throwDegenerateFamily(q); return; // error, should not happen
-                    case Apex::Ortho::Generating: posture.flush();          return; // nothing to add, should be specific to 1D
+                    case Apex::Ortho::Foundation: posture.flush();          return; // nothing to add, should be specific to 1D
                     case Apex::Ortho::Hyperplane:
                         if(optimizeHyperplanes)
                         {
@@ -137,7 +137,7 @@ namespace Yttrium
                                 if(tribe->lastVec)
                                 {
                                     tribes.pushTail( tribe )->posture.flush();
-                                    assert(Apex::Ortho::Generating==tribe->qfamily->quality);
+                                    assert(Apex::Ortho::Foundation==tribe->qfamily->quality);
                                     break;
                                 }
                                 else

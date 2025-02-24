@@ -141,7 +141,7 @@ namespace Yttrium
             
             bool Family:: includes(const Family &sub)
             {
-                if(sub->size>qlist.size) return false;
+                //if(sub->size>qlist.size) return false;
                 for(const Vector *v=sub->head;v;v=v->next)
                 {
                     if( welcomes(*v) )

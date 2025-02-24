@@ -78,7 +78,7 @@ namespace Yttrium
                 //______________________________________________________________
                 explicit Family(const VCache &) noexcept; //!< setup from metrics
                 virtual ~Family() noexcept;               //!< cleanup
-                Family(const Family &);                   //!< duplicate
+                Family(const Family  &);                  //!< duplicate
                 Y_OSTREAM_PROTO(Family);                  //!< display
 
                 //______________________________________________________________
@@ -91,11 +91,12 @@ namespace Yttrium
                 //! generate a random family
                 void           generate(Random::Bits &ran, const size_t dim, const size_t bits);
                 void           recreate(const Family &);    //!< duplicate
-                bool           includes(const Family &sub); //!< check
+                bool           includes(const Family &);    //!< check if sub-family is included in this span
                 const Vector * increase();                  //!< increase with latest valid workspace
                 void           clear()  noexcept;           //!< free vectors
                 void           prune()  noexcept;           //!< clear workspace
                 void           reset()  noexcept;           //!< free/trim
+
 
 
                 //______________________________________________________________

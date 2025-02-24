@@ -63,7 +63,7 @@ Y_UTEST(apex_ortho)
                     Y_ASSERT(F.includes(sub));
                     Y_ASSERT(!sub.includes(F));
                 }
-            } while(F.quality != Ortho::Generating);
+            } while(F.quality != Ortho::Foundation);
             sub.reset();
             std::cerr << "#vcache=" << (*vcache)->size << std::endl;
         }
