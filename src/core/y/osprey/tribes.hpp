@@ -58,7 +58,8 @@ namespace Yttrium
                             const IBank   & bank,
                             const QFCache & qfcc) :
             my(),
-            vc(qfcc->vcache),
+            fc(qfcc),
+            vc(fc->vcache),
             db()
             {
                 Y_XML_SECTION_OPT(xml, "Osprey::Tribes","matrix[" << data.rows << "][" << data.cols << "]" );
@@ -139,6 +140,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Tribes);
             Y_PROXY_DECL();
             Tribe::List   my;
+            QFCache       fc;
             QVCache       vc;
         public:
             const QVector::List db; //!< current database of unique vectors

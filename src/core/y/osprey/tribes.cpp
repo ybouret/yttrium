@@ -108,10 +108,15 @@ namespace Yttrium
         void Tribes:: research(XMLog &xml, Callback &proc, const unsigned flag)
         {
             const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
-            size_t compressed = 0;
+            size_t     compressed          = 0;
+
             for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
             {
+                //--------------------------------------------------------------
+                //
                 // check if a new vector was created
+                //
+                //--------------------------------------------------------------
                 {
                     const QVector * const src = tribe->lastVec;
                     if(0!=src)
@@ -121,15 +126,22 @@ namespace Yttrium
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
                 // check if possible basis compression
+                //
+                //--------------------------------------------------------------
                 if(useBasisCompression)
                 {
                     for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
                     {
                         if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
-                            //std::cerr << "\tshould compress..." << std::endl;
                             ++compressed;
+                            if(tribe->qfamily->liberate()) {
+                                fc->store(tribe->qfamily);
+                            }
+                            (tribe->qfamily = guess->qfamily)->withhold();
                             break;
                         }
                     }
