@@ -179,7 +179,7 @@ namespace Yttrium
                     {
                         if(tribe->qfamily == guess->qfamily)
                         {
-                            // same shared family is replacement only
+                            // same shared family if useBasisReplacement was active
                             goto KEEP;
                         }
 
