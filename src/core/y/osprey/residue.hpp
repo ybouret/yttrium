@@ -39,8 +39,12 @@ namespace Yttrium
             explicit Residue(const IBank &       bank,
                              const INode * const node);
 
+            //! setup with single index
+            explicit Residue(const IBank &bank,
+                             const size_t indx);
+
             Residue(const Residue &); //!< duplicate
-            
+
             //! cleanup
             virtual ~Residue() noexcept;
 

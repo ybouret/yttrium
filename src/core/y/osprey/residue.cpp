@@ -31,6 +31,13 @@ namespace Yttrium
             for(const INode *sub=node->next;sub;sub=sub->next) my << **sub;
         }
 
+        Residue:: Residue(const IBank &bank,
+                          const size_t indx) :
+        IProxy(bank)
+        {
+            my << indx;
+        }
+
         Residue:: ~Residue() noexcept
         {
         }

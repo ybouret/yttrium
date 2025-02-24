@@ -40,6 +40,9 @@ namespace Yttrium
             //! duplicate
             Posture(const Posture &);
 
+            //! duplicate from current basis and a depednent index in residue
+            Posture(const Content &basis, const size_t dependentIndex);
+
             virtual ~Posture() noexcept; //!< cleanup
             Y_OSTREAM_PROTO(Posture);    //!< display
 

@@ -30,6 +30,13 @@ namespace Yttrium
 
         }
 
+        Posture:: Posture(const Content &basis, const size_t dependentIndex) :
+        content(basis),
+        residue(basis->proxy,dependentIndex)
+        {
+
+        }
+
         Posture:: ~Posture() noexcept
         {
 
