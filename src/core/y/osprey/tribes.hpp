@@ -6,7 +6,7 @@
 
 #include "y/osprey/tribe.hpp"
 #include "y/functor.hpp"
-
+#include "y/memory/digest.hpp"
 
 
 namespace Yttrium
@@ -134,6 +134,8 @@ namespace Yttrium
 
                 Y_XML_COMMENT(xml,"#generated = " << my.size);
             }
+
+            Digest signature(Hashing::Function &) const;
 
 
         private:

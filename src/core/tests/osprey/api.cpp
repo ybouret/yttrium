@@ -1,7 +1,6 @@
-
+#include "y/osprey/tribes.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/osprey/tribes.hpp"
 
 #include "y/random/shuffle.hpp"
 #include "y/random/park-miller.hpp"
@@ -10,8 +9,6 @@
 #include "y/text/ascii/convert.hpp"
 #include "y/stream/hash/output.hpp"
 #include "y/hashing/sha1.hpp"
-#include "y/hashing/md.hpp"
-#include "y/memory/digest.hpp"
 
 #include "y/container/matrix.hpp"
 #include "y/system/exception.hpp"
@@ -21,6 +18,33 @@
 using namespace Yttrium;
 using namespace Apex;
 
+
+namespace
+{
+    template <typename MATRIX>
+    Digest Process(XMLog &xml, const MATRIX &data)
+    {
+        Osprey::IBank    bank;
+        Osprey::QMetrics metrics(data.cols);
+        Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
+        Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
+        void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
+        Osprey::Callback proc(proc_);
+        Osprey::Tribes   tribes(xml,proc,data,bank,fcache);
+
+        size_t count = 0;
+        while(tribes->size)
+        {
+            count += tribes->size;
+            tribes.generate(xml,proc,data);
+        }
+        std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
+        std::cerr << "found=" << tribes.db.size << std::endl;
+
+        Hashing::SHA1 H;
+        return tribes.signature(H);
+    }
+}
 
 
 Y_UTEST(osprey)
@@ -64,22 +88,8 @@ Y_UTEST(osprey)
 
     std::cerr << "data=" << data << std::endl;
 
-    Osprey::IBank    bank;
-    Osprey::QMetrics metrics(data.cols);
-    Osprey::QVCache  vcache = new Apex::Ortho::Vector::Cache(metrics);
-    Osprey::QFCache  fcache = new Apex::Ortho::Family::Cache(vcache);
-    void (*proc_)(const Osprey::QVector &) = Osprey::Tribes::Display;
-    Osprey::Callback proc(proc_);
-    Osprey::Tribes   tribes(xml,proc,data,bank,fcache);
-
-    size_t count = 0;
-    while(tribes->size)
-    {
-        count += tribes->size;
-        tribes.generate(xml,proc,data);
-    }
-    std::cerr << "count=" << count << "/" << Osprey::Tribes::MaxCount(data.rows) << std::endl;
-    std::cerr << "found=" << tribes.db.size << std::endl;
+    const Digest h0 = Process(xml,data);
+    std::cerr << "h0=" << h0 << std::endl;
 
 
     for(size_t n=1;n<=16;++n)

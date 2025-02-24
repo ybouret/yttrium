@@ -107,3 +107,30 @@ namespace Yttrium
     }
 
 }
+
+#include "y/hashing/function.hpp"
+#include "y/stream/hash/output.hpp"
+#include "y/hashing/md.hpp"
+
+namespace Yttrium
+{
+    namespace Osprey
+    {
+
+        Digest Tribes:: signature(Hashing::Function &h) const
+        {
+            h.set();
+            {
+                HashingStream fp(h);
+                for(const QVector *v=db.head;v;v=v->next)
+                {
+                    v->serialize(fp);
+                }
+            }
+            
+            return Hashing::MD::Of(h);
+        }
+
+    }
+
+}
