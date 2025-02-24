@@ -128,13 +128,7 @@ namespace Yttrium
                 // check if something happened
                 //
                 //--------------------------------------------------------------
-                for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
-                {
-                    const QVector * const src = tribe->lastVec; if(0==src) continue;
-                    const QVector * const tgt = tryInsert(*src);
-                    if(0!=tgt) proc(*tgt);
-                }
-
+                research(xml,proc,flag);
                 Y_XML_COMMENT(xml,"#generated = " << my.size);
             }
 
@@ -150,14 +144,16 @@ namespace Yttrium
             const QVector::List db; //!< current database of unique vectors
 
         private:
-            void noNullVec(XMLog &)    noexcept;
-            void noReplica(XMLog &, Callback &);
+            void noNullVec(XMLog &)    noexcept; //!< initial no null vector
+            void noReplica(XMLog &, Callback &); //!< initial no replica
+            void research(XMLog &xml, Callback &proc, const unsigned flag); //!< post new generation
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;
 
             //! remove replica indx (must be found in content or residue
             static void NoReplica(const size_t indx, Tribe::List &tribes);
+
 
 
             //! try insert vector in database

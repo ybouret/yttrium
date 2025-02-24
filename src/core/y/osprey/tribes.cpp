@@ -104,6 +104,44 @@ namespace Yttrium
 
         Y_PROXY_IMPL(Tribes,my)
 
+
+        void Tribes:: research(XMLog &xml, Callback &proc, const unsigned flag)
+        {
+            const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
+            size_t compressed = 0;
+            for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
+            {
+                // check if a new vector was created
+                {
+                    const QVector * const src = tribe->lastVec;
+                    if(0!=src)
+                    {
+                        const QVector * const tgt = tryInsert(*src);
+                        if(0!=tgt) proc(*tgt);
+                    }
+                }
+
+                // check if possible basis compression
+                if(useBasisCompression)
+                {
+                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    {
+                        if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        {
+                            //std::cerr << "\tshould compress..." << std::endl;
+                            ++compressed;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(useBasisCompression)
+            {
+                Y_XML_COMMENT(xml, "#compressed = " << compressed);
+            }
+
+        }
     }
 
 }
