@@ -120,19 +120,16 @@ namespace Yttrium
                     my.swapWith(newGen);
                 }
 
+                //--------------------------------------------------------------
+                //
                 // check if something happened
-                for(Tribe *tr=my.head;tr;tr=tr->next)
+                //
+                //--------------------------------------------------------------
+                for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                 {
-                    const QVector * const qv = tr->lastVec;
-                    if(!qv)
-                    {
-
-                    }
-                    else
-                    {
-                        const QVector *vec = tryInsert(*qv);
-                        if(vec) proc(*vec);
-                    }
+                    const QVector * const src = tribe->lastVec; if(0==src) continue;
+                    const QVector * const tgt = tryInsert(*src);
+                    if(0!=tgt) proc(*tgt);
                 }
 
                 Y_XML_COMMENT(xml,"#generated = " << my.size);
