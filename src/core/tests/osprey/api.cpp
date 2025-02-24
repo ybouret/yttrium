@@ -107,6 +107,8 @@ Y_UTEST(osprey)
     }
 
     Y_SIZEOF(Osprey::Tribe);
+    Y_SIZEOF(Osprey::QFamily);
+    
 
 }
 Y_UDONE()

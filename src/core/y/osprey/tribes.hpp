@@ -113,15 +113,15 @@ namespace Yttrium
                 // create new generation
                 //
                 //--------------------------------------------------------------
-
                 {
-                    const bool optimizeHyperplanes = 0 != (flag & Tribe::OptimizeHyperplanes);
+                    const bool  optimizeHyperplanes = 0 != (flag & Tribe::OptimizeHyperplanes);
                     Tribe::List newGen;
                     for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                     {
                         tribe->unfold(newGen,data,optimizeHyperplanes);
                     }
                     my.swapWith(newGen);
+                    
                 }
 
                 //--------------------------------------------------------------
@@ -154,7 +154,7 @@ namespace Yttrium
             void noReplica(XMLog &, Callback &);                //!< initial no replica
             void research(XMLog &, Callback &, const unsigned); //!< post new generation
             void finalize();
-            
+
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;
 

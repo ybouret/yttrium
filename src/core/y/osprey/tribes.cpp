@@ -142,7 +142,7 @@ namespace Yttrium
                             assert(guess->qfamily!=tribe->qfamily);
                             if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                             {
-                                //assert( tribe->qfamily->sameThan( *(guess->qfamily) ) );
+                                assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
                                 ++replaced;
                                 tribe->replaceFamilyBy(*guess);
                                 break;
@@ -166,13 +166,19 @@ namespace Yttrium
                 {
                     Y_XML_COMMENT(xml, "#replaced = " << replaced);
                 }
-
             }
 
 
-            if ( 0 != (flag & Tribe::UseBasisCompression) )
+            if ( 0 != (flag&Tribe::UseBasisCompression) )
             {
-                
+                Tribe::List output;
+                while(my.size>0)
+                {
+                    for(Tribe *tribe=output.head;tribe;tribe=tribe->next)
+                    {
+                        
+                    }
+                }
             }
 
         }

@@ -20,7 +20,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Family :  public Object,  public Counted, public Metrics, public Proxy<const Vector::List>
+            class Family :  public Quantized,  public Counted, public Metrics, public Proxy<const Vector::List>
             {
             public:
                 //______________________________________________________________
@@ -78,7 +78,6 @@ namespace Yttrium
                 //______________________________________________________________
                 explicit Family(const VCache &) noexcept; //!< setup from metrics
                 virtual ~Family() noexcept;               //!< cleanup
-                Family(const Family  &);                  //!< duplicate
                 Y_OSTREAM_PROTO(Family);                  //!< display
 
                 //______________________________________________________________
@@ -89,18 +88,17 @@ namespace Yttrium
                 //______________________________________________________________
 
                 //! generate a random family
-                void           generate(Random::Bits &ran, const size_t dim, const size_t bits);
-                void           recreate(const Family &);    //!< duplicate
-                bool           includes(const Family &);    //!< check if sub-family is included in this span
-                bool           isIdenticalTo(const Family &);   //!< check exact same basis
-                bool           isAnalogousTo(const Family &);   //!< check exact same spam
-                bool           hasSameSpanThan(const Family &); //!< identical or analogous
-
-                const Vector * increase();                  //!< increase with latest valid workspace
-                void           clear()  noexcept;           //!< free vectors
-                void           prune()  noexcept;           //!< clear workspace
-                void           reset()  noexcept;           //!< free/trim
-
+                void                 generate(Random::Bits &ran, const size_t dim, const size_t bits);
+                void                 recreate(const Family &);    //!< duplicate
+                bool                 includes(const Family &);    //!< check if sub-family is included in this span
+                bool                 isIdenticalTo(const Family &);   //!< check exact same basis
+                bool                 isAnalogousTo(const Family &);   //!< check exact same spam
+                bool                 hasSameSpanThan(const Family &); //!< identical or analogous
+                const Vector *       increase();                  //!< increase with latest valid workspace
+                void                 clear()  noexcept;           //!< free vectors
+                void                 prune()  noexcept;           //!< clear workspace
+                void                 reset()  noexcept;           //!< free/trim
+                const Apex::Natural &weight() const noexcept;     //!< norm2.n
 
                 //______________________________________________________________
                 //
@@ -165,9 +163,10 @@ namespace Yttrium
                 const Quality quality; //!< current quality
 
             private:
-                Y_DISABLE_ASSIGN(Family);
+                Y_DISABLE_COPY_AND_ASSIGN(Family);
                 Y_PROXY_DECL();
                 Vector::List  qlist; //!< current list
+                Apex::Integer norm2; //!< |qlist|^2
                 Vector *      qwork; //!< current workspace
                 VCache        cache; //!< shared cache
 

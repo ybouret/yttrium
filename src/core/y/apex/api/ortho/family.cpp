@@ -79,6 +79,7 @@ namespace Yttrium
                 while(qlist.size>0)
                     cache->store(qlist.popHead());
                 Coerce(quality) = getQuality(0);
+                norm2           = 0;
             }
 
             void Family:: reset() noexcept
@@ -97,17 +98,20 @@ namespace Yttrium
             Proxy<const Vector::List>(),
             quality( getQuality(0) ),
             qlist(),
+            norm2(0),
             qwork(0),
             cache(c),
             next(0)
             {
             }
 
+#if 0
             Family:: Family(const Family &_) :
             Metrics(_),
             Proxy<const Vector::List>(),
             quality(_.quality),
             qlist(),
+            norm2(_.norm2),
             qwork(0),
             cache(_.cache),
             next(0)
@@ -117,7 +121,7 @@ namespace Yttrium
                     qlist.pushTail( cache->query(*v) );
                 }
             }
-
+#endif
 
 
             
@@ -128,6 +132,7 @@ namespace Yttrium
                 assert(this != &F);
                 reset();
                 try {
+                    norm2 = F.norm2;
                     for(const Vector *src=F->head;src;src=src->next)
                         qlist.pushTail( cache->query(*src) );
                     Coerce(quality) = F.quality;
@@ -158,8 +163,7 @@ namespace Yttrium
                     return false;
                 else
                 {
-
-
+                     
                     for(const Vector *vec=sub->head;vec;vec=vec->next)
                     {
                         if( welcomes(*vec) )
@@ -205,7 +209,10 @@ namespace Yttrium
 
             }
 
-
+            const Apex::Natural & Family:: weight() const noexcept
+            {
+                return norm2.n;
+            }
 
 
 
@@ -233,9 +240,14 @@ namespace Yttrium
                 assert(qwork->nrm2>0);
                 assert(qlist.size<dimensions);
 
+                {
+                    Apex::Integer _ = norm2 + qwork->nrm2;
+                    _.xch(norm2);
+                }
+
                 qlist.pushTail(qwork);
-                Coerce(quality) = getQuality(qlist.size);
                 qwork = 0;
+                Coerce(quality) = getQuality(qlist.size);
                 {
                     Vector * const curr = qlist.tail;
                 LOOP:
