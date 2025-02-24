@@ -51,8 +51,8 @@ namespace Yttrium
             //! steal residue
             Content & operator<<(Residue &);
 
-            bool includes(const Content &sub) const noexcept;
 
+            
 
         private:
             Y_DISABLE_ASSIGN(Content);

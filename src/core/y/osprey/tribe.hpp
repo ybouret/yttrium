@@ -44,8 +44,8 @@ namespace Yttrium
             //__________________________________________________________________
             typedef CxxListOf<Tribe>  List;      //!< alias
             static const char * const CallSign;  //!< "Osprey::Tribe"
-            static const unsigned     OptimizeHyperplanes = 0x01;
-            static const unsigned     UseBasisCompression = 0x02;
+            static const unsigned     OptimizeHyperplanes = 0x01; //!< intercept Hyperplane cases to procude at most one vector
+            static const unsigned     UseBasisCompression = 0x02; //!< replace equivalent basis
 
             //__________________________________________________________________
             //

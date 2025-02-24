@@ -42,14 +42,7 @@ namespace Yttrium
             return Sign::Of(**lhs,**rhs);
         }
 
-        bool Content:: includes(const Content &sub) const noexcept
-        {
-            for(const INode *node=sub->head;node;node=node->next)
-            {
-                if( !my.has(**node) ) return false;
-            }
-            return true;
-        }
+        
     }
 
 }

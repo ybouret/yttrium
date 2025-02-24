@@ -133,6 +133,8 @@ namespace Yttrium
                 Y_XML_COMMENT(xml,"#generated = " << my.size);
             }
 
+
+            //! database signature
             Digest signature(Hashing::Function &) const;
 
 
