@@ -7,7 +7,7 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/stream/xmlog.hpp"
-
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -62,7 +62,7 @@ namespace Yttrium
             qfcache(qfcc),
             qfamily(qfcache->query()),
             lastIdx(indx),
-            lastVec(addWith(data[lastIdx])),
+            lastVec(constructorIncreaseWith(data[lastIdx])),
             next(0),
             prev(0)
             {
@@ -78,17 +78,20 @@ namespace Yttrium
             qfcache(root.qfcache),
             qfamily(qfcache->query(*root.qfamily)),
             lastIdx(**node),
-            lastVec(addWith(data[lastIdx])),
+            lastVec(constructorIncreaseWith(data[lastIdx])),
             next(0),
             prev(0)
             {
+                if(0==lastVec)
+                {
+
+                }
                 while(0==lastVec)
                 {
-                    std::cerr << "found a dependent vector from " << root.posture <<  ", now " << posture << std::endl;
-                    //exit(0);
+                    std::cerr << "found a dependent vector from " << root.posture << "+ " << **node << ", now " << posture << std::endl;
+                    exit(0);
                     break;
                 }
-
 
             }
 
@@ -110,31 +113,49 @@ namespace Yttrium
             //
             //__________________________________________________________________
             template <typename MATRIX> inline
-            void unfold(Tribe::List &tribes, const MATRIX &data)
+            void unfold(Tribe::List  &tribes,
+                        const MATRIX &data)
             {
                 assert(0!=qfamily);
 
+                //--------------------------------------------------------------
+                //
                 // early return on depleted residue
+                //
+                //--------------------------------------------------------------
                 if(posture.residue->size<=0) return;
-                const Apex::Ortho::Quality q   = qfamily->quality;
-                const char * const         qid = QMetrics::QualityText(q);
-                
+
+                //--------------------------------------------------------------
+                //
                 // process according to current quality
+                //
+                //--------------------------------------------------------------
+                const Apex::Ortho::Quality q = qfamily->quality;
                 switch(q)
                 {
-                    case Apex::Ortho::Degenerate: throwDegenerateFamily(qid); return; // error, should not happen
-                    case Apex::Ortho::Generating: posture.flush();            return; // nothing to add
+                    case Apex::Ortho::Degenerate: throwDegenerateFamily(q); return; // error, should not happen
+                    case Apex::Ortho::Generating: posture.flush();          return; // nothing to add
                     case Apex::Ortho::Hyperplane:
                     case Apex::Ortho::Fragmental:
                         break;
                 }
 
-                
+                //--------------------------------------------------------------
+                //
                 // generic processing
+                //
+                //--------------------------------------------------------------
                 for(const INode *node=posture.residue->head;node;node=node->next)
                 {
-                    tribes.pushTail( new Tribe(data,*this,node) );
+                    Tribe &tribe = *tribes.pushTail( new Tribe(data,*this,node) );
+                    if(0==tribe.lastVec)
+                    {
+                        const Posture dep(posture.content,**node);
+                        std::cerr << "-> dep: " << dep << std::endl;
+                    }
                 }
+
+
             }
 
             //__________________________________________________________________
@@ -154,8 +175,12 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tribe);
 
+            //! increase qfamily in constructor
+            /**
+             withold qfamily upon completion, destroy and re-throw upon exception
+             */
             template <typename T>
-            const  QVector * addWith(const Readable<T> &a)
+            const  QVector * constructorIncreaseWith(const Readable<T> &a)
             {
                 try
                 {
@@ -169,7 +194,7 @@ namespace Yttrium
             //! destroy qfamily
             void destroy() noexcept;
 
-            void throwDegenerateFamily(const char * const qid) const;
+            void throwDegenerateFamily(const Apex::Ortho::Quality) const;
         };
     }
 

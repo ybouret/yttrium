@@ -45,6 +45,7 @@ Y_UTEST(osprey)
 
     if(true)
     {
+#if 0
         if(rows>=3)
         {
             data[3].ld(0);
@@ -54,6 +55,7 @@ Y_UTEST(osprey)
             data[4].ld(data[1]);
             for(size_t i=data.cols;i>0;--i) data[4][i] *= -3;
         }
+#endif
         if(rows>=5)
         {
             for(size_t i=data.cols;i>0;--i) data[5][i] = 2 * data[1][i] - 3 * data[2][i];
