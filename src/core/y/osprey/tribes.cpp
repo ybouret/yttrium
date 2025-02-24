@@ -147,6 +147,15 @@ namespace Yttrium
                         }
                     }
                 }
+
+                {
+                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    {
+                        if(guess->qfamily==tribe->qfamily) continue;
+                        std::cerr << "comparing families..." << std::endl;
+                    }
+                }
+
             }
 
             if(useBasisCompression)
