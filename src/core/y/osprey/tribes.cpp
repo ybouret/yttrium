@@ -147,8 +147,10 @@ namespace Yttrium
 
                         if( tribe->qfamily->sameThan(*(guess->qfamily)) )
                         {
-                            std::cerr << "Same Than!!" << std::endl;
-                            exit(0);
+                            std::cerr << "---- Same Spans ----" << std::endl;
+                            std::cerr << "tribe=" << *tribe << std::endl;
+                            std::cerr << "guess=" << *guess << std::endl;x
+                            throw Exception("Same family with different content!");
                             break;
                         }
                     }
