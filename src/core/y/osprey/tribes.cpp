@@ -106,6 +106,20 @@ namespace Yttrium
         Y_PROXY_IMPL(Tribes,my)
 
 
+        void Tribes:: onNewVectors(Callback &proc)
+        {
+            for(const Tribe *tribe=my.head;tribe;tribe=tribe->next)
+            {
+                const QVector * const src = tribe->lastVec;
+                if(0!=src)
+                {
+                    const QVector * const tgt = tryInsert(*src);
+                    if(0!=tgt) proc(*tgt);
+                }
+            }
+        }
+
+
 
         static inline SignType CompareByWeight(const Tribe * const lhs,
                                                const Tribe * const rhs) noexcept
@@ -213,17 +227,7 @@ namespace Yttrium
         }
 
 
-        static inline SignType QVectorCompare(const QVector * const lhs,
-                                              const QVector * const rhs) noexcept
-        {
-            return QVector:: Compare(*lhs,*rhs);
-        }
-
-        void Tribes:: finalize()
-        {
-            MergeSort::Call(Coerce(db),QVectorCompare);
-        }
-
+        
     }
 
 }

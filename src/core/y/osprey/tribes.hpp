@@ -7,7 +7,7 @@
 #include "y/osprey/tribe.hpp"
 #include "y/functor.hpp"
 #include "y/memory/digest.hpp"
-
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -99,6 +99,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
+            static inline SignType QVectorCompare(const QVector * const lhs,
+                                                  const QVector * const rhs) noexcept
+            {
+                return QVector:: Compare(*lhs,*rhs);
+            }
+
             //! create new generation
             template <typename MATRIX> inline
             void generate(XMLog &        xml,
@@ -122,16 +128,67 @@ namespace Yttrium
                     }
                     my.swapWith(newGen);
                 }
+                Y_XMLOG(xml, "#generated = " << my.size);
 
                 //--------------------------------------------------------------
                 //
-                // check if something happened
+                // check if done
                 //
                 //--------------------------------------------------------------
-                if(my.size>0)
-                    research(xml,proc,flag);
-                else
-                    finalize();
+                if(my.size<=0) {
+                    MergeSort::Call(Coerce(db),QVectorCompare);
+                    return;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // post-process
+                //
+                //--------------------------------------------------------------
+                onNewVectors(proc);
+
+                //--------------------------------------------------------------
+                //
+                // post-process
+                //
+                //--------------------------------------------------------------
+                const bool useBasisReplacement = 0 != (flag & Tribe::UseBasisReplacement);
+                const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
+                if(!useBasisCompression && !useBasisReplacement) return;
+
+                size_t replaced = 0;
+                for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
+                {
+                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    {
+                        //------------------------------------------------------
+                        // sanity check at that point
+                        //------------------------------------------------------
+                        assert(guess->qfamily != tribe->qfamily);
+
+                        //------------------------------------------------------
+                        // check same content => same family
+                        //------------------------------------------------------
+                        if( useBasisReplacement && IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        {
+                            assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
+                            ++replaced;
+                            tribe->replaceFamilyBy(*guess);
+                            break;
+                        }
+
+                        if( useBasisCompression && tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
+                        {
+                            
+                        }
+
+
+                    }
+                }
+
+                Y_XMLOG(xml, "#replaced = " << replaced);
+
+
             }
 
 
@@ -152,7 +209,7 @@ namespace Yttrium
             void noNullVec(XMLog &)    noexcept;                //!< initial no null vector
             void noReplica(XMLog &, Callback &);                //!< initial no replica
             void research(XMLog &, Callback &, const unsigned); //!< post new generation
-            void finalize();
+            void onNewVectors(Callback &);
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;
