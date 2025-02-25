@@ -106,6 +106,8 @@ namespace Yttrium
                 return QVector:: Compare(*lhs,*rhs);
             }
 
+
+
             //! create new generation
             template <typename MATRIX> inline
             void generate(XMLog &        xml,
@@ -146,7 +148,8 @@ namespace Yttrium
                 // post-process
                 //
                 //--------------------------------------------------------------
-                onNewVectors(proc);
+                makeTribesOrder();
+                storeNewVectors(proc);
 
                 //--------------------------------------------------------------
                 //
@@ -154,8 +157,41 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 if( 0 == (flag&Tribe::UseBasisCompression) ) return;
+                size_t replacement = 0;
+                size_t compression = 0;
+            CYCLE:
+                for(Tribe *tribe = my.head; tribe; tribe=tribe->next)
+                {
+                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    {
+                        if( (tribe->qfamily != guess->qfamily) && IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        {
+                            assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
+                            ++replacement;
+                            tribe->replaceFamilyBy(*guess);
+                            break;
+                        }
+
+                        if( (tribe->qfamily != guess->qfamily) && tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
+                        {
+                            std::cerr << "---- Same Spans ----" << std::endl;
+                            std::cerr << "tribe=" << *tribe << std::endl;
+                            std::cerr << "guess=" << *guess << std::endl;
+                            Posture lhs( tribe->posture );
+                            Posture rhs( guess->posture );
+                            std::cerr << "upgrading " << lhs << " and " << rhs << std::endl;
+                            throw Exception("Same Spans With Different families!");
+                            ++compression;
+                            goto CYCLE;
+                        }
+                    }
+                }
+
+                Y_XMLOG(xml, "#replacement = " << replacement);
+                Y_XMLOG(xml, "#compression = " << compression);
 
 
+#if 0
                 size_t replacement = 0;
                 size_t compression = 0;
 
@@ -192,7 +228,7 @@ namespace Yttrium
 
                 Y_XMLOG(xml, "#replacement = " << replacement);
                 Y_XMLOG(xml, "#compression = " << compression);
-
+#endif
 
             }
 
@@ -211,10 +247,12 @@ namespace Yttrium
             const QVector::List db; //!< current database of unique vectors
 
         private:
-            void noNullVec(XMLog &)    noexcept;                //!< initial no null vector
-            void noReplica(XMLog &, Callback &);                //!< initial no replica
-            void research(XMLog &, Callback &, const unsigned); //!< post new generation
-            void onNewVectors(Callback &);
+            void   noNullVec(XMLog &)    noexcept;                //!< initial no null vector
+            void   noReplica(XMLog &, Callback &);                //!< initial no replica
+
+            void   makeTribesOrder();
+            void   storeNewVectors(Callback &);
+
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;

@@ -106,7 +106,7 @@ namespace Yttrium
         Y_PROXY_IMPL(Tribes,my)
 
 
-        void Tribes:: onNewVectors(Callback &proc)
+        void Tribes:: storeNewVectors(Callback &proc)
         {
             for(const Tribe *tribe=my.head;tribe;tribe=tribe->next)
             {
@@ -118,14 +118,21 @@ namespace Yttrium
                 }
             }
         }
-
-
-#if 0
+        
         static inline SignType CompareByWeight(const Tribe * const lhs,
                                                const Tribe * const rhs) noexcept
         {
             return Apex::Natural::Compare(lhs->qfamily->weight(), rhs->qfamily->weight() );
         }
+
+        void Tribes:: makeTribesOrder()
+        {
+            MergeSort::Call(my,CompareByWeight);
+
+        }
+
+#if 0
+
 
         void Tribes:: research(XMLog    &xml,
                                Callback &proc,
