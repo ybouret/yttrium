@@ -75,6 +75,7 @@ namespace Yttrium
                     Y_DISABLE_ASSIGN(Content);
                     Y_PROXY_DECL();
                     IList my;
+                    
                     static SignType Compare(const INode * const lhs,
                                             const INode * const rhs) noexcept
                     {
@@ -102,9 +103,10 @@ namespace Yttrium
                                      const size_t excl) :
                     IList(bank)
                     {
+                        IList &self = *this;
                         for(size_t i=1;i<=dims;++i)
                         {
-                            if(i!=excl) (*this) << i;
+                            if(i!=excl) self << i;
                         }
                     }
 
