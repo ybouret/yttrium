@@ -387,6 +387,7 @@ add_test(apex:uni   test-core apex_uni)
 add_test(apex:col   test-core apex_col)
 add_test(apex:narrow test-core apex_narrow)
 add_test(apex:ortho  test-core apex_ortho)
+add_test(apex:coven  test-core apex_coven)
 add_test(apex:osprey test-core apex_osprey)
 
 

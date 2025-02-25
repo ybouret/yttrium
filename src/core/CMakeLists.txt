@@ -92,6 +92,7 @@ apex/q
 apex/api
 apex/api/univocal
 apex/api/ortho
+apex/api/ortho/coven
 osprey
 kemp
 kemp/element
