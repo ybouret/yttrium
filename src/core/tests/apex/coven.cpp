@@ -48,8 +48,6 @@ namespace Yttrium
 
                     }
 
-
-
                     virtual ~Content() noexcept
                     {
                     }
@@ -69,6 +67,20 @@ namespace Yttrium
                     void xch(Content &_) noexcept
                     {
                         my.swapWith(_.my);
+                    }
+
+                    friend bool operator==(const Content &lhs, const Content &rhs) noexcept
+                    {
+                        return IList::AreEqual(lhs.my,rhs.my);
+                    }
+
+                    bool removed(const size_t indx) noexcept
+                    {
+                        for(INode *node=my.head;node;node=node->next)
+                        {
+                            if(indx==**node) { my.cutNode(node); return true; }
+                        }
+                        return false;
                     }
 
                 private:
@@ -136,6 +148,15 @@ namespace Yttrium
                         swapWith(_);
                     }
 
+                    bool removed(const size_t indx) noexcept
+                    {
+                        for(INode *node=head;node;node=node->next)
+                        {
+                            if(indx==**node) { cutNode(node); return true; }
+                        }
+                        return false;
+                    }
+
                 private:
                     Y_DISABLE_ASSIGN(Residue);
                 };
@@ -173,6 +194,10 @@ namespace Yttrium
                         residue.xch(_.residue);
                     }
 
+                    bool removed(const size_t indx) noexcept
+                    {
+                        return content.removed(indx) || residue.removed(indx);
+                    }
 
                     Content content;
                     Residue residue;
@@ -197,19 +222,28 @@ namespace Yttrium
                     template <typename MATRIX> inline
                     explicit Tribe(const MATRIX & data,
                                    const IBank  & bank,
-                                   const size_t   indx) :
+                                   const size_t   indx,
+                                   const FCache & qfcc) :
                     Posture(bank,data.rows,indx),
+                    qfcache(qfcc),
+                    qfamily( qfcache->query() ),
+                    lastIdx( indx ),
+                    lastVec( tryIncreaseWith(data[lastIdx] ) ),
                     next(0),
                     prev(0)
                     {
-                        // check dimension
+
                     }
 
                     template <typename MATRIX> inline
-                    explicit Tribe(const Posture &       root,
+                    explicit Tribe(const Tribe  &        root,
                                    const MATRIX &        data,
                                    const INode   * const node) :
                     Posture(root,node),
+                    qfcache(root.qfcache),
+                    qfamily(qfcache->query( *root.qfamily ) ),
+                    lastIdx(**node),
+                    lastVec( tryIncreaseWith(data[lastIdx] ) ),
                     next(0),
                     prev(0)
                     {
@@ -217,8 +251,10 @@ namespace Yttrium
 
                     virtual ~Tribe() noexcept
                     {
-
+                        destroy();
                     }
+
+                    Y_OSTREAM_PROTO(Tribe);
 
                     template <typename MATRIX> inline
                     void progeny(List         &chld,
@@ -227,18 +263,48 @@ namespace Yttrium
 
                         for(const INode *node=residue.head;node;node=node->next)
                         {
-                            assert(0!=node);
                             chld.pushTail( new Tribe(*this,data,node) );
                         }
 
+
                     }
 
-                    Tribe * next;
-                    Tribe * prev;
+                    FCache               qfcache;
+                    Family *             qfamily;
+                    const size_t         lastIdx;
+                    const Vector * const lastVec;
+                    Tribe *              next;
+                    Tribe *              prev;
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribe);
+
+
+
+                    template <typename READABLE> inline
+                    const Vector * tryIncreaseWith(READABLE &a)
+                    {
+                        try {
+                            qfamily->withhold();
+                            return qfamily->tryIncreaseWith(a);
+                        }
+                        catch(...) { destroy(); throw; }
+                    }
+
+                    void destroy() noexcept {
+                        assert( 0 != qfamily );
+                        if( qfamily->liberate() ) qfcache->store(qfamily);
+                        qfamily = 0;
+                    }
                 };
+
+
+                std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
+                {
+                    const Posture &posture = tribe;
+                    os << posture << "->" << *(tribe.qfamily);
+                    return os;
+                }
 
 
                 class Tribes : public Tribe::List
@@ -253,15 +319,14 @@ namespace Yttrium
 
                     template <typename MATRIX> inline
                     explicit Tribes(const MATRIX & data,
-                                    const IBank  & bank) :
+                                    const IBank  & bank,
+                                    const FCache & qfcc) :
                     Tribe::List()
                     {
                         const size_t n = data.rows;
-                        for(size_t i=1;i<=n;++i)
-                        {
-                            Tribe * const tribe = pushTail( new Tribe(data,bank,i) );
-                            (void) tribe;
-                        }
+                        for(size_t indx=1;indx<=n;++indx)
+                            (void) pushTail( new Tribe(data,bank,indx,qfcc) );
+                        noInitialZeroVector();
                     }
 
                     virtual ~Tribes() noexcept
@@ -290,6 +355,25 @@ namespace Yttrium
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
+
+                    void removeIndex(const size_t zid)
+                    {
+                        for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                        {
+                            if(!tribe->removed(zid)) throw Exception("missing index=%u in Tribe", unsigned(zid));
+                        }
+                    }
+
+                    void noInitialZeroVector()
+                    {
+                        for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                        {
+                            if(0==tribe->lastVec) removeIndex(tribe->lastIdx);
+                        }
+                    }
+
+                    void NoInitialDuplicates();
+
                 };
 
 
@@ -334,14 +418,19 @@ Y_UTEST(apex_coven)
     {
         for(size_t j=1;j<=cols;++j)
         {
-            data[i][j] = 0;
+            data[i][j] = ran.in<int>(-5,5);
         }
     }
 
 
     Ortho::Coven::IBank  bank;
-    Ortho::Coven::Tribes tribes(data,bank);
+    Ortho::Metrics       qmtx(cols);
+    Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
+    Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
 
+    Ortho::Coven::Tribes tribes(data,bank,qfcc);
+
+#if 1
     Natural count = 0;
     while(tribes.size)
     {
@@ -351,7 +440,7 @@ Y_UTEST(apex_coven)
     }
 
     std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(rows) << std::endl;
-
+#endif
 
 }
 Y_UDONE()
