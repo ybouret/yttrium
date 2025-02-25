@@ -226,6 +226,7 @@ namespace Yttrium
                 public:
 
                     typedef CxxListOf<Tribe> List;
+                    static const unsigned BasisCompression = 0x01;
 
                     template <typename MATRIX> inline
                     explicit Tribe(const MATRIX & data,
@@ -280,6 +281,13 @@ namespace Yttrium
                             lineage.pushTail( new Tribe(*this,data,node) );
                         }
                         MergeSort::Call(lineage,Compare);
+                    }
+
+                    void replaceFamilyByFamilyOf(Tribe &better) noexcept
+                    {
+                        assert(qfamily!=better.qfamily);
+                        destroy();
+                        (qfamily=better.qfamily)->withhold();
                     }
 
                     FCache               qfcache;
@@ -374,7 +382,10 @@ namespace Yttrium
                     }
 
                     template <typename MATRIX> inline
-                    void generate(Callback &proc, const MATRIX &data)
+                    void generate(XMLog        & xml,
+                                  Callback     & proc,
+                                  const MATRIX & data,
+                                  const unsigned flag)
                     {
 
                         {
@@ -400,6 +411,12 @@ namespace Yttrium
                         {
                             MergeSort::Call( Coerce(db), CompareVectors);
                         }
+                        else
+                        {
+                            if( 0 != (flag & Tribe::BasisCompression ) )
+                                compression(xml);
+
+                        }
 
                     }
 
@@ -421,6 +438,23 @@ namespace Yttrium
                     VCache             vc;
                 public:
                     const Vector::List db;
+
+                    void compression(XMLog &xml)
+                    {
+                        size_t replacement = 0;
+                        for(Tribe *curr=head;curr;curr=curr->next)
+                        {
+                            for(Tribe *prev=curr->prev;prev;prev=prev->prev)
+                            {
+                                if( (curr->qfamily!=prev->qfamily) && (curr->content==prev->content) )
+                                {
+                                    curr->replaceFamilyByFamilyOf(*prev);
+                                    ++replacement;
+                                }
+                            }
+                        }
+                        Y_XML_COMMENT(xml,"#replacement = " << replacement);
+                    }
 
                     void collect(Callback &proc)
                     {
@@ -567,8 +601,9 @@ namespace Yttrium
 namespace
 {
     template <typename MATRIX> static inline
-    Digest Process(XMLog &        xml,
-                   const MATRIX & data,
+    Digest Process(XMLog &            xml,
+                   const MATRIX &     data,
+                   const unsigned     flag,
                    Hashing::Function &H)
     {
 
@@ -588,7 +623,7 @@ namespace
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
             std::cerr << tribes << std::endl;
-            tribes.generate(proc,data);
+            tribes.generate(xml,proc,data,flag);
         }
 
         std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
@@ -624,8 +659,10 @@ Y_UTEST(apex_coven)
     XMLog  xml(verbose);
 
     Hashing::SHA1 H;
-    const Digest h0 = Process(xml,data,H);
+    const Digest h0 = Process(xml,data,0,H);
+    const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::BasisCompression,H);
     std::cerr << "h0=" << h0 << std::endl;
+    std::cerr << "h1=" << h0 << std::endl;
 }
 Y_UDONE()
 
