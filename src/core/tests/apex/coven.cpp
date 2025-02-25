@@ -44,8 +44,10 @@ namespace Yttrium
                     Proxy<const IList>(),
                     my(root.my)
                     {
-                        std::cerr << "new content" << std::endl;
+                        std::cerr << "sub-content" << std::endl;
                         (*this) << indx;
+                        std::cerr << "/sub-content" << std::endl;
+
                     }
 
 
@@ -115,10 +117,11 @@ namespace Yttrium
                     IList(bank)
                     {
                         assert(0!=node);
+                        IList &self = *this;
                         std::cerr << "sub-residue" << std::endl;
-                        for(const INode *prev=node->prev;prev;prev=prev->prev) (*this) >> **prev;
-                        for(const INode *next=node->next;next;next=next->next) (*this) << **next;
-                        std::cerr << "/sub-residude" << std::endl;
+                        for(const INode *prev=node->prev;prev;prev=prev->prev) self >> **prev;
+                        for(const INode *next=node->next;next;next=next->next) self << **next;
+                        std::cerr << "/sub-residue" << std::endl;
                     }
 
 
@@ -152,9 +155,11 @@ namespace Yttrium
                     content(root.content,**node),
                     residue(content->proxy,node)
                     {
+                        std::cerr << "sub-posture" << std::endl;
                         assert(root.residue.owns(node));
                         assert(1+root.content->size == content->size);
                         assert(root.residue.size-1  == residue.size);
+                        std::cerr << "/sub-posture" << std::endl;
                     }
 
                     virtual ~Posture() noexcept {}
@@ -219,10 +224,13 @@ namespace Yttrium
                                  const MATRIX &data) const
                     {
 
+
                         for(const INode *node=residue.head;node;node=node->next)
                         {
                             assert(0!=node);
+                            std::cerr << "chld with node=" << **node << std::endl;
                             chld.pushTail( new Tribe(data,node) );
+                            break;
                         }
 
                     }
@@ -335,6 +343,25 @@ Y_UTEST(apex_coven)
 
 
     Ortho::Coven::IBank  bank;
+
+    {
+        Ortho::Coven::Content root(bank,2); std::cerr << root << std::endl;
+        Ortho::Coven::Content chld(root,1); std::cerr << chld << std::endl;
+        std::cerr << std::endl;
+    }
+
+    {
+        Ortho::Coven::Residue root(bank,3,2);        std::cerr << root << std::endl;
+        {
+            Ortho::Coven::Residue chld(bank,root.head);  std::cerr << chld << std::endl;
+        }
+        {
+            Ortho::Coven::Residue chld(bank,root.tail);  std::cerr << chld << std::endl;
+        }
+    }
+
+    return 0;
+
     Ortho::Coven::Tribes tribes(data,bank);
 
     Natural count = 0;
