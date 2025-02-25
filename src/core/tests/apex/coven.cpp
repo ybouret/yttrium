@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 
 #include "y/sort/merge.hpp"
+#include "y/functor.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -215,7 +216,6 @@ namespace Yttrium
                     return os;
                 }
 
-
                 class Tribe : public Quantized, public Posture
                 {
                 public:
@@ -314,7 +314,7 @@ namespace Yttrium
                     return os;
                 }
 
-
+                typedef Functor<void,TL1(const Vector&)> Callback;
 
                 class Tribes : public Tribe::List
                 {
@@ -326,8 +326,14 @@ namespace Yttrium
                         return res;
                     }
 
+                    static void Display(const Vector &v)
+                    {
+                        std::cerr << "\t(+) " << v << std::endl;
+                    }
+
                     template <typename MATRIX> inline
                     explicit Tribes(XMLog &        xml,
+                                    Callback     & proc,
                                     const MATRIX & data,
                                     const IBank  & bank,
                                     const FCache & qfcc) :
@@ -335,15 +341,17 @@ namespace Yttrium
                     vc(qfcc->vcache)
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "[" << data.rows << "][" << data.cols << "]");
-                        const size_t n = data.rows;
-                        for(size_t indx=1;indx<=n;++indx)
-                            (void) pushTail( new Tribe(data,bank,indx,qfcc) );
-                        initialize(xml);
+                        {
+                            const size_t n = data.rows;
+                            for(size_t indx=1;indx<=n;++indx)
+                                (void) pushTail( new Tribe(data,bank,indx,qfcc) );
+                        }
+                        initialize(xml,proc);
                     }
 
                     virtual ~Tribes() noexcept
                     {
-                        while(db.size) vc->store( Coerce(db).popTail() );
+                        while(db.size) vc->store( db.popTail() );
                     }
 
                     Y_OSTREAM_PROTO(Tribes);
@@ -351,26 +359,44 @@ namespace Yttrium
                     template <typename MATRIX> inline
                     void generate(const MATRIX &data)
                     {
-                        Tribe::List curr;
-                        {
-                            Tribe::List chld;
-                            for(const Tribe *tribe=head;tribe;tribe=tribe->next)
-                            {
-                                tribe->progeny(chld,data);
-                            }
-                            Tribe::List part;
-                            ListOps::Fusion(part,curr,chld,Tribe::Compare);
-                            curr.swapWith(part);
-                        }
-                        swapWith(curr);
 
+                        {
+                            Tribe::List curr;
+                            {
+                                Tribe::List chld;
+                                for(const Tribe *tribe=head;tribe;tribe=tribe->next)
+                                {
+                                    tribe->progeny(chld,data);
+                                }
+                                Tribe::List part;
+                                ListOps::Fusion(part,curr,chld,Tribe::Compare);
+                                curr.swapWith(part);
+                            }
+                            swapWith(curr);
+                        }
                     }
 
-                    const Vector::List db;
+
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
-                    VCache vc;
+                    VCache       vc;
+                    Vector::List db;
+
+                    const Vector * tryInsert(const Vector &vec)
+                    {
+                        for(const Vector *v=db.head;v;v=v->next)
+                        {
+                            switch( Vector::Compare(*v,vec) )
+                            {
+                                case __Zero__: return 0;
+                                case Negative:
+                                case Positive:
+                                    continue;
+                            }
+                        }
+                        return db.pushTail( vc->query(vec) );
+                    }
 
                     static void RemoveFrom(Tribe::List &tribes, const size_t zid)
                     {
@@ -438,10 +464,17 @@ namespace Yttrium
                         swapWith(ok);
                     }
 
-                    void initialize(XMLog &xml)
+                    void initialize(XMLog &xml, Callback &proc)
                     {
                         noNullVector(xml);
                         noDuplicates(xml);
+                        for(const Tribe *tribe=head;tribe;tribe=tribe->next)
+                        {
+                            assert(0!=tribe->lastVec);
+                            const Vector *vec = tryInsert(*(tribe->lastVec));
+                            if(!vec) throw Exception("unexpected multiple initial vector");
+                            proc(*vec);
+                        }
                     }
 
 
@@ -501,10 +534,11 @@ Y_UTEST(apex_coven)
     Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
     Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
 
-    bool      verbose = true;
-    XMLog    xml(verbose);
+    bool   verbose = true;
+    XMLog  xml(verbose);
 
-    Ortho::Coven::Tribes tribes(xml,data,bank,qfcc);
+    Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+    Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
 
     Natural count = 0;
     while(tribes.size)
