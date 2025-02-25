@@ -369,7 +369,6 @@ namespace Yttrium
 
                     void initialize(XMLog &xml)
                     {
-                        Tribe::List &me = *this;
                         Tribe::List ok;
                         while(size>0)
                         {
@@ -379,8 +378,8 @@ namespace Yttrium
                                 const size_t zid = tribe->lastIdx;
                                 Y_XML_COMMENT(xml, "zero vector #" << zid);
                                 delete tribe;
-                                RemoveFrom(ok,zid);
-                                RemoveFrom(me,zid);
+                                RemoveFrom(ok,   zid);
+                                RemoveFrom(*this,zid);
                             }
                             else
                             {
