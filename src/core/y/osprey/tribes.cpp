@@ -168,7 +168,8 @@ namespace Yttrium
             Tribe::List kept;
             while(my.size>0)
             {
-                const Tribe * const rhs = my.head;
+                Tribe * const rhs = my.head;
+                bool          pop = true;
                 for(Tribe *lhs=kept.head;lhs;lhs=lhs->next)
                 {
                     if( (lhs->qfamily != rhs->qfamily) && lhs->qfamily->hasSameSpanThan( *(rhs->qfamily) ) )
@@ -176,21 +177,33 @@ namespace Yttrium
                         std::cerr << "---- Same Spans ----" << std::endl;
                         std::cerr << "lhs=" << *lhs << std::endl;
                         std::cerr << "rhs=" << *rhs << std::endl;
-                        Posture lhsNew( lhs->posture );
-                        Posture rhsNew( rhs->posture );
+                        {
+                            Posture lhsNew( lhs->posture );
+                            Posture rhsNew( rhs->posture );
 
-                        lhsNew.promoteResidueWithin(rhs->posture.content);
-                        rhsNew.promoteResidueWithin(lhs->posture.content);
-                        std::cerr << "lhsNew=" << lhsNew << std::endl;
-                        std::cerr << "rhsNew=" << rhsNew << std::endl;
+                            lhsNew.promoteResidueWithin(rhs->posture.content);
+                            rhsNew.promoteResidueWithin(lhs->posture.content);
+                            std::cerr << "lhsNew=" << lhsNew << std::endl;
+                            std::cerr << "rhsNew=" << rhsNew << std::endl;
 
-                        
+                            lhs->posture.exchange(lhsNew);
+                            rhs->posture.exchange(rhsNew);
+                        }
 
-                        throw Exception("Same Spans With Different families!");
                         ++compression;
+                        if( Posture::AreEqual(lhs->posture,rhs->posture) )
+                        {
+                            pop = false;
+                            delete my.popHead();
+                        }
+
+                        //throw Exception("Same Spans With Different families!");
+                        break;
                     }
                 }
-                kept.pushTail(my.popHead());
+                
+                if(pop)
+                    kept.pushTail(my.popHead());
             }
             my.swapWith(kept);
         }
