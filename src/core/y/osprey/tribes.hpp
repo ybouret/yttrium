@@ -8,6 +8,7 @@
 #include "y/functor.hpp"
 #include "y/memory/digest.hpp"
 #include "y/sort/merge.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -155,37 +156,42 @@ namespace Yttrium
                 if( 0 == (flag&Tribe::UseBasisCompression) ) return;
 
 
-                size_t replaced = 0;
+                size_t replacement = 0;
+                size_t compression = 0;
+
                 for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
                 {
                     for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
                     {
                         //------------------------------------------------------
-                        // sanity check at that point
-                        //------------------------------------------------------
-                        assert(guess->qfamily != tribe->qfamily);
-
-                        //------------------------------------------------------
                         // check same content => same family
                         //------------------------------------------------------
+                        assert(guess->qfamily != tribe->qfamily);
                         if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
                             assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
-                            ++replaced;
+                            ++replacement;
                             tribe->replaceFamilyBy(*guess);
                             break;
                         }
 
+                        assert(guess->qfamily != tribe->qfamily);
                         if( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
                         {
-                            
+                            std::cerr << "---- Same Spans ----" << std::endl;
+                            std::cerr << "tribe=" << *tribe << std::endl;
+                            std::cerr << "guess=" << *guess << std::endl;
+                            throw Exception("Same Spans With Different families!");
+                            ++compression;
+                            break;
                         }
 
 
                     }
                 }
 
-                Y_XMLOG(xml, "#replaced = " << replaced);
+                Y_XMLOG(xml, "#replacement = " << replacement);
+                Y_XMLOG(xml, "#compression = " << compression);
 
 
             }
