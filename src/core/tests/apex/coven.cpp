@@ -1,4 +1,5 @@
 #include "y/apex/api/ortho/coven/types.hpp"
+#include "y/data/list/cxx.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -140,14 +141,6 @@ namespace Yttrium
                     {
                     }
 
-                    virtual ~Posture() noexcept {}
-
-                    void xch(Posture &_) noexcept
-                    {
-                        content.xch(_.content);
-                        residue.xch(_.residue);
-                    }
-
                     explicit Posture(const Posture &     root,
                                      const INode * const node) :
                     content(root.content,**node),
@@ -158,6 +151,17 @@ namespace Yttrium
                         assert(root.residue.size-1  == residue.size);
                     }
 
+                    virtual ~Posture() noexcept {}
+                    Y_OSTREAM_PROTO(Posture);
+
+
+                    void xch(Posture &_) noexcept
+                    {
+                        content.xch(_.content);
+                        residue.xch(_.residue);
+                    }
+
+
                     Content content;
                     Residue residue;
 
@@ -165,6 +169,108 @@ namespace Yttrium
                     Y_DISABLE_ASSIGN(Posture);
                 };
 
+                std::ostream & operator<<(std::ostream &os, const Posture &self)
+                {
+                    os << self.content << ':' << self.residue;
+                    return os;
+                }
+
+
+                class Tribe : public Quantized, public Posture
+                {
+                public:
+
+                    typedef CxxListOf<Tribe> List;
+
+                    template <typename MATRIX> inline
+                    explicit Tribe(const MATRIX & data,
+                                   const IBank  & bank,
+                                   const size_t   indx) :
+                    Posture(bank,data.rows,indx),
+                    next(0),
+                    prev(0)
+                    {
+                        // check dimension
+                    }
+
+                    template <typename MATRIX> inline
+                    explicit Tribe(const MATRIX & data ,
+                                   const INode   *node) :
+                    Posture(*this,node),
+                    next(0),
+                    prev(0)
+                    {
+                    }
+
+                    virtual ~Tribe() noexcept
+                    {
+
+                    }
+
+                    template <typename MATRIX> inline
+                    void progeny(List &lineage, const MATRIX &data) const
+                    {
+
+                    }
+
+
+                    Tribe * next;
+                    Tribe * prev;
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Tribe);
+                };
+
+
+                class Tribes : public Tribe::List
+                {
+                public:
+                    static Natural MaxCount(const size_t n)
+                    {
+                        Natural res = 0;
+                        for(size_t k=1;k<=n;++k) res += Natural::Arrange(n,k);
+                        return res;
+                    }
+
+                    template <typename MATRIX> inline
+                    explicit Tribes(const MATRIX & data,
+                                    const IBank  & bank) :
+                    Tribe::List()
+                    {
+                        const size_t n = data.rows;
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            Tribe * const tribe = pushTail( new Tribe(data,bank,i) );
+                            (void) tribe;
+                        }
+                    }
+
+                    virtual ~Tribes() noexcept
+                    {
+                    }
+
+                    Y_OSTREAM_PROTO(Tribes);
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Tribes);
+                };
+
+
+                std::ostream & operator<<(std::ostream &os, const Tribes &self)
+                {
+                    os << "  " << '{' << '#' << self.size;
+                    if(self.size>0)
+                    {
+                        os << std::endl;
+                        for(const Tribe *tribe=self.head;tribe;tribe=tribe->next)
+                        {
+                            os << "    " << *tribe << std::endl;
+                        }
+                        os << "  ";
+                    }
+                    os << '}';
+                    return os;
+                }
             }
 
         }
@@ -173,8 +279,38 @@ namespace Yttrium
 
 }
 
+#include "y/text/ascii/convert.hpp"
+#include "y/container/matrix.hpp"
+#include "y/random/park-miller.hpp"
+
 Y_UTEST(apex_coven)
 {
+
+    Random::ParkMiller ran;
+    Y_SIZEOF(Ortho::Coven::Tribe);
+
+    size_t rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t cols = 5; if(argc>2) cols = ASCII::Convert::To<size_t>(argv[2],"cols");
+
+    Matrix<int> data(rows,cols);
+    for(size_t i=1;i<=rows;++i)
+    {
+        for(size_t j=1;j<=cols;++j)
+        {
+            data[i][j] = 0;
+        }
+    }
+
+
+    Ortho::Coven::IBank  bank;
+    Ortho::Coven::Tribes tribes(data,bank);
+
+    Natural count = 0;
+    while(tribes.size)
+    {
+        std::cerr << tribes << std::endl;
+        break;
+    }
 
 }
 Y_UDONE()
