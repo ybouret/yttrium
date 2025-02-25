@@ -44,6 +44,7 @@ namespace Yttrium
                     Proxy<const IList>(),
                     my(root.my)
                     {
+                        std::cerr << "new content" << std::endl;
                         (*this) << indx;
                     }
 
@@ -111,8 +112,11 @@ namespace Yttrium
                                      const INode * const node) :
                     IList(bank)
                     {
+                        assert(0!=node);
+                        std::cerr << "sub-residue" << std::endl;
                         for(const INode *prev=node->prev;prev;prev=prev->prev) (*this) >> **prev;
                         for(const INode *next=node->next;next;next=next->next) (*this) << **next;
+                        std::cerr << "/sub-residude" << std::endl;
                     }
 
 
@@ -152,6 +156,7 @@ namespace Yttrium
                     }
 
                     virtual ~Posture() noexcept {}
+
                     Y_OSTREAM_PROTO(Posture);
 
 
@@ -194,8 +199,8 @@ namespace Yttrium
                     }
 
                     template <typename MATRIX> inline
-                    explicit Tribe(const MATRIX & data ,
-                                   const INode   *node) :
+                    explicit Tribe(const MATRIX &        data ,
+                                   const INode   * const node) :
                     Posture(*this,node),
                     next(0),
                     prev(0)
@@ -208,8 +213,15 @@ namespace Yttrium
                     }
 
                     template <typename MATRIX> inline
-                    void progeny(List &lineage, const MATRIX &data) const
+                    void progeny(List         &chld,
+                                 const MATRIX &data) const
                     {
+
+                        for(const INode *node=residue.head;node;node=node->next)
+                        {
+                            assert(0!=node);
+                            chld.pushTail( new Tribe(data,node) );
+                        }
 
                     }
 
@@ -250,6 +262,24 @@ namespace Yttrium
                     }
 
                     Y_OSTREAM_PROTO(Tribes);
+
+                    template <typename MATRIX> inline
+                    void generate(const MATRIX &data)
+                    {
+
+
+                        {
+                            Tribe::List chld;
+                            for(const Tribe *tribe=head;tribe;tribe=tribe->next)
+                            {
+                                tribe->progeny(chld,data);
+                            }
+                            swapWith(chld);
+                        }
+
+                    }
+
+
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
@@ -309,7 +339,7 @@ Y_UTEST(apex_coven)
     while(tribes.size)
     {
         std::cerr << tribes << std::endl;
-        break;
+        tribes.generate(data);
     }
 
 }
