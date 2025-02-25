@@ -30,7 +30,9 @@ namespace Yttrium
         //
         //
         //! family built from posture=content+residue
-        //
+        /**
+         family.size >= content.size in case of dependent vectors
+         */
         //
         //______________________________________________________________________
         class Tribe : public Quantized
@@ -127,7 +129,7 @@ namespace Yttrium
                 const Apex::Ortho::Quality q = qfamily->quality;
                 switch(q)
                 {
-                    case Apex::Ortho::Degenerate: throwDegenerateFamily(q); return; // error, should not happen
+                    case Apex::Ortho::Degenerate: throwBadFamily(q); return; // error, should not happen
                     case Apex::Ortho::Foundation: posture.flush();          return; // nothing to add, should be specific to 1D
                     case Apex::Ortho::Hyperplane:
                         if(optimizeHyperplanes)
@@ -147,17 +149,19 @@ namespace Yttrium
                             return;
                         }
                         else
-                            break;
+                            break; // => generic case
 
                     case Apex::Ortho::Fragmental:
-                        break;
+                        break;     // => generic case
                 }
 
+                //--------------------------------------------------------------
+                //
                 // default growth
+                //
+                //--------------------------------------------------------------
                 for(const INode *node=posture.residue->head;node;node=node->next)
                     (void) tribes.pushTail( new Tribe(data,*this,node) );
-
-
             }
 
             void replaceFamilyBy(const Tribe &equivalent) noexcept;
@@ -198,7 +202,7 @@ namespace Yttrium
             //! destroy qfamily
             void destroy() noexcept;
 
-            void throwDegenerateFamily(const Apex::Ortho::Quality) const;
+            void throwBadFamily(const Apex::Ortho::Quality) const;
         };
     }
 

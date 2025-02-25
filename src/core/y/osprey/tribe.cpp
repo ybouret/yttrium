@@ -26,7 +26,7 @@ namespace Yttrium
             qfamily = 0;
         }
 
-        void Tribe:: throwDegenerateFamily(const Apex::Ortho::Quality q) const
+        void Tribe:: throwBadFamily(const Apex::Ortho::Quality q) const
         {
             throw Specific::Exception(CallSign,"Unfolding %s family!", QVector::QualityText(q));
         }
