@@ -3,6 +3,8 @@
 #include "y/data/list/cxx.hpp"
 #include "y/utest/run.hpp"
 
+#include "y/sort/merge.hpp"
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -250,6 +252,7 @@ namespace Yttrium
                     {
                     }
 
+
                     virtual ~Tribe() noexcept
                     {
                         destroy();
@@ -257,17 +260,21 @@ namespace Yttrium
 
                     Y_OSTREAM_PROTO(Tribe);
 
+                    static SignType Compare(const Tribe * const lhs, const Tribe * const rhs) noexcept
+                    {
+                        return Natural::Compare(lhs->qfamily->weight(),rhs->qfamily->weight());
+                    }
+
                     template <typename MATRIX> inline
-                    void progeny(List         &chld,
+                    void progeny(List         &lineage,
                                  const MATRIX &data) const
                     {
 
                         for(const INode *node=residue.head;node;node=node->next)
                         {
-                            chld.pushTail( new Tribe(*this,data,node) );
+                            lineage.pushTail( new Tribe(*this,data,node) );
                         }
-
-
+                        MergeSort::Call(lineage,Compare);
                     }
 
                     FCache               qfcache;
@@ -308,6 +315,7 @@ namespace Yttrium
                 }
 
 
+
                 class Tribes : public Tribe::List
                 {
                 public:
@@ -323,7 +331,8 @@ namespace Yttrium
                                     const MATRIX & data,
                                     const IBank  & bank,
                                     const FCache & qfcc) :
-                    Tribe::List()
+                    Tribe::List(),
+                    vc(qfcc->vcache)
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "[" << data.rows << "][" << data.cols << "]");
                         const size_t n = data.rows;
@@ -334,6 +343,7 @@ namespace Yttrium
 
                     virtual ~Tribes() noexcept
                     {
+                        while(db.size) vc->store( Coerce(db).popTail() );
                     }
 
                     Y_OSTREAM_PROTO(Tribes);
@@ -354,10 +364,11 @@ namespace Yttrium
 
                     }
 
-
+                    const Vector::List db;
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
+                    VCache vc;
 
                     static void RemoveFrom(Tribe::List &tribes, const size_t zid)
                     {
@@ -367,7 +378,7 @@ namespace Yttrium
                         }
                     }
 
-                    void initialize(XMLog &xml)
+                    void noNullVector(XMLog &xml)
                     {
                         Tribe::List ok;
                         while(size>0)
@@ -387,8 +398,48 @@ namespace Yttrium
                             }
                         }
                         swapWith(ok);
+                    }
 
+                    static const Tribe * FoundDuplicateOf(const Vector      &vec,
+                                                          const Tribe::List &ok) noexcept
+                    {
+                        for(const Tribe *guess=ok.head;guess;guess=guess->next)
+                        {
+                            assert(0!=guess->lastVec);
+                            if( vec == *(guess->lastVec) ) return guess;
+                        }
+                        return 0;
+                    }
 
+                    void noDuplicates(XMLog &xml)
+                    {
+                        Tribe::List ok;
+                        while(size>0)
+                        {
+                            Tribe * const        tribe = popHead();assert(0!=tribe->lastVec);
+                            const Tribe *  const guess = FoundDuplicateOf(*(tribe->lastVec),ok);
+
+                            if(0!=guess)
+                            {
+                                const size_t rid = tribe->lastIdx;
+                                Y_XML_COMMENT(xml, "duplicates #" << rid << " and #" << guess->lastIdx);
+                                RemoveFrom(*this,rid);
+                                for(Tribe *tr=ok.head;tr;tr=tr->next)
+                                {
+                                    if(!tr->residue.removed(rid)) throw Exception("missing index=%u in Tribe residue", unsigned(rid));
+                                }
+                                delete tribe;
+                            }
+                            else
+                                ok.pushTail(tribe);
+                        }
+                        swapWith(ok);
+                    }
+
+                    void initialize(XMLog &xml)
+                    {
+                        noNullVector(xml);
+                        noDuplicates(xml);
                     }
 
 
@@ -397,15 +448,15 @@ namespace Yttrium
 
                 std::ostream & operator<<(std::ostream &os, const Tribes &self)
                 {
-                    os << "  " << '{' << '#' << self.size;
+                    os << '{' << '#' << self.size;
                     if(self.size>0)
                     {
                         os << std::endl;
                         for(const Tribe *tribe=self.head;tribe;tribe=tribe->next)
                         {
-                            os << "    " << *tribe << std::endl;
+                            os << "  " << *tribe << std::endl;
                         }
-                        os << "  ";
+
                     }
                     os << '}';
                     return os;
@@ -441,7 +492,7 @@ Y_UTEST(apex_coven)
     }
 
     data[1].ld(0);
-
+    data[3].ld(data[2]);
 
     Ortho::Coven::IBank  bank;
     Ortho::Metrics       qmtx(cols);
