@@ -71,8 +71,8 @@ namespace Yttrium
         Swap( Coerce(a), Coerce(b) );
     }
 
-    bool Die(const char *);                         //!< return true
-    bool Say(const char *);                         //!< return false
+    bool Die(const char *);                         //!< return false
+    bool Say(const char *);                         //!< return true
     bool Good(const void *addr, const size_t size); //!< !(addr==NULL&&size>0) */
 
     namespace Core

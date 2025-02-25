@@ -88,7 +88,7 @@ namespace Yttrium
         Core::ArcPtr(),
         SelfType(other.handle)
         {
-            assert(0!=handle || Die("invalid other"));
+            assert(0!=handle);
             handle->withhold();
         }
 
@@ -101,7 +101,7 @@ namespace Yttrium
         Core::ArcPtr(),
         SelfType(other.handle)
         {
-            assert(0!=handle || Die("invalid other"));
+            assert(0!=handle);
             handle->withhold();
         }
 

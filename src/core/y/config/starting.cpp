@@ -15,14 +15,14 @@ namespace Yttrium
     bool Die(const char *msg)
     {
         (void)msg;
-        return true;
+        return false;
     }
 
 
     bool Say(const char *msg)
     {
         (void)msg;
-        return false;
+        return true;
     }
 
     bool Good(const void *addr, const size_t size)

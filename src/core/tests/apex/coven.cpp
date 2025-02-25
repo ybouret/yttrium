@@ -44,9 +44,7 @@ namespace Yttrium
                     Proxy<const IList>(),
                     my(root.my)
                     {
-                        std::cerr << "sub-content" << std::endl;
                         (*this) << indx;
-                        std::cerr << "/sub-content" << std::endl;
 
                     }
 
@@ -112,16 +110,20 @@ namespace Yttrium
                         }
                     }
 
+                    static inline const IBank & check(const IBank &bank)
+                    {
+                        assert(bank.isValid());
+                        return bank;
+                    }
+
                     explicit Residue(const IBank &       bank,
                                      const INode * const node) :
-                    IList(bank)
+                    IList( check(bank) )
                     {
                         assert(0!=node);
                         IList &self = *this;
-                        std::cerr << "sub-residue" << std::endl;
                         for(const INode *prev=node->prev;prev;prev=prev->prev) self >> **prev;
                         for(const INode *next=node->next;next;next=next->next) self << **next;
-                        std::cerr << "/sub-residue" << std::endl;
                     }
 
 
@@ -153,13 +155,11 @@ namespace Yttrium
                     explicit Posture(const Posture &     root,
                                      const INode * const node) :
                     content(root.content,**node),
-                    residue(content->proxy,node)
+                    residue(root.residue.proxy,node)
                     {
-                        std::cerr << "sub-posture" << std::endl;
                         assert(root.residue.owns(node));
                         assert(1+root.content->size == content->size);
                         assert(root.residue.size-1  == residue.size);
-                        std::cerr << "/sub-posture" << std::endl;
                     }
 
                     virtual ~Posture() noexcept {}
@@ -206,9 +206,10 @@ namespace Yttrium
                     }
 
                     template <typename MATRIX> inline
-                    explicit Tribe(const MATRIX &        data ,
+                    explicit Tribe(const Posture &       root,
+                                   const MATRIX &        data,
                                    const INode   * const node) :
-                    Posture(*this,node),
+                    Posture(root,node),
                     next(0),
                     prev(0)
                     {
@@ -224,17 +225,13 @@ namespace Yttrium
                                  const MATRIX &data) const
                     {
 
-
                         for(const INode *node=residue.head;node;node=node->next)
                         {
                             assert(0!=node);
-                            std::cerr << "chld with node=" << **node << std::endl;
-                            chld.pushTail( new Tribe(data,node) );
-                            break;
+                            chld.pushTail( new Tribe(*this,data,node) );
                         }
 
                     }
-
 
                     Tribe * next;
                     Tribe * prev;
@@ -343,33 +340,18 @@ Y_UTEST(apex_coven)
 
 
     Ortho::Coven::IBank  bank;
-
-    {
-        Ortho::Coven::Content root(bank,2); std::cerr << root << std::endl;
-        Ortho::Coven::Content chld(root,1); std::cerr << chld << std::endl;
-        std::cerr << std::endl;
-    }
-
-    {
-        Ortho::Coven::Residue root(bank,3,2);        std::cerr << root << std::endl;
-        {
-            Ortho::Coven::Residue chld(bank,root.head);  std::cerr << chld << std::endl;
-        }
-        {
-            Ortho::Coven::Residue chld(bank,root.tail);  std::cerr << chld << std::endl;
-        }
-    }
-
-    return 0;
-
     Ortho::Coven::Tribes tribes(data,bank);
 
     Natural count = 0;
     while(tribes.size)
     {
+        count += tribes.size;
         std::cerr << tribes << std::endl;
         tribes.generate(data);
     }
+
+    std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(rows) << std::endl;
+
 
 }
 Y_UDONE()
