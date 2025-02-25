@@ -6,6 +6,11 @@
 #include "y/sort/merge.hpp"
 #include "y/functor.hpp"
 
+#include "y/stream/hash/output.hpp"
+#include "y/hashing/md.hpp"
+#include "y/memory/digest.hpp"
+#include "y/hashing/function.hpp"
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -361,6 +366,13 @@ namespace Yttrium
 
                     Y_OSTREAM_PROTO(Tribes);
 
+
+                    static inline SignType CompareVectors(const Vector * const lhs,
+                                                          const Vector * const rhs) noexcept
+                    {
+                        return Vector::Compare(*lhs,*rhs);
+                    }
+
                     template <typename MATRIX> inline
                     void generate(Callback &proc, const MATRIX &data)
                     {
@@ -383,6 +395,22 @@ namespace Yttrium
                         }
                         ++Coerce(iteration);
                         collect(proc);
+
+                        if(size<=0)
+                        {
+                            MergeSort::Call( Coerce(db), CompareVectors);
+                        }
+
+                    }
+
+                    Digest signature(Hashing::Function &H) const
+                    {
+                        H.set();
+                        {
+                            HashingStream fp(H);
+                            for(const Vector *v=db.head;v;v=v->next) v->serialize(fp);
+                        }
+                        return Hashing::MD::Of(H);
                     }
 
                     const size_t iteration;;
@@ -534,6 +562,40 @@ namespace Yttrium
 #include "y/container/matrix.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/hashing/sha1.hpp"
+
+namespace
+{
+    template <typename MATRIX> static inline
+    Digest Process(XMLog &        xml,
+                   const MATRIX & data,
+                   Hashing::Function &H)
+    {
+
+        Ortho::Coven::IBank  bank;
+        Ortho::Metrics       qmtx(data.cols);
+        Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
+        Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
+
+        Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+
+        Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
+        OutputFile             fp("coven.dat");
+
+        Natural count = 0;
+        while(tribes.size)
+        {
+            fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
+            count += tribes.size;
+            std::cerr << tribes << std::endl;
+            tribes.generate(proc,data);
+        }
+
+        std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
+
+        return tribes.signature(H);
+    }
+}
 
 Y_UTEST(apex_coven)
 {
@@ -556,30 +618,14 @@ Y_UTEST(apex_coven)
     //data[1].ld(0);
     //data[3].ld(data[2]);
 
-    Ortho::Coven::IBank  bank;
-    Ortho::Metrics       qmtx(cols);
-    Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
-    Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
+
 
     bool   verbose = true;
     XMLog  xml(verbose);
 
-    Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
-
-    Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
-    OutputFile             fp("coven.dat");
-
-    Natural count = 0;
-    while(tribes.size)
-    {
-        fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
-        count += tribes.size;
-        std::cerr << tribes << std::endl;
-        tribes.generate(proc,data);
-    }
-
-    std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(rows) << std::endl;
-
+    Hashing::SHA1 H;
+    const Digest h0 = Process(xml,data,H);
+    std::cerr << "h0=" << h0 << std::endl;
 }
 Y_UDONE()
 
