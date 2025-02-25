@@ -152,9 +152,8 @@ namespace Yttrium
                 // post-process
                 //
                 //--------------------------------------------------------------
-                const bool useBasisReplacement = 0 != (flag & Tribe::UseBasisReplacement);
-                const bool useBasisCompression = 0 != (flag & Tribe::UseBasisCompression);
-                if(!useBasisCompression && !useBasisReplacement) return;
+                if( 0 == (flag&Tribe::UseBasisCompression) ) return;
+
 
                 size_t replaced = 0;
                 for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
@@ -169,7 +168,7 @@ namespace Yttrium
                         //------------------------------------------------------
                         // check same content => same family
                         //------------------------------------------------------
-                        if( useBasisReplacement && IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                        if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
                         {
                             assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
                             ++replaced;
@@ -177,7 +176,7 @@ namespace Yttrium
                             break;
                         }
 
-                        if( useBasisCompression && tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
+                        if( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
                         {
                             
                         }

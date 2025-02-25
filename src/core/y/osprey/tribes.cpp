@@ -120,7 +120,7 @@ namespace Yttrium
         }
 
 
-
+#if 0
         static inline SignType CompareByWeight(const Tribe * const lhs,
                                                const Tribe * const rhs) noexcept
         {
@@ -225,7 +225,7 @@ namespace Yttrium
 
             Y_XML_COMMENT(xml, "#replaced = " << replaced);
         }
-
+#endif
 
         
     }
