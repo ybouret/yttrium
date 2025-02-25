@@ -53,7 +53,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! check equal contents and equivalent residues
+            //! check equal contents and  residues
             static bool AreEqual(const Posture &lhs, const Posture &rhs) noexcept;
 
             //! try remove in content or residue
@@ -62,7 +62,10 @@ namespace Yttrium
             //! tranfer residue to content
             void flush() noexcept;
 
+            //! no-throw exchange
             void exchange(Posture &other) noexcept;
+
+            void promoteResidueWithin(const Content &other) noexcept;
 
             //__________________________________________________________________
             //

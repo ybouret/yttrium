@@ -33,9 +33,16 @@ namespace Yttrium
 
         Content & Content:: operator<<(const size_t indx) {
             assert( !my.has(indx) );
-            ListOps::InsertOrdered(my,my.proxy->produce(indx), Compare);
+            //ListOps::InsertOrdered(my,my.proxy->produce(indx), Compare);
+            push(my.proxy->produce(indx));
             return *this;
         }
+
+        void Content:: push(INode * const node) noexcept
+        {
+            ListOps::InsertOrdered(my,node, Compare);
+        }
+
 
         SignType Content:: Compare(const INode *lhs, const INode *rhs) noexcept
         {
@@ -46,7 +53,7 @@ namespace Yttrium
         {
             my.swapWith(other.my);
         }
-        
+
 
     }
 

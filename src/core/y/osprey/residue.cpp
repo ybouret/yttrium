@@ -4,6 +4,13 @@ namespace Yttrium
 {
     namespace Osprey
     {
+
+        Residue:: Residue(const IBank &bank) noexcept :
+        IProxy(bank)
+        {
+
+        }
+
         Residue:: Residue(const IBank &bank,
                           const size_t dims,
                           const size_t excl) :
@@ -51,6 +58,17 @@ namespace Yttrium
         void Residue:: exchange(Residue &other) noexcept
         {
             my.swapWith(other.my);
+        }
+
+        INode * Residue:: pop() noexcept {
+            assert(my.size>0);
+            return my.popHead();
+        }
+
+        void Residue:: push(INode * const node) noexcept
+        {
+            assert(0!=node);
+            my.pushTail(node);
         }
     }
 

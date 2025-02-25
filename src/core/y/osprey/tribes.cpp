@@ -118,7 +118,19 @@ namespace Yttrium
                 }
             }
         }
-        
+
+        static inline SignType QVectorCompare(const QVector * const lhs,
+                                              const QVector * const rhs) noexcept
+        {
+            return QVector:: Compare(*lhs,*rhs);
+        }
+
+
+        void Tribes:: finalizeVectors()
+        {
+            MergeSort::Call(Coerce(db),QVectorCompare);
+        }
+
         static inline SignType CompareByWeight(const Tribe * const lhs,
                                                const Tribe * const rhs) noexcept
         {

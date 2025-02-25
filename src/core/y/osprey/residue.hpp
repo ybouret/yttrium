@@ -29,6 +29,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
+            explicit Residue(const IBank &bank) noexcept;
 
             //! setup with dimensions, but excluded index
             explicit Residue(const IBank &bank,
@@ -58,7 +59,11 @@ namespace Yttrium
             //! remove index of null vector
             void removeNull(const size_t zid) noexcept;
 
+            //! no-throw exchange
             void exchange(Residue &other) noexcept;
+
+            INode *pop() noexcept;
+            void   push(INode * const) noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Residue);

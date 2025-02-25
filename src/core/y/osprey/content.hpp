@@ -53,7 +53,7 @@ namespace Yttrium
 
 
             void exchange(Content &) noexcept;
-            
+            void push(INode * const) noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Content);

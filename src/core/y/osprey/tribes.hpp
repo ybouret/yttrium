@@ -7,7 +7,6 @@
 #include "y/osprey/tribe.hpp"
 #include "y/functor.hpp"
 #include "y/memory/digest.hpp"
-#include "y/sort/merge.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium
@@ -49,7 +48,11 @@ namespace Yttrium
             //
             //! setup
             /**
-
+             \param xml for output
+             \param proc on new vector
+             \param data workspace
+             \param bank shared bank of indices
+             \param qfcc QFamily shared cache
              */
             //__________________________________________________________________
             template <typename MATRIX> inline
@@ -100,13 +103,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            static inline SignType QVectorCompare(const QVector * const lhs,
-                                                  const QVector * const rhs) noexcept
-            {
-                return QVector:: Compare(*lhs,*rhs);
-            }
-
-
+           
 
             //! create new generation
             template <typename MATRIX> inline
@@ -139,7 +136,7 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 if(my.size<=0) {
-                    MergeSort::Call(Coerce(db),QVectorCompare);
+                    finalizeVectors();
                     return;
                 }
 
@@ -148,8 +145,8 @@ namespace Yttrium
                 // post-process
                 //
                 //--------------------------------------------------------------
-                makeTribesOrder();
-                storeNewVectors(proc);
+                makeTribesOrder();      // keep lower complexity
+                storeNewVectors(proc);  // check all new vectors
 
                 //--------------------------------------------------------------
                 //
@@ -177,9 +174,14 @@ namespace Yttrium
                             std::cerr << "---- Same Spans ----" << std::endl;
                             std::cerr << "tribe=" << *tribe << std::endl;
                             std::cerr << "guess=" << *guess << std::endl;
-                            Posture lhs( tribe->posture );
-                            Posture rhs( guess->posture );
-                            std::cerr << "upgrading " << lhs << " and " << rhs << std::endl;
+                            Posture newTribe( tribe->posture );
+                            Posture newGuess( guess->posture );
+
+                            newTribe.promoteResidueWithin(guess->posture.content);
+                            newGuess.promoteResidueWithin(tribe->posture.content);
+                            std::cerr << "newTribe=" << newTribe << std::endl;
+                            std::cerr << "newGuess=" << newGuess << std::endl;
+
                             throw Exception("Same Spans With Different families!");
                             ++compression;
                             goto CYCLE;
@@ -191,44 +193,7 @@ namespace Yttrium
                 Y_XMLOG(xml, "#compression = " << compression);
 
 
-#if 0
-                size_t replacement = 0;
-                size_t compression = 0;
 
-                for(Tribe *tribe=my.head;tribe;tribe=tribe->next)
-                {
-                    for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
-                    {
-                        //------------------------------------------------------
-                        // check same content => same family
-                        //------------------------------------------------------
-                        assert(guess->qfamily != tribe->qfamily);
-                        if( IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
-                        {
-                            assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
-                            ++replacement;
-                            tribe->replaceFamilyBy(*guess);
-                            break;
-                        }
-
-                        assert(guess->qfamily != tribe->qfamily);
-                        if( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) )
-                        {
-                            std::cerr << "---- Same Spans ----" << std::endl;
-                            std::cerr << "tribe=" << *tribe << std::endl;
-                            std::cerr << "guess=" << *guess << std::endl;
-                            throw Exception("Same Spans With Different families!");
-                            ++compression;
-                            break;
-                        }
-
-
-                    }
-                }
-
-                Y_XMLOG(xml, "#replacement = " << replacement);
-                Y_XMLOG(xml, "#compression = " << compression);
-#endif
 
             }
 
@@ -252,7 +217,7 @@ namespace Yttrium
 
             void   makeTribesOrder();
             void   storeNewVectors(Callback &);
-
+            void   finalizeVectors();
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;

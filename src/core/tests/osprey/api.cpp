@@ -70,6 +70,7 @@ Y_UTEST(osprey)
         for (size_t j = 1; j <= data.cols; ++j)
         {
             data[i][j] = ran.in<int>(-amplitude,amplitude);
+            data[i][j] = ran.in<int>(0,amplitude);
         }
     }
 

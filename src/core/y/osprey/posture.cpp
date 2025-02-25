@@ -68,7 +68,20 @@ namespace Yttrium
         {
             content.exchange(other.content);
             residue.exchange(other.residue);
+        }
 
+        void Posture:: promoteResidueWithin(const Content &other) noexcept
+        {
+            Residue newres(residue->proxy);
+            while(residue->size>0)
+            {
+                INode * const node = residue.pop();
+                if(other->has(**node))
+                    content.push(node);
+                else
+                    newres.push(node);
+            }
+            residue.exchange(newres);
         }
 
     }
