@@ -1,4 +1,5 @@
 #include "y/apex/api/ortho/coven/types.hpp"
+#include "y/stream/xmlog.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/utest/run.hpp"
 
@@ -318,15 +319,17 @@ namespace Yttrium
                     }
 
                     template <typename MATRIX> inline
-                    explicit Tribes(const MATRIX & data,
+                    explicit Tribes(XMLog &        xml,
+                                    const MATRIX & data,
                                     const IBank  & bank,
                                     const FCache & qfcc) :
                     Tribe::List()
                     {
+                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "[" << data.rows << "][" << data.cols << "]");
                         const size_t n = data.rows;
                         for(size_t indx=1;indx<=n;++indx)
                             (void) pushTail( new Tribe(data,bank,indx,qfcc) );
-                        noInitialZeroVector();
+                        initialize(xml);
                     }
 
                     virtual ~Tribes() noexcept
@@ -356,23 +359,39 @@ namespace Yttrium
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
 
-                    void removeIndex(const size_t zid)
+                    static void RemoveFrom(Tribe::List &tribes, const size_t zid)
                     {
-                        for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                        for(Tribe *tribe=tribes.head;tribe;tribe=tribe->next)
                         {
                             if(!tribe->removed(zid)) throw Exception("missing index=%u in Tribe", unsigned(zid));
                         }
                     }
 
-                    void noInitialZeroVector()
+                    void initialize(XMLog &xml)
                     {
-                        for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                        Tribe::List &me = *this;
+                        Tribe::List ok;
+                        while(size>0)
                         {
-                            if(0==tribe->lastVec) removeIndex(tribe->lastIdx);
+                            Tribe * const tribe = popHead();
+                            if(0==tribe->lastVec)
+                            {
+                                const size_t zid = tribe->lastIdx;
+                                Y_XML_COMMENT(xml, "zero vector #" << zid);
+                                delete tribe;
+                                RemoveFrom(ok,zid);
+                                RemoveFrom(me,zid);
+                            }
+                            else
+                            {
+                                ok.pushTail(tribe);
+                            }
                         }
+                        swapWith(ok);
+
+
                     }
 
-                    void NoInitialDuplicates();
 
                 };
 
@@ -422,13 +441,18 @@ Y_UTEST(apex_coven)
         }
     }
 
+    data[1].ld(0);
+
 
     Ortho::Coven::IBank  bank;
     Ortho::Metrics       qmtx(cols);
     Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
     Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
 
-    Ortho::Coven::Tribes tribes(data,bank,qfcc);
+    bool      verbose = true;
+    XMLog xml(verbose);
+
+    Ortho::Coven::Tribes tribes(xml,data,bank,qfcc);
 
 #if 1
     Natural count = 0;
