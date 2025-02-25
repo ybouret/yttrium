@@ -148,14 +148,25 @@ namespace Yttrium
                 makeTribesOrder();      // keep lower complexity
                 storeNewVectors(proc);  // check all new vectors
 
+
+                if( 0 != (flag&Tribe::UseBasisCompression) )
+                {
+                    size_t replacement = 0;
+                    size_t compression = 0;
+                    makeCompression(replacement,compression);
+
+                    Y_XMLOG(xml, "#replacement = " << replacement);
+                    Y_XMLOG(xml, "#compression = " << compression);
+                }
+
+#if 0
                 //--------------------------------------------------------------
                 //
                 // post-process
                 //
                 //--------------------------------------------------------------
                 if( 0 == (flag&Tribe::UseBasisCompression) ) return;
-                size_t replacement = 0;
-                size_t compression = 0;
+
             CYCLE:
                 for(Tribe *tribe = my.head; tribe; tribe=tribe->next)
                 {
@@ -188,9 +199,9 @@ namespace Yttrium
                         }
                     }
                 }
+#endif
 
-                Y_XMLOG(xml, "#replacement = " << replacement);
-                Y_XMLOG(xml, "#compression = " << compression);
+
 
 
 
@@ -218,6 +229,8 @@ namespace Yttrium
             void   makeTribesOrder();
             void   storeNewVectors(Callback &);
             void   finalizeVectors();
+            void   makeReplacement(size_t &replacement);
+            void   makeCompression(size_t &replacement, size_t &compression);
 
             //! remove zid from residue of tribes
             static void NoNullVec(const size_t zid, Tribe::List &tribes) noexcept;

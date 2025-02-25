@@ -140,8 +140,61 @@ namespace Yttrium
         void Tribes:: makeTribesOrder()
         {
             MergeSort::Call(my,CompareByWeight);
-
         }
+
+
+        void Tribes:: makeReplacement(size_t &replacement)
+        {
+            for(Tribe *tribe = my.head; tribe; tribe=tribe->next)
+            {
+                // find previous guess with equal content
+                for(const Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                {
+                    if( (tribe->qfamily != guess->qfamily) && IList::AreEqual( *(tribe->posture.content),*(guess->posture.content) ) )
+                    {
+                        assert( tribe->qfamily->hasSameSpanThan( *(guess->qfamily) ) );
+                        ++replacement;
+                        tribe->replaceFamilyBy(*guess);
+                        break;
+                    }
+                }
+            }
+        }
+
+        void Tribes:: makeCompression(size_t &replacement, size_t &compression)
+        {
+            makeReplacement(replacement);
+
+            Tribe::List kept;
+            while(my.size>0)
+            {
+                const Tribe * const rhs = my.head;
+                for(Tribe *lhs=kept.head;lhs;lhs=lhs->next)
+                {
+                    if( (lhs->qfamily != rhs->qfamily) && lhs->qfamily->hasSameSpanThan( *(rhs->qfamily) ) )
+                    {
+                        std::cerr << "---- Same Spans ----" << std::endl;
+                        std::cerr << "lhs=" << *lhs << std::endl;
+                        std::cerr << "rhs=" << *rhs << std::endl;
+                        Posture lhsNew( lhs->posture );
+                        Posture rhsNew( rhs->posture );
+
+                        lhsNew.promoteResidueWithin(rhs->posture.content);
+                        rhsNew.promoteResidueWithin(lhs->posture.content);
+                        std::cerr << "lhsNew=" << lhsNew << std::endl;
+                        std::cerr << "rhsNew=" << rhsNew << std::endl;
+
+                        
+
+                        throw Exception("Same Spans With Different families!");
+                        ++compression;
+                    }
+                }
+                kept.pushTail(my.popHead());
+            }
+            my.swapWith(kept);
+        }
+
 
 #if 0
 
