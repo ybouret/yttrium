@@ -600,11 +600,25 @@ namespace Yttrium
 
 namespace
 {
+
+    struct Stats
+    {
+        size_t vc;
+        size_t fc;
+
+        inline friend
+        std::ostream & operator<<(std::ostream &os, const Stats &s)
+        {
+            os << "#v = " << s.vc << " | #f = " << s.fc;
+            return os;
+        }
+    };
+
     template <typename MATRIX> static inline
     Digest Process(XMLog &            xml,
                    const MATRIX &     data,
                    const unsigned     flag,
-                   Hashing::Function &H)
+                   Stats             &stats)
     {
 
         Ortho::Coven::IBank  bank;
@@ -626,8 +640,13 @@ namespace
             tribes.generate(xml,proc,data,flag);
         }
 
-        std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
+        std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
 
+        stats.vc = (*qvcc)->size;
+        stats.fc = (*qfcc)->size;
+
+
+        Hashing::SHA1 H;
         return tribes.signature(H);
     }
 }
@@ -646,7 +665,7 @@ Y_UTEST(apex_coven)
     {
         for(size_t j=1;j<=cols;++j)
         {
-            data[i][j] = ran.in<int>(-5,5);
+            data[i][j] = ran.in<int>(-1,1);
         }
     }
 
@@ -658,11 +677,10 @@ Y_UTEST(apex_coven)
     bool   verbose = true;
     XMLog  xml(verbose);
 
-    Hashing::SHA1 H;
-    const Digest h0 = Process(xml,data,0,H);
-    const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::BasisCompression,H);
-    std::cerr << "h0=" << h0 << std::endl;
-    std::cerr << "h1=" << h0 << std::endl;
+    Stats        s0; const Digest h0 = Process(xml,data,0,s0);
+    Stats        s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::BasisCompression,s1);
+    std::cerr << "h0=" << h0 << " " << s0 << std::endl;
+    std::cerr << "h1=" << h1 << " " << s1 << std::endl;
 }
 Y_UDONE()
 
