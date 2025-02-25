@@ -42,7 +42,12 @@ namespace Yttrium
             return Sign::Of(**lhs,**rhs);
         }
 
+        void Content:: exchange(Content &other) noexcept
+        {
+            my.swapWith(other.my);
+        }
         
+
     }
 
 }

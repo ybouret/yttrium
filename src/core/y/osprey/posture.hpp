@@ -62,6 +62,7 @@ namespace Yttrium
             //! tranfer residue to content
             void flush() noexcept;
 
+            void exchange(Posture &other) noexcept;
 
             //__________________________________________________________________
             //

@@ -44,7 +44,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             bool tryRemove(const size_t indx) noexcept; //!< try remove index
-
+            
         protected:
             IList my; //!< my list
 

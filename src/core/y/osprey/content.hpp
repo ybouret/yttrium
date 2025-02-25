@@ -52,6 +52,7 @@ namespace Yttrium
             Content & operator<<(Residue &);
 
 
+            void exchange(Content &) noexcept;
             
 
         private:

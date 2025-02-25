@@ -47,6 +47,11 @@ namespace Yttrium
             INode *node = my.has(zid); assert(0!=node);
             my.cutNode(node);
         }
+
+        void Residue:: exchange(Residue &other) noexcept
+        {
+            my.swapWith(other.my);
+        }
     }
 
 }

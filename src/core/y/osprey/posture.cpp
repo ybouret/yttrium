@@ -63,6 +63,14 @@ namespace Yttrium
             os << self.content << ':' << self.residue;
             return os;
         }
+
+        void Posture:: exchange(Posture &other) noexcept
+        {
+            content.exchange(other.content);
+            residue.exchange(other.residue);
+
+        }
+
     }
 
 }

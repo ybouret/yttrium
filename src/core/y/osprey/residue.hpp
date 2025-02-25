@@ -58,6 +58,7 @@ namespace Yttrium
             //! remove index of null vector
             void removeNull(const size_t zid) noexcept;
 
+            void exchange(Residue &other) noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Residue);
