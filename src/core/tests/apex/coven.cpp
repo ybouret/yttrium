@@ -338,7 +338,10 @@ namespace Yttrium
                                     const IBank  & bank,
                                     const FCache & qfcc) :
                     Tribe::List(),
-                    vc(qfcc->vcache)
+                    iteration(1),
+                    collected(0),
+                    vc(qfcc->vcache),
+                    db()
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "[" << data.rows << "][" << data.cols << "]");
                         {
@@ -347,17 +350,19 @@ namespace Yttrium
                                 (void) pushTail( new Tribe(data,bank,indx,qfcc) );
                         }
                         initialize(xml,proc);
+                        assert(db.size==size);
+                        Coerce(collected) = db.size;
                     }
 
                     virtual ~Tribes() noexcept
                     {
-                        while(db.size) vc->store( db.popTail() );
+                        while(db.size) vc->store( Coerce(db).popTail() );
                     }
 
                     Y_OSTREAM_PROTO(Tribes);
 
                     template <typename MATRIX> inline
-                    void generate(const MATRIX &data)
+                    void generate(Callback &proc, const MATRIX &data)
                     {
 
                         {
@@ -368,20 +373,39 @@ namespace Yttrium
                                 {
                                     tribe->progeny(chld,data);
                                 }
-                                Tribe::List part;
-                                ListOps::Fusion(part,curr,chld,Tribe::Compare);
-                                curr.swapWith(part);
+                                {
+                                    Tribe::List part;
+                                    ListOps::Fusion(part,curr,chld,Tribe::Compare);
+                                    curr.swapWith(part);
+                                }
                             }
                             swapWith(curr);
                         }
+                        ++Coerce(iteration);
+                        collect(proc);
                     }
 
-
+                    const size_t iteration;;
+                    const size_t collected;
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
-                    VCache       vc;
-                    Vector::List db;
+                    VCache             vc;
+                public:
+                    const Vector::List db;
+
+                    void collect(Callback &proc)
+                    {
+                        size_t & count = Coerce(collected);
+                        count = 0;
+                        for(const Tribe *tribe=head;tribe;tribe=tribe->next)
+                        {
+                            const Vector *pVector = tribe->lastVec;      if(0==pVector) continue;
+                            const Vector *pSingle = tryInsert(*pVector); if(0==pSingle) continue;
+                            proc(*pSingle);
+                            ++count;
+                        }
+                    }
 
                     const Vector * tryInsert(const Vector &vec)
                     {
@@ -395,7 +419,7 @@ namespace Yttrium
                                     continue;
                             }
                         }
-                        return db.pushTail( vc->query(vec) );
+                        return Coerce(db).pushTail( vc->query(vec) );
                     }
 
                     static void RemoveFrom(Tribe::List &tribes, const size_t zid)
@@ -468,6 +492,8 @@ namespace Yttrium
                     {
                         noNullVector(xml);
                         noDuplicates(xml);
+
+                        // collect first
                         for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                         {
                             assert(0!=tribe->lastVec);
@@ -507,6 +533,7 @@ namespace Yttrium
 #include "y/text/ascii/convert.hpp"
 #include "y/container/matrix.hpp"
 #include "y/random/park-miller.hpp"
+#include "y/stream/libc/output.hpp"
 
 Y_UTEST(apex_coven)
 {
@@ -538,14 +565,17 @@ Y_UTEST(apex_coven)
     XMLog  xml(verbose);
 
     Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+
     Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
+    OutputFile             fp("coven.dat");
 
     Natural count = 0;
     while(tribes.size)
     {
+        fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
         count += tribes.size;
         std::cerr << tribes << std::endl;
-        tribes.generate(data);
+        tribes.generate(proc,data);
     }
 
     std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(rows) << std::endl;
