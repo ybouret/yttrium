@@ -351,16 +351,18 @@ namespace Yttrium
                     template <typename MATRIX> inline
                     void generate(const MATRIX &data)
                     {
-
-
+                        Tribe::List curr;
                         {
                             Tribe::List chld;
                             for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                             {
                                 tribe->progeny(chld,data);
                             }
-                            swapWith(chld);
+                            Tribe::List part;
+                            ListOps::Fusion(part,curr,chld,Tribe::Compare);
+                            curr.swapWith(part);
                         }
+                        swapWith(curr);
 
                     }
 
@@ -491,8 +493,8 @@ Y_UTEST(apex_coven)
         }
     }
 
-    data[1].ld(0);
-    data[3].ld(data[2]);
+    //data[1].ld(0);
+    //data[3].ld(data[2]);
 
     Ortho::Coven::IBank  bank;
     Ortho::Metrics       qmtx(cols);
@@ -500,11 +502,10 @@ Y_UTEST(apex_coven)
     Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
 
     bool      verbose = true;
-    XMLog xml(verbose);
+    XMLog    xml(verbose);
 
     Ortho::Coven::Tribes tribes(xml,data,bank,qfcc);
 
-#if 1
     Natural count = 0;
     while(tribes.size)
     {
@@ -514,7 +515,6 @@ Y_UTEST(apex_coven)
     }
 
     std::cerr << "count=" << count << " / " << Ortho::Coven::Tribes::MaxCount(rows) << std::endl;
-#endif
 
 }
 Y_UDONE()
