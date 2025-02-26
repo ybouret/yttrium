@@ -356,7 +356,7 @@ namespace Yttrium
                     vc(qfcc->vcache),
                     db()
                     {
-                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "[" << data.rows << "][" << data.cols << "]");
+                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "initialize [" << data.rows << "][" << data.cols << "]");
                         {
                             const size_t n = data.rows;
                             for(size_t indx=1;indx<=n;++indx)
@@ -387,7 +387,7 @@ namespace Yttrium
                                   const MATRIX & data,
                                   const unsigned flag)
                     {
-
+                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "Generate");
                         {
                             Tribe::List curr;
                             {
@@ -404,6 +404,7 @@ namespace Yttrium
                             }
                             swapWith(curr);
                         }
+                        Y_XML_COMMENT(xml, "#generated   = " << size);
                         ++Coerce(iteration);
                         collect(proc);
 
@@ -636,7 +637,7 @@ namespace
         {
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
-            std::cerr << tribes << std::endl;
+            //std::cerr << tribes << std::endl;
             tribes.generate(xml,proc,data,flag);
         }
 
