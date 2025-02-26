@@ -52,6 +52,12 @@ namespace Yttrium
                         return content.removed(indx) || residue.removed(indx);
                     }
 
+                    void flush() noexcept
+                    {
+                        while(residue.size>0)
+                            content.push(residue.popHead());
+                    }
+
                     Content content;
                     Residue residue;
 

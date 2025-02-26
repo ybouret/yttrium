@@ -30,7 +30,9 @@ namespace Yttrium
                 public:
 
                     typedef CxxListOf<Tribe> List;
-                    static const unsigned BasisCompression = 0x01;
+                    static const unsigned OptimizeHyperPlanes = 0x01;
+                    static const unsigned UseBasisCompression = 0x02;
+
 
                     template <typename MATRIX> inline
                     explicit Tribe(const MATRIX & data,
@@ -75,18 +77,26 @@ namespace Yttrium
                         return Natural::Compare(lhs->qfamily->weight(),rhs->qfamily->weight());
                     }
 
+                    //! add to lineage
                     template <typename MATRIX> inline
                     void progeny(List         &lineage,
-                                 const MATRIX &data) const
+                                 const MATRIX &data)
                     {
 
+                        assert( lineage.isSortedAccordingTo(Tribe::Compare) );
+                        const Quality q = qfamily->quality;
+                        switch(q)
+                        {
+                            case Degenerate: throw Exception("Degenerate Family");
+                            case Foundation: flush(); return;
+                            case Hyperplane:;
+                        }
 
                         for(const INode *node=residue.head;node;node=node->next)
                         {
                             lineage.pushTail( new Tribe(*this,data,node) );
                         }
 
-                        // partial sort
                         MergeSort::Call(lineage,Compare);
                     }
 
@@ -200,19 +210,17 @@ namespace Yttrium
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "Iteration #" << iteration);
                         {
                             Tribe::List curr;
+
+                            for(Tribe *tribe=head;tribe;tribe=tribe->next)
                             {
                                 Tribe::List chld;
-                                for(const Tribe *tribe=head;tribe;tribe=tribe->next)
-                                    tribe->progeny(chld,data);
-                                {
-                                    assert(ListOps::IsSorted(curr,Tribe::Compare));
-                                    assert(ListOps::IsSorted(chld,Tribe::Compare));
-                                    Tribe::List part;
-                                    ListOps::Fusion(part,curr,chld,Tribe::Compare);
-                                    assert(ListOps::IsSorted(part,Tribe::Compare));
-                                    curr.swapWith(part);
-                                }
+                                tribe->progeny(chld,data);
+                                Tribe::List part;
+                                ListOps::Fusion(part,curr,chld,Tribe::Compare);
+                                assert(ListOps::IsSorted(part,Tribe::Compare));
+                                curr.swapWith(part);
                             }
+
                             swapWith(curr);
                         }
                         Y_XML_COMMENT(xml, "#generated   = " << size);
@@ -225,8 +233,8 @@ namespace Yttrium
                         }
                         else
                         {
-                            if( 0 != (flag & Tribe::BasisCompression ) )
-                                compression(xml);
+                            if( 0 != (flag & Tribe::UseBasisCompression ) )
+                                makeCompression(xml);
                         }
 
                     }
@@ -250,7 +258,7 @@ namespace Yttrium
                 public:
                     const Vector::List db;
 
-                    void compression(XMLog &xml)
+                    void makeReplacement(XMLog &xml)
                     {
                         size_t replacement = 0;
                         for(Tribe *curr=head;curr;curr=curr->next)
@@ -265,6 +273,11 @@ namespace Yttrium
                             }
                         }
                         Y_XML_COMMENT(xml,"#replacement = " << replacement);
+                    }
+
+                    void makeCompression(XMLog &xml)
+                    {
+                        makeReplacement(xml);
                     }
 
                     void collect(Callback &proc)
@@ -488,8 +501,8 @@ Y_UTEST(apex_coven)
     bool   verbose = true;
     XMLog  xml(verbose);
 
-    Stats        s0; const Digest h0 = Process(xml,data,0,s0);
-    Stats        s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::BasisCompression,s1);
+    Stats s0; const Digest h0 = Process(xml,data,0,s0);
+    Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::UseBasisCompression,s1);
     std::cerr << "h0=" << h0 << " " << s0 << std::endl;
     std::cerr << "h1=" << h1 << " " << s1 << std::endl;
 }

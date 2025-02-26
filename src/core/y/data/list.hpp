@@ -153,6 +153,12 @@ namespace Yttrium
             pushHead( popTail() );
         }
 
+        //! check that nodes are sorted according to comparison
+        template <typename COMPARE_NODES> inline
+        bool isSortedAccordingTo(COMPARE_NODES &compare) const
+        {
+            return ListOps::IsSorted(*this,compare);
+        }
 
 
         //______________________________________________________________________
