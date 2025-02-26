@@ -1,4 +1,6 @@
-#include "y/apex/api/ortho/coven/types.hpp"
+#include "y/apex/api/ortho/coven/posture.hpp"
+#include "y/apex/api/ortho/family.hpp"
+
 #include "y/stream/xmlog.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/utest/run.hpp"
@@ -22,204 +24,6 @@ namespace Yttrium
         {
             namespace Coven
             {
-
-                class Content : public Proxy<const IList>
-                {
-                public:
-                    explicit Content(const IBank &bank) noexcept :
-                    Proxy<const IList>(),
-                    my(bank)
-                    {
-                    }
-
-                    explicit Content(const Content &_) :
-                    Proxy<const IList>(),
-                    my(_.my)
-                    {
-                    }
-
-
-                    //! with first index
-                    explicit Content(const IBank &bank,
-                                     const size_t indx) :
-                    Proxy<const IList>(),
-                    my(bank)
-                    {
-                        (*this) << indx;
-                    }
-
-                    explicit Content(const Content &root,
-                                     const size_t   indx) :
-                    Proxy<const IList>(),
-                    my(root.my)
-                    {
-                        (*this) << indx;
-
-                    }
-
-                    virtual ~Content() noexcept
-                    {
-                    }
-
-                    Content & push(INode * const node) noexcept
-                    {
-                        assert(0!=node);
-                        ListOps::InsertOrdered(my,node,Compare);
-                        return *this;
-                    }
-
-                    Content & operator<<(const size_t indx)
-                    {
-                        return push(my.proxy->produce(indx));
-                    }
-
-                    void xch(Content &_) noexcept
-                    {
-                        my.swapWith(_.my);
-                    }
-
-                    friend bool operator==(const Content &lhs, const Content &rhs) noexcept
-                    {
-                        return IList::AreEqual(lhs.my,rhs.my);
-                    }
-
-                    bool removed(const size_t indx) noexcept
-                    {
-                        for(INode *node=my.head;node;node=node->next)
-                        {
-                            if(indx==**node) { my.cutNode(node); return true; }
-                        }
-                        return false;
-                    }
-
-                private:
-                    Y_DISABLE_ASSIGN(Content);
-                    Y_PROXY_DECL();
-                    IList my;
-                    
-                    static SignType Compare(const INode * const lhs,
-                                            const INode * const rhs) noexcept
-                    {
-                        return Sign::Of(**lhs,**rhs);
-                    }
-                };
-
-                Y_PROXY_IMPL(Content,my)
-
-                class Residue : public IList
-                {
-                public:
-                    explicit Residue(const IBank &bank) noexcept :
-                    IList(bank)
-                    {
-                    }
-
-                    explicit Residue(const Residue &_) :
-                    IList(_)
-                    {
-                    }
-
-                    explicit Residue(const IBank &bank,
-                                     const size_t dims,
-                                     const size_t excl) :
-                    IList(bank)
-                    {
-                        IList &self = *this;
-                        for(size_t i=1;i<=dims;++i)
-                        {
-                            if(i!=excl) self << i;
-                        }
-                    }
-
-                    static inline const IBank & check(const IBank &bank)
-                    {
-                        assert(bank.isValid());
-                        return bank;
-                    }
-
-                    explicit Residue(const IBank &       bank,
-                                     const INode * const node) :
-                    IList( check(bank) )
-                    {
-                        assert(0!=node);
-                        IList &self = *this;
-                        for(const INode *prev=node->prev;prev;prev=prev->prev) self >> **prev;
-                        for(const INode *next=node->next;next;next=next->next) self << **next;
-                    }
-
-
-                    virtual ~Residue() noexcept
-                    {
-                    }
-
-                    void xch(Residue &_) noexcept
-                    {
-                        swapWith(_);
-                    }
-
-                    bool removed(const size_t indx) noexcept
-                    {
-                        for(INode *node=head;node;node=node->next)
-                        {
-                            if(indx==**node) { cutNode(node); return true; }
-                        }
-                        return false;
-                    }
-
-                private:
-                    Y_DISABLE_ASSIGN(Residue);
-                };
-
-
-                class Posture
-                {
-                public:
-                    explicit Posture(const IBank &bank,
-                                     const size_t dims,
-                                     const size_t indx) :
-                    content(bank,indx),
-                    residue(bank,dims,indx)
-                    {
-                    }
-
-                    explicit Posture(const Posture &     root,
-                                     const INode * const node) :
-                    content(root.content,**node),
-                    residue(root.residue.proxy,node)
-                    {
-                        assert(root.residue.owns(node));
-                        assert(1+root.content->size == content->size);
-                        assert(root.residue.size-1  == residue.size);
-                    }
-
-                    virtual ~Posture() noexcept {}
-
-                    Y_OSTREAM_PROTO(Posture);
-
-
-                    void xch(Posture &_) noexcept
-                    {
-                        content.xch(_.content);
-                        residue.xch(_.residue);
-                    }
-
-                    bool removed(const size_t indx) noexcept
-                    {
-                        return content.removed(indx) || residue.removed(indx);
-                    }
-
-                    Content content;
-                    Residue residue;
-
-                private:
-                    Y_DISABLE_ASSIGN(Posture);
-                };
-
-                std::ostream & operator<<(std::ostream &os, const Posture &self)
-                {
-                    os << self.content << ':' << self.residue;
-                    return os;
-                }
 
                 class Tribe : public Quantized, public Posture
                 {
@@ -394,12 +198,13 @@ namespace Yttrium
                             {
                                 Tribe::List chld;
                                 for(const Tribe *tribe=head;tribe;tribe=tribe->next)
-                                {
                                     tribe->progeny(chld,data);
-                                }
                                 {
+                                    assert(ListOps::IsSorted(curr,Tribe::Compare));
+                                    assert(ListOps::IsSorted(chld,Tribe::Compare));
                                     Tribe::List part;
                                     ListOps::Fusion(part,curr,chld,Tribe::Compare);
+                                    assert(ListOps::IsSorted(part,Tribe::Compare));
                                     curr.swapWith(part);
                                 }
                             }
