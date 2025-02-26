@@ -387,7 +387,8 @@ namespace Yttrium
                                   const MATRIX & data,
                                   const unsigned flag)
                     {
-                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "Generate");
+                        ++Coerce(iteration);
+                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "Iteration #" << iteration);
                         {
                             Tribe::List curr;
                             {
@@ -405,8 +406,8 @@ namespace Yttrium
                             swapWith(curr);
                         }
                         Y_XML_COMMENT(xml, "#generated   = " << size);
-                        ++Coerce(iteration);
                         collect(proc);
+                        Y_XML_COMMENT(xml, "#collected   = " << collected);
 
                         if(size<=0)
                         {

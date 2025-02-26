@@ -45,6 +45,7 @@ namespace Yttrium
                 Call(rhs,compareNodes);
                 ListOps::Fusion(L,lhs,rhs,compareNodes);
             }
+            assert( ListOps::IsSorted(L,compareNodes) );
         }
 
         //______________________________________________________________________

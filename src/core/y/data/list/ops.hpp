@@ -565,6 +565,26 @@ namespace Yttrium
             return Upgraded_(L,node);
         }
 
+        //! check that a list is sorted
+        template <typename LIST, typename COMPARE> static inline
+        bool IsSorted(const LIST &L, COMPARE &compareNodes)
+        {
+            typedef typename LIST::NodeType NODE;
+            if(L.size<=1) return true;
+            for(NODE *curr=L.head, *next=curr->next;
+                0!=next;
+                curr=next,next=next->next)
+            {
+                switch( compareNodes(curr,next) )
+                {
+                    case Negative:
+                    case __Zero__: continue;
+                    case Positive: return false;
+                }
+            }
+            return true;
+        }
+
         //______________________________________________________________________
         //
         //! helper to test InsertOrdered
@@ -735,6 +755,9 @@ namespace Yttrium
             NODE * const prev = node->prev;
             return InsertBefore(L,prev,Pop(L,node));
         }
+
+
+
     };
 
 }
