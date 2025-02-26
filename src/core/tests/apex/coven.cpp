@@ -80,10 +80,13 @@ namespace Yttrium
                                  const MATRIX &data) const
                     {
 
+
                         for(const INode *node=residue.head;node;node=node->next)
                         {
                             lineage.pushTail( new Tribe(*this,data,node) );
                         }
+
+                        // partial sort
                         MergeSort::Call(lineage,Compare);
                     }
 
@@ -130,6 +133,8 @@ namespace Yttrium
                     os << posture << "->" << *(tribe.qfamily);
                     return os;
                 }
+
+
 
                 typedef Functor<void,TL1(const Vector&)> Callback;
 
@@ -222,7 +227,6 @@ namespace Yttrium
                         {
                             if( 0 != (flag & Tribe::BasisCompression ) )
                                 compression(xml);
-
                         }
 
                     }
