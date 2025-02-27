@@ -22,8 +22,9 @@ namespace Yttrium
                 public:
 
                     typedef CxxListOf<Tribe> List;
-                    static const unsigned    OptimizeHyperPlanes = 0x01;
-                    static const unsigned    UseBasisCompression = 0x02;
+                    static const char * const CallSign;
+                    static const unsigned     OptimizeHyperPlanes = 0x01;
+                    static const unsigned     UseBasisCompression = 0x02;
 
 
                     template <typename MATRIX> inline
@@ -69,8 +70,25 @@ namespace Yttrium
                                  const MATRIX  & data,
                                  const unsigned  flag)
                     {
+                        if(0!= (flag&OptimizeHyperPlanes) )
+                        {
+                            switch(qfamily->quality)
+                            {
+                                case Degenerate: throwDegenerate(); return;
+                                case Foundation: flush(); return;
+                                case Hyperplane:
+                                    break;
+                                case Fragmental:
+                                    break;
+                            }
 
-                        lineage(chld,data);
+
+                            lineage(chld,data);
+                        }
+                        else
+                        {
+                            lineage(chld,data);
+                        }
                     }
 
 
@@ -85,6 +103,7 @@ namespace Yttrium
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribe);
                     void destroy() noexcept;
+                    void throwDegenerate() const;
 
                     template <typename MATRIX> inline
                     void lineage(List          & chld,

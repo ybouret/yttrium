@@ -1,4 +1,5 @@
 #include "y/apex/api/ortho/coven/tribe.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -39,6 +40,13 @@ namespace Yttrium
                     const Posture &posture = tribe;
                     os << posture << "->" << *(tribe.qfamily);
                     return os;
+                }
+
+                const char * const Tribe:: CallSign = "Coven::Tribe";
+
+                void Tribe:: throwDegenerate() const
+                {
+                    throw Specific::Exception(CallSign, "Unexpected %s Family!", Family::QualityText(Degenerate) );
                 }
             }
 
