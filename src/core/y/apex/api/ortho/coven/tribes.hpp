@@ -77,40 +77,10 @@ namespace Yttrium
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));
                         assembleLast(proc);
-                        prune(xml,flag);
+                        removeFutile(xml,flag);
                     }
 
-                    void prune(XMLog &xml, const unsigned flag)
-                    {
-                        Y_XML_COMMENT(xml, "#generated   = " << size);
-                        Y_XML_COMMENT(xml, "#collected   = " << collected);
-
-                        {
-                            Tribe::List active;
-                            while(size>0)
-                            {
-                                Tribe * const tribe = popHead();
-                                if(Foundation == tribe->qfamily->quality)
-                                {
-                                    delete tribe;
-                                    continue;
-                                }
-                                active.pushTail(tribe);
-                            }
-                            swapWith(active);
-                            assert(isSortedAccordingTo(Tribe::Compare));
-                        }
-
-                        if(size<=0)
-                        {
-                            MergeSort::Call( Coerce(db), CompareVectors);
-                        }
-                        else
-                        {
-                            if( 0 != (flag & Tribe::UseBasisCompression ) )
-                                makeCompression(xml);
-                        }
-                    }
+                   
 
 
 
@@ -124,11 +94,12 @@ namespace Yttrium
                     const Vector::List db;
 
 
-                    void           doInitialize(XMLog &xml, Callback &proc);
-                    void           noNullVector(XMLog &xml);
-                    void           noDuplicates(XMLog &xml);
+                    void           doInitialize(XMLog &, Callback &);
+                    void           noNullVector(XMLog &);
+                    void           noDuplicates(XMLog &);
                     const Vector * tryInsertNew(const Vector &vec);
                     void           assembleLast(Callback &);
+                    void           removeFutile(XMLog &, const unsigned flag);
 
                     void makeReplacement(XMLog &xml);
                     void makeCompression(XMLog &xml);

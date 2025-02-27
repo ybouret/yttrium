@@ -74,6 +74,11 @@ namespace Yttrium
                         return false;
                     }
 
+                    friend bool operator==(const Residue &lhs, const Residue &rhs) noexcept
+                    {
+                        return IList::AreEqual(lhs,rhs);
+                    }
+
                 private:
                     Y_DISABLE_ASSIGN(Residue);
                 };

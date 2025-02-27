@@ -82,6 +82,7 @@ namespace Yttrium
                     size_t replacement = 0;
                     for(Tribe *curr=head;curr;curr=curr->next)
                     {
+                        assert(Foundation != curr->qfamily->quality );
                         for(Tribe *prev=curr->prev;prev;prev=prev->prev)
                         {
                             if( (curr->qfamily!=prev->qfamily) && (curr->content==prev->content) )
@@ -91,7 +92,6 @@ namespace Yttrium
                             }
                         }
                     }
-
 
                     Y_XML_COMMENT(xml,"#replacement = " << replacement);
                     if(replacement<=0) { assert( isSortedAccordingTo(Tribe::Compare) ); return; }
@@ -105,7 +105,7 @@ namespace Yttrium
                     count = 0;
                     for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                     {
-                        const Vector *pVector = tribe->lastVec;        if(0==pVector) continue;
+                        const Vector *pVector = tribe->lastVec;         if(0==pVector) continue;
                         const Vector *pSingle = tryInsertNew(*pVector); if(0==pSingle) continue;
                         proc(*pSingle);
                         ++count;
@@ -234,39 +234,80 @@ namespace Yttrium
                     makeReplacement(xml);
 
                     Tribe::List kept;
+                    std::cerr << "compression [";
                     while(size>0)
                     {
                         AutoPtr<Tribe> lhs = popHead();
 
-                        std::cerr << "[";
                         for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
                         {
                             if(lhs->qfamily==rhs->qfamily) continue;
-                            (std::cerr << '.').flush();
 
                             if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
                             {
-                                std::cerr << "---- Same Vectors, different families" << std::endl;
-                                std::cerr << "(*) lhs=" << *lhs << std::endl;
-                                std::cerr << "(*) rhs=" << *rhs << std::endl;
+                                //std::cerr << "---- Same Vectors, different families" << std::endl;
+                                //std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                //std::cerr << "(*) rhs=" << *rhs << std::endl;
 
-                                collapse(*lhs,*rhs);
-                                std::cerr << "--> lhs=" << *lhs << std::endl;
-                                std::cerr << "--> rhs=" << *rhs << std::endl;
+                                Posture &L = *lhs;
+                                Posture &R = *rhs;
 
+                                collapse(L,R);
+                                //std::cerr << "--> lhs=" << *lhs << std::endl;
+                                //std::cerr << "--> rhs=" << *rhs << std::endl;
+
+                                if(L==R)
+                                {
+                                    (std::cerr << '#').flush();
+                                    continue;
+                                }
 
 
 
                                 throw Exception("Not Handled!!");
                             }
                         }
-                        std::cerr << "]" << std::endl;
 
+                        (std::cerr << '.').flush();
                         kept.pushTail(lhs.yield());
                     }
+                    std::cerr << "]" << std::endl;
 
                     swapWith(kept);
 
+                }
+
+
+                void Tribes:: removeFutile(XMLog &xml, const unsigned flag)
+                {
+                    Y_XML_COMMENT(xml, "#generated   = " << size);
+                    Y_XML_COMMENT(xml, "#collected   = " << collected);
+
+                    {
+                        Tribe::List active;
+                        while(size>0)
+                        {
+                            Tribe * const tribe = popHead();
+                            if(Foundation == tribe->qfamily->quality || tribe->residue.size<=0)
+                            {
+                                delete tribe;
+                                continue;
+                            }
+                            active.pushTail(tribe);
+                        }
+                        swapWith(active);
+                        assert(isSortedAccordingTo(Tribe::Compare));
+                    }
+
+
+
+                    if(size<=0)
+                        MergeSort::Call( Coerce(db), CompareVectors);
+                    else
+                    {
+                        if( 0 != (flag & Tribe::UseBasisCompression ) )
+                            makeCompression(xml);
+                    }
                 }
 
             }

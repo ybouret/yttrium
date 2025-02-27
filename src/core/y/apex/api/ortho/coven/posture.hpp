@@ -53,6 +53,11 @@ namespace Yttrium
                         residue.xch(_.residue);
                     }
 
+                    friend bool operator==(const Posture &lhs, const Posture &rhs) noexcept
+                    {
+                        return (lhs.content == rhs.content) && (lhs.residue == rhs.residue);
+                    }
+
                     bool removed(const size_t indx) noexcept
                     {
                         return content.removed(indx) || residue.removed(indx);
