@@ -215,9 +215,9 @@ namespace Yttrium
                             if(lhs->qfamily==rhs->qfamily) continue;
                             (std::cerr << '.').flush();
 
-                            if(lhs->qfamily->hasSameSpanThan(*rhs->qfamily))
+                            if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
                             {
-                                std::cerr << "---- Same Spans" << std::endl;
+                                std::cerr << "---- Same Vectors, different families" << std::endl;
                                 std::cerr << "lhs=" << *lhs << std::endl;
                                 std::cerr << "rhs=" << *rhs << std::endl;
                                 throw Exception("Not Handled!!");
