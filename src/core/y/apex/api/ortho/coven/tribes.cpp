@@ -186,12 +186,12 @@ namespace Yttrium
                     noDuplicates(xml);
                     MergeSort::Call(*this,Tribe::Compare);
 
-                    // collect first
+                    // collect first inserted vectors
                     for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                     {
                         assert(0!=tribe->lastVec);
                         const Vector *vec = tryInsertNew(*(tribe->lastVec));
-                        if(!vec) throw Exception("unexpected multiple initial vector");
+                        if(!vec) throw Specific::Exception(CallSign,"Unexpected multiple initial vector");
                         proc(*vec);
                     }
 
@@ -208,6 +208,22 @@ namespace Yttrium
                     while(size>0)
                     {
                         AutoPtr<Tribe> lhs = popHead();
+
+                        std::cerr << "[";
+                        for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
+                        {
+                            if(lhs->qfamily==rhs->qfamily) continue;
+                            (std::cerr << '.').flush();
+
+                            if(lhs->qfamily->hasSameSpanThan(*rhs->qfamily))
+                            {
+                                std::cerr << "---- Same Spans" << std::endl;
+                                std::cerr << "lhs=" << *lhs << std::endl;
+                                std::cerr << "rhs=" << *rhs << std::endl;
+                                throw Exception("Not Handled!!");
+                            }
+                        }
+                        std::cerr << "]" << std::endl;
 
                         kept.pushTail(lhs.yield());
                     }
