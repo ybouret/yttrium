@@ -199,6 +199,26 @@ namespace Yttrium
                     Coerce(collected) = db.size;
                 }
 
+                static inline
+                void promote(Posture       &posture,
+                             const Content &foreign) noexcept
+                {
+                    ListOf<INode> conserved;
+                    while(posture.residue.size>0)
+                    {
+                        INode *node = posture.residue.popHead();
+                        if(foreign->has(**node))
+                        {
+                            posture.content.push(node);
+                        }
+                        else
+                        {
+                            conserved.pushTail(node);
+                        }
+                    }
+                    posture.residue.swapWith(conserved);
+                }
+
 
                 void Tribes:: makeCompression(XMLog &xml)
                 {
@@ -221,8 +241,13 @@ namespace Yttrium
                                 std::cerr << "lhs=" << *lhs << std::endl;
                                 std::cerr << "rhs=" << *rhs << std::endl;
 
-                                Posture lhsNew = *lhs;
-                                Posture rhsnew = *rhs;
+                                Posture lhsNew = *lhs; promote(lhsNew,rhs->content);
+                                Posture rhsNew = *rhs; promote(rhsNew,lhs->content);
+
+                                std::cerr << "lhsNew=" << lhsNew << std::endl;
+                                std::cerr << "rhsNew=" << rhsNew << std::endl;
+
+
 
                                 throw Exception("Not Handled!!");
                             }

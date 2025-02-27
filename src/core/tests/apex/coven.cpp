@@ -78,11 +78,10 @@ namespace
                    Stats             &stats)
     {
 
-        Ortho::Coven::IBank  bank;
-        Ortho::Metrics       qmtx(data.cols);
-        Ortho::VCache        qvcc( new Ortho::Vector::Cache(qmtx) );
-        Ortho::FCache        qfcc( new Ortho::Family::Cache(qvcc) );
-
+        Ortho::Coven::IBank    bank;
+        Ortho::Metrics         qmtx(data.cols);
+        Ortho::VCache          qvcc( new Ortho::Vector::Cache(qmtx) );
+        Ortho::FCache          qfcc( new Ortho::Family::Cache(qvcc) );
         Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
 
         Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
