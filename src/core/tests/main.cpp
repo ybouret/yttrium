@@ -133,6 +133,8 @@ Y_UTEST_DECL(300)
     Y_UTEST(random_gaussian);
     Y_UTEST(random_isaac);
     Y_UTEST(random_mt19937ar);
+    Y_UTEST(random_mt19937);
+
 
     Y_UTEST(sort_heap);
     Y_UTEST(sort_merge);
