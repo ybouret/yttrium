@@ -443,8 +443,8 @@ namespace Yttrium
         //
         //! fusion of two sorted list into another sorted
         //______________________________________________________________________
-        template <typename TARGET, typename LIST, typename COMPARE_NODES> static inline
-        void Fusion(TARGET &target, LIST &lhs, LIST &rhs, COMPARE_NODES &compareNodes) noexcept
+        template <typename TARGET, typename LHS, typename RHS, typename COMPARE_NODES> static inline
+        void Fusion(TARGET &target, LHS &lhs, RHS &rhs, COMPARE_NODES &compareNodes) noexcept
         {
             assert(0==target.size);
             assert(0==target.head);
@@ -464,6 +464,18 @@ namespace Yttrium
             assert(0==lhs.size||0==rhs.size);
             MergeTail(target,lhs);
             MergeTail(target,rhs);
+        }
+
+        //______________________________________________________________________
+        //
+        //! fusion of two sorted list into the first one
+        //______________________________________________________________________
+        template <typename LHS, typename RHS, typename COMPARE_NODES> static inline
+        void Fusion(LHS &lhs, RHS &rhs, COMPARE_NODES &compareNodes) noexcept
+        {
+            LHS target;
+            Fusion(target,lhs,rhs,compareNodes);
+            lhs.swapWith(target);
         }
 
 

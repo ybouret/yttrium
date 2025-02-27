@@ -77,27 +77,24 @@ namespace Yttrium
                         return Natural::Compare(lhs->qfamily->weight(),rhs->qfamily->weight());
                     }
 
-                    //! add to lineage
+                    //! add to ordered children
                     template <typename MATRIX> inline
-                    void progeny(List         &lineage,
-                                 const MATRIX &data)
+                    void progeny(List          & chld,
+                                 const MATRIX  & data,
+                                 const unsigned  flag)
                     {
 
-                        assert( lineage.isSortedAccordingTo(Tribe::Compare) );
-                        const Quality q = qfamily->quality;
-                        switch(q)
+                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
                         {
-                            case Degenerate: throw Exception("Degenerate Family");
-                            case Foundation: flush(); return;
-                            case Hyperplane:;
+                            List here;
+                            for(const INode *node=residue.head;node;node=node->next)
+                            {
+                                here.pushTail( new Tribe(*this,data,node) );
+                            }
+                            MergeSort::Call(here,Compare);
+                            ListOps::Fusion(chld,here,Compare);
                         }
-
-                        for(const INode *node=residue.head;node;node=node->next)
-                        {
-                            lineage.pushTail( new Tribe(*this,data,node) );
-                        }
-
-                        MergeSort::Call(lineage,Compare);
+                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
                     }
 
                     void replaceFamilyByFamilyOf(Tribe &better) noexcept
@@ -207,22 +204,19 @@ namespace Yttrium
                                   const unsigned flag)
                     {
                         ++Coerce(iteration);
-                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "Iteration #" << iteration);
+                        Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
+                        assert(isSortedAccordingTo(Tribe::Compare));
                         {
-                            Tribe::List curr;
-
+                            Tribe::List chld;
                             for(Tribe *tribe=head;tribe;tribe=tribe->next)
                             {
-                                Tribe::List chld;
-                                tribe->progeny(chld,data);
-                                Tribe::List part;
-                                ListOps::Fusion(part,curr,chld,Tribe::Compare);
-                                assert(ListOps::IsSorted(part,Tribe::Compare));
-                                curr.swapWith(part);
+                                tribe->progeny(chld,data,flag);
                             }
-
-                            swapWith(curr);
+                            swapWith(chld);
                         }
+                        assert(isSortedAccordingTo(Tribe::Compare));
+
+
                         Y_XML_COMMENT(xml, "#generated   = " << size);
                         collect(proc);
                         Y_XML_COMMENT(xml, "#collected   = " << collected);
@@ -378,6 +372,7 @@ namespace Yttrium
                     {
                         noNullVector(xml);
                         noDuplicates(xml);
+                        MergeSort::Call(*this,Tribe::Compare);
 
                         // collect first
                         for(const Tribe *tribe=head;tribe;tribe=tribe->next)
