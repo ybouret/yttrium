@@ -76,11 +76,30 @@ namespace Yttrium
                             swapWith(chld);
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));
-
-
-                        Y_XML_COMMENT(xml, "#generated   = " << size);
                         assembleLast(proc);
+                        prune(xml,flag);
+                    }
+
+                    void prune(XMLog &xml, const unsigned flag)
+                    {
+                        Y_XML_COMMENT(xml, "#generated   = " << size);
                         Y_XML_COMMENT(xml, "#collected   = " << collected);
+
+                        {
+                            Tribe::List active;
+                            while(size>0)
+                            {
+                                Tribe * const tribe = popHead();
+                                if(Foundation == tribe->qfamily->quality)
+                                {
+                                    delete tribe;
+                                    continue;
+                                }
+                                active.pushTail(tribe);
+                            }
+                            swapWith(active);
+                            assert(isSortedAccordingTo(Tribe::Compare));
+                        }
 
                         if(size<=0)
                         {
@@ -91,9 +110,7 @@ namespace Yttrium
                             if( 0 != (flag & Tribe::UseBasisCompression ) )
                                 makeCompression(xml);
                         }
-
                     }
-
 
 
 
