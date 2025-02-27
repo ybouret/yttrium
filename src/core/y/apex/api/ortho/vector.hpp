@@ -23,6 +23,7 @@ namespace Yttrium
             //! base type for Vector
             //__________________________________________________________________
             typedef CxxArray<const Integer,Memory::Dyadic> VectorType;
+            typedef Quantized                              VectorObject;
 
             //__________________________________________________________________
             //
@@ -33,7 +34,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class Vector :
-            public Object,
+            public VectorObject,
+            public Counted,
             public Metrics,
             public VectorType,
             public Serializable
@@ -48,7 +50,8 @@ namespace Yttrium
                 typedef CxxPoolOf<Vector> Pool;    //!< alias
                 typedef ListOf<Vector>    List;    //!< alias
                 typedef Writable<Integer> Array;   //!< alias
-
+                typedef ArcPtr<Vector>    Pointer; //!< alias
+                
                 //______________________________________________________________
                 //
                 //

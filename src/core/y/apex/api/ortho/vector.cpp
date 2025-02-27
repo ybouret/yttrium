@@ -13,7 +13,7 @@ namespace Yttrium
 
 
             Vector:: Vector(const Metrics &m) :
-            Object(),
+            VectorObject(),
             Metrics(m),
             VectorType(dimensions),
             ncof(0),
