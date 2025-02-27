@@ -1,5 +1,6 @@
 
 #include "y/stream/bits.hpp"
+#include "y/calculus/bit-count.hpp"
 
 namespace Yttrium
 {
@@ -59,7 +60,7 @@ namespace Yttrium
         return *this;
     }
 
-
+    
 }
 
 #include "y/string.hpp"

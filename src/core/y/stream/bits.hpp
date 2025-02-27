@@ -69,7 +69,7 @@ namespace Yttrium
         StreamBits & operator<<( const IO::_0_ &); //!< push 0/false
 
 
-        //! push lower bits of data
+        //! push lower bits of unsigned data
         template <typename T>
         StreamBits & push(const T data,
                           size_t  bits)
@@ -80,7 +80,7 @@ namespace Yttrium
             return *this;
         }
 
-        //! pull lower bits of data
+        //! pull lower bits of unsigned data
         template <typename T>
         T pull(size_t bits) noexcept
         {
@@ -112,7 +112,9 @@ namespace Yttrium
 
         //! push 0 to byte boundary
         StreamBits & fill();
+
         
+
         //______________________________________________________________________
         //
         //
