@@ -114,22 +114,20 @@ Y_UTEST(apex_coven)
     Random::ParkMiller ran;
     Y_SIZEOF(Ortho::Coven::Tribe);
 
-    size_t rows = 4; if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t cols = 5; if(argc>2) cols = ASCII::Convert::To<size_t>(argv[2],"cols");
+    size_t rows = 4;    if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t cols = rows; if(argc>2) cols = ASCII::Convert::To<size_t>(argv[2],"cols");
 
     Matrix<int> data(rows,cols);
     for(size_t i=1;i<=rows;++i)
     {
         for(size_t j=1;j<=cols;++j)
         {
-            data[i][j] = ran.in<int>(-1,1);
+            data[i][j] = ran.in<int>(-5,5);
         }
     }
 
     //data[1].ld(0);
     //data[3].ld(data[2]);
-
-
 
     bool   verbose = true;
     XMLog  xml(verbose);
