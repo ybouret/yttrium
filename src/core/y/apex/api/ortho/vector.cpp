@@ -9,6 +9,9 @@ namespace Yttrium
     {
         namespace Ortho
         {
+
+            const char * const     Vector:: CallSign = "Ortho::Vector";
+
             Vector:: ~Vector() noexcept {}
 
 
@@ -22,6 +25,8 @@ namespace Yttrium
             prev(0)
             {
             }
+
+            const char * Vector:: callSign() const noexcept { return CallSign; }
 
 
 
@@ -113,6 +118,25 @@ namespace Yttrium
 
     }
 
+}
+
+#include "y/stream/output.hpp"
+namespace Yttrium
+{
+    namespace Apex
+    {
+        namespace Ortho
+        {
+            size_t Vector:: serialize(OutputStream &fp) const
+            {
+                const size_t sz = size();
+                size_t res = fp.emitVBR(sz);
+                for(size_t i=1;i<=sz;++i) res += (*this)[i].serialize(fp);
+                return res;
+            }
+
+        }
+    }
 }
 
 

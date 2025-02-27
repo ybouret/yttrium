@@ -9,7 +9,6 @@
 #include "y/container/cxx/array.hpp"
 #include "y/data/list.hpp"
 
-#include "y/stream/output.hpp"
 
 namespace Yttrium
 {
@@ -47,11 +46,11 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef CxxPoolOf<Vector> Pool;    //!< alias
-                typedef ListOf<Vector>    List;    //!< alias
-                typedef Writable<Integer> Array;   //!< alias
-                typedef ArcPtr<Vector>    Pointer; //!< alias
-                
+                typedef CxxPoolOf<Vector>     Pool;    //!< alias
+                typedef ListOf<Vector>        List;    //!< alias
+                typedef Writable<Integer>     Array;   //!< alias
+                static const char * const     CallSign; //!< Ortho::Vector
+
                 //______________________________________________________________
                 //
                 //
@@ -98,14 +97,8 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual const char * callSign() const noexcept { return "Ortho::Vector"; }
-                virtual size_t serialize(OutputStream &fp) const
-                {
-                    const size_t sz = size();
-                    size_t res = fp.emitVBR(sz);
-                    for(size_t i=1;i<=sz;++i) res += (*this)[i].serialize(fp);
-                    return res;
-                }
+                virtual const char * callSign()         const noexcept;
+                virtual size_t       serialize(OutputStream &fp) const;
 
                 //______________________________________________________________
                 //
@@ -113,9 +106,9 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void  ldz() noexcept;      //!< reset all
-                void  ld(const Vector &); //!< duplicate
-
+                void           ldz() noexcept;      //!< reset all
+                void           ld(const Vector &); //!< duplicate
+                const Vector & key() const noexcept { return *this; }
 
                 //! transfer compatible vector, return true if not nul vector
                 template <typename T> inline

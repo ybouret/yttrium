@@ -14,7 +14,7 @@ namespace Yttrium
     {
     public:
         explicit SerializableHasher(Hashing::Function &) noexcept;
-        SerializableHasher(const SerializableHasher &) noexcept;
+        SerializableHasher(const SerializableHasher &)    noexcept;
         virtual ~SerializableHasher() noexcept;
 
         Hashing::Function & hash(const Serializable &obj) noexcept;
@@ -28,7 +28,7 @@ namespace Yttrium
     class SerializableKeyHasher : public HASHING_FUNCTION, public SerializableHasher
     {
     public:
-        inline explicit SerializableKeyHasher() noexcept : HASHING_FUNCTION(), SerializableHasher(*this) {}
+        inline explicit SerializableKeyHasher() noexcept : HASHING_FUNCTION(), SerializableHasher( static_cast<HASHING_FUNCTION&>(*this) ) {}
         inline virtual ~SerializableKeyHasher() noexcept {}
 
         inline size_t operator()(const Serializable &obj) noexcept

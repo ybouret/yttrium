@@ -3,6 +3,11 @@
 #include "y/utest/run.hpp"
 
 
+#include "y/associative/hash/set.hpp"
+#include "y/stream/hash/srzh.hpp"
+#include "y/hashing/sha1.hpp"
+#include "y/ptr/ark.hpp"
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -15,6 +20,26 @@ namespace Yttrium
             namespace Coven
             {
 
+                typedef ArkPtr<Vector,Vector>                VPointer;
+                typedef SerializableKeyHasher<Hashing::SHA1> VHasher;
+
+#if 1
+                class VecDB : public HashSet<Vector,VPointer,VHasher>
+                {
+                public:
+                    explicit VecDB()
+                    {
+                    }
+
+                    virtual ~VecDB() noexcept
+                    {
+                    }
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(VecDB);
+                };
+#endif
 
 
             }
@@ -29,7 +54,6 @@ namespace Yttrium
 #include "y/container/matrix.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/stream/libc/output.hpp"
-#include "y/hashing/sha1.hpp"
 
 namespace
 {
@@ -116,6 +140,7 @@ Y_UTEST(apex_coven)
     std::cerr << "h1=" << h1 << " " << s1 << std::endl;
 
     Y_SIZEOF(Apex::Ortho::Vector);
+    Ortho::Coven::VecDB vdb;
 }
 Y_UDONE()
 
