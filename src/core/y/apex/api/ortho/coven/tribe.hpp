@@ -78,12 +78,10 @@ namespace Yttrium
                                 case Degenerate: throwDegenerate(); return;
                                 case Foundation: flush();           return;
                                 case Hyperplane:
-                                    std::cerr << "-- Found Hyperplane ! " << (Posture &)*this << std::endl;
                                     for(const INode *node=residue.head;node;node=node->next)
                                     {
                                         AutoPtr<Tribe> attempt = new Tribe(*this,data,node);
                                         if(0==attempt->lastVec) continue;
-                                        std::cerr << "  -->" << *(attempt->lastVec) << std::endl;
                                         assert(Foundation==attempt->qfamily->quality);
                                         ListOps::InsertOrdered(chld,attempt.yield(),Compare);
                                         assert(chld.isSortedAccordingTo(Compare));
@@ -94,14 +92,10 @@ namespace Yttrium
                                 case Fragmental:
                                     break;
                             }
-
-
-                            lineage(chld,data);
+                            assert( (*qfamily)->size>0 );
+                            assert( (*qfamily)->size<qfamily->concluding);
                         }
-                        else
-                        {
-                            lineage(chld,data);
-                        }
+                        lineage(chld,data);
                     }
 
 
