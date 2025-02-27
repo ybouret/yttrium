@@ -187,8 +187,9 @@ add_test(random:gaussian  test-core random_gaussian)
 add_test(random:isaac     test-core random_isaac)
 add_test(random:mt19937ar test-core random_mt19937ar)
 add_test(random:mt19937   test-core random_mt19937)
- 
 
+add_executable(test-isaac random/isaac/rand.c random/isaac/rand.h) 
+target_compile_definitions(test-isaac PUBLIC NEVER)
 
 #hashing
 add_test(hashing:mix64     test-core hashing_mix64)
