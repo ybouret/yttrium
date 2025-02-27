@@ -219,6 +219,15 @@ namespace Yttrium
                     posture.residue.swapWith(conserved);
                 }
 
+                static inline
+                void collapse(Posture &lhs, Posture &rhs)
+                {
+                    Posture lhsNew = lhs; promote(lhsNew,rhs.content);
+                    Posture rhsNew = rhs; promote(rhsNew,lhs.content);
+                    lhs.xch(lhsNew);
+                    rhs.xch(rhsNew);
+                }
+
 
                 void Tribes:: makeCompression(XMLog &xml)
                 {
@@ -238,14 +247,13 @@ namespace Yttrium
                             if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
                             {
                                 std::cerr << "---- Same Vectors, different families" << std::endl;
-                                std::cerr << "lhs=" << *lhs << std::endl;
-                                std::cerr << "rhs=" << *rhs << std::endl;
+                                std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                std::cerr << "(*) rhs=" << *rhs << std::endl;
 
-                                Posture lhsNew = *lhs; promote(lhsNew,rhs->content);
-                                Posture rhsNew = *rhs; promote(rhsNew,lhs->content);
+                                collapse(*lhs,*rhs);
+                                std::cerr << "--> lhs=" << *lhs << std::endl;
+                                std::cerr << "--> rhs=" << *rhs << std::endl;
 
-                                std::cerr << "lhsNew=" << lhsNew << std::endl;
-                                std::cerr << "rhsNew=" << rhsNew << std::endl;
 
 
 
