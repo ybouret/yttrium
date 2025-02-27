@@ -140,7 +140,7 @@ namespace Yttrium
                             {
                                 if( (curr->qfamily!=prev->qfamily) && (curr->content==prev->content) )
                                 {
-                                    curr->replaceFamilyByFamilyOf(*prev);
+                                    curr->adoptedBy(*prev);
                                     ++replacement;
                                 }
                             }

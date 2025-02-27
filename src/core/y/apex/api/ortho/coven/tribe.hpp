@@ -63,9 +63,9 @@ namespace Yttrium
                     Y_OSTREAM_PROTO(Tribe);
 
                     static SignType Compare(const Tribe * const lhs, const Tribe * const rhs) noexcept;
-                    void replaceFamilyByFamilyOf(Tribe &better) noexcept;
+                    void            adoptedBy(Tribe &better) noexcept;
 
-                    //! add to ordered children
+                    //! add to sorted children
                     template <typename MATRIX> inline
                     void progeny(List          & chld,
                                  const MATRIX  & data,

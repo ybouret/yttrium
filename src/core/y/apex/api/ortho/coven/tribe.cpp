@@ -17,9 +17,10 @@ namespace Yttrium
 
 
 
-                void Tribe:: replaceFamilyByFamilyOf(Tribe &better) noexcept
+                void Tribe:: adoptedBy(Tribe &better) noexcept
                 {
                     assert(qfamily!=better.qfamily);
+                    assert(qfamily->hasSameSpanThan(*better.qfamily));
                     destroy();
                     (qfamily=better.qfamily)->withhold();
                 }
