@@ -2,6 +2,7 @@
 
 #include "y/utest/run.hpp"
 
+
 using namespace Yttrium;
 using namespace Apex;
 
@@ -15,7 +16,7 @@ namespace Yttrium
             {
 
 
-              
+
             }
 
         }
@@ -113,6 +114,8 @@ Y_UTEST(apex_coven)
     Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::UseBasisCompression,s1);
     std::cerr << "h0=" << h0 << " " << s0 << std::endl;
     std::cerr << "h1=" << h1 << " " << s1 << std::endl;
+
+    Y_SIZEOF(Apex::Ortho::Vector);
 }
 Y_UDONE()
 

@@ -132,6 +132,7 @@ namespace Yttrium
 
                     void makeReplacement(XMLog &xml)
                     {
+                        assert( isSortedAccordingTo(Tribe::Compare) );
                         size_t replacement = 0;
                         for(Tribe *curr=head;curr;curr=curr->next)
                         {
@@ -144,7 +145,11 @@ namespace Yttrium
                                 }
                             }
                         }
+
+
                         Y_XML_COMMENT(xml,"#replacement = " << replacement);
+                        if(replacement<=0) { assert( isSortedAccordingTo(Tribe::Compare) ); return; }
+                        MergeSort::Call(*this,Tribe::Compare);
                     }
 
                     void makeCompression(XMLog &xml)
@@ -251,6 +256,7 @@ namespace Yttrium
                         noNullVector(xml);
                         noDuplicates(xml);
                         MergeSort::Call(*this,Tribe::Compare);
+                        assert(isSortedAccordingTo(Tribe::Compare));
 
                         // collect first
                         for(const Tribe *tribe=head;tribe;tribe=tribe->next)
