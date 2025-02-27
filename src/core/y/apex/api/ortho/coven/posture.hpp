@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_Apex_Ortho_Coven_Posture_Included
