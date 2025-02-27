@@ -185,6 +185,8 @@ add_test(random:bits     test-core random_bits)
 add_test(random:shuffle  test-core random_shuffle)
 add_test(random:gaussian test-core random_gaussian)
 add_test(random:isaac    test-core random_isaac)
+add_test(random:mt19937ar test-core random_mt19937ar)
+ 
 
 
 #hashing
