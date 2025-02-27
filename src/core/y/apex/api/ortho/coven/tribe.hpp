@@ -126,12 +126,7 @@ namespace Yttrium
                 };
 
 
-                std::ostream & operator<<(std::ostream &os, const Tribe &tribe)
-                {
-                    const Posture &posture = tribe;
-                    os << posture << "->" << *(tribe.qfamily);
-                    return os;
-                }
+         
             }
         }
     }
