@@ -203,6 +203,17 @@ namespace Yttrium
                 void Tribes:: makeCompression(XMLog &xml)
                 {
                     makeReplacement(xml);
+
+                    Tribe::List kept;
+                    while(size>0)
+                    {
+                        AutoPtr<Tribe> lhs = popHead();
+
+                        kept.pushTail(lhs.yield());
+                    }
+
+                    swapWith(kept);
+
                 }
 
             }
