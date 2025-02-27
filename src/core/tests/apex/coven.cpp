@@ -139,6 +139,9 @@ Y_UTEST(apex_coven)
     std::cerr << "UseBasisCompression h1=" << h1 << " " << s1 << std::endl;
     std::cerr << "OptimizeHyperPlanes h2=" << h2 << " " << s2 << std::endl;
 
+    Y_CHECK(h1==h0);
+    Y_CHECK(h2==h0);
+
     Y_SIZEOF(Apex::Ortho::Vector);
     Ortho::Coven::VecDB vdb;
 }
