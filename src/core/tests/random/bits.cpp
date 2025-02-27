@@ -1,4 +1,5 @@
 #include "y/random/park-miller.hpp"
+#include "y/random/mt19937.hpp"
 #include "y/system/seed.hpp"
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
@@ -82,17 +83,7 @@ Y_UTEST(random_bits)
 
     Random::Rand       ran1;
     Random::ParkMiller ran2;
-
-    for(size_t i=0;i<10;++i)
-    {
-        std::cerr << ran1.to<double>() << std::endl;
-    }
-
-
-    for(size_t i=0;i<10;++i)
-    {
-        std::cerr << ran2.to<double>() << std::endl;
-    }
+    Random::MT19937    ran3;
 
     for(size_t i=0;i<10;++i)
     {
@@ -105,6 +96,9 @@ Y_UTEST(random_bits)
     TestBits<double>(ran2);
     TestBits<float>(ran2);
 
+
+    TestBits<double>(ran3);
+    TestBits<float>(ran3);
 
     std::cerr << "Testing Random Bytes" << std::endl;
     for(unsigned lo=0;lo<=255;++lo)

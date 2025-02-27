@@ -1,4 +1,4 @@
-#include "y/random/bits.hpp"
+#include "y/random/mt19937.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/system/seed.hpp"
@@ -8,102 +8,7 @@ namespace Yttrium
 {
     namespace Random
     {
-        class MT19937 : public Random::Bits
-        {
-        public:
-            static const size_t   N = 624;
-            static const size_t   M = 397;
-            static const size_t   MTI        = N+1;            //!< not initialized
-            static const uint32_t MATRIX_A   = 0x9908b0dfUL;   //!< constant vector a
-            static const uint32_t UPPER_MASK = 0x80000000UL;   //!< most significant w-r bits
-            static const uint32_t LOWER_MASK = 0x7fffffffUL;   //!< least significant r bits
-
-            static const uint32_t ReferenceKey[4];
-            static const size_t   ReferenceLen = sizeof(ReferenceKey)/sizeof(ReferenceKey[0]);
-
-            explicit MT19937()   :
-            Random::Bits(0xffffffff),
-            mti(MTI),
-            mt()
-            {
-                init_genrand( SystemSeed::Get() );
-            }
-
-            explicit MT19937(const uint32_t s) noexcept :
-            Random::Bits(0xffffffff),
-            mti(MTI),
-            mt()
-            {
-                init_genrand(s);
-            }
-
-            explicit MT19937(const uint32_t init_key[], const size_t key_length) noexcept :
-            Random::Bits(0xffffffff),
-            mti(MTI),
-            mt()
-            {
-                init_by_array(init_key,key_length);
-            }
-
-            virtual ~MT19937() noexcept
-            {
-                mti = MTI;
-                memset(mt,0,sizeof(mt));
-            }
-
-            /* generates a random number on [0,0xffffffff]-interval */
-            virtual uint32_t next32(void) noexcept
-            {
-                static const uint32_t mag01[2]={0x0UL, MATRIX_A};
-
-                /* mag01[x] = x * MATRIX_A  for x=0,1 */
-
-                if (mti >= N) { /* generate N words at one time */
-                    size_t kk;
-
-                    if (mti == N+1)   /* if init_genrand() has not been called, */
-                        init_genrand(5489UL); /* a default initial seed is used */
-
-                    for (kk=0;kk<N-M;kk++) {
-                        const uint32_t y = (mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-                        mt[kk] = mt[kk+M] ^ (y >> 1) ^ mag01[y & 0x1UL];
-                    }
-                    for (;kk<N-1;kk++) {
-                        const uint32_t y = (mt[kk]&UPPER_MASK)|(mt[kk+1]&LOWER_MASK);
-                        mt[kk] = mt[kk+(M-N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
-                    }
-
-                    {
-                        const uint32_t y = (mt[N-1]&UPPER_MASK)|(mt[0]&LOWER_MASK);
-                        mt[N-1] = mt[M-1] ^ (y >> 1) ^ mag01[y & 0x1UL];
-                    }
-                    mti = 0;
-                }
-
-                uint32_t y = mt[mti++];
-
-                /* Tempering */
-                y ^= (y >> 11);
-                y ^= (y << 7) & 0x9d2c5680UL;
-                y ^= (y << 15) & 0xefc60000UL;
-                y ^= (y >> 18);
-
-                return y;
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(MT19937);
-            size_t   mti;   /* mti==N+1 means mt[N] is not initialized */
-            uint32_t mt[N]; /* the array for the state vector  */
-
-            void init_genrand(const uint32_t s) noexcept; //!< initializes mt[N] with a seed
-            void init_by_array(const uint32_t init_key[], size_t key_length) noexcept; //!< initialize by an array with array-length
-
-
-
-
-        };
-
+       
 
         const uint32_t MT19937:: ReferenceKey[4] = {
             0x123, 0x234, 0x345, 0x456
