@@ -8,6 +8,7 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/sort/merge.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace Yttrium
 {
@@ -75,9 +76,21 @@ namespace Yttrium
                             switch(qfamily->quality)
                             {
                                 case Degenerate: throwDegenerate(); return;
-                                case Foundation: flush(); return;
+                                case Foundation: flush();           return;
                                 case Hyperplane:
-                                    break;
+                                    std::cerr << "-- Found Hyperplane ! " << (Posture &)*this << std::endl;
+                                    for(const INode *node=residue.head;node;node=node->next)
+                                    {
+                                        AutoPtr<Tribe> attempt = new Tribe(*this,data,node);
+                                        if(0==attempt->lastVec) continue;
+                                        std::cerr << "  -->" << *(attempt->lastVec) << std::endl;
+                                        assert(Foundation==attempt->qfamily->quality);
+                                        ListOps::InsertOrdered(chld,attempt.yield(),Compare);
+                                        assert(chld.isSortedAccordingTo(Compare));
+                                        return; // with one new child
+                                    }
+                                    return; // without new child
+
                                 case Fragmental:
                                     break;
                             }
@@ -110,7 +123,7 @@ namespace Yttrium
                                  const MATRIX  & data)
                     {
 
-                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
+                        assert( chld.isSortedAccordingTo(Compare) );
                         {
                             List here;
                             for(const INode *node=residue.head;node;node=node->next)
@@ -120,7 +133,7 @@ namespace Yttrium
                             MergeSort::Call(here,Compare);
                             ListOps::Fusion(chld,here,Compare);
                         }
-                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
+                        assert( chld.isSortedAccordingTo(Compare) );
                     }
 
                     template <typename READABLE> inline
