@@ -209,9 +209,7 @@ namespace Yttrium
                         {
                             Tribe::List chld;
                             for(Tribe *tribe=head;tribe;tribe=tribe->next)
-                            {
                                 tribe->progeny(chld,data,flag);
-                            }
                             swapWith(chld);
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));

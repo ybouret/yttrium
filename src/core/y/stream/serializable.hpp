@@ -8,8 +8,7 @@
 
 namespace Yttrium
 {
-    namespace Hashing { class                     Function; }
-
+    namespace Hashing { class Function; }
     class OutputStream;
 
     //__________________________________________________________________________
