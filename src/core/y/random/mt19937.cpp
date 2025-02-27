@@ -1,6 +1,7 @@
 
 #include "y/random/mt19937.hpp"
 #include "y/system/seed.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
