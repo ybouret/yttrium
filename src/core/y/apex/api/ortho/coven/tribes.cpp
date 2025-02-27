@@ -220,6 +220,10 @@ namespace Yttrium
                                 std::cerr << "---- Same Vectors, different families" << std::endl;
                                 std::cerr << "lhs=" << *lhs << std::endl;
                                 std::cerr << "rhs=" << *rhs << std::endl;
+
+                                Posture lhsNew = *lhs;
+                                Posture rhsnew = *rhs;
+
                                 throw Exception("Not Handled!!");
                             }
                         }
