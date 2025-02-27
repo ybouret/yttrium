@@ -35,6 +35,13 @@ namespace Yttrium
                         assert(root.residue.size-1  == residue.size);
                     }
 
+                    Posture(const Posture &_) :
+                    content(_.content),
+                    residue(_.residue)
+                    {
+                    }
+                    
+
                     virtual ~Posture() noexcept {}
 
                     Y_OSTREAM_PROTO(Posture);
