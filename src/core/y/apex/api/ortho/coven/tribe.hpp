@@ -22,8 +22,8 @@ namespace Yttrium
                 public:
 
                     typedef CxxListOf<Tribe> List;
-                    static const unsigned OptimizeHyperPlanes = 0x01;
-                    static const unsigned UseBasisCompression = 0x02;
+                    static const unsigned    OptimizeHyperPlanes = 0x01;
+                    static const unsigned    UseBasisCompression = 0x02;
 
 
                     template <typename MATRIX> inline
@@ -57,17 +57,11 @@ namespace Yttrium
                     }
 
 
-                    virtual ~Tribe() noexcept
-                    {
-                        destroy();
-                    }
-
+                    virtual ~Tribe() noexcept;
                     Y_OSTREAM_PROTO(Tribe);
 
-                    static SignType Compare(const Tribe * const lhs, const Tribe * const rhs) noexcept
-                    {
-                        return Natural::Compare(lhs->qfamily->weight(),rhs->qfamily->weight());
-                    }
+                    static SignType Compare(const Tribe * const lhs, const Tribe * const rhs) noexcept;
+                    void replaceFamilyByFamilyOf(Tribe &better) noexcept;
 
                     //! add to ordered children
                     template <typename MATRIX> inline
@@ -89,12 +83,7 @@ namespace Yttrium
                         assert( chld.isSortedAccordingTo(Tribe::Compare) );
                     }
 
-                    void replaceFamilyByFamilyOf(Tribe &better) noexcept
-                    {
-                        assert(qfamily!=better.qfamily);
-                        destroy();
-                        (qfamily=better.qfamily)->withhold();
-                    }
+
 
                     FCache               qfcache;
                     Family *             qfamily;
@@ -105,8 +94,7 @@ namespace Yttrium
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribe);
-
-
+                    void destroy() noexcept;
 
                     template <typename READABLE> inline
                     const Vector * tryIncreaseWith(READABLE &a)
@@ -118,11 +106,6 @@ namespace Yttrium
                         catch(...) { destroy(); throw; }
                     }
 
-                    void destroy() noexcept {
-                        assert( 0 != qfamily );
-                        if( qfamily->liberate() ) qfcache->store(qfamily);
-                        qfamily = 0;
-                    }
                 };
 
 
