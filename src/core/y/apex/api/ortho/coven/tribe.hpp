@@ -70,17 +70,7 @@ namespace Yttrium
                                  const unsigned  flag)
                     {
 
-                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
-                        {
-                            List here;
-                            for(const INode *node=residue.head;node;node=node->next)
-                            {
-                                here.pushTail( new Tribe(*this,data,node) );
-                            }
-                            MergeSort::Call(here,Compare);
-                            ListOps::Fusion(chld,here,Compare);
-                        }
-                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
+                        lineage(chld,data);
                     }
 
 
@@ -95,6 +85,24 @@ namespace Yttrium
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribe);
                     void destroy() noexcept;
+
+                    template <typename MATRIX> inline
+                    void lineage(List          & chld,
+                                 const MATRIX  & data)
+                    {
+
+                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
+                        {
+                            List here;
+                            for(const INode *node=residue.head;node;node=node->next)
+                            {
+                                here.pushTail( new Tribe(*this,data,node) );
+                            }
+                            MergeSort::Call(here,Compare);
+                            ListOps::Fusion(chld,here,Compare);
+                        }
+                        assert( chld.isSortedAccordingTo(Tribe::Compare) );
+                    }
 
                     template <typename READABLE> inline
                     const Vector * tryIncreaseWith(READABLE &a)
