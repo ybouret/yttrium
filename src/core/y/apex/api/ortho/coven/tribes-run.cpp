@@ -38,6 +38,17 @@ namespace Yttrium
                     rhs.xch(rhsNew);
                 }
 
+
+                bool FoundSamePostureThan(const Posture &p, const Tribe::List &l) noexcept
+                {
+                    for(const Tribe *t=l.head;t;t=t->next)
+                    {
+                        const Posture &_ = *t;
+                        if( _ == p ) return true;
+                    }
+                    return false;
+                }
+
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
                     Y_XML_COMMENT(xml, "#generated   = " << size);
@@ -75,22 +86,14 @@ namespace Yttrium
                     {
                         Tribe::List kept;
                         size_t      drop = 0;
-                    CYCLE:
-                        if(size>0)
+                        while(size>0)
                         {
                             AutoPtr<Tribe> lhs = popHead();
-                            Posture       &L   = *lhs;
-                            for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
-                            {
-                                Posture &R = *rhs;
-                                if(L==R)
-                                {
-                                    ++drop;
-                                    goto CYCLE;
-                                }
+                            if( FoundSamePostureThan(*lhs,kept) ) {
+                                ++drop;
+                                continue;
                             }
                             kept.pushTail( lhs.yield() );
-                            goto CYCLE;
                         }
                         swapWith(kept);
                         assert(isSortedAccordingTo(Tribe::Compare));
