@@ -18,16 +18,42 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Tribe is a Posture used to build a Family
+                //
+                //
+                //______________________________________________________________
                 class Tribe : public Quantized, public Posture
                 {
                 public:
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef CxxListOf<Tribe>  List;                       //!< alias
+                    static const char * const CallSign;                   //!< "Coven::Tribe"
+                    static const unsigned     OptimizeHyperPlanes = 0x01; //!< alias
+                    static const unsigned     UseBasisCompression = 0x02; //!< alias
 
-                    typedef CxxListOf<Tribe> List;
-                    static const char * const CallSign;
-                    static const unsigned     OptimizeHyperPlanes = 0x01;
-                    static const unsigned     UseBasisCompression = 0x02;
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
 
-
+                    //! intialize
+                    /**
+                     \param data matrix of row vectors
+                     \param bank to handle indices
+                     \param indx use data[indx] as primary vector
+                     \param qfcc Family/Vector cache
+                     */
                     template <typename MATRIX> inline
                     explicit Tribe(const MATRIX & data,
                                    const IBank  & bank,
@@ -44,6 +70,12 @@ namespace Yttrium
 
                     }
 
+                    //! iterate next tribe
+                    /**
+                     \param root parent tribe
+                     \param data matrix of row vectors
+                     \param node node from root's residue to promote content
+                     */
                     template <typename MATRIX> inline
                     explicit Tribe(const Tribe  &        root,
                                    const MATRIX &        data,
@@ -59,11 +91,17 @@ namespace Yttrium
                     }
 
 
-                    virtual ~Tribe() noexcept;
-                    Y_OSTREAM_PROTO(Tribe);
+                    virtual ~Tribe() noexcept; //!< cleanup
+                    Y_OSTREAM_PROTO(Tribe);    //!< display
 
-                    static SignType Compare(const Tribe * const lhs, const Tribe * const rhs) noexcept;
-                    void            adoptedBy(Tribe &better) noexcept;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+                    static SignType Compare(const Tribe * const,const Tribe * const) noexcept; //!< compare family weights
+                    void            adoptedBy(Tribe &better) noexcept;                         //!< replace family
 
                     //! add to sorted children
                     template <typename MATRIX> inline
@@ -98,20 +136,25 @@ namespace Yttrium
                         lineage(chld,data);
                     }
 
-
-
-                    FCache               qfcache;
-                    Family *             qfamily;
-                    const size_t         lastIdx;
-                    const Vector * const lastVec;
-                    Tribe *              next;
-                    Tribe *              prev;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
+                    FCache               qfcache; //!< family/vector cache
+                    Family *             qfamily; //!< current family
+                    const size_t         lastIdx; //!< last used index
+                    const Vector * const lastVec; //!< last created vector
+                    Tribe *              next;    //!< for list
+                    Tribe *              prev;    //!< for list
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribe);
-                    void destroy() noexcept;
-                    void throwDegenerate() const;
+                    void destroy()      noexcept; //!< destroy family
+                    void throwDegenerate() const; //!< raise error
 
+                    //! default lineage creation
                     template <typename MATRIX> inline
                     void lineage(List          & chld,
                                  const MATRIX  & data)
@@ -130,6 +173,7 @@ namespace Yttrium
                         assert( chld.isSortedAccordingTo(Compare) );
                     }
 
+                    //! setup initial family from a vector
                     template <typename READABLE> inline
                     const Vector * tryIncreaseWith(READABLE &a)
                     {

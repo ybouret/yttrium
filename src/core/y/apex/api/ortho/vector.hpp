@@ -19,10 +19,12 @@ namespace Yttrium
 
             //__________________________________________________________________
             //
-            //! base type for Vector
+            //
+            // Types for Vector
+            //
             //__________________________________________________________________
-            typedef CxxArray<const Integer,Memory::Dyadic> VectorType;
-            typedef Quantized                              VectorObject;
+            typedef CxxArray<const Integer,Memory::Dyadic> VectorType;    //!< memory
+            typedef Quantized                              VectorObject;  //!< base object
 
             //__________________________________________________________________
             //
@@ -106,9 +108,9 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void           ldz() noexcept;      //!< reset all
+                void           ldz() noexcept;     //!< reset all
                 void           ld(const Vector &); //!< duplicate
-                const Vector & key() const noexcept { return *this; }
+                const Vector & key() const noexcept { return *this; } //!< for map/set if necessary
 
                 //! transfer compatible vector, return true if not nul vector
                 template <typename T> inline

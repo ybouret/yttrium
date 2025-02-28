@@ -21,16 +21,52 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Callback to apply on newly created, unique vector
+                //
+                //
+                //______________________________________________________________
                 typedef Functor<void,TL1(const Vector&)> Callback;
 
+                //______________________________________________________________
+                //
+                //
+                //
+                //! list of Tribes
+                //
+                //
+                //______________________________________________________________
                 class Tribes : public Tribe::List
                 {
                 public:
-                    static const char * const CallSign;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    static const char * const CallSign;                 //!< "Coven::Tribes"
+                    static Natural            MaxCount(const size_t n); //!< sum of arrangements
+                    static void               Display(const Vector &v); //!< helper for default callback
 
-                    static Natural MaxCount(const size_t n);
-                    static void Display(const Vector &v);
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
 
+                    //! setup from initial set of vectors
+                    /**
+                     \param xml  for output
+                     \param proc callback for vectors
+                     \param data matrix of row vectors
+                     \param bank for indices handling
+                     \param qfcc for vectors/families
+                     */
                     template <typename MATRIX> inline
                     explicit Tribes(XMLog &        xml,
                                     Callback     & proc,
@@ -44,22 +80,46 @@ namespace Yttrium
                     db()
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "initialize [" << data.rows << "][" << data.cols << "]");
+
+                        // create all possible initial tribes
                         {
                             const size_t n = data.rows;
                             for(size_t indx=1;indx<=n;++indx)
                                 (void) pushTail( new Tribe(data,bank,indx,qfcc) );
                         }
+
+                        // remove null and duplicates, sort tribes and collect vectors
                         doInitialize(xml,proc);
                     }
 
-                    virtual ~Tribes() noexcept;
-                    Y_OSTREAM_PROTO(Tribes);
+                    virtual ~Tribes() noexcept; //!< cleanup
+                    Y_OSTREAM_PROTO(Tribes);    //!< display
 
-                    Digest          signature(Hashing::Function &H) const;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+
+                    //! get signature from created vectors
+                    Digest          signature(Hashing::Function &) const;
+
+                    //! compare vectors for unique db
                     static SignType CompareVectors(const Vector * const lhs,
                                                    const Vector * const rhs) noexcept;
 
-
+                    //! create new generation
+                    /**
+                     - create all possible children
+                     - collect all newly created vectors
+                     - remove tribes that won't produce new vectors
+                     - use equivalent families to reduce memory and complexity
+                     \param xml for output
+                     \param proc to apply on newly created vectors
+                     \param data matrix of row vectors
+                     \param flag modification to raw algorithm
+                     */
                     template <typename MATRIX> inline
                     void generate(XMLog        & xml,
                                   Callback     & proc,
@@ -68,6 +128,8 @@ namespace Yttrium
                     {
                         ++Coerce(iteration);
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
+
+                        // create all possible children
                         assert(isSortedAccordingTo(Tribe::Compare));
                         {
                             Tribe::List chld;
@@ -76,24 +138,32 @@ namespace Yttrium
                             swapWith(chld);
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));
+
+                        // collect all newly created vectors
                         assembleLast(proc);
+
+                        // remove futile (that won't create new vectors on next generation)
                         removeFutile(xml,flag);
                     }
 
-                   
 
 
-
-                    const size_t iteration;
-                    const size_t collected;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
+                    const size_t iteration; //!< current iteration
+                    const size_t collected; //!< collected at this iteration
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Tribes);
                     VCache             vc;
                 public:
-                    const Vector::List db;
+                    const Vector::List db; //!< current database, sorted when done
 
-
+                private:
                     void           doInitialize(XMLog &, Callback &);
                     void           noNullVector(XMLog &);
                     void           noDuplicates(XMLog &);
@@ -105,7 +175,7 @@ namespace Yttrium
                     void makeCompression(XMLog &xml);
 
                     static void          RemoveFrom(Tribe::List &tribes, const size_t zid);
-                    static const Tribe * FoundDuplicateOf(const Vector      &vec, const Tribe::List &ok) noexcept;
+                    static const Tribe * FoundDuplicateOf(const Vector &vec, const Tribe::List &ok) noexcept;
 
 
 
@@ -114,7 +184,7 @@ namespace Yttrium
                 };
 
 
-            
+
             }
 
         }

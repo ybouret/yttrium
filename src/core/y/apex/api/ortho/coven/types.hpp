@@ -14,9 +14,9 @@ namespace Yttrium
         {
             namespace Coven
             {
-                typedef Small::CoopHeavyList<size_t> IList;
-                typedef IList::NodeType              INode;
-                typedef IList::ProxyType             IBank;
+                typedef Small::CoopHeavyList<size_t> IList; //!< alias
+                typedef IList::NodeType              INode; //!< alias
+                typedef IList::ProxyType             IBank; //!< alias
                 
             }
         }

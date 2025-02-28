@@ -13,9 +13,10 @@ namespace Yttrium
     namespace Apex
     {
 
+        //! todo
         struct IOBits
         {
-            static void Store(StreamBits &io, const Natural &n);
+            static void Store(StreamBits &io, const Natural &n); //!< todo
 
         };
 
