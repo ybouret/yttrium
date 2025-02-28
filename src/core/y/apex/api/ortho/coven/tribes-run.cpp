@@ -43,8 +43,12 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "#generated   = " << size);
                     Y_XML_COMMENT(xml, "#collected   = " << collected);
 
+                    //----------------------------------------------------------
+                    //
+                    // first pass: removeFutile
+                    //
+                    //----------------------------------------------------------
                     if( 0 != (flag&RemoveFutile) )
-                    // first pass: remove futile
                     {
                         Tribe::List active;
                         while(size>0)
@@ -59,27 +63,34 @@ namespace Yttrium
                         }
                         swapWith(active);
                         assert(isSortedAccordingTo(Tribe::Compare));
+                        Y_XML_COMMENT(xml, "#active      = " << size);
                     }
 
-                    // second pass: remove alike
+                    //----------------------------------------------------------
+                    //
+                    // second pass: findMultiple
+                    //
+                    //----------------------------------------------------------
                     if( 0 != (flag&FindMultiple) )
                     {
                         Tribe::List kept;
                         size_t      drop = 0;
-                        while(size>0)
+                    CYCLE:
+                        if(size>0)
                         {
                             AutoPtr<Tribe> lhs = popHead();
-                            Posture       &L = *lhs;
+                            Posture       &L   = *lhs;
                             for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
                             {
                                 Posture &R = *rhs;
                                 if(L==R)
                                 {
                                     ++drop;
-                                    continue;
+                                    goto CYCLE;
                                 }
                             }
                             kept.pushTail( lhs.yield() );
+                            goto CYCLE;
                         }
                         swapWith(kept);
                         assert(isSortedAccordingTo(Tribe::Compare));

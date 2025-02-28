@@ -132,7 +132,11 @@ namespace Yttrium
                         ++Coerce(iteration);
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
 
+                        //------------------------------------------------------
+                        //
                         // create all possible children
+                        //
+                        //------------------------------------------------------
                         assert(isSortedAccordingTo(Tribe::Compare));
                         {
                             Tribe::List chld;
@@ -142,10 +146,18 @@ namespace Yttrium
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));
 
+                        //------------------------------------------------------
+                        //
                         // collect all newly created vectors
+                        //
+                        //------------------------------------------------------
                         collect(proc);
 
+                        //------------------------------------------------------
+                        //
                         // process
+                        //
+                        //------------------------------------------------------
                         process(xml,flag);
                     }
 

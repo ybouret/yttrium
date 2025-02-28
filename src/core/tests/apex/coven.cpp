@@ -54,19 +54,22 @@ namespace Yttrium
 #include "y/container/matrix.hpp"
 #include "y/random/park-miller.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/system/wtime.hpp"
 
 namespace
 {
 
     struct Stats
     {
-        size_t vc;
-        size_t fc;
+        size_t   vc;
+        size_t   fc;
+        uint64_t ticks;
 
         inline friend
         std::ostream & operator<<(std::ostream &os, const Stats &s)
         {
-            os << "#v = " << std::setw(6) << s.vc << " | #f = " << std::setw(6) << s.fc;
+            WallTime chrono;
+            os << "#v = " << std::setw(6) << s.vc << " | #f = " << std::setw(6) << s.fc << " | time= " << std::setw(6) << chrono(s.ticks);
             return os;
         }
     };
@@ -87,13 +90,16 @@ namespace
         Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
         OutputFile             fp("coven.dat");
 
+        stats.ticks = 0;
         Natural count = 0;
         while(tribes.size)
         {
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
             //std::cerr << tribes << std::endl;
+            const uint64_t ini = WallTime::Ticks();
             tribes.generate(xml,proc,data,flag);
+            stats.ticks += WallTime::Ticks() - ini;
         }
 
         std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
@@ -136,11 +142,10 @@ Y_UTEST(apex_coven)
     Stats s2; const Digest h2 = Process(xml,data,Ortho::Coven::Tribes::FindMultiple,s2);
 
     std::cerr << "raw          h0=" << h0 << " " << s0 << std::endl;
-    std::cerr << "RemoveFutile h1=" << h1 << " " << s1 << std::endl;
-    std::cerr << "FindMultiple h2=" << h2 << " " << s2 << std::endl;
+    std::cerr << "RemoveFutile h1=" << h1 << " " << s1 << std::endl; Y_ASSERT(h1==h0);
+    std::cerr << "FindMultiple h2=" << h2 << " " << s2 << std::endl; Y_ASSERT(h2==h0);
 
-    Y_CHECK(h0==h1);
-    Y_CHECK(h0==h2);
+
 
 
     Y_SIZEOF(Apex::Ortho::Vector);
