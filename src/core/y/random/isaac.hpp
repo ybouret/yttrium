@@ -6,6 +6,9 @@
 #include "y/random/bits.hpp"
 #include "y/system/seed.hpp"
 
+#include <cstring>
+#include <cstdio>
+
 namespace Yttrium
 {
     namespace Random
