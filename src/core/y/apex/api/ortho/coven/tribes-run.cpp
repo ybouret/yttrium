@@ -139,8 +139,13 @@ namespace Yttrium
                             if(0!=rhs)
                             {
                                 std::cerr << "---- Identical " << std::endl;
-                                std::cerr << "lhs=" << *lhs << std::endl;
-                                std::cerr << "rhs=" << *rhs << std::endl;
+                                std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                std::cerr << "(*) rhs=" << *rhs << std::endl;
+
+                                collapse(*lhs,*rhs);
+                                std::cerr << "--> lhs=" << *lhs << std::endl;
+                                std::cerr << "--> rhs=" << *rhs << std::endl;
+
 
                                 throw Exception("TODO");
                             }
