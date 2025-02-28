@@ -74,7 +74,6 @@ namespace
     template <typename MATRIX> static inline
     Digest Process(XMLog &            xml,
                    const MATRIX &     data,
-                   const unsigned     flag,
                    Stats             &stats)
     {
 
@@ -93,7 +92,7 @@ namespace
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
             //std::cerr << tribes << std::endl;
-            tribes.generate(xml,proc,data,flag);
+            tribes.generate(xml,proc,data);
         }
 
         std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
@@ -121,7 +120,7 @@ Y_UTEST(apex_coven)
     {
         for(size_t j=1;j<=cols;++j)
         {
-            data[i][j] = ran.in<int>(-1,1);
+            data[i][j] = ran.in<int>(-5,5);
         }
     }
 
@@ -131,15 +130,9 @@ Y_UTEST(apex_coven)
     bool   verbose = true;
     XMLog  xml(verbose);
 
-    Stats s0; const Digest h0 = Process(xml,data,0,s0);
-    Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::OptimizeHyperPlanes,s1);
-    Stats s2; const Digest h2 = Process(xml,data,Ortho::Coven::Tribe::UseBasisCompression,s2);
-    std::cerr << "raw                 h0=" << h0 << " " << s0 << std::endl;
-    std::cerr << "OptimizeHyperPlanes h1=" << h1 << " " << s1 << std::endl;
-    std::cerr << "UseBasisCompression h2=" << h2 << " " << s2 << std::endl;
+    Stats s0; const Digest h0 = Process(xml,data,s0);
+    std::cerr << "raw h0=" << h0 << " " << s0 << std::endl;
 
-    Y_CHECK(h1==h0);
-    Y_CHECK(h2==h0);
 
     Y_SIZEOF(Apex::Ortho::Vector);
     Ortho::Coven::VecDB vdb;

@@ -106,33 +106,8 @@ namespace Yttrium
                     //! add to sorted children
                     template <typename MATRIX> inline
                     void progeny(List          & chld,
-                                 const MATRIX  & data,
-                                 const unsigned  flag)
+                                 const MATRIX  & data)
                     {
-                        if(0!= (flag&OptimizeHyperPlanes) )
-                        {
-                            switch(qfamily->quality)
-                            {
-                                case Degenerate: throwDegenerate(); return;
-                                case Foundation: flush();           return;
-                                case Hyperplane:
-                                    for(const INode *node=residue.head;node;node=node->next)
-                                    {
-                                        AutoPtr<Tribe> attempt = new Tribe(*this,data,node);
-                                        if(0==attempt->lastVec) continue;
-                                        assert(Foundation==attempt->qfamily->quality);
-                                        ListOps::InsertOrdered(chld,attempt.yield(),Compare);
-                                        assert(chld.isSortedAccordingTo(Compare));
-                                        return; // with one new child
-                                    }
-                                    return; // without new child
-
-                                case Fragmental:
-                                    break;
-                            }
-                            assert( (*qfamily)->size>0 );
-                            assert( (*qfamily)->size<qfamily->concluding);
-                        }
                         lineage(chld,data);
                     }
 

@@ -45,21 +45,7 @@ namespace Yttrium
                 }
 
 
-                const Vector * Tribes:: tryInsertNew(const Vector &vec)
-                {
-                    for(const Vector *v=db.head;v;v=v->next)
-                    {
-                        switch( Vector::Compare(*v,vec) )
-                        {
-                            case __Zero__: return 0;
-                            case Negative:
-                            case Positive:
-                                continue;
-                        }
-                    }
-                    return Coerce(db).pushTail( vc->query(vec) );
-                }
-
+             
                 SignType Tribes:: CompareVectors(const Vector * const lhs,
                                                  const Vector * const rhs) noexcept
                 {
@@ -75,7 +61,7 @@ namespace Yttrium
                     }
                     return Hashing::MD::Of(H);
                 }
-
+#if 0
                 void Tribes:: makeReplacement(XMLog &xml)
                 {
                     assert( isSortedAccordingTo(Tribe::Compare) );
@@ -97,9 +83,9 @@ namespace Yttrium
                     if(replacement<=0) { assert( isSortedAccordingTo(Tribe::Compare) ); return; }
                     MergeSort::Call(*this,Tribe::Compare);
                 }
+#endif
 
-
-                void Tribes:: assembleLast(Callback &proc)
+                void Tribes:: collect(Callback &proc)
                 {
                     size_t & count = Coerce(collected);
                     count = 0;
@@ -113,122 +99,12 @@ namespace Yttrium
                 }
 
 
-                void Tribes:: RemoveFrom(Tribe::List &tribes, const size_t zid)
-                {
-                    for(Tribe *tribe=tribes.head;tribe;tribe=tribe->next)
-                    {
-                        if(!tribe->removed(zid)) throw Specific::Exception(CallSign,"missing index=%u in Tribe", unsigned(zid));
-                    }
-                }
+            
+              
 
-                const Tribe * Tribes:: FoundDuplicateOf(const Vector      &vec,
-                                                        const Tribe::List &ok) noexcept
-                {
-                    for(const Tribe *guess=ok.head;guess;guess=guess->next)
-                    {
-                        assert(0!=guess->lastVec);
-                        if( vec == *(guess->lastVec) ) return guess;
-                    }
-                    return 0;
-                }
+            
 
-                void Tribes:: noNullVector(XMLog &xml)
-                {
-                    Tribe::List ok;
-                    while(size>0)
-                    {
-                        Tribe * const tribe = popHead();
-                        if(0==tribe->lastVec)
-                        {
-                            const size_t zid = tribe->lastIdx;
-                            Y_XML_COMMENT(xml, "zero vector #" << zid);
-                            delete tribe;
-                            RemoveFrom(ok,   zid);
-                            RemoveFrom(*this,zid);
-                        }
-                        else
-                        {
-                            ok.pushTail(tribe);
-                        }
-                    }
-                    swapWith(ok);
-                }
-
-
-                void Tribes:: noDuplicates(XMLog &xml)
-                {
-                    Tribe::List ok;
-                    while(size>0)
-                    {
-                        Tribe * const        tribe = popHead();assert(0!=tribe->lastVec);
-                        const Tribe *  const guess = FoundDuplicateOf(*(tribe->lastVec),ok);
-
-                        if(0!=guess)
-                        {
-                            const size_t rid = tribe->lastIdx;
-                            Y_XML_COMMENT(xml, "duplicates #" << rid << " and #" << guess->lastIdx);
-                            RemoveFrom(*this,rid);
-                            for(Tribe *tr=ok.head;tr;tr=tr->next)
-                            {
-                                if(!tr->residue.removed(rid)) throw Specific:: Exception(CallSign, "missing index=%u in Tribe residue", unsigned(rid));
-                            }
-                            delete tribe;
-                        }
-                        else
-                            ok.pushTail(tribe);
-                    }
-                    swapWith(ok);
-                }
-
-                void Tribes:: doInitialize(XMLog &xml, Callback &proc)
-                {
-                    noNullVector(xml);
-                    noDuplicates(xml);
-                    MergeSort::Call(*this,Tribe::Compare);
-
-                    // collect first inserted vectors
-                    for(const Tribe *tribe=head;tribe;tribe=tribe->next)
-                    {
-                        assert(0!=tribe->lastVec);
-                        const Vector *vec = tryInsertNew(*(tribe->lastVec));
-                        if(!vec) throw Specific::Exception(CallSign,"Unexpected multiple initial vector");
-                        proc(*vec);
-                    }
-
-                    assert(db.size==size);
-                    Coerce(collected) = db.size;
-                }
-
-                static inline
-                void promote(Posture       &posture,
-                             const Content &foreign) noexcept
-                {
-                    ListOf<INode> conserved;
-                    while(posture.residue.size>0)
-                    {
-                        INode *node = posture.residue.popHead();
-                        if(foreign->has(**node))
-                        {
-                            posture.content.push(node);
-                        }
-                        else
-                        {
-                            conserved.pushTail(node);
-                        }
-                    }
-                    posture.residue.swapWith(conserved);
-                }
-
-                static inline
-                void collapse(Posture &lhs, Posture &rhs)
-                {
-                    Posture lhsNew = lhs; promote(lhsNew,rhs.content);
-                    Posture rhsNew = rhs; promote(rhsNew,lhs.content);
-                    lhs.xch(lhsNew);
-                    rhs.xch(rhsNew);
-                }
-
-
+#if 0
                 void Tribes:: makeCompression(XMLog &xml)
                 {
                     makeReplacement(xml);
@@ -276,8 +152,9 @@ namespace Yttrium
                     Y_XML_COMMENT(xml,"#compression = " << compression);
 
                 }
+#endif
 
-
+#if 0
                 void Tribes:: removeFutile(XMLog &xml, const unsigned flag)
                 {
                     Y_XML_COMMENT(xml, "#generated   = " << size);
@@ -309,6 +186,7 @@ namespace Yttrium
                             makeCompression(xml);
                     }
                 }
+#endif
 
             }
         }

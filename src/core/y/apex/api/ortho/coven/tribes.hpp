@@ -123,8 +123,7 @@ namespace Yttrium
                     template <typename MATRIX> inline
                     void generate(XMLog        & xml,
                                   Callback     & proc,
-                                  const MATRIX & data,
-                                  const unsigned flag)
+                                  const MATRIX & data)
                     {
                         ++Coerce(iteration);
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
@@ -134,16 +133,16 @@ namespace Yttrium
                         {
                             Tribe::List chld;
                             for(Tribe *tribe=head;tribe;tribe=tribe->next)
-                                tribe->progeny(chld,data,flag);
+                                tribe->progeny(chld,data);
                             swapWith(chld);
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));
 
                         // collect all newly created vectors
-                        assembleLast(proc);
+                        collect(proc);
 
-                        // remove futile (that won't create new vectors on next generation)
-                        removeFutile(xml,flag);
+                        // process
+                        process(xml);
                     }
 
 
@@ -168,17 +167,9 @@ namespace Yttrium
                     void           noNullVector(XMLog &);
                     void           noDuplicates(XMLog &);
                     const Vector * tryInsertNew(const Vector &vec);
-                    void           assembleLast(Callback &);
-                    void           removeFutile(XMLog &, const unsigned flag);
-
-                    void makeReplacement(XMLog &xml);
-                    void makeCompression(XMLog &xml);
-
-                    static void          RemoveFrom(Tribe::List &tribes, const size_t zid);
-                    static const Tribe * FoundDuplicateOf(const Vector &vec, const Tribe::List &ok) noexcept;
-
-
-
+                    
+                    void           collect(Callback &);
+                    void           process(XMLog &);
 
 
                 };
