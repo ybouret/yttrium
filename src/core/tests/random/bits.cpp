@@ -1,5 +1,7 @@
 #include "y/random/park-miller.hpp"
 #include "y/random/mt19937.hpp"
+#include "y/random/isaac.hpp"
+
 #include "y/system/seed.hpp"
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
@@ -81,9 +83,13 @@ Y_UTEST(random_bits)
     Y_SIZEOF(Random::Bits);
 
 
-    Random::Rand       ran1;
-    Random::ParkMiller ran2;
-    Random::MT19937    ran3;
+    Random::Rand        ran1;
+    Random::ParkMiller  ran2;
+    Random::MT19937     ran3;
+    Random::ISAAC_Quick ran4;
+    Random::ISAAC_Crypt ran5;
+
+
 
     for(size_t i=0;i<10;++i)
     {
@@ -99,6 +105,12 @@ Y_UTEST(random_bits)
 
     TestBits<double>(ran3);
     TestBits<float>(ran3);
+
+    TestBits<double>(ran4);
+    TestBits<float>(ran4);
+
+    TestBits<double>(ran5);
+    TestBits<float>(ran5);
 
     std::cerr << "Testing Random Bytes" << std::endl;
     for(unsigned lo=0;lo<=255;++lo)
