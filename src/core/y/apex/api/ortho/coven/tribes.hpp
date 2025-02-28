@@ -52,6 +52,8 @@ namespace Yttrium
                     static Natural            MaxCount(const size_t n); //!< sum of arrangements
                     static void               Display(const Vector &v); //!< helper for default callback
 
+                    static const unsigned RemoveFutile = 0x01;
+
                     //__________________________________________________________
                     //
                     //
@@ -123,7 +125,8 @@ namespace Yttrium
                     template <typename MATRIX> inline
                     void generate(XMLog        & xml,
                                   Callback     & proc,
-                                  const MATRIX & data)
+                                  const MATRIX & data,
+                                  const unsigned flag)
                     {
                         ++Coerce(iteration);
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
@@ -142,7 +145,7 @@ namespace Yttrium
                         collect(proc);
 
                         // process
-                        process(xml);
+                        process(xml,flag);
                     }
 
 
@@ -169,7 +172,7 @@ namespace Yttrium
                     const Vector * tryInsertNew(const Vector &vec);
                     
                     void           collect(Callback &);
-                    void           process(XMLog &);
+                    void           process(XMLog &,const unsigned);
 
 
                 };

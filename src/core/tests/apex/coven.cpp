@@ -74,6 +74,7 @@ namespace
     template <typename MATRIX> static inline
     Digest Process(XMLog &            xml,
                    const MATRIX &     data,
+                   const unsigned     flag,
                    Stats             &stats)
     {
 
@@ -92,7 +93,7 @@ namespace
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
             //std::cerr << tribes << std::endl;
-            tribes.generate(xml,proc,data);
+            tribes.generate(xml,proc,data,flag);
         }
 
         std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
@@ -130,8 +131,11 @@ Y_UTEST(apex_coven)
     bool   verbose = true;
     XMLog  xml(verbose);
 
-    Stats s0; const Digest h0 = Process(xml,data,s0);
-    std::cerr << "raw h0=" << h0 << " " << s0 << std::endl;
+    Stats s0; const Digest h0 = Process(xml,data,0,s0);
+    Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribes::RemoveFutile,s1);
+
+    std::cerr << "raw          h0=" << h0 << " " << s0 << std::endl;
+    std::cerr << "RemoveFutile h1=" << h0 << " " << s1 << std::endl;
 
 
     Y_SIZEOF(Apex::Ortho::Vector);

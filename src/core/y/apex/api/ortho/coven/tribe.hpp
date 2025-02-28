@@ -37,8 +37,7 @@ namespace Yttrium
                     //__________________________________________________________
                     typedef CxxListOf<Tribe>  List;                       //!< alias
                     static const char * const CallSign;                   //!< "Coven::Tribe"
-                    static const unsigned     OptimizeHyperPlanes = 0x01; //!< alias
-                    static const unsigned     UseBasisCompression = 0x02; //!< alias
+                    
 
                     //__________________________________________________________
                     //

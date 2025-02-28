@@ -38,12 +38,12 @@ namespace Yttrium
                     rhs.xch(rhsNew);
                 }
 
-                void Tribes:: process(XMLog &xml)
+                void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
                     Y_XML_COMMENT(xml, "#generated   = " << size);
                     Y_XML_COMMENT(xml, "#collected   = " << collected);
 
-                    if(false)
+                    if( 0 != (flag&RemoveFutile) )
                     // first pass
                     {
                         Tribe::List active;
