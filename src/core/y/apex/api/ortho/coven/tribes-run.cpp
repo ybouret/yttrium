@@ -44,7 +44,7 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "#collected   = " << collected);
 
                     if( 0 != (flag&RemoveFutile) )
-                    // first pass
+                    // first pass: remove futile
                     {
                         Tribe::List active;
                         while(size>0)
@@ -60,6 +60,30 @@ namespace Yttrium
                         swapWith(active);
                         assert(isSortedAccordingTo(Tribe::Compare));
                     }
+
+                    // second pass: remove alike
+                    {
+                        Tribe::List kept;
+
+                        while(size>0)
+                        {
+                            AutoPtr<Tribe> lhs = popHead();
+                            Posture       &L = *lhs;
+                            for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
+                            {
+                                Posture &R = *rhs;
+                                if(L==R)
+                                {
+                                    throw Exception("Must Remove Alike!!");
+                                }
+                            }
+
+
+                            kept.pushHead( lhs.yield() );
+                        }
+
+                    }
+
 
 
 
