@@ -63,6 +63,9 @@ namespace Yttrium
                     //! test equality
                     friend bool operator==(const Residue &, const Residue &) noexcept;
 
+                    //! test difference
+                    friend bool operator!=(const Residue &, const Residue &) noexcept;
+
 
                 private:
                     Y_DISABLE_ASSIGN(Residue);

@@ -47,6 +47,12 @@ namespace Yttrium
                     return (lhs.content == rhs.content) && (lhs.residue == rhs.residue);
                 }
 
+                bool operator!=(const Posture &lhs, const Posture &rhs) noexcept
+                {
+                    return (lhs.content != rhs.content) || (lhs.residue != rhs.residue);
+                }
+
+
 
 
                 void  Posture:: xch(Posture &_) noexcept

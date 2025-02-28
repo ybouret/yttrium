@@ -48,6 +48,11 @@ namespace Yttrium
                     return IList::AreEqual(lhs,rhs);
                 }
 
+                bool operator!=(const Residue &lhs, const Residue &rhs) noexcept
+                {
+                    return !IList::AreEqual(lhs,rhs);
+                }
+
                 void  Residue::  xch(Residue &_) noexcept
                 {
                     swapWith(_);

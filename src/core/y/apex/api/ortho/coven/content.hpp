@@ -55,8 +55,12 @@ namespace Yttrium
                     Content & push(INode * const node) noexcept; //!< push a new node
                     Content & operator<<(const size_t indx);     //!< cleanup
 
-                    //! comparison
+                    //! test equality
                     friend bool operator==(const Content &lhs, const Content &rhs) noexcept;
+
+                    //! test difference
+                    friend bool operator!=(const Content &lhs, const Content &rhs) noexcept;
+
 
                     //! true if indx was found and removed
                     bool removed(const size_t indx) noexcept;

@@ -65,6 +65,9 @@ namespace Yttrium
                     //! test equality
                     friend bool operator==(const Posture &,const Posture &) noexcept;
 
+                    //! test difference
+                    friend bool operator!=(const Posture &,const Posture &) noexcept;
+
                     //__________________________________________________________
                     //
                     //

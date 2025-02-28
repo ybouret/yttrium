@@ -39,6 +39,24 @@ namespace Yttrium
                 }
 
 
+                Tribe *FindIndenticalFamily(const Tribe &tribe,
+                                            Tribe::List &tribes) noexcept
+                {
+                    const Posture &L = tribe;
+                    for(  Tribe *guess=tribes.head;guess;guess=guess->next)
+                    {
+                        const Posture &R = *guess;
+                        if(L==R) continue;
+
+                        if( guess->qfamily->isIdenticalTo(*tribe.qfamily) )
+                        {
+                            return guess;
+                        }
+                    }
+
+                    return 0;
+                }
+
                 bool FoundSamePostureThan(const Posture &p, const Tribe::List &l) noexcept
                 {
                     for(const Tribe *t=l.head;t;t=t->next)
@@ -48,6 +66,8 @@ namespace Yttrium
                     }
                     return false;
                 }
+
+
 
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
@@ -101,6 +121,34 @@ namespace Yttrium
                     }
 
 
+                    //----------------------------------------------------------
+                    //
+                    // second pass: findMatching
+                    //
+                    //----------------------------------------------------------
+                    if( 0 != (flag&FindMatching) )
+                    {
+                        Tribe::List kept;
+                        size_t      drop = 0;
+                        while(size>0)
+                        {
+                            AutoPtr<Tribe> lhs = popHead();
+                            Tribe * const  rhs = FindIndenticalFamily(*lhs,kept);
+                            if(0!=rhs)
+                            {
+                                std::cerr << "---- Identical " << std::endl;
+                                std::cerr << "lhs=" << *lhs << std::endl;
+                                std::cerr << "rhs=" << *rhs << std::endl;
+
+                                throw Exception("TODO");
+                            }
+
+                            kept.pushTail( lhs.yield() );
+                        }
+                        swapWith(kept);
+                        assert(isSortedAccordingTo(Tribe::Compare));
+                        //Y_XML_COMMENT(xml, "#drop-same   = " << drop);
+                    }
 
 
                     if(size<=0)

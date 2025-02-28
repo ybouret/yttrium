@@ -46,6 +46,11 @@ namespace Yttrium
                     return IList::AreEqual(lhs.my,rhs.my);
                 }
 
+                bool operator!=(const Content &lhs, const Content &rhs) noexcept
+                {
+                    return !IList::AreEqual(lhs.my,rhs.my);
+                }
+
                 Content:: ~Content() noexcept
                 {
                 }

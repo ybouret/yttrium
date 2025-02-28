@@ -54,6 +54,7 @@ namespace Yttrium
 
                     static const unsigned RemoveFutile = 0x01;
                     static const unsigned FindMultiple = 0x02;
+                    static const unsigned FindMatching = 0x04;
 
                     //__________________________________________________________
                     //
