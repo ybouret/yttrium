@@ -101,6 +101,7 @@ namespace Yttrium
                     //__________________________________________________________
                     static SignType Compare(const Tribe * const,const Tribe * const) noexcept; //!< compare family weights
                     void            adoptedBy(Tribe &better) noexcept;                         //!< replace family
+                    bool            isFutile()         const noexcept;                        //!< Foundation or no residue
 
                     //! add to sorted children
                     template <typename MATRIX> inline

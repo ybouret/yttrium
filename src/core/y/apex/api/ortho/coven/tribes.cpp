@@ -61,29 +61,7 @@ namespace Yttrium
                     }
                     return Hashing::MD::Of(H);
                 }
-#if 0
-                void Tribes:: makeReplacement(XMLog &xml)
-                {
-                    assert( isSortedAccordingTo(Tribe::Compare) );
-                    size_t replacement = 0;
-                    for(Tribe *curr=head;curr;curr=curr->next)
-                    {
-                        assert(Foundation != curr->qfamily->quality );
-                        for(Tribe *prev=curr->prev;prev;prev=prev->prev)
-                        {
-                            if( (curr->qfamily!=prev->qfamily) && (curr->content==prev->content) )
-                            {
-                                curr->adoptedBy(*prev);
-                                ++replacement;
-                            }
-                        }
-                    }
 
-                    Y_XML_COMMENT(xml,"#replacement = " << replacement);
-                    if(replacement<=0) { assert( isSortedAccordingTo(Tribe::Compare) ); return; }
-                    MergeSort::Call(*this,Tribe::Compare);
-                }
-#endif
 
                 void Tribes:: collect(Callback &proc)
                 {
@@ -99,94 +77,6 @@ namespace Yttrium
                 }
 
 
-            
-              
-
-            
-
-#if 0
-                void Tribes:: makeCompression(XMLog &xml)
-                {
-                    makeReplacement(xml);
-                    size_t compression = 0;
-                    {
-                        Tribe::List kept;
-                        while(size>0)
-                        {
-                            AutoPtr<Tribe> lhs = popHead();
-
-                            for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
-                            {
-                                if(lhs->qfamily==rhs->qfamily) continue;
-
-                                if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
-                                {
-                                    //std::cerr << "---- Same Vectors, different families" << std::endl;
-                                    //std::cerr << "(*) lhs=" << *lhs << std::endl;
-                                    //std::cerr << "(*) rhs=" << *rhs << std::endl;
-
-                                    Posture &L = *lhs;
-                                    Posture &R = *rhs;
-
-                                    collapse(L,R);
-                                    //std::cerr << "--> lhs=" << *lhs << std::endl;
-                                    //std::cerr << "--> rhs=" << *rhs << std::endl;
-
-                                    if(L==R)
-                                    {
-                                        //(std::cerr << '#').flush();
-                                        ++compression;
-                                        continue; // will drop lhs
-                                    }
-                                    
-                                    throw Exception("Not Handled!!");
-                                }
-                            }
-
-                            kept.pushTail(lhs.yield());
-                        }
-
-                        swapWith(kept);
-                    }
-
-                    Y_XML_COMMENT(xml,"#compression = " << compression);
-
-                }
-#endif
-
-#if 0
-                void Tribes:: removeFutile(XMLog &xml, const unsigned flag)
-                {
-                    Y_XML_COMMENT(xml, "#generated   = " << size);
-                    Y_XML_COMMENT(xml, "#collected   = " << collected);
-
-                    {
-                        Tribe::List active;
-                        while(size>0)
-                        {
-                            Tribe * const tribe = popHead();
-                            if(Foundation == tribe->qfamily->quality || tribe->residue.size<=0)
-                            {
-                                delete tribe;
-                                continue;
-                            }
-                            active.pushTail(tribe);
-                        }
-                        swapWith(active);
-                        assert(isSortedAccordingTo(Tribe::Compare));
-                    }
-
-
-
-                    if(size<=0)
-                        MergeSort::Call( Coerce(db), CompareVectors);
-                    else
-                    {
-                        if( 0 != (flag & Tribe::UseBasisCompression ) )
-                            makeCompression(xml);
-                    }
-                }
-#endif
 
             }
         }

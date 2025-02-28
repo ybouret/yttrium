@@ -49,6 +49,12 @@ namespace Yttrium
                 {
                     throw Specific::Exception(CallSign, "Unexpected %s Family!", Family::QualityText(Degenerate) );
                 }
+
+
+                bool Tribe:: isFutile() const noexcept
+                {
+                    return (Foundation == qfamily->quality) || (residue.size <= 0);
+                }
             }
 
         }

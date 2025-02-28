@@ -85,7 +85,7 @@ namespace Yttrium
                         while(size>0)
                         {
                             Tribe * const tribe = popHead();
-                            if(Foundation == tribe->qfamily->quality || tribe->residue.size<=0)
+                            if( tribe->isFutile() )
                             {
                                 delete tribe;
                                 continue;
