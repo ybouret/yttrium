@@ -129,7 +129,7 @@ int main()
     isaac(&ctx);
     for (j=0; j<256; ++j)
     {
-      printf("%.8lx",ctx.randrsl[j]);
+      printf("%.8lx", (unsigned long)(ctx.randrsl[j]));
       if ((j&7)==7) printf("\n");
     }
   }

@@ -14,70 +14,55 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! List of available indices
+                //
+                //
+                //______________________________________________________________
                 class Residue : public IList
                 {
                 public:
-                    explicit Residue(const IBank &bank) noexcept :
-                    IList(bank)
-                    {
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    explicit Residue(const IBank &bank) noexcept; //!< setup empty
+                    explicit Residue(const Residue &);            //!< duplicate
 
-                    explicit Residue(const Residue &_) :
-                    IList(_)
-                    {
-                    }
-
+                    //! setup with [1..dims] without excl
                     explicit Residue(const IBank &bank,
                                      const size_t dims,
-                                     const size_t excl) :
-                    IList(bank)
-                    {
-                        IList &self = *this;
-                        for(size_t i=1;i<=dims;++i)
-                        {
-                            if(i!=excl) self << i;
-                        }
-                    }
+                                     const size_t excl);
 
-                    static inline const IBank & check(const IBank &bank)
-                    {
-                        assert(bank.isValid());
-                        return bank;
-                    }
 
+                    //! setup from content of node's list, without node
                     explicit Residue(const IBank &       bank,
-                                     const INode * const node) :
-                    IList( check(bank) )
-                    {
-                        assert(0!=node);
-                        IList &self = *this;
-                        for(const INode *prev=node->prev;prev;prev=prev->prev) self >> **prev;
-                        for(const INode *next=node->next;next;next=next->next) self << **next;
-                    }
+                                     const INode * const node);
 
+                    //! cleanup
+                    virtual ~Residue() noexcept;
 
-                    virtual ~Residue() noexcept
-                    {
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
 
-                    void xch(Residue &_) noexcept
-                    {
-                        swapWith(_);
-                    }
+                    //! no-throw exchange
+                    void xch(Residue &_) noexcept;
 
-                    bool removed(const size_t indx) noexcept
-                    {
-                        for(INode *node=head;node;node=node->next)
-                        {
-                            if(indx==**node) { cutNode(node); return true; }
-                        }
-                        return false;
-                    }
+                    //! true if indx was found and removed
+                    bool removed(const size_t indx) noexcept;
 
-                    friend bool operator==(const Residue &lhs, const Residue &rhs) noexcept
-                    {
-                        return IList::AreEqual(lhs,rhs);
-                    }
+                    //! test equality
+                    friend bool operator==(const Residue &, const Residue &) noexcept;
+
 
                 private:
                     Y_DISABLE_ASSIGN(Residue);

@@ -10,13 +10,22 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //!  Hasher of Serializable objects
+    //
+    //
+    //__________________________________________________________________________
     class SerializableHasher
     {
     public:
-        explicit SerializableHasher(Hashing::Function &) noexcept;
-        SerializableHasher(const SerializableHasher &)    noexcept;
-        virtual ~SerializableHasher() noexcept;
+        explicit SerializableHasher(Hashing::Function &) noexcept; //!< setup
+        SerializableHasher(const SerializableHasher &)   noexcept; //!< duplicate
+        virtual ~SerializableHasher()                    noexcept; //!< cleanup
 
+        //! hash binary representation of object
         Hashing::Function & hash(const Serializable &obj) noexcept;
 
     private:
@@ -24,13 +33,25 @@ namespace Yttrium
         Hashing::Function &hfcn;
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Key Hasher to use Serializable as keys
+    //
+    //
+    //__________________________________________________________________________
     template <typename HASHING_FUNCTION>
     class SerializableKeyHasher : public HASHING_FUNCTION, public SerializableHasher
     {
     public:
+        //! setup
         inline explicit SerializableKeyHasher() noexcept : HASHING_FUNCTION(), SerializableHasher( static_cast<HASHING_FUNCTION&>(*this) ) {}
+
+        //! cleanup
         inline virtual ~SerializableKeyHasher() noexcept {}
 
+        //! return key from hashed object
         inline size_t operator()(const Serializable &obj) noexcept
         {
             size_t res = 0;

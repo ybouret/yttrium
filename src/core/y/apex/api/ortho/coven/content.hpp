@@ -14,82 +14,60 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Ordered list of used indices
+                //
+                //
+                //______________________________________________________________
                 class Content : public Proxy<const IList>
                 {
                 public:
-                    explicit Content(const IBank &bank) noexcept :
-                    Proxy<const IList>(),
-                    my(bank)
-                    {
-                    }
-                    
-                    explicit Content(const Content &_) :
-                    Proxy<const IList>(),
-                    my(_.my)
-                    {
-                    }
-                    
-                    
-                    //! with first index
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    explicit Content(const IBank &bank) noexcept; //!< setup empty
+                    explicit Content(const Content &);            //!< duplicate
+
+                    //! setup with first index
                     explicit Content(const IBank &bank,
-                                     const size_t indx) :
-                    Proxy<const IList>(),
-                    my(bank)
-                    {
-                        (*this) << indx;
-                    }
-                    
+                                     const size_t indx);
+
+                    //! copy and append extra indx
                     explicit Content(const Content &root,
-                                     const size_t   indx) :
-                    Proxy<const IList>(),
-                    my(root.my)
-                    {
-                        (*this) << indx;
-                        
-                    }
-                    
-                    virtual ~Content() noexcept
-                    {
-                    }
-                    
-                    Content & push(INode * const node) noexcept
-                    {
-                        assert(0!=node);
-                        ListOps::InsertOrdered(my,node,Compare);
-                        return *this;
-                    }
-                    
-                    Content & operator<<(const size_t indx)
-                    {
-                        return push(my.proxy->produce(indx));
-                    }
-                    
-                    void xch(Content &_) noexcept
-                    {
-                        my.swapWith(_.my);
-                    }
-                    
+                                     const size_t   indx);
+
+                    //! cleanup
+                    virtual ~Content() noexcept;
+
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+                    void      xch(Content &)           noexcept; //!< no-throw exchange
+                    Content & push(INode * const node) noexcept; //!< push a new node
+                    Content & operator<<(const size_t indx);     //!< cleanup
+
+                    //! comparison
                     friend bool operator==(const Content &lhs, const Content &rhs) noexcept;
 
-                    bool removed(const size_t indx) noexcept
-                    {
-                        for(INode *node=my.head;node;node=node->next)
-                        {
-                            if(indx==**node) { my.cutNode(node); return true; }
-                        }
-                        return false;
-                    }
-                    
+                    //! true if indx was found and removed
+                    bool removed(const size_t indx) noexcept;
+
                 private:
                     Y_DISABLE_ASSIGN(Content);
                     Y_PROXY_DECL();
                     IList my;
                     
                     static SignType Compare(const INode * const lhs,
-                                            const INode * const rhs) noexcept
-                    {
-                        return Sign::Of(**lhs,**rhs);
-                    }
+                                            const INode * const rhs) noexcept;
                 };
             }
             
