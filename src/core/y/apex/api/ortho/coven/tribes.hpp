@@ -53,6 +53,7 @@ namespace Yttrium
                     static void               Display(const Vector &v); //!< helper for default callback
 
                     static const unsigned RemoveFutile = 0x01;
+                    static const unsigned FindMultiple = 0x02;
 
                     //__________________________________________________________
                     //

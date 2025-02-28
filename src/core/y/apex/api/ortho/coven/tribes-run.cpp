@@ -62,9 +62,10 @@ namespace Yttrium
                     }
 
                     // second pass: remove alike
+                    if( 0 != (flag&FindMultiple) )
                     {
                         Tribe::List kept;
-
+                        size_t      drop = 0;
                         while(size>0)
                         {
                             AutoPtr<Tribe> lhs = popHead();
@@ -74,14 +75,15 @@ namespace Yttrium
                                 Posture &R = *rhs;
                                 if(L==R)
                                 {
-                                    throw Exception("Must Remove Alike!!");
+                                    ++drop;
+                                    continue;
                                 }
                             }
-
-
-                            kept.pushHead( lhs.yield() );
+                            kept.pushTail( lhs.yield() );
                         }
-
+                        swapWith(kept);
+                        assert(isSortedAccordingTo(Tribe::Compare));
+                        Y_XML_COMMENT(xml, "#drop-same   = " << drop);
                     }
 
 
