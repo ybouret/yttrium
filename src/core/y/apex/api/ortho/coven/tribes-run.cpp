@@ -71,8 +71,8 @@ namespace Yttrium
 
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
-                    Y_XML_COMMENT(xml, "#generated   = " << size);
-                    Y_XML_COMMENT(xml, "#collected   = " << collected);
+                    Y_XML_COMMENT(xml, "#generated = " << size);
+                    Y_XML_COMMENT(xml, "#collected = " << collected);
 
                     //----------------------------------------------------------
                     //
@@ -94,7 +94,8 @@ namespace Yttrium
                         }
                         swapWith(active);
                         assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#active      = " << size);
+                        Y_XML_COMMENT(xml, "#active    = " << size);
+
                     }
 
                     //----------------------------------------------------------
@@ -117,7 +118,8 @@ namespace Yttrium
                         }
                         swapWith(kept);
                         assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#drop-same   = " << drop);
+                        Y_XML_COMMENT(xml, "#multiple  = " << drop);
+
                     }
 
 
@@ -147,7 +149,7 @@ namespace Yttrium
                         }
                         swapWith(kept);
                         assert(isSortedAccordingTo(Tribe::Compare));
-                        //Y_XML_COMMENT(xml, "#drop-same   = " << drop);
+                        Y_XML_COMMENT(xml, "#matching  = " << drop);
                     }
 
 
