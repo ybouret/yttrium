@@ -132,11 +132,11 @@ Y_UTEST(apex_coven)
     XMLog  xml(verbose);
 
     Stats s0; const Digest h0 = Process(xml,data,0,s0);
-    Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::UseBasisCompression,s1);
-    Stats s2; const Digest h2 = Process(xml,data,Ortho::Coven::Tribe::OptimizeHyperPlanes,s2);
+    Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribe::OptimizeHyperPlanes,s1);
+    Stats s2; const Digest h2 = Process(xml,data,Ortho::Coven::Tribe::UseBasisCompression,s2);
     std::cerr << "raw                 h0=" << h0 << " " << s0 << std::endl;
-    std::cerr << "UseBasisCompression h1=" << h1 << " " << s1 << std::endl;
-    std::cerr << "OptimizeHyperPlanes h2=" << h2 << " " << s2 << std::endl;
+    std::cerr << "OptimizeHyperPlanes h1=" << h1 << " " << s1 << std::endl;
+    std::cerr << "UseBasisCompression h2=" << h2 << " " << s2 << std::endl;
 
     Y_CHECK(h1==h0);
     Y_CHECK(h2==h0);

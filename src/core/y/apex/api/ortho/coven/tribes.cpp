@@ -232,48 +232,48 @@ namespace Yttrium
                 void Tribes:: makeCompression(XMLog &xml)
                 {
                     makeReplacement(xml);
-
-                    Tribe::List kept;
-                    std::cerr << "compression [";
-                    while(size>0)
+                    size_t compression = 0;
                     {
-                        AutoPtr<Tribe> lhs = popHead();
-
-                        for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
+                        Tribe::List kept;
+                        while(size>0)
                         {
-                            if(lhs->qfamily==rhs->qfamily) continue;
+                            AutoPtr<Tribe> lhs = popHead();
 
-                            if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
+                            for(Tribe *rhs=kept.head;rhs;rhs=rhs->next)
                             {
-                                //std::cerr << "---- Same Vectors, different families" << std::endl;
-                                //std::cerr << "(*) lhs=" << *lhs << std::endl;
-                                //std::cerr << "(*) rhs=" << *rhs << std::endl;
+                                if(lhs->qfamily==rhs->qfamily) continue;
 
-                                Posture &L = *lhs;
-                                Posture &R = *rhs;
-
-                                collapse(L,R);
-                                //std::cerr << "--> lhs=" << *lhs << std::endl;
-                                //std::cerr << "--> rhs=" << *rhs << std::endl;
-
-                                if(L==R)
+                                if(lhs->qfamily->isIdenticalTo(*rhs->qfamily))
                                 {
-                                    (std::cerr << '#').flush();
-                                    continue;
+                                    //std::cerr << "---- Same Vectors, different families" << std::endl;
+                                    //std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                    //std::cerr << "(*) rhs=" << *rhs << std::endl;
+
+                                    Posture &L = *lhs;
+                                    Posture &R = *rhs;
+
+                                    collapse(L,R);
+                                    //std::cerr << "--> lhs=" << *lhs << std::endl;
+                                    //std::cerr << "--> rhs=" << *rhs << std::endl;
+
+                                    if(L==R)
+                                    {
+                                        //(std::cerr << '#').flush();
+                                        ++compression;
+                                        continue; // will drop lhs
+                                    }
+                                    
+                                    throw Exception("Not Handled!!");
                                 }
-
-
-
-                                throw Exception("Not Handled!!");
                             }
+
+                            kept.pushTail(lhs.yield());
                         }
 
-                        (std::cerr << '.').flush();
-                        kept.pushTail(lhs.yield());
+                        swapWith(kept);
                     }
-                    std::cerr << "]" << std::endl;
 
-                    swapWith(kept);
+                    Y_XML_COMMENT(xml,"#compression = " << compression);
 
                 }
 
