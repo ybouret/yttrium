@@ -43,7 +43,9 @@ namespace Yttrium
             return res;
         }
 
+        const char * const ParkMiller:: CallSign = "Park-Miller";
 
+        const char * ParkMiller:: callSign() const noexcept { return CallSign; }
 
     }
 

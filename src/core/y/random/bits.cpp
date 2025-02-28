@@ -333,6 +333,8 @@ namespace Yttrium
 {
     namespace Random
     {
+        const char * const Rand:: CallSign = "rand()";
+
         Rand:: Rand() noexcept : Bits(RAND_MAX)
         {
             srand( unsigned(SystemSeed::Get()) );
@@ -347,6 +349,8 @@ namespace Yttrium
             const unsigned r = rand();
             return r;
         }
+
+        const char * Rand:: callSign() const noexcept { return CallSign; }
     }
 
 }

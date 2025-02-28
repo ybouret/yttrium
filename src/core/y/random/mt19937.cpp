@@ -79,7 +79,9 @@ mt()
             return y;
         }
 
+        const char * const MT19937:: CallSign = "MT19937";
 
+        const char * MT19937:: callSign() const noexcept { return CallSign; }
     }
 
 }

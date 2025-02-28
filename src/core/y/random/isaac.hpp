@@ -11,26 +11,48 @@ namespace Yttrium
     namespace Random
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! ISAAC Implementation
+        //
+        //
+        //______________________________________________________________________
         template <const unsigned RANDSIZL>
         class ISAAC : public Bits
         {
         public:
-            typedef uint8_t     ub1;
-            typedef uint32_t    ub4;
-            static const size_t RANDSIZ = (1<<RANDSIZL);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef uint8_t     ub1;                       //!< alias
+            typedef uint32_t    ub4;                       //!< alias
+            static const size_t RANDSIZ = (1<<RANDSIZL);   //!< alias
+            static const char   CID = '0' + RANDSIZL;
 
-            /* context of random number generator */
+            //! context of random number generator
             struct randctx
             {
-                ub4 randcnt;
-                ub4 randrsl[RANDSIZ];
-                ub4 randmem[RANDSIZ];
-                ub4 randa;
-                ub4 randb;
-                ub4 randc;
+                ub4 randcnt;          //!< current count
+                ub4 randrsl[RANDSIZ]; //!< state
+                ub4 randmem[RANDSIZ]; //!< aux. stte
+                ub4 randa;            //!< a
+                ub4 randb;            //!< b
+                ub4 randc;            //!< c
             };
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup with seed
             inline explicit ISAAC(const uint32_t s) noexcept :
             Bits(0xffffffff),
             rctx()
@@ -40,6 +62,7 @@ namespace Yttrium
                 randinit(&rctx,true);
             }
 
+            //! setup from system seeds
             inline explicit ISAAC() :
             Bits(0xffffffff),
             rctx()
@@ -49,14 +72,33 @@ namespace Yttrium
                 randinit(&rctx,true);
             }
 
-
+            //! cleanup
             inline virtual ~ISAAC() noexcept
             {
                 clear();
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // interface
+            //
+            //__________________________________________________________________
+            inline virtual const char * callSign() const noexcept
+            {
+                static const char id[] = { 'I', 'S', 'A', 'A', 'C', '<', CID, '>', 0 };
+                return id;
+            }
 
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! test for ISAAC<8>
             void outputTest()
             {
                 clear();
@@ -72,11 +114,14 @@ namespace Yttrium
                 }
             }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define Y_ISAAC_rand(r) \
 (!(r)->randcnt-- ?      \
 (isaac(r), (r)->randcnt=RANDSIZ-1, (r)->randrsl[(r)->randcnt]) : \
 (r)->randrsl[(r)->randcnt])
+#endif
 
+            //! interface for bits
             inline virtual uint32_t next32() noexcept
             {
                 randctx * const ctx = &rctx;
@@ -88,6 +133,7 @@ namespace Yttrium
             randctx rctx;
             inline void clear() noexcept { memset(&rctx,0,sizeof(rctx)); }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define Y_ISAAC_mix(a,b,c,d,e,f,g,h) \
 { \
 a^=b<<11; d+=a; b+=c; \
@@ -99,13 +145,12 @@ f^=g>>4;  a+=f; g+=h; \
 g^=h<<8;  b+=g; h+=a; \
 h^=a>>9;  c+=h; a+=b; \
 }
-
+#endif
             /*
              ------------------------------------------------------------------------------
              If (flag==TRUE), then use the contents of randrsl[0..RANDSIZ-1] as the seed.
              ------------------------------------------------------------------------------
              */
-            /* if (flag==TRUE), then use the contents of randrsl[] to initialize mm[]. */
             static void randinit(randctx * const ctx, const bool flag) noexcept
             {
                 unsigned i;
@@ -157,6 +202,8 @@ h^=a>>9;  c+=h; a+=b; \
                 ctx->randcnt=RANDSIZ;  /* prepare to use the first set of results */
             }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 #undef  Y_ISAAC_mix
 #define Y_ISAAC_ind(mm,x)  (*(ub4 *)((ub1 *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
 #define Y_ISAAC_rngstep(mix,a,b,mm,m,m2,r,x) \
@@ -166,6 +213,9 @@ a = (a^(mix)) + *(m2++); \
 *(m++) = y = Y_ISAAC_ind(mm,x) + a + b; \
 *(r++) = b = Y_ISAAC_ind(mm,y>>RANDSIZL) + x; \
 }
+
+#endif
+
             static inline void isaac(randctx * const ctx)
             {
                 ub4 a,b,x,y,*m,*mm,*m2,*r,*mend;
@@ -193,8 +243,7 @@ a = (a^(mix)) + *(m2++); \
 
         };
 
-        typedef ISAAC<8> ISAAC_Crypt;
-        typedef ISAAC<4> ISAAC_Quick;
+        
 
 
     }

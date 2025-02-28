@@ -38,6 +38,8 @@ namespace Yttrium
             static const uint32_t ReferenceKey[4]; //!< reference key for testing
             static const size_t   ReferenceLen = sizeof(ReferenceKey)/sizeof(ReferenceKey[0]); //!< alias
 
+            static const char * const CallSign; //!< MT19937
+
             //__________________________________________________________________
             //
             //
@@ -60,6 +62,8 @@ namespace Yttrium
 
             //! generates a random number on [0,0xffffffff]-interval
             virtual uint32_t next32(void) noexcept;
+
+            virtual const char * callSign() const noexcept; //!< CallSign
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MT19937);

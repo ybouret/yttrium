@@ -7,6 +7,7 @@
 #include "y/object.hpp"
 #include "y/counted.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/type/identifiable.hpp"
 #include <cmath>
 
 namespace Yttrium
@@ -22,7 +23,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Bits : public Object, public Counted
+        class Bits : public Object, public Counted, public Identifiable
         {
         public:
             //__________________________________________________________________
@@ -110,10 +111,13 @@ namespace Yttrium
         class Rand : public Bits
         {
         public:
-            explicit Rand()           noexcept; //!< initialized in [0..RAND_MAX] with system rand seed in srand()
-            virtual ~Rand()           noexcept; //!< cleanup
-            virtual uint32_t next32() noexcept; //!< rand()
+            static const char * const CallSign; //!< "rand()"
             
+            explicit Rand()  noexcept; //!< initialized in [0..RAND_MAX] with system rand seed in srand()
+            virtual ~Rand()  noexcept; //!< cleanup
+
+            virtual uint32_t      next32()        noexcept; //!< rand()
+            virtual const char * callSign() const noexcept; //!< CallSign
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Rand);
         };
