@@ -14,69 +14,71 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Content+Residue to build a Family
+                //
+                //
+                //______________________________________________________________
                 class Posture
                 {
                 public:
-                    explicit Posture(const IBank &bank,
-                                     const size_t dims,
-                                     const size_t indx) :
-                    content(bank,indx),
-                    residue(bank,dims,indx)
-                    {
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
 
-                    explicit Posture(const Posture &     root,
-                                     const INode * const node) :
-                    content(root.content,**node),
-                    residue(root.residue.proxy,node)
-                    {
-                        assert(root.residue.owns(node));
-                        assert(1+root.content->size == content->size);
-                        assert(root.residue.size-1  == residue.size);
-                    }
+                    //! setup with initial indx for content, other for residue
+                    Posture(const IBank &bank,
+                            const size_t dims,
+                            const size_t indx);
 
-                    Posture(const Posture &_) :
-                    content(_.content),
-                    residue(_.residue)
-                    {
-                    }
-                    
+                    //! duplicate and add index to content, excluded from residue
+                    Posture(const Posture &     root,
+                            const INode * const node);
 
-                    virtual ~Posture() noexcept {}
+                    //! duplicate
+                    Posture(const Posture &_);
 
+                    //! cleanup
+                    virtual ~Posture() noexcept;
+
+                    //! display
                     Y_OSTREAM_PROTO(Posture);
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+                    void xch(Posture &) noexcept; //!< no-throw exchange
+                    void flush()        noexcept; //!< residue to content
 
-                    void xch(Posture &_) noexcept
-                    {
-                        content.xch(_.content);
-                        residue.xch(_.residue);
-                    }
+                    //! true if indx was found and removed from content or residue
+                    bool removed(const size_t indx) noexcept;
 
-                    friend bool operator==(const Posture &lhs, const Posture &rhs) noexcept
-                    {
-                        return (lhs.content == rhs.content) && (lhs.residue == rhs.residue);
-                    }
+                    //! test equality
+                    friend bool operator==(const Posture &,const Posture &) noexcept;
 
-                    bool removed(const size_t indx) noexcept
-                    {
-                        return content.removed(indx) || residue.removed(indx);
-                    }
-
-                    void flush() noexcept
-                    {
-                        while(residue.size>0)
-                            content.push(residue.popHead());
-                    }
-
-                    Content content;
-                    Residue residue;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
+                    Content content; //!< current content
+                    Residue residue; //!< current residue
 
                 private:
                     Y_DISABLE_ASSIGN(Posture);
                 };
 
-               
+
             }
 
         }
