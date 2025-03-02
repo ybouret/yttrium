@@ -95,7 +95,6 @@ namespace Yttrium
                         swapWith(active);
                         assert(isSortedAccordingTo(Tribe::Compare));
                         Y_XML_COMMENT(xml, "#active    = " << size);
-
                     }
 
                     //----------------------------------------------------------
@@ -106,19 +105,19 @@ namespace Yttrium
                     if( 0 != (flag&FindMultiple) )
                     {
                         Tribe::List kept;
-                        size_t      drop = 0;
+                        size_t      multiple = 0;
                         while(size>0)
                         {
                             AutoPtr<Tribe> lhs = popHead();
                             if( FoundSamePostureThan(*lhs,kept) ) {
-                                ++drop;
+                                ++multiple;
                                 continue;
                             }
                             kept.pushTail( lhs.yield() );
                         }
                         swapWith(kept);
                         assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#multiple  = " << drop);
+                        Y_XML_COMMENT(xml, "#multiple  = " << multiple);
 
                     }
 
