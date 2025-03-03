@@ -30,12 +30,15 @@ namespace Yttrium
                 }
 
                 static inline
-                void collapse(Posture &lhs, Posture &rhs)
+                bool collapse(Posture &lhs, Posture &rhs)
                 {
-                    Posture lhsNew = lhs; promote(lhsNew,rhs.content);
-                    Posture rhsNew = rhs; promote(rhsNew,lhs.content);
-                    lhs.xch(lhsNew);
-                    rhs.xch(rhsNew);
+                    {
+                        Posture lhsNew = lhs; promote(lhsNew,rhs.content);
+                        Posture rhsNew = rhs; promote(rhsNew,lhs.content);
+                        lhs.xch(lhsNew);
+                        rhs.xch(rhsNew);
+                    }
+                    return lhs == rhs;
                 }
 
 
@@ -67,96 +70,89 @@ namespace Yttrium
                     return false;
                 }
 
+                void Tribes:: removeFutile(XMLog &xml)
+                {
+                    Tribe::List active;
+                    while(size>0)
+                    {
+                        Tribe * const tribe = popHead();
+                        if( tribe->isFutile() )
+                        {
+                            delete tribe;
+                            continue;
+                        }
+                        active.pushTail(tribe);
+                    }
+                    swapWith(active);
+                    assert(isSortedAccordingTo(Tribe::Compare));
+                    Y_XML_COMMENT(xml, "#active    = " << size);
+                }
+
+                void Tribes:: findMultiple(XMLog &xml)
+                {
+                    Tribe::List kept;
+                    size_t      multiple = 0;
+                    while(size>0)
+                    {
+                        AutoPtr<Tribe> lhs = popHead();
+                        if( FoundSamePostureThan(*lhs,kept) ) {
+                            ++multiple;
+                            continue;
+                        }
+                        kept.pushTail( lhs.yield() );
+                    }
+                    swapWith(kept);
+                    assert(isSortedAccordingTo(Tribe::Compare));
+                    Y_XML_COMMENT(xml, "#multiple  = " << multiple);
+
+                }
+
+                void Tribes:: findMatching(XMLog &xml)
+                {
+                    Tribe::List kept;
+                    size_t      drop = 0;
+                    while(size>0)
+                    {
+                        AutoPtr<Tribe> lhs = popHead();
+                        Tribe * const  rhs = FindIndenticalFamily(*lhs,kept);
+                        if(0!=rhs)
+                        {
+                            std::cerr << "---- Identical " << std::endl;
+                            std::cerr << "(*) lhs=" << *lhs << std::endl;
+                            std::cerr << "(*) rhs=" << *rhs << std::endl;
+
+                            const bool samePosture = collapse(*lhs,*rhs);
+                            std::cerr << "--> lhs=" << *lhs << std::endl;
+                            std::cerr << "--> rhs=" << *rhs << std::endl;
+
+                            if( samePosture )
+                            {
+                                if(rhs->isFutile()) delete kept.pop(rhs);
+                                continue; // will drop lhs
+                            }
+
+
+
+                            throw Exception("TODO");
+                        }
+
+                        kept.pushTail( lhs.yield() );
+                    }
+                    swapWith(kept);
+                    assert(isSortedAccordingTo(Tribe::Compare));
+                    Y_XML_COMMENT(xml, "#matching  = " << drop);
+                }
 
 
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
-                    Y_XML_COMMENT(xml, " -- flag = " << flag << " --");
                     Y_XML_COMMENT(xml, "#generated = " << size);
                     Y_XML_COMMENT(xml, "#collected = " << collected);
 
-                    //----------------------------------------------------------
-                    //
-                    // first pass: removeFutile
-                    //
-                    //----------------------------------------------------------
-                    if( 0 != (flag&RemoveFutile) )
-                    {
-                        Tribe::List active;
-                        while(size>0)
-                        {
-                            Tribe * const tribe = popHead();
-                            if( tribe->isFutile() )
-                            {
-                                delete tribe;
-                                continue;
-                            }
-                            active.pushTail(tribe);
-                        }
-                        swapWith(active);
-                        assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#active    = " << size);
-                    }
 
-                    //----------------------------------------------------------
-                    //
-                    // second pass: findMultiple
-                    //
-                    //----------------------------------------------------------
-                    if( 0 != (flag&FindMultiple) )
-                    {
-                        Tribe::List kept;
-                        size_t      multiple = 0;
-                        while(size>0)
-                        {
-                            AutoPtr<Tribe> lhs = popHead();
-                            if( FoundSamePostureThan(*lhs,kept) ) {
-                                ++multiple;
-                                continue;
-                            }
-                            kept.pushTail( lhs.yield() );
-                        }
-                        swapWith(kept);
-                        assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#multiple  = " << multiple);
-
-                    }
-
-
-                    //----------------------------------------------------------
-                    //
-                    // second pass: findMatching
-                    //
-                    //----------------------------------------------------------
-                    if( 0 != (flag&FindMatching) )
-                    {
-                        Tribe::List kept;
-                        size_t      drop = 0;
-                        while(size>0)
-                        {
-                            AutoPtr<Tribe> lhs = popHead();
-                            Tribe * const  rhs = FindIndenticalFamily(*lhs,kept);
-                            if(0!=rhs)
-                            {
-                                std::cerr << "---- Identical " << std::endl;
-                                std::cerr << "(*) lhs=" << *lhs << std::endl;
-                                std::cerr << "(*) rhs=" << *rhs << std::endl;
-
-                                collapse(*lhs,*rhs);
-                                std::cerr << "--> lhs=" << *lhs << std::endl;
-                                std::cerr << "--> rhs=" << *rhs << std::endl;
-
-
-                                throw Exception("TODO");
-                            }
-
-                            kept.pushTail( lhs.yield() );
-                        }
-                        swapWith(kept);
-                        assert(isSortedAccordingTo(Tribe::Compare));
-                        Y_XML_COMMENT(xml, "#matching  = " << drop);
-                    }
-
+                    if( 0 != (flag&RemoveFutile) ) removeFutile(xml);
+                    if( 0 != (flag&FindMultiple) ) findMultiple(xml);
+                    if( 0 != (flag&FindMatching) ) findMatching(xml);
 
                     if(size<=0)
                         MergeSort::Call( Coerce(db), CompareVectors);

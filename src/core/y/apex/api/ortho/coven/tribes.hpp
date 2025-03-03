@@ -185,9 +185,11 @@ namespace Yttrium
                     const Vector * tryInsertNew(const Vector &vec);
                     
                     void           collect(Callback &);
-                    void           process(XMLog &,const unsigned);
-
-
+                    void           process(XMLog &, const unsigned);
+                    void           removeFutile(XMLog &);
+                    void           findMultiple(XMLog &);
+                    void           findMatching(XMLog &);
+                    
                 };
 
 
