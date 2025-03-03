@@ -136,7 +136,6 @@ namespace Yttrium
                         //------------------------------------------------------
                         if(0== (flag&Strategy::HyperClosure) ) { lineage(chld,data); return; }
 
-
                         //------------------------------------------------------
                         //
                         // Hyperclosure
@@ -165,11 +164,11 @@ namespace Yttrium
                                 return;
 
                             case Fragmental:
-                                break;
+                                lineage(chld,data);
+                                return;
                         }
 
-                        assert(Fragmental==qfamily->quality);
-                        lineage(chld,data);
+
                     }
 
                     //__________________________________________________________
