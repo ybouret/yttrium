@@ -167,9 +167,9 @@ namespace Yttrium
         Rational Rational:: sqrt() const
         {
             const Integer u   = numer.sqrt();
-            const Natural du2 = denom * u.n * u.n;
+            const Natural du2 = denom * u.n.sqr();
             Natural       v   = denom.sqrt();
-            while(v*v*numer.n<du2) ++v;
+            while(v.sqr()*numer.n<du2) ++v;
             return Rational(u,v);
         }
 
