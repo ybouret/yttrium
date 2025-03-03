@@ -1,5 +1,6 @@
 
 #include "y/apex/api/ortho/coven/tribes.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {

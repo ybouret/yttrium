@@ -6,12 +6,10 @@
 
 #include "y/apex/api/ortho/coven/tribe.hpp"
 #include "y/stream/xmlog.hpp"
-#include "y/stream/hash/srzh.hpp"
-#include "y/stream/hash/output.hpp"
+
 #include "y/memory/digest.hpp"
-#include "y/hashing/md.hpp"
 #include "y/functor.hpp"
-#include "y/system/exception.hpp"
+#include "y/hashing/md.hpp"
 
 namespace Yttrium
 {
@@ -70,11 +68,12 @@ namespace Yttrium
                      \param qfcc for vectors/families
                      */
                     template <typename MATRIX> inline
-                    explicit Tribes(XMLog &        xml,
-                                    Callback     & proc,
-                                    const MATRIX & data,
-                                    const IBank  & bank,
-                                    const FCache & qfcc) :
+                    explicit Tribes(XMLog &          xml,
+                                    Callback     &   proc,
+                                    const MATRIX &   data,
+                                    const IBank  &   bank,
+                                    const FCache &   qfcc,
+                                    uint64_t * const pEll = 0) :
                     Tribe::List(),
                     iteration(1),
                     collected(0),
@@ -82,15 +81,26 @@ namespace Yttrium
                     db()
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "initialize [" << data.rows << "][" << data.cols << "]");
-
+                        const bool watch = 0!=pEll;
+                        //------------------------------------------------------
+                        //
                         // create all possible initial tribes
+                        //
+                        //------------------------------------------------------
                         {
-                            const size_t n = data.rows;
+                            const uint64_t ini = watch ? WallTime::Ticks() : 0;
+                            const size_t   n   = data.rows;
                             for(size_t indx=1;indx<=n;++indx)
                                 (void) pushTail( new Tribe(data,bank,indx,qfcc) );
+                            if(watch) *pEll= WallTime::Ticks() - ini;
                         }
 
-                        // remove null and duplicates, sort tribes and collect vectors
+                        //------------------------------------------------------
+                        //
+                        // remove null and duplicates,
+                        // sort tribes and collect vectors
+                        //
+                        //------------------------------------------------------
                         doInitialize(xml,proc);
                     }
 

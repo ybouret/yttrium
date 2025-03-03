@@ -1,4 +1,6 @@
 #include "y/apex/api/ortho/coven/tribes.hpp"
+#include "y/hashing/function.hpp"
+#include "y/stream/hash/output.hpp"
 
 namespace Yttrium
 {
