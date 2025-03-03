@@ -55,6 +55,7 @@ namespace Yttrium
 #include "y/random/park-miller.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/system/wtime.hpp"
+#include "y/string/env.hpp"
 
 namespace
 {
@@ -119,22 +120,23 @@ Y_UTEST(apex_coven)
     Random::ParkMiller ran;
     Y_SIZEOF(Ortho::Coven::Tribe);
 
-    size_t rows = 4;    if(argc>1) rows = ASCII::Convert::To<size_t>(argv[1],"rows");
-    size_t cols = rows; if(argc>2) cols = ASCII::Convert::To<size_t>(argv[2],"cols");
+    size_t rows      = 4;    if(argc>1) rows      = ASCII::Convert::To<size_t>(argv[1],"rows");
+    size_t cols      = rows; if(argc>2) cols      = ASCII::Convert::To<size_t>(argv[2],"cols");
+    int    amplitude = 5;    if(argc>3) amplitude = ASCII::Convert::To<int>(argv[3],"amplitude");
 
     Matrix<int> data(rows,cols);
     for(size_t i=1;i<=rows;++i)
     {
         for(size_t j=1;j<=cols;++j)
         {
-            data[i][j] = ran.in<int>(-2,2);
+            data[i][j] = ran.in<int>(-amplitude,amplitude);
         }
     }
 
     //data[1].ld(0);
     //data[3].ld(data[2]);
 
-    bool   verbose = true;
+    bool   verbose = Environment::Flag("VERBOSE");
     XMLog  xml(verbose);
 
     Stats s0; const Digest h0 = Process(xml,data,0,s0);
