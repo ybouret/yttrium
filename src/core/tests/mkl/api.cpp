@@ -21,13 +21,6 @@ static inline void TestFabs(Random::Bits &ran)
     std::cerr << std::endl;
 }
 
-namespace Yttrium
-{
-    namespace MKL
-    {
-       
-    }
-}
 
 
 Y_UTEST(mkl_api)
