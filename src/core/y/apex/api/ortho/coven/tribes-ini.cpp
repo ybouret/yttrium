@@ -101,7 +101,7 @@ namespace Yttrium
 
                     // get rid of zero/duplicates
                     {
-                        const StopWatch sw(pEll);
+                        Y_StopWatch(pEll);
                         noNullVector(xml);
                         noDuplicates(xml);
                         MergeSort::Call(*this,Tribe::Compare);
@@ -112,7 +112,7 @@ namespace Yttrium
                     {
                         const Vector * vec = 0;
                         {
-                            const StopWatch sw(pEll);
+                            Y_StopWatch(pEll);
                             assert(0!=tribe->lastVec);
                             vec = tryInsertNew(*(tribe->lastVec));
                             if(!vec)

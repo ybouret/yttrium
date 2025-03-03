@@ -75,6 +75,12 @@ namespace
         }
     };
 
+
+    static inline void ShowDot(const Ortho::Vector &)
+    {
+        (std::cerr << '.').flush();
+    }
+
     template <typename MATRIX> static inline
     Digest Process(XMLog &            xml,
                    const MATRIX &     data,
@@ -87,8 +93,9 @@ namespace
         Ortho::Metrics         qmtx(data.cols);
         Ortho::VCache          qvcc( new Ortho::Vector::Cache(qmtx) );
         Ortho::FCache          qfcc( new Ortho::Family::Cache(qvcc) );
-        Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
-
+        //Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+        Ortho::Coven::Callback proc = cfunctor( ShowDot );
+        std::cerr << "[";
         Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc,&stats.ticks);
         OutputFile             fp("coven.dat");
 
@@ -100,7 +107,7 @@ namespace
             tribes.generate(xml,proc,data,flag, &stats.ticks);
         }
 
-        std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
+        std::cerr << "]\ncount = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl << std::endl;
 
         stats.vc = (*qvcc)->size;
         stats.fc = (*qfcc)->size;

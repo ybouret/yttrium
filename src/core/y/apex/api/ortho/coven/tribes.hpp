@@ -87,7 +87,7 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                         {
-                            const StopWatch sw(pEll);
+                            Y_StopWatch(pEll);
                             const size_t    n = data.rows;
                             for(size_t indx=1;indx<=n;++indx)
                                 (void) pushTail( new Tribe(data,bank,indx,qfcc) );
