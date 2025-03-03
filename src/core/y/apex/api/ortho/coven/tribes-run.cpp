@@ -109,38 +109,45 @@ namespace Yttrium
 
                 void Tribes:: findMatching(XMLog &xml)
                 {
-                    Tribe::List kept;
-                    size_t      drop = 0;
-                    while(size>0)
+                    size_t      matching = 0;
+                CYCLE:
                     {
-                        AutoPtr<Tribe> lhs = popHead();
-                        Tribe * const  rhs = FindIndenticalFamily(*lhs,kept);
-                        if(0!=rhs)
+                        Tribe::List retained;
+                        bool        modified = false;
+                        while(size>0)
                         {
-                            std::cerr << "---- Identical " << std::endl;
-                            std::cerr << "(*) lhs=" << *lhs << std::endl;
-                            std::cerr << "(*) rhs=" << *rhs << std::endl;
-
-                            const bool samePosture = collapse(*lhs,*rhs);
-                            std::cerr << "--> lhs=" << *lhs << std::endl;
-                            std::cerr << "--> rhs=" << *rhs << std::endl;
-
-                            if( samePosture )
+                            AutoPtr<Tribe> lhs = popHead();
+                            Tribe * const  rhs = FindIndenticalFamily(*lhs,retained);
+                            if(0!=rhs)
                             {
-                                if(rhs->isFutile()) delete kept.pop(rhs);
-                                continue; // will drop lhs
+                                matching++;
+                                modified = true;
+                                std::cerr << "---- Identical " << std::endl;
+                                std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                std::cerr << "(*) rhs=" << *rhs << std::endl;
+
+                                const bool samePosture = collapse(*lhs,*rhs);
+                                std::cerr << "--> lhs=" << *lhs << std::endl;
+                                std::cerr << "--> rhs=" << *rhs << std::endl;
+
+                                if( samePosture )
+                                {
+                                    if(rhs->isFutile())
+                                        delete retained.pop(rhs); // drop futile rhs
+                                    continue;                 // drop same lhs in any case
+                                }
+
+
+                                throw Exception("TODO");
                             }
 
-
-
-                            throw Exception("TODO");
+                            retained.pushTail( lhs.yield() );
                         }
-
-                        kept.pushTail( lhs.yield() );
+                        swapWith(retained);
+                        assert(isSortedAccordingTo(Tribe::Compare));
+                        if(modified) goto CYCLE;
                     }
-                    swapWith(kept);
-                    assert(isSortedAccordingTo(Tribe::Compare));
-                    Y_XML_COMMENT(xml, "#matching  = " << drop);
+                    Y_XML_COMMENT(xml, "#matching  = " << matching);
                 }
 
 
