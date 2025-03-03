@@ -134,7 +134,7 @@ namespace Yttrium
                                 {
                                     if(rhs->isFutile())
                                         delete retained.pop(rhs); // drop futile rhs
-                                    continue;                 // drop same lhs in any case
+                                    continue;                     // drop same lhs in any case
                                 }
 
 
