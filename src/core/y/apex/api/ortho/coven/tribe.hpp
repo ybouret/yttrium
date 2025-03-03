@@ -55,7 +55,7 @@ namespace Yttrium
                     //__________________________________________________________
                     typedef CxxListOf<Tribe>  List;                       //!< alias
                     static const char * const CallSign;                   //!< "Coven::Tribe"
-                    
+
 
                     //__________________________________________________________
                     //
@@ -128,37 +128,47 @@ namespace Yttrium
                                  const unsigned  flag)
                     {
                         assert( chld.isSortedAccordingTo(Compare) );
-                        const bool hyperClosure = 0 != (flag&Strategy::HyperClosure);
+
+                        //------------------------------------------------------
+                        //
+                        // without hypeclosure, default lineage
+                        //
+                        //------------------------------------------------------
+                        if(0== (flag&Strategy::HyperClosure) ) { lineage(chld,data); return; }
+
+
+                        //------------------------------------------------------
+                        //
+                        // Hyperclosure
+                        //
+                        //------------------------------------------------------
                         switch(qfamily->quality)
                         {
                             case Degenerate: throwDegenerate(); return;
                             case Foundation: flush();           return;
                             case Hyperplane:
-                                if(hyperClosure)
+                                while(residue.size>0)
                                 {
-                                    while(residue.size>0)
-                                    {
-                                        Tribe *tribe = new Tribe(*this,data,residue.head);
-                                        residue.cutHead();
-                                        if(0!=tribe->lastVec) {
-                                            assert(Foundation==tribe->qfamily->quality);
-                                            tribe->flush();
-                                            ListOps::InsertOrdered(chld,tribe,Compare);
-                                            assert( chld.isSortedAccordingTo(Compare) );
-                                            return;
-                                        }
-                                        else
-                                            delete tribe;
+                                    Tribe *tribe = new Tribe(*this,data,residue.head);
+                                    residue.cutHead();
+                                    if(0!=tribe->lastVec) {
+                                        assert(Foundation==tribe->qfamily->quality);
+                                        tribe->flush();
+                                        ListOps::InsertOrdered(chld,tribe,Compare);
+                                        assert( chld.isSortedAccordingTo(Compare) );
+                                        return;
                                     }
-                                    assert(0==residue.size);
-                                    return;
+                                    else
+                                        delete tribe;
                                 }
-                                else
-                                    break; // => lineage
+                                assert(0==residue.size);
+                                return;
 
                             case Fragmental:
-                                break;    // => lineage
+                                break;
                         }
+
+                        assert(Fragmental==qfamily->quality);
                         lineage(chld,data);
                     }
 
@@ -212,7 +222,7 @@ namespace Yttrium
                 };
 
 
-         
+
             }
         }
     }
