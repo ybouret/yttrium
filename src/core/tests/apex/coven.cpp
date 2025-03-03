@@ -140,11 +140,12 @@ Y_UTEST(apex_coven)
     Stats s0; const Digest h0 = Process(xml,data,0,s0);
     Stats s1; const Digest h1 = Process(xml,data,Ortho::Coven::Tribes::RemoveFutile,s1);
     Stats s2; const Digest h2 = Process(xml,data,Ortho::Coven::Tribes::FindMultiple,s2);
-    Stats s3; const Digest h3 = Process(xml,data,Ortho::Coven::Tribes::RemoveFutile|Ortho::Coven::Tribes::FindMatching,s3);
+    Stats s3; const Digest h3 = Process(xml,data,Ortho::Coven::Tribes::FindMatching,s3);
 
     std::cerr << "raw          h0=" << h0 << " " << s0 << std::endl;
     std::cerr << "RemoveFutile h1=" << h1 << " " << s1 << std::endl; Y_ASSERT(h1==h0);
     std::cerr << "FindMultiple h2=" << h2 << " " << s2 << std::endl; Y_ASSERT(h2==h0);
+    std::cerr << "FindMatching h3=" << h3 << " " << s3 << std::endl; Y_ASSERT(h3==h0);
 
 
 

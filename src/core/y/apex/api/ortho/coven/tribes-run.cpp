@@ -71,6 +71,7 @@ namespace Yttrium
 
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
+                    Y_XML_COMMENT(xml, " -- flag = " << flag << " --");
                     Y_XML_COMMENT(xml, "#generated = " << size);
                     Y_XML_COMMENT(xml, "#collected = " << collected);
 
