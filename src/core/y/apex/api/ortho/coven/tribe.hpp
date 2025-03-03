@@ -143,8 +143,9 @@ namespace Yttrium
                         //------------------------------------------------------
                         switch(qfamily->quality)
                         {
-                            case Degenerate: throwDegenerate(); return;
-                            case Foundation: flush();           return;
+                            case Degenerate: throwDegenerate();  return;
+                            case Foundation: flush();            return;
+                            case Fragmental: lineage(chld,data); return ;
                             case Hyperplane:
                                 while(residue.size>0)
                                 {
@@ -163,10 +164,10 @@ namespace Yttrium
                                 assert(0==residue.size);
                                 return;
 
-                            case Fragmental:
-                                lineage(chld,data);
-                                return;
+
                         }
+
+
 
 
                     }

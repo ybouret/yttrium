@@ -68,7 +68,10 @@ namespace Yttrium
                     //! test difference
                     friend bool operator!=(const Posture &,const Posture &) noexcept;
 
-                    
+                    bool has(const size_t indx) const noexcept
+                    {
+                        return content->has(indx) || residue.has(indx);
+                    }
 
                     //__________________________________________________________
                     //
