@@ -233,7 +233,10 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
                 return res;
             }
 
-
+            Integer sqrt() const; //!< integer square-root
+            Integer abs()  const; //!< |*this|
+            Integer sqr()  const; //!< |*this|^2
+            
             //__________________________________________________________________
             //
             //

@@ -222,6 +222,12 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Y_Apex_Rational_Operators(/,Div)
 #endif
 
+
+
+            Rational sqrt() const; //!< integer square-root
+            Rational abs()  const; //!< |*this|
+            Rational sqr()  const; //!< |*this|^2
+
             //__________________________________________________________________
             //
             //

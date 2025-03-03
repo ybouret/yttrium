@@ -146,7 +146,35 @@ namespace Yttrium
         }
 
 
-        
+        Rational Rational:: abs() const
+        {
+            switch(numer.s)
+            {
+                case Negative: return - *this;
+                case Positive: return   *this;
+                case __Zero__: break;
+            }
+            return 0;
+        }
+
+        Rational Rational:: sqr() const
+        {
+            const  Integer n = numer.sqr();
+            const  Natural d = denom.sqr();
+            return Rational(n,d);
+        }
+
+        Rational Rational:: sqrt() const
+        {
+            const Integer u   = numer.sqrt();
+            const Natural du2 = denom * u.n * u.n;
+            Natural       v   = denom.sqrt();
+            while(v*v*numer.n<du2) ++v;
+            return Rational(u,v);
+        }
+
+
+
     }
 
 

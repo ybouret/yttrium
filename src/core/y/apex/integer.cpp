@@ -1,6 +1,7 @@
 
 #include "y/apex/integer.hpp"
 #include "y/system/exception.hpp"
+#include <cerrno>
 
 namespace Yttrium
 {
@@ -140,7 +141,33 @@ namespace Yttrium
         }
 
 
-        
+        Integer Integer:: sqr() const
+        {
+            return n.sqr();
+        }
+
+        Integer Integer:: sqrt() const
+        {
+            switch(s)
+            {
+                case Negative: throw Libc::Exception(EDOM, "sqrt of negative %s",CallSign);
+                case __Zero__: return 0;
+                case Positive:
+                    break;
+            }
+            return n.sqrt();
+        }
+
+        Integer Integer:: abs()  const
+        {
+            switch(s)
+            {
+                case Negative: return - *this;
+                case Positive: return *this;
+                case __Zero__: break;
+            }
+            return 0;
+        }
 
 
     }
