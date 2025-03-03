@@ -193,6 +193,7 @@ namespace Yttrium
 
                     assert(isSortedAccordingTo(Tribe::Compare));
 
+                    // final call for unique signature ?
                     if(size<=0) {
                         MergeSort::Call( Coerce(db), CompareVectors);
                         return;
