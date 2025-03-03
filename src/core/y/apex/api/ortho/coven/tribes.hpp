@@ -52,10 +52,7 @@ namespace Yttrium
                     static Natural            MaxCount(const size_t n); //!< sum of arrangements
                     static void               Display(const Vector &v); //!< helper for default callback
 
-                    static const unsigned RemoveFutile = 0x01;
-                    static const unsigned FindMultiple = 0x02;
-                    static const unsigned FindMatching = 0x04;
-                    static const unsigned ReplaceBasis = 0x08;
+                  
 
                     //__________________________________________________________
                     //
@@ -143,7 +140,7 @@ namespace Yttrium
                         {
                             Tribe::List chld;
                             for(Tribe *tribe=head;tribe;tribe=tribe->next)
-                                tribe->progeny(chld,data);
+                                tribe->progeny(chld,data,flag);
                             swapWith(chld);
                         }
                         assert(isSortedAccordingTo(Tribe::Compare));

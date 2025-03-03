@@ -18,6 +18,15 @@ namespace Yttrium
         {
             namespace Coven
             {
+                struct Strategy
+                {
+                    static const unsigned RemoveFutile = 0x01;
+                    static const unsigned FindMultiple = 0x02;
+                    static const unsigned FindMatching = 0x04;
+                    static const unsigned ReplaceBasis = 0x08;
+                    static const unsigned HyperClosure = 0x10;
+                };
+
                 //______________________________________________________________
                 //
                 //
@@ -106,8 +115,41 @@ namespace Yttrium
                     //! add to sorted children
                     template <typename MATRIX> inline
                     void progeny(List          & chld,
-                                 const MATRIX  & data)
+                                 const MATRIX  & data,
+                                 const unsigned  flag)
                     {
+                        assert( chld.isSortedAccordingTo(Compare) );
+                        const bool hyperClosure = 0 != (flag&Strategy::HyperClosure);
+                        switch(qfamily->quality)
+                        {
+                            case Degenerate: throwDegenerate(); return;
+                            case Foundation: flush();           return;
+                            case Hyperplane:
+                                if(hyperClosure)
+                                {
+                                    while(residue.size>0)
+                                    {
+                                        Tribe *tribe = new Tribe(*this,data,residue.head);
+                                        residue.cutHead();
+                                        if(0!=tribe->lastVec) {
+                                            assert(Foundation==tribe->qfamily->quality);
+                                            tribe->flush();
+                                            ListOps::InsertOrdered(chld,tribe,Compare);
+                                            assert( chld.isSortedAccordingTo(Compare) );
+                                            return;
+                                        }
+                                        else
+                                            delete tribe;
+                                    }
+                                    assert(0==residue.size);
+                                    return;
+                                }
+                                else
+                                    break; // => lineage
+
+                            case Fragmental:
+                                break;    // => lineage
+                        }
                         lineage(chld,data);
                     }
 
@@ -135,7 +177,6 @@ namespace Yttrium
                                  const MATRIX  & data)
                     {
 
-                        assert( chld.isSortedAccordingTo(Compare) );
                         {
                             List here;
                             for(const INode *node=residue.head;node;node=node->next)

@@ -122,14 +122,13 @@ namespace Yttrium
                             {
                                 matching++;
                                 modified = true;
-                                std::cerr << "---- Identical " << std::endl;
-                                std::cerr << "(*) lhs=" << *lhs << std::endl;
-                                std::cerr << "(*) rhs=" << *rhs << std::endl;
+                                //std::cerr << "---- Identical " << std::endl;
+                                //std::cerr << "(*) lhs=" << *lhs << std::endl;
+                                //std::cerr << "(*) rhs=" << *rhs << std::endl;
 
                                 const bool samePosture = collapse(*lhs,*rhs);
-                                std::cerr << "--> lhs=" << *lhs << std::endl;
-                                std::cerr << "--> rhs=" << *rhs << std::endl;
-
+                                //std::cerr << "--> lhs=" << *lhs << std::endl;
+                                //std::cerr << "--> rhs=" << *rhs << std::endl;
                                 if( samePosture )
                                 {
                                     if(rhs->isFutile())
@@ -186,10 +185,10 @@ namespace Yttrium
 
                     assert(isSortedAccordingTo(Tribe::Compare));
 
-                    if( 0 != (flag&RemoveFutile) ) removeFutile(xml);
-                    if( 0 != (flag&FindMultiple) ) findMultiple(xml);
-                    if( 0 != (flag&FindMatching) ) findMatching(xml);
-                    if( 0 != (flag&ReplaceBasis) ) replaceBasis(xml);
+                    if( 0 != (flag&Strategy::RemoveFutile) ) removeFutile(xml);
+                    if( 0 != (flag&Strategy::FindMultiple) ) findMultiple(xml);
+                    if( 0 != (flag&Strategy::FindMatching) ) findMatching(xml);
+                    if( 0 != (flag&Strategy::ReplaceBasis) ) replaceBasis(xml);
 
                     assert(isSortedAccordingTo(Tribe::Compare));
 
