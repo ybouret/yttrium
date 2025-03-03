@@ -136,8 +136,7 @@ namespace Yttrium
                                     continue;                     // drop same lhs in any case
                                 }
 
-
-                                throw Exception("TODO");
+                                // otherwise keep lhs
                             }
 
                             retained.pushTail( lhs.yield() );

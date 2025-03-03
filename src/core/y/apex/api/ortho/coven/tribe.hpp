@@ -25,6 +25,7 @@ namespace Yttrium
                     static const unsigned FindMatching = 0x04;
                     static const unsigned ReplaceBasis = 0x08;
                     static const unsigned HyperClosure = 0x10;
+                    static const unsigned Optimize     = 0xff;
                 };
 
                 //______________________________________________________________

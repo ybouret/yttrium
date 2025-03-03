@@ -143,6 +143,7 @@ Y_UTEST(apex_coven)
     Stats s3; const Digest h3 = Process(xml,data,Ortho::Coven::Strategy::FindMatching,s3);
     Stats s4; const Digest h4 = Process(xml,data,Ortho::Coven::Strategy::ReplaceBasis,s4);
     Stats s5; const Digest h5 = Process(xml,data,Ortho::Coven::Strategy::HyperClosure,s5);
+    Stats s6; const Digest h6 = Process(xml,data,Ortho::Coven::Strategy::Optimize,s6);
 
     std::cerr << "raw          h0=" << h0 << " " << s0 << std::endl;
     std::cerr << "RemoveFutile h1=" << h1 << " " << s1 << std::endl; Y_ASSERT(h1==h0);
@@ -150,6 +151,7 @@ Y_UTEST(apex_coven)
     std::cerr << "FindMatching h3=" << h3 << " " << s3 << std::endl; Y_ASSERT(h3==h0);
     std::cerr << "ReplaceBasis h4=" << h4 << " " << s4 << std::endl; Y_ASSERT(h4==h0);
     std::cerr << "HyperClosure h5=" << h5 << " " << s5 << std::endl; Y_ASSERT(h5==h0);
+    std::cerr << "Optimize     h6=" << h6 << " " << s6 << std::endl; Y_ASSERT(h6==h0);
 
 
 
