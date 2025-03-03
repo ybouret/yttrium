@@ -184,12 +184,14 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "#generated = " << size);
                     Y_XML_COMMENT(xml, "#collected = " << collected);
 
+                    assert(isSortedAccordingTo(Tribe::Compare));
 
                     if( 0 != (flag&RemoveFutile) ) removeFutile(xml);
                     if( 0 != (flag&FindMultiple) ) findMultiple(xml);
                     if( 0 != (flag&FindMatching) ) findMatching(xml);
                     if( 0 != (flag&ReplaceBasis) ) replaceBasis(xml);
 
+                    assert(isSortedAccordingTo(Tribe::Compare));
 
                     if(size<=0) {
                         MergeSort::Call( Coerce(db), CompareVectors);
