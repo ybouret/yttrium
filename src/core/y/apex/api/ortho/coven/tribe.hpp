@@ -163,8 +163,6 @@ namespace Yttrium
                                 }
                                 assert(0==residue.size);
                                 return;
-
-
                         }
 
 
