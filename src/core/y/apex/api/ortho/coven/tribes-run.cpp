@@ -151,6 +151,34 @@ namespace Yttrium
                 }
 
 
+                static inline
+                Tribe *findReplacementFamilyFor(const Tribe * const tribe)
+                {
+                    assert(0!=tribe);
+                    for(Tribe *guess=tribe->prev;guess;guess=guess->prev)
+                    {
+                        if(tribe->content==guess->content)
+                            return guess;
+                    }
+                    return 0;
+                }
+
+                void Tribes:: replaceBasis(XMLog &xml)
+                {
+                    size_t replaced = 0;
+                    for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                    {
+                        Tribe * const guess = findReplacementFamilyFor(tribe);
+                        if(guess)
+                        {
+                            tribe->adoptedBy(*guess);
+                            ++replaced;
+                        }
+                    }
+                    if( replaced ) MergeSort::Call(*this,Tribe::Compare);
+                    Y_XML_COMMENT(xml, "#replaced  = " << replaced);
+                }
+
                 void Tribes:: process(XMLog &xml, const unsigned flag)
                 {
                     Y_XML_COMMENT(xml, "#generated = " << size);
@@ -160,9 +188,15 @@ namespace Yttrium
                     if( 0 != (flag&RemoveFutile) ) removeFutile(xml);
                     if( 0 != (flag&FindMultiple) ) findMultiple(xml);
                     if( 0 != (flag&FindMatching) ) findMatching(xml);
+                    if( 0 != (flag&ReplaceBasis) ) replaceBasis(xml);
 
-                    if(size<=0)
+
+                    if(size<=0) {
                         MergeSort::Call( Coerce(db), CompareVectors);
+                        return;
+                    }
+
+
 
                 }
 

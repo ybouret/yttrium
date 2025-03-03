@@ -55,6 +55,7 @@ namespace Yttrium
                     static const unsigned RemoveFutile = 0x01;
                     static const unsigned FindMultiple = 0x02;
                     static const unsigned FindMatching = 0x04;
+                    static const unsigned ReplaceBasis = 0x08;
 
                     //__________________________________________________________
                     //
@@ -189,7 +190,7 @@ namespace Yttrium
                     void           removeFutile(XMLog &);
                     void           findMultiple(XMLog &);
                     void           findMatching(XMLog &);
-                    
+                    void           replaceBasis(XMLog &);
                 };
 
 
