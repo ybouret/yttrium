@@ -1,4 +1,4 @@
-include_directories(. ../core ../jive)
+include_directories(. ../core ../lingo)
 
 Y_CreateLibrary(y-csv
 csv
