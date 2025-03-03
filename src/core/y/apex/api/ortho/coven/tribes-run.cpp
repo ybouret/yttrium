@@ -177,11 +177,12 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "#replaced  = " << replaced);
                 }
 
-                void Tribes:: process(XMLog &xml, const unsigned flag)
+                void Tribes:: process(XMLog &xml, const unsigned flag, uint64_t * const pEll)
                 {
                     Y_XML_COMMENT(xml, "#generated = " << size);
                     Y_XML_COMMENT(xml, "#collected = " << collected);
 
+                    const StopWatch sw(pEll);
                     assert(isSortedAccordingTo(Tribe::Compare));
 
                     if( 0 != (flag&Strategy::RemoveFutile) ) removeFutile(xml);

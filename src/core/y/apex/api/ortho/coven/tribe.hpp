@@ -8,8 +8,7 @@
 #include "y/apex/api/ortho/family.hpp"
 #include "y/data/list/cxx.hpp"
 #include "y/sort/merge.hpp"
-#include "y/ptr/auto.hpp"
-#include "y/system/wtime.hpp"
+
 
 namespace Yttrium
 {

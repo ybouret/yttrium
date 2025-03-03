@@ -81,6 +81,7 @@ namespace
                    const unsigned     flag,
                    Stats             &stats)
     {
+        stats.ticks   = 0;
 
         Ortho::Coven::IBank    bank;
         Ortho::Metrics         qmtx(data.cols);
@@ -88,19 +89,18 @@ namespace
         Ortho::FCache          qfcc( new Ortho::Family::Cache(qvcc) );
         Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
 
-        Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc);
+        Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc,&stats.ticks);
         OutputFile             fp("coven.dat");
 
-        stats.ticks = 0;
         Natural count = 0;
         while(tribes.size)
         {
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
             //std::cerr << tribes << std::endl;
-            const uint64_t ini = WallTime::Ticks();
-            tribes.generate(xml,proc,data,flag);
-            stats.ticks += WallTime::Ticks() - ini;
+            //const uint64_t ini = WallTime::Ticks();
+            tribes.generate(xml,proc,data,flag, &stats.ticks);
+            //stats.ticks += WallTime::Ticks() - ini;
         }
 
         std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;

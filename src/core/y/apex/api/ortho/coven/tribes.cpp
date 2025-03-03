@@ -1,7 +1,7 @@
 #include "y/apex/api/ortho/coven/tribes.hpp"
 #include "y/hashing/function.hpp"
 #include "y/stream/hash/output.hpp"
-
+#include "y/hashing/md.hpp"
 namespace Yttrium
 {
     namespace Apex
@@ -65,14 +65,19 @@ namespace Yttrium
                 }
 
 
-                void Tribes:: collect(Callback &proc)
+                void Tribes:: collect(Callback &proc, uint64_t * const pEll)
                 {
                     size_t & count = Coerce(collected);
                     count = 0;
+                    const Vector *pSingle = 0;
                     for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                     {
-                        const Vector *pVector = tribe->lastVec;         if(0==pVector) continue;
-                        const Vector *pSingle = tryInsertNew(*pVector); if(0==pSingle) continue;
+                        {
+                            const StopWatch sw(pEll);
+                            const Vector * const pVector = tribe->lastVec; if(0==pVector) continue;
+                            pSingle = tryInsertNew(*pVector);
+                            if(0==pSingle) continue;
+                        }
                         proc(*pSingle);
                         ++count;
                     }

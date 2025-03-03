@@ -44,10 +44,10 @@ namespace Yttrium
                         if(0==tribe->lastVec)
                         {
                             const size_t zid = tribe->lastIdx;
-                            Y_XML_COMMENT(xml, "zero vector #" << zid);
                             delete tribe;
                             RemoveFrom(ok,   zid);
                             RemoveFrom(*this,zid);
+                            Y_XML_COMMENT(xml, "zero vector #" << zid);
                         }
                         else
                         {
@@ -96,18 +96,30 @@ namespace Yttrium
                 }
 
 
-                void Tribes:: doInitialize(XMLog &xml, Callback &proc)
+                void Tribes:: doInitialize(XMLog &xml, Callback &proc, uint64_t * const pEll)
                 {
-                    noNullVector(xml);
-                    noDuplicates(xml);
-                    MergeSort::Call(*this,Tribe::Compare);
+
+                    // get rid of zero/duplicates
+                    {
+                        const StopWatch sw(pEll);
+                        noNullVector(xml);
+                        noDuplicates(xml);
+                        MergeSort::Call(*this,Tribe::Compare);
+                    }
 
                     // collect first inserted vectors
                     for(const Tribe *tribe=head;tribe;tribe=tribe->next)
                     {
-                        assert(0!=tribe->lastVec);
-                        const Vector *vec = tryInsertNew(*(tribe->lastVec));
-                        if(!vec) throw Specific::Exception(CallSign,"Unexpected multiple initial vector");
+                        const Vector * vec = 0;
+                        {
+                            const StopWatch sw(pEll);
+                            assert(0!=tribe->lastVec);
+                            vec = tryInsertNew(*(tribe->lastVec));
+                            if(!vec)
+                                throw Specific::Exception(CallSign,"Unexpected multiple initial vector");
+                        }
+
+                        assert(0!=vec);
                         proc(*vec);
                     }
 

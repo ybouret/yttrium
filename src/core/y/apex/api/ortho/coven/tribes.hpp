@@ -6,10 +6,9 @@
 
 #include "y/apex/api/ortho/coven/tribe.hpp"
 #include "y/stream/xmlog.hpp"
-
 #include "y/memory/digest.hpp"
 #include "y/functor.hpp"
-#include "y/hashing/md.hpp"
+#include "y/system/stopwatch.hpp"
 
 namespace Yttrium
 {
@@ -81,18 +80,16 @@ namespace Yttrium
                     db()
                     {
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "initialize [" << data.rows << "][" << data.cols << "]");
-                        const bool watch = 0!=pEll;
                         //------------------------------------------------------
                         //
                         // create all possible initial tribes
                         //
                         //------------------------------------------------------
                         {
-                            const uint64_t ini = watch ? WallTime::Ticks() : 0;
-                            const size_t   n   = data.rows;
+                            const StopWatch sw(pEll);
+                            const size_t    n = data.rows;
                             for(size_t indx=1;indx<=n;++indx)
                                 (void) pushTail( new Tribe(data,bank,indx,qfcc) );
-                            if(watch) *pEll= WallTime::Ticks() - ini;
                         }
 
                         //------------------------------------------------------
@@ -101,7 +98,7 @@ namespace Yttrium
                         // sort tribes and collect vectors
                         //
                         //------------------------------------------------------
-                        doInitialize(xml,proc);
+                        doInitialize(xml,proc,pEll);
                     }
 
                     virtual ~Tribes() noexcept; //!< cleanup
@@ -133,10 +130,11 @@ namespace Yttrium
                      \param flag modification to raw algorithm
                      */
                     template <typename MATRIX> inline
-                    void generate(XMLog        & xml,
-                                  Callback     & proc,
-                                  const MATRIX & data,
-                                  const unsigned flag)
+                    void generate(XMLog        &   xml,
+                                  Callback     &   proc,
+                                  const MATRIX &   data,
+                                  const unsigned   flag,
+                                  uint64_t * const pEll = 0)
                     {
                         ++Coerce(iteration);
                         Y_XML_SECTION_OPT(xml, "Coven::Tribes", "iteration=" << iteration << " size=" << size);
@@ -146,28 +144,30 @@ namespace Yttrium
                         // create all possible children
                         //
                         //------------------------------------------------------
-                        assert(isSortedAccordingTo(Tribe::Compare));
                         {
-                            Tribe::List chld;
-                            for(Tribe *tribe=head;tribe;tribe=tribe->next)
-                                tribe->progeny(chld,data,flag);
-                            swapWith(chld);
+                            assert(isSortedAccordingTo(Tribe::Compare));
+                            const StopWatch sw(pEll);
+                            {
+                                Tribe::List chld;
+                                for(Tribe *tribe=head;tribe;tribe=tribe->next)
+                                    tribe->progeny(chld,data,flag);
+                                swapWith(chld);
+                            }
+                            assert(isSortedAccordingTo(Tribe::Compare));
                         }
-                        assert(isSortedAccordingTo(Tribe::Compare));
-
                         //------------------------------------------------------
                         //
                         // collect all newly created vectors
                         //
                         //------------------------------------------------------
-                        collect(proc);
+                        collect(proc,pEll);
 
                         //------------------------------------------------------
                         //
                         // process with flags
                         //
                         //------------------------------------------------------
-                        process(xml,flag);
+                        process(xml,flag,pEll);
                     }
 
 
@@ -187,13 +187,13 @@ namespace Yttrium
                     const Vector::List db; //!< current database, sorted when done
 
                 private:
-                    void           doInitialize(XMLog &, Callback &);
+                    void           doInitialize(XMLog &, Callback &, uint64_t * const pEll);
                     void           noNullVector(XMLog &);
                     void           noDuplicates(XMLog &);
                     const Vector * tryInsertNew(const Vector &vec);
                     
-                    void           collect(Callback &);
-                    void           process(XMLog &, const unsigned);
+                    void           collect(Callback &, uint64_t * const pEll);
+                    void           process(XMLog &, const unsigned, uint64_t * const pEll);
                     void           removeFutile(XMLog &);
                     void           findMultiple(XMLog &);
                     void           findMatching(XMLog &);
