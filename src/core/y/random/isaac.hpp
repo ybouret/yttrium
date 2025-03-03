@@ -35,14 +35,14 @@ namespace Yttrium
             typedef uint8_t     ub1;                       //!< alias
             typedef uint32_t    ub4;                       //!< alias
             static const size_t RANDSIZ = (1<<RANDSIZL);   //!< alias
-            static const char   CID = '0' + RANDSIZL;
+            static const char   CID = '0' + RANDSIZL;      //!< '4' or '8'
 
             //! context of random number generator
             struct randctx
             {
                 ub4 randcnt;          //!< current count
                 ub4 randrsl[RANDSIZ]; //!< state
-                ub4 randmem[RANDSIZ]; //!< aux. stte
+                ub4 randmem[RANDSIZ]; //!< aux. state
                 ub4 randa;            //!< a
                 ub4 randb;            //!< b
                 ub4 randc;            //!< c

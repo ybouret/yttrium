@@ -18,14 +18,22 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! List of optimization strategies
+                //
+                //
+                //______________________________________________________________
                 struct Strategy
                 {
-                    static const unsigned RemoveFutile = 0x01;
-                    static const unsigned FindMultiple = 0x02;
-                    static const unsigned FindMatching = 0x04;
-                    static const unsigned ReplaceBasis = 0x08;
-                    static const unsigned HyperClosure = 0x10;
-                    static const unsigned Optimize     = 0xff;
+                    static const unsigned RemoveFutile = 0x01; //!< remove futile tribes (won't produce more vectors)
+                    static const unsigned FindMultiple = 0x02; //!< find and deal with multiple same content
+                    static const unsigned FindMatching = 0x04; //!< find and deal with different contents/same families
+                    static const unsigned ReplaceBasis = 0x08; //!< replace equivalent basis, for memory
+                    static const unsigned HyperClosure = 0x10; //!< anticipate hyperplane
+                    static const unsigned Optimize     = 0xff; //!< full optimization
                 };
 
                 //______________________________________________________________

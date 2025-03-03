@@ -65,6 +65,7 @@ namespace Yttrium
                      \param data matrix of row vectors
                      \param bank for indices handling
                      \param qfcc for vectors/families
+                     \param pEll ellapsed ticks, optional
                      */
                     template <typename MATRIX> inline
                     explicit Tribes(XMLog &          xml,
@@ -128,6 +129,7 @@ namespace Yttrium
                      \param proc to apply on newly created vectors
                      \param data matrix of row vectors
                      \param flag modification to raw algorithm
+                     \param pEll ellapsed ticks, optional
                      */
                     template <typename MATRIX> inline
                     void generate(XMLog        &   xml,

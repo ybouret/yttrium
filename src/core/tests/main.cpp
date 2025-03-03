@@ -9,6 +9,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(atexit);
     Y_UTEST(lockable);
     Y_UTEST(wtime);
+    Y_UTEST(stopwatch);
     Y_UTEST(singleton);
     Y_UTEST(object);
     Y_UTEST(oversized);

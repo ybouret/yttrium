@@ -97,10 +97,7 @@ namespace
         {
             fp("%u %u %u\n", unsigned(tribes.iteration), unsigned(tribes.collected), unsigned(tribes.db.size) );
             count += tribes.size;
-            //std::cerr << tribes << std::endl;
-            //const uint64_t ini = WallTime::Ticks();
             tribes.generate(xml,proc,data,flag, &stats.ticks);
-            //stats.ticks += WallTime::Ticks() - ini;
         }
 
         std::cerr << "count = " << count << " / " << Ortho::Coven::Tribes::MaxCount(data.rows) << std::endl;
