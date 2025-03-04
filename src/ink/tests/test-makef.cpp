@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/calculus/ipower.hpp"
 #include "y/calculus/isqrt.hpp"
-#include "y/kemp/ops/common-denominator.hpp"
+//#include "y/kemp/ops/common-denominator.hpp"
 
 using namespace Yttrium;
 
@@ -67,7 +67,7 @@ public:
             }
         }
         LightArray<apq> arr = m.asArray();
-        Kemp::CommonDenominator::Simplify(arr);
+        //Kemp::CommonDenominator::Simplify(arr);
     }
 
 
