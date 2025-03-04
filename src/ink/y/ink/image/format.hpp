@@ -6,7 +6,7 @@
 
 #include "y/ink/image/codec.hpp"
 #include "y/ptr/ark.hpp"
-#include "y/jive/pattern/matcher.hpp"
+#include "y/lingo/pattern/matching.hpp"
 
 namespace Yttrium
 {
@@ -76,7 +76,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            Jive::Matcher extension; //!< regular expression matcher
+            Lingo::Matching extension; //!< regular expression matcher
 
 
 

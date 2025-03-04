@@ -57,7 +57,7 @@ namespace
 
 }
 
-#include "y/jive/pattern/vfs.hpp"
+#include "y/lingo/vfs/find.hpp"
 
 Y_UTEST(make5)
 {
@@ -71,8 +71,10 @@ Y_UTEST(make5)
     fs.makeDirectory(outDir,true);
     {
         VFS::Entries          toRemove;
-        Jive::VirtualFileSystem::List(toRemove, fs, outDir, "pbm", VFS::Entry::Ext);
+        //Jive::VirtualFileSystem::List(toRemove, fs, outDir, "pbm", VFS::Entry::Ext);
+        Lingo::VirtualFileSystem::Find(fs, toRemove, outDir, "pbm", Lingo::Matching::Exactly, VFS::Entry::Ext);
         std::cerr << "Found #toRemove=" << toRemove.size << std::endl;
+        //return 0;
         for(const VFS::Entry *ep=toRemove.head;ep;ep=ep->next)
         {
             fs.tryRemoveFile(ep->path);

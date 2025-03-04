@@ -83,7 +83,6 @@ endmacro()
 ################################################################################
 add_subdirectory(core)
 add_subdirectory(lingo)
-#add_subdirectory(jive)
 add_subdirectory(json)
 add_subdirectory(csv)
 add_subdirectory(mkl)
