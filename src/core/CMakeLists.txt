@@ -93,13 +93,6 @@ apex/api
 apex/api/univocal
 apex/api/ortho
 apex/api/ortho/coven
-#kemp
-#kemp/element
-#kemp/natural
-#kemp/integer
-#kemp/rational
-#kemp/ops
-#orthogonal
 counting
 counting/c
 sequence
@@ -126,8 +119,6 @@ information/bwt
 information/entropic
 information/entropic/model
 functor
-#woven
-#woven/survey
 rtld
 field
 field/layout
