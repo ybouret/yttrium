@@ -92,6 +92,7 @@ apex/api
 apex/api/univocal
 apex/api/ortho
 apex/api/ortho/coven
+apex/api/ortho/coven/survey
 counting
 counting/c
 sequence

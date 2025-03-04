@@ -5,7 +5,7 @@
 #define Y_Apex_Ortho_Coven_Survey_Of_Included 1
 
 #include "y/apex/api/ortho/coven/survey.hpp"
-#include "y/apex/api/ortho/coven/sarray.hpp"
+#include "y/apex/api/ortho/coven/survey/sarray.hpp"
 
 namespace Yttrium
 {

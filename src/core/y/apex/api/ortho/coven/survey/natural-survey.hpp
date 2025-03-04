@@ -4,8 +4,8 @@
 #ifndef Y_Apex_Ortho_Coven_Natural_Survey_Included
 #define Y_Apex_Ortho_Coven_Natural_Survey_Included 1
 
-#include "y/apex/api/ortho/coven/survey-of.hpp"
-#include "y/apex/api/ortho/coven/wayfarer.hpp"
+#include "y/apex/api/ortho/coven/survey/survey-of.hpp"
+#include "y/apex/api/ortho/coven/survey/wayfarer.hpp"
 
 namespace Yttrium
 {

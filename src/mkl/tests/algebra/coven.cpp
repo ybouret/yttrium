@@ -1,5 +1,5 @@
-#include "y/apex/api/ortho/coven/natural-survey.hpp"
-#include "y/apex/api/ortho/coven/integer-survey.hpp"
+#include "y/apex/api/ortho/coven/survey/natural-survey.hpp"
+#include "y/apex/api/ortho/coven/survey/integer-survey.hpp"
 
 
 #include "y/utest/run.hpp"
