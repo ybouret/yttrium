@@ -234,6 +234,7 @@ Y_UTEST(algebra_coven)
     bool  verbose = Environment::Flag("VERBOSE");
     XMLog xml(verbose);
 
+    // one acid
     {
         Matrix<int> M(2,4);
         /* H20 <=> H+ + OH- */ M[1][1] = 1; M[1][2] = 1;
@@ -241,12 +242,22 @@ Y_UTEST(algebra_coven)
         DoProcess(xml,M);
     }
 
-    
+
+    //! two acids
     {
         Matrix<int> M(3,6);
         /* H20 <=> H+ + OH-  */ M[1][1] = 1; M[1][2] = 1;
         /* AH  <=> H+ + A-   */ M[2][1] = 1; M[2][3] = -1; M[2][4] = 1;
         /* NH4 <=> H+ + NH3- */ M[3][1] = 1; M[3][5] = -1; M[3][6] = 1;
+        DoProcess(xml,M);
+    }
+
+    //! diacid
+    {
+        Matrix<int> M(3,5);
+        /* H20 <=> H+ + OH-  */ M[1][1] = 1; M[1][2] = 1;
+        /* AH2 <=> H+ + AH-  */ M[2][1] = 1; M[2][3] = -1; M[2][4] = 1;
+        /* AH- <=> H+ + A2-  */ M[3][1] = 1; M[3][3] = -1; M[3][5] = 1;
         DoProcess(xml,M);
     }
 
