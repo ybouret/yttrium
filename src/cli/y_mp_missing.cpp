@@ -2,13 +2,11 @@
 #include "y/program.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/tokenizer.hpp"
-#include "y/jive/pattern/matcher.hpp"
 #include "y/system/exception.hpp"
 #include "y/container/algo/crop.hpp"
 #include "y/container/algo/search.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/graphviz/vizible.hpp"
-#include "y/jive/pattern/vfs.hpp"
 #include "y/vfs/local/fs.hpp"
 #include <cstring>
 
