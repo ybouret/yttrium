@@ -12,6 +12,7 @@ namespace Yttrium
     namespace Apex
     {
 
+        class Rational;
 
         //! helper to implement comparisons
 #define Y_Apex_Integer_Op(OP,LHS,RHS,MATCHES,RESULT)             \
@@ -106,7 +107,8 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             virtual ~Integer() noexcept;              //!< cleanup
             Integer(Random::Bits &, const size_t);    //!< with random sign
             Y_OSTREAM_PROTO(Integer);                 //!< output as decimal string
-
+            Integer & operator=(const Rational &);    //!< iff rational with unit denom
+                                                    
             //__________________________________________________________________
             //
             //

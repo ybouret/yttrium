@@ -143,8 +143,8 @@ Y_UTEST(tao1)
             Antelope::Caddy<apq> amf;
             for(size_t i=5+ran.leq(10);i>0;--i)
             {
-                lhs << apq(10,10,ran);
-                rhs << apq(10,10,ran);
+                lhs << apq(ran,10,10);
+                rhs << apq(ran,10,10);
             }
             std::cerr << "lhs=" << lhs << std::endl;
             std::cerr << "rhs=" << rhs << std::endl;

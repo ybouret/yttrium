@@ -179,7 +179,15 @@ namespace Yttrium
             Coerce(numer).ldz();
         }
 
+        Integer & Integer:: operator=(const Rational &q)
+        {
+            if(q.denom!=1) throw Specific::Exception(CallSign, "assign a non-integer rational");
+            Integer &self = *this;
+            return self = q.numer;
+        }
+
     }
+
 
 
 }
