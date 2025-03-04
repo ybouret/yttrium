@@ -136,7 +136,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             Natural & operator=(const natural_t)  noexcept; //!< assign natural
             Natural & operator=(const String &);            //!< parse
             Y_OSTREAM_PROTO(Natural);                       //!< output
-
+            Natural(const Integer &);                       //!< for valid integer
+                                                            
             //__________________________________________________________________
             //
             //

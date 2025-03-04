@@ -243,3 +243,25 @@ namespace Yttrium
 }
 
 
+#include "y/apex/integer.hpp"
+
+namespace Yttrium
+{
+    namespace Apex
+    {
+        Natural:: Natural(const Integer &z) :
+        Castable(),
+        block( _Factory().query(0) ),
+        mutex( _Factory().query()  )
+        {
+            switch(z.s)
+            {
+                case Negative: throw Specific::Exception(CallSign,"copy a negative Integer!");
+                case __Zero__: break; // do nothing
+                case Positive: { Natural n(z.n); xch(n); } break;
+            }
+        }
+    }
+}
+
+
