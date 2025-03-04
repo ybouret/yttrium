@@ -267,29 +267,6 @@ Y_UTEST_DECL(300)
     Y_UTEST(color_conv);
     Y_UTEST(color_channels);
 
-    Y_UTEST(tow_api);
-
-/*
-    Y_UTEST(kemp_element);
-    Y_UTEST(kemp_natural);
-    Y_UTEST(kemp_addsub);
-    Y_UTEST(kemp_muldiv);
-    Y_UTEST(kemp_mulperf);
-    Y_UTEST(kemp_mulswitch);
-    Y_UTEST(kemp_integer);
-    Y_UTEST(kemp_rational);
-    Y_UTEST(kemp_modular);
-    Y_UTEST(kemp_input);
-    Y_UTEST(kemp_comden);
-    Y_UTEST(kemp_univocal);
-    Y_UTEST(kemp_colinear);
-    Y_UTEST(kemp_narrow);
-    Y_UTEST(kemp_kar);
-    Y_UTEST(kemp_words);
-    Y_UTEST(kemp_ortho);
-    Y_UTEST(kemp_rsa);
-*/
-
     Y_UTEST(codec_b64);
     Y_UTEST(codec_u64);
 

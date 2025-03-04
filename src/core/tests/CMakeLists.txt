@@ -15,8 +15,6 @@ fft
 string
 apex
 dft
-#kemp
-tow
 ordered
 counting
 container
@@ -347,27 +345,6 @@ add_test(color:rgba test-core color_rgba)
 add_test(color:yuv test-core color_yuv)
 add_test(color:conv test-core color_conv)
 add_test(color:channels test-core color_channels)
-
-#tow
-add_test(tow:api test-core tow_api)
-
-#kemp
-#add_test(kemp:element  test-core kemp_element)
-#add_test(kemp:natural  test-core kemp_natural)
-#add_test(kemp:addsub   test-core kemp_addsub)
-#add_test(kemp:muldiv   test-core kemp_muldiv)
-#add_test(kemp:integer  test-core kemp_integer)
-#add_test(kemp:rational test-core kemp_rational)
-#add_test(kemp:modular  test-core kemp_modular)
-#add_test(kemp:input    test-core kemp_input)
-#add_test(kemp:comden   test-core kemp_comden)
-#add_test(kemp:univocal test-core kemp_univocal)
-#add_test(kemp:colinear test-core kemp_colinear)
-#add_test(kemp:narrow   test-core kemp_narrow)
-#add_test(kemp:kar      test-core kemp_kar)
-#add_test(kemp:words    test-core kemp_words)
-#add_test(kemp:ortho    test-core kemp_ortho)
-#add_test(kemp:rsa      test-core kemp_rsa)
 
 #codec
 add_test(codec:b64 test-core codec_b64)

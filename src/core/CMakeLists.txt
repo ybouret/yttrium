@@ -79,7 +79,6 @@ container/algo
 string
 fft
 fft/xbitrev
-tow
 dft
 dft/fmt
 apex
