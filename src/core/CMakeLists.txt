@@ -77,8 +77,6 @@ container/matrix
 container/cxx
 container/algo
 string
-fft
-fft/xbitrev
 dft
 dft/fmt
 apex
