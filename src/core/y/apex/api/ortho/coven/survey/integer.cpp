@@ -1,5 +1,5 @@
 
-#include "y/apex/api/ortho/coven/survey/integer-survey.hpp"
+#include "y/apex/api/ortho/coven/survey/integer.hpp"
 
 namespace Yttrium
 {
