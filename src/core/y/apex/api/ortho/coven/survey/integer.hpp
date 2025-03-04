@@ -27,6 +27,7 @@ namespace Yttrium
                                            uint64_t * const pEll)
                     {
                         Wayfarer::Explore(xml, proc, data, pEll);
+                        finalize();
                     }
 
                 private:

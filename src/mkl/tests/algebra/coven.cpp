@@ -43,6 +43,7 @@ void DoProcess(XMLog &       xml,
         Y_XML_SECTION(xml, "Combinations");
         const MATRIX data(TransposeOf,M);
         Ortho::Coven::IntegerSurvey survey(xml,data,0);
+        std::cerr << "IntegerSurvey=" << survey << std::endl;
     }
 
 
@@ -53,6 +54,8 @@ void DoProcess(XMLog &       xml,
             throw Exception("No OrthoSpace!!");
         std::cerr << "Q=" << Q << std::endl;
         Ortho::Coven::NaturalSurvey survey(xml,Q,0);
+        std::cerr << "NaturalSurvey=" << survey << std::endl;
+
     }
 
     std::cerr << std::endl;

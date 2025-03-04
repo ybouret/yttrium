@@ -6,6 +6,7 @@
 
 #include "y/apex/api/ortho/coven/survey.hpp"
 #include "y/apex/api/ortho/coven/survey/sarray.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -22,15 +23,35 @@ namespace Yttrium
                     typedef SArray<T>                  ArrayType;
                     typedef Proxy< ListOf<ArrayType> > ProxyType;
 
-                    virtual ~SurveyOf() noexcept
+                    inline virtual ~SurveyOf() noexcept
                     {
+                    }
+
+                    friend inline
+                    std::ostream & operator<<(std::ostream &os, const SurveyOf &self)
+                    {
+                        os << '{';
+                        if(self->size>0)
+                        {
+                            os << std::endl;
+                            for(const ArrayType *node=self->head;node;node=node->next)
+                            {
+                                os << "  " << *node << std::endl;
+                            }
+                        }
+                        os << '}';
+                        return os;
                     }
 
                 protected:
-                    explicit SurveyOf() noexcept : my()
+                    inline explicit SurveyOf() noexcept : my()
                     {
                     }
 
+                    inline void finalize()
+                    {
+                        MergeSort::Call(my,ArrayType::Compare);
+                    }
 
                     CxxListOf<ArrayType> my;
 

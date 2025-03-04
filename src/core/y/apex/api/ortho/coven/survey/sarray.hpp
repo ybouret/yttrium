@@ -40,6 +40,37 @@ namespace Yttrium
                         return os;
                     }
 
+                    static inline
+                    SignType Compare(const SArray * const lhs,
+                                     const SArray * const rhs) noexcept
+                    {
+                        assert(0!=lhs);
+                        assert(0!=rhs);
+                        assert(lhs->size() == rhs->size() );
+
+                        const SArray &L = *lhs;
+                        const SArray &R = *rhs;
+                        switch( Sign::Of(L.ncof,R.ncof) )
+                        {
+                            case Negative: return Negative;
+                            case Positive: return Positive;
+                            case __Zero__: break;
+                        }
+
+                        const size_t n = L.size();
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            switch( T::Compare(L[i],R[i]) )
+                            {
+                                case Negative: return Negative;
+                                case __Zero__: continue;
+                                case Positive: return Positive;
+                            }
+                        }
+                        return __Zero__;
+
+                    }
+
                     const size_t ncof;
                     SArray *     next;
                     SArray *     prev;
