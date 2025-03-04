@@ -21,6 +21,7 @@ namespace Yttrium
              - Q(q<=d,d), univocal set of row
              - Q*P' = 0
              - may return an empty matrix
+             \return Q = det(P*P') * I - P'*(P*P')^-1*P
              */
             static bool Build(Matrix<apz> &Q, const Matrix<apz> &P);
 
