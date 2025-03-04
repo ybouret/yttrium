@@ -127,9 +127,10 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             // Interface
             //
             //__________________________________________________________________
-            virtual const char * callSign()       const noexcept;  //!< CallSign
-            virtual size_t       serialize(OutputStream &) const;  //!< numer+denom
-            static  Rational     Read(InputStream &);              //!< reload serialized
+            virtual const char * callSign()       const noexcept; //!< CallSign
+            virtual size_t       serialize(OutputStream &) const; //!< numer+denom
+            static  Rational     Read(InputStream &);             //!< reload serialized
+            virtual void         ldz()                  noexcept; //!< set to zero
 
 
             //__________________________________________________________________
@@ -244,7 +245,11 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             Y_Apex_Rational_Binary_Wrapper(Div);
 
         };
+
+
     }
+
+    typedef Apex::Rational apq;
 
 }
 

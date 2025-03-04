@@ -249,8 +249,8 @@ Y_UTEST_DECL(300)
     Y_UTEST(info_bwt);
     Y_UTEST(info_pack);
 
-    Y_UTEST(woven_indices);
-    Y_UTEST(woven_subspace);
+    //Y_UTEST(woven_indices);
+    //Y_UTEST(woven_subspace);
 
     Y_UTEST(rtld_dll);
 
@@ -269,6 +269,7 @@ Y_UTEST_DECL(300)
 
     Y_UTEST(tow_api);
 
+/*
     Y_UTEST(kemp_element);
     Y_UTEST(kemp_natural);
     Y_UTEST(kemp_addsub);
@@ -287,6 +288,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(kemp_words);
     Y_UTEST(kemp_ortho);
     Y_UTEST(kemp_rsa);
+*/
 
     Y_UTEST(codec_b64);
     Y_UTEST(codec_u64);

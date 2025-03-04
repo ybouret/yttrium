@@ -1,7 +1,7 @@
 
 #include "y/container/operating.hpp"
 #include "y/utest/run.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/container/iterator/display-all.hpp"
 #include "y/container/light-array.hpp"
@@ -35,7 +35,7 @@ Y_UTEST(container_operating)
     LightArray<apn> a1( op1(), op1.blocks() );
     for(size_t i=a1.size();i>0;--i)
     {
-        a1[i] = apn(10,ran);
+        a1[i] = apn(ran,10);
     }
     std::cerr << a1 << std::endl;
     Iterating::DisplayAll::Of(a1);

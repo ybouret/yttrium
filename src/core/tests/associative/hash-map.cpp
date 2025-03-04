@@ -6,7 +6,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 
 using namespace Yttrium;
 

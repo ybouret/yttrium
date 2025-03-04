@@ -156,6 +156,12 @@ namespace Yttrium
             return *this;
         }
 
+        void Natural:: ldz() noexcept {
+            Natural &self = *this;
+            self = 0;
+        }
+
+
         uint64_t Natural:: lsw() const noexcept
         {
             volatile AutoLock guard(*this);

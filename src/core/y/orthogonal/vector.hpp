@@ -3,7 +3,7 @@
 #ifndef Y_Orthogonal_Vector_Included
 #define Y_Orthogonal_Vector_Included 1
 
-#include "y/kemp/rational.hpp"
+#include "y/apex/rational.hpp"
 #include "y/container/cxx/array.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/orthogonal/metrics.hpp"

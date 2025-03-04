@@ -3,7 +3,7 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/type/nullify.hpp"
 #include "y/quantized.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium

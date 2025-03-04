@@ -1,10 +1,10 @@
 #include "y/type/conversion.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 
 using namespace Yttrium;
-using namespace Kemp;
+using namespace Apex;
 
 #define SHOW(TEST) std::cerr << #TEST << " = " << (TEST) << std::endl;
 

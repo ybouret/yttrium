@@ -8,7 +8,7 @@
 #include "y/mkl/xreal.hpp"
 #include "y/mkl/complex.hpp"
 #include "y/mkl/v3d.hpp"
-#include "y/kemp/rational.hpp"
+#include "y/apex/rational.hpp"
 #include "y/string.hpp"
 #include "y/container/matrix.hpp"
 
@@ -107,7 +107,7 @@ namespace Yttrium
     {
         static inline apn Get(Random::Bits &ran)
         {
-            return apn(ran.in<size_t>(0,Y_BRING_MAXBITS),ran);
+            return apn(ran,ran.in<size_t>(0,Y_BRING_MAXBITS));
         }
     };
 
@@ -116,7 +116,7 @@ namespace Yttrium
     {
         static inline apz Get(Random::Bits &ran)
         {
-            return apz(ran.in<size_t>(0,Y_BRING_MAXBITS),ran);
+            return apz(ran,ran.in<size_t>(0,Y_BRING_MAXBITS));
         }
     };
 
@@ -125,7 +125,7 @@ namespace Yttrium
     {
         static inline apq Get(Random::Bits &ran)
         {
-            return apq(ran.in<size_t>(0,Y_BRING_MAXBITS),ran.in<size_t>(1,Y_BRING_MAXBITS),ran);
+            return apq(ran,ran.in<size_t>(0,Y_BRING_MAXBITS),ran.in<size_t>(1,Y_BRING_MAXBITS));
         }
     };
 

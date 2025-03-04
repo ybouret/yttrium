@@ -3,7 +3,7 @@
 #include "y/ordered/priority-queue.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/comparison.hpp"
 
 using namespace Yttrium;
@@ -22,7 +22,7 @@ Y_UTEST(ordered_PQ)
     try {
         while(count<n)
         {
-            const apn temp(ran.leq(16),ran);
+            const apn temp(ran,ran.leq(16));
 
             PriorityQueue<apn>::Insert(pq,count,temp,Comparison::Increasing<apn>);
             std::cerr << "(" << pq[0] << ") "; Core::Display(std::cerr,pq,count) << std::endl;

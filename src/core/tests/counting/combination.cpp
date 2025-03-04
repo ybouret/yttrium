@@ -1,7 +1,7 @@
 
 #include "y/counting/combination.hpp"
 #include "y/text/ascii/convert.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -12,7 +12,7 @@ Y_UTEST(counting_combination)
     {
         const size_t n = ASCII::Convert::To<size_t>(argv[1],"n");
         const size_t k = ASCII::Convert::To<size_t>(argv[2],"k");
-        const apn    r = Kemp::Natural::Comb(n,k);
+        const apn    r = Apex::Natural::Comb(n,k);
         std::cerr << "(" << n << "," << k << ")=" << r << std::endl;
     }
     else

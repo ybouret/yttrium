@@ -6,7 +6,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
@@ -29,7 +29,7 @@ Y_UTEST(ordered_dire)
 #if 1
     for(int i=0;i<10;++i)
     {
-        const apn n(1+ran.leq(30),ran);
+        const apn n(ran,1+ran.leq(30));
         Dd.insert(n);
         Df.insert(n);
         std::cerr << Dd << "/" << Df << std::endl;

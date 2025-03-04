@@ -106,6 +106,12 @@ namespace Yttrium
             return*this;
         }
 
+        void Integer:: ldz() noexcept
+        {
+            Coerce(n).ldz();
+            Coerce(s) = __Zero__;
+        }
+
         Integer & Integer:: operator=(const Natural &u)
         {
             Integer _(u);

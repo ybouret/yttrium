@@ -17,10 +17,14 @@ namespace Yttrium
         class Number : public Serializable, public Identifiable
         {
         protected:
+            // C++
             explicit Number() noexcept;
-            
+
         public:
             virtual ~Number() noexcept;
+
+            // interface
+            virtual void ldz()  = 0; //!< set to default zero
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Number);

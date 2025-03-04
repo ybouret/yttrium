@@ -125,7 +125,8 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             //__________________________________________________________________
             virtual const char * callSign()       const noexcept; //!< CallSign
             virtual size_t       serialize(OutputStream &) const; //!< mark+n
-            static  Integer      Read(InputStream &);             //!< retriver serialized
+            static  Integer      Read(InputStream &);             //!< retrive serialized
+            virtual void         ldz()                  noexcept; //!< set to zero
 
             //__________________________________________________________________
             //
@@ -254,6 +255,9 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
         };
 
     }
+
+    typedef Apex::Integer  apz;
+
 
 }
 

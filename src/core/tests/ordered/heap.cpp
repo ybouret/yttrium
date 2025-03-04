@@ -5,7 +5,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/random/shuffle.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/comparison.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"
@@ -29,7 +29,7 @@ Y_UTEST(ordered_heap)
 
     for(int i=0;i<10;++i)
     {
-        const apn n(1+ran.leq(30),ran);
+        const apn n(ran,1+ran.leq(30));
         h.insert(n);
         hf.insert(n);
         std::cerr << h << "/" << hf << std::endl;

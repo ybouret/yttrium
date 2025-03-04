@@ -1,7 +1,7 @@
 
 #include "y/container/cxx/series.hpp"
 #include "y/utest/run.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/random/shuffle.hpp"
 #include "y/container/iterator/display-all.hpp"
@@ -21,7 +21,7 @@ Y_UTEST(container_cxx_series)
             arr.free();
             while(arr.size()<arr.capacity())
             {
-                const apn tmp(10,ran);
+                const apn tmp(ran,10);
                 if(ran.choice())
                 {
                     arr.pushHead(tmp);
@@ -54,7 +54,7 @@ Y_UTEST(container_cxx_series)
 
             while(arr.size()<arr.capacity())
             {
-                const apn tmp(10,ran);
+                const apn tmp(ran,10);
                 if(ran.choice())
                 {
                     arr.pushHead(tmp);

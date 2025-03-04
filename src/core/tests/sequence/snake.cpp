@@ -1,7 +1,7 @@
 #include "y/sequence/snake.hpp"
 #include "y/utest/run.hpp"
 #include "y/container/iterator/display-all.hpp"
-#include "y/kemp/rational.hpp"
+#include "y/apex/rational.hpp"
 #include "y/random/bits.hpp"
 
 using namespace Yttrium;
@@ -39,7 +39,7 @@ Y_UTEST(sequence_snake)
         Random::Rand ran;
         for(size_t i=0;i<=10;++i)
         {
-            const apq q(16,16,ran);
+            const apq q(ran,16,16);
             snake << q;
             std::cerr << snake << std::endl;
         }

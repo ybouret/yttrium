@@ -5,7 +5,7 @@
 
 #include "y/mkl/complex.hpp"
 #include "y/mkl/xreal.hpp"
-#include "y/kemp/rational.hpp"
+#include "y/apex.hpp"
 #include "y/sort/nw.hpp"
 
 namespace Yttrium

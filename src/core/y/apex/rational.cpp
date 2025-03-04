@@ -173,7 +173,11 @@ namespace Yttrium
             return Rational(u,v);
         }
 
-
+        void Rational:: ldz() noexcept
+        {
+            Coerce(denom) = 1;
+            Coerce(numer).ldz();
+        }
 
     }
 

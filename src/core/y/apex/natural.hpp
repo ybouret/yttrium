@@ -142,6 +142,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             // Interface
             //
             //__________________________________________________________________
+            virtual void         ldz()                  noexcept; //!< set to zero
             virtual size_t       serialize(OutputStream &) const; //!< [Serializable] bytes
             virtual const char * callSign()       const noexcept; //!< [Identifiable] CallSign
             static  Natural      Read(InputStream &);             //!< read from serialized
@@ -482,9 +483,10 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
             
         };
 
-
-
     }
+
+    typedef Apex::Natural  apn;
+
 
 }
 

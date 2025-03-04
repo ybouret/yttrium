@@ -2,7 +2,7 @@
 #define Y_Counting_Combination_Included 1
 
 #include "y/counting/schedule.hpp"
-#include "y/kemp/natural.hpp"
+#include "y/apex/natural.hpp"
 
 namespace Yttrium
 {
