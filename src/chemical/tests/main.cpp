@@ -2,6 +2,6 @@
 
 Y_UTEST_DECL(32)
 {
-	Y_UTEST(chemtran);
+	Y_UTEST(weasel);
 }
 Y_UTEST_EXEC()

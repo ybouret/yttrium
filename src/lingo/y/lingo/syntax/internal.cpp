@@ -26,7 +26,7 @@ namespace Yttrium
 
 
             XNode:: XNode(const Syntax::Internal & _rule) noexcept:
-            Object(),
+            XNodeObject(),
             Counted(),
             rule(_rule),
             type(Internal),

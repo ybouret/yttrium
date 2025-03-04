@@ -16,6 +16,8 @@ namespace Yttrium
             class Terminal;
             class Internal;
 
+            typedef Quantized XNodeObject; //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -25,7 +27,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             class XNode :
-            public Object,
+            public XNodeObject,
             public Counted,
             public Serializable,
             public GraphViz::Vizible

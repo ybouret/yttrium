@@ -7,5 +7,5 @@ set( DATA ${HERE}/../../../var)
 
 enable_testing()
 
-add_test(chemtran test-chemical chemtran)
+add_test(weasel test-chemical weasel)
 

@@ -98,7 +98,7 @@ namespace Yttrium
         namespace Syntax
         {
             XNode:: XNode(const Syntax::Terminal & _rule, Lexeme * const _unit) noexcept:
-            Object(),
+            XNodeObject(),
             Counted(),
             rule(_rule),
             type(Terminal),
