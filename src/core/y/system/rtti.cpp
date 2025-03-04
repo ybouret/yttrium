@@ -248,7 +248,7 @@ namespace Yttrium
     }
 }
 
-#include "y/apex.hpp"
+#include "y/apex/rational.hpp"
 #include "y/mkl/xreal.hpp"
 #include "y/mkl/complex.hpp"
 
