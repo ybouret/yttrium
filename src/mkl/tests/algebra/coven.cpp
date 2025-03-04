@@ -1,4 +1,4 @@
-#include "y/apex/api/ortho/coven/survey/natural-survey.hpp"
+#include "y/apex/api/ortho/coven/survey/natural.hpp"
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 
 
