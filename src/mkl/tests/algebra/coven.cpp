@@ -1,7 +1,7 @@
 #include "y/apex/api/ortho/coven/tribes.hpp"
 #include "y/utest/run.hpp"
-#include "y/container/matrix.hpp"
 #include "y/string/env.hpp"
+#include "y/mkl/algebra/ortho-space.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -52,10 +52,20 @@ void DoProcess(XMLog &xml,
 {
     Y_XML_SECTION(xml, "Processing");
     Y_XMLOG(xml,"M=" << M);
+    Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
     {
+        Y_XML_SECTION(xml, "Combinations");
         const MATRIX data(TransposeOf,M);
-        Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
         Ortho::Coven::Wayfarer::Walk(xml,proc,data);
+    }
+
+    {
+        Y_XML_SECTION(xml, "Conservations");
+        Matrix<apz> Q;
+        if( ! MKL::OrthoSpace::Make(Q,M) )
+            throw Exception("No OrthoSpace!!");
+        Y_XMLOG(xml,"Q=" << Q);
+        Ortho::Coven::Wayfarer::Walk(xml,proc,Q);
     }
 
 }
