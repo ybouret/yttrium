@@ -50,6 +50,8 @@ namespace Yttrium
             const uint8_t & operator*() const noexcept; //!< r/o access
             const char    * printable() const noexcept; //!< printable for token
 
+
+            
             //__________________________________________________________________
             //
             //

@@ -72,6 +72,18 @@ namespace Yttrium
             return *this;
         }
 
+        bool  operator==(const Token &lhs, const Token &rhs) noexcept
+        {
+            if(lhs.size!=rhs.size) return false;
+            for(const Char *l=lhs.head,*r=rhs.head;l;l=l->next,r=r->next)
+            {
+                assert(0!=l);
+                assert(0!=r);
+                if( **l != **r ) return false;
+            }
+            return true;
+        }
+
     }
 
 }

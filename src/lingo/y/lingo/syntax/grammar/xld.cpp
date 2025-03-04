@@ -89,6 +89,39 @@ namespace Yttrium
 
                 throw Specific::Exception(name.c_str(), "reload of rule uuid='%s' is not implemented", FourCC::ToText(uuid) );
             }
+
+
+
+            
+        }
+
+    }
+
+}
+
+#include "y/stream/libc/output.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+            void Grammar:: testIO(const XNode &node) const
+            {
+                const String fn  = *name + "-xnode.bin";
+                {
+                    OutputFile fp(fn);
+                    node.serialize(fp);
+                }
+
+                {
+                    Source source( Module::OpenFile(fn) );
+                    AutoPtr<XNode> reloaded = reload(source);
+                    if( node != *reloaded )
+                        throw Specific::Exception( name->c_str(), "testIO() failure");
+                }
+            }
         }
 
     }

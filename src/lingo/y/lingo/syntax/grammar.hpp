@@ -192,6 +192,10 @@ namespace Yttrium
                 //! reload a serialized node
                 XNode * reload(Source &) const;
 
+                //! mostly for debug
+                void    testIO(const XNode &) const;
+
+
                 //! helper to human readable exception
                 void tryAppendTo(Exception           &excp,
                                  const char * const   prefix,

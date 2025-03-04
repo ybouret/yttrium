@@ -72,7 +72,8 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual size_t serialize(OutputStream &) const; //! [Serializable]
+                virtual size_t serialize(OutputStream &) const;      //!< [Serializable]
+
 
                 //______________________________________________________________
                 //
@@ -92,7 +93,8 @@ namespace Yttrium
                 //! full consistency check, mostly for debug
                 bool isWellFormed() const;
 
-                
+
+
                 Lexeme &        lexeme()              noexcept; //!< access lexeme if Terminal
                 const Lexeme &  lexeme()        const noexcept; //!< access lexeme if Terminal
                 XList        &  branch()              noexcept; //!< access XList if Internal
@@ -104,6 +106,11 @@ namespace Yttrium
                 const Lexeme  * lastLexeme()           const noexcept; //!< previous from last()
                 void            appendTo(Exception &)  const noexcept; //!< if lexeme is Terminal
                 static XNode  * AST(XNode * const)           noexcept; //!< recursive AST rules
+                static bool     AreEqual(const XNode &lhs,
+                                         const XNode &rhs);
+
+                friend bool operator==(const XNode &lhs, const XNode &rhs);
+                friend bool operator!=(const XNode &lhs, const XNode &rhs);
 
                 //______________________________________________________________
                 //

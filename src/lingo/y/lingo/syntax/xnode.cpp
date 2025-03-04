@@ -9,7 +9,7 @@ namespace Yttrium
         namespace Syntax
         {
 
-          
+
             void    XNode:: zero() noexcept
             {
                 memset(wksp,0,sizeof(wksp));
@@ -39,14 +39,14 @@ namespace Yttrium
                 }
             }
 
-            
+
 
             XNode * XNode:: CreateFrom(const Syntax::Internal &rule)
             {
                 return new XNode(rule);
             }
 
-            
+
             Lexeme & XNode:: lexeme() noexcept
             {
                 assert(Terminal==type);
@@ -73,7 +73,56 @@ namespace Yttrium
                 return list();
             }
 
-            
+        }
+    }
+}
+
+#include "y/lingo/syntax/rule.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        namespace Syntax
+        {
+
+            bool XNode:: AreEqual(const XNode &lhs,
+                                  const XNode &rhs)
+            {
+                if( &lhs.rule != &rhs.rule ) return false;
+
+                switch( lhs.type )
+                {
+                    case Terminal: return lhs.lexeme() == rhs.lexeme();
+                    case Internal:
+                        break;
+                }
+
+                for(const XNode
+                    *l=lhs.branch().head,
+                    *r=rhs.branch().head;
+                    l;
+                    l=l->next,r=r->next)
+                {
+                    assert(0!=l);
+                    assert(0!=r);
+                    if( ! AreEqual(*l,*r) ) return false;
+                }
+
+                return true;
+
+            }
+
+
+            bool operator==(const XNode &lhs, const XNode &rhs)
+            {
+                return XNode:: AreEqual(lhs,rhs);
+            }
+
+            bool operator!=(const XNode &lhs, const XNode &rhs)
+            {
+                return !XNode:: AreEqual(lhs,rhs);
+            }
 
         }
 

@@ -59,6 +59,7 @@ Y_UTEST(eval)
         AutoPtr<Lingo::Syntax::XNode> xnode = eval( Lingo::Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("eval-ast.dot", *xnode);
         xnode->toBinary("eval.dat");
+        eval.testIO(*xnode);
     }
 
 }

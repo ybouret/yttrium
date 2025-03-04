@@ -33,6 +33,7 @@ namespace Yttrium
             Token(const Token &);      //!< copy
             Y_OSTREAM_PROTO(Token);    //!< display
 
+
             //__________________________________________________________________
             //
             //
@@ -45,6 +46,9 @@ namespace Yttrium
             Token & operator<<(Char * const ch) noexcept;                   //!< helper
             Token & operator+=(const Token &);                              //!< merge back a copy
             Token & operator+=(const Char  &);                              //!< push back a copy
+
+            friend bool operator==(const Token &lhs, const Token &rhs) noexcept;
+
         private:
             Y_DISABLE_ASSIGN(Token);
         };

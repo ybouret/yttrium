@@ -82,6 +82,9 @@ Y_UTEST(grammar)
             GraphViz::Vizible::DotToPng("xnode-raw.dot", *xnode);
             xnode = Syntax::XNode::AST( xnode.yield() );
             GraphViz::Vizible::DotToPng("xnode-ast.dot", *xnode);
+
+            G.testIO(*xnode);
+            
         }
         else
         {
