@@ -8,7 +8,10 @@ using namespace Apex;
 
 namespace Yttrium
 {
-
+    namespace MKL
+    {
+        
+    }
 }
 
 template <typename MATRIX> static inline
@@ -31,7 +34,7 @@ void DoProcess(XMLog &xml,
     }
 }
 
-Y_UTEST(apex_chem)
+Y_UTEST(algebra_coven)
 {
     bool  verbose = Environment::Flag("VERBOSE");
     XMLog xml(verbose);

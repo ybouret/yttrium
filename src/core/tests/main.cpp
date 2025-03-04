@@ -309,7 +309,6 @@ Y_UTEST_DECL(300)
     Y_UTEST(apex_narrow);
     Y_UTEST(apex_ortho);
     Y_UTEST(apex_coven);
-    Y_UTEST(apex_chem);
     
 
     Y_UTEST(dft_core);

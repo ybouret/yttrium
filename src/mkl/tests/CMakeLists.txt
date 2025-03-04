@@ -45,6 +45,7 @@ add_test(algebra:tridiag     test-mkl algebra_tridiag)
 add_test(algebra:cyclic      test-mkl algebra_cyclic)
 add_test(algebra:svd         test-mkl algebra_svd)
 add_test(algebra:woven       test-mkl algebra_woven)
+add_test(algebra:coven       test-mkl algebra_coven)
 
 add_test(drvs:1d test-mkl drvs1D)
 add_test(drvs:nd test-mkl drvsND)

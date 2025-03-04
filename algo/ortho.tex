@@ -32,6 +32,24 @@ Let $\bm{P}$ be a base of $p$ row-vectors of $\mathbb{R}^d$, $d>p$:
 \end{equation}
 
 \begin{equation}
-\forall \vec{v} \in \mathbb{R}^d,\;\; \vec{v} = \bm{P}^t \vec{\lambda} +  \vec{q}, \;\; \vec{q} \in \bm{P}^\perp
+\forall \vec{v} \in \mathbb{R}^d,\;\; \vec{v} = \bm{P}^t \vec{\lambda} +  \underbrace{\vec v  - \bm{P}^t \vec \lambda}_{\in \bm{P}^\perp} %\vec{q}, \;\; \vec{q} \in \bm{P}^\perp
 \end{equation}
+
+\begin{equation}
+	\bm{P} \vec v = \bm{P} \bm{P}^t \; \vec{\lambda}
+\end{equation}
+
+\begin{equation}
+	\vec \lambda = (\bm{P} \bm{P}^t)^{-1} \bm{P}\; \vec v 
+\end{equation}
+
+\begin{equation}
+	\forall \vec{v} \in  \mathbb{R}^d \; \lbrack \bm{I}_d - \bm{P}^t (\bm{P} \bm{P}^t)^{-1} \bm{P} \rbrack \vec v \in \bm{P}^\perp
+\end{equation}
+	
+\begin{equation}
+	\lbrack \det(\bm{P} \bm{P}^t) \bm{I}_d - \bm{P}^t (\bm{P} \bm{P}^t)^{\ast} \bm{P} \rbrack \vec v \in \bm{P}^\perp
+\end{equation}
+
+
 \end{document}
