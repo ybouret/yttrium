@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/string/env.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
+#include "y/apex/api/count-non-zero.hpp"
 
 using namespace Yttrium;
 using namespace Apex;
@@ -45,6 +46,7 @@ namespace Yttrium
 
                     explicit SArray(const Vector &v) :
                     SArrayType(CopyOf,v),
+                    ncof(CountNonZero(*this)),
                     next(0),
                     prev(0)
                     {
@@ -54,8 +56,9 @@ namespace Yttrium
                     {
                     }
 
-                    SArray *next;
-                    SArray *prev;
+                    const size_t ncof;
+                    SArray *     next;
+                    SArray *     prev;
 
 
 
@@ -140,10 +143,10 @@ namespace Yttrium
 
                     virtual void study(const IList &l, const Vector &v)
                     {
-                        if(l.size>1)
+                        if(l.size>1 && CountNonZero(v) >= 2)
                         {
                             my.pushTail(new ArrayType(v) );
-                            std::cerr << "\t--> " << *my.tail << std::endl;
+                            std::cerr << "\t(comb) " << *my.tail << std::endl;
                         }
                     }
                 };
@@ -182,7 +185,7 @@ namespace Yttrium
                         if(numPositive>=2)
                         {
                             my.pushTail(new ArrayType(v) );
-                            std::cerr << "\t--> " << *my.tail << std::endl;
+                            std::cerr << "\t(keep) " << *my.tail << std::endl;
                         }
 
 
@@ -200,11 +203,11 @@ namespace Yttrium
 }
 
 template <typename MATRIX> static inline
-void DoProcess(XMLog &xml,
+void DoProcess(XMLog &       xml,
                const MATRIX &M)
 {
     Y_XML_SECTION(xml, "Processing");
-    Y_XMLOG(xml,"M=" << M);
+    std::cerr << "M=" << M << std::endl;
     Ortho::Coven::Callback proc = cfunctor2( Ortho::Coven::Tribes::Display );
     {
         Y_XML_SECTION(xml, "Combinations");
@@ -218,17 +221,17 @@ void DoProcess(XMLog &xml,
         Matrix<apz> Q;
         if( ! MKL::OrthoSpace::Make(Q,M) )
             throw Exception("No OrthoSpace!!");
-        Y_XMLOG(xml,"Q=" << Q);
-        Ortho::Coven::Wayfarer::Walk(xml,proc,Q,0);
+        std::cerr << "Q=" << Q << std::endl;
         Ortho::Coven::NaturalSurvey survey(xml,Q,0);
-
     }
+
+    std::cerr << std::endl;
 
 }
 
 Y_UTEST(algebra_coven)
 {
-    bool  verbose =  true; //Environment::Flag("VERBOSE");
+    bool  verbose = Environment::Flag("VERBOSE");
     XMLog xml(verbose);
 
     {
@@ -238,13 +241,12 @@ Y_UTEST(algebra_coven)
         DoProcess(xml,M);
     }
 
-    return 0;
-
+    
     {
         Matrix<int> M(3,6);
-        /* H20 <=> H+ + OH- */    M[1][1] = 1; M[1][2] = 1;
-        /* AH  <=> H+ + A-  */    M[2][1] = 1; M[2][3] = -1; M[2][4] = 1;
-        /* NH4  <=> H+ + NH3-  */ M[3][1] = 1; M[3][5] = -1; M[3][6] = 1;
+        /* H20 <=> H+ + OH-  */ M[1][1] = 1; M[1][2] = 1;
+        /* AH  <=> H+ + A-   */ M[2][1] = 1; M[2][3] = -1; M[2][4] = 1;
+        /* NH4 <=> H+ + NH3- */ M[3][1] = 1; M[3][5] = -1; M[3][6] = 1;
         DoProcess(xml,M);
     }
 
