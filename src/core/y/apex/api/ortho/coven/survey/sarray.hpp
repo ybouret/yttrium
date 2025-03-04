@@ -32,6 +32,14 @@ namespace Yttrium
                     {
                     }
 
+                    inline friend
+                    std::ostream & operator<<(std::ostream &os, const SArray &arr)
+                    {
+                        const SArrayType &self = arr;
+                        os << self << " //#" << arr.ncof;
+                        return os;
+                    }
+
                     const size_t ncof;
                     SArray *     next;
                     SArray *     prev;
