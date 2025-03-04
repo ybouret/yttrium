@@ -14,12 +14,34 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Survey Array
+                //
+                //
+                //______________________________________________________________
                 template <typename T>
                 class SArray : public Quantized, public CxxArray<T,Memory::Dyadic>
                 {
                 public:
-                    typedef CxxArray<T,Memory::Dyadic> SArrayType;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Definitions
+                    //
+                    //__________________________________________________________
+                    typedef CxxArray<T,Memory::Dyadic> SArrayType; //!< alias
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+
+                    //! setup from vector
                     explicit SArray(const Vector &v) :
                     SArrayType(CopyOf,v),
                     ncof(CountNonZero(*this)),
@@ -28,10 +50,12 @@ namespace Yttrium
                     {
                     }
 
+                    //! cleanup
                     virtual ~SArray() noexcept
                     {
                     }
 
+                    //! display
                     inline friend
                     std::ostream & operator<<(std::ostream &os, const SArray &arr)
                     {
@@ -40,6 +64,14 @@ namespace Yttrium
                         return os;
                     }
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // Methods
+                    //
+                    //__________________________________________________________
+
+                    //! extended lexicographic comparison
                     static inline
                     SignType Compare(const SArray * const lhs,
                                      const SArray * const rhs) noexcept
@@ -71,9 +103,15 @@ namespace Yttrium
 
                     }
 
-                    const size_t ncof;
-                    SArray *     next;
-                    SArray *     prev;
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
+                    const size_t ncof; //!< number of coefficients
+                    SArray *     next; //!< for list
+                    SArray *     prev; //!< for list
 
 
 

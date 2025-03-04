@@ -24,6 +24,13 @@ namespace Yttrium
                 //______________________________________________________________
                 struct Wayfarer
                 {
+                    //! explore all tribes from initial data
+                    /**
+                     \param xml for output
+                     \param proc callback on each new vector
+                     \param data initial rows vector
+                     \param ell  optional ellapsed ticks
+                     */
                     template <typename MATRIX> static inline
                     void Explore(XMLog        &   xml,
                                  Callback     &   proc,

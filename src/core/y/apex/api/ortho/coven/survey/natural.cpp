@@ -28,6 +28,9 @@ namespace Yttrium
                         std::cerr << "\t(keep) " << *my.tail << std::endl;
                     }
                 }
+
+
+                NaturalSurvey:: ~NaturalSurvey() noexcept {}
             }
 
         }

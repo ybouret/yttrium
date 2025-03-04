@@ -487,7 +487,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
     }
 
-    typedef Apex::Natural  apn;
+    typedef Apex::Natural  apn; //!< alias
 
 
 }

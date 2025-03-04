@@ -9,6 +9,9 @@ namespace Yttrium
         {
             namespace Coven
             {
+
+                IntegerSurvey:: ~IntegerSurvey() noexcept {}
+                
                 void IntegerSurvey:: study(const IList &l, const Vector &v)
                 {
                     if(l.size>1 && CountNonZero(v) >= 2)

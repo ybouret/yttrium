@@ -15,12 +15,32 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Survey to produce arrays of Natural
+                //
+                //
+                //______________________________________________________________
                 class NaturalSurvey : public SurveyOf<Natural>
                 {
                 public:
-                    explicit NaturalSurvey() noexcept {}
-                    virtual ~NaturalSurvey() noexcept {}
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
 
+                    //! create from data
+                    /**
+                     keep only vectors of two or more positive values
+
+                     \param xml  for output
+                     \param data original rows
+                     \param pEll optional ellapsed ticks
+                     */
                     template <typename MATRIX> inline
                     explicit NaturalSurvey(XMLog        &   xml,
                                            const MATRIX &   data,
@@ -29,6 +49,9 @@ namespace Yttrium
                         Wayfarer::Explore(xml, proc, data, pEll);
                         finalize();
                     }
+
+                    //! cleanup
+                    virtual ~NaturalSurvey() noexcept;
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(NaturalSurvey);

@@ -258,7 +258,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
 
     }
 
-    typedef Apex::Integer  apz;
+    typedef Apex::Integer  apz; //!< alias
 
 
 }

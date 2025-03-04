@@ -13,34 +13,50 @@ namespace Yttrium
         {
             namespace Coven
             {
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Survey interface to explore data
+                //
+                //
+                //______________________________________________________________
                 class Survey
                 {
                 protected:
-                    virtual ~Survey() noexcept
-                    {
-                    }
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
+                    virtual ~Survey() noexcept; //!< cleanup
 
                 public:
-                    explicit Survey() :
-                    proc(this, & Survey::check)
-                    {
-                    }
+                    explicit Survey(); //!< setup proc
 
+                    //__________________________________________________________
+                    //
+                    //
+                    // Interface
+                    //
+                    //__________________________________________________________
 
+                    //! what to do with vector created from l=content of posture
                     virtual void study(const IList &l, const Vector &v) = 0;
 
-
-
+                    //__________________________________________________________
+                    //
+                    //
+                    // Members
+                    //
+                    //__________________________________________________________
                 protected:
-                    Callback proc;
+                    Callback proc; //!< redirect to study
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Survey);
-
-                    void check(const IList &l, const Vector &v)
-                    {
-                        study(l,v);
-                    }
+                    void check(const IList &l, const Vector &v);
                 };
             }
         }

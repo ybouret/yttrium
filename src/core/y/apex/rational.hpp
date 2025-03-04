@@ -249,7 +249,7 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
 
     }
 
-    typedef Apex::Rational apq;
+    typedef Apex::Rational apq; //!< alias
 
 }
 

@@ -14,13 +14,35 @@ namespace Yttrium
         {
             namespace Coven
             {
-                
+                //______________________________________________________________
+                //
+                //
+                //
+                //! Survey to produce arrays of Integer
+                //
+                //
+                //______________________________________________________________
                 class IntegerSurvey : public SurveyOf<Integer>
                 {
                 public:
-                    explicit IntegerSurvey() noexcept {}
-                    virtual ~IntegerSurvey() noexcept {}
+                    //__________________________________________________________
+                    //
+                    //
+                    // C++
+                    //
+                    //__________________________________________________________
 
+                    //! cleanup
+                    virtual ~IntegerSurvey() noexcept;
+
+
+                    //! construct survey from original data
+                    /**
+                     keep only vectors of two or more non-zero values
+                     \param xml  for output
+                     \param data original rows
+                     \param pEll optional ellapsed ticks
+                     */
                     template <typename MATRIX> inline
                     explicit IntegerSurvey(XMLog        &   xml,
                                            const MATRIX &   data,
