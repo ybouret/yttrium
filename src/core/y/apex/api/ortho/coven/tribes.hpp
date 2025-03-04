@@ -26,7 +26,7 @@ namespace Yttrium
                 //
                 //
                 //______________________________________________________________
-                typedef Functor<void,TL1(const Vector&)> Callback;
+                typedef Functor<void,TL2(const IList &, const Vector&)> Callback;
 
                 //______________________________________________________________
                 //
@@ -47,7 +47,7 @@ namespace Yttrium
                     //__________________________________________________________
                     static const char * const CallSign;                 //!< "Coven::Tribes"
                     static Natural            MaxCount(const size_t n); //!< sum of arrangements
-                    static void               Display(const Vector &v); //!< helper for default callback
+                    static void               Display(const IList &, const Vector &v); //!< helper for default callback
 
                   
 

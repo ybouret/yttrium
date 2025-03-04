@@ -34,9 +34,102 @@ namespace Yttrium
                             tribes.generate(xml,proc,data,Strategy::Optimize,ell);
                         }
                     }
+                };
 
+
+                template <typename T>
+                class SArray : public Quantized, public CxxArray<T,Memory::Dyadic>
+                {
+                public:
+                    typedef CxxArray<T,Memory::Dyadic> SArrayType;
+
+                    explicit SArray(const Vector &v) :
+                    SArrayType(CopyOf,v),
+                    next(0),
+                    prev(0)
+                    {
+                    }
+
+                    virtual ~SArray() noexcept
+                    {
+                    }
+
+                    SArray *next;
+                    SArray *prev;
+
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(SArray);
+                };
+
+                class Survey
+                {
+                protected:
+                    virtual ~Survey() noexcept
+                    {
+                    }
+
+                public:
+                    explicit Survey() :
+                    proc(this, & Survey::check)
+                    {
+                    }
+
+
+                    virtual void carryOut(const IList &l, const Vector &v) = 0;
+
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Survey);
+                    Callback proc;
+
+                    void check(const IList &l, const Vector &v)
+                    {
+                        carryOut(l,v);
+                    }
+                };
+
+                template <typename T>
+                class SurveyOf : public Survey, public Proxy< const ListOf< SArray<T> > >
+                {
+                public:
+                    typedef SArray<T> ArrayType;
+                    typedef Proxy< ListOf<ArrayType> > ProxyType;
+
+                    virtual ~SurveyOf() noexcept
+                    {
+                    }
+
+                protected:
+                    explicit SurveyOf() noexcept : my()
+                    {
+                    }
+
+
+                    CxxListOf<ArrayType> my;
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(SurveyOf);
+                    inline virtual typename ProxyType::ConstInterface & surrogate() const noexcept
+                    {
+                        return my;
+                    }
 
                 };
+
+                class IntegerSurvey : public SurveyOf<Integer>
+                {
+                public:
+                    explicit IntegerSurvey() noexcept {}
+                    virtual ~IntegerSurvey() noexcept {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
+                };
+
+
 
 
             }
@@ -52,7 +145,7 @@ void DoProcess(XMLog &xml,
 {
     Y_XML_SECTION(xml, "Processing");
     Y_XMLOG(xml,"M=" << M);
-    Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+    Ortho::Coven::Callback proc = cfunctor2( Ortho::Coven::Tribes::Display );
     {
         Y_XML_SECTION(xml, "Combinations");
         const MATRIX data(TransposeOf,M);
@@ -83,6 +176,8 @@ Y_UTEST(algebra_coven)
     }
 
 
+    Y_SIZEOF( Ortho::Coven::SArray<apz> );
+    Y_SIZEOF( Ortho::Coven::SArray<apn> );
 
 
 }

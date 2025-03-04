@@ -36,9 +36,9 @@ namespace Yttrium
                     return res;
                 }
 
-                void Tribes:: Display(const Vector &v)
+                void Tribes:: Display(const IList &l, const Vector &v)
                 {
-                    std::cerr << "\t(+) " << v << std::endl;
+                    std::cerr << "\t(+) " << v << " // @" << l << std::endl;
                 }
 
                 Tribes:: ~Tribes() noexcept
@@ -78,7 +78,7 @@ namespace Yttrium
                             pSingle = tryInsertNew(*pVector);
                             if(0==pSingle) continue;
                         }
-                        proc(*pSingle);
+                        proc(*(tribe->content),*pSingle);
                         ++count;
                     }
                 }

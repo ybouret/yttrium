@@ -120,7 +120,7 @@ namespace Yttrium
                         }
 
                         assert(0!=vec);
-                        proc(*vec);
+                        proc(*(tribe->content),*vec);
                     }
 
                     // initialize for collected

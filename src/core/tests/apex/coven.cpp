@@ -76,10 +76,12 @@ namespace
     };
 
 
-    static inline void ShowDot(const Ortho::Vector &)
+#if 0
+    static inline void ShowDot(const Ortho::Coven::IList &, const Ortho::Vector &)
     {
         (std::cerr << '.').flush();
     }
+#endif
 
     template <typename MATRIX> static inline
     Digest Process(XMLog &            xml,
@@ -93,8 +95,8 @@ namespace
         Ortho::Metrics         qmtx(data.cols);
         Ortho::VCache          qvcc( new Ortho::Vector::Cache(qmtx) );
         Ortho::FCache          qfcc( new Ortho::Family::Cache(qvcc) );
-        //Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
-        Ortho::Coven::Callback proc = cfunctor( ShowDot );
+        Ortho::Coven::Callback proc = cfunctor2( Ortho::Coven::Tribes::Display );
+        //Ortho::Coven::Callback proc = cfunctor2( ShowDot );
         std::cerr << "[";
         Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc,&stats.ticks);
         OutputFile             fp("coven.dat");

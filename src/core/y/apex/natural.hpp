@@ -20,7 +20,8 @@ namespace Yttrium
     namespace Apex
     {
         class Block;
-
+        class Integer;
+        
         Y_SHALLOW_DECL(AsBlock); //!< alias
         Y_SHALLOW_DECL(Exp2);    //!< alias
         
