@@ -8,10 +8,42 @@ using namespace Apex;
 
 namespace Yttrium
 {
-    namespace MKL
+    namespace Apex
     {
-        
+        namespace Ortho
+        {
+            namespace Coven
+            {
+
+                struct Wayfarer
+                {
+                    template <typename MATRIX> static inline
+                    void Walk(XMLog        &   xml,
+                              Callback     &   proc,
+                              const MATRIX &   data,
+                              uint64_t * const ell = 0)
+                    {
+                        const Metrics params(data.cols);
+                        Ortho::VCache vCache( new Ortho::Vector::Cache(params) );
+                        Ortho::FCache fCache( new Ortho::Family::Cache(vCache) );
+                        IBank         iCache;
+
+                        Ortho::Coven::Tribes   tribes(xml,proc,data,iCache,fCache,ell);
+                        while(tribes.size)
+                        {
+                            tribes.generate(xml,proc,data,Strategy::Optimize,ell);
+                        }
+                    }
+
+
+                };
+
+
+            }
+        }
     }
+
+
 }
 
 template <typename MATRIX> static inline
@@ -20,18 +52,12 @@ void DoProcess(XMLog &xml,
 {
     Y_XML_SECTION(xml, "Processing");
     Y_XMLOG(xml,"M=" << M);
-    const MATRIX data(TransposeOf,M);
-
-    Ortho::Coven::IBank    bank;
-    Ortho::Metrics         qmtx(data.cols);
-    Ortho::VCache          qvcc( new Ortho::Vector::Cache(qmtx) );
-    Ortho::FCache          qfcc( new Ortho::Family::Cache(qvcc) );
-    Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
-    Ortho::Coven::Tribes   tribes(xml,proc,data,bank,qfcc,0);
-    while(tribes.size)
     {
-        tribes.generate(xml,proc,data,0,0);
+        const MATRIX data(TransposeOf,M);
+        Ortho::Coven::Callback proc = cfunctor( Ortho::Coven::Tribes::Display );
+        Ortho::Coven::Wayfarer::Walk(xml,proc,data);
     }
+
 }
 
 Y_UTEST(algebra_coven)
