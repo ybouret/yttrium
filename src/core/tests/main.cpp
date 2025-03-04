@@ -168,13 +168,6 @@ Y_UTEST_DECL(300)
     Y_UTEST(io_pstream);
     Y_UTEST(io_input_data);
 
-    Y_UTEST(fft1);
-    Y_UTEST(fft2);
-    Y_UTEST(fft_mul);
-    Y_UTEST(fft_mul2);
-    Y_UTEST(fft_xbr);
-    Y_UTEST(fft_xbr_build);
-
     Y_UTEST(strings);
     Y_UTEST(string_tokenizer);
     Y_UTEST(string_env);

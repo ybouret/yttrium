@@ -11,7 +11,6 @@ hashing
 sort
 ptr
 io
-fft
 string
 apex
 dft
@@ -230,13 +229,6 @@ add_test(io:bits        test-core io_bits)
 add_test(io:disk       test-core io_disk)
 add_test(io:pstream     test-core io_pstream)
 add_test(io:input-data  test-core io_input_data)
-
-#fft
-add_test(fft:xbr  test-core fft_xbr)
-add_test(fft:1    test-core fft1)
-add_test(fft:2    test-core fft2)
-add_test(fft:mul  test-core fft_mul)
-add_test(fft:mul2 test-core fft_mul2)
 
 #string(s)
 add_test(strings          test-core strings)
