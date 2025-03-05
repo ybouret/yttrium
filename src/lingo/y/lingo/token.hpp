@@ -48,7 +48,8 @@ namespace Yttrium
             Token & operator+=(const Char  &);                              //!< push back a copy
 
             friend bool operator==(const Token &lhs, const Token &rhs) noexcept;
-
+            friend bool operator==(const char * lhs, const Token &rhs) noexcept;
+            friend bool operator==(const char   lhs, const Token &rhs) noexcept;
         private:
             Y_DISABLE_ASSIGN(Token);
         };

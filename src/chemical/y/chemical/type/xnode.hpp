@@ -12,7 +12,8 @@ namespace Yttrium
     {
         typedef Lingo::Syntax::XNode XNode;
         typedef Lingo::Syntax::XList XList;
-
+        typedef Lingo::Lexeme        Lexeme;
+        
     }
 
 }

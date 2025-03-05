@@ -2,6 +2,7 @@
 #include "y/chemical/weasel/parser.hpp"
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -106,20 +107,21 @@ namespace Yttrium
         }
 
 
-        static inline void cleanFormula(XNode &node) noexcept
+        static inline void cleanFormula(XNode &node)
         {
             XList &list = node.branch();
-            if(list.size<=1) return;
+            if(list.size<=1) return; // no charge
+
             std::cerr << "Need To Clean Charge" << std::endl;
-            XNode &charge = *(list.tail);
-            assert( Formula::Positive == charge.name() || Formula::Negative == charge.name() );
-            XList &content = charge.branch(); assert(content.size>=1);
-            if(2==content.size) delete content.popTail();
+
+            XNode &charge  = *(list.tail);     assert( Formula::Positive == charge.name() || Formula::Negative == charge.name() );
+            XList &content = charge.branch();  assert(1==content.size||2==content.size);
+            delete content.popTail();
+            if(content.size<=0) return;
+
             assert(1==content.size);
-            XNode &coef = *content.head;
-            const Lingo::Lexeme &lx = coef.lexeme();
-            if(1==lx.size && '1' == **lx.head)
-                content.release();
+            const XNode &coefNode = *content.head; assert( "Coef" == coefNode.name() );
+            if( '1' == coefNode.lexeme() ) content.release();
         }
 
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)

@@ -84,6 +84,31 @@ namespace Yttrium
             return true;
         }
 
+        bool operator==(const char *lhs, const Token &rhs) noexcept
+        {
+            if(0==lhs)
+            {
+                return 0 == rhs.size;
+            }
+            else
+            {
+                size_t len = strlen(lhs);
+                if(rhs.size!=len) return false;
+                const Char *chr = rhs.head;
+                while(len-- > 0 )
+                {
+                    if( *(++lhs) != **chr) return false;
+                    chr=chr->next;
+                }
+                return true;
+            }
+        }
+
+        bool operator==(const char   lhs, const Token &rhs) noexcept
+        {
+            return 1 == rhs.size && lhs == **rhs.head;
+        }
+
     }
 
 }
