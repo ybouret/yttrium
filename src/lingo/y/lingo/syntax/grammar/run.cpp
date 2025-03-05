@@ -53,6 +53,7 @@ namespace Yttrium {
 
                 if(lexer.cache.size>0)
                 {
+                    XNode::BackToLexer(lexer,keep.yield());
                     rejected(lexer);
                 }
                 else

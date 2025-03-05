@@ -114,6 +114,9 @@ namespace Yttrium
                 friend bool operator==(const XNode &lhs, const XNode &rhs);
                 friend bool operator!=(const XNode &lhs, const XNode &rhs);
 
+
+
+
                 //______________________________________________________________
                 //
                 //

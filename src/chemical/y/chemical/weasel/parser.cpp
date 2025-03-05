@@ -3,6 +3,7 @@
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
 #include "y/system/exception.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -48,7 +49,9 @@ namespace Yttrium
             Agg        &FORMULA   = agg(Formula::CallSign);
             const Rule &PLUS      = term('+');
             const Rule &MINUS     = term('-');
+            const Rule &SIGN      = pick(PLUS,MINUS);
             const Rule &SPACE     = zom(WHITE);
+
 
             //------------------------------------------------------------------
             //
@@ -62,10 +65,8 @@ namespace Yttrium
                 Alt        &ITEM     = alt("Item");
                 GROUP   << ITEM     << OPT_COEF;
                 ITEM    << NAME     << parens(MOLECULE);
-                const Rule &POSITIVE = agg(Formula::Positive) << '^' << OPT_COEF << PLUS;
-                const Rule &NEGATIVE = agg(Formula::Negative) << '^' << OPT_COEF << MINUS;
-
-                FORMULA << MOLECULE << opt(alt("Charge") << POSITIVE << NEGATIVE);
+                const Rule & CHARGE  = agg("Charge") << '^' << OPT_COEF << SIGN;
+                FORMULA << MOLECULE << opt(CHARGE);
             }
 
             STATEMENT << FORMULA;
@@ -82,17 +83,14 @@ namespace Yttrium
                 const Rule &EQSEP = mark(Equilibrium::Separator);
                 EQUILIBRIUM << LABEL;
                 EQUILIBRIUM << SPACE << EQSEP;
-#if 1
-                const Rule &ACTOR  = agg("Actor")  << SPACE << OPT_COEF << SPACE << FORMULA;
-                const Rule &ACTORS = agg("Actors") << ACTOR << extra('+', ACTOR);
-                const Rule &EQSIDE = pick(ACTORS,SPACE);
+
+                const Rule & ACTOR  = agg("Actor") << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
+                const Rule & ACTORS = grp("Actors") << ACTOR << extra('+',ACTOR);
+                const Rule & EQSIDE = pick(ACTORS,SPACE);
                 EQUILIBRIUM << (agg("Reac") << EQSIDE);
                 EQUILIBRIUM << SPACE << mark(Equilibrium::Symbol);
                 EQUILIBRIUM << (agg("Prod") << EQSIDE);
-                EQUILIBRIUM << SPACE << EQSEP;
 
-
-#endif
             }
 
             STATEMENT << EQUILIBRIUM;
@@ -107,22 +105,8 @@ namespace Yttrium
         }
 
 
-        static inline void cleanFormula(XNode &node)
-        {
-            XList &list = node.branch();
-            if(list.size<=1) return; // no charge
 
-            std::cerr << "Need To Clean Charge" << std::endl;
 
-            XNode &charge  = *(list.tail);     assert( Formula::Positive == charge.name() || Formula::Negative == charge.name() );
-            XList &content = charge.branch();  assert(1==content.size||2==content.size);
-            delete content.popTail();
-            if(content.size<=0) return;
-
-            assert(1==content.size);
-            const XNode &coefNode = *content.head; assert( "Coef" == coefNode.name() );
-            if( '1' == coefNode.lexeme() ) content.release();
-        }
 
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
         {
@@ -132,14 +116,6 @@ namespace Yttrium
             assert( CallSign == ast->name() );
 
 
-
-            for(XNode *node=ast->branch().head;node;node=node->next)
-            {
-                if( Formula::CallSign == node->name() )
-                {
-                    cleanFormula(*node);
-                }
-            }
 
             return ast.yield();
         }
