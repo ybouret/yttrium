@@ -15,9 +15,9 @@ namespace  {
     void Test2D()
     {
         std::cerr << "Testing with " << RTTI::Name<T>() << std::endl;
-        for(unit_t nx=1;nx<=16;nx*=2)
+        for(unit_t nx=1;nx<=32;nx*=2)
         {
-            for(unit_t ny=1;ny<=16;ny*=2)
+            for(unit_t ny=1;ny<=32;ny*=2)
             {
                 Field::Format2D  L = new Field::Layout2D( Field::Coord2D(1,1), Field::Coord2D(nx,ny) );
 
