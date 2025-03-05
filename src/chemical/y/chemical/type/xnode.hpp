@@ -11,6 +11,7 @@ namespace Yttrium
     namespace Chemical
     {
         typedef Lingo::Syntax::XNode XNode;
+        typedef Lingo::Syntax::XList XList;
 
     }
 

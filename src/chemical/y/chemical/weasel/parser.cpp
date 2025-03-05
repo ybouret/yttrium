@@ -47,7 +47,7 @@ namespace Yttrium
             Agg        &FORMULA   = agg(Formula::CallSign);
             const Rule &PLUS      = term('+');
             const Rule &MINUS     = term('-');
-            const Rule &SIGN      = alt("Sign") << PLUS << MINUS;
+            const Rule &SPACE     = zom(WHITE);
 
             //------------------------------------------------------------------
             //
@@ -61,7 +61,10 @@ namespace Yttrium
                 Alt        &ITEM     = alt("Item");
                 GROUP   << ITEM     << OPT_COEF;
                 ITEM    << NAME     << parens(MOLECULE);
-                FORMULA << MOLECULE << opt(act("Charge") << '^' << OPT_COEF << SIGN);
+                const Rule &POSITIVE = agg(Formula::Positive) << '^' << OPT_COEF << PLUS;
+                const Rule &NEGATIVE = agg(Formula::Negative) << '^' << OPT_COEF << MINUS;
+
+                FORMULA << MOLECULE << opt(alt("Charge") << POSITIVE << NEGATIVE);
             }
 
             STATEMENT << FORMULA;
@@ -76,7 +79,19 @@ namespace Yttrium
                 String rx = Equilibrium::Prefix; rx +="[[:word:]_\\(\\))]+";
                 const Rule &LABEL = term("Label",rx);
                 const Rule &EQSEP = mark(Equilibrium::Separator);
-                EQUILIBRIUM << LABEL << EQSEP;
+                EQUILIBRIUM << LABEL;
+                EQUILIBRIUM << SPACE << EQSEP;
+#if 1
+                const Rule &ACTOR  = agg("Actor")  << SPACE << OPT_COEF << SPACE << FORMULA;
+                const Rule &ACTORS = agg("Actors") << ACTOR << extra('+', ACTOR);
+                const Rule &EQSIDE = pick(ACTORS,SPACE);
+                EQUILIBRIUM << (agg("Reac") << EQSIDE);
+                EQUILIBRIUM << SPACE << mark(Equilibrium::Symbol);
+                EQUILIBRIUM << (agg("Prod") << EQSIDE);
+                EQUILIBRIUM << SPACE << EQSEP;
+
+
+#endif
             }
 
             STATEMENT << EQUILIBRIUM;
@@ -88,6 +103,43 @@ namespace Yttrium
             (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
             (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
             render();
+        }
+
+
+        static inline void cleanFormula(XNode &node) noexcept
+        {
+            XList &list = node.branch();
+            if(list.size<=1) return;
+            std::cerr << "Need To Clean Charge" << std::endl;
+            XNode &charge = *(list.tail);
+            assert( Formula::Positive == charge.name() || Formula::Negative == charge.name() );
+            XList &content = charge.branch(); assert(content.size>=1);
+            if(2==content.size) delete content.popTail();
+            assert(1==content.size);
+            XNode &coef = *content.head;
+            const Lingo::Lexeme &lx = coef.lexeme();
+            if(1==lx.size && '1' == **lx.head)
+                content.release();
+        }
+
+        XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
+        {
+            Lingo::Parser &self = *this;
+            AutoPtr<XNode> ast  = self(inputModule);
+
+            assert( CallSign == ast->name() );
+
+
+
+            for(XNode *node=ast->branch().head;node;node=node->next)
+            {
+                if( Formula::CallSign == node->name() )
+                {
+                    cleanFormula(*node);
+                }
+            }
+
+            return ast.yield();
         }
 
 

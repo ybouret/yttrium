@@ -21,6 +21,8 @@ namespace Yttrium
             explicit Parser();
             virtual ~Parser() noexcept;
 
+            XNode * preprocess(Lingo::Module * const);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
         };

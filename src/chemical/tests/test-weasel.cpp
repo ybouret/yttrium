@@ -12,7 +12,7 @@ Y_UTEST(weasel)
 
     if( argc > 1)
     {
-        AutoPtr<XNode> xnode = wp( Lingo::Module::OpenFile(argv[1]) );
+        AutoPtr<XNode> xnode = wp.preprocess( Lingo::Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
     }
 

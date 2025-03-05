@@ -16,7 +16,9 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign;
-            
+            static const char * const Positive;
+            static const char * const Negative;;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Formula);
         };
