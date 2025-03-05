@@ -20,6 +20,24 @@ namespace Yttrium {
                 }
 
                 static inline
+                void removeEmptyRepeatFrom(XList &list) noexcept
+                {
+                    XList temp;
+                    while(list.size>0)
+                    {
+                        XNode * const node = list.popHead();
+                        if(node->rule.uuid == Repeat::UUID && node->branch().size <= 0)
+                        {
+                            //std::cerr << "*** AST *** Should Remove Empty Repeat!" << std::endl;
+                            delete node;
+                            continue;
+                        }
+                        temp.pushTail(node);
+                    }
+                    list.swapWith(temp);
+                }
+
+                static inline
                 XNode * InternalAST(XNode * const tree) noexcept
                 {
                     assert(0!=tree);
@@ -103,6 +121,13 @@ namespace Yttrium {
                     list.swapWith(temp);
 
                     assert(tree->isWellFormed());
+
+                    //----------------------------------------------------------
+                    //
+                    // remove dangling reps?
+                    //
+                    //----------------------------------------------------------
+                    removeEmptyRepeatFrom(list);
                     return tree;
                 }
 

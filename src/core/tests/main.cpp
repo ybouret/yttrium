@@ -285,6 +285,7 @@ Y_UTEST_DECL(300)
 
     Y_UTEST(dft_core);
     Y_UTEST(dft_fmt);
+    Y_UTEST(dft_nd);
 }
 Y_UTEST_EXEC()
 

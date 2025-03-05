@@ -16,14 +16,31 @@ namespace Yttrium
 
         Weasel:: Parser:: Parser() : Lingo::Parser("Weasel")
         {
+            //------------------------------------------------------------------
+            //
+            // Top Level
+            //
+            //------------------------------------------------------------------
             Agg &WEASEL = agg(CallSign);
 
-            const Rule &ENDL  = endl("ENDL","[:endl:]",Dividing);
-            const Rule &BLANK = mark("BLANK", "[ \t]");
-            const Rule &WHITE = zom(alt("WHITE") << ENDL << BLANK);
+            //------------------------------------------------------------------
+            //
+            // Whitespaces
+            //
+            //------------------------------------------------------------------
+            const Rule &WHITE = oom(alt("WHITE") << endl("ENDL","[:endl:]",Dividing) << mark("BLANK", "[ \t]"));
 
-            WEASEL << WHITE;
+            Alt &STATEMENT    = alt("STATEMENT");
+            WEASEL << zom(STATEMENT);
 
+            STATEMENT << WHITE;
+
+            //std::cerr << "WHITE.uuid=" << FourCC::ToText(WHITE.uuid) << std::endl;
+
+            //const Rule & ID = term("ID","[:alpha:][:word:]*");
+            //STATEMENT << ID;
+
+            //STATEMENT << WHITE;
 
             //------------------------------------------------------------------
             // Lexical Only

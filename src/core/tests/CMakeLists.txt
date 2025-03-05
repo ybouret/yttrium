@@ -365,4 +365,7 @@ add_test(apex:coven  test-core apex_coven)
 #dft
 add_test(dft:core test-core dft_core)
 add_test(dft:fmt  test-core dft_fmt)
+add_test(dft:nd   test-core dft_nd)
+
+
 
