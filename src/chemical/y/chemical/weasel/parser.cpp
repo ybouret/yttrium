@@ -18,29 +18,27 @@ namespace Yttrium
         {
             //------------------------------------------------------------------
             //
-            // Top Level
+            // Top Level will always be Weasel
             //
             //------------------------------------------------------------------
-            Agg &WEASEL = agg(CallSign);
+            Agg &WEASEL    = agg(CallSign);
+            Alt &STATEMENT = alt("STATEMENT");
+            WEASEL << zom(STATEMENT);
 
             //------------------------------------------------------------------
             //
             // Whitespaces
             //
             //------------------------------------------------------------------
-            const Rule &WHITE = oom(alt("WHITE") << endl("ENDL","[:endl:]",Dividing) << mark("BLANK", "[ \t]"));
+            const Rule &WHITE = alt("WHITE") << endl("ENDL","[:endl:]",Dividing) << mark("BLANK", "[ \t]");
+            STATEMENT << oom(WHITE);
 
-            Alt &STATEMENT    = alt("STATEMENT");
-            WEASEL << zom(STATEMENT);
+            //const Rule &SPACE = opt(WHITE);
+            const Rule &ID = term("ID","[:alpha:][[:alpha:]]*");
 
-            STATEMENT << WHITE;
+            STATEMENT << ID;
 
-            //std::cerr << "WHITE.uuid=" << FourCC::ToText(WHITE.uuid) << std::endl;
 
-            //const Rule & ID = term("ID","[:alpha:][:word:]*");
-            //STATEMENT << ID;
-
-            //STATEMENT << WHITE;
 
             //------------------------------------------------------------------
             // Lexical Only
