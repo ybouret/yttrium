@@ -34,10 +34,10 @@ namespace Yttrium
             STATEMENT << oom(WHITE);
 
             //const Rule &SPACE = opt(WHITE);
-            const Rule &ID = term("ID","[:alpha:][[:alpha:]]*");
-
-            STATEMENT << ID;
-
+            const Rule &NAME = term("NAME","[:upper:][[:lower:]_]*");
+            const Rule &COEF = term("COEF","[:digit:]+");
+            STATEMENT << NAME;
+            STATEMENT << COEF;
 
 
             //------------------------------------------------------------------
