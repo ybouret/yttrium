@@ -4,7 +4,8 @@
 #ifndef Y_Chemical_Weasel_Included
 #define Y_Chemical_Weasel_Included 1
 
-#include "y/chemical/type/xnode.hpp"
+#include "y/chemical/formula.hpp"
+#include "y/chemical/reactive/equilibrium.hpp"
 
 namespace Yttrium
 {

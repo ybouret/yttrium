@@ -23,22 +23,63 @@ namespace Yttrium
             //------------------------------------------------------------------
             Agg &WEASEL    = agg(CallSign);
             Alt &STATEMENT = alt("STATEMENT");
-            WEASEL << zom(STATEMENT);
 
             //------------------------------------------------------------------
             //
             // Whitespaces
             //
             //------------------------------------------------------------------
-            const Rule &WHITE = alt("WHITE") << endl("ENDL","[:endl:]",Dividing) << mark("BLANK", "[ \t]");
-            STATEMENT << oom(WHITE);
+            const Rule &WHITE     = alt("WHITE") << endl("ENDL","[:endl:]",Dividing) << mark("BLANK", "[ \t]");
+            const Rule &SEPARATOR = mark(';');
+            const Rule &OPT_SEP   = opt(SEPARATOR);
+            WEASEL << zom(STATEMENT);
 
-            //const Rule &SPACE = opt(WHITE);
-            const Rule &NAME = term("NAME","[:upper:][[:lower:]_]*");
-            const Rule &COEF = term("COEF","[:digit:]+");
-            STATEMENT << NAME;
-            STATEMENT << COEF;
+            STATEMENT << SEPARATOR;                // single separator
+            STATEMENT << cat(oom(WHITE),OPT_SEP);  // blank line
 
+            //------------------------------------------------------------------
+            //
+            // Common rules for Equilibria/Formula
+            //
+            //------------------------------------------------------------------
+            const Rule &COEF     = term("Coef","[:digit:]+");
+            const Rule &OPT_COEF = opt(COEF);
+            Agg        &FORMULA   = agg(Formula::CallSign);
+            const Rule &PLUS      = term('+');
+            const Rule &MINUS     = term('-');
+            const Rule &SIGN      = alt("Sign") << PLUS << MINUS;
+
+            //------------------------------------------------------------------
+            //
+            // Create Formula
+            //
+            //------------------------------------------------------------------
+            {
+                const Rule &NAME     = term("Name","[:upper:][[:lower:]_]*");
+                Agg        &GROUP    = act("Group");
+                const Rule &MOLECULE = act("Molecule") << GROUP << zom(GROUP);
+                Alt        &ITEM     = alt("Item");
+                GROUP   << ITEM     << OPT_COEF;
+                ITEM    << NAME     << parens(MOLECULE);
+                FORMULA << MOLECULE << opt(act("Charge") << '^' << OPT_COEF << SIGN);
+            }
+
+            STATEMENT << FORMULA;
+
+            //------------------------------------------------------------------
+            //
+            // Create Equilibrium
+            //
+            //------------------------------------------------------------------
+            Agg &EQUILIBRIUM = agg(Equilibrium::CallSign);
+            {
+                String rx = Equilibrium::Prefix; rx +="[[:word:]_\\(\\))]+";
+                const Rule &LABEL = term("Label",rx);
+                const Rule &EQSEP = mark(Equilibrium::Separator);
+                EQUILIBRIUM << LABEL << EQSEP;
+            }
+
+            STATEMENT << EQUILIBRIUM;
 
             //------------------------------------------------------------------
             // Lexical Only
