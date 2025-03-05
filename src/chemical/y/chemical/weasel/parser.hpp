@@ -5,6 +5,7 @@
 #ifndef Y_Chemical_Parser_Included
 #define Y_Chemical_Parser_Included 1
 
+#include "y/chemical/weasel.hpp"
 #include "y/lingo/parser.hpp"
 
 namespace Yttrium
@@ -12,19 +13,18 @@ namespace Yttrium
     namespace Chemical
     {
 
-        namespace Weasel
+
+        class Weasel:: Parser : public Lingo::Parser
         {
+        public:
 
-            class Parser : public Lingo::Parser
-            {
-            public:
-                explicit Parser();
-                virtual ~Parser() noexcept;
+            explicit Parser();
+            virtual ~Parser() noexcept;
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Parser);
-            };
-        }
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Parser);
+        };
+
 
     }
 }

@@ -8,22 +8,34 @@ namespace Yttrium
     namespace Chemical
     {
 
-        namespace Weasel
+
+        Weasel::Parser:: ~Parser() noexcept
         {
-
-            Parser:: ~Parser() noexcept
-            {
-            }
-
-            Parser:: Parser() : Lingo::Parser("Weasel")
-            {
-                
-                (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
-                (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
-            }
-
-
         }
+
+
+        Weasel:: Parser:: Parser() : Lingo::Parser("Weasel")
+        {
+            Agg &WEASEL = agg(CallSign);
+
+            const Rule &ENDL  = endl("ENDL","[:endl:]",Dividing);
+            const Rule &BLANK = mark("BLANK", "[ \t]");
+            const Rule &WHITE = zom(alt("WHITE") << ENDL << BLANK);
+
+            WEASEL << WHITE;
+
+
+            //------------------------------------------------------------------
+            // Lexical Only
+            //------------------------------------------------------------------
+
+            (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
+            (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
+            render();
+        }
+
+
+        
 
     }
 
