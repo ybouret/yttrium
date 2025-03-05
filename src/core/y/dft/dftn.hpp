@@ -30,13 +30,14 @@ namespace Yttrium
          array increases most rapidly as one proceeds along data. For a two-dimensional array, this is
          equivalent to storing the array by rows. If isign is input as−1, data is replaced by its inverse
          */
-        static inline
-        void Transform(float * const  data,
+        template <typename T> static inline
+        void Transform(T * const  data,
                        const size_t   nn[],
                        const unsigned ndim,
                        const int      isign)
         {
-            double theta,wtemp;
+            typedef typename DFT_Real<T>::Type long_T;
+            long_T theta,wtemp;
 
             const size_t ntot = Prod(nn,ndim);
             size_t       nprv = 1;
@@ -77,10 +78,10 @@ namespace Yttrium
                     const size_t ifp2  = ifp1 << 1;
                     theta = isign*6.28318530717959/(ifp2/ip1);
                     wtemp = sin(0.5*theta);
-                    double wpr = -2.0*wtemp*wtemp;
-                    double wpi = sin(theta);
-                    double wr  = 1.0;
-                    double wi  = 0.0;
+                    long_T wpr = -2.0*wtemp*wtemp;
+                    long_T wpi = sin(theta);
+                    long_T wr  = 1.0;
+                    long_T wi  = 0.0;
                     for(size_t i3=1;i3<=ifp1;i3+=ip1)
                     {
                         for (size_t i1=i3;i1<=i3+ip1-2;i1+=2)
@@ -92,8 +93,8 @@ namespace Yttrium
                                 const size_t k1im = k1re+1;
                                 const size_t k2im = k2re+1;
 
-                                const float tempr=(float)wr*data[k2re]-(float)wi*data[k2im];
-                                const float tempi=(float)wr*data[k2im]+(float)wi*data[k2re];
+                                const T tempr=(T)wr*data[k2re]-(T)wi*data[k2im];
+                                const T tempi=(T)wr*data[k2im]+(T)wi*data[k2re];
                                 data[k2re]  = data[k1re]-tempr;
                                 data[k2im]  = data[k1im]-tempi;
                                 data[k1re] += tempr;
