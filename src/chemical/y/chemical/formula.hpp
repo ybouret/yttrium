@@ -5,7 +5,7 @@
 #define Y_Chemical_Formula_Included 1
 
 
-#include "y/chemical/type/xnode.hpp"
+#include "y/chemical/type/xcode.hpp"
 
 
 namespace Yttrium
