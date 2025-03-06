@@ -111,7 +111,24 @@ namespace Yttrium
 
 
 
+        static inline void cleanupActors(XNode * const actors) noexcept
+        {
+            XList &list = actors->branch();
+            XList  temp;
 
+            while(list.size>0)
+            {
+                XNode * node = list.popHead();
+                if( '+' == node->name() )
+                {
+                    //std::cerr << "Removing " << node->name() << std::endl;
+                    delete node;
+                    continue;
+                }
+                temp.pushTail(node);
+            }
+            list.swapWith(temp);
+        }
 
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
         {
@@ -120,6 +137,21 @@ namespace Yttrium
 
             assert( CallSign == ast->name() );
 
+            for(XNode *node=ast->branch().head;node;node=node->next)
+            {
+                std::cerr << "Got '" << node->name() << "'" << std::endl;
+                if( Equilibrium::CallSign != node->name() ) continue;
+                std::cerr << "\tprocessing..." << std::endl;
+                XList &list = node->branch(); assert(4==list.size);
+                {
+                    XNode * const reac = list.fetch(2); assert( "Reac" == reac->name() );
+                    cleanupActors(reac);
+                }
+                {
+                    XNode * const prod = list.fetch(3); assert( "Prod" == prod->name() );
+                    cleanupActors(prod);
+                }
+            }
 
 
             return ast.yield();
