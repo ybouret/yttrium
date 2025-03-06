@@ -1,5 +1,6 @@
 
 #include "y/lingo/token.hpp"
+#include <cstring>
 
 namespace Yttrium
 {
@@ -92,8 +93,7 @@ namespace Yttrium
             }
             else
             {
-                size_t len = strlen(lhs);
-                if(rhs.size!=len) return false;
+                size_t      len = strlen(lhs); if(rhs.size!=len) return false;
                 const Char *chr = rhs.head;
                 while(len-- > 0 )
                 {

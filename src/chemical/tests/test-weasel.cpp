@@ -18,7 +18,7 @@ Y_UTEST(weasel)
     }
     else
     {
-        for(size_t i=0;i<=EDB::Count;++i)
+        for(size_t i=0;i<EDB::Count;++i)
         {
             const char * const text = EDB::Table[i];
             std::cerr << "parsing \"" << text << "\"" << std::endl;

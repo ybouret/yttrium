@@ -68,8 +68,8 @@ namespace Yttrium
                 Alt        &ITEM     = alt("Item");
                 GROUP   << ITEM     << OPT_COEF;
                 ITEM    << NAME     << parens(BODY);
-                const Rule & CHARGE  = agg("Charge") << '^' << OPT_COEF << SIGN;
-                FORMULA << BODY << opt(CHARGE);
+                const Rule & Z  = agg("Z") << '^' << OPT_COEF << SIGN;
+                FORMULA << BODY << opt(Z);
             }
 
             STATEMENT << FORMULA;
