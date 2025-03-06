@@ -5,6 +5,7 @@ chemical
 chemical/type
 chemical/reactive
 chemical/weasel
+chemical/weasel/equilibrium
 )
 
 add_subdirectory(tests)

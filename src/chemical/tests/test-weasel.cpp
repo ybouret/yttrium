@@ -1,5 +1,6 @@
 #include "y/chemical/weasel/parser.hpp"
 #include "y/chemical/formula.hpp"
+#include "y/chemical/weasel/equilibrium/db.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -15,7 +16,15 @@ Y_UTEST(weasel)
         AutoPtr<XNode> xnode = wp.preprocess( Lingo::Module::OpenFile(argv[1]) );
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
     }
-
+    else
+    {
+        for(size_t i=0;i<=EDB::Count;++i)
+        {
+            const char * const text = EDB::Table[i];
+            std::cerr << "parsing \"" << text << "\"" << std::endl;
+            AutoPtr<XNode> xnode = wp.preprocess( Lingo::Module::OpenData("db",text));
+        }
+    }
     Y_SIZEOF(XNode);
 }
 Y_UDONE()

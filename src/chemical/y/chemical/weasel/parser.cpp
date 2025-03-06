@@ -2,6 +2,8 @@
 #include "y/chemical/weasel/parser.hpp"
 #include "y/lingo/lexical/add-on/single-line-comment.hpp"
 #include "y/lingo/lexical/add-on/multi-lines-comment.hpp"
+#include "y/lingo/lexical/add-on/rstring.hpp"
+
 #include "y/system/exception.hpp"
 #include <iomanip>
 
@@ -51,6 +53,7 @@ namespace Yttrium
             const Rule &MINUS     = term('-');
             const Rule &SIGN      = pick(PLUS,MINUS);
             const Rule &SPACE     = zom(WHITE);
+            const Rule &STRING    = plug<Lingo::Lexical::RString>("String");
 
 
             //------------------------------------------------------------------
@@ -61,12 +64,12 @@ namespace Yttrium
             {
                 const Rule &NAME     = term("Name","[:upper:][[:lower:]_]*");
                 Agg        &GROUP    = act("Group");
-                const Rule &MOLECULE = act("Molecule") << GROUP << zom(GROUP);
+                const Rule &BODY     = act("Body") << GROUP << zom(GROUP);
                 Alt        &ITEM     = alt("Item");
                 GROUP   << ITEM     << OPT_COEF;
-                ITEM    << NAME     << parens(MOLECULE);
+                ITEM    << NAME     << parens(BODY);
                 const Rule & CHARGE  = agg("Charge") << '^' << OPT_COEF << SIGN;
-                FORMULA << MOLECULE << opt(CHARGE);
+                FORMULA << BODY << opt(CHARGE);
             }
 
             STATEMENT << FORMULA;
@@ -84,13 +87,15 @@ namespace Yttrium
                 EQUILIBRIUM << LABEL;
                 EQUILIBRIUM << SPACE << EQSEP;
 
-                const Rule & ACTOR  = agg("Actor") << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
+                const Rule & ACTOR  = agg("Actor")  << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
                 const Rule & ACTORS = grp("Actors") << ACTOR << extra('+',ACTOR);
                 const Rule & EQSIDE = pick(ACTORS,SPACE);
                 EQUILIBRIUM << (agg("Reac") << EQSIDE);
                 EQUILIBRIUM << SPACE << mark(Equilibrium::Symbol);
                 EQUILIBRIUM << (agg("Prod") << EQSIDE);
 
+                EQUILIBRIUM << SPACE << EQSEP;
+                EQUILIBRIUM << SPACE << STRING;
             }
 
             STATEMENT << EQUILIBRIUM;
