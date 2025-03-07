@@ -87,8 +87,8 @@ namespace Yttrium
                 EQUILIBRIUM << LABEL;
                 EQUILIBRIUM << SPACE << EQSEP;
 
-                const Rule & ACTOR  = agg("Actor")  << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
-                const Rule & ACTORS = grp("Actors") << ACTOR << extra('+',ACTOR);
+                const Rule & ACTOR  = agg(Actor::CallSign)  << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
+                const Rule & ACTORS = grp(Actors::CallSign) << ACTOR << extra('+',ACTOR);
                 const Rule & EQSIDE = pick(ACTORS,SPACE);
                 EQUILIBRIUM << (agg(Equilibrium::Reac) << EQSIDE);
                 EQUILIBRIUM << SPACE << mark(Equilibrium::Symbol);
@@ -110,26 +110,6 @@ namespace Yttrium
         }
 
 
-
-        static inline void cleanupActors(XNode * const actors) noexcept
-        {
-            assert( Equilibrium::Reac == actors->name() || Equilibrium::Prod == actors->name() );
-            XList &list = actors->branch();
-            XList  temp;
-
-            while(list.size>0)
-            {
-                XNode * node = list.popHead();
-                if( '+' == node->name() )
-                {
-                    //std::cerr << "Removing " << node->name() << std::endl;
-                    delete node;
-                    continue;
-                }
-                temp.pushTail(node);
-            }
-            list.swapWith(temp);
-        }
 
         static inline void cleanupFormula(XNode * const formula) noexcept
         {
@@ -162,6 +142,55 @@ namespace Yttrium
                 }
             }
         }
+
+
+        static inline void cleanupActors(XNode * const actors) noexcept
+        {
+            assert( Equilibrium::Reac == actors->name() || Equilibrium::Prod == actors->name() );
+            XList &list = actors->branch();
+            XList  temp;
+
+            while(list.size>0)
+            {
+                XNode * node = list.popHead();
+                if( '+' == node->name() )
+                {
+                    delete node;
+                    continue;
+                }
+
+                if( Actor::CallSign == node->name() )
+                {
+                    //std::cerr << "Found Actor" << std::endl;
+                    XList &list = node->branch(); assert(Formula::CallSign == list.tail->name() );
+                    cleanupFormula(list.tail);
+                    if(2==list.size)
+                    {
+                        assert(Weasel::Coef == list.head->name() );
+                        const apn sto = list.head->lexeme().toNatural();
+
+                        if(1==sto)
+                        {
+                            // remove coefficient
+                            delete list.popHead();
+                            goto KEEP;
+                        }
+
+                        if(0==sto)
+                        {
+                            // remove actor
+                            delete node;
+                            continue;
+                        }
+                    }
+                }
+
+            KEEP:
+                temp.pushTail(node);
+            }
+            list.swapWith(temp);
+        }
+
 
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
         {
