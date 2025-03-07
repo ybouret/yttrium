@@ -5,6 +5,7 @@ chemical
 chemical/type
 chemical/reactive
 chemical/weasel
+chemical/weasel/formula
 chemical/weasel/equilibrium
 )
 

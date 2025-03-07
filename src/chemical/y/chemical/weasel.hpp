@@ -27,7 +27,13 @@ namespace Yttrium
             static const char * const      Coef;           //!< "Coef"
 
             class Parser;
-            
+            class FormulaToText;
+            class FormulaToSpec;
+            class Code;
+
+            XNode * parse(Lingo::Module * const);
+
+
         private:
             explicit Weasel();
             virtual ~Weasel() noexcept;
