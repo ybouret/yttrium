@@ -46,8 +46,8 @@ namespace Yttrium
             // Common rules for Equilibria/Formula
             //
             //------------------------------------------------------------------
-            const Rule &COEF     = term("Coef","[:digit:]+");
-            const Rule &OPT_COEF = opt(COEF);
+            const Rule &COEF      = term(Coef,"[:digit:]+");
+            const Rule &OPT_COEF  = opt(COEF);
             Agg        &FORMULA   = agg(Formula::CallSign);
             const Rule &PLUS      = term('+');
             const Rule &MINUS     = term('-');
@@ -62,16 +62,14 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                const Rule &NAME     = term("Name","[:upper:][[:lower:]_]*");
-                Agg        &GROUP    = act("Group");
-                const Rule &BODY     = act("Body") << GROUP << zom(GROUP);
-                Alt        &ITEM     = alt("Item");
-                GROUP   << ITEM     << OPT_COEF;
+                const Rule &NAME = term(Formula::Name,"[:upper:][[:lower:]_]*");
+                Agg        &MULT = act(Formula::Mult);
+                const Rule &BODY = act(Formula::Body) << MULT << zom(MULT);
+                Alt        &ITEM = alt("Item");
+                MULT    << ITEM     << OPT_COEF;
                 ITEM    << NAME     << parens(BODY);
-                const Rule & Z  = agg("Z") << '^' << OPT_COEF << SIGN;
-                FORMULA << BODY << opt(Z);
+                FORMULA << BODY << opt(agg(Formula::Z) << '^' << OPT_COEF << SIGN);
             }
-
             STATEMENT << FORMULA;
 
             //------------------------------------------------------------------

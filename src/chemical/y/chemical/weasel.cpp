@@ -6,7 +6,9 @@ namespace Yttrium
     {
 
         const char * const Weasel:: CallSign = "Weasel";
-        
+        const char * const Weasel:: Coef     = "Coef";
+
+
         Weasel:: ~Weasel() noexcept
         {
         }

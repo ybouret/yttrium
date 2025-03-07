@@ -17,6 +17,7 @@ namespace Yttrium
         public:
             static const char * const      CallSign;;
             static const AtExit::Longevity LifeTime = 100;
+            static const char * const      Coef; //!< "Coef"
 
             class Parser;
             

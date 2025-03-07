@@ -108,11 +108,10 @@ namespace Yttrium
                 const Lexeme  * lastLexeme()           const noexcept; //!< previous from last()
                 void            appendTo(Exception &)  const noexcept; //!< if lexeme is Terminal
                 static XNode  * AST(XNode * const)           noexcept; //!< recursive AST rules
-                static bool     AreEqual(const XNode &lhs,
-                                         const XNode &rhs);
-
-                friend bool operator==(const XNode &lhs, const XNode &rhs);
-                friend bool operator!=(const XNode &lhs, const XNode &rhs);
+                static bool     AreEqual(const XNode &,const XNode &); //!< recursive equality
+                
+                friend bool operator==(const XNode &lhs, const XNode &rhs); //!< test equality
+                friend bool operator!=(const XNode &lhs, const XNode &rhs); //!< test difference
 
 
 

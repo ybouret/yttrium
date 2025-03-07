@@ -10,17 +10,28 @@
 namespace Yttrium
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Discrete N-Dimensional Fourier Transform
+    //
+    //
+    //__________________________________________________________________________
     struct DFTN
     {
+
+        //! Product of nn[1..ndim]
         static inline size_t Prod(const size_t   nn[],
-                                  const unsigned ndim) noexcept
+                                  const unsigned dims) noexcept
         {
             size_t prod=1;
-            for(unsigned idim=1;idim<=ndim;idim++)
-                prod *= nn[idim];
+            for(unsigned i=dims;i>0;--i)
+                prod *= nn[i];
             return prod;
         }
 
+        //! Apply Transform
         /**
          Replaces data by its ndim-dimensional discrete Fourier transform, if isign is input as 1.
          nn[1..ndim] is an integer array containing the lengths of each dimension (number of complex
@@ -31,17 +42,17 @@ namespace Yttrium
          equivalent to storing the array by rows. If isign is input as−1, data is replaced by its inverse
          */
         template <typename T> static inline
-        void Transform(T * const  data,
+        void Transform(T * const      data,
                        const size_t   nn[],
-                       const unsigned ndim,
+                       const unsigned dims,
                        const int      isign)
         {
             typedef typename DFT_Real<T>::Type long_T;
             long_T theta,wtemp;
 
-            const size_t ntot = Prod(nn,ndim);
+            const size_t ntot = Prod(nn,dims);
             size_t       nprv = 1;
-            for(unsigned idim=ndim;idim>0;--idim)
+            for(unsigned idim=dims;idim>0;--idim)
             {
                 const size_t n     = nn[idim];
                 const size_t nrem  = ntot/(n*nprv);
@@ -58,8 +69,7 @@ namespace Yttrium
                             {
                                 for (size_t i3=i1;i3<=ip3;i3+=ip2)
                                 {
-                                    const size_t i3rev=i2rev+i3-i2;
-                                    DFT::Swap2(data+i3,data+i3rev);
+                                    DFT::Swap2(data+i3,data+i2rev+i3-i2);
                                 }
                             }
                         }
