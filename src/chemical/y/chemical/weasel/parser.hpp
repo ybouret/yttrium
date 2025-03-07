@@ -13,7 +13,14 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Parser
+        //
+        //
+        //______________________________________________________________________
         class Weasel:: Parser : public Lingo::Parser
         {
         public:
@@ -21,6 +28,7 @@ namespace Yttrium
             explicit Parser();
             virtual ~Parser() noexcept;
 
+            //! parse and cleanup module
             XNode * preprocess(Lingo::Module * const);
 
         private:

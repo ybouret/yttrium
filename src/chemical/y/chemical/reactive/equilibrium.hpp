@@ -13,11 +13,19 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Interface for equilibrium
+        //
+        //
+        //______________________________________________________________________
         class Equilibrium
         {
         public:
-            static const char         Prefix    = '@';
-            static const char         Separator = ':';
+            static const char         Prefix    = '@'; //!< for parser
+            static const char         Separator = ':'; //!< for parser
             static const char * const Symbol;    //!< "<=>";
             static const char * const CallSign;  //!< "Equilibrium"
 

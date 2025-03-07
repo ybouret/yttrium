@@ -11,13 +11,20 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Weasel is Equilibrium and Species Elementary Language
+        //
+        //
+        //______________________________________________________________________
         class Weasel : public Singleton<Weasel>
         {
         public:
-            static const char * const      CallSign;;
-            static const AtExit::Longevity LifeTime = 100;
-            static const char * const      Coef; //!< "Coef"
+            static const char * const      CallSign;       //!< "Weasel"
+            static const AtExit::Longevity LifeTime = 100; //!< lifetime
+            static const char * const      Coef;           //!< "Coef"
 
             class Parser;
             

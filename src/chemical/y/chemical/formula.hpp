@@ -12,17 +12,29 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species formula
+        //
+        //
+        //______________________________________________________________________
         class Formula
         {
         public:
-            static const char * const CallSign;
+            static const char * const CallSign; //!< "Formulat"
             static const char * const Name; //!< "Name"
             static const char * const Body; //!< "Body"
             static const char * const Mult; //!< "Mult"
             static const char * const Z;    //!< "Z"
-            
+
+            explicit Formula(const XCode &) noexcept;
+            virtual ~Formula() noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Formula);
+            const XCode code;
         };
     }
 

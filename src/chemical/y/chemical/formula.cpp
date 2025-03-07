@@ -11,6 +11,18 @@ namespace Yttrium
         const char * const Formula:: Mult     = "Mult";
         const char * const Formula:: Z        = "Z";
 
+
+        Formula:: ~Formula() noexcept
+        {
+
+        }
+
+        Formula:: Formula(const XCode &_) noexcept :
+        code(_)
+        {
+        }
+        
+
     }
 
 }
