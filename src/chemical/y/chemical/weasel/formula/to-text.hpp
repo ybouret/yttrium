@@ -24,6 +24,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToText);
             Vector<String> str;
             Vector<String> cof;
+            Vector<char>   sgn;
+            
             virtual void init();
             virtual void quit();
 
@@ -31,6 +33,9 @@ namespace Yttrium
             void onCoef(const Lexeme &);
             void onMult(const size_t );
             void onBody(const size_t );
+            void onPos(const Lexeme &);
+            void onNeg(const Lexeme &);
+            void onZ(const size_t );
         };
 
     }
