@@ -88,9 +88,9 @@ namespace Yttrium
                 const Rule & ACTOR  = agg("Actor")  << SPACE << OPT_COEF << SPACE << FORMULA << SPACE;
                 const Rule & ACTORS = grp("Actors") << ACTOR << extra('+',ACTOR);
                 const Rule & EQSIDE = pick(ACTORS,SPACE);
-                EQUILIBRIUM << (agg("Reac") << EQSIDE);
+                EQUILIBRIUM << (agg(Equilibrium::Reac) << EQSIDE);
                 EQUILIBRIUM << SPACE << mark(Equilibrium::Symbol);
-                EQUILIBRIUM << (agg("Prod") << EQSIDE);
+                EQUILIBRIUM << (agg(Equilibrium::Prod) << EQSIDE);
 
                 EQUILIBRIUM << SPACE << EQSEP;
                 EQUILIBRIUM << SPACE << STRING;
@@ -111,6 +111,7 @@ namespace Yttrium
 
         static inline void cleanupActors(XNode * const actors) noexcept
         {
+            assert( Equilibrium::Reac == actors->name() || Equilibrium::Prod == actors->name() );
             XList &list = actors->branch();
             XList  temp;
 
@@ -128,6 +129,24 @@ namespace Yttrium
             list.swapWith(temp);
         }
 
+        static inline void cleanupFormula(XNode * const formula) noexcept
+        {
+            std::cerr << "cleanupFormula" << std::endl;
+            assert( Formula::CallSign == formula->name() );
+            XList &list = formula->branch(); assert(1==list.size||2==list.size);
+            if(2==list.size)
+            {
+                XNode * const zNode = list.tail; assert(Formula::Z==zNode->name());
+                XList        &zlist = zNode->branch();
+                if(2==zlist.size)
+                {
+                    XNode * const coefNode = zlist.head; assert(Weasel::Coef==coefNode->name());
+                    const Lexeme &coefLexm = coefNode->lexeme();
+                    std::cerr << "Coef=" << coefLexm << std::endl;
+                }
+            }
+        }
+
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
         {
             Lingo::Parser &self = *this;
@@ -138,17 +157,28 @@ namespace Yttrium
             for(XNode *node=ast->branch().head;node;node=node->next)
             {
                 std::cerr << "Got '" << node->name() << "'" << std::endl;
-                if( Equilibrium::CallSign != node->name() ) continue;
-                std::cerr << "\tprocessing..." << std::endl;
-                XList &list = node->branch(); assert(4==list.size);
+
+                if( Equilibrium::CallSign == node->name() )
                 {
-                    XNode * const reac = list.fetch(2); assert( "Reac" == reac->name() );
-                    cleanupActors(reac);
+                    XList &list = node->branch(); assert(4==list.size);
+                    {
+                        XNode * const reac = list.fetch(2); assert( Equilibrium::Reac == reac->name() );
+                        cleanupActors(reac);
+                    }
+                    {
+                        XNode * const prod = list.fetch(3); assert( Equilibrium::Prod == prod->name() );
+                        cleanupActors(prod);
+                    }
+                    continue;
                 }
+
+                if( Formula::CallSign == node->name() )
                 {
-                    XNode * const prod = list.fetch(3); assert( "Prod" == prod->name() );
-                    cleanupActors(prod);
+                    cleanupFormula(node);
+                    continue;
                 }
+
+
             }
 
 

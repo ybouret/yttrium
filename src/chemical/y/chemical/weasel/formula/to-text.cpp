@@ -10,7 +10,9 @@ namespace Yttrium
 
         Weasel:: FormulaToText:: FormulaToText() :
         Lingo::Syntax::Translator("FormulaToText"),
-        str()
+        str(),
+        cof(),
+        sgn()
         {
             OnTerminal(Name);
             OnTerminal(Coef);
@@ -100,7 +102,7 @@ namespace Yttrium
             body << '^';
             switch(n)
             {
-                case 2: assert(sgn.size()>0); body << cof.pullTail();
+                case 2: assert(cof.size()>0); body << cof.pullTail(); // FALLTHRU
                 case 1: assert(sgn.size()>0); body << sgn.pullTail(); break;
             }
             indent() << "str=" << str << std::endl;

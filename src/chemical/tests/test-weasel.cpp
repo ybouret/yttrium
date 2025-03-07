@@ -20,7 +20,7 @@ Y_UTEST(weasel)
         GraphViz::Vizible::DotToPng("xnode.dot", *xnode);
 
         Weasel::FormulaToText ftt;
-        ftt.policy = Lingo::Syntax::Permissive;
+        ftt.policy  = Lingo::Syntax::Permissive;
         ftt.verbose = true;
 
         for(const XNode *node=xnode->branch().head;node;node=node->next)

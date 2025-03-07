@@ -49,7 +49,7 @@ namespace Yttrium
             std::cerr << "sizeof(Code)=" << sizeof(Code__) << std::endl;
             zCode();
             try { code = new ( Code__ ) Code(); }
-            catch(...) {  zCode(); }
+            catch(...) {  zCode(); throw; }
         }
 
 

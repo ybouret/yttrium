@@ -27,6 +27,9 @@ namespace Yttrium
             static const char         Prefix    = '@'; //!< for parser
             static const char         Separator = ':'; //!< for parser
             static const char * const Symbol;    //!< "<=>";
+            static const char * const Reac;      //!< "Reac";
+            static const char * const Prod;      //!< "Prod";
+
             static const char * const CallSign;  //!< "Equilibrium"
 
         private:
