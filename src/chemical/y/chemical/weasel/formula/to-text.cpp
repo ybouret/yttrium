@@ -1,5 +1,6 @@
 
 #include "y/chemical/weasel/formula/to-text.hpp"
+#include "y/apex/natural.hpp"
 
 namespace Yttrium
 {
@@ -54,7 +55,8 @@ namespace Yttrium
 
         void Weasel:: FormulaToText:: onCoef(const Lexeme &lexeme)
         {
-            cof << lexeme.toString();
+            const apn value = lexeme.toNatural();
+            cof << value.toDec();
             indent() << "cof=" << cof << std::endl;
         }
 

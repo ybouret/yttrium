@@ -125,7 +125,7 @@ namespace Yttrium
 
             apn       res;
             const apn ten = 10;
-            for(const Char *ch=tail;ch;ch=ch->prev)
+            for(const Char *ch=head;ch;ch=ch->next)
             {
                 assert( isdigit(**ch) );
                 res *= 10;
