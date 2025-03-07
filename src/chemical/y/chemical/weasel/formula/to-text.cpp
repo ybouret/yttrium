@@ -13,7 +13,9 @@ namespace Yttrium
         Lingo::Syntax::Translator("FormulaToText"),
         str(),
         cof(),
-        sgn()
+        sgn(),
+        uid(0),
+        zzz(0)
         {
             OnTerminal(Name);
             OnTerminal(Coef);
@@ -33,16 +35,24 @@ namespace Yttrium
 
         }
 
-        void Weasel:: FormulaToText:: init()
+
+        void Weasel:: FormulaToText:: reset() noexcept
         {
             str.release();
             cof.release();
             sgn.release();
+            uid.erase();
+            zzz=0;
+        }
+
+        void Weasel:: FormulaToText:: init()
+        {
+            reset();
         }
 
         void Weasel:: FormulaToText:: quit()
         {
-            std::cerr << "Now Quitting..." << std::endl;
+            std::cerr << "Now Quitting [" << str << "]" << std::endl;
         }
 
 

@@ -20,12 +20,17 @@ namespace Yttrium
             explicit FormulaToText();
             virtual ~FormulaToText() noexcept;
 
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToText);
-            Vector<String> str;
-            Vector<String> cof;
-            Vector<char>   sgn;
-            
+            Vector<String>  str;
+            Vector<String>  cof;
+            Vector<char>    sgn;
+            AutoPtr<String> uid;
+            int             zzz;
+
+            void         reset() noexcept;
             virtual void init();
             virtual void quit();
 
