@@ -8,6 +8,8 @@
 
 namespace Yttrium
 {
+    namespace Apex { class Natural; }
+
     namespace Lingo
     {
 
@@ -40,8 +42,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            String toString(const size_t skip=0,const size_t trim=0) const; //!< convert to string with optional clipping
-            String toPrintable() const;                                     //!< convert to printable string
+            String        toString(const size_t skip=0,const size_t trim=0) const; //!< convert to string with optional clipping
+            String        toPrintable() const;                                     //!< convert to printable string
+            Apex::Natural toNatural()   const;                              //!< convert to integer
             Token & operator<<(Token &);                                    //!< merge back content
             Token & operator<<(Char * const ch) noexcept;                   //!< helper
             Token & operator+=(const Token &);                              //!< merge back a copy

@@ -7,6 +7,8 @@
 #include "y/system/exception.hpp"
 #include <iomanip>
 
+#include "y/apex/natural.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -142,7 +144,21 @@ namespace Yttrium
                 {
                     XNode * const coefNode = zlist.head; assert(Weasel::Coef==coefNode->name());
                     const Lexeme &coefLexm = coefNode->lexeme();
-                    std::cerr << "Coef=" << coefLexm << std::endl;
+                    const apn     coef     = coefLexm.toNatural();
+
+                    if(1==coef)
+                    {
+                        // removing unit coef
+                        delete zlist.popHead();
+                        return;
+                    }
+
+                    if(0==coef)
+                    {
+                        // removing charge
+                        delete list.pop(zNode);
+                        return;
+                    }
                 }
             }
         }

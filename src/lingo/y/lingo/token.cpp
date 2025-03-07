@@ -112,3 +112,29 @@ namespace Yttrium
     }
 
 }
+
+#include "y/apex/natural.hpp"
+
+namespace Yttrium
+{
+    namespace Lingo
+    {
+        Apex::Natural Token:: toNatural()   const
+        {
+            assert(size>0);
+
+            apn       res;
+            const apn ten = 10;
+            for(const Char *ch=tail;ch;ch=ch->prev)
+            {
+                assert( isdigit(**ch) );
+                res *= 10;
+                res += char(**ch)-'0';
+            }
+            
+            return res;
+        }
+
+    }
+
+}
