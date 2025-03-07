@@ -27,7 +27,11 @@ Y_UTEST(weasel)
         {
             if(node->name() == Formula::CallSign)
             {
-                ftt(*node);
+
+                int    z;
+                //ftt(*node);
+                const String name = ftt.get(*node,z);
+                std::cerr << name << " with z=" << z << std::endl;
             }
         }
 

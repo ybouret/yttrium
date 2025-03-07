@@ -1,11 +1,36 @@
 
 #include "y/chemical/weasel/formula/to-text.hpp"
 #include "y/apex/natural.hpp"
+#include "y/text/ascii/convert.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        String  Weasel:: FormulaToText:: get(const XNode &node, int &z)
+        {
+            assert( Formula::CallSign == node.name() );
+
+            Translator &self = *this;
+            self(node);
+            assert(uid.isValid());
+            z = zzz;
+            try
+            {
+                const String t = *uid;
+                resetAll();
+                return t;
+            }
+            catch(...)
+            {
+                resetAll();
+                throw;
+            }
+
+        }
+
+
 #define OnTerminal(NAME) Y_Lingo_OnTerminal(FormulaToText,NAME)
 #define OnInternal(NAME) Y_Lingo_OnInternal(FormulaToText,NAME)
 
@@ -35,24 +60,31 @@ namespace Yttrium
 
         }
 
-
-        void Weasel:: FormulaToText:: reset() noexcept
+        void Weasel:: FormulaToText::resetVec() noexcept
         {
             str.release();
             cof.release();
             sgn.release();
+        }
+
+        void Weasel:: FormulaToText:: resetAll() noexcept
+        {
+            resetVec();
             uid.erase();
             zzz=0;
         }
 
         void Weasel:: FormulaToText:: init()
         {
-            reset();
+            resetAll();
         }
 
         void Weasel:: FormulaToText:: quit()
         {
+            assert(str.size()==1);
             std::cerr << "Now Quitting [" << str << "]" << std::endl;
+            uid = new String( str.tail() );
+            resetVec();
         }
 
 
@@ -112,12 +144,22 @@ namespace Yttrium
             assert(n==1||n==2);
             String &body = str.tail();
             body << '^';
+            zzz = 1;
             switch(n)
             {
-                case 2: assert(cof.size()>0); body << cof.pullTail(); // FALLTHRU
-                case 1: assert(sgn.size()>0); body << sgn.pullTail(); break;
+                case 2:
+                    assert(cof.size()>0);
+                    zzz = ASCII::Convert::To<int>(cof.tail(),Formula::Z);
+                    body << cof.pullTail();
+                    // FALLTHRU
+                case 1:
+                    assert(sgn.size()>0);
+                    if('-' == sgn.tail()) zzz = -zzz;
+                    body << sgn.pullTail(); break;
             }
             indent() << "str=" << str << std::endl;
+            indent() << "zzz=" << zzz << std::endl;
+
         }
 
     }

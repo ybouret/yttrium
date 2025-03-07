@@ -20,7 +20,7 @@ namespace Yttrium
             explicit FormulaToText();
             virtual ~FormulaToText() noexcept;
 
-
+            String get(const XNode &node, int &z);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToText);
@@ -30,7 +30,8 @@ namespace Yttrium
             AutoPtr<String> uid;
             int             zzz;
 
-            void         reset() noexcept;
+            void         resetVec() noexcept;
+            void         resetAll() noexcept;
             virtual void init();
             virtual void quit();
 
