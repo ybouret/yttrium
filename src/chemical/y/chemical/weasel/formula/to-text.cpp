@@ -8,7 +8,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        String  Weasel:: FormulaToText:: get(const XNode &node, int &z)
+        const String  *Weasel:: FormulaToText:: get(const XNode &node, int &z)
         {
             assert( Formula::CallSign == node.name() );
 
@@ -16,18 +16,9 @@ namespace Yttrium
             self(node);
             assert(uid.isValid());
             z = zzz;
-            try
-            {
-                const String t = *uid;
-                resetAll();
-                return t;
-            }
-            catch(...)
-            {
-                resetAll();
-                throw;
-            }
-
+            const String * const s = uid.yield();
+            resetAll();
+            return s;
         }
 
 

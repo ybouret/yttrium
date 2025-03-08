@@ -30,7 +30,7 @@ Y_UTEST(weasel)
 
                 int    z;
                 //ftt(*node);
-                const String name = ftt.get(*node,z);
+                ArcPtr<const String> name = ftt.get(*node,z);
                 std::cerr << name << " with z=" << z << std::endl;
             }
         }
@@ -46,6 +46,9 @@ Y_UTEST(weasel)
         }
     }
     Y_SIZEOF(XNode);
+    Y_SIZEOF(Formula);
+    Y_SIZEOF(Species);
+    
 }
 Y_UDONE()
 

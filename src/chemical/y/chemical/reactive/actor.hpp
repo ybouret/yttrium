@@ -6,7 +6,7 @@
 #define Y_Chemical_Actor_Included 1
 
 
-#include "y/chemical/type/xcode.hpp"
+#include "y/chemical/species.hpp"
 
 
 namespace Yttrium

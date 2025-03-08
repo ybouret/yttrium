@@ -29,11 +29,12 @@ namespace Yttrium
             static const char * const Mult; //!< "Mult"
             static const char * const Z;    //!< "Z"
 
-            explicit Formula(const XCode &) noexcept;
+            explicit Formula(const XCode   &) noexcept;
+            explicit Formula(const Formula &) noexcept;
             virtual ~Formula() noexcept;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Formula);
+            Y_DISABLE_ASSIGN(Formula);
             const XCode code;
         };
     }

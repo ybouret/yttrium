@@ -32,7 +32,7 @@ namespace Yttrium
             class Code;
 
             XNode * parse(Lingo::Module * const);
-
+            
 
         private:
             explicit Weasel();

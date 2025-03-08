@@ -20,7 +20,7 @@ namespace Yttrium
             explicit FormulaToText();
             virtual ~FormulaToText() noexcept;
 
-            String get(const XNode &node, int &z);
+            const String *get(const XNode &node, int &z);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToText);
