@@ -16,7 +16,6 @@ namespace Yttrium
         class Species : public Formula, public Entity
         {
         public:
-            explicit Species(const XNode &xnode);
             virtual ~Species() noexcept;
 
         private:

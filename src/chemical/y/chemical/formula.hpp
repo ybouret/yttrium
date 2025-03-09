@@ -20,21 +20,23 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Formula
+        class Formula : public Proxy<const XNode>
         {
         public:
             static const char * const CallSign; //!< "Formulat"
-            static const char * const Name; //!< "Name"
-            static const char * const Body; //!< "Body"
-            static const char * const Mult; //!< "Mult"
-            static const char * const Z;    //!< "Z"
+            static const char * const Name;     //!< "Name"
+            static const char * const Body;     //!< "Body"
+            static const char * const Mult;     //!< "Mult"
+            static const char * const Z;        //!< "Z"
 
-            explicit Formula(const XCode   &) noexcept;
-            explicit Formula(const Formula &) noexcept;
+            explicit Formula(const XNode * const) noexcept;
+            explicit Formula(const XCode   &)     noexcept;
+            explicit Formula(const Formula &)     noexcept;
             virtual ~Formula() noexcept;
 
         private:
             Y_DISABLE_ASSIGN(Formula);
+            Y_PROXY_DECL();
             const XCode code;
         };
     }

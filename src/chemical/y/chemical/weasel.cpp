@@ -67,6 +67,13 @@ namespace Yttrium
             return code->parser.preprocess(inputModule);
         }
 
+        const String * Weasel:: formulaToText(const Formula &f, int &z)
+        {
+            assert(0!=code);
+            return code->formulaToText.get(*f,z);
+        }
+
+
     }
 
 }

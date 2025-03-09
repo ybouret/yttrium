@@ -31,8 +31,8 @@ namespace Yttrium
             class FormulaToSpec;
             class Code;
 
-            XNode * parse(Lingo::Module * const);
-            
+            XNode *        parse(Lingo::Module * const);
+            const String * formulaToText(const Formula &, int &);
 
         private:
             explicit Weasel();

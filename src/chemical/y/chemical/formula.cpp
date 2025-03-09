@@ -21,8 +21,15 @@ namespace Yttrium
         code(_)
         {
         }
-        
 
+
+        Formula:: Formula(const XNode * const _) noexcept :
+        code(_)
+        {
+        }
+
+
+        Y_PROXY_IMPL(Formula,*code);
     }
 
 }
