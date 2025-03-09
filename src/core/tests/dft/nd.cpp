@@ -1,7 +1,7 @@
 
 #include "y/dft/dftn.hpp"
 #include "y/utest/run.hpp"
-#include "y/field/2d.hpp"
+#include "y/field/3d.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/system/rtti.hpp"
 
@@ -14,7 +14,7 @@ namespace  {
     static inline
     void Test2D()
     {
-        std::cerr << "Testing with " << RTTI::Name<T>() << std::endl;
+        std::cerr << "Testing 2D with " << RTTI::Name<T>() << std::endl;
         for(unit_t nx=1;nx<=32;nx*=2)
         {
             for(unit_t ny=1;ny<=32;ny*=2)
@@ -22,7 +22,7 @@ namespace  {
                 Field::Format2D  L = new Field::Layout2D( Field::Coord2D(1,1), Field::Coord2D(nx,ny) );
 
                 typedef Field::In2D< Complex<T>, Memory::Dyadic > F2D;
-                F2D F("F",L);
+                F2D F("F2D",L);
 
                 std::cerr << F << std::endl;
                 for(unit_t j=F->lower.y;j<=F->upper.y;++j)
@@ -61,6 +61,34 @@ namespace  {
         std::cerr << std::endl;
     }
 
+
+    template <typename T>
+    static inline
+    void Test3D()
+    {
+        std::cerr << "Testing 3D with " << RTTI::Name<T>() << std::endl;
+        for(unit_t nx=1;nx<=32;nx*=2)
+        {
+            for(unit_t ny=1;ny<=32;ny*=2)
+            {
+                for(unit_t nz=1;nz<=32;nz*=2)
+                {
+                    Field::Format3D  L = new Field::Layout3D( Field::Coord3D(1,1,1), Field::Coord3D(nx,ny,ny) );
+                    typedef Field::In3D< Complex<T>, Memory::Dyadic > F3D;
+                    F3D F("F3D",L);
+                    std::cerr << F << std::endl;
+
+                    const size_t  nn[] = { 0, F->width.z, F->width.y, F->width.x };
+                    T * const     data = (&F[1][1][1].re) - 1;
+                    DFTN::Transform(data, nn, 3,  1);
+                    DFTN::Transform(data, nn, 3, -1);
+
+                }
+            }
+
+        }
+    }
+
 }
 
 Y_UTEST(dft_nd)
@@ -69,6 +97,7 @@ Y_UTEST(dft_nd)
     Test2D<double>();
     Test2D<long double>();
 
+    Test3D<float>();
 
 }
 Y_UDONE()
