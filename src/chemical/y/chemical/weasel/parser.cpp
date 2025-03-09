@@ -114,7 +114,7 @@ namespace Yttrium
         static inline void cleanupFormula(XNode * const formula) noexcept
         {
             std::cerr << "cleanupFormula" << std::endl;
-            assert( Formula::CallSign == formula->name() );
+            assert(formula->is(Formula::CallSign));
             XList &list = formula->branch(); assert(1==list.size||2==list.size);
             if(2==list.size)
             {

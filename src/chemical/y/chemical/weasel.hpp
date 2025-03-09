@@ -31,7 +31,8 @@ namespace Yttrium
             class FormulaToSpec;
             class Code;
 
-            XNode *        parse(Lingo::Module * const);
+            XNode *        parse(Lingo::Module * const); //!< parse and preprocess
+            Formula        parseFormula1(Lingo::Module * const);
             const String * formulaToText(const Formula &, int &);
 
         private:

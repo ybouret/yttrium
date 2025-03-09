@@ -112,6 +112,8 @@ namespace Yttrium
                 
                 friend bool operator==(const XNode &lhs, const XNode &rhs); //!< test equality
                 friend bool operator!=(const XNode &lhs, const XNode &rhs); //!< test difference
+                bool is(const char * const) const noexcept;
+                bool is(const String &)     const noexcept;
 
 
 

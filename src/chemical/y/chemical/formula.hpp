@@ -29,9 +29,9 @@ namespace Yttrium
             static const char * const Mult;     //!< "Mult"
             static const char * const Z;        //!< "Z"
 
-            explicit Formula(const XNode * const) noexcept;
-            explicit Formula(const XCode   &)     noexcept;
-            explicit Formula(const Formula &)     noexcept;
+            Formula(const XNode * const) noexcept;
+            Formula(const XCode   &)     noexcept;
+            Formula(const Formula &)     noexcept;
             virtual ~Formula() noexcept;
 
         private:

@@ -73,6 +73,16 @@ namespace Yttrium
                 return list();
             }
 
+            bool XNode:: is(const char * const id) const noexcept
+            {
+                return id == name();
+            }
+
+            bool XNode:: is(const String &id) const noexcept
+            {
+                return id == name();
+            }
+
         }
     }
 }

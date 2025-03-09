@@ -67,6 +67,16 @@ namespace Yttrium
             return code->parser.preprocess(inputModule);
         }
 
+        
+        Formula Weasel:: parseFormula1(Lingo::Module * const inputModule)
+        {
+            AutoPtr<XNode> node = parse(inputModule);
+            assert(Weasel::CallSign==node->name());
+            XList &list = node->branch();
+            return Formula(node.yield());
+        }
+
+
         const String * Weasel:: formulaToText(const Formula &f, int &z)
         {
             assert(0!=code);
