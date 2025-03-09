@@ -78,11 +78,33 @@ namespace  {
                     F3D F("F3D",L);
                     std::cerr << F << std::endl;
 
+                    for(unit_t k=F->lower.z;k<=F->upper.z;++k)
+                    {
+                        for(unit_t j=F->lower.y;j<=F->upper.y;++j)
+                        {
+                            for(unit_t i=F->lower.x;i<=F->upper.x;++i)
+                            {
+                            }
+                        }
+                    }
+
                     const size_t  nn[] = { 0, F->width.z, F->width.y, F->width.x };
                     T * const     data = (&F[1][1][1].re) - 1;
+
+
+
                     DFTN::Transform(data, nn, 3,  1);
                     DFTN::Transform(data, nn, 3, -1);
-
+                    for(unit_t k=F->lower.z;k<=F->upper.z;++k)
+                    {
+                        for(unit_t j=F->lower.y;j<=F->upper.y;++j)
+                        {
+                            for(unit_t i=F->lower.x;i<=F->upper.x;++i)
+                            {
+                                F[k][j][i] /= F->shift.z;
+                            }
+                        }
+                    }
                 }
             }
 
