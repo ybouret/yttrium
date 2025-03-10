@@ -81,8 +81,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             Agg &EQUILIBRIUM = agg(Equilibrium::CallSign);
             {
-                String rx = Equilibrium::Prefix; rx +="[[:word:]_\\(\\)]+";
-                const Rule &LABEL = term("Label",rx);
+                String      rx    = Equilibrium::Prefix; rx +="[[:word:]_\\(\\)]+";
+                const Rule &LABEL = term(Equilibrium::Label,rx);
                 const Rule &EQSEP = mark(Equilibrium::Separator);
                 EQUILIBRIUM << LABEL;
                 EQUILIBRIUM << SPACE << EQSEP;
