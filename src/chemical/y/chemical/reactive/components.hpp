@@ -26,17 +26,7 @@ namespace Yttrium
             static const char * const Symbol;    //!< "<=>";
             static const char         Separator = ':'; //!< for parser
 
-            template <typename NAME>
-            explicit Components(const NAME &uuid) :
-            Entity( new String(uuid) ),
-            Proxy<const ComponentsType>(),
-            Latchable(),
-            reac(Actor::AsComponentOnly),
-            prod(Actor::AsComponentOnly)
-            {
-            }
-
-            
+            explicit Components(const String * const) ;
             virtual ~Components() noexcept;
             Y_OSTREAM_PROTO(Components);
 

@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_XNode_Included
 #define Y_Chemical_XNode_Included 1
 
-#include "y/lingo/syntax/xnode.hpp"
+#include "y/lingo/syntax/xlist.hpp"
 
 namespace Yttrium
 {

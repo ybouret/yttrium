@@ -18,12 +18,8 @@ namespace Yttrium
         {
         public:
 
-            //! XNAME = String *, XName &
-            template <typename XNAME> inline
-            explicit Entity(const XNAME &_) noexcept : name(_)
-            {
-            }
-
+            explicit Entity(const String *_) noexcept : name(_) {}
+            explicit Entity(const XName & _) noexcept : name(_) {}
             virtual ~Entity()      noexcept;
 
             const String & key() const noexcept;

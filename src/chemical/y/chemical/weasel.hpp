@@ -47,6 +47,7 @@ namespace Yttrium
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
             
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             

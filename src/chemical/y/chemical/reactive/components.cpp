@@ -18,6 +18,15 @@ namespace Yttrium
             
         }
 
+        Components:: Components(const String * const xname) :
+        Entity(xname),
+        Proxy<const ComponentsType>(),
+        Latchable(),
+        reac(Actor::AsComponentOnly),
+        prod(Actor::AsComponentOnly)
+        {
+        }
+
         void Components:: operator()(const Role role, const unsigned nu, const Species &sp)
         {
             const String &uid = sp.key();
