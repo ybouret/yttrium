@@ -6,7 +6,9 @@
 #define Y_Chemical_Library_Included 1
 
 #include "y/chemical/species.hpp"
+#include "y/chemical/type/assembly.hpp"
 #include "y/associative/suffix/set.hpp"
+
 
 namespace Yttrium
 {
@@ -15,7 +17,7 @@ namespace Yttrium
 
         typedef SuffixSet<const String,Species::Pointer> LibraryType;
 
-        class Library : public Proxy<const LibraryType>
+        class Library : public Proxy<const LibraryType>, public Assembly
         {
         public:
             static const char * const CallSign;
@@ -33,6 +35,7 @@ namespace Yttrium
                     if(0!=pp) return **pp;
                 }
                 if(!db.insert(sp)) throwFailedInsertion();
+                enroll(*sp);
                 return *sp;
             }
 
