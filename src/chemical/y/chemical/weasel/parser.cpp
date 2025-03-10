@@ -81,7 +81,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             Agg &EQUILIBRIUM = agg(Equilibrium::CallSign);
             {
-                String rx = Equilibrium::Prefix; rx +="[[:word:]_\\(\\))]+";
+                String rx = Equilibrium::Prefix; rx +="[[:word:]_\\(\\)]+";
                 const Rule &LABEL = term("Label",rx);
                 const Rule &EQSEP = mark(Equilibrium::Separator);
                 EQUILIBRIUM << LABEL;
@@ -99,6 +99,13 @@ namespace Yttrium
             }
 
             STATEMENT << EQUILIBRIUM;
+
+            //------------------------------------------------------------------
+            //
+            // Create Regular Expression
+            //
+            //------------------------------------------------------------------
+            STATEMENT<< term("REGEXP","%[-+[:word:]*?\\(\\)]+");;
 
             //------------------------------------------------------------------
             // Lexical Only
