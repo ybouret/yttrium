@@ -29,6 +29,7 @@ namespace Yttrium
 
             explicit Library();
             virtual ~Library() noexcept;
+            Y_OSTREAM_PROTO(Library);
 
             template <typename NAME> inline
             const Species & operator()(const NAME &name)

@@ -1,6 +1,7 @@
 
 #include "y/chemical/library.hpp"
 #include "y/system/exception.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -39,7 +40,24 @@ namespace Yttrium
             return *sp;
         }
 
-
+        std::ostream & operator<<(std::ostream &os, const Library &lib)
+        {
+            os << '{';
+            if(lib->size()>0)
+            {
+                os << std::endl;
+                for(LibraryType::ConstIterator it=lib->begin();it!=lib->end();++it)
+                {
+                    const Species &sp = **it;
+                    os << '\t' << sp;
+                    lib.pad(os,sp);
+                    os << " | z = " << std::setw(3) << sp.z;
+                    os << std::endl;
+                }
+            }
+            os << '}';
+            return os;
+        }
 
 
         Y_PROXY_IMPL(Library,db)
