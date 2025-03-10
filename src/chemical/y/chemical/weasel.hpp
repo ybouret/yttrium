@@ -31,7 +31,7 @@ namespace Yttrium
             static const char * const      CallSign;       //!< "Weasel"
             static const AtExit::Longevity LifeTime = 100; //!< lifetime
             static const char * const      Coef;           //!< "Coef"
-
+            static const char * const      RegExp;         //!< "RegExp";
             class Parser;
             class FormulaToText;
             class FormulaToSpec;

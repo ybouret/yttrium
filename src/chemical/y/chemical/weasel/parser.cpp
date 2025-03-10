@@ -105,7 +105,7 @@ namespace Yttrium
             // Create Regular Expression
             //
             //------------------------------------------------------------------
-            STATEMENT<< term("REGEXP","%[-+[:word:]*?\\(\\)]+");;
+            STATEMENT<< term(RegExp,"%[-+[:word:].*?\\(\\)&|]+");;
 
             //------------------------------------------------------------------
             // Lexical Only
@@ -151,10 +151,11 @@ namespace Yttrium
         }
 
 
-        static inline void cleanupActors(XNode * const actors) noexcept
+        static inline void cleanupActors(XNode * const acNode) noexcept
         {
-            assert( Equilibrium::Reac == actors->name() || Equilibrium::Prod == actors->name() );
-            XList &list = actors->branch();
+            assert(0!=acNode);
+            assert( acNode->is(Equilibrium::Reac) || acNode->is(Equilibrium::Prod) );
+            XList &list = acNode->branch();
             XList  temp;
 
             while(list.size>0)
@@ -198,6 +199,23 @@ namespace Yttrium
         }
 
 
+        static inline void cleanupEquilibrium(XNode * const node) noexcept
+        {
+            assert(0!=node);
+            assert( node->is(Equilibrium::CallSign) );
+            XList &list = node->branch(); assert(4==list.size);
+            {
+                XNode * const reac = list.fetch(2); assert( reac->is(Equilibrium::Reac)   );
+                cleanupActors(reac);
+            }
+
+            {
+                XNode * const prod = list.fetch(3); assert( prod->is(Equilibrium::Prod) );
+                cleanupActors(prod);
+            }
+        }
+
+
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
         {
             Lingo::Parser &self = *this;
@@ -205,30 +223,44 @@ namespace Yttrium
 
             assert( CallSign == ast->name() );
 
-            for(XNode *node=ast->branch().head;node;node=node->next)
+
             {
-                std::cerr << "Got '" << node->name() << "'" << std::endl;
+                XList &mine = ast->branch();
+                XList  temp;
 
-                if( Equilibrium::CallSign == node->name() )
+                while(mine.size>0)
                 {
-                    XList &list = node->branch(); assert(4==list.size);
+                    AutoPtr<XNode> node = mine.popHead();
+
+                    if( node->is(Equilibrium::CallSign) )
                     {
-                        XNode * const reac = list.fetch(2); assert( Equilibrium::Reac == reac->name() );
-                        cleanupActors(reac);
+                        cleanupEquilibrium(& *node);
+                        goto PUSH;
                     }
+
+                    if( node->is(Formula::CallSign) )
                     {
-                        XNode * const prod = list.fetch(3); assert( Equilibrium::Prod == prod->name() );
-                        cleanupActors(prod);
+                        cleanupFormula( & *node);
+                        goto PUSH;
                     }
-                    continue;
+
+
+                    if( node->is(RegExp) )
+                    {
+                        const String regexp = '@' + node->lexeme().toString(1,0);
+                        std::cerr << "Found RegExp = '" << regexp << "'" << std::endl;
+                        processRegExp(temp,regexp);
+                        continue; // drop node
+                    }
+
+                    // unprocessed...
+
+                PUSH:
+                    temp.pushTail(node.yield());
+
                 }
 
-                if( Formula::CallSign == node->name() )
-                {
-                    cleanupFormula(node);
-                    continue;
-                }
-
+                mine.swapWith(temp);
 
             }
 
@@ -237,8 +269,52 @@ namespace Yttrium
         }
 
 
-        
+
+
+
 
     }
 
 }
+
+#include "y/lingo/pattern/matching.hpp"
+#include "y/chemical/weasel/equilibrium/db.hpp"
+#include "y/string/tokenizer.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/container/algo/crop.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        void Weasel:: Parser:: processRegExp(XList &       target,
+                                             const String &regexp)
+        {
+            Lingo::Matching               matching(regexp);
+            Vector<String,Memory::Pooled> words(4,AsCapacity);
+            size_t                        count = 0;
+            for(size_t i=0;i<EDB::Count;++i)
+            {
+                words.free();
+                const String entry = EDB::Table[i];
+                Tokenizer::AppendTo(words,entry,':');
+                if(words.size()!=3) throw Specific::Exception(CallSign, "invalid EDB[%u]", unsigned(i) );
+                String &uuid = words[1];
+                Algo::Crop(uuid,isspace);
+                if(matching.exactly(uuid,uuid))
+                {
+                    ++count;
+                    std::cerr << "Matching '" << uuid << "'" << std::endl;
+                    AutoPtr<XNode> root = preprocess( Lingo::Module::OpenData(uuid,entry) ); assert( root->is(CallSign) );
+                    target.mergeTail(root->branch());
+                }
+
+            }
+
+            if(count<=0) throw Specific::Exception(CallSign,"no matching '%s'", regexp.c_str());
+        }
+
+    }
+
+}
+

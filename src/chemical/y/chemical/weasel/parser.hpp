@@ -33,6 +33,7 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+            void processRegExp(XList &target, const String &regexp);
         };
 
 
