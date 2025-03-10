@@ -1,5 +1,6 @@
 
 #include "y/chemical/library.hpp"
+#include "y/stream/libc/input.hpp"
 #include "y/utest/run.hpp"
 
 using namespace Yttrium;
@@ -16,6 +17,15 @@ Y_UTEST(lib)
     std::cerr << "w='" << w << "'" << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
+
+    lib.toBinary("lib.dat");
+    {
+        Library reloaded;
+        InputFile fp("lib.dat");
+        reloaded.readFrom(fp);
+        std::cerr << "cpy=" << reloaded << std::endl;
+    }
+
 
 
 
