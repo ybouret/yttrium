@@ -5,5 +5,6 @@ Y_UTEST_DECL(32)
 	Y_UTEST(weasel);
         Y_UTEST(lib);
         Y_UTEST(cm);
+        Y_UTEST(eqs);
 }
 Y_UTEST_EXEC()

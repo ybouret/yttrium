@@ -7,6 +7,7 @@
 
 
 #include "y/chemical/reactive/components.hpp"
+#include "y/chemical/library.hpp"
 #include "y/chemical/type/defs.hpp"
 #include "y/oversized.hpp"
 
@@ -40,13 +41,15 @@ namespace Yttrium
             struct Parser
             {
                 static const String * Name(const XCode &);
+                static void           Fill(Components &, Library &, const XCode &);
             };
 
 
         protected:
-            explicit Equilibrium(const XCode &xcode) :
+            explicit Equilibrium(Library &lib, const XCode &xcode) :
             Components( Parser::Name(xcode) )
             {
+                Parser::Fill(*this,lib,xcode);
             }
 
         public:
@@ -66,10 +69,9 @@ namespace Yttrium
         {
         public:
 
-            template <typename NAME>
-            explicit ConstEquilibrium(const NAME &eid, const xreal_t value) :
-            Equilibrium(eid),
-            Konst(value)
+            explicit ConstEquilibrium(Library &lib, const XCode &xcode) :
+            Equilibrium(lib,xcode),
+            Konst(1)
             {
             }
 

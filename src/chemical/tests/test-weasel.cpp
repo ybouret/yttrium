@@ -46,6 +46,9 @@ Y_UTEST(weasel)
             AutoPtr<XNode> xnode = weasel.parse( Lingo::Module::OpenData("db",text));
         }
     }
+
+    
+
     Y_SIZEOF(XNode);
     Y_SIZEOF(Formula);
     Y_SIZEOF(Species);
