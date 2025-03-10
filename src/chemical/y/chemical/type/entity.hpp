@@ -25,8 +25,11 @@ namespace Yttrium
 
 
             virtual ~Entity()      noexcept;
-
+            
             const String & key() const noexcept;
+
+
+
 
             const XName name;
 

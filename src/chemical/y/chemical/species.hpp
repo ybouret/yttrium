@@ -35,6 +35,7 @@ namespace Yttrium
                 static const String * Brew(const Formula &, int &);
             };
 
+            typedef ArkPtr<const String,const Species> Pointer;
 
             template <typename NAME> inline
             explicit Species(const NAME &description) :
@@ -45,8 +46,8 @@ namespace Yttrium
 
             }
 
-            
             virtual ~Species() noexcept;
+            Y_OSTREAM_PROTO(Species);
 
 
         private:

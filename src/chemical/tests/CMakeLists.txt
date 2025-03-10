@@ -8,4 +8,5 @@ set( DATA ${HERE}/../../../var)
 enable_testing()
 
 add_test(weasel test-chemical weasel)
+add_test(lib    test-chemical lib)
 

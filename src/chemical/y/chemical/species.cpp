@@ -24,6 +24,12 @@ namespace Yttrium
         Species:: ~Species() noexcept
         {
         }
-        
+
+        std::ostream & operator<<(std::ostream &os, const Species &sp)
+        {
+            os << sp.key();
+            return os;
+        }
+
     }
 }

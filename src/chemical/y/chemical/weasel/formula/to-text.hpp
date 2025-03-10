@@ -42,6 +42,7 @@ namespace Yttrium
             void onPos(const Lexeme &);
             void onNeg(const Lexeme &);
             void onZ(const size_t );
+            void onFormula(const size_t) noexcept;
         };
 
     }

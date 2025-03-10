@@ -22,6 +22,12 @@ namespace Yttrium
         class Weasel : public Singleton<Weasel>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const      CallSign;       //!< "Weasel"
             static const AtExit::Longevity LifeTime = 100; //!< lifetime
             static const char * const      Coef;           //!< "Coef"
@@ -31,12 +37,16 @@ namespace Yttrium
             class FormulaToSpec;
             class Code;
 
-            XNode *        parse(Lingo::Module * const); //!< parse and preprocess
-            Formula        parseFormula1(Lingo::Module * const); //!< from single formula
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            XNode *        parse(Lingo::Module * const);          //!< parse and preprocess
+            Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
+            const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
 
-
-            const String * formulaToText(const Formula &, int &);
-            
         private:
             explicit Weasel();
             virtual ~Weasel() noexcept;

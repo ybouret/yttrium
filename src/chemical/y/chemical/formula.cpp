@@ -29,6 +29,12 @@ namespace Yttrium
         }
 
 
+        Formula:: Formula(const Formula &_) noexcept :
+        code(_.code)
+        {
+            
+        }
+
         Y_PROXY_IMPL(Formula,*code);
     }
 

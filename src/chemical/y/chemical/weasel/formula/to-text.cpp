@@ -43,6 +43,7 @@ namespace Yttrium
             onTerminal('+', *this, & FormulaToText:: onPos);
             onTerminal('-', *this, & FormulaToText:: onNeg);
 
+            OnInternal(Formula);
 
         }
 
@@ -73,7 +74,7 @@ namespace Yttrium
         void Weasel:: FormulaToText:: quit()
         {
             assert(str.size()==1);
-            std::cerr << "Now Quitting [" << str << "]" << std::endl;
+            //std::cerr << "Now Quitting [" << str << "]" << std::endl;
             uid = new String( str.tail() );
             resetVec();
         }
@@ -82,7 +83,7 @@ namespace Yttrium
         void Weasel:: FormulaToText:: onName(const Lexeme &lexeme)
         {
             str << lexeme.toString();
-            indent() << "str=" << str << std::endl;
+            //indent() << "str=" << str << std::endl;
         }
 
 
@@ -90,7 +91,7 @@ namespace Yttrium
         {
             const apn value = lexeme.toNatural();
             cof << value.toDec();
-            indent() << "cof=" << cof << std::endl;
+            //indent() << "cof=" << cof << std::endl;
         }
 
         void Weasel:: FormulaToText:: onMult(const size_t)
@@ -99,7 +100,7 @@ namespace Yttrium
             assert( cof.size() > 0 );
             String mult = str.pullTail() + cof.pullTail();
             str << mult;
-            indent() << "str=" << str << std::endl;
+           // indent() << "str=" << str << std::endl;
         }
 
 
@@ -117,7 +118,7 @@ namespace Yttrium
             }
             str.trim(n);
             str << body;
-            indent() << "str=" << str << std::endl;
+            //indent() << "str=" << str << std::endl;
         }
 
         void Weasel:: FormulaToText:: onPos(const Lexeme &)
@@ -148,8 +149,12 @@ namespace Yttrium
                     if('-' == sgn.tail()) zzz = -zzz;
                     body << sgn.pullTail(); break;
             }
-            indent() << "str=" << str << std::endl;
-            indent() << "zzz=" << zzz << std::endl;
+            //indent() << "str=" << str << std::endl;
+           // indent() << "zzz=" << zzz << std::endl;
+        }
+
+        void Weasel:: FormulaToText:: onFormula(const size_t) noexcept
+        {
 
         }
 

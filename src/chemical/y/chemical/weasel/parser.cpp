@@ -161,7 +161,6 @@ namespace Yttrium
 
                 if( Actor::CallSign == node->name() )
                 {
-                    //std::cerr << "Found Actor" << std::endl;
                     XList &list = node->branch(); assert(Formula::CallSign == list.tail->name() );
                     cleanupFormula(list.tail);
                     if(2==list.size)
