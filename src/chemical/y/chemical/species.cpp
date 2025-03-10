@@ -31,5 +31,17 @@ namespace Yttrium
             return os;
         }
 
+        size_t Species:: serialize(OutputStream &fp) const
+        {
+            return name->serialize(fp);
+        }
+
+        Species * Species:: ReloadFrom(InputStream &fp)
+        {
+            const String description = String::ReadFrom(fp,Formula::CallSign);
+            return new Species(description);
+        }
     }
 }
+
+

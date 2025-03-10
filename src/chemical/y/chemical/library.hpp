@@ -17,7 +17,10 @@ namespace Yttrium
 
         typedef SuffixSet<const String,Species::Pointer> LibraryType;
 
-        class Library : public Proxy<const LibraryType>, public Assembly
+        class Library :
+        public Proxy<const LibraryType>,
+        public Assembly,
+        public Serializable
         {
         public:
             static const char * const CallSign;
@@ -39,6 +42,7 @@ namespace Yttrium
                 return *sp;
             }
 
+            virtual size_t serialize(OutputStream &) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

@@ -35,7 +35,10 @@ namespace Yttrium
             
         }
 
-        Y_PROXY_IMPL(Formula,*code);
+       
+
+
+        Y_PROXY_IMPL(Formula,*code)
     }
 
 }

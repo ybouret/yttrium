@@ -34,6 +34,7 @@ namespace Yttrium
             Formula(const Formula &)     noexcept;
             virtual ~Formula() noexcept;
 
+
         private:
             Y_DISABLE_ASSIGN(Formula);
             Y_PROXY_DECL();

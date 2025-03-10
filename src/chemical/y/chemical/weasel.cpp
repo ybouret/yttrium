@@ -72,6 +72,7 @@ namespace Yttrium
             assert(0!=code);
             return code->formulaToText.get(*f,z);
         }
+
     }
 
 }
@@ -111,7 +112,11 @@ namespace Yttrium
             static Weasel &weasel = Weasel::Instance();
             return weasel.formulaToText(f,z);
         }
+
+
+
     }
 
 }
+
 

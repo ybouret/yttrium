@@ -25,7 +25,13 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Charge);
         };
 
-        class Species : public Quantized, public Formula, public Charge, public Entity, public Counted
+        class Species :
+        public Quantized,
+        public Formula,
+        public Charge,
+        public Entity,
+        public Counted,
+        public Serializable
         {
         public:
             struct Parser
@@ -46,8 +52,12 @@ namespace Yttrium
 
             }
 
+            
             virtual ~Species() noexcept;
             Y_OSTREAM_PROTO(Species);
+
+            virtual size_t   serialize(OutputStream &fp) const;
+            static Species * ReloadFrom(InputStream &fp);
 
 
         private:

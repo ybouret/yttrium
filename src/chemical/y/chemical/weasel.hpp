@@ -46,11 +46,12 @@ namespace Yttrium
             XNode *        parse(Lingo::Module * const);          //!< parse and preprocess
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
-
+            
         private:
             explicit Weasel();
             virtual ~Weasel() noexcept;
             friend class Singleton<Weasel>;
+
         };
 
         
