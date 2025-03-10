@@ -36,7 +36,7 @@ namespace Yttrium
             return name->serialize(fp);
         }
 
-        Species * Species:: ReloadFrom(InputStream &fp)
+        Species * Species:: ReadFrom(InputStream &fp)
         {
             const String description = String::ReadFrom(fp,Formula::CallSign);
             return new Species(description);

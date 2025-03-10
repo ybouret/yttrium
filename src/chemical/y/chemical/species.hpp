@@ -57,7 +57,7 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Species);
 
             virtual size_t   serialize(OutputStream &fp) const;
-            static Species * ReloadFrom(InputStream &fp);
+            static Species * ReadFrom(InputStream &fp);
 
 
         private:

@@ -6,6 +6,7 @@
 
 #include "y/chemical/formula.hpp"
 #include "y/chemical/reactive/equilibrium.hpp"
+#include "y/lua++/state.hpp"
 
 namespace Yttrium
 {
@@ -51,6 +52,7 @@ namespace Yttrium
             explicit Weasel();
             virtual ~Weasel() noexcept;
             friend class Singleton<Weasel>;
+         //  Code *code;
 
         };
 

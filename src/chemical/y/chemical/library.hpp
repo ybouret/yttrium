@@ -7,6 +7,7 @@
 
 #include "y/chemical/species.hpp"
 #include "y/chemical/type/assembly.hpp"
+#include "y/chemical/type/latchable.hpp"
 #include "y/associative/suffix/set.hpp"
 
 
@@ -20,7 +21,8 @@ namespace Yttrium
         class Library :
         public Proxy<const LibraryType>,
         public Assembly,
-        public Serializable
+        public Serializable,
+        public Latchable
         {
         public:
             static const char * const CallSign;
@@ -31,25 +33,20 @@ namespace Yttrium
             template <typename NAME> inline
             const Species & operator()(const NAME &name)
             {
-                const Species::Pointer         sp = new Species(name);
-                const String &                 id = sp.key();
-                {
-                    const Species::Pointer * const pp = db.search(id);
-                    if(0!=pp) return **pp;
-                }
-                if(!db.insert(sp)) throwFailedInsertion();
-                enroll(*sp);
-                return *sp;
+                const Species::Pointer sp = new Species(name);
+                return setup(sp);
             }
 
             virtual size_t serialize(OutputStream &) const;
+            void           readFrom(InputStream &);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             Y_PROXY_DECL();
             LibraryType db;
 
-            void throwFailedInsertion() const;
+            const Species & setup(const Species::Pointer &sp);
+
         };
 
 
