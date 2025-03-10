@@ -15,6 +15,7 @@ namespace Yttrium
         typedef Lingo::Lexeme        Lexeme;  //!< alias
         typedef ArcPtr<const XNode>  XCode;   //!< for internal representations
         typedef ArcPtr<const String> XName;   //!< for storing names
+        
     }
 
 }

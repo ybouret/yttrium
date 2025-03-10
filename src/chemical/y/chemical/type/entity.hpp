@@ -12,7 +12,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Y_SHALLOW_DECL(AsName);
 
         class Entity
         {
@@ -20,11 +19,10 @@ namespace Yttrium
 
             //! XNAME = String *, XName &
             template <typename XNAME> inline
-            explicit Entity(const XNAME &_, const AsName_ &) noexcept : name(_)
+            explicit Entity(const XNAME &_) noexcept : name(_)
             {
             }
 
-            Entity(const Entity &) noexcept;
 
             virtual ~Entity()      noexcept;
 
@@ -33,7 +31,7 @@ namespace Yttrium
             const XName name;
 
         private:
-            Y_DISABLE_ASSIGN(Entity);
+            Y_DISABLE_COPY_AND_ASSIGN(Entity);
         };
     }
 }

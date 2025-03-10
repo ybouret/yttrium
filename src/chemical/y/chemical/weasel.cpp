@@ -67,23 +67,50 @@ namespace Yttrium
             return code->parser.preprocess(inputModule);
         }
 
-        
-        Formula Weasel:: parseFormula1(Lingo::Module * const inputModule)
-        {
-            AutoPtr<XNode> node = parse(inputModule);
-            assert(Weasel::CallSign==node->name());
-            XList &list = node->branch();
-            return Formula(node.yield());
-        }
-
-
         const String * Weasel:: formulaToText(const Formula &f, int &z)
         {
             assert(0!=code);
             return code->formulaToText.get(*f,z);
         }
+    }
 
+}
 
+#include "y/system/exception.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        Formula Weasel:: parseFormula1(Lingo::Module * const inputModule)
+        {
+            static const char fn[] = "parseFormula1";
+            AutoPtr<XNode> node = parse(inputModule); assert(node->is(Weasel::CallSign));
+            XList &        list = node->branch();
+
+            if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",fn);
+            if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",fn,list.head->name().c_str());
+            return Formula(list.popHead());
+        }
+
+        Formula Species:: Parser:: Make(const char * const id)
+        {
+            static Weasel &weasel = Weasel::Instance();
+            return weasel.parseFormula1( Lingo::Module::OpenData(id,id) );
+        }
+
+        Formula Species:: Parser:: Make(const String & id)
+        {
+            static Weasel &weasel = Weasel::Instance();
+            return weasel.parseFormula1( Lingo::Module::OpenData(id,id) );
+        }
+
+        const String * Species:: Parser:: Brew(const Formula &f, int &z)
+        {
+            static Weasel &weasel = Weasel::Instance();
+            return weasel.formulaToText(f,z);
+        }
     }
 
 }
