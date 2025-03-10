@@ -92,12 +92,12 @@ namespace Yttrium
 
         Formula Weasel:: parseFormula1(Lingo::Module * const inputModule)
         {
-            static const char fn[] = "parseFormula1";
-            AutoPtr<XNode> node = parse(inputModule); assert(node->is(Weasel::CallSign));
-            XList &        list = node->branch();
+            static const char func[] = "parseFormula1";
+            AutoPtr<XNode>    node = parse(inputModule); assert(node->is(Weasel::CallSign));
+            XList &           list = node->branch();
 
-            if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",fn);
-            if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",fn,list.head->name().c_str());
+            if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",func);
+            if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",func,list.head->name().c_str());
             return Formula(list.popHead());
         }
 
