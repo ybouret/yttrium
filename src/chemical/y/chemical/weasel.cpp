@@ -26,7 +26,8 @@ namespace Yttrium
         public:
             inline Code() :
             parser(),
-            formulaToText()
+            formulaToText(),
+            lvm( new Lua::State() )
             {
             }
 
@@ -34,22 +35,26 @@ namespace Yttrium
 
             Parser        parser;
             FormulaToText formulaToText;
+            Lua::VM       lvm;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
         };
 
         static void *         Code__[ Y_WORDS_FOR(Weasel::Code) ];
-        static Weasel::Code * code = 0;
-        static inline void    zCode() noexcept {  code=0; memset(Code__,0,sizeof(Code__)); }
 
-
-        Weasel:: Weasel()
+        static inline
+        Weasel::Code * initCode()
         {
-            std::cerr << "sizeof(Code)=" << sizeof(Code__) << std::endl;
-            zCode();
-            try { code = new ( Code__ ) Code(); }
-            catch(...) {  zCode(); throw; }
+            return new ( memset(Code__,0,sizeof(Code__)) ) Weasel::Code();
+        }
+
+
+        Weasel:: Weasel() :
+        code( initCode() ),
+        lvm( code->lvm )
+        {
+
         }
 
 
@@ -57,7 +62,8 @@ namespace Yttrium
         {
             assert(0!=code);
             Destruct(code);
-            zCode();
+            memset(Code__, 0, sizeof(Code__) );
+            Coerce(code)=0;
         }
 
 

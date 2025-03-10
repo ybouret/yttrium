@@ -49,11 +49,14 @@ namespace Yttrium
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
             
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Weasel);
+            
             explicit Weasel();
             virtual ~Weasel() noexcept;
             friend class Singleton<Weasel>;
-         //  Code *code;
-
+            Code * const code;
+        public:
+            Lua::VM     &lvm;
         };
 
         
