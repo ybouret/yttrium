@@ -49,6 +49,7 @@ Y_UTEST(weasel)
     Y_SIZEOF(Formula);
     Y_SIZEOF(Species);
     Y_SIZEOF(Actor);
+    Y_SIZEOF(Component);
 }
 Y_UDONE()
 

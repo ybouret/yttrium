@@ -22,7 +22,7 @@ Y_UTEST(lib)
 
     lib.toBinary("lib.dat");
     {
-        Library reloaded;
+        Library   reloaded;
         InputFile fp("lib.dat");
         reloaded.readFrom(fp);
         std::cerr << "cpy=" << reloaded << std::endl;

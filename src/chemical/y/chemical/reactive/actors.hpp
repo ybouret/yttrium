@@ -15,21 +15,23 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Actors : public Entity, Proxy<const Actor::List>, public Latchable
+        class Actors : public Entity, public Proxy<const Actor::List>, public Latchable
         {
         public:
             static const char * const CallSign; //!< "Actors"
 
             explicit Actors(const Actor::Involvement); //!< setup
+            Actors(const Actors &);                    //!< duplicate all
             virtual ~Actors() noexcept;                //!< cleanup
 
-            void operator()(const unsigned nu, const Species &sp);
+            const Actor & operator()(const unsigned nu, const Species &sp);
             bool has(const Species &) const noexcept;
-            
+            void xch(Actors &) noexcept;
+
             const Actor::Involvement in; //!< involvement
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actors);
+            Y_DISABLE_ASSIGN(Actors);
             Y_PROXY_DECL();
             Actor::List my; //!< my list
 

@@ -117,6 +117,13 @@ namespace Yttrium
             return *this;
         }
 
+        //! trade pointees
+        void exchange(ArcPtr &other) noexcept
+        {
+            CoerceSwap(handle,other.handle);
+        }
+
+
     };
 
 }

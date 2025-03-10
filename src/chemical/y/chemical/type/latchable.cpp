@@ -19,6 +19,7 @@ namespace Yttrium
             Coerce(latched) = true;
         }
 
+
     }
 
 }

@@ -13,6 +13,7 @@ namespace Yttrium
     {
 
 
+
         class Entity
         {
         public:
@@ -23,9 +24,8 @@ namespace Yttrium
             {
             }
 
-
             virtual ~Entity()      noexcept;
-            
+
             const String & key() const noexcept;
 
 

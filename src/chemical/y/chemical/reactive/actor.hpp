@@ -29,8 +29,9 @@ namespace Yttrium
             explicit Actor(const unsigned,
                            const Species &,
                            const Involvement);
-            virtual ~Actor() noexcept;
-            
+            Actor(const Actor &) noexcept; //!< 'shared' copy
+            virtual ~Actor()     noexcept;
+
 
 
             const unsigned    nu; //!< coefficient
@@ -39,7 +40,7 @@ namespace Yttrium
             Actor *           prev;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Actor);
+            Y_DISABLE_ASSIGN(Actor);
         };
     }
 

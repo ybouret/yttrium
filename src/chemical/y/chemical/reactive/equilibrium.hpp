@@ -6,7 +6,7 @@
 #define Y_Chemical_Equilibrium_Included 1
 
 
-#include "y/chemical/reactive/actors.hpp"
+#include "y/chemical/reactive/components.hpp"
 
 
 namespace Yttrium
@@ -21,12 +21,10 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Equilibrium
+        class Equilibrium : public Components
         {
         public:
             static const char         Prefix    = '@'; //!< for parser
-            static const char         Separator = ':'; //!< for parser
-            static const char * const Symbol;    //!< "<=>";
             static const char * const Reac;      //!< "Reac";
             static const char * const Prod;      //!< "Prod";
 

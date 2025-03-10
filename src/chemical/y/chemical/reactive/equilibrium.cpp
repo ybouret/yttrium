@@ -7,8 +7,6 @@ namespace Yttrium
     namespace Chemical
     {
         const char * const Equilibrium:: CallSign = "Equilibrium";
-        const char * const Equilibrium:: Symbol   = "<=>";
-        const char         Equilibrium:: Separator;
         const char * const Equilibrium:: Reac = "Reac";
         const char * const Equilibrium:: Prod = "Prod";
 

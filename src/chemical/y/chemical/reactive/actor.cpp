@@ -45,7 +45,7 @@ namespace Yttrium
         Actor:: Actor(const unsigned   _nu,
                       const Species  & _sp,
                       const Involvement how):
-        Entity( ActorName(_nu,_sp,how) ),
+        Entity( ActorName(_nu,_sp,how)  ),
         nu( _nu ),
         sp( _sp ),
         next(0),
@@ -53,6 +53,16 @@ namespace Yttrium
         {
 
         }
+
+        Actor:: Actor(const Actor &_) noexcept :
+        Entity( _.name ),
+        nu(_.nu),
+        sp(_.sp),
+        next(0),
+        prev(0)
+        {
+        }
+
 
 
     }
