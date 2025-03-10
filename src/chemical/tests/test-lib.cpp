@@ -10,11 +10,13 @@ Y_UTEST(lib)
 {
 
     Library        lib;
-    const Species &h = lib("H^+");
-    const Species &w = lib("HO^-");
+    const Species &h  = lib("H^+");
+    const Species &w  = lib("HO^-");
+    const Species &AH = lib("AH");
 
     std::cerr << "h='" << h << "'" << std::endl;
     std::cerr << "w='" << w << "'" << std::endl;
+    std::cerr << "AH='" << AH << "'" << std::endl;
 
     std::cerr << "lib=" << lib << std::endl;
 
@@ -25,6 +27,7 @@ Y_UTEST(lib)
         reloaded.readFrom(fp);
         std::cerr << "cpy=" << reloaded << std::endl;
     }
+
 
 
 

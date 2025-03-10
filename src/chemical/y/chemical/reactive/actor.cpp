@@ -23,7 +23,17 @@ namespace Yttrium
 
             if(_nu<=0) throw Specific::Exception(Actor::CallSign,"zero '%s'", _sp.name->c_str());
             AutoPtr<String> s = new String();
-            if(_nu>1) *s += Formatted::Get("%u ",_nu);
+            if(_nu>1)
+            {
+                *s += Formatted::Get("%u",_nu);
+                switch(_in)
+                {
+                    case Actor::AsComponentOnly: *s += ' '; break;
+                    case Actor::AsConcentration: break;
+                }
+            }
+
+            
             switch(_in)
             {
                 case Actor::AsComponentOnly: *s += * _sp.name; break;
@@ -38,7 +48,6 @@ namespace Yttrium
         Entity( ActorName(_nu,_sp,how) ),
         nu( _nu ),
         sp( _sp ),
-        in( how ),
         next(0),
         prev(0)
         {

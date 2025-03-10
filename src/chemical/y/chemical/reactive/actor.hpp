@@ -24,15 +24,17 @@ namespace Yttrium
             };
 
             static const char * const CallSign; //!< "Actor"
+            typedef CxxListOf<Actor>  List;
 
             explicit Actor(const unsigned,
                            const Species &,
                            const Involvement);
             virtual ~Actor() noexcept;
+            
+
 
             const unsigned    nu; //!< coefficient
             const Species &   sp; //!< persistent species
-            const Involvement in;
             Actor *           next;
             Actor *           prev;
 
