@@ -14,6 +14,7 @@ namespace Yttrium
 
 #include "y/chemical/weasel/parser.hpp"
 #include "y/chemical/weasel/formula/to-text.hpp"
+#include "y/lua++/state.hpp"
 #include <cstring>
 
 namespace Yttrium
@@ -51,8 +52,7 @@ namespace Yttrium
 
 
         Weasel:: Weasel() :
-        code( initCode() ),
-        lvm( code->lvm )
+        code( initCode() ) 
         {
 
         }
