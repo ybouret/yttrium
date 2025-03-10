@@ -7,7 +7,7 @@
 
 
 #include "y/chemical/reactive/components.hpp"
-
+#include "y/chemical/type/defs.hpp"
 
 namespace Yttrium
 {
@@ -30,10 +30,46 @@ namespace Yttrium
 
             static const char * const CallSign;  //!< "Equilibrium"
 
+        protected:
+            template <typename NAME> inline
+            explicit Equilibrium(const NAME &eid) : Components(eid)
+            {
+            }
+
+        public:
+            virtual ~Equilibrium() noexcept;
+            
+            xreal_t K(xreal_t);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
+            virtual xreal_t getK(xreal_t) = 0;
         };
+
+
+        class ConstEquilibrium : public Equilibrium
+        {
+        public:
+
+            template <typename NAME>
+            explicit ConstEquilibrium(const NAME &eid, const xreal_t value) :
+            Equilibrium(eid),
+            Konst(value)
+            {
+            }
+
+            virtual ~ConstEquilibrium() noexcept;
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
+            virtual xreal_t getK(xreal_t);
+            const xreal_t Konst;
+        };
+
     }
+
 
 }
 

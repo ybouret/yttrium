@@ -84,6 +84,9 @@ namespace  {
                         {
                             for(unit_t i=F->lower.x;i<=F->upper.x;++i)
                             {
+                                F[k][j][i].re = i+j;
+                                F[k][j][i].im = j+k;
+
                             }
                         }
                     }
@@ -95,6 +98,8 @@ namespace  {
 
                     DFTN::Transform(data, nn, 3,  1);
                     DFTN::Transform(data, nn, 3, -1);
+
+                    static const T half = 0.5;
                     for(unit_t k=F->lower.z;k<=F->upper.z;++k)
                     {
                         for(unit_t j=F->lower.y;j<=F->upper.y;++j)
@@ -102,6 +107,10 @@ namespace  {
                             for(unit_t i=F->lower.x;i<=F->upper.x;++i)
                             {
                                 F[k][j][i] /= F->shift.z;
+                                const unit_t re = (unit_t)( floor(F[k][j][i].re+half) );
+                                const unit_t im = (unit_t)( floor(F[k][j][i].im+half) );
+                                Y_ASSERT(re==i+j);
+                                Y_ASSERT(im==j+k);
                             }
                         }
                     }
