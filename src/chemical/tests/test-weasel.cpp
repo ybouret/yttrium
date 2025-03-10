@@ -2,6 +2,7 @@
 #include "y/chemical/formula.hpp"
 #include "y/chemical/weasel/equilibrium/db.hpp"
 #include "y/chemical/weasel/formula/to-text.hpp"
+#include "y/chemical/reactive/equilibria.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -50,6 +51,8 @@ Y_UTEST(weasel)
     Y_SIZEOF(Species);
     Y_SIZEOF(Actor);
     Y_SIZEOF(Component);
+    Y_SIZEOF(Equilibrium);
+
 }
 Y_UDONE()
 

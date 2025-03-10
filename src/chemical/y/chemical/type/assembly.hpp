@@ -16,6 +16,7 @@ namespace Yttrium
         public:
             explicit Assembly() noexcept;
             virtual ~Assembly() noexcept;
+            Assembly(const Assembly &) noexcept;
 
             void enroll(const Entity &);
 
@@ -27,20 +28,10 @@ namespace Yttrium
                 return os;
             }
 
-#if 0
-            std::ostream & print(std::ostream        &os,
-                                 const String        &msg,
-                                 const Entity        &entity,
-                                 const Justify::Type &format) const
-            {
-
-            }
-#endif
-
             const size_t maxNameLength;
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Assembly);
+            Y_DISABLE_ASSIGN(Assembly);
         };
     }
 

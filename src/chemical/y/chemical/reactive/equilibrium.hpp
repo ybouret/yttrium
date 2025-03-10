@@ -8,6 +8,7 @@
 
 #include "y/chemical/reactive/components.hpp"
 #include "y/chemical/type/defs.hpp"
+#include "y/oversized.hpp"
 
 namespace Yttrium
 {
@@ -21,7 +22,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Equilibrium : public Components
+        class Equilibrium : public Oversized, public Components, public Counted
         {
         public:
             static const char         Prefix    = '@'; //!< for parser
@@ -29,6 +30,9 @@ namespace Yttrium
             static const char * const Prod;      //!< "Prod";
 
             static const char * const CallSign;  //!< "Equilibrium"
+
+            typedef ArkPtr<const String,Equilibrium> Pointer;
+
 
         protected:
             template <typename NAME> inline
