@@ -16,13 +16,15 @@ namespace Yttrium
 
 #include "y/chemical/weasel/parser.hpp"
 #include "y/chemical/weasel/formula/to-text.hpp"
-#include "y/lua++/state.hpp"
+#include "y/lua++/function.hpp"
 #include <cstring>
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        
 
         class Weasel:: Code
         {
@@ -169,13 +171,72 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Equilibrium  * Weasel:: compile(XNode * const root)
+        namespace {
+
+            class LuaEquilibrium : public RawEquilibrium
+            {
+            public:
+                inline explicit LuaEquilibrium(Library &     lib,
+                                               XNode * const root,
+                                               Lua::VM &     lvm) :
+                RawEquilibrium(lib,root),
+                vm(lvm)
+                {
+                }
+
+                inline virtual ~LuaEquilibrium() noexcept
+                {
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibrium);
+                Lua::VM vm;
+
+                virtual xreal_t getK(xreal_t t)
+                {
+                    lua_State  * const L = **vm;
+                    const char * const f = Kdata->c_str();
+                    lua_settop(L,0);
+                    lua_getglobal(L,f);
+                    lua_pushnumber(L,static_cast<lua_Number>(t));
+
+                    /* do the call (1 arguments, 1 result) */
+                    if (lua_pcall(L, 1, 1, 0) != 0)
+                        throw Specific::Exception(name->c_str(),"call '%s': %s",f, lua_tostring(L, -1));
+
+                    /* retrieve result */
+                    if (!lua_isnumber(L, -1))
+                        throw Specific:: Exception(name->c_str(),"function '%s' must return a number, no %s", f, luaL_typename(L,-1));
+
+                    const xreal_t k = static_cast<xreal_t>(lua_tonumber(L,-1));
+                    lua_pop(L,1);
+                    return k;
+                }
+            };
+
+        }
+
+        Equilibrium  * Weasel:: compile(Library &lib, XNode * const root)
         {
             assert(0!=root);
             assert(root->defines<Equilibrium>());
             XList &list = root->branch(); assert(4==list.size);
-            
 
+            const String &data = list.tail->lexeme().toString();
+            std::cerr << "data=" << data << std::endl;
+            if(data.size()<=0)
+            {
+                const String  uuid = list.head->lexeme().toString(1,0);
+                throw Specific::Exception(uuid.c_str(),"empty constant description");
+            }
+
+            if( isdigit(data[1]) )
+            {
+                return new ConstEquilibrium(lib,root);
+            }
+
+            return new LuaEquilibrium(lib,root,code->lvm);
         }
     }
 

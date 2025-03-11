@@ -47,7 +47,7 @@ Y_UTEST(weasel)
         }
     }
 
-    
+    std::cerr << double(weasel.eval("10^-3")) << std::endl;
 
     Y_SIZEOF(XNode);
     Y_SIZEOF(Formula);

@@ -49,8 +49,8 @@ namespace Yttrium
                 if(actor.size>0)
                 {
                     assert(1==actor.size);
-                    const apn apnu = actor.head->lexeme().toNatural();
-                    if(!apnu.tryCast(nu)) throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
+                    const apn Nu = actor.head->lexeme().toNatural();
+                    if(!Nu.tryCast(nu)) throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
                     assert(nu>0);
                 }
                 eq(role,nu,sp);
@@ -81,7 +81,13 @@ namespace Yttrium
                 fillActors(eq,Product,node,lib);
             }
 
+            if(eq->size()<=0)
+            {
+                throw Specific::Exception(eq.name->c_str(), "no component!");
+            }
+
             eq.latch();
+
         }
 
 

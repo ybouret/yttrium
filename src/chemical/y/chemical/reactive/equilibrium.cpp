@@ -38,12 +38,30 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        RawEquilibrium:: RawEquilibrium(Library &lib, XNode * const root) :
+        Equilibrium(lib,root),
+        Kdata( Compile::Data(root) )
+        {
+
+        }
+
+        RawEquilibrium:: ~RawEquilibrium() noexcept
+        {
+
+        }
+    }
+
+}
 
 
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
 
         ConstEquilibrium:: ConstEquilibrium(Library &lib,  XNode * const eNode) :
-        Equilibrium(lib,eNode),
-        Kdata( Compile::Data(eNode) ),
+        RawEquilibrium(lib,eNode),
         Konst( Eval(*Kdata) )
         {
         }

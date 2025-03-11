@@ -96,6 +96,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             Y_PROXY_DECL();
+        protected:
             ComponentsType db;
         };
 

@@ -202,7 +202,10 @@ namespace Yttrium
         static inline void cleanupString(XNode * const node) noexcept
         {
             assert(node->is(Weasel::StringID));
-            node->lexeme().crop(isspace);
+            Lingo::Token &token = node->lexeme(); assert(token.size>=2);
+            delete token.popTail();
+            delete token.popHead();
+            token.crop(isspace);
         }
 
         static inline void cleanupEquilibrium(XNode * const node) noexcept

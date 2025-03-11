@@ -21,8 +21,9 @@ Y_UTEST(eqs)
         {
             if( xnode->defines<Equilibrium>() )
             {
-                ConstEquilibrium eq(lib,xnode);
-                std::cerr << eq << std::endl;
+                //ConstEquilibrium eq(lib,xnode);
+                //std::cerr << eq << std::endl;
+                AutoPtr<Equilibrium> eq = weasel.compile(lib,xnode);
             }
         }
 

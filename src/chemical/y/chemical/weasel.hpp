@@ -11,6 +11,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        
         //______________________________________________________________________
         //
         //
@@ -48,8 +50,9 @@ namespace Yttrium
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             XNode *        singleFormula(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
-            Equilibrium  * compile(XNode * const);                //!< compile equilibrium from parse node
+            Equilibrium  * compile(Library &,XNode * const);                //!< compile equilibrium from parse node
             xreal_t        eval(const String &);                  //!< use Lua to eval
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             
