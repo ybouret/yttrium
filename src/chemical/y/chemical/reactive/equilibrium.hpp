@@ -38,7 +38,7 @@ namespace Yttrium
 
             typedef ArkPtr<const String,Equilibrium> Pointer;
 
-            struct Parser
+            struct Compile
             {
                 static const String * Name(const XCode &);
                 static void           Fill(Components &, Library &, const XCode &);
@@ -47,9 +47,9 @@ namespace Yttrium
 
         protected:
             explicit Equilibrium(Library &lib, const XCode &xcode) :
-            Components( Parser::Name(xcode) )
+            Components( Compile::Name(xcode) )
             {
-                Parser::Fill(*this,lib,xcode);
+                Compile::Fill(*this,lib,xcode);
             }
 
         public:

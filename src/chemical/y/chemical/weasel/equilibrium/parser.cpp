@@ -6,7 +6,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        const String * Equilibrium:: Parser:: Name(const XCode &xcode)
+        const String * Equilibrium:: Compile:: Name(const XCode &xcode)
         {
             assert( xcode->is(Equilibrium::CallSign) );
             const XList &       xlist = xcode->branch(); assert(xlist.size==4);
@@ -16,7 +16,7 @@ namespace Yttrium
         }
 
 
-        void Equilibrium:: Parser:: Fill(Components &eq, Library &lib, const XCode &xcode)
+        void Equilibrium:: Compile:: Fill(Components &eq, Library &lib, const XCode &xcode)
         {
             assert( xcode->is(Equilibrium::CallSign) );
             const XList & xlist = xcode->branch(); assert(xlist.size==4);
