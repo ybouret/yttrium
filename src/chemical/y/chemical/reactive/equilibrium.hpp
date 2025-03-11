@@ -73,57 +73,9 @@ namespace Yttrium
         };
 
 
-        class RawEquilibrium : public Equilibrium
-        {
-        public:
-            explicit RawEquilibrium(Library &lib,  XNode * const eNode);
-            virtual ~RawEquilibrium() noexcept;
+       
 
-            const AutoPtr<const String> Kdata; //!< raw string
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(RawEquilibrium);
-        };
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Default constant equilibirum
-        //
-        //
-        //______________________________________________________________________
-        class ConstEquilibrium : public RawEquilibrium
-        {
-        public:
-            //__________________________________________________________________
-            //
-            //
-            // C++
-            //
-            //__________________________________________________________________
-
-            //! setup from parsed node with numerical string
-            explicit ConstEquilibrium(Library &lib,  XNode * const eNode);
-
-            //! cleanup
-            virtual ~ConstEquilibrium() noexcept;
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const xreal_t               Konst; //!< numerical value
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
-            virtual xreal_t getK(xreal_t);
-            static  xreal_t Eval(const String &);
-        };
-
+      
     }
 
 

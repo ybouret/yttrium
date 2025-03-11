@@ -94,17 +94,3 @@ namespace Yttrium
     }
 }
 
-#include "y/chemical/weasel.hpp"
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-        xreal_t ConstEquilibrium:: Eval(const String &expr)
-        {
-            static Weasel &weasel = Weasel::Instance();
-            return weasel.eval(expr);
-        }
-
-    }
-}

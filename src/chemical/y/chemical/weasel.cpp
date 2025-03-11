@@ -167,6 +167,9 @@ namespace Yttrium
 
 }
 
+#include "y/chemical/reactive/equilibrium/raw.hpp"
+#include "y/chemical/reactive/equilibrium/const.hpp"
+
 namespace Yttrium
 {
     namespace Chemical

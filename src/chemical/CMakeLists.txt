@@ -4,6 +4,7 @@ Y_CreateLibrary(y-chemical
 chemical
 chemical/type
 chemical/reactive
+chemical/reactive/equilibrium
 chemical/weasel
 chemical/weasel/formula
 chemical/weasel/equilibrium

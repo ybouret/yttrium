@@ -55,8 +55,7 @@ Y_UTEST(weasel)
     Y_SIZEOF(Actor);
     Y_SIZEOF(Component);
     Y_SIZEOF(Equilibrium);
-    Y_SIZEOF(ConstEquilibrium);
-
+    
 }
 Y_UDONE()
 
