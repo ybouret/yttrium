@@ -33,10 +33,21 @@ namespace Yttrium
 
 }
 
+
 namespace Yttrium
 {
     namespace Chemical
     {
+
+
+
+        ConstEquilibrium:: ConstEquilibrium(Library &lib,  XNode * const eNode) :
+        Equilibrium(lib,eNode),
+        Kdata( Compile::Data(eNode) ),
+        Konst(1)
+        {
+        }
+
 
         ConstEquilibrium:: ~ConstEquilibrium() noexcept
         {

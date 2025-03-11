@@ -20,6 +20,16 @@ namespace Yttrium
         }
 
 
+        const String *  Equilibrium:: Compile:: Data(const XNode * const eNode)
+        {
+            assert(0!=eNode);
+            assert( eNode->defines<Equilibrium>() );
+            const XList &       xlist = eNode->branch(); assert(xlist.size==4);
+            const XNode * const kdata = xlist.tail;      assert(kdata->is("String"));
+            const String        sdata = kdata->lexeme().toString(1,1);
+            return new String(sdata);
+        }
+
         static inline
         void fillActors(Components &  eq,
                         const Role    role,

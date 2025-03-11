@@ -151,6 +151,20 @@ namespace Yttrium
 
 }
 
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        xreal_t Weasel:: eval(const String &expr)
+        {
+            assert(0!=code);
+            return code->lvm->eval<real_t>(expr);
+        }
+    }
+
+}
+
 namespace Yttrium
 {
     namespace Chemical

@@ -45,6 +45,7 @@ namespace Yttrium
             {
                 static const String * Name(const XNode * const);                    //!< extract name
                 static void           Fill(Components &, Library &, XNode * const); //!< extract components and latch
+                static const String * Data(const XNode * const);                    //!< extract string
             };
 
             //__________________________________________________________________
@@ -53,8 +54,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Equilibrium(Library &, XNode * const); //!< setup
+            explicit Equilibrium(Library &, XNode * const); //!< compile
             virtual ~Equilibrium() noexcept;                //!< cleanup
+            explicit Equilibrium(const String * const);     //!< start manual
 
             //__________________________________________________________________
             //
@@ -63,13 +65,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             xreal_t K(xreal_t); //!< checked getK
-
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
 
 
         private:
@@ -89,23 +84,32 @@ namespace Yttrium
         class ConstEquilibrium : public Equilibrium
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            //! setup
-            explicit ConstEquilibrium(Library &lib,  XNode * const eNode) :
-            Equilibrium(lib,eNode),
-            Konst(1)
-            {
-            }
+            //! setup from parsed node with numerical string
+            explicit ConstEquilibrium(Library &lib,  XNode * const eNode);
 
             //! cleanup
             virtual ~ConstEquilibrium() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const AutoPtr<const String> Kdata; //!< numerical string
+            const xreal_t               Konst; //!< numerical value
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
             virtual xreal_t getK(xreal_t);
-            const xreal_t Konst;
         };
 
     }
