@@ -110,6 +110,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
             virtual xreal_t getK(xreal_t);
+            static  xreal_t Eval(const String &);
         };
 
     }
