@@ -16,7 +16,9 @@ namespace Yttrium
             return *name;
         }
 
-        
+
+        Entity:: Entity(const String *_) noexcept : name(_) {}
+        Entity:: Entity(const XName & _) noexcept : name(_) {}
     }
 
 }

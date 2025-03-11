@@ -45,6 +45,7 @@ namespace Yttrium
             //__________________________________________________________________
             XNode *        parse(Lingo::Module * const);          //!< parse and preprocess
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
+            XNode *        singleFormula(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
             
 

@@ -11,24 +11,51 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Utilities for assembly of entities
+        //
+        //
+        //______________________________________________________________________
         class Assembly
         {
         public:
-            explicit Assembly() noexcept;
-            virtual ~Assembly() noexcept;
-            Assembly(const Assembly &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Assembly() noexcept;         //!< setup
+            virtual ~Assembly() noexcept;         //!< cleanup
+            Assembly(const Assembly &) noexcept;  //!< duplicate
 
-            void enroll(const Entity &);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! update maxNameLength
+            void enroll(const Entity &) noexcept;
 
-            std::ostream &pad(std::ostream &os,
-                              const Entity &entity) const
+            //! pad stream with entity.name->size() to maxNameLength
+            std::ostream &pad(std::ostream &os, const Entity &entity) const
             {
                 for(size_t i=entity.name->size();i<maxNameLength;++i) os << ' ';
                 return os;
             }
 
-            const size_t maxNameLength;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t maxNameLength; //!< max name length of entities
 
         private:
             Y_DISABLE_ASSIGN(Assembly);

@@ -34,20 +34,13 @@ namespace Yttrium
         public Serializable
         {
         public:
-            struct Parser
-            {
-                static Formula        Make(const char * const);
-                static Formula        Make(const String &);
-                static const String * Brew(const Formula &, int &);
-            };
-
             typedef ArkPtr<const String,const Species> Pointer;
 
             template <typename NAME> inline
             explicit Species(const NAME &description) :
-            Formula( Parser:: Make(description) ),
+            Formula(description),
             Charge(),
-            Entity(  Parser:: Brew(*this, Coerce(z))  )
+            Entity( toText(Coerce(z))  )
             {
 
             }

@@ -20,19 +20,21 @@ namespace Yttrium
         Formula:: Formula(const XCode &_) noexcept :
         code(_)
         {
+            assert(code->defines<Formula>());
         }
 
 
         Formula:: Formula(const XNode * const _) noexcept :
         code(_)
         {
+            assert(code->defines<Formula>());
         }
 
 
         Formula:: Formula(const Formula &_) noexcept :
         code(_.code)
         {
-            
+            assert(code->defines<Formula>());
         }
 
        

@@ -15,7 +15,7 @@ namespace Yttrium
         {
         }
 
-        void Assembly:: enroll(const Entity &entity)
+        void Assembly:: enroll(const Entity &entity) noexcept
         {
             InSituMax( Coerce(maxNameLength), entity.name->size() );
         }

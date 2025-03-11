@@ -115,6 +115,12 @@ namespace Yttrium
                 bool is(const char * const) const noexcept;                 //!< check name
                 bool is(const String &)     const noexcept;                 //!< check name
 
+                //! return is(CLASS::CallSign)
+                template <typename CLASS> inline
+                bool defines() const noexcept
+                {
+                    return is( CLASS::CallSign );
+                }
 
 
 

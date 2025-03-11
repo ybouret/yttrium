@@ -13,21 +13,44 @@ namespace Yttrium
     {
 
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Base class for named entities
+        //
+        //
+        //______________________________________________________________________
         class Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Entity(const String *_) noexcept; //!< setup
+            explicit Entity(const XName & _) noexcept; //!< setup
+            virtual ~Entity()                noexcept; //!< cleanup
 
-            explicit Entity(const String *_) noexcept : name(_) {}
-            explicit Entity(const XName & _) noexcept : name(_) {}
-            virtual ~Entity()      noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String & key() const noexcept; //!< *name*
 
-            const String & key() const noexcept;
 
 
-
-
-            const XName name;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const XName name; //!< shared name
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Entity);

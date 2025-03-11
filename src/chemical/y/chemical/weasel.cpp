@@ -102,23 +102,43 @@ namespace Yttrium
             return Formula(list.popHead());
         }
 
-        Formula Species:: Parser:: Make(const char * const id)
+        XNode * Weasel:: singleFormula(Lingo::Module * const inputModule)
         {
-            static Weasel &weasel = Weasel::Instance();
-            return weasel.parseFormula1( Lingo::Module::OpenData(id,id) );
+            static const char func[] = "singleFormula";
+            AutoPtr<XNode>    node = parse(inputModule); assert(node->is(Weasel::CallSign));
+            XList &           list = node->branch();
+
+            if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",func);
+            if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",func,list.head->name().c_str());
+            return list.popHead();
         }
 
-        Formula Species:: Parser:: Make(const String & id)
+        template <typename DESCRIPTION> static inline
+        XNode * singleFormulaFrom(const DESCRIPTION & description)
         {
             static Weasel &weasel = Weasel::Instance();
-            return weasel.parseFormula1( Lingo::Module::OpenData(id,id) );
+            return weasel.singleFormula( Lingo::Module::OpenData(description,description) );
         }
 
-        const String * Species:: Parser:: Brew(const Formula &f, int &z)
+
+        Formula:: Formula(const String & description) :
+        code( singleFormulaFrom(description) )
+        {
+        }
+
+        Formula:: Formula(const char * const  description) :
+        code( singleFormulaFrom(description) )
+        {
+        }
+
+
+        const String * Formula:: toText(int &z) const
         {
             static Weasel &weasel = Weasel::Instance();
-            return weasel.formulaToText(f,z);
+            return weasel.formulaToText(*this,z);
         }
+
+        
 
 
 
