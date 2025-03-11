@@ -55,7 +55,7 @@ namespace Yttrium
             const Rule &MINUS     = term('-');
             const Rule &SIGN      = pick(PLUS,MINUS);
             const Rule &SPACE     = zom(WHITE);
-            const Rule &STRING    = plug<Lingo::Lexical::RString>("String");
+            const Rule &STRING    = plug<Lingo::Lexical::RString>(StringID);
 
 
             //------------------------------------------------------------------
@@ -199,6 +199,12 @@ namespace Yttrium
         }
 
 
+        static inline void cleanupString(XNode * const node) noexcept
+        {
+            assert(node->is(Weasel::StringID));
+            node->lexeme().crop(isspace);
+        }
+
         static inline void cleanupEquilibrium(XNode * const node) noexcept
         {
             assert(0!=node);
@@ -213,6 +219,8 @@ namespace Yttrium
                 XNode * const prod = list.fetch(3); assert( prod->is(Equilibrium::Prod) );
                 cleanupActors(prod);
             }
+
+            cleanupString(list.tail);
         }
 
 

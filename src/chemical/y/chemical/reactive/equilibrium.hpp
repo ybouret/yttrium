@@ -16,9 +16,6 @@ namespace Yttrium
     namespace Chemical
     {
 
-        
-
-
         //______________________________________________________________________
         //
         //
@@ -67,6 +64,13 @@ namespace Yttrium
             //__________________________________________________________________
             xreal_t K(xreal_t); //!< checked getK
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
@@ -74,15 +78,26 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Default constant equilibirum
+        //
+        //
+        //______________________________________________________________________
         class ConstEquilibrium : public Equilibrium
         {
         public:
+
+            //! setup
             explicit ConstEquilibrium(Library &lib,  XNode * const eNode) :
             Equilibrium(lib,eNode),
             Konst(1)
             {
             }
 
+            //! cleanup
             virtual ~ConstEquilibrium() noexcept;
 
 

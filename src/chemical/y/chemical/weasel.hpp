@@ -32,6 +32,7 @@ namespace Yttrium
             static const AtExit::Longevity LifeTime = 100; //!< lifetime
             static const char * const      Coef;           //!< "Coef"
             static const char * const      RegExp;         //!< "RegExp";
+            static const char * const      StringID;       //!< "String";
             class Parser;
             class FormulaToText;
             class FormulaToSpec;
@@ -47,7 +48,7 @@ namespace Yttrium
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             XNode *        singleFormula(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
-            
+            Equilibrium  * compile(XNode * const);                //!< compile equilibrium from parse node
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);

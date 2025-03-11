@@ -13,13 +13,33 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Transform parsed formula into univocal test
+        //
+        //
+        //______________________________________________________________________
         class Weasel:: FormulaToText : public Lingo::Syntax::Translator
         {
         public:
-            explicit FormulaToText();
-            virtual ~FormulaToText() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit FormulaToText();            //!< setup
+            virtual ~FormulaToText() noexcept;   //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            //! build name and fetch
             const String *get(const XNode &node, int &z);
 
         private:

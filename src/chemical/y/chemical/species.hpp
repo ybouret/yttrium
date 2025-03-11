@@ -1,4 +1,3 @@
-
 //! \file
 
 
@@ -7,24 +6,21 @@
 
 #include "y/chemical/type/entity.hpp"
 #include "y/chemical/formula.hpp"
+#include "y/chemical/type/charge.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-
-        class Charge
-        {
-            protected: explicit Charge() noexcept;
-            public:    virtual ~Charge() noexcept;
-
-            const int z;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Charge);
-        };
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species description
+        //
+        //
+        //______________________________________________________________________
         class Species :
         public Quantized,
         public Formula,
@@ -34,8 +30,22 @@ namespace Yttrium
         public Serializable
         {
         public:
-            typedef ArkPtr<const String,const Species> Pointer;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef ArkPtr<const String,const Species> Pointer; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! NAME = text, String, Formula
             template <typename NAME> inline
             explicit Species(const NAME &description) :
             Formula(description),
@@ -45,12 +55,17 @@ namespace Yttrium
 
             }
 
-            
-            virtual ~Species() noexcept;
-            Y_OSTREAM_PROTO(Species);
+            virtual ~Species() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Species);    //!< display
 
-            virtual size_t   serialize(OutputStream &fp) const;
-            static Species * ReadFrom(InputStream &fp);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            virtual size_t   serialize(OutputStream &fp) const; //!< univocal formula
+            static Species * ReadFrom(InputStream &fp);         //!< retrieve from serialized
 
 
         private:

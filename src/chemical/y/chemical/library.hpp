@@ -16,8 +16,25 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species DataBase Base class
+        //
+        //
+        //______________________________________________________________________
         typedef SuffixSet<const String,Species::Pointer> LibraryType;
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Species Database
+        //
+        //
+        //______________________________________________________________________
         class Library :
         public Proxy<const LibraryType>,
         public Assembly,
@@ -25,11 +42,30 @@ namespace Yttrium
         public Latchable
         {
         public:
-            static const char * const CallSign;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< "Library"
 
-            explicit Library();
-            virtual ~Library() noexcept;
-            Y_OSTREAM_PROTO(Library);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Library();          //!< setup
+            virtual ~Library() noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Library);    //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! (create new|query existing) species
             template <typename NAME> inline
@@ -39,8 +75,8 @@ namespace Yttrium
                 return setup(sp);
             }
 
-            virtual size_t serialize(OutputStream &) const;
-            void           readFrom(InputStream &);
+            virtual size_t serialize(OutputStream &) const; //!< [Serializable] all species
+            void           readFrom(InputStream &);         //!< retrieve all species
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

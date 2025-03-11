@@ -53,6 +53,31 @@ namespace Yttrium
             friend bool operator==(const Token &lhs, const Token &rhs) noexcept; //!< content equality
             friend bool operator==(const char * lhs, const Token &rhs) noexcept; //!< compare to string
             friend bool operator==(const char   lhs, const Token &rhs) noexcept; //!< compare to single char
+
+            //! skip first bad
+            template <typename PROC> inline
+            Token & skip(PROC &isBad) noexcept
+            {
+                while(size>0 && isBad(**head)) delete popHead();
+                return *this;
+            }
+
+            //! trim last bad
+            template <typename PROC> inline
+            Token & trim(PROC &isBad) noexcept
+            {
+                while(size>0 && isBad(**tail)) delete popTail();
+                return *this;
+            }
+
+            //! trim and skip bad
+            template <typename PROC> inline
+            Token & crop(PROC &isBad) noexcept
+            {
+                return trim(isBad).skip(isBad);
+            }
+
+
         private:
             Y_DISABLE_ASSIGN(Token);
         };

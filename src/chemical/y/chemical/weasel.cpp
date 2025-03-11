@@ -8,6 +8,7 @@ namespace Yttrium
         const char * const Weasel:: CallSign = "Weasel";
         const char * const Weasel:: Coef     = "Coef";
         const char * const Weasel:: RegExp   = "RegExp";
+        const char * const Weasel:: StringID = "String";
 
     }
 }
@@ -146,8 +147,22 @@ namespace Yttrium
             return *uuid;
         }
 
+    }
 
+}
 
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Equilibrium  * Weasel:: compile(XNode * const root)
+        {
+            assert(0!=root);
+            assert(root->defines<Equilibrium>());
+            XList &list = root->branch(); assert(4==list.size);
+            
+
+        }
     }
 
 }

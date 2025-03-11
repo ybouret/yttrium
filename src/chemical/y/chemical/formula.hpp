@@ -41,12 +41,12 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Formula(XNode * const)       noexcept; //!< setup from raw node
-            Formula(const XCode   &)     noexcept; //!< setup for shared code
-            Formula(const Formula &)     noexcept; //!< shared copy
-            Formula(const char * const description);
-            Formula(const String &     description);
-            virtual ~Formula()           noexcept; //!< cleanup
+            Formula(XNode * const)       noexcept;   //!< setup from raw node
+            Formula(const XCode   &)     noexcept;   //!< setup for shared code
+            Formula(const Formula &)     noexcept;   //!< shared copy
+            virtual ~Formula()           noexcept;   //!< cleanup
+            Formula(const char * const description); //!< compile single formula
+            Formula(const String &     description); //!< compile single formula
 
             //__________________________________________________________________
             //
@@ -54,9 +54,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const  String * text(int &z) const;
-            String          uuid()       const;
-            
+            const  String * text(int &z) const; //!< build name text and fetch z
+            String          uuid()       const; //!< return built name
+
         private:
             Y_DISABLE_ASSIGN(Formula);
             Y_PROXY_DECL();
