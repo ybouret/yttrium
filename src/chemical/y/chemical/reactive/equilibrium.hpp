@@ -41,12 +41,12 @@ namespace Yttrium
             struct Compile
             {
                 static const String * Name(const XNode * const);
-                static void           Fill(Components &, Library &, const XNode * consts);
+                static void           Fill(Components &, Library &, XNode * const);
             };
 
 
         protected:
-            explicit Equilibrium(Library &lib, const XNode * const eNode) :
+            explicit Equilibrium(Library &lib, XNode * const eNode) :
             Components( Compile::Name(eNode) )
             {
                 Compile::Fill(*this,lib,eNode);
@@ -68,7 +68,7 @@ namespace Yttrium
         class ConstEquilibrium : public Equilibrium
         {
         public:
-            explicit ConstEquilibrium(Library &lib, const XNode * const eNode) :
+            explicit ConstEquilibrium(Library &lib,  XNode * const eNode) :
             Equilibrium(lib,eNode),
             Konst(1)
             {

@@ -132,13 +132,19 @@ namespace Yttrium
         }
 
 
-        const String * Formula:: toText(int &z) const
+        const String * Formula:: text(int &z) const
         {
             static Weasel &weasel = Weasel::Instance();
             return weasel.formulaToText(*this,z);
         }
 
         
+        String Formula:: uuid() const
+        {
+            int z = 0;
+            AutoPtr<const String> uuid = text(z);
+            return *uuid;
+        }
 
 
 

@@ -40,7 +40,7 @@ namespace Yttrium
             explicit Species(const NAME &description) :
             Formula(description),
             Charge(),
-            Entity( toText(Coerce(z))  )
+            Entity( text(Coerce(z))  )
             {
 
             }

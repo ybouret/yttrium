@@ -41,7 +41,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            Formula(const XNode * const) noexcept; //!< setup from raw node
+            Formula(XNode * const)       noexcept; //!< setup from raw node
             Formula(const XCode   &)     noexcept; //!< setup for shared code
             Formula(const Formula &)     noexcept; //!< shared copy
             Formula(const char * const description);
@@ -54,7 +54,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const String * toText(int &z) const;
+            const  String * text(int &z) const;
+            String          uuid()       const;
             
         private:
             Y_DISABLE_ASSIGN(Formula);

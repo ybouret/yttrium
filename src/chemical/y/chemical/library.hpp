@@ -31,6 +31,7 @@ namespace Yttrium
             virtual ~Library() noexcept;
             Y_OSTREAM_PROTO(Library);
 
+            //! (create new|query existing) species
             template <typename NAME> inline
             const Species & operator()(const NAME &name)
             {
