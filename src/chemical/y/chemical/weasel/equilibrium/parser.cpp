@@ -64,6 +64,7 @@ namespace Yttrium
             assert( node->is(Equilibrium::Prod)  );
             fillActors(eq,Product,node,lib);
 
+            eq.latch();
         }
 
 

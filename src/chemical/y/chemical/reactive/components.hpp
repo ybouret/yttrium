@@ -15,27 +15,79 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef SuffixSet<const String,const Component> ComponentsType;
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! database of components
+        //
+        //
+        //______________________________________________________________________
+        typedef SuffixSet<const String,const Component> ComponentsDB;
 
-        class Components :
-        public Entity,
-        public Proxy<const ComponentsType>,
-        public Latchable
+        class ComponentsType : public ComponentsDB, public Latchable
         {
         public:
-            static const char * const Symbol;    //!< "<=>";
+            explicit ComponentsType();
+            virtual ~ComponentsType() noexcept;
+            
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ComponentsType);
+        };
+
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! named components
+        //
+        //
+        //______________________________________________________________________
+        class Components :
+        public   Entity,
+        public   Proxy<const ComponentsType>
+        {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const Symbol;          //!< "<=>";
             static const char         Separator = ':'; //!< for parser
 
-            explicit Components(const String * const) ;
-            virtual ~Components() noexcept;
-            Y_OSTREAM_PROTO(Components);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Components(const String * const); //!< setup
+            virtual ~Components()            noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Components);               //!< display
 
-            void operator()(const Role, const unsigned, const Species &);
-            void operator()(const Role, const  Species &);
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void operator()(const Role, const unsigned, const Species &); //!< append
+            void operator()(const Role, const  Species &);                //!< (*this)(role,1,species);
+            void latch() noexcept;                                        //!< latch all
 
-            const Actors reac;
-            const Actors prod;
-            
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            const Actors reac; //!< current reactants
+            const Actors prod; //!< current products
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             Y_PROXY_DECL();
