@@ -1,6 +1,5 @@
 
-#include "y/chemical/weasel/equilibrium/parser.hpp"
-#include "y/chemical/type/xcode.hpp"
+#include "y/chemical/reactive/equilibrium.hpp"
 
 namespace Yttrium
 {
