@@ -33,6 +33,7 @@ namespace Yttrium
         xreal_t ConstEquilibrium:: Eval(const String &expr)
         {
             static Weasel &weasel = Weasel::Instance();
+            std::cerr << "Evaluating '" << expr << "'" << std::endl;
             return weasel.eval(expr);
         }
 

@@ -26,7 +26,7 @@ namespace Yttrium
             assert( eNode->defines<Equilibrium>() );
             const XList &       xlist = eNode->branch(); assert(xlist.size==4);
             const XNode * const kdata = xlist.tail;      assert(kdata->is("String"));
-            const String        sdata = kdata->lexeme().toString(1,1);
+            const String        sdata = kdata->lexeme().toString();
             return new String(sdata);
         }
 

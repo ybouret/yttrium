@@ -3,7 +3,7 @@
 
 
 #ifndef Y_Chemical_Equilibrium_Const_Included
-#define Y_Chemical_Equilibrium_ConstIncluded 1
+#define Y_Chemical_Equilibrium_Const_Included 1
 
 
 #include "y/chemical/reactive/equilibrium/raw.hpp"

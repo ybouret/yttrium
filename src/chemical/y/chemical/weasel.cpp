@@ -153,6 +153,19 @@ namespace Yttrium
 
 }
 
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Weasel & Weasel:: operator<<(const String &luaCode)
+        {
+            code->lvm->dostring(luaCode);
+            return *this;
+        }
+
+    }
+}
+
 
 namespace Yttrium
 {
@@ -168,7 +181,6 @@ namespace Yttrium
 }
 
 #include "y/chemical/reactive/equilibrium/raw.hpp"
-#include "y/chemical/reactive/equilibrium/const.hpp"
 
 namespace Yttrium
 {
@@ -220,6 +232,17 @@ namespace Yttrium
 
         }
 
+
+    }
+
+}
+
+#include "y/chemical/reactive/equilibrium/const.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
         Equilibrium  * Weasel:: compile(Library &lib, XNode * const root)
         {
             assert(0!=root);
@@ -236,9 +259,11 @@ namespace Yttrium
 
             if( isdigit(data[1]) )
             {
+                // assuming const
                 return new ConstEquilibrium(lib,root);
             }
 
+            // assuming lua
             return new LuaEquilibrium(lib,root,code->lvm);
         }
     }

@@ -53,6 +53,9 @@ namespace Yttrium
             Equilibrium  * compile(Library &,XNode * const);                //!< compile equilibrium from parse node
             xreal_t        eval(const String &);                  //!< use Lua to eval
 
+            Weasel & operator<<(const String &luaCode);
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Weasel);
             

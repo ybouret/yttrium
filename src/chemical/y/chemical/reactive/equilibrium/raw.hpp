@@ -1,10 +1,7 @@
-
 //! \file
-
 
 #ifndef Y_Chemical_Equilibrium_Raw_Included
 #define Y_Chemical_Equilibrium_Raw_Included 1
-
 
 #include "y/chemical/reactive/equilibrium.hpp"
 
