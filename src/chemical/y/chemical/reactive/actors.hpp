@@ -15,19 +15,51 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! List of actors
+        //
+        //
+        //______________________________________________________________________
         class Actors : public Entity, public Proxy<const Actor::List>, public Latchable
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
             static const char * const CallSign; //!< "Actors"
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Actors(const Actor::Involvement); //!< setup
-            Actors(const Actors &);                    //!< duplicate all
+            Actors(const Actors &);                    //!< duplicate name and actors
             virtual ~Actors() noexcept;                //!< cleanup
 
-            const Actor & operator()(const unsigned nu, const Species &sp);
-            bool has(const Species &) const noexcept;
-            void xch(Actors &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const Actor & operator()(const unsigned nu, const Species &sp); //!< create new actor
+            bool          has(const Species &) const noexcept; //!< check presence
+            void          xch(Actors &)              noexcept; //!< no-throw exchange
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Actor::Involvement in; //!< involvement
 
         private:

@@ -13,25 +13,58 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Role of an actor
+        //
+        //
+        //______________________________________________________________________
         enum Role
         {
-            Reactant,
-            Product
+            Reactant, //!< use as reactant
+            Product   //!< use as product
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! persistent Actor + its role
+        //
+        //
+        //______________________________________________________________________
         class Component :  Proxy<const Actor>
         {
         public:
-            static const char * RoleText(const Role) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Component(const Role, const Actor &) noexcept; //!< setup
+            virtual ~Component()                          noexcept; //!< cleanup
+            Component(const Component &)                  noexcept; //!< no-throw copy
 
-            explicit Component(const Role, const Actor &) noexcept;
-            virtual ~Component() noexcept;
-            Component(const Component &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            const String &      key()          const noexcept; //!< species key
+            const char *        roleText()     const noexcept; //!< human readable role
+            static const char * RoleText(const Role) noexcept; //!< human readable role
 
-            const String & key()      const noexcept;
-            const char *   roleText() const noexcept;
-
-            const Role     role;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const Role     role; //!< actor's rile
         private:
             Y_DISABLE_ASSIGN(Component);
             Y_PROXY_DECL();

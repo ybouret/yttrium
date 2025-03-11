@@ -13,31 +13,59 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Single Actor
+        //
+        //
+        //______________________________________________________________________
         class Actor : public Entity
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+
+            //! for components or concentration
             enum Involvement
             {
-                AsComponentOnly,
-                AsConcentration
+                AsComponentOnly, //!< for components
+                AsConcentration  //!< for conservations,...
             };
 
             static const char * const CallSign; //!< "Actor"
-            typedef CxxListOf<Actor>  List;
+            typedef CxxListOf<Actor>  List;     //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
             explicit Actor(const unsigned,
                            const Species &,
                            const Involvement);
-            Actor(const Actor &) noexcept; //!< 'shared' copy
-            virtual ~Actor()     noexcept;
+            Actor(const Actor &) noexcept; //!< copy with shared entity name
+            virtual ~Actor()     noexcept; //!< cleanup
 
 
-
-            const unsigned    nu; //!< coefficient
-            const Species &   sp; //!< persistent species
-            Actor *           next;
-            Actor *           prev;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const unsigned    nu;   //!< coefficient
+            const Species &   sp;   //!< persistent species
+            Actor *           next; //!< for list
+            Actor *           prev; //!< for list
 
         private:
             Y_DISABLE_ASSIGN(Actor);
