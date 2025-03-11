@@ -43,7 +43,6 @@ namespace Yttrium
                     if(!apnu.tryCast(nu)) throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
                     assert(nu>0);
                 }
-                //std::cerr << nu << " " << sp << std::endl;
                 eq(role,nu,sp);
             }
         }
@@ -54,15 +53,23 @@ namespace Yttrium
             assert(0!=eNode);
             assert( eNode->defines<Equilibrium>() );
             XList & xlist = eNode->branch(); assert(xlist.size==4);
-            XNode * node  = xlist.head; assert( node->is(Equilibrium::Label) );
+            XNode * node  = xlist.head;
+            assert(0!=node);
+            assert( node->is(Equilibrium::Label) );
 
-            node=node->next;
-            assert( node->is(Equilibrium::Reac)  );
-            fillActors(eq,Reactant,node,lib);
+            {
+                node=node->next;
+                assert(0!=node);
+                assert( node->is(Equilibrium::Reac)  );
+                fillActors(eq,Reactant,node,lib);
+            }
 
-            node=node->next;
-            assert( node->is(Equilibrium::Prod)  );
-            fillActors(eq,Product,node,lib);
+            {
+                node=node->next;
+                assert(0!=node);
+                assert( node->is(Equilibrium::Prod)  );
+                fillActors(eq,Product,node,lib);
+            }
 
             eq.latch();
         }

@@ -12,6 +12,12 @@ namespace Yttrium
         const char * const Equilibrium:: Prod  = "Prod";
 
 
+        Equilibrium:: Equilibrium(Library &lib, XNode * const eNode) :
+        Components( Compile::Name(eNode) )
+        {
+            Compile::Fill(*this,lib,eNode);
+        }
+
         Equilibrium:: ~Equilibrium() noexcept
         {
         }

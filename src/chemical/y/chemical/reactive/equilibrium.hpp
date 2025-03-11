@@ -30,33 +30,42 @@ namespace Yttrium
         class Equilibrium : public Oversized, public Components, public Counted
         {
         public:
-            static const char         Prefix = '@'; //!< for parser
-            static const char * const Reac;         //!< "Reac";
-            static const char * const Prod;         //!< "Prod";
-            static const char * const Label;        //!< "Label"
-            static const char * const CallSign;     //!< "Equilibrium"
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char                        Prefix = '@'; //!< for parser
+            static const char * const                Reac;         //!< "Reac";
+            static const char * const                Prod;         //!< "Prod";
+            static const char * const                Label;        //!< "Label"
+            static const char * const                CallSign;     //!< "Equilibrium"
+            typedef ArkPtr<const String,Equilibrium> Pointer;      //!< alias
 
-            typedef ArkPtr<const String,Equilibrium> Pointer;
-
+            //! compiling from parsed xnode
             struct Compile
             {
-                static const String * Name(const XNode * const);
-                static void           Fill(Components &, Library &, XNode * const);
+                static const String * Name(const XNode * const);                    //!< extract name
+                static void           Fill(Components &, Library &, XNode * const); //!< extract components and latch
             };
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equilibrium(Library &, XNode * const); //!< setup
+            virtual ~Equilibrium() noexcept;                //!< cleanup
 
-        protected:
-            explicit Equilibrium(Library &lib, XNode * const eNode) :
-            Components( Compile::Name(eNode) )
-            {
-                Compile::Fill(*this,lib,eNode);
-            }
-
-        public:
-            virtual ~Equilibrium() noexcept;
-
+            //__________________________________________________________________
+            //
+            //
             // Methods
-            xreal_t K(xreal_t);
+            //
+            //__________________________________________________________________
+            xreal_t K(xreal_t); //!< checked getK
 
 
         private:

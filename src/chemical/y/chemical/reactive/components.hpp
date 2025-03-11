@@ -25,13 +25,20 @@ namespace Yttrium
         //______________________________________________________________________
         typedef SuffixSet<const String,const Component> ComponentsDB;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Latchable Database of components
+        //
+        //
+        //______________________________________________________________________
         class ComponentsType : public ComponentsDB, public Latchable
         {
         public:
-            explicit ComponentsType();
-            virtual ~ComponentsType() noexcept;
-            
-            
+            explicit ComponentsType();           //!< setup
+            virtual ~ComponentsType() noexcept;  //!< cleanup
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ComponentsType);
         };
@@ -45,9 +52,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components :
-        public   Entity,
-        public   Proxy<const ComponentsType>
+        class Components : public   Entity, public   Proxy<const ComponentsType>
         {
         public:
             //__________________________________________________________________
