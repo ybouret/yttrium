@@ -12,16 +12,41 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! latching objects
+        //
+        //
+        //______________________________________________________________________
         class Latchable
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Latchable() noexcept; //!< setup unlatched
+            virtual ~Latchable() noexcept; //!< cleanup
 
-            explicit Latchable() noexcept;
-            virtual ~Latchable() noexcept;
-            void     latch() noexcept;
-            
-            bool latched;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void     latch()     noexcept; //!< set latch
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const bool latched; //!< state
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Latchable);
         };
