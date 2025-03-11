@@ -129,6 +129,8 @@ Y_UTEST(dft_nd)
     Test2D<long double>();
 
     Test3D<float>();
+    Test3D<double>();
+    Test3D<long double>();
 
 }
 Y_UDONE()
