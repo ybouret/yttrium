@@ -1,10 +1,13 @@
 
 #include "y/chemical/plexus/cluster.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+        const char * const Cluster::CallSign = "Cluster";
+        
         Cluster:: Cluster(Equilibrium &first) :
         eqs(),
         next(0),
@@ -16,6 +19,7 @@ namespace Yttrium
 
         void Cluster:: attach(Equilibrium &eq)
         {
+            if(latched) throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
             eqs << eq;
             Coerce(species).collect(eq);
         }

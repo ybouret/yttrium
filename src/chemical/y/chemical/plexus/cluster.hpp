@@ -14,16 +14,19 @@ namespace Yttrium
     {
 
 
-        class Cluster : public Object, public Proxy<const EList>
+        class Cluster : public Object, public Proxy<const EList>, public Latchable
         {
         public:
+            static const char * const CallSign;
+            typedef CxxListOf<Cluster> List;
+
             explicit Cluster(Equilibrium &first);
             virtual ~Cluster() noexcept;
 
             void attach(Equilibrium &);
             bool accepts(const Equilibrium &) const noexcept; //!< shared species
             bool accepts(const Cluster &)     const noexcept; //!< shared species
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             EList eqs;
