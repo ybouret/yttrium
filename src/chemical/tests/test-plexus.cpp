@@ -1,5 +1,5 @@
 
-#include "y/chemical/type/meta-list.hpp"
+#include "y/chemical/plexus/clusters.hpp"
 #include "y/chemical/weasel.hpp"
 
 #include "y/utest/run.hpp"
@@ -26,20 +26,8 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    ParaList<SubLevel,SList> msl;
-    ParaList<AuxLevel,EList> mel;
+    Clusters cls(eqs);
 
-    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-    {
-        const Species &sp = **it;
-        msl << sp;
-    }
-
-    for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
-    {
-        Equilibrium &eq = **it;
-        mel << eq;
-    }
 }
 Y_UDONE()
 

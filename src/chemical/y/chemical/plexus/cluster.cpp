@@ -16,20 +16,25 @@ namespace Yttrium
 
         void ClusterType:: link(Equilibrium &eq)
         {
+            std::cerr << "linking " << eq.name << std::endl;
             assert(!equilibria->has(eq));
             {
-                SubEList esave(equilibria);
-                SubSList ssave(species);
+                //SubEList esave(equilibria);
+                //SubSList ssave(species);
                 try
                 {
+                    std::cerr << " (+) " << eq.name << std::endl;
                     equilibria << eq;
                     for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
+                    {
+                        std::cerr << " (+) " << (*it)->sp.name << std::endl;
                         species << (*it)->sp;
+                    }
                 }
                 catch(...)
                 {
-                    equilibria.xch(esave);
-                    species.xch(ssave);
+                    //equilibria.xch(esave);
+                    //species.xch(ssave);
                     throw;
                 }
             }
@@ -47,6 +52,11 @@ namespace Yttrium
 
         Y_PROXY_IMPL(Cluster,my)
 
+        Cluster:: ~Cluster() noexcept
+        {
+            
+        }
+
         Cluster:: Cluster(Equilibrium &first) :
         Proxy<const ClusterType>(),
         my(),
@@ -58,7 +68,7 @@ namespace Yttrium
 
         void Cluster:: attach(Equilibrium &eq)
         {
-            if(latched)              throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
+            if(latched)                 throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
             if(my.equilibria->has(eq))  throw Specific::Exception(CallSign, "attaching multiple '%s'", eq.key().c_str());
             my.link(eq);
         }
