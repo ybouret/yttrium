@@ -9,13 +9,41 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Equilibrium with parsed data string
+        //
+        //
+        //______________________________________________________________________
         class RawEquilibrium : public Equilibrium
         {
         public:
-            explicit RawEquilibrium(Library &,  XNode * const);
-            virtual ~RawEquilibrium() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+        protected:
+            explicit RawEquilibrium(Library &,  XNode * const); //!< setup
+        public:
+            virtual ~RawEquilibrium() noexcept;                 //!< cleanup
 
-            const AutoPtr<const String> Kdata; //!< raw string from xnode
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+
+            //! string from parsed XNode
+            /**
+             - if numeric, assume constant
+             - if function name, use internal Lua VM
+             */
+            const AutoPtr<const String> Kdata;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RawEquilibrium);
