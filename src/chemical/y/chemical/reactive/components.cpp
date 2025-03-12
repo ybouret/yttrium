@@ -113,6 +113,16 @@ namespace Yttrium
             return os;
         }
 
+        bool Components:: AreConnected(const Components &lhs, const Components &rhs)
+        {
+            ConstIterator it = lhs->begin();
+            for(size_t n=lhs->size();n>0;--n,++it)
+            {
+                if(rhs->search(it->key)) return true;
+            }
+            return false;
+        }
+
     }
 
 }

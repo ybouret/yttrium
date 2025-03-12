@@ -8,10 +8,13 @@
 #include "y/chemical/formula.hpp"
 #include "y/chemical/type/charge.hpp"
 
+#include "y/data/small/light/list/bare.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
     {
+
 
         //______________________________________________________________________
         //
@@ -72,6 +75,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
+
+        typedef Small::BareLightList<const Species> SList;
+        typedef SList::NodeType                     SNode;
+
 
     }
 

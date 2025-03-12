@@ -63,6 +63,8 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const Symbol;          //!< "<=>";
             static const char         Separator = ':'; //!< for parser
+            typedef ComponentsType::ConstIterator ConstIterator;
+            
 
             //__________________________________________________________________
             //
@@ -83,6 +85,9 @@ namespace Yttrium
             void operator()(const Role, const unsigned, const Species &); //!< append
             void operator()(const Role, const  Species &);                //!< (*this)(role,1,species);
             void latch() noexcept;                                        //!< latch all
+
+            static bool AreConnected(const Components &lhs, const Components &rhs);
+
 
             //__________________________________________________________________
             //

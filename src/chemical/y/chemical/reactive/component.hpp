@@ -35,7 +35,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Component :  Proxy<const Actor>
+        class Component :  public Proxy<const Actor>
         {
         public:
             //__________________________________________________________________
