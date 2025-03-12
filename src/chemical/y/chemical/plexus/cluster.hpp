@@ -21,6 +21,7 @@ namespace Yttrium
             virtual ~ClusterType() noexcept;
 
             void link(Equilibrium &eq);
+            void fusion(ClusterType &other) noexcept;
 
             SubEList equilibria;
             SubSList species;

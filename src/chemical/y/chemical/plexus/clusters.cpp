@@ -47,6 +47,7 @@ namespace Yttrium
                             if(rhs->accepts(*lhs))
                             {
                                 std::cerr << "Need To Implement Fusion!" << std::endl;
+                                
                                 break;
                             }
                         }

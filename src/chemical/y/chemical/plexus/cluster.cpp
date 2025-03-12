@@ -37,6 +37,12 @@ namespace Yttrium
             }
             enroll(eq);
         }
+
+        void ClusterType:: fusion(ClusterType &other) noexcept
+        {
+            
+        }
+
     }
 
 }
