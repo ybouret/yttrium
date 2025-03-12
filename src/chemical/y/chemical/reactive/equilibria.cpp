@@ -42,6 +42,16 @@ namespace Yttrium
             return db.size()+1;
         }
 
+        Equilibria::Iterator Equilibria:: begin() noexcept
+        {
+            return db.begin();
+        }
+
+        Equilibria::Iterator Equilibria:: end() noexcept
+        {
+            return db.end();
+        }
+
         void Equilibria:: operator()(const Equilibrium::Pointer &eq)
         {
             const String &     key = eq->key();

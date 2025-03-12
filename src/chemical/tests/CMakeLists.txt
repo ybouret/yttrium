@@ -11,5 +11,5 @@ add_test(weasel test-chemical weasel)
 add_test(lib    test-chemical lib)
 add_test(cm     test-chemical cm)
 add_test(eqs    test-chemical eqs)
-
+add_test(plexus test-chemical plexus)
 

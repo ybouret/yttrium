@@ -40,6 +40,7 @@ namespace Yttrium
         public:
             static const char * const CallSign;
             typedef EquilibriaType::ConstIterator ConstIterator;
+            typedef EquilibriaType::Iterator      Iterator;
 
             explicit Equilibria();
             virtual ~Equilibria() noexcept;
@@ -49,7 +50,9 @@ namespace Yttrium
 
 
             size_t nextIndex() const noexcept;
-
+            Iterator begin() noexcept;
+            Iterator end()   noexcept;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             Y_PROXY_DECL();

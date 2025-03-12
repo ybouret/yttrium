@@ -49,7 +49,8 @@ namespace Yttrium
             //
             //__________________________________________________________________
             static const char * const CallSign; //!< "Library"
-
+            typedef LibraryType::ConstIterator ConstIterator;
+            
             //__________________________________________________________________
             //
             //
