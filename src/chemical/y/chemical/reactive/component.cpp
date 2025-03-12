@@ -13,6 +13,7 @@ namespace Yttrium
         }
 
         Component:: Component(const Role r, const Actor &a) noexcept :
+        Proxy<const Actor>(),
         role(r),
         actor(a)
         {
@@ -20,6 +21,7 @@ namespace Yttrium
         }
 
         Component:: Component(const Component &_) noexcept :
+        Proxy<const Actor>(),
         role(_.role),
         actor(_.actor)
         {

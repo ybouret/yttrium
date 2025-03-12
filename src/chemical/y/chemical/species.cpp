@@ -20,10 +20,10 @@ namespace Yttrium
             return name->serialize(fp);
         }
 
-        Species * Species:: ReadFrom(InputStream &fp)
+        Species * Species:: ReadFrom(InputStream &fp,const size_t id)
         {
             const String description = String::ReadFrom(fp,Formula::CallSign);
-            return new Species(description);
+            return new Species(description,id);
         }
     }
 }

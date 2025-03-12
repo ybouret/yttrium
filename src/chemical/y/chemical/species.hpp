@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Species_Included
 #define Y_Chemical_Species_Included 1
 
-#include "y/chemical/type/entity.hpp"
+#include "y/chemical/type/indexed.hpp"
 #include "y/chemical/formula.hpp"
 #include "y/chemical/type/charge.hpp"
 
@@ -25,7 +25,7 @@ namespace Yttrium
         public Quantized,
         public Formula,
         public Charge,
-        public Entity,
+        public Indexed,
         public Counted,
         public Serializable
         {
@@ -47,10 +47,11 @@ namespace Yttrium
 
             //! NAME = text, String, Formula
             template <typename NAME> inline
-            explicit Species(const NAME &description) :
+            explicit Species(const NAME  &description,
+                             const size_t i) :
             Formula(description),
             Charge(),
-            Entity( text(Coerce(z))  )
+            Indexed( text(Coerce(z)), i  )
             {
 
             }
@@ -64,8 +65,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            virtual size_t   serialize(OutputStream &fp) const; //!< univocal formula
-            static Species * ReadFrom(InputStream &fp);         //!< retrieve from serialized
+            virtual size_t   serialize(OutputStream &fp) const;          //!< univocal formula
+            static Species * ReadFrom(InputStream &fp, const size_t id); //!< retrieve from serialized
 
 
         private:

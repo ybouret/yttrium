@@ -71,7 +71,7 @@ namespace Yttrium
             template <typename NAME> inline
             const Species & operator()(const NAME &name)
             {
-                const Species::Pointer sp = new Species(name);
+                const Species::Pointer sp = new Species(name,db.size()+1);
                 return setup(sp);
             }
 

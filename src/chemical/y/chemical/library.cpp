@@ -100,9 +100,10 @@ namespace Yttrium
         void Library:: readFrom(InputStream &fp)
         {
             size_t n = fp.readVBR<size_t>("species");
+            size_t i = db.size();
             while(n-- > 0)
             {
-                const Species::Pointer sp = Species::ReadFrom(fp);
+                const Species::Pointer sp = Species::ReadFrom(fp,++i);
                 (void) setup(sp);
             }
         }
