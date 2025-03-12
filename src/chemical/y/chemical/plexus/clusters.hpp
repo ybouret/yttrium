@@ -22,6 +22,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
+            Y_PROXY_DECL();
+            Cluster::List my;
         };
 
     }

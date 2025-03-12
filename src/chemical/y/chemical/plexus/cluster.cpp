@@ -44,7 +44,9 @@ namespace Yttrium
     namespace Chemical
     {
         const char * const Cluster::CallSign = "Cluster";
-        
+
+        Y_PROXY_IMPL(Cluster,my)
+
         Cluster:: Cluster(Equilibrium &first) :
         Proxy<const ClusterType>(),
         my(),

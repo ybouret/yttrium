@@ -44,9 +44,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
+            Y_PROXY_DECL();
             ClusterType my;
+            
         public:
-
             Cluster *next;
             Cluster *prev;
         };
