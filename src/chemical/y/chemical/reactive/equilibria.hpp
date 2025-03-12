@@ -38,8 +38,13 @@ namespace Yttrium
         class Equilibria : public Proxy<const EquilibriaType>, public Latchable
         {
         public:
+            static const char * const CallSign;
+
             explicit Equilibria();
             virtual ~Equilibria() noexcept;
+
+
+            void operator()(const Equilibrium::Pointer &eq);
 
 
             size_t nextIndex() const noexcept;

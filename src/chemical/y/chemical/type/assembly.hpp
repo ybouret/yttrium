@@ -28,9 +28,10 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Assembly() noexcept;         //!< setup
-            virtual ~Assembly() noexcept;         //!< cleanup
-            Assembly(const Assembly &) noexcept;  //!< duplicate
+            explicit Assembly() noexcept;                    //!< setup
+            virtual ~Assembly() noexcept;                    //!< cleanup
+            Assembly(const Assembly &) noexcept;             //!< duplicate
+            Assembly & operator=(const Assembly &) noexcept; //!< assign
 
             //__________________________________________________________________
             //
@@ -57,8 +58,7 @@ namespace Yttrium
             //__________________________________________________________________
             const size_t maxNameLength; //!< max name length of entities
 
-        private:
-            Y_DISABLE_ASSIGN(Assembly);
+
         };
     }
 

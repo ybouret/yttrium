@@ -40,7 +40,7 @@ namespace Yttrium
             static const char * const                CallSign;     //!< "Equilibrium"
             typedef ArkPtr<const String,Equilibrium> Pointer;      //!< alias
 
-            //! compiling from parsed xnode
+            //! compiling from parsed XNode
             struct Compile
             {
                 static const String * Name(const XNode * const);                    //!< extract name

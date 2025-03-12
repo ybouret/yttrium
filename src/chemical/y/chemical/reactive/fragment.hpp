@@ -5,23 +5,27 @@
 #ifndef Y_Chemical_Fragment_Included
 #define Y_Chemical_Fragment_Included 1
 
+#include "y/chemical/reactive/components.hpp"
 #include "y/chemical/type/assembly.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        class Fragment : public Assembly
+        class Fragment  
         {
         public:
-            explicit Fragment();
-            virtual ~Fragment() noexcept;
+            explicit Fragment()        noexcept;
+            virtual ~Fragment()        noexcept;
+            Fragment(const Fragment &) noexcept;
+            Fragment & operator=(const Fragment &) noexcept;
 
-            Assembly reac;
-            Assembly prod;
+            void enroll(const Components &eq) noexcept;
+            
+            Assembly self; //!< equilibria name
+            Assembly reac; //!< reactants  name
+            Assembly prod; //!< products   name
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Fragment);
         };
 
     }

@@ -6,6 +6,36 @@ namespace Yttrium
     namespace Chemical
     {
 
+        Fragment:: ~Fragment() noexcept
+        {
+        }
+
+        Fragment:: Fragment() noexcept :
+        self(), reac(), prod()
+        {
+        }
+
+        Fragment:: Fragment(const Fragment &_) noexcept :
+        self(_.self),
+        reac(_.reac),
+        prod(_.prod)
+        {
+        }
+
+        Fragment & Fragment:: operator=(const Fragment & _) noexcept
+        {
+            self = _.self;
+            reac = _.reac;
+            prod = _.prod;
+            return *this;
+        }
+
+        void Fragment:: enroll(const Components &eq) noexcept
+        {
+            self.enroll(eq);
+            reac.enroll(eq.reac);
+            prod.enroll(eq.prod);
+        }
 
     }
 
