@@ -43,7 +43,7 @@ namespace Yttrium
 
             explicit Equilibria();
             virtual ~Equilibria() noexcept;
-
+            Y_OSTREAM_PROTO(Equilibria);
 
             void operator()(const Equilibrium::Pointer &eq);
 

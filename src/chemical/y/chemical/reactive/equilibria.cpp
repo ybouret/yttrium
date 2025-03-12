@@ -68,6 +68,23 @@ namespace Yttrium
         }
 
         Y_PROXY_IMPL(Equilibria, db);
+
+
+        std::ostream & operator<<(std::ostream &os, const Equilibria &eqs)
+        {
+            os << '{';
+            if(eqs->size()>0)
+            {
+                os << std::endl;
+                for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+                {
+                    const Equilibrium &eq = **it;
+                    eqs->display(os << '\t',eq) << std::endl;
+                }
+            }
+            os << '}';
+            return os;
+        }
     }
 
 }

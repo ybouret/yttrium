@@ -21,7 +21,8 @@ Y_UTEST(eqs)
     }
 
     std::cerr << "lib=" << lib << std::endl;
-    
+    std::cerr << "eqs=" << eqs << std::endl;
+
 
 
 }

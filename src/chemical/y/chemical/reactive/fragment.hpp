@@ -20,8 +20,9 @@ namespace Yttrium
             Fragment(const Fragment &) noexcept;
             Fragment & operator=(const Fragment &) noexcept;
 
-            void enroll(const Components &eq) noexcept;
-            
+            void           enroll(const Components &eq) noexcept;
+            std::ostream & display(std::ostream &, const Components &) const;
+
             Assembly self; //!< equilibria name
             Assembly reac; //!< reactants  name
             Assembly prod; //!< products   name
