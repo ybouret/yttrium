@@ -38,8 +38,8 @@ namespace Yttrium
             
         }
 
-        Components:: Components(const String * const xname) :
-        Entity(xname),
+        Components:: Components(const String * const xname, const size_t i) :
+        Indexed(xname,i),
         Proxy<const ComponentsType>(),
         reac(Actor::AsComponentOnly),
         prod(Actor::AsComponentOnly),

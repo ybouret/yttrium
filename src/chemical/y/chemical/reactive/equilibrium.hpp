@@ -54,9 +54,11 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Equilibrium(Library &, XNode * const); //!< compile
-            virtual ~Equilibrium() noexcept;                //!< cleanup
-            explicit Equilibrium(const String * const);     //!< start manual
+        protected:
+            explicit Equilibrium(Library &, XNode * const, const size_t ); //!< compile
+            explicit Equilibrium(const String * const, const size_t);      //!< start manual
+        public:
+            virtual ~Equilibrium() noexcept;                               //!< cleanup
 
             //__________________________________________________________________
             //

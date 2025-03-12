@@ -38,6 +38,9 @@ namespace Yttrium
             explicit Equilibria();
             virtual ~Equilibria() noexcept;
 
+
+            size_t nextIndex() const noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             Y_PROXY_DECL();

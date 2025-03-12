@@ -20,6 +20,12 @@ namespace Yttrium
         {
         }
 
+        size_t Library:: nextIndex() const noexcept
+        {
+            return db.size()+1;
+        }
+
+
 
         const Species & Library:: setup(const Species::Pointer &sp)
         {
@@ -31,6 +37,10 @@ namespace Yttrium
             
             if(latched)
                 throw Specific::Exception(CallSign,"latched while creating '%s'", id.c_str());
+
+            if( nextIndex() != sp->indx[TopLevel] )
+                throw Specific::Exception(CallSign,"mismatch index while creating '%s'", id.c_str());
+
 
             if(!db.insert(sp))
                 throw Specific::Exception(CallSign, "failed to insert new '%s'", id.c_str());

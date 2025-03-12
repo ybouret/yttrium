@@ -5,8 +5,10 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        ConstEquilibrium:: ConstEquilibrium(Library &lib,  XNode * const eNode) :
-        RawEquilibrium(lib,eNode),
+        ConstEquilibrium:: ConstEquilibrium(Library &     lib,
+                                            XNode * const eNode,
+                                            const size_t  ei) :
+        RawEquilibrium(lib,eNode,ei),
         Konst( Eval(*Kdata) )
         {
         }

@@ -14,7 +14,7 @@ Y_UTEST(cm)
     const Species &A = lib("A");
     const Species &B = lib("B");
 
-    Components A2B( new String("A2B") );
+    Components A2B( new String("A2B"), 1 );
     std::cerr << A2B << std::endl;
     A2B(Reactant,A);
     std::cerr << A2B << std::endl;

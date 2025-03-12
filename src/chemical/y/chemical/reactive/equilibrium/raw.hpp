@@ -27,7 +27,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
         protected:
-            explicit RawEquilibrium(Library &,  XNode * const); //!< setup
+            explicit RawEquilibrium(Library &,  XNode * const, const size_t); //!< setup
         public:
             virtual ~RawEquilibrium() noexcept;                 //!< cleanup
 

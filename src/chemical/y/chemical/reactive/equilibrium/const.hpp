@@ -31,7 +31,7 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup from parsed node with numerical string
-            explicit ConstEquilibrium(Library &lib,  XNode * const eNode);
+            explicit ConstEquilibrium(Library &lib,  XNode * const eNode, const size_t ei);
 
             //! cleanup
             virtual ~ConstEquilibrium() noexcept;

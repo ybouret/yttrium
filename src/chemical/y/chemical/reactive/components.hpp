@@ -52,7 +52,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components : public   Entity, public   Proxy<const ComponentsType>
+        class Components : public Indexed, public   Proxy<const ComponentsType>
         {
         public:
             //__________________________________________________________________
@@ -70,9 +70,9 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Components(const String * const); //!< setup
-            virtual ~Components()            noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(Components);               //!< display
+            explicit Components(const String * const, const size_t); //!< setup
+            virtual ~Components() noexcept;                          //!< cleanup
+            Y_OSTREAM_PROTO(Components);                             //!< display
 
             //__________________________________________________________________
             //

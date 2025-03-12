@@ -50,8 +50,11 @@ namespace Yttrium
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             XNode *        singleFormula(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
-            Equilibrium  * compile(Library &,XNode * const);                //!< compile equilibrium from parse node
             xreal_t        eval(const String &);                  //!< use Lua to eval
+
+            Equilibrium  * compile(Library &     lib,
+                                   XNode * const eNode,
+                                   const size_t  eIndx); //!< compile equilibrium from parse node
 
             Weasel & operator<<(const String &luaCode);
 

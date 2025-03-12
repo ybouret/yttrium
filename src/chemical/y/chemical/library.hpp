@@ -71,13 +71,14 @@ namespace Yttrium
             template <typename NAME> inline
             const Species & operator()(const NAME &name)
             {
-                const Species::Pointer sp = new Species(name,db.size()+1);
+                const Species::Pointer sp = new Species(name,nextIndex());
                 return setup(sp);
             }
 
             virtual size_t serialize(OutputStream &) const; //!< [Serializable] all species
             void           readFrom(InputStream &);         //!< retrieve all species
-
+            size_t         nextIndex() const noexcept;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             Y_PROXY_DECL();

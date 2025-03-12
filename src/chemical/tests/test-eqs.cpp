@@ -25,7 +25,7 @@ Y_UTEST(eqs)
             {
                 //ConstEquilibrium eq(lib,xnode);
                 //std::cerr << eq << std::endl;
-                AutoPtr<Equilibrium> eq = weasel.compile(lib,xnode);
+                AutoPtr<Equilibrium> eq = weasel.compile(lib,xnode,1);
                 std::cerr << eq << " =" << eq->K(0) << std::endl;
             }
         }

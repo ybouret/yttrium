@@ -193,8 +193,9 @@ namespace Yttrium
             public:
                 inline explicit LuaEquilibrium(Library &     lib,
                                                XNode * const root,
+                                               const size_t  eidx,
                                                Lua::VM &     lvm) :
-                RawEquilibrium(lib,root),
+                RawEquilibrium(lib,root,eidx),
                 vm(lvm)
                 {
                 }
@@ -243,7 +244,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Equilibrium  * Weasel:: compile(Library &lib, XNode * const root)
+        Equilibrium  * Weasel:: compile(Library &     lib,
+                                        XNode * const root,
+                                        const size_t  eidx)
         {
             assert(0!=root);
             assert(root->defines<Equilibrium>());
@@ -260,11 +263,11 @@ namespace Yttrium
             if( isdigit(data[1]) )
             {
                 // assuming const
-                return new ConstEquilibrium(lib,root);
+                return new ConstEquilibrium(lib,root,eidx);
             }
 
             // assuming lua
-            return new LuaEquilibrium(lib,root,code->lvm);
+            return new LuaEquilibrium(lib,root,eidx,code->lvm);
         }
     }
 
