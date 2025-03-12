@@ -7,22 +7,25 @@
 
 
 #include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/reactive/fragment.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-        class Fragment
+        
+        typedef SuffixSet<const String,Equilibrium::Pointer> EquilibriaSet;
+
+        class EquilibriaType : public EquilibriaSet, public Fragment
         {
         public:
-
+            explicit EquilibriaType();
+            virtual ~EquilibriaType() noexcept;
 
         private:
-
+            Y_DISABLE_COPY_AND_ASSIGN(EquilibriaType);
         };
-
-        typedef SuffixSet<const String,Equilibrium::Pointer> EquilibriaSet;
 
         //______________________________________________________________________
         //
@@ -32,7 +35,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Equilibria : public Proxy<const EquilibriaSet>, public Latchable
+        class Equilibria : public Proxy<const EquilibriaType>, public Latchable
         {
         public:
             explicit Equilibria();
@@ -44,7 +47,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             Y_PROXY_DECL();
-            EquilibriaSet db;
+            EquilibriaType db;
         };
 
 
