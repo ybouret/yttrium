@@ -24,7 +24,7 @@ namespace Yttrium
 
         protected:
             inline explicit MetaList() noexcept : SelfType(), list() {}
-            inline          MetaList(const MetaList &_) : SelfType(), list(_) {}
+            inline          MetaList(const MetaList &_) : SelfType(), list(_.list) {}
 
         public:
             inline virtual ~MetaList() noexcept {}
@@ -36,6 +36,11 @@ namespace Yttrium
                 assert(list.isSortedAccordingTo(Compare));
                 update();
                 return *this;
+            }
+
+            inline void xch(MetaList &other) noexcept
+            {
+                list.swapWith(other.list);
             }
 
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept

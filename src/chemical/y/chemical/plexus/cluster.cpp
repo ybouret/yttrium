@@ -6,28 +6,65 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        ClusterType:: ClusterType() noexcept : Fragment(), equilibria(), species()
+        {
+        }
+
+        ClusterType:: ~ClusterType() noexcept
+        {
+        }
+
+        void ClusterType:: link(Equilibrium &eq)
+        {
+            assert(!equilibria->has(eq));
+            {
+                SubEList esave(equilibria);
+                SubSList ssave(species);
+                try
+                {
+                    equilibria << eq;
+                    for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
+                        species << (*it)->sp;
+                }
+                catch(...)
+                {
+                    equilibria.xch(esave);
+                    species.xch(ssave);
+                    throw;
+                }
+            }
+            enroll(eq);
+        }
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
         const char * const Cluster::CallSign = "Cluster";
         
         Cluster:: Cluster(Equilibrium &first) :
-        eqs(),
+        Proxy<const ClusterType>(),
+        my(),
         next(0),
         prev(0)
         {
-            eqs << first;
-            Coerce(species).collect(first);
+            my.link(first);
         }
 
         void Cluster:: attach(Equilibrium &eq)
         {
-            if(latched) throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
-            eqs << eq;
-            Coerce(species).collect(eq);
+            if(latched)              throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
+            if(my.equilibria->has(eq))  throw Specific::Exception(CallSign, "attaching multiple '%s'", eq.key().c_str());
+            my.link(eq);
         }
 
 
         bool Cluster:: accepts(const Equilibrium &eq) const noexcept
         {
-            for(const SNode *sn=species->head;sn;sn=sn->next)
+            for(const SNode *sn=my.species->head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
                 if(eq->search(sp.key())) return true;
@@ -37,10 +74,10 @@ namespace Yttrium
 
         bool Cluster:: accepts(const Cluster &cluster) const noexcept
         {
-            for(const SNode *sn=species->head;sn;sn=sn->next)
+            for(const SNode *sn=my.species->head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
-                if(cluster.species->has(sp)) return true;
+                if(cluster->species->has(sp)) return true;
             }
             return false;
         }
