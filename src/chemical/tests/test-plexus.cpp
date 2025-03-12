@@ -26,8 +26,8 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    MetaList<SList> msl;
-    MetaList<EList> mel;
+    ParaList<SubLevel,SList> msl;
+    ParaList<AuxLevel,EList> mel;
 
     for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
     {

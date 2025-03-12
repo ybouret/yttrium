@@ -5,7 +5,8 @@
 #ifndef Y_Chemical_MetaList_Included
 #define Y_Chemical_MetaList_Included 1
 
-#include "y/chemical/reactive/components.hpp"
+#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/check/static.hpp"
 
 namespace Yttrium
 {
@@ -20,31 +21,68 @@ namespace Yttrium
             typedef typename ListType::NodeType  NodeType;
             typedef typename ListType::Type      Type;
 
-            explicit MetaList() noexcept : SelfType(), list() {}
-            virtual ~MetaList() noexcept {}
+
+        protected:
+            inline explicit MetaList() noexcept : SelfType(), list() {}
+            inline          MetaList(const MetaList &_) : SelfType(), list(_) {}
+
+        public:
+            inline virtual ~MetaList() noexcept {}
 
             inline MetaList & operator<<(Type &param)
             {
                 if(list.has(param)) return *this;
-                
+                ListOps::InsertOrdered(list,list.proxy->produce(param),Compare);
+                assert(list.isSortedAccordingTo(Compare));
+                update();
                 return *this;
             }
-
 
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
+
         private:
             Y_DISABLE_ASSIGN(MetaList);
             inline virtual typename
-            SelfType::ConstInterface &surrogate() const noexcept
-            {
-                return list;
-            }
+            SelfType::ConstInterface &surrogate() const noexcept { return list; }
 
+            virtual void update() noexcept = 0;
+
+        protected:
             ListType list;
         };
+
+        template<Level LEVEL, typename LIST>
+        class ParaList : public MetaList<LIST>
+        {
+        public:
+            typedef typename MetaList<LIST>::NodeType NodeType;
+
+            inline explicit ParaList() noexcept : MetaList<LIST>() {
+                Y_STATIC_CHECK(LEVEL!=TopLevel,BadLevel);
+            }
+            inline virtual ~ParaList() noexcept {}
+            inline          ParaList(const ParaList &_)  : MetaList<LIST>(_) {}
+
+
+
+        private:
+            Y_DISABLE_ASSIGN(ParaList);
+            virtual void update() noexcept
+            {
+                size_t sub = 1;
+                for(NodeType *node=this->list.head;node;node=node->next)
+                    Coerce( (**node).indx[LEVEL] ) = sub++;
+            }
+
+        };
+
+
+        typedef ParaList<SubLevel,SList> SubSList;
+        typedef ParaList<SubLevel,EList> SubEList;
+
     }
 
 }
