@@ -39,6 +39,7 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign;
+            typedef EquilibriaType::ConstIterator ConstIterator;
 
             explicit Equilibria();
             virtual ~Equilibria() noexcept;

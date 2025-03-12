@@ -62,6 +62,7 @@ namespace Yttrium
                     os << '\t' << sp;
                     lib.pad(os,sp);
                     os << " | z = " << std::setw(3) << sp.z;
+                    os << " | id= "; Core::Display(os,sp.indx,sp.MaxLevel);
                     os << std::endl;
                 }
             }

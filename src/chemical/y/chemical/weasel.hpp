@@ -5,14 +5,12 @@
 #define Y_Chemical_Weasel_Included 1
 
 #include "y/chemical/formula.hpp"
-#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/reactive/equilibria.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-        
         //______________________________________________________________________
         //
         //
@@ -48,14 +46,35 @@ namespace Yttrium
             //__________________________________________________________________
             XNode *        parse(Lingo::Module * const);          //!< parse and preprocess
 
+            //__________________________________________________________________
+            //
+            //
+            // Formula/Species
+            //
+            //__________________________________________________________________
             Formula        parseFormula1(Lingo::Module * const);  //!< from single formula
             XNode *        singleFormula(Lingo::Module * const);  //!< from single formula
             const String * formulaToText(const Formula &, int &); //!< univocal name from parsed formula
             xreal_t        eval(const String &);                  //!< use Lua to eval numerical expression
 
+            //__________________________________________________________________
+            //
+            //
+            // Equilibrium
+            //
+            //__________________________________________________________________
             Equilibrium  * compile(Library &     lib,
                                    XNode * const eNode,
                                    const size_t  eIndx); //!< compile equilibrium from parse node
+
+            void     update(Library    &  lib,
+                            Equilibria &  eqs,
+                            XNode * const root);
+
+
+            void operator()(Library    &  lib,
+                            Equilibria &  eqs,
+                            Lingo::Module * const);
             
             Weasel & operator<<(const String &luaCode);
 

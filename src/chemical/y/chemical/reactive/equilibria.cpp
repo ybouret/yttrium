@@ -67,6 +67,7 @@ namespace Yttrium
             db.enroll(*eq);
         }
 
+        Y_PROXY_IMPL(Equilibria, db);
     }
 
 }
