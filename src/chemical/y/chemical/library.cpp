@@ -73,6 +73,12 @@ namespace Yttrium
 
         Y_PROXY_IMPL(Library,db)
 
+        bool Library:: owns(const Species &sp) const noexcept
+        {
+            const Species::Pointer * pp = db.search(sp.key());
+            if(0==pp) return false;
+            return & **pp == & sp;
+        }
 
     }
 

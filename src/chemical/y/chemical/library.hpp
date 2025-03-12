@@ -79,6 +79,7 @@ namespace Yttrium
             virtual size_t serialize(OutputStream &) const; //!< [Serializable] all species
             void           readFrom(InputStream &);         //!< retrieve all species
             size_t         nextIndex() const noexcept;
+            bool           owns(const Species &sp) const noexcept;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

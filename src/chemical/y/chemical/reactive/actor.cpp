@@ -51,7 +51,7 @@ namespace Yttrium
         next(0),
         prev(0)
         {
-
+            assert(nu>0);
         }
 
         Actor:: Actor(const Actor &_) noexcept :
@@ -61,6 +61,7 @@ namespace Yttrium
         next(0),
         prev(0)
         {
+            assert(nu>0);
         }
 
 

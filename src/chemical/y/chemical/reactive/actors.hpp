@@ -41,7 +41,6 @@ namespace Yttrium
             //
             //__________________________________________________________________
             explicit Actors(const Actor::Involvement); //!< setup
-            Actors(const Actors &);                    //!< duplicate name and actors
             virtual ~Actors() noexcept;                //!< cleanup
 
             //__________________________________________________________________
@@ -52,7 +51,6 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & operator()(const unsigned nu, const Species &sp); //!< create new actor
             bool          has(const Species &) const noexcept; //!< check presence
-            void          xch(Actors &)              noexcept; //!< no-throw exchange
 
             //__________________________________________________________________
             //
@@ -63,7 +61,7 @@ namespace Yttrium
             const Actor::Involvement in; //!< involvement
 
         private:
-            Y_DISABLE_ASSIGN(Actors);
+            Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Y_PROXY_DECL();
             Actor::List my; //!< my list
 

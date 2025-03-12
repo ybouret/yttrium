@@ -41,11 +41,12 @@ namespace Yttrium
             for(XNode *node=aNode->branch().head;node;node=node->next)
             {
                 assert( node->defines<Actor>() );
-                XList        &actor =  node->branch();assert(1==actor.size||2==actor.size);
+                XList        &actor =  node->branch();    assert(1==actor.size||2==actor.size);
                 const Formula formula( actor.popTail() ); // extract node
                 const String  uuid  = formula.uuid();     // make uuid
                 const Species &sp   = lib(uuid);          // guess species
                 unsigned       nu   = 1;                  // default coefficient
+                assert(lib.owns(sp));
                 if(actor.size>0)
                 {
                     assert(1==actor.size);
@@ -53,6 +54,7 @@ namespace Yttrium
                     if(!Nu.tryCast(nu)) throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
                     assert(nu>0);
                 }
+                assert(nu>0);
                 eq(role,nu,sp);
             }
         }
@@ -87,6 +89,7 @@ namespace Yttrium
             }
 
             eq.latch();
+            
 
         }
 

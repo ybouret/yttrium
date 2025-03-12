@@ -16,25 +16,22 @@ namespace Yttrium
 
         void ClusterType:: link(Equilibrium &eq)
         {
-            std::cerr << "linking " << eq.name << std::endl;
             assert(!equilibria->has(eq));
             {
-                //SubEList esave(equilibria);
-                //SubSList ssave(species);
+                SubEList esave(equilibria);
+                SubSList ssave(species);
                 try
                 {
-                    std::cerr << " (+) " << eq.name << std::endl;
                     equilibria << eq;
                     for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
                     {
-                        std::cerr << " (+) " << (*it)->sp.name << std::endl;
                         species << (*it)->sp;
                     }
                 }
                 catch(...)
                 {
-                    //equilibria.xch(esave);
-                    //species.xch(ssave);
+                    esave.xch(equilibria);
+                    ssave.xch(species);
                     throw;
                 }
             }

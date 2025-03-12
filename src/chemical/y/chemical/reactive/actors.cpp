@@ -21,21 +21,7 @@ namespace Yttrium
         {
         }
 
-        Actors:: Actors(const Actors &_) :
-        Entity( new String(*_.name) ),
-        in(_.in),
-        my(_.my)
-        {
-        }
-
-        void Actors:: xch(Actors &_) noexcept
-        {
-            assert(!latched);
-            assert(!_.latched);
-            assert(in == _.in);
-            Coerce(name).exchange( Coerce(_.name) );
-            my.swapWith(_.my);
-        }
+        
 
 
         Y_PROXY_IMPL(Actors,my)

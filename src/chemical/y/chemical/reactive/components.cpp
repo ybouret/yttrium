@@ -77,27 +77,20 @@ namespace Yttrium
                 case Product:  pActors = &Coerce(prod); break;
             }
             assert(0!=pActors);
-            Actors &mine = *pActors;
 
-            //------------------------------------------------------------------
-            //
-            //
-            // atomic build
-            //
-            //
-            //------------------------------------------------------------------
-            Actors          temporary(mine);                     // hard copy
-            const Component component(role,temporary(nu,sp));    // new component to grown temporary
-            if(!db.insert(component)) throw Specific::Exception( key().c_str(), "couldn't insert %s '%s'", component.roleText(), uid.c_str() );
-
-            //------------------------------------------------------------------
-            //
-            //
-            // temporary+db are valid
-            //
-            //
-            //------------------------------------------------------------------
-            mine.xch(temporary);
+            // atomic add
+            Actors &        actors    = *pActors;
+            String          savedName = *actors.name;
+            const Component component(role, actors(nu,sp) );
+            try {
+                if(!db.insert(component)) throw Specific::Exception( key().c_str(), "couldn't insert %s '%s'", component.roleText(), uid.c_str() );
+            }
+            catch(...)
+            {
+                savedName.swapWith( Coerce(*actors.name) );
+                throw;
+            }
+            
         }
 
 
