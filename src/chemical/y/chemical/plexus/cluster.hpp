@@ -14,6 +14,7 @@ namespace Yttrium
     namespace Chemical
     {
 
+#if 0
         class ClusterType : public Fragment
         {
         public:
@@ -23,8 +24,8 @@ namespace Yttrium
             void link(Equilibrium &eq);
             void fusion(ClusterType &other) noexcept;
 
-            SubEList equilibria;
-            SubSList species;
+            //SubEList equilibria;
+            //SubSList species;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterType);
@@ -52,7 +53,7 @@ namespace Yttrium
             Cluster *next;
             Cluster *prev;
         };
-
+#endif
 
     }
 

@@ -2,6 +2,7 @@
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/system/exception.hpp"
 
+#if 0
 namespace Yttrium
 {
     namespace Chemical
@@ -16,6 +17,8 @@ namespace Yttrium
 
         void ClusterType:: link(Equilibrium &eq)
         {
+            assert(equilibria->isSortedAccordingTo(SubEList::Compare));
+            assert(species->isSortedAccordingTo(SubSList::Compare));
             assert(!equilibria->has(eq));
             {
                 SubEList esave(equilibria);
@@ -27,6 +30,8 @@ namespace Yttrium
                     {
                         species << (*it)->sp;
                     }
+                    assert(equilibria->isSortedAccordingTo(SubEList::Compare));
+                    assert(species->isSortedAccordingTo(SubSList::Compare));
                 }
                 catch(...)
                 {
@@ -40,7 +45,10 @@ namespace Yttrium
 
         void ClusterType:: fusion(ClusterType &other) noexcept
         {
-            
+            assert(equilibria->isSortedAccordingTo(SubEList::Compare));
+            assert(species->isSortedAccordingTo(SubSList::Compare));
+
+           
         }
 
     }
@@ -100,3 +108,6 @@ namespace Yttrium
     }
 
 }
+
+#endif
+

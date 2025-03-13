@@ -26,7 +26,7 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    Clusters cls(eqs);
+    //Clusters cls(eqs);
 
 }
 Y_UDONE()
