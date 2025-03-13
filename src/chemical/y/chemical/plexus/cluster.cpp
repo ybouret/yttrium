@@ -2,7 +2,6 @@
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/system/exception.hpp"
 
-#if 0
 namespace Yttrium
 {
     namespace Chemical
@@ -43,6 +42,7 @@ namespace Yttrium
             enroll(eq);
         }
 
+#if 0
         void ClusterType:: fusion(ClusterType &other) noexcept
         {
             assert(equilibria->isSortedAccordingTo(SubEList::Compare));
@@ -50,11 +50,13 @@ namespace Yttrium
 
            
         }
-
+#endif
+        
     }
 
 }
 
+#if 0
 namespace Yttrium
 {
     namespace Chemical

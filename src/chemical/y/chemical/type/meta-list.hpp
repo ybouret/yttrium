@@ -37,17 +37,6 @@ namespace Yttrium
         public:
             inline virtual ~MetaList() noexcept {}
 
-            inline MetaList & operator<<(Type &param)
-            {
-                if(list.has(param)) return *this;
-                insert(param);
-                return *this;
-            }
-
-            inline void xch(MetaList &other) noexcept
-            {
-                list.swapWith(other.list);
-            }
 
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
@@ -69,6 +58,7 @@ namespace Yttrium
                 assert(list.isSortedAccordingTo(Compare));
                 update();
             }
+
             ListType list;
         };
 
@@ -76,7 +66,7 @@ namespace Yttrium
 
 
 
-        //! multiple possible entries, keep single instance
+        //! keep indexed up-to-date
         template<Level LEVEL, typename LIST>
         class CodingList : public MetaList<LIST>
         {
@@ -104,6 +94,8 @@ namespace Yttrium
             }
         };
 
+
+        //! keep single instance of possible multiple parameter
         template <Level LEVEL, typename LIST>
         class ParaList : public CodingList<LEVEL,LIST>
         {
@@ -122,10 +114,17 @@ namespace Yttrium
                 return *this;
             }
 
+            inline void xch(ParaList &_) noexcept
+            {
+                this->list.swapWith(_.list);
+            }
+
         private:
             Y_DISABLE_ASSIGN(ParaList);
         };
 
+
+        //! keep single instance of possible single parameter
         template <Level LEVEL, typename LIST>
         class OrthoList : public CodingList<LEVEL,LIST>
         {
@@ -139,17 +138,21 @@ namespace Yttrium
 
             inline OrthoList & operator<<(Type &param)
             {
-                assert( !this->has(param) );
+                assert( !this->list.has(param) );
                 this->insert(param);
                 return *this;
+            }
+
+            inline void xch(OrthoList &_) noexcept
+            {
+                this->list.swapWith(_.list);
             }
 
         private:
             Y_DISABLE_ASSIGN(OrthoList);
         };
 
-
-
+        
         typedef ParaList<SubLevel,SList>  SubSList;
         typedef OrthoList<SubLevel,EList> SubEList;
 
