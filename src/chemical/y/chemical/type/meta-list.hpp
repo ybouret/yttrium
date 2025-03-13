@@ -37,6 +37,8 @@ namespace Yttrium
         public:
             inline virtual ~MetaList() noexcept {}
 
+            
+
 
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
@@ -51,6 +53,8 @@ namespace Yttrium
             virtual void update() noexcept = 0; //!< post-insertion indexing
 
         protected:
+
+            //! insert parameter post validation, then update
             inline  void insert(Type &param)
             {
                 assert(list.isSortedAccordingTo(Compare));
@@ -147,6 +151,12 @@ namespace Yttrium
             {
                 this->list.swapWith(_.list);
             }
+
+            void fusion(OrthoList &rhs) noexcept
+            {
+                ListOps::Fusion(this->list,rhs->list,MyList::Compare);
+            }
+
 
         private:
             Y_DISABLE_ASSIGN(OrthoList);

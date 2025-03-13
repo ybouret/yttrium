@@ -42,16 +42,17 @@ namespace Yttrium
             enroll(eq);
         }
 
-#if 0
         void ClusterType:: fusion(ClusterType &other) noexcept
         {
             assert(equilibria->isSortedAccordingTo(SubEList::Compare));
             assert(species->isSortedAccordingTo(SubSList::Compare));
+            assert(other.equilibria->isSortedAccordingTo(SubEList::Compare));
+            assert(other.species->isSortedAccordingTo(SubSList::Compare));
 
-           
+            
+
         }
-#endif
-        
+
     }
 
 }
