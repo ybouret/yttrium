@@ -16,13 +16,16 @@ namespace Yttrium
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
-            explicit Clusters(Equilibria &eqs);
+            explicit Clusters(XMLog &xml, Equilibria &eqs);
             virtual ~Clusters() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Y_PROXY_DECL();
             Cluster::List my;
+
+            void setup(XMLog &xml, Equilibria &eqs);
+            void compile(XMLog &xml);
         };
         
     }

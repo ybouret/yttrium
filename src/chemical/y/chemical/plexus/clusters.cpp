@@ -13,9 +13,19 @@ namespace Yttrium
         }
 
         
-        Clusters:: Clusters(Equilibria &eqs) :
+        Clusters:: Clusters(XMLog &xml, Equilibria &eqs) :
         my()
         {
+
+            Y_XML_SECTION_OPT(xml, "Clusters", "#eqs=" << eqs->size());
+            setup(xml,eqs);
+            compile(xml);
+        }
+
+        void Clusters:: setup(XMLog &xml, Equilibria &eqs)
+        {
+            Y_XML_SECTION(xml, "setup");
+
             for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
             {
                 Equilibrium &eq = **it;
@@ -28,7 +38,7 @@ namespace Yttrium
                     }
                 }
 
-                std::cerr << "new Cluster" << std::endl;
+                Y_XML_COMMENT(xml, "new cluster with '" << eq.name << "'");
                 my.pushTail( new Cluster(eq) );
                 continue;
 
@@ -42,7 +52,7 @@ namespace Yttrium
                         {
                             if(rhs->accepts(*lhs))
                             {
-                                std::cerr << "Need To Implement Fusion!" << std::endl;
+                                Y_XML_COMMENT(xml, "fusion " << *rhs << " and " << *lhs);
                                 rhs->attach(*lhs);
                                 lhs.erase();
                                 break;
@@ -53,6 +63,23 @@ namespace Yttrium
                     }
                     my.swapWith(ok);
                 }
+            }
+            Y_XML_COMMENT(xml, "constructed #cluster=" << my.size );
+            for(Cluster *cl=my.head;cl;cl=cl->next)
+            {
+                cl->latch();
+                Y_XMLOG(xml, "(+) " << *cl);
+            }
+        }
+
+
+        void Clusters:: compile(XMLog &xml)
+        {
+            Y_XML_SECTION(xml, "compile");
+            for(Cluster *cl=my.head;cl;cl=cl->next)
+            {
+                assert(cl->latched);
+                cl->compile(xml);
             }
         }
 

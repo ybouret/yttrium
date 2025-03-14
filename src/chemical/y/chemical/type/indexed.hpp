@@ -36,6 +36,18 @@ namespace Yttrium
             explicit Indexed(const String *, const size_t i) noexcept;
             virtual ~Indexed() noexcept;
 
+            template <typename T> inline
+            T & operator()(Writable<T> &arr, const Level level) const
+            {
+                return arr[ indx[level] ];
+            }
+
+            template <typename T> inline
+            const T & operator()(const Readable<T> &arr, const Level level) const
+            {
+                return arr[ indx[level] ];
+            }
+
 
             const size_t indx[MaxLevel];
         private:

@@ -6,76 +6,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        ClusterType:: ClusterType() noexcept : Fragment(), equilibria(), species()
-        {
-        }
-
-        ClusterType:: ~ClusterType() noexcept
-        {
-        }
-
-        void ClusterType:: attach(Equilibrium &eq)
-        {
-            assert(equilibria->isStrictlySortedBy(SubEList::Compare));
-            assert(species->isStrictlySortedBy(SubSList::Compare));
-            assert(!equilibria->has(eq));
-
-            if(eq->size()<=0)
-                throw Specific::Exception(Cluster::CallSign,"empty equilibrium '%s'", eq.key().c_str());
-
-            {
-                SubEList esave(equilibria);
-                SubSList ssave(species);
-                try
-                {
-                    equilibria << eq;
-                    for(Equilibrium::ConstIterator it=eq->begin();it!=eq->end();++it)
-                    {
-                        species << (*it)->sp;
-                    }
-                    assert(equilibria->isStrictlySortedBy(SubEList::Compare));
-                    assert(species->isStrictlySortedBy(SubSList::Compare));
-                }
-                catch(...)
-                {
-                    esave.xch(equilibria);
-                    ssave.xch(species);
-                    throw;
-                }
-            }
-            enroll(eq);
-
-            assert(equilibria->size>0);
-            assert(species->size>0);
-        }
-
-        void ClusterType:: fusion(ClusterType &other) noexcept
-        {
-            assert(      equilibria->isStrictlySortedBy(SubEList::Compare));
-            assert(         species->isStrictlySortedBy(SubSList::Compare));
-            assert(other.equilibria->isStrictlySortedBy(SubEList::Compare));
-            assert(other.   species->isStrictlySortedBy(SubSList::Compare));
-
-            equilibria.fusion(other.equilibria);
-            species.fusion(other.species);
-
-            assert(      equilibria->isStrictlySortedBy(SubEList::Compare));
-            assert(         species->isStrictlySortedBy(SubSList::Compare));
-
-            for(const ENode *en=equilibria->head;en;en=en->next)
-            {
-                enroll(**en);
-            }
-        }
-
-    }
-
-}
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
         const char * const Cluster::CallSign = "Cluster";
 
         Y_PROXY_IMPL(Cluster,my)
@@ -132,6 +62,24 @@ namespace Yttrium
             if(latched || cluster.latched) throw Specific::Exception(CallSign,"cannot attached latched cluster(s)");
             my.fusion(cluster.my);
         }
+
+
+        void Cluster:: compile(XMLog &xml)
+        {
+            Y_XML_SECTION_OPT(xml, CallSign,*this);
+            const size_t N = my.equilibria->size; assert(N>0);
+            const size_t M = my.species->size;    assert(M>0);
+            iMatrix &topo = Coerce(topology);
+            topo.make(N,M);
+            for(const ENode *en=my.equilibria->head;en;en=en->next)
+            {
+                const Components &eq = **en;
+                (**en).fillTopology(topo[eq.indx[SubLevel]],SubLevel);
+            }
+            Y_XMLOG(xml, "topology=" << topology);
+        }
+
+
 
     }
 

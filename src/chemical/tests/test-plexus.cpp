@@ -26,12 +26,19 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    Clusters cls(eqs);
+    bool verbose = true;
+
+    XMLog    xml(verbose);
+    Clusters cls(xml,eqs);
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
     }
     std::cerr << "lib=" << lib << std::endl;
+
+    Y_SIZEOF(Cluster);
+    Y_SIZEOF(ClusterType);
+
 }
 Y_UDONE()
 

@@ -88,6 +88,13 @@ namespace Yttrium
 
             static bool AreConnected(const Components &lhs, const Components &rhs);
 
+            template <typename ARRAY> inline
+            void fillTopology(ARRAY &topo, const Level level) const
+            {
+                typedef typename ARRAY::Type _T;
+                for(const Actor *a=prod->head;a;a=a->next) a->sp(topo,level) =  _T(a->nu);
+                for(const Actor *a=reac->head;a;a=a->next) a->sp(topo,level) = -_T(a->nu);
+            }
 
             //__________________________________________________________________
             //
