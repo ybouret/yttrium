@@ -14,7 +14,8 @@ namespace Yttrium
     namespace Chemical
     {
         class Clusters;
-
+        class Equilibria;
+        
         typedef Matrix<int>      iMatrix;
         typedef Matrix<unsigned> uMatrix;
 
@@ -44,9 +45,9 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             friend class Clusters;
             Y_PROXY_DECL();
-            void compile(XMLog &);
+            void compile(XMLog &, Equilibria &);
             void conservations(XMLog &);
-            void combinatorics(XMLog &);
+            void combinatorics(XMLog &, Equilibria &);
             ClusterType my;
 
         public:

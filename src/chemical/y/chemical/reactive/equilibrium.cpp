@@ -31,6 +31,13 @@ namespace Yttrium
             if(value<=zero) throw Specific::Exception( key().c_str(), "K(%g)=%g", double(t), double(value));
             return value;
         }
+
+        Equilibrium:: Equilibrium(const String * const s,
+                                  const size_t         i) :
+        Components(s,i)
+        {
+        }
+        
     }
 
 }

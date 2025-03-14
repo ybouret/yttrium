@@ -1,11 +1,11 @@
 
 #include "y/chemical/plexus/clusters.hpp"
+#include "y/chemical/reactive/equilibria.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
 
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 #include "y/apex/api/count-non-zero.hpp"
-
 #include "y/data/small/heavy/list/bare.hpp"
 
 
@@ -168,13 +168,31 @@ namespace Yttrium
                 return ans.yield();
             }
 
-            explicit MixedEqulibrium(WList       &wl,
-                                     EList       &el,
-                                     const size_t ii) :
+            explicit MixedEqulibrium(WList               &wl,
+                                     EList               &el,
+                                     const SList         &sl,
+                                     const Readable<int> &st,
+                                     const size_t         ii) :
             Equilibrium( MakeName(wl,el), ii), wlist(), elist(), xmul()
             {
+                // steal data
                 Coerce(wlist).swapWith(wl);
                 Coerce(elist).swapWith(el);
+
+                // fill
+                for(const SNode *sn=sl.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    const int      cf = sp(st,SubLevel);
+                    switch( Sign::Of(cf) )
+                    {
+                        case __Zero__: continue;
+                        case Positive: use(Product,  cf,sp); break;
+                        case Negative: use(Reactant,-cf,sp); break;
+                    }
+                }
+
+                latch();
             }
 
             virtual ~MixedEqulibrium() noexcept {}
@@ -186,9 +204,13 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEqulibrium);
+            virtual xreal_t getK(xreal_t)
+            {
+                return 1;
+            }
         };
 
-        void Cluster:: combinatorics(XMLog &xml)
+        void Cluster:: combinatorics(XMLog &xml, Equilibria &eqs)
         {
             Y_XML_SECTION(xml, "combinatorics");
 
@@ -246,12 +268,19 @@ namespace Yttrium
                         elist << eq;
                     }
                 }
-                AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
-                std::cerr << "(+) " << ptr << std::endl;
+              //  AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
+               // std::cerr << "(+) " << ptr << std::endl;
+
+                Equilibrium::Pointer mixed = new MixedEqulibrium(wlist,
+                                                                 elist,
+                                                                 *my.species,
+                                                                 mix->stoi,
+                                                                 eqs.nextIndex());
+                std::cerr << mixed << std::endl;
+
             }
 
             Y_XML_COMMENT(xml, "#mixes = " << mixes.size << " / maxOrder = " << maxOrder);
-
         }
 
     }

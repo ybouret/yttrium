@@ -53,7 +53,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components : public Indexed, public   Proxy<const ComponentsType>
+        class Components : public Indexed, public Proxy<const ComponentsType>
         {
         public:
             //__________________________________________________________________

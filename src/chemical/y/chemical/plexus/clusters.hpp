@@ -25,7 +25,7 @@ namespace Yttrium
             Cluster::List my;
 
             void setup(XMLog &xml, Equilibria &eqs);
-            void compile(XMLog &xml);
+            void compile(XMLog &xml, Equilibria &eqs);
         };
         
     }

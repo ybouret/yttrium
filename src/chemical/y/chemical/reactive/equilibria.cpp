@@ -68,6 +68,7 @@ namespace Yttrium
 
             if(!(*eq)->latched)
                 throw Specific::Exception(CallSign, "adding unlatched '%s",eid);
+            
             assert(eq->reac.latched);
             assert(eq->prod.latched);
 

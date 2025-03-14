@@ -19,7 +19,7 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "Clusters", "#eqs=" << eqs->size());
             setup(xml,eqs);
-            compile(xml);
+            compile(xml,eqs);
         }
 
         void Clusters:: setup(XMLog &xml, Equilibria &eqs)
@@ -73,13 +73,13 @@ namespace Yttrium
         }
 
 
-        void Clusters:: compile(XMLog &xml)
+        void Clusters:: compile(XMLog &xml, Equilibria &eqs)
         {
             Y_XML_SECTION(xml, "compile");
             for(Cluster *cl=my.head;cl;cl=cl->next)
             {
                 assert(cl->latched);
-                cl->compile(xml);
+                cl->compile(xml,eqs);
             }
         }
 
