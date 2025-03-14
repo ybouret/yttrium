@@ -116,6 +116,15 @@ namespace Yttrium
             return false;
         }
 
+        void Components:: gatherSpeciesIn(AddressBook &book) const
+        {
+            for(ConstIterator it=db.begin();it!=db.end();++it)
+            {
+                book |= (*it)->sp;
+            }
+        }
+
+
     }
 
 }

@@ -9,6 +9,7 @@
 #include "y/chemical/reactive/component.hpp"
 #include "y/chemical/reactive/actors.hpp"
 #include "y/associative/suffix/set.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -95,6 +96,9 @@ namespace Yttrium
                 for(const Actor *a=prod->head;a;a=a->next) a->sp(topo,level) =  _T(a->nu);
                 for(const Actor *a=reac->head;a;a=a->next) a->sp(topo,level) = -_T(a->nu);
             }
+
+            void gatherSpeciesIn(AddressBook &book) const;
+
 
             //__________________________________________________________________
             //

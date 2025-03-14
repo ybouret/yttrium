@@ -6,7 +6,6 @@
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 #include "y/apex/api/count-non-zero.hpp"
 
-#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -51,17 +50,50 @@ namespace Yttrium
             }
 
 
-            bool isEfficientFor(const ClusterType &cl) const
+            bool isEfficientFor(const ClusterType &cl, AddressBook &source) const
             {
+                source.free();
+
                 AddressBook target;
                 for(const SNode *sn=cl.species->head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    if( 0 != sp(stoi,SubLevel) ) target |= sp;
+                    if( 0 != sp(stoi,SubLevel) ) target += sp;
                 }
-                
+
+                for(const ENode *en=cl.equilibria->head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const Indexed     &ei = eq;
+                    if( 0 != ei(*this,SubLevel) ) eq.gatherSpeciesIn(source);
+                }
 
 
+                const size_t src = source.size();
+                const size_t tgt = target.size();
+
+                switch( Sign::Of(tgt,src) )
+                {
+                    case Positive:
+                        throw Specific::Exception(Cluster::CallSign,"corrupted mix stoichiometry excess!!");
+
+                    case __Zero__:
+                        if( !(source==target) )
+                            throw Specific::Exception(Cluster::CallSign,"corrupted mix stoichiometry equality!!");
+                        return false;
+
+                    case Negative:
+                        break;
+                }
+
+                for(AddressBook::Iterator it=target.begin();it!=target.end();++it)
+                {
+                    const void * addr = *it;
+                    if(!source.remove_(addr))
+                        throw Specific::Exception(Cluster::CallSign,"corrupted mix stoichiometry compression!!");
+                }
+
+                return true;
             }
 
             ArrayType stoi;
@@ -78,18 +110,27 @@ namespace Yttrium
             Y_XML_SECTION(xml, "combinatorics");
             
             const IntegerSurvey survey(xml,topologyT,0);
-            std::cerr << "survey=" << survey << std::endl;
+            //std::cerr << "survey=" << survey << std::endl;
             if(survey->size<=0) {
                 Y_XML_COMMENT(xml,"no combinatorics");
                 return;
             }
 
-            for(const IntegerSurvey::ArrayType *arr=survey->head;arr;arr=arr->next)
+            CxxListOf<MixTab> mixes;
             {
-                MixTab mix(*arr,topology);
-                std::cerr << mix << " => " << mix.stoi << std::endl;
-                if(mix.isEfficientFor(**this))
+                AddressBook missing;
+                for(const IntegerSurvey::ArrayType *arr=survey->head;arr;arr=arr->next)
                 {
+                    AutoPtr<MixTab> mix = new MixTab(*arr,topology);
+                    if(!mix->isEfficientFor(**this,missing))
+                    {
+                        Y_XMLOG(xml, "(-) " << mix);
+                        continue;
+                    }
+                    if(xml.verbose)
+                    {
+                        missing.display<Species>( xml() << "(+) " << mix << "->") << std::endl;
+                    }
 
                 }
             }
