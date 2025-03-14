@@ -20,17 +20,16 @@ namespace Yttrium
             explicit ClusterType() noexcept;
             virtual ~ClusterType() noexcept;
 
-            void link(Equilibrium &eq);
-            void fusion(ClusterType &other) noexcept;
+            void attach(Equilibrium &eq);             //!< attache new equilibrium and its species
+            void fusion(ClusterType &other) noexcept; //!< fusion and update fragment
 
-            SubEList equilibria;
-            SubSList species;
+            SubEList equilibria;   //!< list of equilibria
+            SubSList species;      //!< list of shared species species
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterType);
         };
 
-#if 0
         class Cluster : public Object, public Proxy<const ClusterType>, public Latchable
         {
         public:
@@ -40,7 +39,7 @@ namespace Yttrium
             explicit Cluster(Equilibrium &first);
             virtual ~Cluster() noexcept;
 
-            void attach(Equilibrium &);
+            void attach(Equilibrium &);                       //!< sanity check and link equilibrium/species
             bool accepts(const Equilibrium &) const noexcept; //!< shared species
             bool accepts(const Cluster &)     const noexcept; //!< shared species
 
@@ -48,12 +47,11 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             Y_PROXY_DECL();
             ClusterType my;
-            
+
         public:
             Cluster *next;
             Cluster *prev;
         };
-#endif
 
     }
 

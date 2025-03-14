@@ -14,11 +14,15 @@ namespace Yttrium
         {
         }
 
-        void ClusterType:: link(Equilibrium &eq)
+        void ClusterType:: attach(Equilibrium &eq)
         {
-            assert(equilibria->isSortedAccordingTo(SubEList::Compare));
-            assert(species->isSortedAccordingTo(SubSList::Compare));
+            assert(equilibria->isStrictlySortedBy(SubEList::Compare));
+            assert(species->isStrictlySortedBy(SubSList::Compare));
             assert(!equilibria->has(eq));
+
+            if(eq->size()<=0)
+                throw Specific::Exception(Cluster::CallSign,"empty equilibrium '%s'", eq.key().c_str());
+
             {
                 SubEList esave(equilibria);
                 SubSList ssave(species);
@@ -29,8 +33,8 @@ namespace Yttrium
                     {
                         species << (*it)->sp;
                     }
-                    assert(equilibria->isSortedAccordingTo(SubEList::Compare));
-                    assert(species->isSortedAccordingTo(SubSList::Compare));
+                    assert(equilibria->isStrictlySortedBy(SubEList::Compare));
+                    assert(species->isStrictlySortedBy(SubSList::Compare));
                 }
                 catch(...)
                 {
@@ -40,24 +44,34 @@ namespace Yttrium
                 }
             }
             enroll(eq);
+
+            assert(equilibria->size>0);
+            assert(species->size>0);
         }
 
         void ClusterType:: fusion(ClusterType &other) noexcept
         {
-            assert(equilibria->isSortedAccordingTo(SubEList::Compare));
-            assert(species->isSortedAccordingTo(SubSList::Compare));
-            assert(other.equilibria->isSortedAccordingTo(SubEList::Compare));
-            assert(other.species->isSortedAccordingTo(SubSList::Compare));
+            assert(      equilibria->isStrictlySortedBy(SubEList::Compare));
+            assert(         species->isStrictlySortedBy(SubSList::Compare));
+            assert(other.equilibria->isStrictlySortedBy(SubEList::Compare));
+            assert(other.   species->isStrictlySortedBy(SubSList::Compare));
 
-            
+            equilibria.fusion(other.equilibria);
+            species.fusion(other.species);
 
+            assert(      equilibria->isStrictlySortedBy(SubEList::Compare));
+            assert(         species->isStrictlySortedBy(SubSList::Compare));
+
+            for(const ENode *en=equilibria->head;en;en=en->next)
+            {
+                enroll(**en);
+            }
         }
 
     }
 
 }
 
-#if 0
 namespace Yttrium
 {
     namespace Chemical
@@ -77,14 +91,14 @@ namespace Yttrium
         next(0),
         prev(0)
         {
-            my.link(first);
+            my.attach(first);
         }
 
         void Cluster:: attach(Equilibrium &eq)
         {
             if(latched)                 throw Specific::Exception(CallSign, "latched while attaching '%s'", eq.key().c_str());
             if(my.equilibria->has(eq))  throw Specific::Exception(CallSign, "attaching multiple '%s'", eq.key().c_str());
-            my.link(eq);
+            my.attach(eq);
         }
 
 
@@ -112,5 +126,4 @@ namespace Yttrium
 
 }
 
-#endif
 

@@ -84,7 +84,7 @@ namespace Yttrium
                         active.pushTail(tribe);
                     }
                     swapWith(active);
-                    assert(isSortedAccordingTo(Tribe::Compare));
+                    assert(isSortedBy(Tribe::Compare));
                     Y_XML_COMMENT(xml, "#active    = " << size);
                 }
 
@@ -102,7 +102,7 @@ namespace Yttrium
                         kept.pushTail( lhs.yield() );
                     }
                     swapWith(kept);
-                    assert(isSortedAccordingTo(Tribe::Compare));
+                    assert(isSortedBy(Tribe::Compare));
                     Y_XML_COMMENT(xml, "#multiple  = " << multiple);
 
                 }
@@ -142,7 +142,7 @@ namespace Yttrium
                             retained.pushTail( lhs.yield() );
                         }
                         swapWith(retained);
-                        assert(isSortedAccordingTo(Tribe::Compare));
+                        assert(isSortedBy(Tribe::Compare));
                         if(modified) goto CYCLE;
                     }
                     Y_XML_COMMENT(xml, "#matching  = " << matching);
@@ -183,14 +183,14 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, "#collected = " << collected);
 
                     const StopWatch sw(pEll);
-                    assert(isSortedAccordingTo(Tribe::Compare));
+                    assert(isSortedBy(Tribe::Compare));
 
                     if( 0 != (flag&Strategy::RemoveFutile) ) removeFutile(xml);
                     if( 0 != (flag&Strategy::FindMultiple) ) findMultiple(xml);
                     if( 0 != (flag&Strategy::FindMatching) ) findMatching(xml);
                     if( 0 != (flag&Strategy::ReplaceBasis) ) replaceBasis(xml);
 
-                    assert(isSortedAccordingTo(Tribe::Compare));
+                    assert(isSortedBy(Tribe::Compare));
 
                     // final call for unique signature ?
                     if(size<=0) {

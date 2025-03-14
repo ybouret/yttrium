@@ -127,7 +127,7 @@ namespace Yttrium
                                  const MATRIX  & data,
                                  const unsigned  flag)
                     {
-                        assert( chld.isSortedAccordingTo(Compare) );
+                        assert( chld.isSortedBy(Compare) );
 
                         //------------------------------------------------------
                         //
@@ -155,7 +155,7 @@ namespace Yttrium
                                         assert(Foundation==tribe->qfamily->quality);
                                         tribe->flush();
                                         ListOps::InsertOrdered(chld,tribe,Compare);
-                                        assert( chld.isSortedAccordingTo(Compare) );
+                                        assert( chld.isSortedBy(Compare) );
                                         return;
                                     }
                                     else
@@ -203,7 +203,7 @@ namespace Yttrium
                             MergeSort::Call(here,Compare);
                             ListOps::Fusion(chld,here,Compare);
                         }
-                        assert( chld.isSortedAccordingTo(Compare) );
+                        assert( chld.isSortedBy(Compare) );
                     }
 
                     //! setup initial family from a vector

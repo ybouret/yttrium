@@ -52,21 +52,22 @@ namespace Yttrium
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
 
+            virtual void update() noexcept = 0; //!< post-insertion indexing
+
         private:
             Y_DISABLE_ASSIGN(MetaList);
             inline virtual typename
             SelfType::ConstInterface &surrogate() const noexcept { return list; }
 
-            virtual void update() noexcept = 0; //!< post-insertion indexing
 
         protected:
 
             //! after validation, insert parameter and update indices
             inline  void insert(Type &param)
             {
-                assert(list.isSortedAccordingTo(Compare));
+                assert(list.isStrictlySortedBy(Compare));
                 ListOps::InsertOrdered(list,list.proxy->produce(param),Compare);
-                assert(list.isSortedAccordingTo(Compare));
+                assert(list.isStrictlySortedBy(Compare));
                 update();
             }
 
@@ -94,15 +95,15 @@ namespace Yttrium
         public:
             inline virtual ~CodingList() noexcept {}
 
-
-        private:
-            Y_DISABLE_ASSIGN(CodingList);
             virtual void update() noexcept
             {
                 size_t idx = 1;
                 for(NodeType *node=this->list.head;node;node=node->next)
                     Coerce( (**node).indx[LEVEL] ) = idx++;
             }
+        private:
+            Y_DISABLE_ASSIGN(CodingList);
+
         };
 
 
@@ -111,12 +112,13 @@ namespace Yttrium
         class ParaList : public CodingList<LEVEL,LIST>
         {
         public:
-            typedef CodingList<LEVEL,LIST> MyList;
-            typedef typename MyList::Type  Type;
+            typedef CodingList<LEVEL,LIST>       BaseList;
+            typedef typename BaseList::Type      Type;
+            typedef typename BaseList::NodeType  NodeType;
 
-            inline explicit ParaList() noexcept : MyList() {}
+            inline explicit ParaList() noexcept : BaseList() {}
             inline virtual ~ParaList() noexcept {}
-            inline ParaList(const ParaList &_) : MyList(_) {}
+            inline ParaList(const ParaList &_) : BaseList(_) {}
 
             inline ParaList & operator<<(Type &param)
             {
@@ -125,9 +127,23 @@ namespace Yttrium
                 return *this;
             }
 
-            inline void xch(ParaList &_) noexcept
-            {
+            inline void xch(ParaList &_) noexcept {
                 this->list.swapWith(_.list);
+            }
+
+            void fusion(ParaList &other) noexcept
+            {
+                LIST &mine = this->list;
+                LIST &peer = other.list;
+                while(peer.size>0)
+                {
+                    NodeType * const node = peer.popHead();
+                    if(mine.has(**node))
+                        mine.proxy->destroy(node);
+                    else
+                        ListOps::InsertOrdered(mine,node,BaseList::Compare);
+                }
+                this->update();
             }
 
         private:
@@ -160,11 +176,12 @@ namespace Yttrium
                 this->list.swapWith(_.list);
             }
 
+            //! fusion of two disting lists
             void fusion(OrthoList &rhs) noexcept
             {
-                CoreList &lhs = *this;
+                OrthoList &lhs = *this;
                 assert( CoreList::AreDistinct(lhs,rhs) );
-                ListOps::Fusion(lhs->list,rhs->list,CoreList::Compare);
+                ListOps::Fusion(lhs.list,rhs.list,CoreList::Compare);
                 lhs.update();
             }
 
@@ -173,7 +190,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(OrthoList);
         };
 
-        
+
         typedef ParaList<SubLevel,SList>  SubSList;
         typedef OrthoList<SubLevel,EList> SubEList;
 

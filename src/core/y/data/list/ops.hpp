@@ -589,13 +589,34 @@ namespace Yttrium
             {
                 switch( compareNodes(curr,next) )
                 {
-                    case Negative:
+                    case Negative: continue;
                     case __Zero__: continue;
                     case Positive: return false;
                 }
             }
             return true;
         }
+
+        //! check that a list is strictly ssorted
+        template <typename LIST, typename COMPARE> static inline
+        bool IsStrictlySorted(const LIST &L, COMPARE &compareNodes)
+        {
+            typedef typename LIST::NodeType NODE;
+            if(L.size<=1) return true;
+            for(NODE *curr=L.head, *next=curr->next;
+                0!=next;
+                curr=next,next=next->next)
+            {
+                switch( compareNodes(curr,next) )
+                {
+                    case Negative: continue;
+                    case __Zero__: return false;
+                    case Positive: return false;
+                }
+            }
+            return true;
+        }
+
 
         //______________________________________________________________________
         //

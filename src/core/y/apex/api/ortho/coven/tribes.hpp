@@ -147,7 +147,7 @@ namespace Yttrium
                         //
                         //------------------------------------------------------
                         {
-                            assert(isSortedAccordingTo(Tribe::Compare));
+                            assert(isSortedBy(Tribe::Compare));
                             const StopWatch sw(pEll);
                             {
                                 Tribe::List chld;
@@ -155,7 +155,7 @@ namespace Yttrium
                                     tribe->progeny(chld,data,flag);
                                 swapWith(chld);
                             }
-                            assert(isSortedAccordingTo(Tribe::Compare));
+                            assert(isSortedBy(Tribe::Compare));
                         }
                         //------------------------------------------------------
                         //

@@ -155,9 +155,16 @@ namespace Yttrium
 
         //! check that nodes are sorted according to comparison
         template <typename COMPARE_NODES> inline
-        bool isSortedAccordingTo(COMPARE_NODES &compare) const
+        bool isSortedBy(COMPARE_NODES &compare) const
         {
             return ListOps::IsSorted(*this,compare);
+        }
+
+        //! check that nodes are sorted according to comparison
+        template <typename COMPARE_NODES> inline
+        bool isStrictlySortedBy(COMPARE_NODES &compare) const
+        {
+            return ListOps::IsStrictlySorted(*this,compare);
         }
 
 

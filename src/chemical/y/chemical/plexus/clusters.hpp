@@ -13,7 +13,6 @@ namespace Yttrium
 {
     namespace Chemical
     {
-#if 0
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
@@ -25,7 +24,6 @@ namespace Yttrium
             Y_PROXY_DECL();
             Cluster::List my;
         };
-#endif
         
     }
 
