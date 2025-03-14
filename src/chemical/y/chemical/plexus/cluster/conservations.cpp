@@ -31,7 +31,7 @@ namespace Yttrium
             }
 
             {
-                uMatrix &Cm = Coerce(preserve);
+                uMatrix &Cm = Coerce(preserved);
                 const size_t M = my.species->size;
                 Cm.make(survey->size,M);
 
@@ -48,8 +48,8 @@ namespace Yttrium
                 }
             }
 
-            Y_XMLOG(xml, "topology = " << topology);
-            Y_XMLOG(xml, "preserve = " << preserve);
+            Y_XMLOG(xml, "topology  = " << topology);
+            Y_XMLOG(xml, "preserved = " << preserved);
 
 
         }

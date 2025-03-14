@@ -37,7 +37,8 @@ namespace Yttrium
 
 
             const iMatrix topology;
-            const uMatrix preserve;
+            const iMatrix topologyT;
+            const uMatrix preserved;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

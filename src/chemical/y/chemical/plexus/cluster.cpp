@@ -69,15 +69,26 @@ namespace Yttrium
             Y_XML_SECTION_OPT(xml,CallSign,*this);
             const size_t N = my.equilibria->size; assert(N>0);
             const size_t M = my.species->size;    assert(M>0);
-            iMatrix &topo = Coerce(topology);
-            topo.make(N,M);
-            for(const ENode *en=my.equilibria->head;en;en=en->next)
             {
-                const Components &eq = **en;
-                (**en).fillTopology(topo[eq.indx[SubLevel]],SubLevel);
+                iMatrix &topo = Coerce(topology);
+                topo.make(N,M);
+                for(const ENode *en=my.equilibria->head;en;en=en->next)
+                {
+                    const Components &eq = **en;
+                    (**en).fillTopology(topo[eq.indx[SubLevel]],SubLevel);
+                }
+                Y_XMLOG(xml, "topology=" << topology);
             }
-            Y_XMLOG(xml, "topology=" << topology);
+
+            {
+                iMatrix &mu = Coerce(topologyT);
+                mu.make(M,N);
+                mu.assign(TransposeOf,topology);
+
+            }
             conservations(xml);
+            combinatorics(xml);
+
         }
 
 
