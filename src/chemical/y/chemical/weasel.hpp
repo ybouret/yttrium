@@ -67,15 +67,18 @@ namespace Yttrium
                                    XNode * const eNode,
                                    const size_t  eIndx); //!< compile equilibrium from parse node
 
+            //! use root's content to update library and equilibria
             void     update(Library    &  lib,
                             Equilibria &  eqs,
                             XNode * const root);
 
 
+            //! update from parsed module
             void operator()(Library    &  lib,
                             Equilibria &  eqs,
                             Lingo::Module * const);
-            
+
+            //! append Lua code to internal VM
             Weasel & operator<<(const String &luaCode);
 
 

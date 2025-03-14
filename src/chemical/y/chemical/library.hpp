@@ -48,9 +48,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const CallSign; //!< "Library"
-            typedef LibraryType::ConstIterator ConstIterator;
-            
+            static const char * const          CallSign;       //!< "Library"
+            typedef LibraryType::ConstIterator ConstIterator;  //!< alias
+
             //__________________________________________________________________
             //
             //
@@ -76,10 +76,10 @@ namespace Yttrium
                 return setup(sp);
             }
 
-            virtual size_t serialize(OutputStream &) const; //!< [Serializable] all species
-            void           readFrom(InputStream &);         //!< retrieve all species
-            size_t         nextIndex() const noexcept;
-            bool           owns(const Species &sp) const noexcept;
+            virtual size_t serialize(OutputStream &) const;        //!< [Serializable] all species
+            void           readFrom(InputStream &);                //!< retrieve all species
+            size_t         nextIndex() const noexcept;             //!< for species creation
+            bool           owns(const Species &sp) const noexcept; //!< checkup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

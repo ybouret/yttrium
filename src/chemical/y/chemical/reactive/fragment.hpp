@@ -12,17 +12,43 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        class Fragment  
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Helper to format equilibria/components
+        //
+        //
+        //______________________________________________________________________
+        class Fragment
         {
         public:
-            explicit Fragment()        noexcept;
-            virtual ~Fragment()        noexcept;
-            Fragment(const Fragment &) noexcept;
-            Fragment & operator=(const Fragment &) noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Fragment()                    noexcept; //!< setup
+            virtual ~Fragment()                    noexcept; //!< cleanup
+            Fragment(const Fragment &)             noexcept; //!< duplicate
+            Fragment & operator=(const Fragment &) noexcept; //!< assign
 
-            void           enroll(const Components &eq) noexcept;
-            std::ostream & display(std::ostream &, const Components &) const;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            void           enroll(const Components &eq) noexcept;             //!< update all
+            std::ostream & display(std::ostream &, const Components &) const; //!< default display
 
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             Assembly self; //!< equilibria name
             Assembly reac; //!< reactants  name
             Assembly prod; //!< products   name

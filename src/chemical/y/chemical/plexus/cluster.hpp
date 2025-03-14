@@ -16,43 +16,74 @@ namespace Yttrium
         class Clusters;
         class Equilibria;
         
-        typedef Matrix<int>      iMatrix;
-        typedef Matrix<unsigned> uMatrix;
+        typedef Matrix<int>      iMatrix; //!< alias
+        typedef Matrix<unsigned> uMatrix; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Cluster description
+        //
+        //
+        //______________________________________________________________________
         class Cluster : public Object, public Proxy<const ClusterType>, public Latchable
         {
         public:
-            static const char * const CallSign;
-            typedef CxxListOf<Cluster> List;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const  CallSign; //!< "Cluster"
+            typedef CxxListOf<Cluster> List;     //!< alias
 
-            explicit Cluster(Equilibrium &first);
-            virtual ~Cluster() noexcept;
-            Y_OSTREAM_PROTO(Cluster);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Cluster(Equilibrium &first); //!< initialize
+            virtual ~Cluster() noexcept;          //!< cleanup
+            Y_OSTREAM_PROTO(Cluster);             //!< display
 
 
+            //__________________________________________________________________
+            //
+            //
             // Construction Methods
+            //
+            //__________________________________________________________________
             void attach(Equilibrium &);                       //!< sanity check and link equilibrium/species
             bool accepts(const Equilibrium &) const noexcept; //!< shared species
             bool accepts(const Cluster &)     const noexcept; //!< shared species
             void attach(Cluster &);                           //!< steal content (if not latched)
 
-
-            const iMatrix topology;
-            const iMatrix topologyT;
-            const uMatrix preserved;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const iMatrix topology;    //!< topology
+            const iMatrix topologyT;   //!< transpose(topology)
+            const uMatrix preserved;   //!< preserved matrix for conservation
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
+            ClusterType my;
+
             friend class Clusters;
             Y_PROXY_DECL();
             void compile(XMLog &, Equilibria &);
             void conservations(XMLog &);
             void combinatorics(XMLog &, Equilibria &);
-            ClusterType my;
 
         public:
-            Cluster *next;
-            Cluster *prev;
+            Cluster *next; //!< for list
+            Cluster *prev; //!< for list
 
         };
 

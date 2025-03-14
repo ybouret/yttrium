@@ -76,8 +76,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
 
-        typedef Small::BareLightList<const Species> SList;
-        typedef SList::NodeType                     SNode;
+        typedef Small::BareLightList<const Species> SList; //!< alias
+        typedef SList::NodeType                     SNode; //!< alias
 
 
     }

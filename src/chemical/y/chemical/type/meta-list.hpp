@@ -16,7 +16,7 @@ namespace Yttrium
         //
         //
         //
-        //! Proxy to ordered Small::List
+        //! Proxy to ordered Small::List by TopLevel index
         //
         //
         //______________________________________________________________________
@@ -113,24 +113,57 @@ namespace Yttrium
 
 
 
-
-        //! keep indexed up-to-date
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! keep indexed[LEVEL] up-to-date
+        //
+        //
+        //______________________________________________________________________
         template<Level LEVEL, typename LIST>
         class CodingList : public MetaList<LIST>
         {
         public:
-            typedef typename MetaList<LIST>::NodeType NodeType;
-            typedef typename MetaList<LIST>::Type     Type;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef typename MetaList<LIST>::NodeType NodeType; //!< alias
+            typedef typename MetaList<LIST>::Type     Type;     //!< alias
 
         protected:
-            inline explicit CodingList() noexcept : MetaList<LIST>() {
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+
+            //! setup
+            inline explicit CodingList() noexcept :
+            MetaList<LIST>()
+            {
                 Y_STATIC_CHECK(LEVEL!=TopLevel,BadLevel);
             }
-            inline          CodingList(const CodingList &_)  : MetaList<LIST>(_) {}
+
+            //! duplicate
+            inline CodingList(const CodingList &_)  : MetaList<LIST>(_) {}
 
         public:
+            //! cleanup
             inline virtual ~CodingList() noexcept {}
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! set proper indices after a change
             virtual void update() noexcept
             {
                 size_t idx = 1;
@@ -142,20 +175,46 @@ namespace Yttrium
 
         };
 
-
+        //______________________________________________________________________
+        //
+        //
+        //
         //! keep single instance of possible multiple parameter
+        //
+        //
+        //______________________________________________________________________
         template <Level LEVEL, typename LIST>
         class ParaList : public CodingList<LEVEL,LIST>
         {
         public:
-            typedef CodingList<LEVEL,LIST>       BaseList;
-            typedef typename BaseList::Type      Type;
-            typedef typename BaseList::NodeType  NodeType;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CodingList<LEVEL,LIST>       BaseList; //!< alias
+            typedef typename BaseList::Type      Type;     //!< alias
+            typedef typename BaseList::NodeType  NodeType; //!< alias
 
-            inline explicit ParaList() noexcept : BaseList() {}
-            inline virtual ~ParaList() noexcept {}
-            inline ParaList(const ParaList &_) : BaseList(_) {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit ParaList() noexcept : BaseList() {} //!< setup
+            inline virtual ~ParaList() noexcept {}              //!< cleanup
+            inline ParaList(const ParaList &_) : BaseList(_) {} //!< duplicate
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! insert param, drop if multiple
             inline ParaList & operator<<(Type &param)
             {
                 if(this->list.has(param)) return *this;
@@ -163,10 +222,12 @@ namespace Yttrium
                 return *this;
             }
 
+            //! no-throw exchange
             inline void xch(ParaList &_) noexcept {
                 this->list.swapWith(_.list);
             }
 
+            //! incremental fusion
             inline void fusion(ParaList &other) noexcept
             {
                 LIST &mine = this->list;
@@ -192,14 +253,34 @@ namespace Yttrium
         class OrthoList : public CodingList<LEVEL,LIST>
         {
         public:
-            typedef MetaList<LIST>           CoreList;
-            typedef CodingList<LEVEL,LIST>   BaseList;
-            typedef typename BaseList::Type  Type;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef MetaList<LIST>           CoreList; //!< alias
+            typedef CodingList<LEVEL,LIST>   BaseList; //!< alias
+            typedef typename BaseList::Type  Type;     //!< alias
 
-            inline explicit OrthoList() noexcept : BaseList() {}
-            inline virtual ~OrthoList() noexcept {}
-            inline OrthoList(const OrthoList &_) : BaseList(_) {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit OrthoList() noexcept : BaseList() {}   //!< setup
+            inline virtual ~OrthoList() noexcept {}                //!< cleanup
+            inline OrthoList(const OrthoList &_) : BaseList(_) {}  //!< duplicate
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! insert param that MUST NOT exist
             inline OrthoList & operator<<(Type &param)
             {
                 assert( !this->list.has(param) );
@@ -207,6 +288,7 @@ namespace Yttrium
                 return *this;
             }
 
+            //! no-throw exchange
             inline void xch(OrthoList &_) noexcept
             {
                 this->list.swapWith(_.list);
@@ -227,8 +309,8 @@ namespace Yttrium
         };
 
 
-        typedef ParaList<SubLevel,SList>  SubSList;
-        typedef OrthoList<SubLevel,EList> SubEList;
+        typedef ParaList<SubLevel,SList>  SubSList; //!< alias
+        typedef OrthoList<SubLevel,EList> SubEList; //!< alias
 
     }
 

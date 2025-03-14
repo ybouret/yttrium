@@ -13,11 +13,26 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Independent Clusters of dependent species
+        //
+        //
+        //______________________________________________________________________
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
-            explicit Clusters(XMLog &xml, Equilibria &eqs);
-            virtual ~Clusters() noexcept;
+
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Clusters(XMLog &xml, Equilibria &eqs); //!< full setup
+            virtual ~Clusters() noexcept;                   //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
