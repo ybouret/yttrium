@@ -37,8 +37,15 @@ namespace Yttrium
         public:
             inline virtual ~MetaList() noexcept {}
 
-            
-
+            static inline bool AreDistinct(const MetaList &lhs,
+                                           const MetaList &rhs) noexcept
+            {
+                for(const NodeType *node=lhs->head;node;node=node->next)
+                {
+                    if(rhs->has(**node)) return false;
+                }
+                return true;
+            }
 
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
@@ -54,7 +61,7 @@ namespace Yttrium
 
         protected:
 
-            //! insert parameter post validation, then update
+            //! after validation, insert parameter and update indices
             inline  void insert(Type &param)
             {
                 assert(list.isSortedAccordingTo(Compare));
@@ -133,12 +140,13 @@ namespace Yttrium
         class OrthoList : public CodingList<LEVEL,LIST>
         {
         public:
-            typedef CodingList<LEVEL,LIST> MyList;
-            typedef typename MyList::Type  Type;
+            typedef MetaList<LIST>           CoreList;
+            typedef CodingList<LEVEL,LIST>   BaseList;
+            typedef typename BaseList::Type  Type;
 
-            inline explicit OrthoList() noexcept : MyList() {}
+            inline explicit OrthoList() noexcept : BaseList() {}
             inline virtual ~OrthoList() noexcept {}
-            inline OrthoList(const OrthoList &_) : MyList(_) {}
+            inline OrthoList(const OrthoList &_) : BaseList(_) {}
 
             inline OrthoList & operator<<(Type &param)
             {
@@ -154,7 +162,10 @@ namespace Yttrium
 
             void fusion(OrthoList &rhs) noexcept
             {
-                ListOps::Fusion(this->list,rhs->list,MyList::Compare);
+                CoreList &lhs = *this;
+                assert( CoreList::AreDistinct(lhs,rhs) );
+                ListOps::Fusion(lhs->list,rhs->list,CoreList::Compare);
+                lhs.update();
             }
 
 
