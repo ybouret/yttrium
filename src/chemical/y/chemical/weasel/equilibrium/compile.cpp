@@ -55,7 +55,7 @@ namespace Yttrium
                     assert(nu>0);
                 }
                 assert(nu>0);
-                eq(role,nu,sp);
+                eq.use(role,nu,sp);
             }
         }
 

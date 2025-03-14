@@ -83,9 +83,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void operator()(const Role, const unsigned, const Species &); //!< append
-            void operator()(const Role, const  Species &);                //!< (*this)(role,1,species);
-            void latch() noexcept;                                        //!< latch all
+            void use(const Role, const unsigned, const Species &); //!< use new actor
+            void use(const Role, const  Species &);                //!< use(role,1,species)
+            void latch() noexcept;                                  //!< latch all
 
             static bool AreConnected(const Components &lhs, const Components &rhs);
 

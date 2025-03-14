@@ -47,7 +47,7 @@ namespace Yttrium
         {
         }
 
-        void Components:: operator()(const Role role, const unsigned nu, const Species &sp)
+        void Components:: use(const Role role, const unsigned nu, const Species &sp)
         {
 
             //------------------------------------------------------------------
@@ -94,9 +94,9 @@ namespace Yttrium
         }
 
 
-        void Components:: operator()(const Role role, const Species &sp)
+        void Components:: use(const Role role, const Species &sp)
         {
-            (*this)(role,1,sp);
+            use(role,1,sp);
         }
 
 

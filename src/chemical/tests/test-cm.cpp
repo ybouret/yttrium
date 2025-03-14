@@ -16,9 +16,9 @@ Y_UTEST(cm)
 
     Components A2B( new String("A2B"), 1 );
     std::cerr << A2B << std::endl;
-    A2B(Reactant,A);
+    A2B.use(Reactant,A);
     std::cerr << A2B << std::endl;
-    A2B(Product,2,B);
+    A2B.use(Product,2,B);
     std::cerr << A2B << std::endl;
 
 
