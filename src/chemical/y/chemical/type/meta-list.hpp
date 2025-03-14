@@ -54,6 +54,22 @@ namespace Yttrium
 
             virtual void update() noexcept = 0; //!< post-insertion indexing
 
+            inline friend std::ostream & operator<<(std::ostream &os, const MetaList &self)
+            {
+                os << '{';
+                const NodeType *node=self.list.head;
+                if(node)
+                {
+                    os << (**node).name;
+                    for(node=node->next;node;node=node->next)
+                    {
+                        os << ',' << (**node).name;
+                    }
+                }
+                os << '}';
+                return os;
+            }
+
         private:
             Y_DISABLE_ASSIGN(MetaList);
             inline virtual typename
@@ -131,7 +147,7 @@ namespace Yttrium
                 this->list.swapWith(_.list);
             }
 
-            void fusion(ParaList &other) noexcept
+            inline void fusion(ParaList &other) noexcept
             {
                 LIST &mine = this->list;
                 LIST &peer = other.list;

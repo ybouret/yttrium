@@ -38,11 +38,12 @@ namespace Yttrium
 
             explicit Cluster(Equilibrium &first);
             virtual ~Cluster() noexcept;
+            Y_OSTREAM_PROTO(Cluster);
 
             void attach(Equilibrium &);                       //!< sanity check and link equilibrium/species
             bool accepts(const Equilibrium &) const noexcept; //!< shared species
             bool accepts(const Cluster &)     const noexcept; //!< shared species
-
+            void attach(Cluster &);                           //!< steal content
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             Y_PROXY_DECL();

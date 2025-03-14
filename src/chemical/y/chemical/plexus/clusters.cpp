@@ -33,19 +33,18 @@ namespace Yttrium
                 continue;
 
             CHECK_FUSION:
-                continue;
                 {
                     Cluster::List ok;
                     while(my.size>0)
                     {
                         AutoPtr<Cluster> lhs = my.popHead();
-
                         for(Cluster *rhs=ok.head;rhs;rhs=rhs->next)
                         {
                             if(rhs->accepts(*lhs))
                             {
                                 std::cerr << "Need To Implement Fusion!" << std::endl;
-                                
+                                rhs->attach(*lhs);
+                                lhs.erase();
                                 break;
                             }
                         }

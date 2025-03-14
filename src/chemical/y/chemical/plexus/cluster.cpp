@@ -101,6 +101,11 @@ namespace Yttrium
             my.attach(eq);
         }
 
+        std::ostream & operator<<(std::ostream &os, const Cluster &cl)
+        {
+            return os << cl->equilibria << '/' << cl->species;
+        }
+
 
         bool Cluster:: accepts(const Equilibrium &eq) const noexcept
         {
@@ -120,6 +125,12 @@ namespace Yttrium
                 if(cluster->species->has(sp)) return true;
             }
             return false;
+        }
+
+        void Cluster:: attach(Cluster &cluster)  
+        {
+            if(latched || cluster.latched) throw Specific::Exception(CallSign,"cannot attached latched cluster(s)");
+            my.fusion(cluster.my);
         }
 
     }
