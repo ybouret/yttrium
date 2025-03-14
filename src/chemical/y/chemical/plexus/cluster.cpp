@@ -66,7 +66,7 @@ namespace Yttrium
 
         void Cluster:: compile(XMLog &xml)
         {
-            Y_XML_SECTION_OPT(xml, CallSign,*this);
+            Y_XML_SECTION_OPT(xml,CallSign,*this);
             const size_t N = my.equilibria->size; assert(N>0);
             const size_t M = my.species->size;    assert(M>0);
             iMatrix &topo = Coerce(topology);
@@ -77,6 +77,7 @@ namespace Yttrium
                 (**en).fillTopology(topo[eq.indx[SubLevel]],SubLevel);
             }
             Y_XMLOG(xml, "topology=" << topology);
+            conservations(xml);
         }
 
 
