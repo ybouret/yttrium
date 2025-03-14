@@ -12,11 +12,19 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Index Level
+        //
+        //
+        //______________________________________________________________________
         enum Level
         {
-            TopLevel,
-            SubLevel,
-            AuxLevel
+            TopLevel, //!< global system
+            SubLevel, //!< sub systems
+            AuxLevel  //!< aux systems
         };
 
         //______________________________________________________________________
@@ -30,26 +38,46 @@ namespace Yttrium
         class Indexed : public Entity
         {
         public:
-            static const size_t MaxLevel = AuxLevel+1;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const size_t MaxLevel = AuxLevel+1; //!< number of description levels
 
 
-            explicit Indexed(const String *, const size_t i) noexcept;
-            virtual ~Indexed() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Indexed(const String *, const size_t i) noexcept; //!< setup
+            virtual ~Indexed() noexcept;                               //!< cleanup
 
+            //! access
             template <typename T> inline
             T & operator()(Writable<T> &arr, const Level level) const
             {
                 return arr[ indx[level] ];
             }
 
+            //! access
             template <typename T> inline
             const T & operator()(const Readable<T> &arr, const Level level) const
             {
                 return arr[ indx[level] ];
             }
 
-
-            const size_t indx[MaxLevel];
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const size_t indx[MaxLevel]; //!< assigned indices
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Indexed);
             void setup(const size_t i) noexcept;

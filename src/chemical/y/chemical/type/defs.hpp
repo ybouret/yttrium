@@ -15,8 +15,8 @@ namespace Yttrium
     {
         typedef double                      real_t;  //!< alias
         typedef XReal<real_t>               xreal_t; //!< alias
-        typedef MKL::Antelope::Add<xreal_t> XAdd;
-        typedef MKL::Antelope::Mul<xreal_t> XMul;
+        typedef MKL::Antelope::Add<xreal_t> XAdd;    //!< alias
+        typedef MKL::Antelope::Mul<xreal_t> XMul;    //!< alias
 
     }
 

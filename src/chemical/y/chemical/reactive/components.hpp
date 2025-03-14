@@ -62,10 +62,10 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const Symbol;          //!< "<=>";
-            static const char         Separator = ':'; //!< for parser
-            typedef ComponentsType::ConstIterator ConstIterator;
-            
+            static const char * const             Symbol;          //!< "<=>";
+            static const char                     Separator = ':'; //!< for parser
+            typedef ComponentsType::ConstIterator ConstIterator;   //!< alias
+
 
             //__________________________________________________________________
             //
@@ -87,8 +87,10 @@ namespace Yttrium
             void use(const Role, const  Species &);                //!< use(role,1,species)
             void latch() noexcept;                                  //!< latch all
 
+            //! check connected by species
             static bool AreConnected(const Components &lhs, const Components &rhs);
 
+            //! fill compatible topology
             template <typename ARRAY> inline
             void fillTopology(ARRAY &topo, const Level level) const
             {
@@ -97,6 +99,7 @@ namespace Yttrium
                 for(const Actor *a=reac->head;a;a=a->next) a->sp(topo,level) = -_T(a->nu);
             }
 
+            //! OR'ed species
             void gatherSpeciesIn(AddressBook &book) const;
 
 
@@ -113,7 +116,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Components);
             Y_PROXY_DECL();
         protected:
-            ComponentsType db;
+            ComponentsType db; //!< database
         };
 
     }

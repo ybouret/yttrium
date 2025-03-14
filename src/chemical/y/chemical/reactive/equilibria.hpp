@@ -15,13 +15,21 @@ namespace Yttrium
     {
 
         
-        typedef SuffixSet<const String,Equilibrium::Pointer> EquilibriaSet;
+        typedef SuffixSet<const String,Equilibrium::Pointer> EquilibriaSet; //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Internal content for equilibria
+        //
+        //
+        //______________________________________________________________________
         class EquilibriaType : public EquilibriaSet, public Fragment
         {
         public:
-            explicit EquilibriaType();
-            virtual ~EquilibriaType() noexcept;
+            explicit EquilibriaType();          //!< setup
+            virtual ~EquilibriaType() noexcept; //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(EquilibriaType);
@@ -38,21 +46,42 @@ namespace Yttrium
         class Equilibria : public Proxy<const EquilibriaType>, public Latchable
         {
         public:
-            static const char * const CallSign;
-            typedef EquilibriaType::ConstIterator ConstIterator;
-            typedef EquilibriaType::Iterator      Iterator;
 
-            explicit Equilibria();
-            virtual ~Equilibria() noexcept;
-            Y_OSTREAM_PROTO(Equilibria);
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const             CallSign;       //!< "Equilibria"
+            typedef EquilibriaType::ConstIterator ConstIterator;  //!< alias
+            typedef EquilibriaType::Iterator      Iterator;       //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equilibria();           //!< setup
+            virtual ~Equilibria() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Equilibria);     //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! insertion of a new equilibrium
             void operator()(const Equilibrium::Pointer &eq);
 
 
-            size_t nextIndex() const noexcept;
-            Iterator begin() noexcept;
-            Iterator end()   noexcept;
-            
+            size_t   nextIndex() const noexcept; //!< db.size()+1
+            Iterator begin()           noexcept; //!< alias
+            Iterator end()             noexcept; //!< alias
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             Y_PROXY_DECL();

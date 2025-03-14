@@ -24,19 +24,38 @@ namespace Yttrium
         class MetaList : public Proxy<const LIST>
         {
         public:
-            typedef LIST                         ListType;
-            typedef Proxy<const ListType>        SelfType;
-            typedef typename ListType::NodeType  NodeType;
-            typedef typename ListType::Type      Type;
-
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef LIST                         ListType; //!< alias
+            typedef Proxy<const ListType>        SelfType; //!< alias
+            typedef typename ListType::NodeType  NodeType; //!< alias
+            typedef typename ListType::Type      Type;     //!< alias
 
         protected:
-            inline explicit MetaList() noexcept : SelfType(), list() {}
-            inline          MetaList(const MetaList &_) : SelfType(), list(_.list) {}
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            inline explicit MetaList() noexcept :          SelfType(), list()      {} //!< setup
+            inline          MetaList(const MetaList &_) : SelfType(), list(_.list) {} //!< duplicate
 
         public:
-            inline virtual ~MetaList() noexcept {}
+            inline virtual ~MetaList() noexcept {} //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! check distinct lists
             static inline bool AreDistinct(const MetaList &lhs,
                                            const MetaList &rhs) noexcept
             {
@@ -47,24 +66,24 @@ namespace Yttrium
                 return true;
             }
 
+            //! comparison by TopLevel index
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
 
-            virtual void update() noexcept = 0; //!< post-insertion indexing
+            //! post-insertion indexing
+            virtual void update() noexcept = 0;
 
+            //! display
             inline friend std::ostream & operator<<(std::ostream &os, const MetaList &self)
             {
                 os << '{';
                 const NodeType *node=self.list.head;
-                if(node)
-                {
+                if(node) {
                     os << (**node).name;
                     for(node=node->next;node;node=node->next)
-                    {
                         os << ',' << (**node).name;
-                    }
                 }
                 os << '}';
                 return os;
@@ -87,6 +106,7 @@ namespace Yttrium
                 update();
             }
 
+            //! implementation
             ListType list;
         };
 
