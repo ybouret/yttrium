@@ -1,8 +1,4 @@
-
-
-
 //! \file
-
 
 #ifndef Y_Chemical_ClusterContent_Included
 #define Y_Chemical_ClusterContent_Included 1
@@ -29,7 +25,7 @@ namespace Yttrium
         public:
             typedef ArcPtr<const ClusterContent> Pointer;
             typedef ArcPtr<ClusterContent>       MutablePointer;
-            
+
             //__________________________________________________________________
             //
             //
