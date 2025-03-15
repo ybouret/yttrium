@@ -1,8 +1,5 @@
 //! \file
 
-
-//! \file
-
 #ifndef Y_Chemical_ClusterBuilder_Included
 #define Y_Chemical_ClusterBuilder_Included 1
 
@@ -14,38 +11,36 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        class ClusterBuilder
+        class ClusterNode : public Quantized, public ClusterContent::MutablePointer
         {
         public:
-            typedef ClusterContent::MutablePointer MPtr;
-
-            class ClusterNode : public Object, public MPtr
+            explicit ClusterNode(const ClusterContent::MutablePointer  &ptr) noexcept :
+            ClusterContent::MutablePointer(ptr),
+            next(0),
+            prev(0)
             {
-            public:
-                explicit ClusterNode(const MPtr &ptr) noexcept :
-                Object(),
-                MPtr(ptr),
-                next(0),
-                prev(0)
-                {
-                }
+            }
 
-                virtual ~ClusterNode() noexcept {}
-                ClusterNode *next;
-                ClusterNode *prev;
+            virtual ~ClusterNode() noexcept {}
+            ClusterNode *next;
+            ClusterNode *prev;
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(ClusterNode);
-            };
-            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ClusterNode);
+        };
+
+        class ClusterBuilder : public Proxy<const ListOf<ClusterNode> >
+        {
+        public:
             explicit ClusterBuilder(XMLog &xml, Equilibria &eqs);
             virtual ~ClusterBuilder() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterBuilder);
-            CxxListOf<ClusterNode> cls;
+            Y_PROXY_DECL();
             void startClusterFor(Equilibrium &eq);
+            
+            CxxListOf<ClusterNode> cls;
         };
     }
 

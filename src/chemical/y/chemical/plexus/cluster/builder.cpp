@@ -5,6 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        Y_PROXY_IMPL(ClusterBuilder,cls)
 
         ClusterBuilder:: ~ClusterBuilder() noexcept
         {
@@ -12,7 +13,7 @@ namespace Yttrium
 
         void ClusterBuilder:: startClusterFor(Equilibrium &eq)
         {
-            MPtr ptr = new ClusterContent(eq);
+            ClusterContent::MutablePointer  ptr = new ClusterContent(eq);
             cls.pushTail( new ClusterNode(ptr) );
         }
 

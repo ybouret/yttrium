@@ -31,9 +31,9 @@ Y_UTEST(plexus)
 
     XMLog          xml(verbose);
     ClusterBuilder cls(xml,eqs);
-#if 0
-    Clusters cls(xml,eqs);
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+
+#if 1
+    for(const ClusterNode *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
     }
@@ -45,7 +45,7 @@ Y_UTEST(plexus)
     Y_SIZEOF(ClusterType);
     Y_SIZEOF(ClusterContent);
     Y_SIZEOF(ClusterBuilder);
-    Y_SIZEOF(ClusterBuilder::ClusterNode);
+    Y_SIZEOF(ClusterNode);
 
 }
 Y_UDONE()
