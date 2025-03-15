@@ -14,7 +14,7 @@ namespace Yttrium
         N(ptr->equilibria->size),
         M(ptr->species->size),
         topology(N,M),
-        topologyT(M,M)
+        topologyT(M,N)
         {
             Y_XML_SECTION_OPT(xml, "ClusterTopology", ptr->equilibria);
 

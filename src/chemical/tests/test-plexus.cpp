@@ -1,6 +1,8 @@
 
 #include "y/chemical/plexus/clusters.hpp"
+#include "y/chemical/plexus/cluster/topology.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
+
 #include "y/chemical/weasel.hpp"
 
 #include "y/utest/run.hpp"
@@ -36,6 +38,8 @@ Y_UTEST(plexus)
     for(const ClusterNode *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
+        const ClusterContent::Pointer cc( &Coerce(**cl) );
+        const ClusterTopology         ct(xml,cc);
     }
 #endif
 
