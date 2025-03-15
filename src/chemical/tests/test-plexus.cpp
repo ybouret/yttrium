@@ -29,12 +29,16 @@ Y_UTEST(plexus)
 
     bool verbose = true;
 
-    XMLog    xml(verbose);
+    XMLog          xml(verbose);
+    ClusterBuilder cls(xml,eqs);
+#if 0
     Clusters cls(xml,eqs);
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
     }
+#endif
+
     std::cerr << "lib=" << lib << std::endl;
 
     Y_SIZEOF(Cluster);

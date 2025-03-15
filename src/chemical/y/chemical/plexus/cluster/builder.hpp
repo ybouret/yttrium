@@ -8,6 +8,7 @@
 
 #include "y/chemical/plexus/cluster/content.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -38,12 +39,13 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(ClusterNode);
             };
             
-            explicit ClusterBuilder(Equilibria &eqs);
+            explicit ClusterBuilder(XMLog &xml, Equilibria &eqs);
             virtual ~ClusterBuilder() noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterBuilder);
             CxxListOf<ClusterNode> cls;
+            void startClusterFor(Equilibrium &eq);
         };
     }
 

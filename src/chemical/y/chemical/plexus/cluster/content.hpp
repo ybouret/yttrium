@@ -32,17 +32,20 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit ClusterContent() noexcept; //!< setup
-            virtual ~ClusterContent() noexcept; //!< cleanup
+            explicit ClusterContent(Equilibrium &first); //!< setup
+            virtual ~ClusterContent() noexcept;          //!< cleanup
+            Y_OSTREAM_PROTO(ClusterContent);
 
             //__________________________________________________________________
             //
             //
-            // Definitions
+            // Methods
             //
             //__________________________________________________________________
-            void attach(Equilibrium    &);          //!< attach new equilibrium and its species
-            void fusion(ClusterContent &) noexcept; //!< fusion and update fragment
+            void attach(Equilibrium    &);                       //!< attach new equilibrium and its species
+            void fusion(ClusterContent &)              noexcept; //!< fusion and update fragment
+            bool accepts(const Equilibrium &)    const noexcept;
+            bool accepts(const ClusterContent &) const noexcept;
 
             //__________________________________________________________________
             //

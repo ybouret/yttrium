@@ -6,8 +6,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        ClusterContent:: ClusterContent() noexcept : Fragment(), equilibria(), species()
+        ClusterContent:: ClusterContent(Equilibrium &first)  : Fragment(), equilibria(), species()
         {
+            attach(first);
         }
 
         ClusterContent:: ~ClusterContent() noexcept
@@ -66,6 +67,33 @@ namespace Yttrium
             {
                 enroll(**en);
             }
+        }
+
+
+        bool ClusterContent:: accepts(const Equilibrium &eq) const noexcept
+        {
+            for(const SNode *sn=species->head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                if( eq->search( sp.key() ) ) return true;
+            }
+            return false;
+        }
+
+        bool ClusterContent:: accepts(const ClusterContent &other) const noexcept
+        {
+            for(const SNode *sn=species->head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                if(other.species->has(sp)) return true;
+            }
+            return false;
+        }
+
+        std::ostream & operator<<(std::ostream &os, const ClusterContent &cc)
+        {
+            os << cc.equilibria << '/' << cc.species;
+            return os;
         }
 
     }
