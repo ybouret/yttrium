@@ -1,6 +1,6 @@
 
 #include "y/chemical/plexus/clusters.hpp"
-#include "y/chemical/plexus/cluster/topology.hpp"
+#include "y/chemical/plexus/cluster/conservations.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
 
 #include "y/chemical/weasel.hpp"
@@ -39,7 +39,7 @@ Y_UTEST(plexus)
     {
         std::cerr << "cluster: " << *cl << std::endl;
         const ClusterContent::Pointer cc( &Coerce(**cl) );
-        const ClusterTopology         ct(xml,cc);
+        const ClusterConservations    ct(xml,cc);
     }
 #endif
 

@@ -18,7 +18,7 @@ namespace Yttrium
         class ClusterTopology : public ClusterContent::Pointer
         {
         public:
-            explicit ClusterTopology(XMLog &xml,const ClusterContent::Pointer &ptr);
+            explicit ClusterTopology(XMLog &xml, const ClusterContent::Pointer &ptr);
             virtual ~ClusterTopology() noexcept;
 
             const size_t  N;

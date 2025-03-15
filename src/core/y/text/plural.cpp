@@ -14,5 +14,11 @@ namespace Yttrium
         return n > 1 ? "s" : "";
     }
 
+    const char * Plural:: aum(const size_t n) noexcept
+    {
+        return n>1 ? "a" : "um";
+    }
+
+
 }
 
