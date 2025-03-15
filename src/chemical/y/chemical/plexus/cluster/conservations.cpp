@@ -1,5 +1,26 @@
 
 #include "y/chemical/plexus/cluster/conservations.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        Conservation:: ~Conservation() noexcept
+        {
+        }
+
+        Conservation:: Conservation() noexcept :
+        Actors(Actor::AsConcentration),
+        next(0),
+        prev(0)
+        {
+        }
+
+    }
+
+}
+
+
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
 
@@ -22,7 +43,9 @@ namespace Yttrium
         }
 
         ClusterConservations:: ClusterConservations( XMLog &xml, const ClusterContent::Pointer &ptr) :
-        ClusterTopology(xml,ptr)
+        ClusterTopology(xml,ptr),
+        preserved(),
+        conserved()
         {
             Y_XML_SECTION(xml,"ClusterConservations");
 
@@ -33,7 +56,7 @@ namespace Yttrium
 
             const NaturalSurvey survey(xml,Q,0);
             if(survey->size<=0) {
-                Y_XMLOG(xml,"no conservation");
+                Y_XMLOG(xml,"no conservation found");
                 return;
             }
 
@@ -42,15 +65,25 @@ namespace Yttrium
                 Cm.make(survey->size,M);
 
 
-                size_t cidx = 1;
+                size_t                cidx = 1;
                 for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
                 {
                     const Readable<apn> &coef = *node; assert(CountNonZero(coef)>=2);
                     Writable<unsigned>  &cons = Cm[cidx];
-                    for(size_t j=M;j>0;--j) {
-                        if( !coef[j].tryCast(cons[j]))
-                            throw Specific::Exception(CallSign, "conservation coefficient overflow");
+                    AutoPtr<Conservation> claw = new Conservation();
+                    for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        const size_t   sj = sp.indx[SubLevel];
+                        unsigned &     cf = cons[sj];
+                        if( !coef[sj].tryCast(cf) )
+                            throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
+                        if(0!=cf)
+                        {
+                            (*claw)(cf,sp);
+                        }
                     }
+                    std::cerr << claw->name << std::endl;
                 }
             }
 
