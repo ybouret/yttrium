@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/clusters.hpp"
+#include "y/chemical/plexus/cluster/content.hpp"
 #include "y/chemical/weasel.hpp"
 
 #include "y/utest/run.hpp"
@@ -38,6 +39,7 @@ Y_UTEST(plexus)
 
     Y_SIZEOF(Cluster);
     Y_SIZEOF(ClusterType);
+    Y_SIZEOF(ClusterContent);
 
 }
 Y_UDONE()
