@@ -40,14 +40,13 @@ namespace Yttrium
 
                 //! append and latch
                 void add(Law *const law) noexcept;
-
+                
             private:
                 Y_DISABLE_ASSIGN(Laws);
                 Y_PROXY_DECL();
                 Law::List      list;
-            public:
-                const AuxSList species;
             };
+            
         }
 
 

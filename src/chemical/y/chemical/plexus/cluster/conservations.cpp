@@ -36,8 +36,7 @@ namespace Yttrium
             Laws:: Laws() noexcept :
             Proxy<const Law::List>(),
             Assembly(),
-            list(),
-            species()
+            list()
             {
             }
 
@@ -47,27 +46,20 @@ namespace Yttrium
             void Laws:: add(Law *const law) noexcept
             {
                 assert(0!=law);
-                list.pushTail(law);
-                AuxSList newSpecies(species);
-                try {
-                    for(const Actor *a=(*law)->head;a;a=a->next)
-                    {
-                        newSpecies << a->sp;
-                    }
-                    Coerce(species).xch(newSpecies);
-                    law->latch();
-                    enroll(*law);
-                }
-                catch(...)
                 {
-                    delete list.popTail();
-                    throw;
+                    String & oldName = Coerce(*law->name);
+                    String   newName = "0=d(" + oldName + ")";
+                    newName.swapWith(oldName);
                 }
+
+                list.pushTail(law)->latch();
+                enroll(*law);
+
             }
 
             std::ostream & operator<<(std::ostream &os, const Laws &laws)
             {
-                os << "{ species=" << laws.species;
+                os << "{";
                 if(laws->size>0)
                 {
                     os << std::endl;
