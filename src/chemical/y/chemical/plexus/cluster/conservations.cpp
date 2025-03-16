@@ -5,15 +5,81 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Conservation:: ~Conservation() noexcept
+        namespace Conservation
         {
+            Law:: ~Law() noexcept
+            {
+            }
+
+            Law:: Law() noexcept :
+            Actors(Actor::AsConcentration),
+            next(0),
+            prev(0)
+            {
+            }
         }
 
-        Conservation:: Conservation() noexcept :
-        Actors(Actor::AsConcentration),
-        next(0),
-        prev(0)
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        namespace Conservation
         {
+            Laws:: ~Laws() noexcept
+            {
+            }
+
+            Laws:: Laws() noexcept :
+            Proxy<const Law::List>(),
+            Assembly(),
+            list(),
+            species()
+            {
+            }
+
+            Y_PROXY_IMPL(Laws,list)
+
+
+            void Laws:: add(Law *const law) noexcept
+            {
+                assert(0!=law);
+                list.pushTail(law);
+                AuxSList newSpecies(species);
+                try {
+                    for(const Actor *a=(*law)->head;a;a=a->next)
+                    {
+                        newSpecies << a->sp;
+                    }
+                    Coerce(species).xch(newSpecies);
+                    law->latch();
+                    enroll(*law);
+                }
+                catch(...)
+                {
+                    delete list.popTail();
+                    throw;
+                }
+            }
+
+            std::ostream & operator<<(std::ostream &os, const Laws &laws)
+            {
+                os << "{ species=" << laws.species;
+                if(laws->size>0)
+                {
+                    os << std::endl;
+                    for(const Law *law=laws->head;law;law=law->next)
+                    {
+                        os << "\t" << law->name << std::endl;
+                    }
+                }
+                os << "}";
+                return os;
+            }
+
         }
 
     }
@@ -70,7 +136,7 @@ namespace Yttrium
                 {
                     const Readable<apn> &coef = *node; assert(CountNonZero(coef)>=2);
                     Writable<unsigned>  &cons = Cm[cidx];
-                    AutoPtr<Conservation> claw = new Conservation();
+                    AutoPtr<Conservation::Law> claw = new Conservation::Law();
                     for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
                     {
                         const Species &sp = **sn;
@@ -84,12 +150,13 @@ namespace Yttrium
                         }
                     }
                     std::cerr << claw->name << std::endl;
+                    Coerce(ordinance).add( claw.yield() );
                 }
             }
 
             Y_XMLOG(xml, "topology  = " << topology);
             Y_XMLOG(xml, "preserved = " << preserved);
-
+            Y_XMLOG(xml, "laws      = " << ordinance);
         }
 
 
