@@ -8,11 +8,15 @@
 
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        typedef Vector<xreal_t,MemoryModel> XVector;
+
         //______________________________________________________________________
         //
         //
@@ -37,10 +41,12 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Y_PROXY_DECL();
-            Cluster::List my;
+            Cluster::List   my;
+            XVector         tlK;
 
-            void setup(XMLog &xml, Equilibria &eqs);
-            void compile(XMLog &xml, Equilibria &eqs);
+        public:
+            const XReadable &K;
+            
         };
         
     }

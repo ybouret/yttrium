@@ -7,6 +7,7 @@
 
 #include "y/chemical/plexus/cluster/conservations.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
+#include "y/container/cxx/array.hpp"
 
 namespace Yttrium
 {
@@ -23,13 +24,15 @@ namespace Yttrium
         class ClusterCombinatorics : public ClusterConservations
         {
         public:
+            typedef CxxArray<EList,MemoryModel> ELists;
+
             explicit ClusterCombinatorics(XMLog                         &xml,
                                           const ClusterContent::Pointer &ptr,
                                           Equilibria                    &eqs,
                                           XWritable                     &tlK); //!< setup
             virtual ~ClusterCombinatorics() noexcept;                                //!< cleanup
 
-            const size_t maxOrder;
+            const ELists order;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);

@@ -50,7 +50,6 @@ Y_UTEST(plexus)
     std::cerr << "eqs=" << eqs << std::endl;
 
     Y_SIZEOF(Cluster);
-    Y_SIZEOF(ClusterType);
     Y_SIZEOF(ClusterContent);
     Y_SIZEOF(ClusterBuilder);
     Y_SIZEOF(ClusterKnot);

@@ -46,20 +46,18 @@ namespace Yttrium
 
         String MixedEquilibrium:: FirstName(const int cf, const String &id)
         {
-            String ans;
-            assert(cf!=0);
-            ans += Formatted::Get("%+d",cf);
-            ans += id;
-            return ans;
+            assert(0!=cf);
+            if(1==cf)                 return id;
+            if(-1==cf)          return '-' + id;
+            return Formatted::Get("%d*",cf) + id;
         }
 
         String MixedEquilibrium:: ExtraName(const int cf, const String &id)
         {
-            String ans;
-            assert(cf>0);
-            ans += Formatted::Get("%+d",cf);
-            ans += id;
-            return ans;
+
+            if(1==cf)  return           '+' + id;
+            if(-1==cf) return           '-' + id;
+            return Formatted::Get("%+d*",cf) + id;
         }
 
 
@@ -75,7 +73,7 @@ namespace Yttrium
             *ans += FirstName(**wn,*(**en).name);
             for(wn=wn->next,en=en->next;wn;wn=wn->next,en=en->next)
             {
-                *ans += FirstName(**wn,*(**en).name);
+                *ans += ExtraName(**wn,*(**en).name);
             }
 
 

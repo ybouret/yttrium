@@ -17,13 +17,14 @@ namespace Yttrium
         typedef XReal<real_t>               xreal_t; //!< alias
         typedef MKL::Antelope::Add<xreal_t> XAdd;    //!< alias
         typedef MKL::Antelope::Mul<xreal_t> XMul;    //!< alias
+        typedef Memory::Dyadic              MemoryModel; //!< alias
 
-        typedef Readable<xreal_t>      XReadable; //!< alias
-        typedef Writable<xreal_t>      XWritable; //!< alias
-        typedef Matrix<int>            iMatrix;   //!< alias
-        typedef Matrix<unsigned>       uMatrix;   //!< alias
-        typedef Matrix<xreal_t>        XMatrix;   //!< alias
-
+        typedef Readable<xreal_t>            XReadable; //!< alias
+        typedef Writable<xreal_t>            XWritable; //!< alias
+        typedef Matrix<int,MemoryModel>      iMatrix;   //!< alias
+        typedef Matrix<unsigned,MemoryModel> uMatrix;   //!< alias
+        typedef Matrix<xreal_t,MemoryModel>  XMatrix;   //!< alias
+        
     }
 
 }

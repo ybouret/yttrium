@@ -164,7 +164,7 @@ namespace Yttrium
                                                     Equilibria                    &eqs,
                                                     XWritable                     &tlK) :
         ClusterConservations(xml,ptr),
-        maxOrder(1)
+        order(0)
         {
             Y_XML_SECTION(xml, "ClusterCombinatorics");
 
@@ -180,7 +180,7 @@ namespace Yttrium
             ClusterContent   &content    = Coerce(**this);
             SubEList       &  equilibria = content.equilibria;
             const SList    &  species    = *content.species;
-
+            size_t            maxOrder   = 1;
             {
                 //--------------------------------------------------------------
                 //
@@ -240,7 +240,7 @@ namespace Yttrium
                         missing.display<Species>( xml() << "(+) " << mix << "->") << std::endl;
                     }
                     mixes.pushTail( mix.yield() );
-                    InSituMax(Coerce(maxOrder),arr->ncof);
+                    InSituMax(maxOrder,arr->ncof);
                 }
 
             }
@@ -254,6 +254,27 @@ namespace Yttrium
             //------------------------------------------------------------------
             MergeSort::Call(mixes,MixTab::Compare);
 
+
+            //------------------------------------------------------------------
+            //
+            //
+            // Dispatch
+            //
+            //
+            //------------------------------------------------------------------
+            ELists &slot = Coerce(order);
+            {
+                ELists _(maxOrder);
+                _.swapWith(slot);
+            }
+            assert(order.size()==maxOrder);
+            assert(N==equilibria->size);
+
+            for(ENode *en=equilibria->head;en;en=en->next)
+            {
+                slot[1] << **en;
+            }
+
             //------------------------------------------------------------------
             //
             //
@@ -263,6 +284,12 @@ namespace Yttrium
             //------------------------------------------------------------------
             for(const MixTab *mix=mixes.head;mix;mix=mix->next)
             {
+
+                //--------------------------------------------------------------
+                //
+                // gather coefficients and their equilibria
+                //
+                //--------------------------------------------------------------
                 WList     wlist;
                 EList     elist;
                 size_t    count = N;
@@ -275,28 +302,43 @@ namespace Yttrium
                         elist << eq;
                     }
                 }
-                //  AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
-                // std::cerr << "(+) " << ptr << std::endl;
 
-                Equilibrium::Pointer mixed = new MixedEquilibrium(wlist,
-                                                                  elist,
-                                                                  species,
-                                                                  mix->stoi,
-                                                                  eqs.nextIndex(),
-                                                                  tlK);
+                //--------------------------------------------------------------
+                //
+                // create a mixed equilibrium
+                //
+                //--------------------------------------------------------------
+                MixedEquilibrium    *mixedEq = new MixedEquilibrium(wlist,
+                                                                   elist,
+                                                                   species,
+                                                                   mix->stoi,
+                                                                   eqs.nextIndex(),
+                                                                   tlK);
+                Equilibrium::Pointer mixed = mixedEq;
 
-                Y_XMLOG(xml,mixed);
-
-                // top level registration
+                //--------------------------------------------------------------
+                //
+                // top level registration for persistent storage
+                //
+                //--------------------------------------------------------------
                 eqs(mixed);
 
+                //--------------------------------------------------------------
+                //
                 // local registration
+                //
+                //--------------------------------------------------------------
                 equilibria << *mixed;
                 content.enroll(*mixed);
+                slot[mixedEq->wlist.size] << *mixed;
+
             }
 
             Y_XML_COMMENT(xml, "#mixes = " << mixes.size << " / maxOrder = " << maxOrder);
-            std::cerr << *this << std::endl;
+            for(size_t i=1;i<=order.size();++i)
+            {
+                Y_XML_COMMENT(xml, "|order[" << i << "]| = " << std::setw(3) << order[i].size);
+            }
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept
