@@ -20,16 +20,16 @@ namespace Yttrium
         using namespace Ortho;
         using namespace Coven;
 
+        typedef Yttrium::CxxArray<int,MemoryModel> iArrayType;
 
-        class MixTab : public Quantized, public CxxArray<int,MemoryModel>
+        class MixTab : public Quantized, public iArrayType
         {
         public:
-            static const char * const CallSign;
-            typedef Yttrium::CxxArray<int,MemoryModel> ArrayType;
+            static const char * const                  CallSign;
 
             explicit MixTab(const IntegerSurvey::ArrayType &arr,
                             const iMatrix                  &topo) :
-            ArrayType(arr.size()),
+            iArrayType(arr.size()),
             ncof(arr.ncof),
             stoi(topo.cols),
             next(0),
@@ -128,10 +128,10 @@ namespace Yttrium
                 return LexicographicCompare(*lhs,*rhs);
             }
 
-            const size_t ncof;
-            ArrayType    stoi;
-            MixTab *     next;
-            MixTab *     prev;
+            const size_t  ncof;
+            iArrayType    stoi;
+            MixTab *      next;
+            MixTab *      prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixTab);
