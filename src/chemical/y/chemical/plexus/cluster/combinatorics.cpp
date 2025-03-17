@@ -25,7 +25,7 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign;
-            typedef CxxArray<int,MemoryModel> ArrayType;
+            typedef Yttrium::CxxArray<int,MemoryModel> ArrayType;
 
             explicit MixTab(const IntegerSurvey::ArrayType &arr,
                             const iMatrix                  &topo) :
