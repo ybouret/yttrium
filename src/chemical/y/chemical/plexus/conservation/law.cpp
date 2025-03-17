@@ -30,7 +30,6 @@ namespace Yttrium
             prev(0)
             {
                 Actors::Exchange(*this,*rule);
-
                 latch();
             }
         }

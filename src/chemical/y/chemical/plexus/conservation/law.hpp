@@ -14,16 +14,36 @@ namespace Yttrium
         {
             class Rule;
 
-            //! law and its data to solve
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Law and its data built from rule
+            //
+            //
+            //__________________________________________________________________
             class Law :  public Actors
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 explicit Law(Rule * const); //!< setup and latch
-                virtual ~Law() noexcept;
+                virtual ~Law() noexcept;    //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const unsigned norm2; //!< |*this|^2
+                Law *          next;  //!< for list
+                Law *          prev;  //!< for list
                 
-                const unsigned norm2;
-                Law *          next;
-                Law *          prev;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Law);
             };

@@ -12,14 +12,35 @@ namespace Yttrium
 
         namespace Conservation
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Internal Rule to build Laws
+            //
+            //
+            //__________________________________________________________________
             class Rule : public Quantized, public Actors
             {
             public:
-                explicit Rule() noexcept;
-                virtual ~Rule() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Rule() noexcept; //!< setup
+                virtual ~Rule() noexcept; //!< cleanup
 
-                Rule *next;
-                Rule *prev;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Rule *next; //!< for list
+                Rule *prev; //!< for list
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
             };

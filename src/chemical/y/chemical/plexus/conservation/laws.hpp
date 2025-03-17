@@ -14,14 +14,34 @@ namespace Yttrium
         namespace Conservation
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! List of laws from conservation matrix
+            //
+            //
+            //__________________________________________________________________
             class Laws : public Proxy< const ListOf<Law> >, public Assembly
             {
             public:
-                explicit Laws(Rule *);
-                virtual ~Laws() noexcept;
-                Y_OSTREAM_PROTO(Laws);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Laws(Rule *);     //!< setup from head node of Rules
+                virtual ~Laws() noexcept;  //!< cleanup
+                Y_OSTREAM_PROTO(Laws);     //!< display
 
-                void xch( Laws &other ) noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void xch( Laws &other ) noexcept; //!< exchagne laws and assembly
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
