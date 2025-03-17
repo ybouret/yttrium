@@ -1,84 +1,6 @@
 
 #include "y/chemical/plexus/cluster/conservations.hpp"
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
-        namespace Conservation
-        {
-            Law:: ~Law() noexcept
-            {
-            }
-
-            Law:: Law() noexcept :
-            Actors(Actor::AsConcentration),
-            next(0),
-            prev(0)
-            {
-            }
-        }
-
-    }
-
-}
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-        namespace Conservation
-        {
-            Laws:: ~Laws() noexcept
-            {
-            }
-
-            Laws:: Laws() noexcept :
-            Proxy<const Law::List>(),
-            Assembly(),
-            list()
-            {
-            }
-
-            Y_PROXY_IMPL(Laws,list)
-
-
-            void Laws:: add(Law *const law) noexcept
-            {
-                assert(0!=law);
-                {
-                    String & oldName = Coerce(*law->name);
-                    String   newName = "0=d(" + oldName + ")";
-                    newName.swapWith(oldName);
-                }
-
-                list.pushTail(law)->latch();
-                enroll(*law);
-
-            }
-
-            std::ostream & operator<<(std::ostream &os, const Laws &laws)
-            {
-                os << "{";
-                if(laws->size>0)
-                {
-                    os << std::endl;
-                    for(const Law *law=laws->head;law;law=law->next)
-                    {
-                        os << "\t" << law->name << std::endl;
-                    }
-                }
-                os << "}";
-                return os;
-            }
-
-        }
-
-    }
-
-}
-
-
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
 
@@ -95,6 +17,7 @@ namespace Yttrium
         using namespace Ortho;
         using namespace Coven;
 
+
         ClusterConservations:: ~ClusterConservations() noexcept
         {
 
@@ -107,48 +30,49 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,"ClusterConservations");
 
-            Matrix<apz> Q;
-            if(!OrthoSpace::Make(Q,topology)) {
-                throw Specific::Exception(CallSign, "no orthogonal space (singular equilibri%s)", Plural::aum(N));
-            }
-
-            const NaturalSurvey survey(xml,Q,0);
-            if(survey->size<=0) {
-                Y_XMLOG(xml,"no conservation found");
-                return;
-            }
-
+            CxxListOf<Conservation::Rule> rules;
             {
-                uMatrix &Cm = Coerce(preserved);
-                Cm.make(survey->size,M);
+                Matrix<apz> Q;
+                if(!OrthoSpace::Make(Q,topology))
+                    throw Specific::Exception(CallSign, "no orthogonal space (singular equilibri%s)", Plural::aum(N));
 
 
-                size_t                cidx = 1;
-                for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
+                const NaturalSurvey survey(xml,Q,0);
+                if(survey->size<=0) {
+                    Y_XMLOG(xml,"no conservation found");
+                    return;
+                }
+
                 {
-                    const Readable<apn> &coef = *node; assert(CountNonZero(coef)>=2);
-                    Writable<unsigned>  &cons = Cm[cidx];
-                    AutoPtr<Conservation::Law> claw = new Conservation::Law();
-                    for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
+                    uMatrix &Cm = Coerce(preserved);
+                    Cm.make(survey->size,M);
+
+
+                    size_t                cidx = 1;
+                    for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
                     {
-                        const Species &sp = **sn;
-                        const size_t   sj = sp.indx[SubLevel];
-                        unsigned &     cf = cons[sj];
-                        if( !coef[sj].tryCast(cf) )
-                            throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
-                        if(0!=cf)
+                        const Readable<apn> &       coef = *node; assert(CountNonZero(coef)>=2);
+                        Writable<unsigned>  &       cons = Cm[cidx];
+                        AutoPtr<Conservation::Rule> claw = new Conservation::Rule();
+                        for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
                         {
-                            (*claw)(cf,sp);
+                            const Species &sp = **sn;
+                            const size_t   sj = sp.indx[SubLevel];
+                            unsigned &     cf = cons[sj];
+                            if( !coef[sj].tryCast(cf) )
+                                throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
+                            if(0!=cf)
+                            {
+                                (*claw)(cf,sp);
+                            }
                         }
+                        std::cerr << " (+) " << claw->name << std::endl;
                     }
-                    std::cerr << claw->name << std::endl;
-                    Coerce(ordinance).add( claw.yield() );
                 }
             }
-
             Y_XMLOG(xml, "topology  = " << topology);
             Y_XMLOG(xml, "preserved = " << preserved);
-            Y_XMLOG(xml, "laws      = " << ordinance);
+            //Y_XMLOG(xml, "laws      = " << ordinance);
         }
 
 

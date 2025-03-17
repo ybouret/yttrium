@@ -52,6 +52,7 @@ namespace Yttrium
             const Actor & operator()(const unsigned nu, const Species &sp); //!< create new actor
             bool          has(const Species &) const noexcept; //!< check presence
 
+
             //__________________________________________________________________
             //
             //
@@ -64,7 +65,6 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Y_PROXY_DECL();
             Actor::List my; //!< my list
-
         };
     }
 

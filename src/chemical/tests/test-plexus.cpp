@@ -50,7 +50,7 @@ Y_UTEST(plexus)
     Y_SIZEOF(ClusterContent);
     Y_SIZEOF(ClusterBuilder);
     Y_SIZEOF(ClusterNode);
-
+    Y_SIZEOF(Conservation::Rule);
 }
 Y_UDONE()
 
