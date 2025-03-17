@@ -3,12 +3,12 @@
 
 
 #include "y/chemical/plexus/cluster/combinatorics.hpp"
+#include "y/chemical/reactive/equilibrium/mixed.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
 
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 #include "y/apex/api/count-non-zero.hpp"
-#include "y/data/small/heavy/list/bare.hpp"
 
 
 namespace Yttrium
@@ -20,8 +20,6 @@ namespace Yttrium
         using namespace Ortho;
         using namespace Coven;
 
-        typedef Small::BareHeavyList<const int> WList;
-        typedef WList::NodeType                 WNode;
 
         class MixTab : public Quantized, public CxxArray<int,Memory::Dyadic>
         {
@@ -141,95 +139,7 @@ namespace Yttrium
 
         const char * const MixTab::CallSign = "Mixing";
 
-        class MixedEquilibrium : public Equilibrium
-        {
-        public:
-
-            static String FirstName(const int cf, const String &id)
-            {
-                String ans;
-                assert(cf!=0);
-                ans += Formatted::Get("%+d",cf);
-                ans += id;
-                return ans;
-            }
-
-            static String ExtraName(const int cf, const String &id)
-            {
-                String ans;
-                assert(cf>0);
-                ans += Formatted::Get("%+d",cf);
-                ans += id;
-                return ans;
-            }
-
-
-            static const String *MakeName(const WList &wl,
-                                          const EList &el)
-            {
-                assert(wl.size==el.size);
-                assert(wl.size>=2);
-                const WNode *wn = wl.head;
-                const ENode *en = el.head;
-
-                AutoPtr<String> ans = new String();
-                *ans += FirstName(**wn,*(**en).name);
-                for(wn=wn->next,en=en->next;wn;wn=wn->next,en=en->next)
-                {
-                    *ans += FirstName(**wn,*(**en).name);
-                }
-
-
-                return ans.yield();
-            }
-
-            explicit MixedEquilibrium(WList               &wl,
-                                      EList               &el,
-                                      const SList         &sl,
-                                      const Readable<int> &st,
-                                      const size_t         ii,
-                                      XWritable           &KK) :
-            Equilibrium( MakeName(wl,el), ii),
-            topK(KK),
-            wlist(),
-            elist(),
-            xmul()
-            {
-                // steal data
-                Coerce(wlist).swapWith(wl);
-                Coerce(elist).swapWith(el);
-
-                // fill
-                for(const SNode *sn=sl.head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    const int      cf = sp(st,SubLevel);
-                    switch( Sign::Of(cf) )
-                    {
-                        case __Zero__: continue;
-                        case Positive: use(Product,  cf,sp); break;
-                        case Negative: use(Reactant,-cf,sp); break;
-                    }
-                }
-
-                latch();
-            }
-
-            virtual ~MixedEquilibrium() noexcept {}
-
-            XWritable   &topK;
-            const WList  wlist;
-            const EList  elist;
-            XMul         xmul;
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
-            virtual xreal_t getK(xreal_t)
-            {
-                return 1;
-            }
-        };
+       
 
 
     }
