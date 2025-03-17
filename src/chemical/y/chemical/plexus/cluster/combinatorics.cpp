@@ -21,11 +21,11 @@ namespace Yttrium
         using namespace Coven;
 
 
-        class MixTab : public Quantized, public CxxArray<int,Memory::Dyadic>
+        class MixTab : public Quantized, public CxxArray<int,MemoryModel>
         {
         public:
             static const char * const CallSign;
-            typedef CxxArray<int,Memory::Dyadic> ArrayType;
+            typedef CxxArray<int,MemoryModel> ArrayType;
 
             explicit MixTab(const IntegerSurvey::ArrayType &arr,
                             const iMatrix                  &topo) :
@@ -139,24 +139,6 @@ namespace Yttrium
 
         const char * const MixTab::CallSign = "Mixing";
 
-       
-
-
-    }
-
-}
-
-
-
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-        using namespace MKL;
-        using namespace Apex;
-        using namespace Ortho;
-        using namespace Coven;
 
 
         ClusterCombinatorics:: ClusterCombinatorics(XMLog                         &xml,
