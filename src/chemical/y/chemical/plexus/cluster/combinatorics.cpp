@@ -177,8 +177,9 @@ namespace Yttrium
             //------------------------------------------------------------------
             assert(ptr->equilibria->size>0);
             CxxListOf<MixTab> mixes;
-            SubEList       &  equilibria = Coerce((*this)->equilibria);
-            const SList    &  species    = *((*this)->species);
+            ClusterContent   &content    = Coerce(**this);
+            SubEList       &  equilibria = content.equilibria;
+            const SList    &  species    = *content.species;
 
             {
                 //--------------------------------------------------------------
@@ -288,12 +289,14 @@ namespace Yttrium
 
                 // top level registration
                 eqs(mixed);
-                
 
+                // local registration
+                equilibria << *mixed;
+                content.enroll(*mixed);
             }
 
             Y_XML_COMMENT(xml, "#mixes = " << mixes.size << " / maxOrder = " << maxOrder);
-
+            std::cerr << *this << std::endl;
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

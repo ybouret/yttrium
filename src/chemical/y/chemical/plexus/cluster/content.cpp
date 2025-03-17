@@ -92,7 +92,12 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const ClusterContent &cc)
         {
-            os << cc.equilibria << '/' << cc.species;
+            os << "{ species=" << cc.species << std::endl;
+            for(const ENode *en=cc.equilibria->head;en;en=en->next)
+            {
+                cc.display(os << '\t',**en) << std::endl;
+            }
+            os << "}";
             return os;
         }
 
