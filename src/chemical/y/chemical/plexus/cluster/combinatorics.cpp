@@ -1,7 +1,3 @@
-
-
-
-
 #include "y/chemical/plexus/cluster/combinatorics.hpp"
 #include "y/chemical/reactive/equilibrium/mixed.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
@@ -27,8 +23,8 @@ namespace Yttrium
         public:
             static const char * const                  CallSign;
 
-            explicit MixTab(const IntegerSurvey::ArrayType &arr,
-                            const iMatrix                  &topo) :
+            inline explicit MixTab(const IntegerSurvey::ArrayType &arr,
+                                   const iMatrix                  &topo) :
             iArrayType(arr.size()),
             ncof(arr.ncof),
             stoi(topo.cols),
@@ -37,10 +33,8 @@ namespace Yttrium
             {
                 const size_t n = arr.size();
                 for(size_t i=n;i>0;--i)
-                {
-                    if( !arr[i].tryCast( (*this)[i]) )
-                        throw Specific::Exception(CallSign,"coefficient overflow");
-                }
+                    if( !arr[i].tryCast( (*this)[i]) )                         throw Specific::Exception(CallSign,"coefficient overflow");
+
 
                 const size_t m = stoi.size();
                 for(size_t j=m;j>0;--j)
@@ -48,21 +42,17 @@ namespace Yttrium
                     apz sum = 0;
                     for(size_t i=n;i>0;--i)
                         sum += arr[i] * topo[i][j];
-
-                    if( !sum.tryCast(stoi[j]))
-                        throw Specific::Exception(CallSign,"stoichiometry overflow");
+                    if( !sum.tryCast(stoi[j])) throw Specific::Exception(CallSign,"stoichiometry overflow");
                 }
 
             }
 
-            virtual ~MixTab() noexcept
-            {
-            }
+            inline virtual ~MixTab() noexcept {}
 
 
-            bool isEfficientFor(const ClusterTopology &cl, AddressBook &source) const
+            inline bool isEfficientFor(const ClusterTopology &cl, AddressBook &source) const
             {
-                static const char msg[] = "corrupted mix stoichiometry ";
+                static const char msg[] = "corrupted stoichiometry ";
                 source.free();
 
                 // gather created species from stoichiometry
@@ -74,15 +64,13 @@ namespace Yttrium
                 }
 
                 // gather original species from intial equilibria
-                if(cl->equilibria->size > cl.N )
                 {
-                    std::cerr << "Expanded Set !!" << std::endl;
-                }
-                size_t n=cl.N;
-                for(const ENode *en=cl->equilibria->head;n-- > 0;en=en->next)
-                {
-                    const Equilibrium &eq = **en;
-                    if( 0 != eq(*this,SubLevel) ) eq.gatherSpeciesIn(source);
+                    size_t n=cl.N;
+                    for(const ENode *en=cl->equilibria->head;n-- > 0;en=en->next)
+                    {
+                        const Equilibrium &eq = **en;
+                        if( 0 != eq(*this,SubLevel) ) eq.gatherSpeciesIn(source);
+                    }
                 }
 
 
@@ -159,7 +147,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             assert(ptr->equilibria->size>0);
             CxxListOf<MixTab> mixes;
-            ClusterContent   &content    = Coerce(**this);
+            ClusterContent &  content    = Coerce(**this);
             SubEList       &  equilibria = content.equilibria;
             const SList    &  species    = *content.species;
             size_t            maxOrder   = 1;
