@@ -39,8 +39,8 @@ namespace Yttrium
 
         std::ostream & Fragment:: display(std::ostream &os, const Components &eq) const
         {
-            self.pad(os << eq.name, eq)           << Components::Separator;
-            reac.pad(os << eq.reac.name, eq.reac) << Components::Symbol;
+            self.pad(os << eq.name, eq)           << Components::Separator << ' ';
+            reac.pad(os << eq.reac.name, eq.reac) << ' ' << Components::Symbol << ' ';
             prod.pad(os << eq.prod.name, eq.prod) << Components::Separator;
             return os;
         }

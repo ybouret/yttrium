@@ -283,7 +283,12 @@ namespace Yttrium
                                                                   mix->stoi,
                                                                   eqs.nextIndex(),
                                                                   tlK);
+
                 Y_XMLOG(xml,mixed);
+
+                // top level registration
+                eqs(mixed);
+                
 
             }
 

@@ -47,6 +47,7 @@ Y_UTEST(plexus)
 #endif
 
     std::cerr << "lib=" << lib << std::endl;
+    std::cerr << "eqs=" << eqs << std::endl;
 
     Y_SIZEOF(Cluster);
     Y_SIZEOF(ClusterType);
