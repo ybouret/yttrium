@@ -14,17 +14,19 @@ namespace Yttrium
         void ClusterBuilder:: startClusterFor(Equilibrium &eq)
         {
             ClusterContent::MutablePointer  ptr = new ClusterContent(eq);
-            cls.pushTail( new ClusterNode(ptr) );
+            cls.pushTail( new ClusterKnot(ptr) );
         }
 
-        ClusterBuilder:: ClusterBuilder(XMLog &xml, Equilibria &eqs)
+        ClusterBuilder:: ClusterBuilder(XMLog &xml, Equilibria &eqs) :
+        Proxy<const ListOf<ClusterKnot> >(),
+        cls()
         {
             Y_XML_SECTION(xml, "ClusterBuilder");
 
             for(Equilibria::Iterator it=eqs.begin();it!=eqs.end();++it)
             {
                 Equilibrium &eq = **it;
-                for(ClusterNode *cl=cls.head;cl;cl=cl->next)
+                for(ClusterKnot *cl=cls.head;cl;cl=cl->next)
                 {
                     ClusterContent &cc = **cl;
                     if(cc.accepts(eq))
@@ -40,11 +42,11 @@ namespace Yttrium
 
                 CHECK_FUSION:;
                 {
-                    CxxListOf<ClusterNode> ok;
+                    CxxListOf<ClusterKnot> ok;
                     while(cls.size>0)
                     {
-                        AutoPtr<ClusterNode> lhs = cls.popHead();
-                        for(ClusterNode *rhs=ok.head;rhs;rhs=rhs->next)
+                        AutoPtr<ClusterKnot> lhs = cls.popHead();
+                        for(ClusterKnot *rhs=ok.head;rhs;rhs=rhs->next)
                         {
                             if( (**rhs).accepts(**lhs))
                             {

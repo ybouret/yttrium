@@ -1,27 +1,25 @@
 
 //! \file
 
-#ifndef Y_Chemical_ClusterTopology_Included
-#define Y_Chemical_ClusterTopology_Included 1
+#ifndef Y_Chemical_ClusterKnot_Included
+#define Y_Chemical_ClusterKnot_Included 1
 
 #include "y/chemical/plexus/cluster/content.hpp"
-#include "y/chemical/type/defs.hpp"
-#include "y/stream/xmlog.hpp"
+
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
         //______________________________________________________________________
         //
         //
         //
-        //! Create topology from content
+        //! Knot of dependent equilibria
         //
         //
         //______________________________________________________________________
-        class ClusterTopology : public ClusterContent::Pointer
+        class ClusterKnot : public Quantized, public ClusterContent::MutablePointer
         {
         public:
             //__________________________________________________________________
@@ -30,26 +28,25 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit ClusterTopology(XMLog &, const ClusterContent::Pointer &); //!< extract information
-            virtual ~ClusterTopology() noexcept;                                //!< cleanup
+            explicit ClusterKnot(const ClusterContent::MutablePointer &) noexcept; //!< create
+            virtual ~ClusterKnot() noexcept;                                       //!< cleanup
 
             //__________________________________________________________________
             //
             //
-            // C++
+            // Members
             //
             //__________________________________________________________________
-            const size_t  N;           //!< |equilibria|
-            const size_t  M;           //!< |species|
-            const iMatrix topology;    //!< N x M
-            const iMatrix topologyT;   //!< transpose(topology)
+            ClusterKnot *next; //!< for list
+            ClusterKnot *prev; //!< for list
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ClusterTopology);
+            Y_DISABLE_COPY_AND_ASSIGN(ClusterKnot);
         };
     }
 
 }
+
 
 #endif
 

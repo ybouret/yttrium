@@ -11,11 +11,19 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Create conservations from topology
+        //
+        //
+        //______________________________________________________________________
         class ClusterConservations : public ClusterTopology
         {
         public:
-            explicit ClusterConservations(XMLog &, const ClusterContent::Pointer &);
-            virtual ~ClusterConservations() noexcept;
+            explicit ClusterConservations(XMLog &, const ClusterContent::Pointer &); //!< setup
+            virtual ~ClusterConservations() noexcept;                                //!< setup
 
             const uMatrix            preserved; //!< preserved matrix
             const Conservation::Laws ordinance; //!< matching laws

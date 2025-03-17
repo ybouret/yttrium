@@ -35,7 +35,7 @@ Y_UTEST(plexus)
     ClusterBuilder cls(xml,eqs);
 
 #if 1
-    for(const ClusterNode *cl=cls->head;cl;cl=cl->next)
+    for(const ClusterKnot *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
         const ClusterContent::Pointer cc( &Coerce(**cl) );
@@ -49,7 +49,7 @@ Y_UTEST(plexus)
     Y_SIZEOF(ClusterType);
     Y_SIZEOF(ClusterContent);
     Y_SIZEOF(ClusterBuilder);
-    Y_SIZEOF(ClusterNode);
+    Y_SIZEOF(ClusterKnot);
     Y_SIZEOF(Conservation::Rule);
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);

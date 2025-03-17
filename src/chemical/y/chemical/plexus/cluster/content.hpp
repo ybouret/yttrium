@@ -23,8 +23,14 @@ namespace Yttrium
         class ClusterContent : public Quantized, public Counted, public Fragment
         {
         public:
-            typedef ArcPtr<const ClusterContent> Pointer;
-            typedef ArcPtr<ClusterContent>       MutablePointer;
+            //__________________________________________________________________
+            //
+            //
+            // Definition
+            //
+            //__________________________________________________________________
+            typedef ArcPtr<const ClusterContent> Pointer;         //!< for cluster
+            typedef ArcPtr<ClusterContent>       MutablePointer;  //!< for builder
 
             //__________________________________________________________________
             //
@@ -34,7 +40,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit ClusterContent(Equilibrium &first); //!< setup
             virtual ~ClusterContent() noexcept;          //!< cleanup
-            Y_OSTREAM_PROTO(ClusterContent);
+            Y_OSTREAM_PROTO(ClusterContent);             //!< display
 
             //__________________________________________________________________
             //
@@ -44,8 +50,8 @@ namespace Yttrium
             //__________________________________________________________________
             void attach(Equilibrium    &);                       //!< attach new equilibrium and its species
             void fusion(ClusterContent &)              noexcept; //!< fusion and update fragment
-            bool accepts(const Equilibrium &)    const noexcept;
-            bool accepts(const ClusterContent &) const noexcept;
+            bool accepts(const Equilibrium &)    const noexcept; //!< if has shared species
+            bool accepts(const ClusterContent &) const noexcept; //!< if has shared species
 
             //__________________________________________________________________
             //
