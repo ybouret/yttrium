@@ -14,7 +14,7 @@ namespace Yttrium
 
         namespace Conservation
         {
-            class Law : public Actors
+            class Law : public Proxy<const Actors>
             {
             public:
                 typedef CxxListOf<Law> List;
