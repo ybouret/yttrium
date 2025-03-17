@@ -46,6 +46,14 @@ namespace Yttrium
                 return os;
             }
 
+            bool Laws:: got(const Species &sp) const noexcept
+            {
+                for(const Law *law=my.head;law;law=law->next)
+                {
+                    if(law->has(sp)) return true;
+                }
+                return false;
+            }
         }
 
     }

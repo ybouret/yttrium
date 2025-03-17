@@ -79,52 +79,21 @@ namespace Yttrium
                 Coerce(ordinance).xch(laws);
             }
 
+            for(const SNode *sn=(*this)->species->head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                if(ordinance.got(sp)) Coerce(conserved) << sp; else Coerce(unbounded) << sp;
+            }
+            assert(conserved.isStrictlySortedBy(MetaList<SList>::Compare));
+            assert(unbounded.isStrictlySortedBy(MetaList<SList>::Compare));
+
             Y_XMLOG(xml, "topology  = " << topology);
             Y_XMLOG(xml, "preserved = " << preserved);
             Y_XMLOG(xml, "ordinance = " << ordinance);
+            Y_XMLOG(xml, "conserved = " << conserved);
+            Y_XMLOG(xml, "unbounded = " << unbounded);
         }
 
-
-#if 0
-        void Cluster:: conservations(XMLog &xml)
-        {
-            Y_XML_SECTION(xml, "conservations");
-
-            Matrix<apz> Q;
-            if(!OrthoSpace::Make(Q,topology)) {
-                throw Specific::Exception(CallSign, "no orthogonal space");
-            }
-
-            const NaturalSurvey survey(xml,Q,0);
-            if(survey->size<=0) {
-                Y_XMLOG(xml,"no conservation");
-                return;
-            }
-
-            {
-                uMatrix &Cm = Coerce(preserved);
-                const size_t M = my.species->size;
-                Cm.make(survey->size,M);
-
-
-                size_t cidx = 1;
-                for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
-                {
-                    const Readable<apn> &coef = *node; assert(CountNonZero(coef)>=2);
-                    Writable<unsigned>  &cons = Cm[cidx];
-                    for(size_t j=M;j>0;--j) {
-                        if( !coef[j].tryCast(cons[j]))
-                            throw Specific::Exception(CallSign, "conservation coefficient overflow");
-                    }
-                }
-            }
-
-            Y_XMLOG(xml, "topology  = " << topology);
-            Y_XMLOG(xml, "preserved = " << preserved);
-
-
-        }
-#endif
 
     }
 

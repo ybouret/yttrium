@@ -41,7 +41,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void xch( Laws &other ) noexcept; //!< exchagne laws and assembly
+                void xch( Laws &other )          noexcept; //!< exchagne laws and assembly
+                bool got(const Species &) const noexcept; //!< check among laws
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
