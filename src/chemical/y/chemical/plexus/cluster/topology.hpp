@@ -5,15 +5,13 @@
 #define Y_Chemical_ClusterTopology_Included 1
 
 #include "y/chemical/plexus/cluster/content.hpp"
+#include "y/chemical/type/defs.hpp"
 #include "y/stream/xmlog.hpp"
-#include "y/container/matrix.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-        typedef Matrix<int> iMatrix;
 
         class ClusterTopology : public ClusterContent::Pointer
         {

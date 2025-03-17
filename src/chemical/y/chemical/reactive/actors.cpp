@@ -62,6 +62,15 @@ namespace Yttrium
 
             return *actor;
         }
+
+
+        void Actors:: Exchange(Actors &lhs, Actors &rhs)  noexcept
+        {
+            assert(lhs.in==rhs.in);
+            Coerce(*lhs.name).swapWith(Coerce(*rhs.name));
+            lhs.my.swapWith(rhs.my);
+        }
+
     }
 
 }

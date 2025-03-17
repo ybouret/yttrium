@@ -51,7 +51,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Actor & operator()(const unsigned nu, const Species &sp); //!< create new actor
             bool          has(const Species &) const noexcept; //!< check presence
-
+            static void   Exchange(Actors &lhs, Actors &rhs) noexcept; //!< same involments
 
             //__________________________________________________________________
             //

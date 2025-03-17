@@ -1,5 +1,6 @@
 
 #include "y/chemical/plexus/cluster/conservations.hpp"
+#include "y/chemical/plexus/conservation/rule.hpp"
 
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
@@ -26,53 +27,61 @@ namespace Yttrium
         ClusterConservations:: ClusterConservations( XMLog &xml, const ClusterContent::Pointer &ptr) :
         ClusterTopology(xml,ptr),
         preserved(),
-        conserved()
+        ordinance(0),
+        conserved(),
+        unbounded()
         {
             Y_XML_SECTION(xml,"ClusterConservations");
 
-            CxxListOf<Conservation::Rule> rules;
             {
-                Matrix<apz> Q;
-                if(!OrthoSpace::Make(Q,topology))
-                    throw Specific::Exception(CallSign, "no orthogonal space (singular equilibri%s)", Plural::aum(N));
-
-
-                const NaturalSurvey survey(xml,Q,0);
-                if(survey->size<=0) {
-                    Y_XMLOG(xml,"no conservation found");
-                    return;
-                }
-
+                CxxListOf<Conservation::Rule> rules;
                 {
-                    uMatrix &Cm = Coerce(preserved);
-                    Cm.make(survey->size,M);
+                    Matrix<apz> Q;
+                    if(!OrthoSpace::Make(Q,topology))
+                        throw Specific::Exception(CallSign, "no orthogonal space (singular equilibri%s)", Plural::aum(N));
 
 
-                    size_t                cidx = 1;
-                    for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
+                    const NaturalSurvey survey(xml,Q,0);
+                    if(survey->size<=0) {
+                        Y_XMLOG(xml,"no conservation found");
+                        return;
+                    }
+
                     {
-                        const Readable<apn> &       coef = *node; assert(CountNonZero(coef)>=2);
-                        Writable<unsigned>  &       cons = Cm[cidx];
-                        AutoPtr<Conservation::Rule> claw = new Conservation::Rule();
-                        for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
+                        uMatrix &Cm = Coerce(preserved);
+                        Cm.make(survey->size,M);
+
+
+                        size_t                cidx = 1;
+                        for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
                         {
-                            const Species &sp = **sn;
-                            const size_t   sj = sp.indx[SubLevel];
-                            unsigned &     cf = cons[sj];
-                            if( !coef[sj].tryCast(cf) )
-                                throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
-                            if(0!=cf)
+                            const Readable<apn> &       coef = *node; assert(CountNonZero(coef)>=2);
+                            Writable<unsigned>  &       cons = Cm[cidx];
+                            AutoPtr<Conservation::Rule> claw = new Conservation::Rule();
+                            for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
                             {
-                                (*claw)(cf,sp);
+                                const Species &sp = **sn;
+                                const size_t   sj = sp.indx[SubLevel];
+                                unsigned &     cf = cons[sj];
+                                if( !coef[sj].tryCast(cf) )
+                                    throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
+                                if(0!=cf)
+                                {
+                                    (*claw)(cf,sp);
+                                }
                             }
+                            std::cerr << " (+) " << claw->name << std::endl;
+                            rules.pushTail(claw.yield());
                         }
-                        std::cerr << " (+) " << claw->name << std::endl;
                     }
                 }
+                Conservation::Laws laws(rules.head);
+                Coerce(ordinance).xch(laws);
             }
+
             Y_XMLOG(xml, "topology  = " << topology);
             Y_XMLOG(xml, "preserved = " << preserved);
-            //Y_XMLOG(xml, "laws      = " << ordinance);
+            Y_XMLOG(xml, "ordinance = " << ordinance);
         }
 
 

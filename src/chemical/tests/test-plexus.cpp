@@ -2,7 +2,7 @@
 #include "y/chemical/plexus/clusters.hpp"
 #include "y/chemical/plexus/cluster/conservations.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
-
+#include "y/chemical/plexus/conservation/rule.hpp"
 #include "y/chemical/weasel.hpp"
 
 #include "y/utest/run.hpp"
@@ -51,6 +51,9 @@ Y_UTEST(plexus)
     Y_SIZEOF(ClusterBuilder);
     Y_SIZEOF(ClusterNode);
     Y_SIZEOF(Conservation::Rule);
+    Y_SIZEOF(Conservation::Law);
+    Y_SIZEOF(Conservation::Laws);
+
 }
 Y_UDONE()
 
