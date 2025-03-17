@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_Chemical_ClusterCombinatorics_Included
