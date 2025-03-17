@@ -27,7 +27,7 @@ namespace Yttrium
 
             const uMatrix            preserved; //!< preserved matrix
             const Conservation::Laws ordinance; //!< matching laws
-            const SList              conserved; //!< conserved species
+            const SList             &conserved; //!< conserved species
             const SList              unbounded; //!< unbounded species
 
         private:

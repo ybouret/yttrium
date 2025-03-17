@@ -7,6 +7,7 @@
 
 #include "y/chemical/reactive/equilibrium.hpp"
 #include "y/check/static.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -71,6 +72,12 @@ namespace Yttrium
             {
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
+
+            static inline void     Sort(LIST &L)
+            {
+                MergeSort::Call(L,Compare);
+            }
+
 
             //! post-insertion indexing
             virtual void update() noexcept = 0;

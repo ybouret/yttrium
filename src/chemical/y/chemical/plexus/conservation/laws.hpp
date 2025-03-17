@@ -41,13 +41,22 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void xch( Laws &other )          noexcept; //!< exchagne laws and assembly
-                bool got(const Species &) const noexcept; //!< check among laws
+                void xch( Laws &other ) noexcept; //!< exchagne laws and assembly
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);
                 Y_PROXY_DECL();
                 CxxListOf<Law> my;
+
+            public:
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const SList species; //!< list of bounded species
             };
 
         }

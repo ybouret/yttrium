@@ -28,7 +28,7 @@ namespace Yttrium
         ClusterTopology(xml,ptr),
         preserved(),
         ordinance(0),
-        conserved(),
+        conserved(ordinance.species),
         unbounded()
         {
             Y_XML_SECTION(xml,"ClusterConservations");
@@ -77,12 +77,13 @@ namespace Yttrium
                 }
                 Conservation::Laws laws(rules.head);
                 Coerce(ordinance).xch(laws);
+
             }
 
             for(const SNode *sn=(*this)->species->head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
-                if(ordinance.got(sp)) Coerce(conserved) << sp; else Coerce(unbounded) << sp;
+                if(!conserved.has(sp)) Coerce(unbounded) << sp;
             }
             assert(conserved.isStrictlySortedBy(MetaList<SList>::Compare));
             assert(unbounded.isStrictlySortedBy(MetaList<SList>::Compare));

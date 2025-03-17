@@ -1,6 +1,7 @@
 
 #include "y/chemical/plexus/conservation/laws.hpp"
 #include "y/chemical/plexus/conservation/rule.hpp"
+#include "y/chemical/type/meta-list.hpp"
 
 namespace Yttrium
 {
@@ -17,10 +18,23 @@ namespace Yttrium
             Laws:: Laws(Rule * rule) :
             Proxy<const ListOf<Law> >(),
             Assembly(),
-            my()
+            my(),
+            species()
             {
-                for(;rule;rule=rule->next)
-                    enroll( *my.pushTail( new Law(rule) ) );
+                SList &L = Coerce(species);
+
+                for(;rule;rule=rule->next) {
+                    Law * const law = my.pushTail( new Law(rule) ); assert(law->latched);
+                    for(const Actor *a=(*law)->head;a;a=a->next)
+                    {
+                        const Species &sp = a->sp;
+                        if(L.has(sp)) continue;
+                        L << sp;
+                    }
+                    enroll(*law);
+                }
+
+                MetaList<SList>::Sort(L);
             }
 
             Y_PROXY_IMPL(Laws,my)
@@ -29,6 +43,7 @@ namespace Yttrium
             {
                 my.swapWith(other.my);
                 CoerceSwap(maxNameLength,other.maxNameLength);
+                Coerce(species).swapWith( Coerce(other.species) );
             }
 
             std::ostream & operator<<(std::ostream &os, const Laws &laws)
@@ -46,14 +61,7 @@ namespace Yttrium
                 return os;
             }
 
-            bool Laws:: got(const Species &sp) const noexcept
-            {
-                for(const Law *law=my.head;law;law=law->next)
-                {
-                    if(law->has(sp)) return true;
-                }
-                return false;
-            }
+            
         }
 
     }
