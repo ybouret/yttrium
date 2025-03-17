@@ -33,7 +33,9 @@ namespace Yttrium
                             const iMatrix                  &topo) :
             ArrayType(arr.size()),
             ncof(arr.ncof),
-            stoi(topo.cols)
+            stoi(topo.cols),
+            next(0),
+            prev(0)
             {
                 const size_t n = arr.size();
                 for(size_t i=n;i>0;--i)
@@ -114,6 +116,7 @@ namespace Yttrium
                 return true;
             }
 
+            //! comparison by ncof then lexicographic
             static SignType Compare(const MixTab * const lhs,
                                     const MixTab * const rhs) noexcept
             {
@@ -138,7 +141,7 @@ namespace Yttrium
 
         const char * const MixTab::CallSign = "Mixing";
 
-        class MixedEqulibrium : public Equilibrium
+        class MixedEquilibrium : public Equilibrium
         {
         public:
 
@@ -180,12 +183,12 @@ namespace Yttrium
                 return ans.yield();
             }
 
-            explicit MixedEqulibrium(WList               &wl,
-                                     EList               &el,
-                                     const SList         &sl,
-                                     const Readable<int> &st,
-                                     const size_t         ii,
-                                     XWritable           &KK) :
+            explicit MixedEquilibrium(WList               &wl,
+                                      EList               &el,
+                                      const SList         &sl,
+                                      const Readable<int> &st,
+                                      const size_t         ii,
+                                      XWritable           &KK) :
             Equilibrium( MakeName(wl,el), ii),
             topK(KK),
             wlist(),
@@ -212,7 +215,7 @@ namespace Yttrium
                 latch();
             }
 
-            virtual ~MixedEqulibrium() noexcept {}
+            virtual ~MixedEquilibrium() noexcept {}
 
             XWritable   &topK;
             const WList  wlist;
@@ -221,7 +224,7 @@ namespace Yttrium
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(MixedEqulibrium);
+            Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
             virtual xreal_t getK(xreal_t)
             {
                 return 1;
@@ -343,7 +346,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             //
             //
-            // compile mixes into mixed
+            // compile mixes into mixed from primary equilibri[um|a]
             //
             //
             //------------------------------------------------------------------
@@ -351,7 +354,8 @@ namespace Yttrium
             {
                 WList     wlist;
                 EList     elist;
-                for(ENode *en=(*this)->equilibria->head;en;en=en->next)
+                size_t    count = N;
+                for(ENode *en=equilibria->head;count-- > 0;en=en->next)
                 {
                     Equilibrium & eq = **en;
                     const int     cf = eq(*mix,SubLevel);
@@ -363,12 +367,12 @@ namespace Yttrium
                 //  AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
                 // std::cerr << "(+) " << ptr << std::endl;
 
-                Equilibrium::Pointer mixed = new MixedEqulibrium(wlist,
-                                                                 elist,
-                                                                 species,
-                                                                 mix->stoi,
-                                                                 eqs.nextIndex(),
-                                                                 tlK);
+                Equilibrium::Pointer mixed = new MixedEquilibrium(wlist,
+                                                                  elist,
+                                                                  species,
+                                                                  mix->stoi,
+                                                                  eqs.nextIndex(),
+                                                                  tlK);
                 Y_XMLOG(xml,mixed);
 
             }
