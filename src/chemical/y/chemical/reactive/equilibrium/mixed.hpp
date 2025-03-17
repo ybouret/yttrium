@@ -14,15 +14,29 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef Small::BareHeavyList<const int> WList;
-        typedef WList::NodeType                 WNode;
+        typedef Small::BareHeavyList<const int> WList; //!< alias
+        typedef WList::NodeType                 WNode; //!< alias
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! based on a weighted combination of equilibria
+        //
+        //
+        //______________________________________________________________________
         class MixedEquilibrium : public Equilibrium
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
 
-            //! create and latch
+            //! create by stealing lists and latch
             explicit MixedEquilibrium(WList               &wl,
                                       EList               &el,
                                       const SList         &sl,
@@ -33,7 +47,12 @@ namespace Yttrium
             //! cleanup
             virtual ~MixedEquilibrium() noexcept;
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
 
             XWritable   &topK;  //!< top level, shared K
             const WList  wlist; //!< weights of equilibria

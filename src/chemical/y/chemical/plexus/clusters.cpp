@@ -14,23 +14,42 @@ namespace Yttrium
         }
 
         
-        Clusters:: Clusters(XMLog &xml, Equilibria &eqs) :
+        Clusters:: Clusters(XMLog      &xml,
+                            Equilibria &eqs,
+                            const xreal_t t0) :
         my(),
         tlK(),
         K(tlK)
         {
-            Y_XML_SECTION_OPT(xml, "Clusters", "#eqs=" << eqs->size());
-            ClusterBuilder cls(xml,eqs);
-            for(const ClusterKnot *cl=cls->head;cl;cl=cl->next)
+            const size_t ini = eqs->size();
+            Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << ini);
+
             {
-                //std::cerr << "cluster: " << *cl << std::endl;
-                const ClusterContent::Pointer clc( &Coerce(**cl) );
-                my.pushTail( new Cluster(xml,clc,eqs,tlK) );
-                //const ClusterCombinatorics    ct(xml,clc,eqs,tlK);
+                ClusterBuilder cls(xml,eqs);
+                for(const ClusterKnot *cl=cls->head;cl;cl=cl->next)
+                {
+                    const ClusterContent::Pointer clc( &Coerce(**cl) );
+                    my.pushTail( new Cluster(xml,clc,eqs,tlK) );
+                }
             }
+            Y_XML_COMMENT(xml, "|eqs|=" << eqs->size() << " from " << ini);
+            tlK.adjust(eqs->size(),0);
+            (void) (*this)(t0);
         }
 
+        const XReadable & Clusters:: operator()(const xreal_t t0)
+        {
 
+            for(Cluster *cl=my.head;cl;cl=cl->next)
+            {
+                for(ENode *en=(*cl)->equilibria->head;en;en=en->next)
+                {
+                    Equilibrium &eq = **en;
+                    eq(tlK,TopLevel) = eq.K(t0);
+                }
+            }
+            return K;
+        }
 
     }
 

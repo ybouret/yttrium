@@ -46,7 +46,6 @@ namespace Yttrium
         class Equilibria : public Proxy<const EquilibriaType>, public Latchable
         {
         public:
-
             //__________________________________________________________________
             //
             //

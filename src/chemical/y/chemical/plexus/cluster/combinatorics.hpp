@@ -24,15 +24,33 @@ namespace Yttrium
         class ClusterCombinatorics : public ClusterConservations
         {
         public:
-            typedef CxxArray<EList,MemoryModel> ELists;
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef CxxArray<EList,MemoryModel> ELists; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit ClusterCombinatorics(XMLog                         &xml,
                                           const ClusterContent::Pointer &ptr,
                                           Equilibria                    &eqs,
                                           XWritable                     &tlK); //!< setup
             virtual ~ClusterCombinatorics() noexcept;                                //!< cleanup
 
-            const ELists order;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const ELists order; //!< equilibria ranked by order
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);

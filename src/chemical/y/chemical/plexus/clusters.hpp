@@ -15,7 +15,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        typedef Vector<xreal_t,MemoryModel> XVector;
+        typedef Vector<xreal_t,MemoryModel> XVector; //!< alias
 
         //______________________________________________________________________
         //
@@ -35,8 +35,21 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Clusters(XMLog &xml, Equilibria &eqs); //!< full setup
-            virtual ~Clusters() noexcept;                   //!< cleanup
+
+            //! full setup
+            /**
+             \param xml for verbosity
+             \param eqs primary equilibria
+             \param t0  time to evaluate constants
+             */
+            explicit Clusters(XMLog &       xml,
+                              Equilibria &  eqs,
+                              const xreal_t t0);
+
+            //! cleanuo
+            virtual ~Clusters() noexcept;
+
+            const XReadable &operator()(const xreal_t);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
@@ -45,10 +58,10 @@ namespace Yttrium
             XVector         tlK;
 
         public:
-            const XReadable &K;
-            
+            const XReadable &K; //!< last computed constant
+
         };
-        
+
     }
 
 }

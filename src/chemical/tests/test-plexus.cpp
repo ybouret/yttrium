@@ -34,6 +34,7 @@ Y_UTEST(plexus)
     bool verbose = true;
 
     XMLog          xml(verbose);
+#if 0
     ClusterBuilder cls(xml,eqs);
     Vector<xreal_t> K;
 
@@ -45,9 +46,12 @@ Y_UTEST(plexus)
         const ClusterCombinatorics    ct(xml,cc,eqs,K);
     }
 #endif
+#endif
 
-    std::cerr << "lib=" << lib << std::endl;
-    std::cerr << "eqs=" << eqs << std::endl;
+    Clusters cls(xml,eqs,0.0);
+
+    //std::cerr << "lib=" << lib << std::endl;
+    //std::cerr << "eqs=" << eqs << std::endl;
 
     Y_SIZEOF(Cluster);
     Y_SIZEOF(ClusterContent);

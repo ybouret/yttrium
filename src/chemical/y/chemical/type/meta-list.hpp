@@ -73,10 +73,8 @@ namespace Yttrium
                 return Sign::Of( (**lhs).indx[TopLevel], (**rhs).indx[TopLevel] );
             }
 
-            static inline void     Sort(LIST &L)
-            {
-                MergeSort::Call(L,Compare);
-            }
+            //! sorting by TopLevel index for any acceptable list
+            static inline void Sort(LIST &L) { MergeSort::Call(L,Compare); }
 
 
             //! post-insertion indexing
