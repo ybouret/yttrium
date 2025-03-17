@@ -101,11 +101,32 @@ namespace Yttrium
         {
             for(const Actor *a=A->head;a;a=a->next)
             {
-                if( conserved.has(a->sp) ) return false;
+                if( conserved.has(a->sp) )
+                {
+                    assert( !unbounded.has(a->sp) );
+                    return false;
+                }
                 assert( unbounded.has(a->sp));
             }
             return true;
         }
+
+        bool   ClusterConservations:: gotAnyConserved(const Actors &A) const noexcept
+        {
+            for(const Actor *a=A->head;a;a=a->next)
+            {
+                if( conserved.has(a->sp) )
+                {
+                    assert( !unbounded.has(a->sp) );
+                    return true;
+                }
+                assert( unbounded.has(a->sp));
+            }
+            return false;
+        }
+
+
+        
 
         ComponentsTier ClusterConservations:: tierOf(const Components &eq) const noexcept
         {
@@ -113,7 +134,14 @@ namespace Yttrium
             {
                 if(eq.prod->size>0)
                 {
-
+                    if(gotAnyConserved(eq.reac) && gotAnyConserved(eq.prod) )
+                    {
+                        return Standard;
+                    }
+                    else
+                    {
+                        return Nebulous;
+                    }
                 }
                 else
                 {

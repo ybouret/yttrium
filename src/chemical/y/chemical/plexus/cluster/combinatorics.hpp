@@ -48,7 +48,12 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const ELists order; //!< equilibria ranked by order
+            const iMatrix Nu;    //!< full topology
+            const EList   standard;
+            const EList   reacOnly;
+            const EList   prodOnly;
+            const ELists  order; //!< equilibria ranked by order
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);

@@ -34,7 +34,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
-            bool areAllUnbounded(const Actors &) const noexcept;
+            bool   areAllUnbounded(const Actors &) const noexcept;
+            bool   gotAnyConserved(const Actors &) const noexcept;
         };
 
     }
