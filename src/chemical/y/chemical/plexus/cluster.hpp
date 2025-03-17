@@ -78,8 +78,8 @@ namespace Yttrium
             friend class Clusters;
             Y_PROXY_DECL();
             void compile(XMLog &, Equilibria &);
-            void conservations(XMLog &);
-            void combinatorics(XMLog &, Equilibria &);
+            //void conservations(XMLog &);
+            //void combinatorics(XMLog &, Equilibria &);
 
         public:
             Cluster *next; //!< for list

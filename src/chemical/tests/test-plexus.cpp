@@ -1,9 +1,11 @@
 
 #include "y/chemical/plexus/clusters.hpp"
-#include "y/chemical/plexus/cluster/conservations.hpp"
+#include "y/chemical/plexus/cluster/combinatorics.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
 #include "y/chemical/plexus/conservation/rule.hpp"
 #include "y/chemical/weasel.hpp"
+
+#include "y/sequence/vector.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -33,13 +35,14 @@ Y_UTEST(plexus)
 
     XMLog          xml(verbose);
     ClusterBuilder cls(xml,eqs);
+    Vector<xreal_t> K;
 
 #if 1
     for(const ClusterKnot *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << "cluster: " << *cl << std::endl;
         const ClusterContent::Pointer cc( &Coerce(**cl) );
-        const ClusterConservations    ct(xml,cc);
+        const ClusterCombinatorics    ct(xml,cc,eqs,K);
     }
 #endif
 

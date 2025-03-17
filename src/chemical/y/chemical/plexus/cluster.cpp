@@ -64,7 +64,7 @@ namespace Yttrium
         }
 
 
-        void Cluster:: compile(XMLog &xml, Equilibria &eqs)
+        void Cluster:: compile(XMLog &xml, Equilibria &)
         {
             Y_XML_SECTION_OPT(xml,CallSign,*this);
             const size_t N = my.equilibria->size; assert(N>0);
@@ -86,8 +86,8 @@ namespace Yttrium
                 mu.assign(TransposeOf,topology);
 
             }
-            conservations(xml);
-            combinatorics(xml,eqs);
+            //conservations(xml);
+            //combinatorics(xml,eqs);
         }
 
 

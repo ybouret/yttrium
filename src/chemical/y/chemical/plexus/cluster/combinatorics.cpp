@@ -1,6 +1,8 @@
 
-#include "y/chemical/plexus/clusters.hpp"
-#include "y/chemical/reactive/equilibria.hpp"
+
+
+
+#include "y/chemical/plexus/cluster/combinatorics.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/system/exception.hpp"
 
@@ -24,6 +26,7 @@ namespace Yttrium
         class MixTab : public Quantized, public CxxArray<int,Memory::Dyadic>
         {
         public:
+            static const char * const CallSign;
             typedef CxxArray<int,Memory::Dyadic> ArrayType;
 
             explicit MixTab(const IntegerSurvey::ArrayType &arr,
@@ -36,7 +39,7 @@ namespace Yttrium
                 for(size_t i=n;i>0;--i)
                 {
                     if( !arr[i].tryCast( (*this)[i]) )
-                        throw Specific::Exception(Cluster::CallSign,"coefficient overflow");
+                        throw Specific::Exception(CallSign,"coefficient overflow");
                 }
 
                 const size_t m = stoi.size();
@@ -47,7 +50,7 @@ namespace Yttrium
                         sum += arr[i] * topo[i][j];
 
                     if( !sum.tryCast(stoi[j]))
-                        throw Specific::Exception(Cluster::CallSign,"stoichiometry overflow");
+                        throw Specific::Exception(CallSign,"stoichiometry overflow");
                 }
 
             }
@@ -57,36 +60,44 @@ namespace Yttrium
             }
 
 
-            bool isEfficientFor(const ClusterType &cl, AddressBook &source) const
+            bool isEfficientFor(const ClusterTopology &cl, AddressBook &source) const
             {
                 static const char msg[] = "corrupted mix stoichiometry ";
                 source.free();
 
+                // gather created species from stoichiometry
                 AddressBook target;
-                for(const SNode *sn=cl.species->head;sn;sn=sn->next)
+                for(const SNode *sn=cl->species->head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
                     if( 0 != sp(stoi,SubLevel) ) target += sp;
                 }
 
-                for(const ENode *en=cl.equilibria->head;en;en=en->next)
+                // gather original species from intial equilibria
+                if(cl->equilibria->size > cl.N )
+                {
+                    std::cerr << "Expanded Set !!" << std::endl;
+                }
+                size_t n=cl.N;
+                for(const ENode *en=cl->equilibria->head;n-- > 0;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     if( 0 != eq(*this,SubLevel) ) eq.gatherSpeciesIn(source);
                 }
 
 
+                // compare
                 const size_t src = source.size();
                 const size_t tgt = target.size();
 
                 switch( Sign::Of(tgt,src) )
                 {
                     case Positive:
-                        throw Specific::Exception(Cluster::CallSign,"%sexcess",msg);
+                        throw Specific::Exception(CallSign,"%sexcess",msg);
 
                     case __Zero__:
                         if( !(source==target) )
-                            throw Specific::Exception(Cluster::CallSign,"%sequality!!",msg);
+                            throw Specific::Exception(CallSign,"%sequality!!",msg);
                         return false;
 
                     case Negative:
@@ -97,7 +108,7 @@ namespace Yttrium
                 {
                     const void * addr = *it;
                     if(!source.remove_(addr))
-                        throw Specific::Exception(Cluster::CallSign,"%scompression",msg);
+                        throw Specific::Exception(CallSign,"%scompression",msg);
                 }
 
                 return true;
@@ -125,6 +136,8 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(MixTab);
         };
 
+        const char * const MixTab::CallSign = "Mixing";
+
         class MixedEqulibrium : public Equilibrium
         {
         public:
@@ -146,7 +159,6 @@ namespace Yttrium
                 ans += id;
                 return ans;
             }
-
 
 
             static const String *MakeName(const WList &wl,
@@ -172,8 +184,13 @@ namespace Yttrium
                                      EList               &el,
                                      const SList         &sl,
                                      const Readable<int> &st,
-                                     const size_t         ii) :
-            Equilibrium( MakeName(wl,el), ii), wlist(), elist(), xmul()
+                                     const size_t         ii,
+                                     XWritable           &KK) :
+            Equilibrium( MakeName(wl,el), ii),
+            topK(KK),
+            wlist(),
+            elist(),
+            xmul()
             {
                 // steal data
                 Coerce(wlist).swapWith(wl);
@@ -197,9 +214,10 @@ namespace Yttrium
 
             virtual ~MixedEqulibrium() noexcept {}
 
-            const WList wlist;
-            const EList elist;
-            XMul        xmul;
+            XWritable   &topK;
+            const WList  wlist;
+            const EList  elist;
+            XMul         xmul;
 
 
         private:
@@ -210,56 +228,130 @@ namespace Yttrium
             }
         };
 
-        void Cluster:: combinatorics(XMLog &xml, Equilibria &eqs)
-        {
-            Y_XML_SECTION(xml, "combinatorics");
 
+    }
+
+}
+
+
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        using namespace MKL;
+        using namespace Apex;
+        using namespace Ortho;
+        using namespace Coven;
+
+
+        ClusterCombinatorics:: ClusterCombinatorics(XMLog                         &xml,
+                                                    const ClusterContent::Pointer &ptr,
+                                                    Equilibria                    &eqs,
+                                                    XWritable                     &tlK) :
+        ClusterConservations(xml,ptr),
+        maxOrder(1)
+        {
+            Y_XML_SECTION(xml, "ClusterCombinatorics");
+
+            //------------------------------------------------------------------
+            //
+            //
+            // prepare variables
+            //
+            //
+            //------------------------------------------------------------------
+            assert(ptr->equilibria->size>0);
             CxxListOf<MixTab> mixes;
-            size_t            maxOrder = 1;
+            SubEList       &  equilibria = Coerce((*this)->equilibria);
+            const SList    &  species    = *((*this)->species);
+
             {
+                //--------------------------------------------------------------
+                //
+                //
+                // create survey
+                //
+                //
+                //--------------------------------------------------------------
                 const IntegerSurvey survey(xml,topologyT,0);
                 if(survey->size<=0) {
-                    Y_XML_COMMENT(xml,"no combinatorics");
+                    Y_XML_COMMENT(xml,"no mixed equilibrium");
                     return;
                 }
-                else
+
+                //--------------------------------------------------------------
+                //
+                //
+                // decode survey
+                //
+                //
+                //--------------------------------------------------------------
+                AddressBook missing;
+                for(const IntegerSurvey::ArrayType *arr=survey->head;arr;arr=arr->next)
                 {
-                    AddressBook missing;
-                    for(const IntegerSurvey::ArrayType *arr=survey->head;arr;arr=arr->next)
+                    assert( CountNonZero(*arr)>=2 );
+                    AutoPtr<MixTab>   mix = new MixTab(*arr,topology);
+
+                    //----------------------------------------------------------
+                    //
+                    // sanity check
+                    //
+                    //----------------------------------------------------------
+                    for(const MixTab *rhs = mixes.head;rhs;rhs=rhs->next)
                     {
-                        assert( CountNonZero(*arr)>=2 );
-                        AutoPtr<MixTab>   mix = new MixTab(*arr,topology);
-                        for(const MixTab *rhs = mixes.head;rhs;rhs=rhs->next)
-                        {
-                            if( *rhs == *mix)            throw Specific::Exception(CallSign,"corrupted mix coefficients");
-                            if( rhs->stoi == mix->stoi ) throw Specific::Exception(CallSign,"corrupted mix stoichiometry");
-                        }
-
-                        if(!mix->isEfficientFor(**this,missing))
-                        {
-                            Y_XMLOG(xml, "(-) " << mix);
-                            continue;
-                        }
-
-                        if(xml.verbose)
-                        {
-                            missing.display<Species>( xml() << "(+) " << mix << "->") << std::endl;
-                        }
-                        mixes.pushTail( mix.yield() );
-                        InSituMax(maxOrder,arr->ncof);
+                        if( *rhs == *mix)            throw Specific::Exception(CallSign,"corrupted mix coefficients");
+                        if( rhs->stoi == mix->stoi ) throw Specific::Exception(CallSign,"corrupted mix stoichiometry");
                     }
+
+                    //----------------------------------------------------------
+                    //
+                    // check that combination get rid of at least one species
+                    //
+                    //----------------------------------------------------------
+                    if(!mix->isEfficientFor(*this,missing))
+                    {
+                        Y_XMLOG(xml, "(-) " << mix);
+                        continue;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // now we have a valid new mix
+                    //
+                    //----------------------------------------------------------
+                    if(xml.verbose)
+                    {
+                        missing.display<Species>( xml() << "(+) " << mix << "->") << std::endl;
+                    }
+                    mixes.pushTail( mix.yield() );
+                    InSituMax(Coerce(maxOrder),arr->ncof);
                 }
+
             }
 
+            //------------------------------------------------------------------
+            //
+            //
             // sorting
+            //
+            //
+            //------------------------------------------------------------------
             MergeSort::Call(mixes,MixTab::Compare);
 
-            // compiling
+            //------------------------------------------------------------------
+            //
+            //
+            // compile mixes into mixed
+            //
+            //
+            //------------------------------------------------------------------
             for(const MixTab *mix=mixes.head;mix;mix=mix->next)
             {
                 WList     wlist;
                 EList     elist;
-                for(ENode *en=my.equilibria->head;en;en=en->next)
+                for(ENode *en=(*this)->equilibria->head;en;en=en->next)
                 {
                     Equilibrium & eq = **en;
                     const int     cf = eq(*mix,SubLevel);
@@ -268,21 +360,27 @@ namespace Yttrium
                         elist << eq;
                     }
                 }
-              //  AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
-               // std::cerr << "(+) " << ptr << std::endl;
+                //  AutoPtr<const String> ptr = MixedEqulibrium::MakeName(wlist,elist);
+                // std::cerr << "(+) " << ptr << std::endl;
 
                 Equilibrium::Pointer mixed = new MixedEqulibrium(wlist,
                                                                  elist,
-                                                                 *my.species,
+                                                                 species,
                                                                  mix->stoi,
-                                                                 eqs.nextIndex());
-                std::cerr << mixed << std::endl;
+                                                                 eqs.nextIndex(),
+                                                                 tlK);
+                Y_XMLOG(xml,mixed);
 
             }
 
             Y_XML_COMMENT(xml, "#mixes = " << mixes.size << " / maxOrder = " << maxOrder);
+
         }
 
+        ClusterCombinatorics:: ~ClusterCombinatorics() noexcept
+        {
+
+        }
     }
 
 }
