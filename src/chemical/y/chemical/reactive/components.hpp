@@ -44,6 +44,15 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(ComponentsType);
         };
 
+        enum ComponentsTier
+        {
+            Deserted, //!< empty...
+            Standard, //!< at least one conserved species on each side
+            ProdOnly, //!< only (unbounded) product(s)
+            ReacOnly, //!< only (unboudned) reactant(s)
+            Nebulous  //!< reac(s) and prod(s), all unbounded
+        };
+
 
         //______________________________________________________________________
         //
@@ -85,7 +94,7 @@ namespace Yttrium
             //__________________________________________________________________
             void use(const Role, const unsigned, const Species &); //!< use new actor
             void use(const Role, const  Species &);                //!< use(role,1,species)
-            void latch() noexcept;                                  //!< latch all
+            void latch() noexcept;                                 //!< latch all
 
             //! check connected by species
             static bool AreConnected(const Components &lhs, const Components &rhs);
@@ -102,7 +111,8 @@ namespace Yttrium
             //! OR'ed species
             void gatherSpeciesIn(AddressBook &book) const;
 
-
+            bool neutral() const noexcept;
+ 
             //__________________________________________________________________
             //
             //

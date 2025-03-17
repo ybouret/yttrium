@@ -30,8 +30,11 @@ namespace Yttrium
             const SList             &conserved; //!< conserved species
             const SList              unbounded; //!< unbounded species
 
+            ComponentsTier tierOf(const Components &) const noexcept;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
+            bool areAllUnbounded(const Actors &) const noexcept;
         };
 
     }

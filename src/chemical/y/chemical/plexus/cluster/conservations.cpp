@@ -96,6 +96,45 @@ namespace Yttrium
         }
 
 
+        
+        bool ClusterConservations:: areAllUnbounded(const Actors &A) const noexcept
+        {
+            for(const Actor *a=A->head;a;a=a->next)
+            {
+                if( conserved.has(a->sp) ) return false;
+                assert( unbounded.has(a->sp));
+            }
+            return true;
+        }
+
+        ComponentsTier ClusterConservations:: tierOf(const Components &eq) const noexcept
+        {
+            if(eq.reac->size>0)
+            {
+                if(eq.prod->size>0)
+                {
+
+                }
+                else
+                {
+                    assert(areAllUnbounded(eq.reac));
+                    return ReacOnly;
+                }
+            }
+            else
+            {
+                if(eq.prod->size>0)
+                {
+
+                    assert(areAllUnbounded(eq.prod));
+                    return ProdOnly;
+                }
+                else
+                {
+                    return Deserted;
+                }
+            }
+        }
     }
 
 }

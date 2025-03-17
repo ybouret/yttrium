@@ -35,7 +35,7 @@ namespace Yttrium
 
         Components:: ~Components() noexcept
         {
-            
+
         }
 
         Components:: Components(const String * const xname, const size_t i) :
@@ -90,7 +90,7 @@ namespace Yttrium
                 savedName.swapWith( Coerce(*actors.name) );
                 throw;
             }
-            
+
         }
 
 
@@ -122,6 +122,38 @@ namespace Yttrium
             {
                 book |= (*it)->sp;
             }
+        }
+
+    }
+
+}
+
+
+#include "y/apex/integer.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        bool Components:: neutral() const noexcept
+        {
+            apz sum = 0;
+
+            for(const Actor *a=reac->head;a;a=a->next)
+            {
+                const apn nu = a->nu;
+                const apz z  = a->sp.z;
+                sum -= nu * z;
+            }
+
+            for(const Actor *a=prod->head;a;a=a->next)
+            {
+                const apn nu = a->nu;
+                const apz z  = a->sp.z;
+                sum += nu * z;
+            }
+            
+            return 0 == sum;
         }
 
 

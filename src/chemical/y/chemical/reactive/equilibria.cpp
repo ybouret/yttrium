@@ -68,7 +68,13 @@ namespace Yttrium
 
             if(!(*eq)->latched)
                 throw Specific::Exception(CallSign, "adding unlatched '%s",eid);
-            
+
+            if(!eq->neutral())
+                throw Specific::Exception(CallSign, "adding not-neutral '%s",eid);
+
+            if((*eq)->size()<=0)
+                throw Specific::Exception(CallSign, "adding empty '%s",eid);
+
             assert(eq->reac.latched);
             assert(eq->prod.latched);
 
