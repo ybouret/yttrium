@@ -7,7 +7,6 @@
 #include "y/chemical/type/indexed.hpp"
 #include "y/chemical/formula.hpp"
 #include "y/chemical/type/charge.hpp"
-
 #include "y/data/small/light/list/bare.hpp"
 
 namespace Yttrium

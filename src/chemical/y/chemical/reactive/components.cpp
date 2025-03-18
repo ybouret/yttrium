@@ -43,6 +43,7 @@ namespace Yttrium
         Proxy<const ComponentsType>(),
         reac(Actor::AsComponentOnly),
         prod(Actor::AsComponentOnly),
+        kind(Deserted),
         db()
         {
         }
@@ -78,7 +79,13 @@ namespace Yttrium
             }
             assert(0!=pActors);
 
+            //------------------------------------------------------------------
+            //
+            //
             // atomic add
+            //
+            //
+            //------------------------------------------------------------------
             Actors &        actors    = *pActors;
             String          savedName = *actors.name;
             const Component component(role, actors(nu,sp) );
@@ -89,6 +96,37 @@ namespace Yttrium
             {
                 savedName.swapWith( Coerce(*actors.name) );
                 throw;
+            }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // update kind
+            //
+            //
+            //------------------------------------------------------------------
+            if(reac->size>0)
+            {
+                if(prod->size>0)
+                {
+                    Coerce(kind) = Standard;
+                }
+                else
+                {
+                    Coerce(kind) = ReacOnly;
+                }
+            }
+            else
+            {
+                assert(reac->size<=0);
+                if(prod->size>0)
+                {
+                    Coerce(kind) = ProdOnly;
+                }
+                else
+                {
+                    Coerce(kind) = Deserted;
+                }
             }
 
         }
@@ -123,6 +161,68 @@ namespace Yttrium
                 book |= (*it)->sp;
             }
         }
+
+
+        xreal_t Components:: activity(const xreal_t K, XMul &X, const XReadable &C, const Level L) const
+        {
+            X.free();
+            X << K;
+            reac.activity(X,C,L);
+            const xreal_t lhs = X.product();
+
+            X << 1;
+            prod.activity(X,C,L);
+            const real_t rhs = X.product();
+            return lhs-rhs;
+        }
+
+        xreal_t Components:: activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
+        {
+            X.free();
+            X << K;
+            reac.activity(X,C,L,-xi);
+            const xreal_t lhs = X.product();
+
+            X << 1;
+            prod.activity(X,C,L,xi);
+            const real_t rhs = X.product();
+            return lhs-rhs;
+        }
+
+
+#if 1
+        Situation Components:: situation(const XReadable &C, const Level L) const noexcept
+        {
+
+            if( reac.critical(C,L) )
+            {
+                if(prod.critical(C,L) )
+                {
+                    // blocked
+                    return Blocked;
+                }
+                else
+                {
+                    // crucial
+                    return Crucial;
+                }
+            }
+            else
+            {
+                if(prod.critical(C,L) )
+                {
+                    // crucial
+                    return Crucial;
+                }
+                else
+                {
+                    // running
+                    return Running;
+                }
+            }
+
+        }
+#endif
 
     }
 

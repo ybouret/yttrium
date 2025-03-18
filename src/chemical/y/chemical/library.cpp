@@ -2,6 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/system/exception.hpp"
 #include <iomanip>
+#include <cmath>
 
 namespace Yttrium
 {
@@ -80,6 +81,24 @@ namespace Yttrium
             return & **pp == & sp;
         }
 
+
+        xreal_t Library:: Concentration(Random::Bits &ran) noexcept
+        {
+            static const real_t pmin = PMIN;
+            static const real_t pamp = PMAX-PMIN;
+            static const real_t ten  = 10;
+            return pow(ten,pmin + pamp * ran.to<real_t>());
+        }
+
+        void Library:: Concentrations(XWritable    &C,
+                                      Random::Bits &ran,
+                                      const real_t probaZero) noexcept
+        {
+            for(size_t i=C.size();i>0;--i)
+            {
+                if( ran.to<real_t>() <= probaZero ) C[i] = 0; else C[i] = Concentration(ran);
+            }
+        }
     }
 
 }

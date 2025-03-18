@@ -47,6 +47,7 @@ namespace Yttrium
                       const Involvement how):
         Entity( ActorName(_nu,_sp,how)  ),
         nu( _nu ),
+        xn(  nu ),
         sp( _sp ),
         next(0),
         prev(0)
@@ -57,11 +58,31 @@ namespace Yttrium
         Actor:: Actor(const Actor &_) noexcept :
         Entity( _.name ),
         nu(_.nu),
+        xn(_.xn),
         sp(_.sp),
         next(0),
         prev(0)
         {
             assert(nu>0);
+        }
+
+        void Actor:: activity(XMul &X, const XReadable &C, const Level L) const
+        {
+            assert(sp(C,L)>=0.0);
+            X.insert(sp(C,L),nu);
+        }
+
+        void Actor:: activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
+        {
+            assert(sp(C,L)>=0.0);
+            const xreal_t zero;
+            X.insert( Max(sp(C,L) + xn * xi,zero), nu);
+        }
+
+        xreal_t Actor:: limiting(const XReadable &C, const Level L) const noexcept
+        {
+            assert(sp(C,L)>=0.0);
+            return sp(C,L) / xn;
         }
 
 

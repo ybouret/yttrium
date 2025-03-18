@@ -7,6 +7,7 @@
 
 
 #include "y/chemical/species.hpp"
+#include "y/chemical/type/defs.hpp"
 
 
 namespace Yttrium
@@ -64,10 +65,21 @@ namespace Yttrium
             //__________________________________________________________________
             //
             //
+            // Methods
+            //
+            //__________________________________________________________________
+            void    activity(XMul &X, const XReadable &C, const Level L)                   const;
+            void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const; //!< clipped
+            xreal_t limiting(const XReadable &C, const Level L) const noexcept; //!< cc/xn
+
+            //__________________________________________________________________
+            //
+            //
             // Members
             //
             //__________________________________________________________________
             const unsigned    nu;   //!< coefficient
+            const xreal_t     xn;   //!< nu as xreal_t
             const Species &   sp;   //!< persistent species
             Actor *           next; //!< for list
             Actor *           prev; //!< for list

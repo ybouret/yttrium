@@ -8,8 +8,9 @@
 #include "y/chemical/species.hpp"
 #include "y/chemical/type/assembly.hpp"
 #include "y/chemical/type/latchable.hpp"
+#include "y/chemical/type/defs.hpp"
 #include "y/associative/suffix/set.hpp"
-
+#include "y/random/bits.hpp"
 
 namespace Yttrium
 {
@@ -50,6 +51,13 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const          CallSign;       //!< "Library"
             typedef LibraryType::ConstIterator ConstIterator;  //!< alias
+            static const int PMIN = -10;
+            static const int PMAX =  1;
+            static xreal_t   Concentration(Random::Bits &) noexcept;
+            static void      Concentrations(XWritable    &,
+                                            Random::Bits &,
+                                            const real_t probaZero = 0) noexcept;
+
 
             //__________________________________________________________________
             //

@@ -51,6 +51,12 @@ namespace Yttrium
             bool          has(const Species &) const noexcept;              //!< check presence
             static void   Exchange(Actors &lhs, Actors &rhs) noexcept;      //!< same involments
 
+            void    activity(XMul &X, const XReadable &C, const Level L) const;
+            void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
+            bool    critical(const XReadable &C, const Level L) const noexcept; //!< at least one zero concentration
+            xreal_t limiting(const XReadable &C, const Level L) const noexcept; //!< fast limiting extent
+            xreal_t scaling(const xreal_t K) const; //!< K^(1/sum)
+
             //__________________________________________________________________
             //
             //
@@ -63,6 +69,10 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             Y_PROXY_DECL();
             Actor::List my; //!< my list
+        public:
+            const unsigned sum; //!< sum(nu);
+            const real_t   kxp; //!< 1.0 / sum
+
         };
     }
 

@@ -17,7 +17,9 @@ namespace Yttrium
         Actors:: Actors(const Actor::Involvement how) :
         Entity( new String() ),
         in(how),
-        my()
+        my(),
+        sum(0),
+        kxp(1)
         {
         }
 
@@ -60,6 +62,8 @@ namespace Yttrium
                 throw;
             }
 
+            Coerce(sum) += nu;
+            Coerce(kxp)  = 1.0 / sum;
             return *actor;
         }
 
@@ -69,6 +73,43 @@ namespace Yttrium
             assert(lhs.in==rhs.in);
             Coerce(*lhs.name).swapWith(Coerce(*rhs.name));
             lhs.my.swapWith(rhs.my);
+        }
+
+
+        void Actors:: activity(XMul &X, const XReadable &C, const Level L) const
+        {
+            for(const Actor *a=my.head;a;a=a->next) a->activity(X,C,L);
+        }
+
+
+        void Actors:: activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
+        {
+            for(const Actor *a=my.head;a;a=a->next) a->activity(X,C,L,xi);
+        }
+
+
+        bool Actors:: critical(const XReadable &C, const Level L) const noexcept
+        {
+            for(const Actor *a=my.head;a;a=a->next)
+            {
+                if( a->sp(C,L).mantissa <= 0 ) return true;
+            }
+            return false;
+        }
+
+        xreal_t Actors:: limiting(const XReadable &C, const Level L) const noexcept
+        {
+            assert(my.size>0);
+            const Actor *ac = my.head;
+            xreal_t      xi = ac->limiting(C,L);
+            for(ac=ac->next;ac;ac=ac->next)
+                InSituMin(xi,ac->limiting(C,L) );
+            return xi;
+        }
+
+        xreal_t Actors:: scaling(const xreal_t K) const
+        {
+            return K.pow(kxp);
         }
 
     }

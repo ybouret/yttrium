@@ -8,6 +8,7 @@
 #include "y/mkl/antelope/add.hpp"
 #include "y/mkl/antelope/mul.hpp"
 #include "y/container/matrix.hpp"
+#include "y/mkl/triplet.hpp"
 
 namespace Yttrium
 {
@@ -24,7 +25,9 @@ namespace Yttrium
         typedef Matrix<int,MemoryModel>      iMatrix;   //!< alias
         typedef Matrix<unsigned,MemoryModel> uMatrix;   //!< alias
         typedef Matrix<xreal_t,MemoryModel>  XMatrix;   //!< alias
-        
+
+        typedef MKL::Triplet<xreal_t>        XTriplet;
+
     }
 
 }

@@ -1,13 +1,13 @@
 
 #include "y/chemical/plexus/clusters.hpp"
-#include "y/chemical/plexus/cluster/combinatorics.hpp"
-#include "y/chemical/plexus/cluster/builder.hpp"
-#include "y/chemical/plexus/conservation/rule.hpp"
 #include "y/chemical/weasel.hpp"
+#include "y/chemical/reactive/aftermath.hpp"
 
 #include "y/sequence/vector.hpp"
 
 #include "y/utest/run.hpp"
+
+#include "y/random/mt19937.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -16,6 +16,7 @@ using namespace Chemical;
 Y_UTEST(plexus)
 {
 
+    Random::MT19937 ran;
     Weasel &weasel = Weasel::Instance();
     weasel << "function f(t) return 1.1 end";
 
@@ -42,11 +43,25 @@ Y_UTEST(plexus)
         std::cerr << *cl << std::endl;
     }
 
+    const size_t m = lib->size();
+    XVector      C0(m,0);
+    XVector      C(m,0);
+
+
+    Aftermath am;
+    for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
+    {
+        const Equilibrium &eq = **it;
+        const xreal_t      eK = eq(cls.K,TopLevel);
+        lib.Concentrations(C0,ran);
+        C.ld(C0);
+        am(eq,eK,C,TopLevel,C0,TopLevel);
+    }
+
+
+
     Y_SIZEOF(Cluster);
     Y_SIZEOF(ClusterContent);
-    Y_SIZEOF(ClusterBuilder);
-    Y_SIZEOF(ClusterKnot);
-    Y_SIZEOF(Conservation::Rule);
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);
 

@@ -26,6 +26,14 @@ namespace Yttrium
         //______________________________________________________________________
         typedef SuffixSet<const String,const Component> ComponentsDB;
 
+        enum Situation
+        {
+            Running,
+            Blocked,
+            Crucial
+        };
+
+
         //______________________________________________________________________
         //
         //
@@ -44,16 +52,14 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(ComponentsType);
         };
 
-#if 0
-        enum ComponentsTier
+
+        enum ComponentsKind
         {
-            Deserted, //!< empty...
-            Standard, //!< at least one conserved species on each side
-            ProdOnly, //!< only (unbounded) product(s)
-            ReacOnly, //!< only (unboudned) reactant(s)
-            Nebulous  //!< reac(s) and prod(s), all unbounded
+            Deserted,
+            ReacOnly,
+            ProdOnly,
+            Standard
         };
-#endif
 
         //______________________________________________________________________
         //
@@ -75,6 +81,8 @@ namespace Yttrium
             static const char * const             Symbol;          //!< "<=>";
             static const char                     Separator = ':'; //!< for parser
             typedef ComponentsType::ConstIterator ConstIterator;   //!< alias
+
+
 
 
             //__________________________________________________________________
@@ -113,14 +121,19 @@ namespace Yttrium
             void gatherSpeciesIn(AddressBook &book) const; //!< OR'ed species into bool
             bool neutral()                 const noexcept; //!< check neutrality
 
+            xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L) const;
+            xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
+            Situation situation(const XReadable &C, const Level L) const noexcept;
+
             //__________________________________________________________________
             //
             //
             // C++
             //
             //__________________________________________________________________
-            const Actors reac; //!< current reactants
-            const Actors prod; //!< current products
+            const Actors         reac; //!< current reactants
+            const Actors         prod; //!< current products
+            const ComponentsKind kind;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);
