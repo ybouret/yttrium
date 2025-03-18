@@ -34,16 +34,20 @@ namespace Yttrium
         };
 
 
+
         class Aftermath
         {
         public:
+            typedef MKL::ZBis<xreal_t> RooType;
+
             explicit Aftermath() noexcept;
             virtual ~Aftermath() noexcept;
 
             XMul               xmul;
             XAdd               xadd;
-            MKL::ZBis<xreal_t> root;
-            
+            RooType            root;
+            const xreal_t      zero;
+
             /**
              \param E   components
              \parem K   constant
