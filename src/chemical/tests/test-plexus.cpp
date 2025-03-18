@@ -55,6 +55,7 @@ Y_UTEST(plexus)
     {
         const Equilibrium &eq = **it;
         const xreal_t      eK = eq(cls.K,TopLevel);
+        std::cerr << "solving " << eq.name << std::endl;
         lib.Concentrations(C0,ran);
         C.ld(C0);
         am(eq,eK,C,TopLevel,C0,TopLevel);

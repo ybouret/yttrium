@@ -191,12 +191,11 @@ namespace Yttrium
                     break;
             }
 
-            Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;
-            Core::Display(std::cerr << "ff=", &ff.a, 3, xreal_t::ToString) << std::endl;
+            //Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;
+            //Core::Display(std::cerr << "ff=", &ff.a, 3, xreal_t::ToString) << std::endl;
 
             root(F,xi,ff);
-            std::cerr << real_t(ff.c) << " @" << real_t(xi.c) << std::endl;
-
+            //std::cerr << real_t(ff.c) << " @" << real_t(xi.c) << std::endl;
             const xreal_t x = xi.c;
             E.moveSafely(C,L,xi.c);
             return xi.c;
@@ -275,7 +274,7 @@ namespace Yttrium
 
             const xreal_t denom = n;
             const xreal_t xi    = xadd.sum() / denom;
-            std::cerr << "xi=" << double(xi) << "; C=" << C << std::endl;
+            std::cerr << "xi=" << double(xi) << "; C=" << C << "; aff="  << E.affinity(K, xadd, C, L).str() << std::endl;
             return Outcome(st, C, L, xadd.sum()/denom);
         }
 

@@ -196,8 +196,25 @@ namespace Yttrium
         }
 
 
+        xreal_t Components:: affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const
+        {
+            xadd.free();
+            xadd << K.log();
+            for(const Actor *ac=reac->head;ac;ac=ac->next)
+            {
+                const xreal_t l = ac->sp(C,L).log();
+                xadd.insert(l,ac->nu);
+            }
+            for(const Actor *ac=prod->head;ac;ac=ac->next)
+            {
+                const xreal_t l = -ac->sp(C,L).log();
+                xadd.insert(l,ac->nu);
+            }
+            return xadd.sum();
+        }
 
-#if 1
+
+
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept
         {
 
@@ -229,7 +246,6 @@ namespace Yttrium
             }
 
         }
-#endif
 
     }
 
