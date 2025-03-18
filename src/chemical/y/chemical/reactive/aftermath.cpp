@@ -54,8 +54,7 @@ namespace Yttrium
                     return E.activity(K,xmul,C,L,xi);
                 }
 
-                r
-
+                
                 void increase(XTriplet &xi, XTriplet &ff)
                 {
                     Activator &F = *this;
