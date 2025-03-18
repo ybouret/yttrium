@@ -54,18 +54,15 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            XWritable   &topK;  //!< top level, shared K
-            const WList  wlist; //!< weights of equilibria
-            const EList  elist; //!< equilibria
-            XMul         xmul;  //!< for internal computation
-
+            XWritable   & topK;  //!< top level, shared K
+            const WList   wlist; //!< weights of equilibria
+            const EList   elist; //!< equilibria
+            XMul          xmul;  //!< for internal computation
+            const xreal_t one;   //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(MixedEquilibrium);
-            virtual xreal_t getK(xreal_t)
-            {
-                return 1;
-            }
+            virtual xreal_t getK(xreal_t);
 
             static String        FirstName(const int   cf, const String &id);
             static String        ExtraName(const int   cf, const String &id);

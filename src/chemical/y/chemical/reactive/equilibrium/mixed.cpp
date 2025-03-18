@@ -16,7 +16,8 @@ namespace Yttrium
         topK(KK),
         wlist(),
         elist(),
-        xmul()
+        xmul(),
+        one(1)
         {
             // steal data
             Coerce(wlist).swapWith(wl);
@@ -79,6 +80,38 @@ namespace Yttrium
 
             return ans.yield();
         }
+
+
+        xreal_t MixedEquilibrium:: getK(xreal_t)
+        {
+            xmul.free();
+            xmul << one;
+
+            assert(wlist.size==elist.size);
+            assert(elist.size>0);
+
+            const WNode     *wn = wlist.head;
+            for(const ENode *en = elist.head;en;en=en->next,wn=wn->next)
+            {
+                const int          cf = **wn;
+                const Equilibrium &eq = **en;
+                const xreal_t      eK = eq(topK,TopLevel);
+                if(cf>0)
+                {
+                    xmul.insert(eK,cf);
+                }
+                else
+                {
+                    assert(cf<0);
+                    const xreal_t iK = one/eK;
+                    xmul.insert(iK,-cf);
+                }
+            }
+
+
+            return xmul.product();
+        }
+
     }
 
 }

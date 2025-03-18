@@ -47,8 +47,9 @@ namespace Yttrium
             Y_OSTREAM_PROTO(Cluster);             //!< display
 
 
-            Cluster *next; //!< for list
-            Cluster *prev; //!< for list
+            Cluster *      next; //!< for list
+            Cluster *      prev; //!< for list
+            const unsigned uuid; //!< indexing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

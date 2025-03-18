@@ -48,11 +48,12 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const iMatrix Nu;    //!< full topology
+            const iMatrix Nu;         //!< full topology
             const EList   standard;
             const EList   reacOnly;
             const EList   prodOnly;
-            const ELists  order; //!< equilibria ranked by order
+            const EList   nebulous;
+            const ELists  order;     //!< equilibria ranked by order
 
 
         private:

@@ -45,6 +45,15 @@ namespace Yttrium
             return os;
         }
 
+        std::ostream & Fragment:: display(std::ostream &os, const Components &eq, const xreal_t K) const
+        {
+            display(os,eq);
+            const real_t lK = K.log10();
+            const String sK = Formatted::Get("10^(%.4g)",lK);
+            os << std::setw(12) << sK.c_str();
+            return os;
+        }
+
 
     }
 

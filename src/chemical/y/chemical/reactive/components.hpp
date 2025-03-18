@@ -44,6 +44,7 @@ namespace Yttrium
             Y_DISABLE_COPY_AND_ASSIGN(ComponentsType);
         };
 
+#if 0
         enum ComponentsTier
         {
             Deserted, //!< empty...
@@ -52,7 +53,7 @@ namespace Yttrium
             ReacOnly, //!< only (unboudned) reactant(s)
             Nebulous  //!< reac(s) and prod(s), all unbounded
         };
-
+#endif
 
         //______________________________________________________________________
         //

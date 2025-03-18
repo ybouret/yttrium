@@ -26,10 +26,11 @@ namespace Yttrium
 
             {
                 ClusterBuilder cls(xml,eqs);
+                unsigned       idx = 1;
                 for(const ClusterKnot *cl=cls->head;cl;cl=cl->next)
                 {
                     const ClusterContent::Pointer clc( &Coerce(**cl) );
-                    my.pushTail( new Cluster(xml,clc,eqs,tlK) );
+                    Coerce(my.pushTail( new Cluster(xml,clc,eqs,tlK) )->uuid) = idx++;
                 }
             }
             Y_XML_COMMENT(xml, "|eqs|=" << eqs->size() << " from " << ini);

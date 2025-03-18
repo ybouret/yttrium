@@ -201,6 +201,34 @@ namespace Yttrium
             {
                 Y_XML_COMMENT(xml, "|order[" << i << "]| = " << std::setw(3) << order[i].size);
             }
+
+            //------------------------------------------------------------------
+            //
+            //
+            // Finalize
+            //
+            //
+            //------------------------------------------------------------------
+            {
+                iMatrix &topo = Coerce(Nu);
+                topo.make(equilibria->size,M);
+                for(ENode *en=equilibria->head;en;en=en->next)
+                {
+                    Equilibrium &eq = **en;
+                    eq.fillTopology(eq(topo,SubLevel), SubLevel);
+#if 0
+                    switch( tierOf(eq) )
+                    {
+                        case Deserted: throw Specific::Exception("ClusterCombinatorics", "deserted '%s'", eq.key().c_str());
+                        case Nebulous: Coerce(nebulous) << eq; break;
+                        case ProdOnly: Coerce(prodOnly) << eq; break;
+                        case ReacOnly: Coerce(reacOnly) << eq; break;
+                        case Standard: Coerce(standard) << eq; break;
+                    }
+#endif
+                }
+            }
+           // Y_XMLOG(xml, "Nu=" << Nu);
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

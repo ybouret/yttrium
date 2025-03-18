@@ -7,6 +7,7 @@
 
 #include "y/chemical/reactive/components.hpp"
 #include "y/chemical/type/assembly.hpp"
+#include "y/chemical/type/defs.hpp"
 
 namespace Yttrium
 {
@@ -42,6 +43,7 @@ namespace Yttrium
             //__________________________________________________________________
             void           enroll(const Components &eq) noexcept;             //!< update all
             std::ostream & display(std::ostream &, const Components &) const; //!< default display
+            std::ostream & display(std::ostream &, const Components &, const xreal_t) const; //!< default display
 
             //__________________________________________________________________
             //

@@ -1,5 +1,7 @@
 
 #include "y/chemical/plexus/cluster/topology.hpp"
+#include "y/mkl/algebra/rank.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -23,6 +25,9 @@ namespace Yttrium
                 const Equilibrium &eq = **en;
                 eq.fillTopology( eq(Coerce(topology),SubLevel), SubLevel);
             }
+            if(N!=MKL::Rank::Of(topology))
+                throw Specific::Exception("ClusterTopology", "bad rank");
+            
             Coerce(topologyT).assign(TransposeOf,topology);
             Y_XMLOG(xml, "topology=" << topology);
         }

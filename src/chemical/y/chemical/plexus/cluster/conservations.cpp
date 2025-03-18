@@ -101,8 +101,7 @@ namespace Yttrium
         {
             for(const Actor *a=A->head;a;a=a->next)
             {
-                if( conserved.has(a->sp) )
-                {
+                if( conserved.has(a->sp) ) {
                     assert( !unbounded.has(a->sp) );
                     return false;
                 }
@@ -115,8 +114,7 @@ namespace Yttrium
         {
             for(const Actor *a=A->head;a;a=a->next)
             {
-                if( conserved.has(a->sp) )
-                {
+                if( conserved.has(a->sp) ) {
                     assert( !unbounded.has(a->sp) );
                     return true;
                 }
@@ -127,7 +125,7 @@ namespace Yttrium
 
 
         
-
+#if 0
         ComponentsTier ClusterConservations:: tierOf(const Components &eq) const noexcept
         {
             if(eq.reac->size>0)
@@ -163,6 +161,8 @@ namespace Yttrium
                 }
             }
         }
+#endif
+        
     }
 
 }

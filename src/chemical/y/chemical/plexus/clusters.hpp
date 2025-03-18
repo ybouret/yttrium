@@ -46,9 +46,17 @@ namespace Yttrium
                               Equilibria &  eqs,
                               const xreal_t t0);
 
-            //! cleanuo
+            //! cleanup
             virtual ~Clusters() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! evaluate K(t0)
             const XReadable &operator()(const xreal_t);
 
         private:

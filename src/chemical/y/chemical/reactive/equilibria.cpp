@@ -96,7 +96,7 @@ namespace Yttrium
                 for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
                 {
                     const Equilibrium &eq = **it;
-                    eqs->display(os << '\t',eq) << std::endl;
+                    eqs->display(os << '\t',eq, Coerce(eq).K(0)) << std::endl;
                 }
             }
             os << '}';
