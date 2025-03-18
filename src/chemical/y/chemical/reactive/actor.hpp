@@ -68,10 +68,10 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            void    activity(XMul &X, const XReadable &C, const Level L)                   const;
+            void    activity(XMul &X, const XReadable &C, const Level L)                   const; //!< current activity
             void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const; //!< clipped
-            xreal_t limiting(const XReadable &C, const Level L) const noexcept; //!< cc/xn
-            void    moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
+            xreal_t limiting(const XReadable &C, const Level L) const noexcept;                   //!< cc/xn
+            void    moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;     //!< update C
             
             //__________________________________________________________________
             //

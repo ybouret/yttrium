@@ -51,13 +51,12 @@ namespace Yttrium
             bool          has(const Species &) const noexcept;              //!< check presence
             static void   Exchange(Actors &lhs, Actors &rhs) noexcept;      //!< same involments
 
-            void    activity(XMul &X, const XReadable &C, const Level L) const;
-            void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
-            bool    critical(const XReadable &C, const Level L) const noexcept; //!< at least one zero concentration
-            xreal_t limiting(const XReadable &C, const Level L) const noexcept; //!< fast limiting extent
-            //xreal_t scaling(const xreal_t K) const; //!< K^(1/sum)
-            void    moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
-            
+            void    activity(XMul &X, const XReadable &C, const Level L)                   const; //!< gather activities in X
+            void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const; //!< gather activities in X
+            bool    critical(const XReadable &C, const Level L)                   const noexcept; //!< at least one zero concentration
+            xreal_t limiting(const XReadable &C, const Level L)                   const noexcept; //!< fast limiting extent
+            void    moveSafely(XWritable &C, const Level L, const xreal_t xi)     const noexcept; //!< update
+
             //__________________________________________________________________
             //
             //

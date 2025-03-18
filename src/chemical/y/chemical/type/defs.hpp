@@ -26,7 +26,7 @@ namespace Yttrium
         typedef Matrix<unsigned,MemoryModel> uMatrix;   //!< alias
         typedef Matrix<xreal_t,MemoryModel>  XMatrix;   //!< alias
 
-        typedef MKL::Triplet<xreal_t>        XTriplet;
+        typedef MKL::Triplet<xreal_t>        XTriplet; //!< alias
 
     }
 
