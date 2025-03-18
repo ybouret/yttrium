@@ -62,6 +62,12 @@ namespace Yttrium
                     while( (ff.c=F(xi.c)).mantissa > 0.0 ) xi.c += xi.c;
                 }
 
+                void decrease(XTriplet &xi, XTriplet &ff)
+                {
+                    Activator &F = *this;
+                    while( (ff.c=F(xi.c)).mantissa < 0.0 ) xi.c += xi.c;
+                }
+
 
             };
 
@@ -118,10 +124,15 @@ namespace Yttrium
             //------------------------------------------------------------------
             switch(E.kind)
             {
-                case Deserted:
-                    throw Specific::Exception("Aftermath", "Deserted '%s'", E.name->c_str());
+                case Deserted: throw Specific::Exception("Aftermath", "Deserted '%s'", E.name->c_str());
+
 
                 case ProdOnly:
+                    //----------------------------------------------------------
+                    //
+                    // Handling ProdOnly
+                    //
+                    //----------------------------------------------------------
                     assert(prod->size>0);
                     assert(reac->size<=0);
 
@@ -129,7 +140,7 @@ namespace Yttrium
                     {
                         case __Zero__: return zero;
                         case Positive:
-                            xi.c = prod.scaling(K);
+                            xi.c = K.pow(prod.kxp); //prod.scaling(K);
                             F.increase(xi,ff);
                             break;
                         case Negative:
@@ -140,9 +151,44 @@ namespace Yttrium
                     break;
 
                 case ReacOnly:
+                    //----------------------------------------------------------
+                    //
+                    // Handling ProdOnly
+                    //
+                    //----------------------------------------------------------
+                    assert(prod->size<=0);
+                    assert(reac->size>0);
+
+                    switch( Sign::Of(ff.a) )
+                    {
+                        case __Zero__: return zero;
+                        case Positive:
+                            xi.c = reac.limiting(C,L);
+                            ff.c = -1;
+                            break;
+
+                        case Negative:
+                            xi.c = -K.pow(-reac.kxp);
+                            F.decrease(xi,ff);
+                            break;
+                    }
+                    break;
 
                 case Standard:
-                    throw Exception("Not Implemented");
+                    //----------------------------------------------------------
+                    //
+                    // Handling Standard
+                    //
+                    //----------------------------------------------------------
+                    assert(prod->size>0);
+                    assert(reac->size>0);
+                    switch( Sign::Of(ff.a) )
+                    {
+                        case __Zero__: return zero;
+                        case Positive: ff.c = F( xi.c =  reac.limiting(C,L) ); break;
+                        case Negative: ff.c = F( xi.c = -prod.limiting(C,L) ); break;
+                    }
+                    break;
             }
 
             Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;

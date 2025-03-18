@@ -107,10 +107,7 @@ namespace Yttrium
             return xi;
         }
 
-        xreal_t Actors:: scaling(const xreal_t K) const
-        {
-            return K.pow(kxp);
-        }
+        
 
         void Actors:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
         {

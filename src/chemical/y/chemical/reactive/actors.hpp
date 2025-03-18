@@ -55,7 +55,7 @@ namespace Yttrium
             void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
             bool    critical(const XReadable &C, const Level L) const noexcept; //!< at least one zero concentration
             xreal_t limiting(const XReadable &C, const Level L) const noexcept; //!< fast limiting extent
-            xreal_t scaling(const xreal_t K) const; //!< K^(1/sum)
+            //xreal_t scaling(const xreal_t K) const; //!< K^(1/sum)
             void    moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
             
             //__________________________________________________________________
