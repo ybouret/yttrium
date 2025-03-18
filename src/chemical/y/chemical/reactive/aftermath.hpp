@@ -43,6 +43,14 @@ namespace Yttrium
             XMul xmul;
             XAdd xadd;
 
+            /**
+             \param E   components
+             \parem K   constant
+             \param C   working  concentration (=C0)
+             \param L   working  level
+             \param C0  starting point
+             \param K0  starting level
+             */
             Outcome operator()(const Components &E,
                                const xreal_t     K,
                                XWritable        &C,

@@ -54,7 +54,7 @@ namespace Yttrium
                     return E.activity(K,xmul,C,L,xi);
                 }
 
-                
+
                 void increase(XTriplet &xi, XTriplet &ff)
                 {
                     Activator &F = *this;
@@ -73,7 +73,7 @@ namespace Yttrium
         Aftermath:: ~Aftermath() noexcept
         {
         }
-        
+
 
         Outcome Aftermath:: operator()(const Components &E,
                                        const xreal_t     K,
@@ -88,19 +88,11 @@ namespace Yttrium
             Activator     F    = { E, K, C, L, xmul, xadd };
 
 
-            const Situation st = E.situation(C,L);
-            switch(st)
-            {
-                case Blocked: return Outcome(Blocked,C,L,0);
-                case Running:
-                case Crucial:
-                    break;
-            }
 
-#if 0
-            Situation st = Running;
-            XTriplet  xi = { 0, 0, 0 };
-            XTriplet  ff = { 0, 0, 0 };
+
+            const Situation st = E.situation(C,L);
+            XTriplet        xi = { 0, 0, 0 };
+            XTriplet        ff = { 0, 0, 0 };
             switch(E.kind)
             {
                 case Deserted:
@@ -109,28 +101,18 @@ namespace Yttrium
                 case ProdOnly:
                     assert(prod->size>0);
                     assert(reac->size<=0);
-                    if(prod.critical(C,L))
+
+                    switch( Sign::Of(ff.a=F.zp() ) )
                     {
-                        ff.a = K;
-                        st   = Crucial;
-                        xi.c = prod.scaling(K);
-                        F.increase(xi,ff);
-                    }
-                    else
-                    {
-                        assert(Running==st);
-                        switch( Sign::Of(ff.a=F.zp() ) )
-                        {
-                            case __Zero__: return Outcome(Running,C,L,0);
-                            case Positive:
-                                xi.c = prod.scaling(K);
-                                F.increase(xi,ff);
-                                break;
-                            case Negative:
-                                xi.c = -prod.limiting(C,L);
-                                ff.c = K;
-                                break;
-                        }
+                        case __Zero__: return Outcome(st,C,L,0);
+                        case Positive:
+                            xi.c = prod.scaling(K);
+                            F.increase(xi,ff);
+                            break;
+                        case Negative:
+                            xi.c = -prod.limiting(C,L);
+                            ff.c = K;
+                            break;
                     }
                     break;
 
@@ -143,7 +125,6 @@ namespace Yttrium
             std::cerr << "ff=" << ff << std::endl;
 
             return Outcome(Blocked,C, L, 0);
-#endif
 
 
         }
