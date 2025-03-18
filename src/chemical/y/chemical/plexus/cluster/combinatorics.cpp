@@ -23,6 +23,7 @@ namespace Yttrium
                                                     Equilibria                    &eqs,
                                                     XWritable                     &tlK) :
         ClusterConservations(xml,ptr),
+        Nu(),
         order(0)
         {
             Y_XML_SECTION(xml, "ClusterCombinatorics");

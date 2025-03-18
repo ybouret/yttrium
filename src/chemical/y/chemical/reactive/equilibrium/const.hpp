@@ -31,7 +31,14 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! setup from parsed node with numerical string
-            explicit ConstEquilibrium(Library &lib,  XNode * const eNode, const size_t ei);
+            /**
+             \param lib   current library, updated with new species
+             \param eNode parsed node
+             \param eid   requested equilibrium index
+             */
+            explicit ConstEquilibrium(Library &     lib,
+                                      XNode * const eNode,
+                                      const size_t  eid);
 
             //! cleanup
             virtual ~ConstEquilibrium() noexcept;

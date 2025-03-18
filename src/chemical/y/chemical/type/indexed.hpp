@@ -53,8 +53,8 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Indexed(const String *, const size_t i) noexcept; //!< setup
-            virtual ~Indexed() noexcept;                               //!< cleanup
+            explicit Indexed(const String *, const size_t) noexcept; //!< setup with name and index
+            virtual ~Indexed() noexcept;                             //!< cleanup
 
             //! access
             template <typename T> inline
@@ -81,6 +81,7 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Indexed);
             void setup(const size_t i) noexcept;
+            void clear()               noexcept;
         };
 
     }

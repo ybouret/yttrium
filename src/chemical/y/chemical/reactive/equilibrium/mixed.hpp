@@ -36,7 +36,15 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! create by stealing lists and latch
+            //! create by stealing lists, then latch
+            /**
+             \param wl list of algebraic weights
+             \param el list of associated equlibria
+             \param sl list of associated species
+             \param st pre-computed stoichiometry
+             \param ii TopLevel index
+             \param KK persistent array of TopLevel constants
+             */
             explicit MixedEquilibrium(WList               &wl,
                                       EList               &el,
                                       const SList         &sl,
@@ -53,7 +61,6 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-
             XWritable   & topK;  //!< top level, shared K
             const WList   wlist; //!< weights of equilibria
             const EList   elist; //!< equilibria

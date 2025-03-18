@@ -44,7 +44,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            explicit Component(const Role, const Actor &) noexcept; //!< setup
+            explicit Component(const Role, const Actor &) noexcept; //!< setup with PERSISTENT actor
             virtual ~Component()                          noexcept; //!< cleanup
             Component(const Component &)                  noexcept; //!< no-throw copy
 

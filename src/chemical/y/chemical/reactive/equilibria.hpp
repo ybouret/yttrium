@@ -73,10 +73,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! insertion of a new, LATCHED equilibrium
-            /**
-             TODO: check valid eq
-             */
+            //! insertion of a new, VALID and LATCHED equilibrium
             void operator()(const Equilibrium::Pointer &eq);
 
 

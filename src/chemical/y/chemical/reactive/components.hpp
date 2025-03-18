@@ -109,11 +109,10 @@ namespace Yttrium
                 for(const Actor *a=reac->head;a;a=a->next) a->sp(topo,level) = -_T(a->nu);
             }
 
-            //! OR'ed species
-            void gatherSpeciesIn(AddressBook &book) const;
 
-            bool neutral() const noexcept;
- 
+            void gatherSpeciesIn(AddressBook &book) const; //!< OR'ed species into bool
+            bool neutral()                 const noexcept; //!< check neutrality
+
             //__________________________________________________________________
             //
             //

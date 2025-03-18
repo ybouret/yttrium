@@ -49,10 +49,10 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const iMatrix Nu;         //!< full topology
-            const EList   standard;
-            const EList   reacOnly;
-            const EList   prodOnly;
-            const EList   nebulous;
+            //const EList   standard;
+            //const EList   reacOnly;
+            //const EList   prodOnly;
+            //const EList   nebulous;
             const ELists  order;     //!< equilibria ranked by order
 
 

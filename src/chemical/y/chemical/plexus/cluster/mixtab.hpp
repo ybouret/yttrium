@@ -17,7 +17,7 @@ namespace Yttrium
         // local definitions
         //
         //______________________________________________________________________
-        typedef Yttrium::CxxArray<int,MemoryModel> iArrayType;
+        typedef Yttrium::CxxArray<int,MemoryModel> iArrayType; //!< aluas
 
         
         using namespace Apex;
@@ -79,7 +79,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const size_t  ncof; //!< number of coefficient = order
-            iArrayType    stoi; //!< computed stoichiometru
+            iArrayType    stoi; //!< computed stoichiometry
             MixTab *      next; //!< for list
             MixTab *      prev; //!< for list
 

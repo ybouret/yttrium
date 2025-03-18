@@ -31,9 +31,9 @@ namespace Yttrium
             const SList              unbounded; //!< unbounded species
 
             //ComponentsTier tierOf(const Components &) const noexcept;
-            bool   areAllUnbounded(const Actors &) const noexcept;
-            bool   gotAnyConserved(const Actors &) const noexcept;
-            
+            bool   areAllUnbounded(const Actors &) const noexcept; //!< are all actors unbounded ?
+            bool   gotAnyConserved(const Actors &) const noexcept; //!< is at least one actor conserved ?
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterConservations);
 

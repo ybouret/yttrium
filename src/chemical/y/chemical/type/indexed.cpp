@@ -6,10 +6,14 @@ namespace Yttrium
     namespace Chemical
     {
 
+        void Indexed:: clear() noexcept
+        {
+            memset( (void*)&indx[0], 0, sizeof(indx) );
+        }
 
         Indexed:: ~Indexed() noexcept
         {
-            memset( (void*)&indx[0], 0, sizeof(indx) );
+            clear();
         }
 
         Indexed:: Indexed(const String *s, const size_t i) noexcept :
@@ -21,10 +25,8 @@ namespace Yttrium
 
         void Indexed:: setup(const size_t i) noexcept
         {
-            for(size_t j=0;j<MaxLevel;++j)
-            {
-                Coerce(indx[j]) = i;
-            }
+            clear();
+            Coerce(indx[TopLevel]) = i;
         }
 
     }

@@ -22,7 +22,7 @@ namespace Yttrium
         //______________________________________________________________________
         class Charge
         {
-            protected: explicit Charge() noexcept; //!< setup
+            protected: explicit Charge() noexcept; //!< setup z=0
             public:    virtual ~Charge() noexcept; //!< cleanup
             const int z;                           //!< algebraic charge
 
