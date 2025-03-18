@@ -7,7 +7,7 @@
 
 
 #include "y/chemical/reactive/components.hpp"
-
+#include "y/mkl/root/zbis.hpp"
 
 namespace Yttrium
 {
@@ -40,9 +40,10 @@ namespace Yttrium
             explicit Aftermath() noexcept;
             virtual ~Aftermath() noexcept;
 
-            XMul xmul;
-            XAdd xadd;
-
+            XMul               xmul;
+            XAdd               xadd;
+            MKL::ZBis<xreal_t> root;
+            
             /**
              \param E   components
              \parem K   constant
@@ -61,6 +62,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aftermath);
+            xreal_t improve(const Components &E,
+                            const xreal_t     K,
+                            XWritable        &C,
+                            const Level       L);
         };
 
     }

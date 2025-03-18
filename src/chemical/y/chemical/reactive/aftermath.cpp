@@ -1,6 +1,7 @@
 
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/system/exception.hpp"
+#include "y/mkl/root/zbis.hpp"
 
 namespace Yttrium
 {
@@ -61,6 +62,7 @@ namespace Yttrium
                     while( (ff.c=F(xi.c)).mantissa > 0.0 ) xi.c += xi.c;
                 }
 
+
             };
 
 
@@ -75,24 +77,19 @@ namespace Yttrium
         }
 
 
-        Outcome Aftermath:: operator()(const Components &E,
-                                       const xreal_t     K,
-                                       XWritable        &C,
-                                       const Level       L,
-                                       const XReadable  &C0,
-                                       const Level       L0)
+        xreal_t Aftermath:: improve(const Components &E,
+                                    const xreal_t     K,
+                                    XWritable        &C,
+                                    const Level       L)
         {
-            // prepare
-            const Actors &reac = E.reac;
-            const Actors &prod = E.prod; assert(reac->size>0||prod->size>0);
-            Activator     F    = { E, K, C, L, xmul, xadd };
 
-
-
-
-            const Situation st = E.situation(C,L);
-            XTriplet        xi = { 0, 0, 0 };
-            XTriplet        ff = { 0, 0, 0 };
+            assert( Blocked!= E.situation(C,L) );
+            const Actors &  reac = E.reac;
+            const Actors &  prod = E.prod; assert(reac->size>0||prod->size>0);
+            const xreal_t   zero = 0;
+            Activator       F    = { E, K, C, L, xmul, xadd };
+            XTriplet        xi   = { zero,   zero, zero };
+            XTriplet        ff   = { F.zp(), zero, zero };
             switch(E.kind)
             {
                 case Deserted:
@@ -102,9 +99,9 @@ namespace Yttrium
                     assert(prod->size>0);
                     assert(reac->size<=0);
 
-                    switch( Sign::Of(ff.a=F.zp() ) )
+                    switch( Sign::Of(ff.a) )
                     {
-                        case __Zero__: return Outcome(st,C,L,0);
+                        case __Zero__: return zero;
                         case Positive:
                             xi.c = prod.scaling(K);
                             F.increase(xi,ff);
@@ -117,16 +114,38 @@ namespace Yttrium
                     break;
 
                 case ReacOnly:
+
                 case Standard:
                     throw Exception("Not Implemented");
             }
 
-            std::cerr << "xi=" << xi << std::endl;
-            std::cerr << "ff=" << ff << std::endl;
+            Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;
+            Core::Display(std::cerr << "ff=", &ff.a, 3, xreal_t::ToString) << std::endl;
 
-            return Outcome(Blocked,C, L, 0);
+            root(F,xi,ff);
+            std::cerr << std::endl;
 
+            Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;
+            Core::Display(std::cerr << "ff=", &ff.a, 3, xreal_t::ToString) << std::endl;
 
+            const xreal_t x = xi.c;
+            E.moveSafely(C,L,xi.c);
+            return xi.c;
+
+        }
+
+        Outcome Aftermath:: operator()(const Components &E,
+                                       const xreal_t     K,
+                                       XWritable        &C,
+                                       const Level       L,
+                                       const XReadable  &C0,
+                                       const Level       L0)
+        {
+            // prepare
+            const Situation st = E.situation(C,L); if(Blocked==st) return Outcome(Blocked,C,L,0);
+            xreal_t         xi = improve(E, K, C, L);
+            
+            return Outcome(st, C, L, 0);
         }
 
     }

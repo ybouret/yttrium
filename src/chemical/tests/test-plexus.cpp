@@ -47,6 +47,8 @@ Y_UTEST(plexus)
     XVector      C0(m,0);
     XVector      C(m,0);
 
+    Library::Concentrations(C0,ran);
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     Aftermath am;
     for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)

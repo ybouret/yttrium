@@ -4,7 +4,7 @@
 #ifndef Y_Chemical_Assembly_Included
 #define Y_Chemical_Assembly_Included 1
 
-#include "y/chemical/type/entity.hpp"
+#include "y/chemical/type/indexed.hpp"
 #include "y/text/justify.hpp"
 
 namespace Yttrium
@@ -15,7 +15,7 @@ namespace Yttrium
         //
         //
         //
-        //! Utilities for assembly of entities
+        //! Utilities for assembly of (indexed) entities
         //
         //
         //______________________________________________________________________
@@ -48,6 +48,27 @@ namespace Yttrium
             {
                 for(size_t i=entity.name->size();i<maxNameLength;++i) os << ' ';
                 return os;
+            }
+
+            template <typename LIST, typename ARRAY> inline
+            void show(std::ostream &os,
+                      const char *  pfx,
+                      const LIST   &list,
+                      const char *  sfx,
+                      const Level   level,
+                      ARRAY        &array)
+            {
+
+                for(const typename LIST::NodeType *node=list.head;node;node=node->next)
+                {
+                    if(pfx) os << pfx;
+                    os << **node;
+                    os << sfx;
+                    pad(os,**node);
+                    os << " = ";
+                    os << (**node)(array,level);
+                    os << std::endl;
+                }
             }
 
             //__________________________________________________________________

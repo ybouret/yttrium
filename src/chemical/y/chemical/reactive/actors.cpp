@@ -112,6 +112,13 @@ namespace Yttrium
             return K.pow(kxp);
         }
 
+        void Actors:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        {
+            for(const Actor *a=my.head;a;a=a->next) a->moveSafely(C,L,xi);
+
+        }
+
+
     }
 
 }

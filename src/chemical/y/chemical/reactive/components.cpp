@@ -189,6 +189,13 @@ namespace Yttrium
             return lhs-rhs;
         }
 
+        void Components:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        {
+            prod.moveSafely(C,L,xi);
+            reac.moveSafely(C,L,-xi);
+        }
+
+
 
 #if 1
         Situation Components:: situation(const XReadable &C, const Level L) const noexcept

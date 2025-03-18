@@ -46,6 +46,7 @@ namespace Yttrium
             virtual ~Cluster() noexcept;          //!< cleanup
             Y_OSTREAM_PROTO(Cluster);             //!< display
 
+            
 
             Cluster *      next; //!< for list
             Cluster *      prev; //!< for list

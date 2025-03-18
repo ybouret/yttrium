@@ -88,7 +88,51 @@ namespace Yttrium
             void           readFrom(InputStream &);                //!< retrieve all species
             size_t         nextIndex() const noexcept;             //!< for species creation
             bool           owns(const Species &sp) const noexcept; //!< checkup
-            
+
+            template <typename ARRAY> inline
+            std::ostream & show(std::ostream &os,
+                                const char *pfx,
+                                ARRAY      &arr,
+                                const char *sfx) const
+            {
+                os << "{" << std::endl;
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    if(pfx) os << pfx;
+                    const Species &sp = **it;
+                    os << sp.name;
+                    if(sfx) os << sfx;
+                    pad(os,sp) << " = " << sp(arr,TopLevel);
+                    os << std::endl;
+                }
+                os << "}";
+                return os;
+            }
+
+
+            template <typename ARRAY, typename PROC> inline
+            std::ostream & show(std::ostream &os,
+                                const char *pfx,
+                                ARRAY      &arr,
+                                const char *sfx,
+                                PROC &      proc) const
+            {
+                os << "{" << std::endl;
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    if(pfx) os << pfx;
+                    const Species &sp = **it;
+                    os << sp.name;
+                    if(sfx) os << sfx;
+                    pad(os,sp) << " = " << proc(sp(arr,TopLevel));
+                    os << std::endl;
+                }
+                os << "}";
+                return os;
+            }
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             Y_PROXY_DECL();

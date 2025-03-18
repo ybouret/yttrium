@@ -124,7 +124,8 @@ namespace Yttrium
             xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L) const;
             xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
             Situation situation(const XReadable &C, const Level L) const noexcept;
-
+            void      moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
+            
             //__________________________________________________________________
             //
             //
