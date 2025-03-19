@@ -251,8 +251,8 @@ namespace Yttrium
 
             const xreal_t denom = n;
             const xreal_t xi    = xadd.sum() / denom;
-            std::cerr << "xi=" << double(xi) << "; C=" << C << "; aff="  << E.affinity(K, xadd, C, L).str() << std::endl;
-            return Outcome(st, E, K, C, L, xadd.sum()/denom);
+            //std::cerr << "xi=" << double(xi) << "; C=" << C << "; aff="  << E.affinity(K, xadd, C, L).str() << std::endl;
+            return Outcome(st, E, K, C, L, xi);
         }
 
     }

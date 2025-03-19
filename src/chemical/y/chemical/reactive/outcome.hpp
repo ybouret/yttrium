@@ -37,11 +37,17 @@ namespace Yttrium
                     const XReadable &  _cc,
                     const Level     &  _lv,
                     const xreal_t      _xi) noexcept;
-            Outcome(const Outcome &_)        noexcept; //!< duplicat
-            ~Outcome()                       noexcept; //!< cleanup
+            Outcome(const Outcome &_)       noexcept; //!< duplicat
+            ~Outcome()                      noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Outcome);                  //!< display
 
-
-            const char * situation() const noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const char * situation() const noexcept; //!< SituationText(st)
 
             //__________________________________________________________________
             //
@@ -55,6 +61,7 @@ namespace Yttrium
             const XReadable  & cc; //!< predicted concentrations mathching eK
             const Level        lv; //!< concentrations level
             const xreal_t      xi; //!< extent from original concentrations
+            const xreal_t      ax; //!< |xi|
         private:
             Y_DISABLE_ASSIGN(Outcome);
         };

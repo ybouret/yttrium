@@ -1,5 +1,6 @@
 
 #include "y/chemical/reactive/outcome.hpp"
+#include <iomanip>
 
 namespace Yttrium
 {
@@ -16,7 +17,8 @@ namespace Yttrium
         eK(_eK),
         cc(_cc),
         lv(_lv),
-        xi(_xi)
+        xi(_xi),
+        ax(xi.abs())
         {
         }
 
@@ -27,7 +29,8 @@ namespace Yttrium
         eK(_.eK),
         cc(_.cc),
         lv(_.lv),
-        xi(_.xi)
+        xi(_.xi),
+        ax(_.ax)
         {}
 
 
@@ -39,6 +42,20 @@ namespace Yttrium
         const char * Outcome:: situation() const noexcept
         {
             return SituationText(st);
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Outcome &out)
+        {
+            switch(out.st)
+            {
+                case Running: os << "(+)"; break;
+                case Blocked: os << "(-)"; break;
+                case Crucial: os << "(!)"; break;
+            }
+            os << ' ' << out.situation() << ' ';
+            os << " @" << std::setw(24) << out.xi.str().c_str();
+            os << ": " << out.eq.name;
+            return os;
         }
 
 
