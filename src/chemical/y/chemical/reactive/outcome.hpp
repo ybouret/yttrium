@@ -34,7 +34,7 @@ namespace Yttrium
             Outcome(const Situation    _st,
                     const Components & _eq,
                     const xreal_t      _eK,
-                    const XReadable &  _cc,
+                    XWritable       &  _cc,
                     const Level     &  _lv,
                     const xreal_t      _xi) noexcept;
             Outcome(const Outcome &_)       noexcept; //!< duplicat
@@ -63,10 +63,11 @@ namespace Yttrium
             const Situation    st; //!< predicted situation
             const Components & eq; //!< the components
             const xreal_t      eK; //!< current constant
-            const XReadable  & cc; //!< predicted concentrations mathching eK
+            XWritable  &       cc; //!< predicted concentrations mathching eK
             const Level        lv; //!< concentrations level
-            const xreal_t      xi; //!< extent from original concentrations
-            const xreal_t      ax; //!< |xi|
+            xreal_t            xi; //!< extent from original concentrations
+            xreal_t            ax; //!< |xi|
+            xreal_t            sc; //!< score
         private:
             Y_DISABLE_ASSIGN(Outcome);
         };

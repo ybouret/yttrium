@@ -235,24 +235,7 @@ namespace Yttrium
             // evaluate xi by average increase
             //
             //------------------------------------------------------------------
-            xadd.free();
-            const size_t n = E->size();
-            {
-                size_t j = n;
-                for(Components::ConstIterator it=E->begin();j-- > 0;++it)
-                {
-                    const Actor   &ac = **it;
-                    const Species &sp = ac.sp;
-                    const xreal_t  dc = (sp(C,L) - sp(C0,L0))/ac.xn;
-                    xadd << dc;
-                }
-                assert(xadd.size()==n);
-            }
-
-            const xreal_t denom = n;
-            const xreal_t xi    = xadd.sum() / denom;
-            //std::cerr << "xi=" << double(xi) << "; C=" << C << "; aff="  << E.affinity(K, xadd, C, L).str() << std::endl;
-            return Outcome(st, E, K, C, L, xi);
+            return Outcome(st, E, K, C, L, E.extent(xadd,C,L,C0,L0));
         }
 
     }

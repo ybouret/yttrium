@@ -9,7 +9,7 @@ namespace Yttrium
         Outcome:: Outcome(const Situation    _st,
                           const Components & _eq,
                           const xreal_t      _eK,
-                          const XReadable &  _cc,
+                          XWritable &        _cc,
                           const Level     &  _lv,
                           const xreal_t      _xi) noexcept :
         st(_st),
@@ -18,7 +18,8 @@ namespace Yttrium
         cc(_cc),
         lv(_lv),
         xi(_xi),
-        ax(xi.abs())
+        ax(xi.abs()),
+        sc(0)
         {
         }
 
@@ -30,7 +31,8 @@ namespace Yttrium
         cc(_.cc),
         lv(_.lv),
         xi(_.xi),
-        ax(_.ax)
+        ax(_.ax),
+        sc(_.sc)
         {}
 
 
@@ -46,14 +48,17 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Outcome &out)
         {
+#if 0
             switch(out.st)
             {
                 case Running: os << "(+)"; break;
                 case Blocked: os << "(-)"; break;
                 case Crucial: os << "(!)"; break;
             }
-            os << ' ' << out.situation() << ' ';
+#endif
+            os << out.situation();
             os << " @" << std::setw(24) << out.xi.str().c_str();
+            os << ":"  << std::setw(24) << out.sc.str().c_str();
             os << ": " << out.eq.name;
             return os;
         }

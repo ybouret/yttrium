@@ -145,6 +145,12 @@ namespace Yttrium
             void      moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
             xreal_t   affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
+            xreal_t   extent(XAdd &           xadd,
+                             const XReadable &target,
+                             const Level     targetLevel,
+                             const XReadable &source,
+                             const Level      sourceLevel) const;
+
             //__________________________________________________________________
             //
             //

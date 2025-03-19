@@ -259,6 +259,32 @@ namespace Yttrium
 
         }
 
+
+        xreal_t Components:: extent(XAdd &           xadd,
+                                    const XReadable &target,
+                                    const Level     targetLevel,
+                                    const XReadable &source,
+                                    const Level      sourceLevel) const
+        {
+            xadd.free();
+            const size_t n = db.size();
+            {
+                size_t j = n;
+                for(Components::ConstIterator it=db.begin();j-- > 0;++it)
+                {
+                    const Actor   &ac = **it;
+                    const Species &sp = ac.sp;
+                    const xreal_t  dc = (sp(target,targetLevel) - sp(source,sourceLevel))/ac.xn;
+                    xadd << dc;
+                }
+                assert(xadd.size()==n);
+            }
+
+            const xreal_t denom = n;
+            const xreal_t xi    = xadd.sum() / denom;
+            return xi;
+        };
+
     }
 
 }
