@@ -94,6 +94,7 @@ Y_UTEST(plexus)
     Y_SIZEOF(ClusterContent);
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);
+    Y_SIZEOF(Reactor);
 
 }
 Y_UDONE()

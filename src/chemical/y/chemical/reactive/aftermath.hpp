@@ -59,12 +59,12 @@ namespace Yttrium
              \param L0  starting level
              \return fully populated Outcome
              */
-            Outcome operator()(const Components &E,
-                               const xreal_t     K,
-                               XWritable        &C,
-                               const Level       L,
-                               const XReadable  &C0,
-                               const Level       L0);
+            Outcome operator()(const Equilibrium & E,
+                               const xreal_t       K,
+                               XWritable &         C,
+                               const Level         L,
+                               const XReadable &   C0,
+                               const Level         L0);
 
 
             //__________________________________________________________________

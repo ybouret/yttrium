@@ -45,7 +45,7 @@ namespace Yttrium
             {
                 for(ENode *en=(*cl)->equilibria->head;en;en=en->next)
                 {
-                    Equilibrium &eq = **en;
+                    Equilibrium &eq  = Coerce(**en);
                     eq(tlK,TopLevel) = eq.K(t0);
                 }
             }

@@ -15,10 +15,14 @@ namespace Yttrium
         solve1D(),
         x_score(),
         running(),
+        basis(),
         Ceq(cluster->equilibria->size,cluster->species->size),
         Cini(cluster->species->size),
         Cend(cluster->species->size),
-        Ctry(cluster->species->size)
+        Ctry(cluster->species->size),
+        qMetrics(cluster->species->size),
+        qVCache( new QVector::Cache(qMetrics) ),
+        qFamily( qVCache )
         {
             running.proxy->reserve(Ceq.rows);
         }
@@ -97,10 +101,10 @@ namespace Yttrium
                 bool emergency = false;
                 for(const ENode *en=cluster->equilibria->head;en;en=en->next)
                 {
-                    const Components &eq  = **en;
-                    const xreal_t     eK  = eq(K0,TopLevel);
-                    XWritable        &cc  = cluster.gather(Ceq[running.size+1],C0);
-                    const Outcome     out = solve1D(eq,eK,cc,SubLevel,C0,TopLevel);
+                    const Equilibrium & eq  = **en;
+                    const xreal_t       eK  = eq(K0,TopLevel);
+                    XWritable        &  cc  = cluster.gather(Ceq[running.size+1],C0);
+                    const Outcome       out = solve1D(eq,eK,cc,SubLevel,C0,TopLevel);
                     switch(out.st)
                     {
                         case Blocked:
@@ -155,6 +159,13 @@ namespace Yttrium
             const xreal_t S0 = score(Cini,SubLevel);
             Y_XMLOG(xml, "S0=" << S0.str());
 
+            //------------------------------------------------------------------
+            //
+            //
+            // optimize each 1D
+            //
+            //
+            //------------------------------------------------------------------
             for(OutNode *node=running.head;node;node=node->next)
             {
                 Outcome &out = **node;
@@ -209,13 +220,43 @@ namespace Yttrium
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // build local basis
+            //
+            //
+            //------------------------------------------------------------------
             MergeSort::Call(running,ByIncreasingSC);
+            const size_t dof = cluster.N;
+            qFamily.clear();
+            basis.free();
+            for(const OutNode *node=running.head;node;node=node->next)
+            {
+                const Equilibrium   &eq = (**node).eq;
+                const Readable<int> &nu = eq(cluster.Nu,SubLevel);
+                if(qFamily.welcomes(nu))
+                {
+                    (void) qFamily.increase();
+                    basis << eq;
+                    if(qFamily->size>=dof) break;
+                }
+            }
+
+
             if(xml.verbose)
             {
                 Y_XML_COMMENT(xml, "Snapshot");
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
-                    Y_XMLOG(xml, "    " << **node);
+                    const Equilibrium &eq = (**node).eq;
+                    if(basis.has(eq)) {
+                        Y_XMLOG(xml, "(*) " << **node);
+                    }
+                    else {
+                        Y_XMLOG(xml, "    " << **node);
+
+                    }
                 }
             }
 

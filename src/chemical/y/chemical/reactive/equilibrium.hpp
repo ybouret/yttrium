@@ -10,6 +10,7 @@
 #include "y/chemical/library.hpp"
 #include "y/chemical/type/defs.hpp"
 #include "y/oversized.hpp"
+#include "y/data/small/light/list/coop.hpp"
 
 namespace Yttrium
 {
@@ -75,10 +76,12 @@ namespace Yttrium
         };
 
 
-        typedef Small::BareLightList<Equilibrium> EList; //!< alias
-        typedef EList::NodeType                   ENode; //!< alias
+        typedef Small::BareLightList<const Equilibrium> EList; //!< alias
+        typedef EList::NodeType                         ENode; //!< alias
+        typedef Small::CoopLightList<const Equilibrium> ERepo; //!< alias
+        typedef ERepo::ProxyType                        EBank; //!< alias
+        typedef Small::SoloLightList<const Equilibrium> ESolo; //!< alias
 
-      
     }
 
 

@@ -42,6 +42,7 @@ namespace Yttrium
             Crucial  //!< at least one zero concentratoon on ONE side
         };
 
+        //! human readable situation
         const char * SituationText(const Situation) noexcept;
 
         //______________________________________________________________________
@@ -139,12 +140,22 @@ namespace Yttrium
             void gatherSpeciesIn(AddressBook &book) const; //!< OR'ed species into bool
             bool neutral()                 const noexcept; //!< check neutrality
 
+            //! current activity
             xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L) const;
+
+            //! shifted activity
             xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
+
+            //! current situation
             Situation situation(const XReadable &C, const Level L) const noexcept;
+
+            //! move with forced clipping
             void      moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
+
+            //! gather affinity with given constant
             xreal_t   affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
+            //! evaluate extent from average of individual extents
             xreal_t   extent(XAdd &           xadd,
                              const XReadable &target,
                              const Level     targetLevel,

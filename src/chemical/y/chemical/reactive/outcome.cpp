@@ -6,12 +6,12 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        Outcome:: Outcome(const Situation    _st,
-                          const Components & _eq,
-                          const xreal_t      _eK,
-                          XWritable &        _cc,
-                          const Level     &  _lv,
-                          const xreal_t      _xi) noexcept :
+        Outcome:: Outcome(const Situation     _st,
+                          const Equilibrium & _eq,
+                          const xreal_t       _eK,
+                          XWritable &         _cc,
+                          const Level     &   _lv,
+                          const xreal_t       _xi) noexcept :
         st(_st),
         eq(_eq),
         eK(_eK),
@@ -44,6 +44,11 @@ namespace Yttrium
         const char * Outcome:: situation() const noexcept
         {
             return SituationText(st);
+        }
+
+        xreal_t Outcome:: affinity(XAdd &xadd, const XReadable &C, const Level L) const
+        {
+            return eq.affinity(eK,xadd,C,L);
         }
 
         std::ostream & operator<<(std::ostream &os, const Outcome &out)

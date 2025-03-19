@@ -104,6 +104,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! display associated proc(array) and level
             template <typename ARRAY, typename PROC> inline
             std::ostream & show(std::ostream &os,
                                 const Level  lvl,

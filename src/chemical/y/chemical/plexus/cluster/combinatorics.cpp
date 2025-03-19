@@ -158,7 +158,7 @@ namespace Yttrium
                 size_t    count = N;
                 for(ENode *en=equilibria->head;count-- > 0;en=en->next)
                 {
-                    Equilibrium & eq = **en;
+                    Equilibrium & eq = Coerce(**en);
                     const int     cf = eq(*mix,SubLevel);
                     if(cf) {
                         wlist << cf;
@@ -215,7 +215,7 @@ namespace Yttrium
                 topo.make(equilibria->size,M);
                 for(ENode *en=equilibria->head;en;en=en->next)
                 {
-                    Equilibrium &eq = **en;
+                    Equilibrium &eq = Coerce(**en);
                     eq.fillTopology(eq(topo,SubLevel), SubLevel);
 #if 0
                     switch( tierOf(eq) )

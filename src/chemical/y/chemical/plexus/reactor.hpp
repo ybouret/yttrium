@@ -7,14 +7,26 @@
 
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
+#include "y/apex/api/ortho/family.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-        typedef Small::SoloHeavyList<Outcome> OutList;
-        typedef OutList::NodeType             OutNode;
+        //______________________________________________________________________
+        //
+        //
+        //
+        // Declarations
+        //
+        //
+        //______________________________________________________________________
+        typedef Small::SoloHeavyList<Outcome> OutList;  //!< alias
+        typedef OutList::NodeType             OutNode;  //!< alias
+        typedef Apex::Ortho::Vector           QVector;  //!< alias
+        typedef Apex::Ortho::Family           QFamily;  //!< alias
+        typedef Apex::Ortho::VCache           QVCache;  //!< alias
+        typedef Apex::Ortho::Metrics          QMetrics; //!< alias
 
         //______________________________________________________________________
         //
@@ -27,19 +39,26 @@ namespace Yttrium
         class Reactor
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Reactor(const Cluster &); //!< setup
+            virtual ~Reactor() noexcept;       //!< cleanup
 
-            explicit Reactor(const Cluster &persistentCluster);
-            virtual ~Reactor() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! solve topLevel
             void operator()(XMLog &xml, XWritable &C0, const XReadable &K0);
 
-            static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
-            static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
-            //! RMS(affinities)
-            xreal_t score(const XReadable &C,
-                          const Level      L);
 
             //! score(Ctry=Cini*(1-u)+Cend*u);
             xreal_t operator()(const xreal_t u);
@@ -49,18 +68,25 @@ namespace Yttrium
             Aftermath       solve1D;  //!< computing 1D solution
             XAdd            x_score;  //!< helper to compute score
             OutList         running;  //!< running equilibria
+            ESolo           basis;    //!< basis of running equilibria
             XMatrix         Ceq;      //!< workspace to store 1D solution
             XArray          Cini;     //!< initial state
             XArray          Cend;     //!< final   state
             XArray          Ctry;     //!< trial   state
-
+            const QMetrics  qMetrics; //!< |species|
+            QVCache         qVCache;  //!< for vectors
+            QFamily         qFamily;  //!< for building basis
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            static bool IsRunning(const Outcome &) noexcept;
+            static bool     IsRunning(const Outcome &) noexcept;
+            static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
+            static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
-            void   initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
-            void   ameliorate(XMLog &xml);
-            real_t optimize1D(const xreal_t Sini); //!< from Sini @Cini and Cend
+            void            initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
+            void            ameliorate(XMLog &xml);
+            real_t          optimize1D(const xreal_t Sini); //!< from Sini @Cini and Cend
+            xreal_t         score(const XReadable &C, const Level L);//!< RMS(affinities)
 
 
         };

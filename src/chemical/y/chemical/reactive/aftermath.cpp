@@ -179,12 +179,12 @@ namespace Yttrium
 
         }
 
-        Outcome Aftermath:: operator()(const Components &E,
-                                       const xreal_t     K,
-                                       XWritable        &C,
-                                       const Level       L,
-                                       const XReadable  &C0,
-                                       const Level       L0)
+        Outcome Aftermath:: operator()(const Equilibrium & E,
+                                       const xreal_t       K,
+                                       XWritable &         C,
+                                       const Level         L,
+                                       const XReadable &   C0,
+                                       const Level         L0)
         {
             //------------------------------------------------------------------
             //
