@@ -42,6 +42,7 @@ namespace Yttrium
             Crucial  //!< at least one zero concentratoon on ONE side
         };
 
+        const char * SituationText(const Situation) noexcept;
 
         //______________________________________________________________________
         //

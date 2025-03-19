@@ -83,7 +83,7 @@ Y_Program()
         const String    portName = GetPortName(descr);
         GetPortDeps(portDeps,portName);
     }
-    
+
 
 }
 Y_End()

@@ -57,13 +57,33 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Reactor");
 
-            outList.free();
-            for(const ENode *en=cluster->equilibria->head;en;en=en->next)
             {
-                const Components &eq  = **en;
-                const xreal_t     eK  = eq(K0,TopLevel);
-                XWritable        &cc  = cluster.gather(Ceq[outList.size+1],C0);
-                const Outcome     out = aftermath(eq,eK,cc,SubLevel,C0,TopLevel);
+                outList.free();
+                bool emergency = false;
+                for(const ENode *en=cluster->equilibria->head;en;en=en->next)
+                {
+                    const Components &eq  = **en;
+                    const xreal_t     eK  = eq(K0,TopLevel);
+                    XWritable        &cc  = cluster.gather(Ceq[outList.size+1],C0);
+                    const Outcome     out = aftermath(eq,eK,cc,SubLevel,C0,TopLevel);
+                    switch(out.st)
+                    {
+                        case Blocked:
+                            Y_XMLOG(xml, "(-) [" << out.situation() << "] " << eq.name);
+                            continue;
+
+                        case Crucial:
+                            Y_XMLOG(xml, "(!) [" << out.situation() << "] " << eq.name);
+                            emergency = true;
+                            outList << out;
+                            continue;
+
+                        case Running:
+                            if(emergency) continue;
+                            Y_XMLOG(xml, "(+) [" << out.situation() << "] " << eq.name);
+                            continue;
+                    }
+                }
             }
 
         }

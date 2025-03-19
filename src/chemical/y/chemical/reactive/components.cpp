@@ -19,6 +19,18 @@ namespace Yttrium
     namespace Chemical
     {
 
+        const char * SituationText(const Situation st) noexcept
+        {
+            switch(st)
+            {
+                case Blocked: return "Blocked";
+                case Running: return "Running";
+                case Crucial: return "Crucial";
+            }
+            return Core::Unknown;
+        }
+
+
         const char * const Components:: Symbol   = "<=>";
         const char         Components:: Separator;
 

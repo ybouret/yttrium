@@ -35,6 +35,13 @@ namespace Yttrium
         {
         }
 
+
+        const char * Outcome:: situation() const noexcept
+        {
+            return SituationText(st);
+        }
+
+
     }
 
 }

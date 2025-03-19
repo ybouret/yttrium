@@ -40,6 +40,9 @@ namespace Yttrium
             Outcome(const Outcome &_)        noexcept; //!< duplicat
             ~Outcome()                       noexcept; //!< cleanup
 
+
+            const char * situation() const noexcept;
+
             //__________________________________________________________________
             //
             //
