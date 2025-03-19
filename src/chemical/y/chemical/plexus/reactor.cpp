@@ -10,6 +10,30 @@ namespace Yttrium
     {
         using namespace MKL;
 
+        Reactor:: Reactor(const Cluster &persistentCluster) :
+        cluster(persistentCluster),
+        solve1D(),
+        x_score(),
+        running(),
+        Ceq(cluster->equilibria->size,cluster->species->size),
+        Cini(cluster->species->size),
+        Cend(cluster->species->size),
+        Ctry(cluster->species->size)
+        {
+            running.proxy->reserve(Ceq.rows);
+        }
+
+        Reactor:: ~Reactor() noexcept
+        {
+        }
+
+        bool Reactor:: IsRunning(const Outcome &out) noexcept
+        {
+            assert(Blocked!=out.st);
+            return Running == out.st;
+        }
+
+
         xreal_t Reactor:: score(const XReadable &C,
                                 const Level      L)
         {
@@ -37,7 +61,9 @@ namespace Yttrium
                 const xreal_t cv = Cini[i];
                 const xreal_t cu = Cend[i];
                 xreal_t       cmin = cv, cmax=cu;
-                if(cmax<cmin) Swap(cmin,cmax); assert(cmin<=cmax);
+                if(cmax<cmin)
+                    Swap(cmin,cmax);
+                assert(cmin<=cmax);
                 Ctry[i] = Clamp(cmin,cv*v+cu*u,cmax);
             }
 

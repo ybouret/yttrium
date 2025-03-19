@@ -16,24 +16,20 @@ namespace Yttrium
         typedef Small::SoloHeavyList<Outcome> OutList;
         typedef OutList::NodeType             OutNode;
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Reactor for one Cluster
+        //
+        //
+        //______________________________________________________________________
         class Reactor
         {
         public:
 
-            explicit Reactor(const Cluster &persistentCluster) :
-            cluster(persistentCluster),
-            running(),
-            Ceq(cluster->equilibria->size,cluster->species->size),
-            Cini(cluster->species->size),
-            Cend(cluster->species->size),
-            Ctry(cluster->species->size)
-            {
-                running.proxy->reserve(Ceq.rows);
-            }
-
-            virtual ~Reactor() noexcept
-            {
-            }
+            explicit Reactor(const Cluster &persistentCluster);
+            virtual ~Reactor() noexcept;
 
             //! solve topLevel
             void operator()(XMLog &xml, XWritable &C0, const XReadable &K0);
@@ -41,6 +37,7 @@ namespace Yttrium
             static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
             static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
+            //! RMS(affinities)
             xreal_t score(const XReadable &C,
                           const Level      L);
 
@@ -59,15 +56,11 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            static bool IsRunning(const Outcome &out) noexcept
-            {
-                assert(Blocked!=out.st);
-                return Running == out.st;
-            }
+            static bool IsRunning(const Outcome &) noexcept;
 
             void   initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
             void   ameliorate(XMLog &xml);
-            real_t optimize1D(const xreal_t Sini); //!< from Sini @Cini
+            real_t optimize1D(const xreal_t Sini); //!< from Sini @Cini and Cend
 
 
         };
