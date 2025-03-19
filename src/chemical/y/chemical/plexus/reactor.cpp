@@ -22,7 +22,8 @@ namespace Yttrium
         Ctry(cluster->species->size),
         qMetrics(cluster->species->size),
         qVCache( new QVector::Cache(qMetrics) ),
-        qFamily( qVCache )
+        qFamily( qVCache ),
+        rate(cluster->species->size)
         {
             running.proxy->reserve(Ceq.rows);
         }
@@ -269,6 +270,16 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Reactor");
             initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             ameliorate(xml);
+        }
+
+
+
+        void Reactor:: queryRates(XMLog &xml)
+        {
+            Y_XML_SECTION(xml,"QueryRates");
+            rate.forEach( & XAdd::free );
+            
+
         }
 
     }

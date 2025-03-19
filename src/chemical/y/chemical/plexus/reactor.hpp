@@ -28,6 +28,8 @@ namespace Yttrium
         typedef Apex::Ortho::VCache           QVCache;  //!< alias
         typedef Apex::Ortho::Metrics          QMetrics; //!< alias
 
+        typedef CxxArray<XAdd,MemoryModel>    Summator;
+
         //______________________________________________________________________
         //
         //
@@ -76,6 +78,7 @@ namespace Yttrium
             const QMetrics  qMetrics; //!< |species|
             QVCache         qVCache;  //!< for vectors
             QFamily         qFamily;  //!< for building basis
+            Summator        rate;     //!< for computing rates
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
@@ -85,8 +88,9 @@ namespace Yttrium
 
             void            initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
             void            ameliorate(XMLog &xml);
-            real_t          optimize1D(const xreal_t Sini); //!< from Sini @Cini and Cend
-            xreal_t         score(const XReadable &C, const Level L);//!< RMS(affinities)
+            void            queryRates(XMLog &xml);
+            real_t          optimize1D(const xreal_t Sini);        //!< with Sini @Cini and loaded Cend
+            xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
 
 
         };
