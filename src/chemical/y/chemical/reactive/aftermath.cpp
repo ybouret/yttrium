@@ -8,30 +8,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        Outcome:: Outcome(const Situation   _st,
-                          const XReadable & _cc,
-                          const Level     & _lv,
-                          const xreal_t     _xi) noexcept :
-        st(_st),
-        cc(_cc),
-        lv(_lv),
-        xi(_xi)
-        {
-        }
-
-
-        Outcome:: Outcome(const Outcome &_) noexcept :
-        st(_.st),
-        cc(_.cc),
-        lv(_.lv),
-        xi(_.xi)
-        {}
-
-
-        Outcome:: ~Outcome() noexcept
-        {
-        }
-
+        
 
 
         namespace
@@ -218,7 +195,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             const Situation st = E.situation(C,L);
             if(Blocked==st)
-                return Outcome(Blocked,C,L,0);
+                return Outcome(Blocked,E,K,C,L,0);
 
 
             //------------------------------------------------------------------
@@ -275,7 +252,7 @@ namespace Yttrium
             const xreal_t denom = n;
             const xreal_t xi    = xadd.sum() / denom;
             std::cerr << "xi=" << double(xi) << "; C=" << C << "; aff="  << E.affinity(K, xadd, C, L).str() << std::endl;
-            return Outcome(st, C, L, xadd.sum()/denom);
+            return Outcome(st, E, K, C, L, xadd.sum()/denom);
         }
 
     }

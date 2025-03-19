@@ -26,11 +26,20 @@ namespace Yttrium
         //______________________________________________________________________
         typedef SuffixSet<const String,const Component> ComponentsDB;
 
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Situation of Components w.r.t Concentrations
+        //
+        //
+        //______________________________________________________________________
         enum Situation
         {
-            Running,
-            Blocked,
-            Crucial
+            Running, //!< all strictly positive
+            Blocked, //!< at least one zero concentration on EACH side
+            Crucial  //!< at least one zero concentratoon on ONE side
         };
 
 
@@ -53,12 +62,20 @@ namespace Yttrium
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Qualification of Components
+        //
+        //
+        //______________________________________________________________________
         enum ComponentsKind
         {
-            Deserted,
-            ReacOnly,
-            ProdOnly,
-            Standard
+            Deserted, //!< no actors
+            ReacOnly, //!< only reactant(s)
+            ProdOnly, //!< only product(s)
+            Standard  //!< both sides are populated
         };
 
         //______________________________________________________________________
@@ -135,7 +152,7 @@ namespace Yttrium
             //__________________________________________________________________
             const Actors         reac; //!< current reactants
             const Actors         prod; //!< current products
-            const ComponentsKind kind;
+            const ComponentsKind kind; //!< current kind
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Components);

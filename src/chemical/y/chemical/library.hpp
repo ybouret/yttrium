@@ -51,9 +51,11 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const          CallSign;       //!< "Library"
             typedef LibraryType::ConstIterator ConstIterator;  //!< alias
-            static const int PMIN = -10;
-            static const int PMAX =  1;
-            static xreal_t   Concentration(Random::Bits &) noexcept;
+            static const int                   PMIN = -10;     //!< Cmin = 10^PMIN
+            static const int                   PMAX =  1;      //!< Cmax = 10^PMAX
+            static xreal_t   Concentration(Random::Bits &) noexcept; //!< 10^ran(PMIN,PMAX)
+
+            //! fill array with random concentrations
             static void      Concentrations(XWritable    &,
                                             Random::Bits &,
                                             const real_t probaZero = 0) noexcept;
@@ -89,6 +91,7 @@ namespace Yttrium
             size_t         nextIndex() const noexcept;             //!< for species creation
             bool           owns(const Species &sp) const noexcept; //!< checkup
 
+            //! display associated TopLevel array
             template <typename ARRAY> inline
             std::ostream & show(std::ostream &os,
                                 const char *pfx,
@@ -109,7 +112,7 @@ namespace Yttrium
                 return os;
             }
 
-
+            //! display associated TopLevel proc(array)
             template <typename ARRAY, typename PROC> inline
             std::ostream & show(std::ostream &os,
                                 const char *pfx,

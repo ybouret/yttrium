@@ -28,7 +28,7 @@ namespace Yttrium
         //
         //
         //
-        // Mixing Weights And Stoichiometry
+        //! Mixing Weights And Stoichiometry
         //
         //
         //______________________________________________________________________

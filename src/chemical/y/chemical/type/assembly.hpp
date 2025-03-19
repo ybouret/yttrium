@@ -50,27 +50,6 @@ namespace Yttrium
                 return os;
             }
 
-            template <typename LIST, typename ARRAY> inline
-            void show(std::ostream &os,
-                      const char *  pfx,
-                      const LIST   &list,
-                      const char *  sfx,
-                      const Level   level,
-                      ARRAY        &array)
-            {
-
-                for(const typename LIST::NodeType *node=list.head;node;node=node->next)
-                {
-                    if(pfx) os << pfx;
-                    os << **node;
-                    os << sfx;
-                    pad(os,**node);
-                    os << " = ";
-                    os << (**node)(array,level);
-                    os << std::endl;
-                }
-            }
-
             //__________________________________________________________________
             //
             //
