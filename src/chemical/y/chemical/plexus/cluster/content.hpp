@@ -61,9 +61,11 @@ namespace Yttrium
             //__________________________________________________________________
             SubEList equilibria;   //!< list of equilibria, initial then expanded
             SubSList species;      //!< list of shared species among equilibria
-
+            Assembly sformat;      //!< format for species
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterContent);
+            void updateFmt() noexcept;
         };
 
 

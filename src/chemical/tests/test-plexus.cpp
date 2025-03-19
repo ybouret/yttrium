@@ -28,10 +28,10 @@ namespace Yttrium
 
             explicit Reactor(const Cluster &persistentCluster) :
             cluster(persistentCluster),
-            outList(),
+            running(),
             Ceq(cluster->equilibria->size,cluster->species->size)
             {
-                outList.proxy->reserve(Ceq.rows);
+                running.proxy->reserve(Ceq.rows);
             }
 
             virtual ~Reactor() noexcept
@@ -47,9 +47,14 @@ namespace Yttrium
                 return Sign::Of( (**rhs).ax, (**lhs).ax );
             }
 
+            xreal_t score(const XReadable &C,
+                          const Level      L);
+
+
             const Cluster & cluster;
-            Aftermath       aftermath;
-            OutList         outList;
+            Aftermath       solve1D;
+            XAdd            x_score;
+            OutList         running;
             XMatrix         Ceq;
 
         private:
@@ -59,60 +64,93 @@ namespace Yttrium
                 assert(Blocked!=out.st);
                 return Running == out.st;
             }
+
+            void initialize(XMLog &           xml,
+                            XWritable &       C0,
+                            const XReadable & K0);
+
         };
+
+
+        xreal_t Reactor:: score(const XReadable &C,
+                                const Level      L)
+        {
+            assert(running.size>0);
+            x_score.free();
+            for(const OutNode *node=running.head;node;node=node->next)
+            {
+                const xreal_t aff = (**node).affinity(solve1D.xadd,C,L);
+                x_score << Squared(aff);
+            }
+            const xreal_t numer = x_score.sum();
+            const xreal_t denom = running.size;
+            const xreal_t ratio = numer/denom;
+            return ratio.sqrt();
+        }
+
+        void Reactor:: initialize(XMLog &           xml,
+                                  XWritable &       C0,
+                                  const XReadable & K0)
+        {
+            size_t buildActive = 0;
+        BUILD_ACTIVE:
+            ++buildActive;
+            //Y_XML_COMMENT(xml,"build active cycle#" << buildActive);
+            Y_XML_SECTION_OPT(xml,"BuildActive", "cycle="<<buildActive);
+            {
+                running.free();
+                bool emergency = false;
+                for(const ENode *en=cluster->equilibria->head;en;en=en->next)
+                {
+                    const Components &eq  = **en;
+                    const xreal_t     eK  = eq(K0,TopLevel);
+                    XWritable        &cc  = cluster.gather(Ceq[running.size+1],C0);
+                    const Outcome     out = solve1D(eq,eK,cc,SubLevel,C0,TopLevel);
+                    switch(out.st)
+                    {
+                        case Blocked:
+                            Y_XMLOG(xml,out);
+                            continue;
+
+                        case Crucial:
+                            Y_XMLOG(xml,out);
+                            emergency = true;
+                            running << out;
+                            continue;
+
+                        case Running:
+                            if(emergency) continue; // discard in case or emergency
+                            Y_XMLOG(xml,out);
+                            running << out;
+                            continue;
+                    }
+                }
+                if(emergency)
+                {
+                    MergeSort::Call(running.removeIf(IsRunning),ByDecreasingAX);
+                    const Outcome &worst = **running.head;
+                    Y_XML_COMMENT(xml,"using crucial " << worst.eq.name);
+                    cluster.expand(C0,worst.cc);
+                    if(xml.verbose)
+                    {
+                        cluster.show(*xml << "C0=", TopLevel,"\t[", C0, "]", xreal_t::ToString) << std::endl;
+                    }
+                    goto BUILD_ACTIVE;
+                }
+            }
+            Y_XML_COMMENT(xml, "|active| = " << running.size << "/" << cluster->equilibria->size);
+
+
+        }
 
         void Reactor:: operator()(XMLog &           xml,
                                   XWritable &       C0,
                                   const XReadable & K0)
         {
             Y_XML_SECTION(xml, "Reactor");
+            initialize(xml,C0,K0);
 
-            {
-                size_t buildActive = 0;
-            BUILD_ACTIVE:
-                ++buildActive;
-                //Y_XML_COMMENT(xml,"build active cycle#" << buildActive);
-                Y_XML_SECTION_OPT(xml,"BuildActive", "cycle="<<buildActive);
-                {
-                    outList.free();
-                    bool emergency = false;
-                    for(const ENode *en=cluster->equilibria->head;en;en=en->next)
-                    {
-                        const Components &eq  = **en;
-                        const xreal_t     eK  = eq(K0,TopLevel);
-                        XWritable        &cc  = cluster.gather(Ceq[outList.size+1],C0);
-                        const Outcome     out = aftermath(eq,eK,cc,SubLevel,C0,TopLevel);
-                        switch(out.st)
-                        {
-                            case Blocked:
-                                Y_XMLOG(xml,out);
-                                continue;
 
-                            case Crucial:
-                                Y_XMLOG(xml,out);
-                                emergency = true;
-                                outList << out;
-                                continue;
-
-                            case Running:
-                                if(emergency) continue; // discard in case or emergency
-                                Y_XMLOG(xml,out);
-                                outList << out;
-                                continue;
-                        }
-                    }
-                    if(emergency)
-                    {
-                        outList.removeIf(IsRunning);assert(outList.size>0);
-                        MergeSort::Call(outList,ByDecreasingAX);
-                        const Outcome &out = **outList.head;
-                        Y_XML_COMMENT(xml,"using crucial " << out.eq.name);
-                        cluster.expand(C0,out.cc);
-                        goto BUILD_ACTIVE;
-                    }
-                    Y_XML_COMMENT(xml, "|active| = " << outList.size << "/" << cluster->equilibria->size);
-                }
-            }
 
         }
 

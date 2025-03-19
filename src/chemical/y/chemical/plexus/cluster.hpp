@@ -82,7 +82,51 @@ namespace Yttrium
                 return transfer(target,TopLevel,source,SubLevel);
             }
 
+            //! display associated array and level
+            template <typename ARRAY> inline
+            std::ostream & show(std::ostream &os,
+                                const Level  lvl,
+                                const char  *pfx,
+                                ARRAY       &arr,
+                                const char  *sfx) const
+            {
+                const ClusterContent &self = **this;
+                os << "{" << std::endl;
+                for(const SNode *it=self.species->head;it;it=it->next)
+                {
+                    if(pfx) os << pfx;
+                    const Species &sp = **it;
+                    os << sp.name;
+                    if(sfx) os << sfx;
+                    self.sformat.pad(os,sp) << " = " << sp(arr,lvl);
+                    os << std::endl;
+                }
+                os << "}";
+                return os;
+            }
 
+            template <typename ARRAY, typename PROC> inline
+            std::ostream & show(std::ostream &os,
+                                const Level  lvl,
+                                const char  *pfx,
+                                ARRAY       &arr,
+                                const char  *sfx,
+                                PROC        &proc) const
+            {
+                const ClusterContent &self = **this;
+                os << "{" << std::endl;
+                for(const SNode *it=self.species->head;it;it=it->next)
+                {
+                    if(pfx) os << pfx;
+                    const Species &sp = **it;
+                    os << sp.name;
+                    if(sfx) os << sfx;
+                    self.sformat.pad(os,sp) << " = " << proc(sp(arr,lvl));
+                    os << std::endl;
+                }
+                os << "}";
+                return os;
+            }
 
 
 

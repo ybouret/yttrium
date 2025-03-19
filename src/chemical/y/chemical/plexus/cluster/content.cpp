@@ -6,13 +6,20 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        ClusterContent:: ClusterContent(Equilibrium &first)  : Fragment(), equilibria(), species()
+        ClusterContent:: ClusterContent(Equilibrium &first)  :
+        Fragment(), equilibria(), species(), sformat()
         {
             attach(first);
         }
 
         ClusterContent:: ~ClusterContent() noexcept
         {
+        }
+
+        void ClusterContent:: updateFmt() noexcept
+        {
+            for(const SNode *sn=species->head;sn;sn=sn->next)
+                sformat.enroll(**sn);
         }
 
         void ClusterContent:: attach(Equilibrium &eq)
@@ -45,7 +52,7 @@ namespace Yttrium
                 }
             }
             enroll(eq);
-
+            updateFmt();
             assert(equilibria->size>0);
             assert(species->size>0);
         }
@@ -64,9 +71,8 @@ namespace Yttrium
             assert(         species->isStrictlySortedBy(SubSList::Compare));
 
             for(const ENode *en=equilibria->head;en;en=en->next)
-            {
                 enroll(**en);
-            }
+            updateFmt();
         }
 
 

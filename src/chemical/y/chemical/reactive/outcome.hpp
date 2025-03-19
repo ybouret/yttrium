@@ -48,6 +48,11 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const char * situation() const noexcept; //!< SituationText(st)
+            xreal_t      affinity(XAdd &xadd, const XReadable &C, const Level L) const
+            {
+                return eq.affinity(eK,xadd,C,L);
+            }
+
 
             //__________________________________________________________________
             //
