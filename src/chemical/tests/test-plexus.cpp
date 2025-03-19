@@ -29,7 +29,10 @@ namespace Yttrium
             explicit Reactor(const Cluster &persistentCluster) :
             cluster(persistentCluster),
             running(),
-            Ceq(cluster->equilibria->size,cluster->species->size)
+            Ceq(cluster->equilibria->size,cluster->species->size),
+            Cini(cluster->species->size),
+            Cend(cluster->species->size),
+            Ctry(cluster->species->size)
             {
                 running.proxy->reserve(Ceq.rows);
             }
@@ -51,11 +54,14 @@ namespace Yttrium
                           const Level      L);
 
 
-            const Cluster & cluster;
-            Aftermath       solve1D;
-            XAdd            x_score;
-            OutList         running;
-            XMatrix         Ceq;
+            const Cluster & cluster;  //!< persistent cluster
+            Aftermath       solve1D;  //!< computing 1D solution
+            XAdd            x_score;  //!< helper to compute score
+            OutList         running;  //!< running equilibria
+            XMatrix         Ceq;      //!< workspace to store 1D solution
+            XArray          Cini;     //!< initial state
+            XArray          Cend;     //!< final   state
+            XArray          Ctry;     //!< trial   state
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
@@ -139,8 +145,7 @@ namespace Yttrium
                 }
             }
             Y_XML_COMMENT(xml, "|active| = " << running.size << "/" << cluster->equilibria->size);
-
-
+            cluster.gather(Cini,C0);
         }
 
         void Reactor:: operator()(XMLog &           xml,
@@ -149,7 +154,12 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Reactor");
             initialize(xml,C0,K0);
+            if(running.size<=0) {
+                Y_XML_COMMENT(xml, "all blocked");
+                return;
+            }
 
+            std::cerr << "score: " << double(score(Cini,SubLevel)) << " / " << double(score(C0,TopLevel)) << std::endl;
 
 
         }
