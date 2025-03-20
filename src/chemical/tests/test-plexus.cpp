@@ -83,6 +83,7 @@ Y_UTEST(plexus)
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         Library::Concentrations(C0,ran,0.5);
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
         Reactor reactor(*cl);
         reactor(xml,C0,cls.K);
     }

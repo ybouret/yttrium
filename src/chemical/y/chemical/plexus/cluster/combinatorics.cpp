@@ -16,18 +16,8 @@ namespace Yttrium
       
        
 
-
-
-        ClusterCombinatorics:: ClusterCombinatorics(XMLog                         &xml,
-                                                    const ClusterContent::Pointer &ptr,
-                                                    Equilibria                    &eqs,
-                                                    XWritable                     &tlK) :
-        ClusterConservations(xml,ptr),
-        Nu(),
-        order(0)
+        void ClusterCombinatorics:: createCombinations(XMLog &xml, Equilibria &eqs, XWritable &tlK)
         {
-            Y_XML_SECTION(xml, "ClusterCombinatorics");
-
             //------------------------------------------------------------------
             //
             //
@@ -35,7 +25,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            assert(ptr->equilibria->size>0);
             CxxListOf<MixTab> mixes;
             ClusterContent &  content    = Coerce(**this);
             SubEList       &  equilibria = content.equilibria;
@@ -172,11 +161,11 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 MixedEquilibrium    *mixedEq = new MixedEquilibrium(wlist,
-                                                                   elist,
-                                                                   species,
-                                                                   mix->stoi,
-                                                                   eqs.nextIndex(),
-                                                                   tlK);
+                                                                    elist,
+                                                                    species,
+                                                                    mix->stoi,
+                                                                    eqs.nextIndex(),
+                                                                    tlK);
                 Equilibrium::Pointer mixed = mixedEq;
 
                 //--------------------------------------------------------------
@@ -202,34 +191,37 @@ namespace Yttrium
             {
                 Y_XML_COMMENT(xml, "|order[" << i << "]| = " << std::setw(3) << order[i].size);
             }
+        }
 
-            //------------------------------------------------------------------
-            //
-            //
-            // Finalize
-            //
-            //
-            //------------------------------------------------------------------
+        void ClusterCombinatorics:: makeGlobalTopology(XMLog &xml)
+        {
+            Y_XML_SECTION(xml,"makeGlobalTopology");
             {
                 iMatrix &topo = Coerce(Nu);
-                topo.make(equilibria->size,M);
-                for(ENode *en=equilibria->head;en;en=en->next)
+                const EList &equilibria = *((**this).equilibria);
+                topo.make(equilibria.size,M);
+                for(const ENode *en=equilibria.head;en;en=en->next)
                 {
-                    Equilibrium &eq = Coerce(**en);
-                    eq.fillTopology(eq(topo,SubLevel), SubLevel);
-#if 0
-                    switch( tierOf(eq) )
-                    {
-                        case Deserted: throw Specific::Exception("ClusterCombinatorics", "deserted '%s'", eq.key().c_str());
-                        case Nebulous: Coerce(nebulous) << eq; break;
-                        case ProdOnly: Coerce(prodOnly) << eq; break;
-                        case ReacOnly: Coerce(reacOnly) << eq; break;
-                        case Standard: Coerce(standard) << eq; break;
-                    }
-#endif
+                    const Equilibrium &eq = Coerce(**en);
+                    Writable<int>     &nu = eq(topo,SubLevel);
+                    eq.fillTopology(nu, SubLevel);
+                    Y_XMLOG(xml,nu << " // " << eq.name);
                 }
             }
-           // Y_XMLOG(xml, "Nu=" << Nu);
+        }
+
+        ClusterCombinatorics:: ClusterCombinatorics(XMLog                         &xml,
+                                                    const ClusterContent::Pointer &ptr,
+                                                    Equilibria                    &eqs,
+                                                    XWritable                     &tlK) :
+        ClusterConservations(xml,ptr),
+        Nu(),
+        order(0)
+        {
+            Y_XML_SECTION(xml, "ClusterCombinatorics");
+            assert(ptr->equilibria->size>0);
+            createCombinations(xml,eqs,tlK);
+            makeGlobalTopology(xml);
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

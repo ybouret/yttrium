@@ -54,7 +54,10 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);
-
+            void createCombinations(XMLog      &xml,
+                                    Equilibria &eqs,
+                                    XWritable  &tlK);
+            void makeGlobalTopology(XMLog &xml);
         };
 
     }

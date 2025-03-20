@@ -228,6 +228,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            Y_XML_COMMENT(xml, "Extract Basis");
             MergeSort::Call(running,ByIncreasingSC);
             const size_t dof = cluster.N;
             qFamily.clear();
@@ -256,7 +257,6 @@ namespace Yttrium
                     }
                     else {
                         Y_XMLOG(xml, "    " << **node);
-
                     }
                 }
             }
@@ -278,7 +278,10 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,"QueryRates");
             rate.forEach( & XAdd::free );
-            
+            for(const OutNode *node=running.head;node;node=node->next)
+            {
+                
+            }
 
         }
 
