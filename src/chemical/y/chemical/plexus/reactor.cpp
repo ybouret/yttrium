@@ -158,7 +158,7 @@ namespace Yttrium
 
         xreal_t Reactor:: ameliorate(XMLog &xml, const xreal_t S0)
         {
-            Y_XML_SECTION(xml, "Ameliorate");
+            Y_XML_SECTION_OPT(xml, "Ameliorate", "running=" << running.size);
 
 
             //------------------------------------------------------------------
@@ -275,13 +275,12 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Reactor");
             const xreal_t S0 = initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             const xreal_t Sx = ameliorate(xml,S0);
-            queryRates(xml,S0);
-
+            const xreal_t Sr = queryRates(xml,S0);
         }
 
 
 
-        void Reactor:: queryRates(XMLog &xml, const xreal_t S0)
+        xreal_t Reactor:: queryRates(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION(xml,"QueryRates");
 
@@ -289,7 +288,7 @@ namespace Yttrium
             rate.forEach( & XAdd::free );
             for(const OutNode *node=running.head;node;node=node->next)
             {
-                const Outcome       &out = **node;
+                const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
                 const Components    &eq  = out.eq;
                 const xreal_t       pxi  = out.xi;
                 const xreal_t       rxi  = -pxi;
@@ -297,10 +296,9 @@ namespace Yttrium
                 for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
             }
 
-            const xreal_t zero  = 0;
-
-            xreal_t rho  = 10;
-            bool    cut  = false;
+            const xreal_t zero = 0;
+            xreal_t       rho  = 10;
+            bool          cut  = false;
 
             for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
             {
@@ -314,7 +312,6 @@ namespace Yttrium
                     {
                         cut = true;
                         rho = fac;
-                        //std::cerr << "cutting rho=" << rho.str() << " for " << sp.name << std::endl;
                     }
                 }
                 if(xml.verbose)
@@ -352,63 +349,10 @@ namespace Yttrium
                 }
             }
 
-            const xreal_t Stry = optimize1D(S0);
-            Y_XMLOG(xml, "Stry=" << Stry.str() << " / S0=" << S0.str() );
+            const xreal_t Sr = optimize1D(S0);
+            Y_XMLOG(xml, "Sr=" << Sr.str() << " // S0=" << S0.str() );
 
-
-#if 0
-
-            // compute full step and clipping
-            const xreal_t zero  = 0;
-            xreal_t       rho   = 10;
-            bool          cut   = false;
-            for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
-            {
-                const Species &sp  = **sn;
-                XAdd &         acc = sp(rate,SubLevel);
-                const xreal_t  c0  = sp(Cini,SubLevel); assert(c0>=0.0);
-                xreal_t &      c1  = sp(Cend,SubLevel);
-                xreal_t &      dc  = sp(dC,  SubLevel);
-                c1 = (acc<<c0).sum(); // Cend = Cini + rate
-                dc = c1-c0;
-                if(dc<zero&&c1<zero)
-                {
-                    InSituMin(rho, (-c0)/dc);
-                    cut = true;
-                }
-                Y_XMLOG(xml, "[" << sp.name << "] : " << c0.str() << " -> " << c1.str() << " | delta= " << dc.str() << " | rho= " << rho.str());
-            }
-
-            if(cut)
-            {
-                bool ok = true;
-                do
-                {
-                    ok   = true;
-                    rho *= 0.95;
-                    for(size_t i=Cend.size();i>0;--i)
-                    {
-                        if( (Cend[i] = Cini[i] + rho * dC[i]) < zero ) ok=false;
-
-                    }
-                } while( !ok );
-                Y_XML_COMMENT(xml,"cut @" << rho.str());
-            }
-
-            {
-
-                OutputFile fp("rate.pro");
-                const size_t np=100;
-                for(size_t i=0;i<=np;++i)
-                {
-                    const real_t u = real_t(i)/np;
-                    const real_t f = real_t((*this)(u));
-                    fp("%.15g %.15g\n",u,f);
-                }
-            }
-
-
-#endif
+            return Sr;
         }
 
     }
