@@ -295,6 +295,63 @@ namespace Yttrium
                 for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
             }
 
+            const xreal_t zero  = 0;
+
+            xreal_t rho  = 10;
+            bool    cut  = false;
+
+            for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
+            {
+                const Species &sp  = **sn;
+                const xreal_t  c0  = sp(Cini,SubLevel); assert(c0>=0.0);
+                xreal_t &      dc  = sp(dC,  SubLevel) = sp(rate,SubLevel).sum();
+
+                if(dc<zero) {
+                    const xreal_t fac = (-c0)/dc;
+                    if(fac<=rho)
+                    {
+                        cut = true;
+                        rho = fac;
+                        //std::cerr << "cutting rho=" << rho.str() << " for " << sp.name << std::endl;
+                    }
+                }
+                if(xml.verbose)
+                {
+                    cluster->sformat.pad( xml() << "[" << sp.name << "]",sp)
+                    << " = "  << std::setw(24) << c0.str()
+                    << " + (" << std::setw(24) << c0.str() << ") * " << rho.str()
+                    << std::endl;
+                }
+            }
+
+            if(cut) rho *= 0.95;
+
+            {
+            EVAL_Cend:
+                for(size_t i=Cend.size();i>0;--i)
+                {
+                    if( (Cend[i] = Cini[i] + rho * dC[i]) < zero )
+                    {
+                        rho *= 0.95;
+                        goto EVAL_Cend;
+                    }
+                }
+            }
+
+            {
+
+                OutputFile fp("rate.pro");
+                const size_t np=100;
+                for(size_t i=0;i<=np;++i)
+                {
+                    const real_t u = real_t(i)/np;
+                    const real_t f = real_t((*this)(u));
+                    fp("%.15g %.15g\n",u,f);
+                }
+            }
+
+
+#if 0
 
             // compute full step and clipping
             const xreal_t zero  = 0;
@@ -347,7 +404,7 @@ namespace Yttrium
 
             const xreal_t Stry = optimize1D(S0);
             Y_XMLOG(xml, "Stry=" << Stry.str() << " / S0=" << S0.str() );
-
+#endif
         }
 
     }
