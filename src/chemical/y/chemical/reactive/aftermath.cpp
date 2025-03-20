@@ -174,7 +174,7 @@ namespace Yttrium
             root(F,xi,ff);
             //std::cerr << real_t(ff.c) << " @" << real_t(xi.c) << std::endl;
             const xreal_t x = xi.c;
-            E.moveSafely(C,L,xi.c);
+            E.safeMove(C,L,xi.c);
             return xi.c;
 
         }

@@ -6,14 +6,14 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        
         const char * const Actors:: CallSign = "Actors";
-
-
+        
+        
         Actors:: ~Actors() noexcept
         {
         }
-
+        
         Actors:: Actors(const Actor::Involvement how) :
         Entity( new String() ),
         in(how),
@@ -22,12 +22,12 @@ namespace Yttrium
         kxp(1)
         {
         }
-
         
-
-
+        
+        
+        
         Y_PROXY_IMPL(Actors,my)
-
+        
         bool Actors:: has(const Species &sp) const noexcept
         {
             for(const Actor *a=my.head;a;a=a->next)
@@ -36,13 +36,13 @@ namespace Yttrium
             }
             return false;
         }
-
+        
         const Actor & Actors:: operator()(const unsigned nu, const Species &sp)
         {
             if(latched) throw Specific::Exception(CallSign,"latched while adding '%s'", sp.name->c_str());
             if(has(sp)) throw Specific::Exception(CallSign,"multiple species '%s'", sp.name->c_str());
             Actor * const actor = my.pushTail( new Actor(nu,sp,in) );
-
+            
             try {
                 String id = *name;
                 if(my.size>1)
@@ -61,33 +61,33 @@ namespace Yttrium
                 delete my.pop(actor);
                 throw;
             }
-
+            
             Coerce(sum) += nu;
             Coerce(kxp)  = 1.0 / sum;
             return *actor;
         }
-
-
+        
+        
         void Actors:: Exchange(Actors &lhs, Actors &rhs)  noexcept
         {
             assert(lhs.in==rhs.in);
             Coerce(*lhs.name).swapWith(Coerce(*rhs.name));
             lhs.my.swapWith(rhs.my);
         }
-
-
+        
+        
         void Actors:: activity(XMul &X, const XReadable &C, const Level L) const
         {
             for(const Actor *a=my.head;a;a=a->next) a->activity(X,C,L);
         }
-
-
+        
+        
         void Actors:: activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
         {
             for(const Actor *a=my.head;a;a=a->next) a->activity(X,C,L,xi);
         }
-
-
+        
+        
         bool Actors:: critical(const XReadable &C, const Level L) const noexcept
         {
             for(const Actor *a=my.head;a;a=a->next)
@@ -96,7 +96,7 @@ namespace Yttrium
             }
             return false;
         }
-
+        
         xreal_t Actors:: limiting(const XReadable &C, const Level L) const noexcept
         {
             assert(my.size>0);
@@ -106,16 +106,14 @@ namespace Yttrium
                 InSituMin(xi,ac->limiting(C,L) );
             return xi;
         }
-
         
-
-        void Actors:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        
+        
+        void Actors:: safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
         {
-            for(const Actor *a=my.head;a;a=a->next) a->moveSafely(C,L,xi);
-
+            for(const Actor *a=my.head;a;a=a->next) a->safeMove(C,L,xi);
         }
-
-
+        
     }
 
 }

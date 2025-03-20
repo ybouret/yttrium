@@ -201,10 +201,10 @@ namespace Yttrium
             return lhs-rhs;
         }
 
-        void Components:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        void Components:: safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
         {
-            prod.moveSafely(C,L,xi);
-            reac.moveSafely(C,L,-xi);
+            prod.safeMove(C,L,xi);
+            reac.safeMove(C,L,-xi);
         }
 
 
@@ -284,6 +284,13 @@ namespace Yttrium
             const xreal_t xi    = xadd.sum() / denom;
             return xi;
         };
+
+
+        bool Components:: critical(const XReadable &C, const Level L) const noexcept
+        {
+            return reac.critical(C,L) || prod.critical(C,L);
+        }
+
 
     }
 

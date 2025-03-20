@@ -149,8 +149,11 @@ namespace Yttrium
             //! current situation
             Situation situation(const XReadable &C, const Level L) const noexcept;
 
+            //! cricitical concentration for reac or prod
+            bool      critical(const XReadable &C, const Level L) const noexcept;
+
             //! move with forced clipping
-            void      moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept;
+            void      safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;
 
             //! gather affinity with given constant
             xreal_t   affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;

@@ -85,7 +85,7 @@ namespace Yttrium
             return sp(C,L) / xn;
         }
 
-        void Actor:: moveSafely(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        void Actor:: safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
         {
             assert(sp(C,L)>=0.0);
             const xreal_t zero;
