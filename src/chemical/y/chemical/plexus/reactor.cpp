@@ -20,6 +20,7 @@ namespace Yttrium
         Cini(cluster->species->size),
         Cend(cluster->species->size),
         Ctry(cluster->species->size),
+        dC(cluster->species->size),
         qMetrics(cluster->species->size),
         qVCache( new QVector::Cache(qMetrics) ),
         qFamily( qVCache ),
@@ -281,6 +282,8 @@ namespace Yttrium
         void Reactor:: queryRates(XMLog &xml)
         {
             Y_XML_SECTION(xml,"QueryRates");
+
+            // accumulate virtual rates
             rate.forEach( & XAdd::free );
             for(const OutNode *node=running.head;node;node=node->next)
             {
@@ -291,7 +294,22 @@ namespace Yttrium
                 for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rxi,a->nu);
                 for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
             }
-            std::cerr << "rate=" << rate << std::endl;
+
+
+            // compute full step and clipping
+            xreal_t ratio = 1;
+            for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
+            {
+                const Species &sp  = **sn;
+                XAdd &         acc = sp(rate,SubLevel);
+                const xreal_t  c0  = sp(Cini,SubLevel); assert(c0>=0.0);
+                xreal_t &      c1  = sp(Cend,SubLevel);
+                xreal_t &      dc  = sp(dC,  SubLevel);
+                c1 = (acc<<c0).sum(); // Cend = Cini + rate
+                dc = c1-c0;
+                Y_XMLOG(xml, "[" << sp.name << "] : " << c0.str() << " -> " << c1.str() << " / delta =" << dc.str());
+            }
+
         }
 
     }

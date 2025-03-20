@@ -75,6 +75,7 @@ namespace Yttrium
             XArray          Cini;     //!< initial state
             XArray          Cend;     //!< final   state
             XArray          Ctry;     //!< trial   state
+            XArray          dC;       //!< trial    deltaC
             const QMetrics  qMetrics; //!< |species|
             QVCache         qVCache;  //!< for vectors
             QFamily         qFamily;  //!< for building basis
