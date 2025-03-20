@@ -87,9 +87,9 @@ namespace Yttrium
             static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
             static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
-            void            initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
-            xreal_t         ameliorate(XMLog &xml);
-            void            queryRates(XMLog &xml,const xreal_t S0);
+            xreal_t         initialize(XMLog &xml, XWritable &C0, const XReadable &K0);
+            xreal_t         ameliorate(XMLog &xml, const xreal_t S0);
+            void            queryRates(XMLog &xml, const xreal_t S0);
             real_t          optimize1D(const xreal_t Sini);        //!< with Sini @Cini and loaded Cend
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
 

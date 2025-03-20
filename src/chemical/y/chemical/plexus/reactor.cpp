@@ -90,9 +90,9 @@ namespace Yttrium
 
 
 
-        void Reactor:: initialize(XMLog &           xml,
-                                  XWritable &       C0,
-                                  const XReadable & K0)
+        xreal_t Reactor:: initialize(XMLog &           xml,
+                                     XWritable &       C0,
+                                     const XReadable & K0)
         {
             size_t cycle = 0;
         CYCLE:
@@ -139,8 +139,10 @@ namespace Yttrium
                     goto CYCLE;
                 }
             }
+            const xreal_t S0 = score( cluster.gather(Cini,C0),SubLevel);
             Y_XML_COMMENT(xml, "|active| = " << running.size << "/" << cluster->equilibria->size);
-            cluster.gather(Cini,C0);
+            Y_XMLOG(xml, "S0 = " << S0.str() );
+            return S0;
         }
 
         real_t Reactor:: optimize1D(const xreal_t Sini)
@@ -154,12 +156,10 @@ namespace Yttrium
         }
 
 
-        xreal_t Reactor:: ameliorate(XMLog &xml)
+        xreal_t Reactor:: ameliorate(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION(xml, "Ameliorate");
 
-            const xreal_t S0 = score(Cini,SubLevel);
-            Y_XMLOG(xml, "S0=" << S0.str());
 
             //------------------------------------------------------------------
             //
@@ -168,6 +168,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
+            xreal_t Sx = S0;
             for(OutNode *node=running.head;node;node=node->next)
             {
                 Outcome &out = **node;
@@ -208,6 +209,7 @@ namespace Yttrium
                     out.ax = out.xi.abs();
                     out.sc = Stry;
                     Y_XMLOG(xml,"[*] " << out);
+                    InSituMin(Sx,Stry);
                 }
                 else
                 {
@@ -229,7 +231,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XML_COMMENT(xml, "Extract Basis");
+           // Y_XML_COMMENT(xml, "Extract Basis");
             MergeSort::Call(running,ByIncreasingSC);
             const size_t dof = cluster.N;
             qFamily.clear();
@@ -249,7 +251,7 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                Y_XML_COMMENT(xml, "Snapshot");
+                Y_XML_COMMENT(xml, "Basis and Dependents");
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
                     const Equilibrium &eq = (**node).eq;
@@ -262,8 +264,8 @@ namespace Yttrium
                 }
             }
 
-
-            return S0;
+            Y_XMLOG(xml, "Sx = " << Sx.str() << " // S0=" << S0.str() );
+            return Sx;
         }
 
         void Reactor:: operator()(XMLog &           xml,
@@ -271,8 +273,8 @@ namespace Yttrium
                                   const XReadable & K0)
         {
             Y_XML_SECTION(xml, "Reactor");
-            initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
-            const xreal_t S0 = ameliorate(xml);
+            const xreal_t S0 = initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
+            const xreal_t Sx = ameliorate(xml,S0);
             queryRates(xml,S0);
 
         }
@@ -319,12 +321,12 @@ namespace Yttrium
                 {
                     cluster->sformat.pad( xml() << "[" << sp.name << "]",sp)
                     << " = "  << std::setw(24) << c0.str()
-                    << " + (" << std::setw(24) << c0.str() << ") * " << rho.str()
+                    << " + (" << std::setw(24) << dc.str() << ") * " << rho.str()
                     << std::endl;
                 }
             }
 
-            if(cut) rho *= 0.95;
+            if(cut) rho *= 0.99;
 
             {
             EVAL_Cend:
@@ -332,7 +334,7 @@ namespace Yttrium
                 {
                     if( (Cend[i] = Cini[i] + rho * dC[i]) < zero )
                     {
-                        rho *= 0.95;
+                        rho *= 0.99;
                         goto EVAL_Cend;
                     }
                 }
@@ -349,6 +351,9 @@ namespace Yttrium
                     fp("%.15g %.15g\n",u,f);
                 }
             }
+
+            const xreal_t Stry = optimize1D(S0);
+            Y_XMLOG(xml, "Stry=" << Stry.str() << " / S0=" << S0.str() );
 
 
 #if 0
@@ -402,8 +407,7 @@ namespace Yttrium
                 }
             }
 
-            const xreal_t Stry = optimize1D(S0);
-            Y_XMLOG(xml, "Stry=" << Stry.str() << " / S0=" << S0.str() );
+
 #endif
         }
 
