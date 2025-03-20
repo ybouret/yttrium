@@ -298,7 +298,7 @@ namespace Yttrium
 
             // compute full step and clipping
             const xreal_t zero  = 0;
-            xreal_t       rho   = 1;
+            xreal_t       rho   = 10;
             bool          cut   = false;
             for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
             {
