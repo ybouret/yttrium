@@ -154,7 +154,7 @@ namespace Yttrium
         }
 
 
-        void Reactor:: ameliorate(XMLog &xml)
+        xreal_t Reactor:: ameliorate(XMLog &xml)
         {
             Y_XML_SECTION(xml, "Ameliorate");
 
@@ -263,7 +263,7 @@ namespace Yttrium
             }
 
 
-
+            return S0;
         }
 
         void Reactor:: operator()(XMLog &           xml,
@@ -272,14 +272,14 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Reactor");
             initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
-            ameliorate(xml);
-            queryRates(xml);
+            const xreal_t S0 = ameliorate(xml);
+            queryRates(xml,S0);
 
         }
 
 
 
-        void Reactor:: queryRates(XMLog &xml)
+        void Reactor:: queryRates(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION(xml,"QueryRates");
 
@@ -297,7 +297,9 @@ namespace Yttrium
 
 
             // compute full step and clipping
-            xreal_t ratio = 1;
+            const xreal_t zero  = 0;
+            xreal_t       rho   = 1;
+            bool          cut   = false;
             for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
             {
                 const Species &sp  = **sn;
@@ -307,8 +309,44 @@ namespace Yttrium
                 xreal_t &      dc  = sp(dC,  SubLevel);
                 c1 = (acc<<c0).sum(); // Cend = Cini + rate
                 dc = c1-c0;
-                Y_XMLOG(xml, "[" << sp.name << "] : " << c0.str() << " -> " << c1.str() << " / delta =" << dc.str());
+                if(dc<zero&&c1<zero)
+                {
+                    InSituMin(rho, (-c0)/dc);
+                    cut = true;
+                }
+                Y_XMLOG(xml, "[" << sp.name << "] : " << c0.str() << " -> " << c1.str() << " | delta= " << dc.str() << " | rho= " << rho.str());
             }
+
+            if(cut)
+            {
+                bool ok = true;
+                do
+                {
+                    ok   = true;
+                    rho *= 0.95;
+                    for(size_t i=Cend.size();i>0;--i)
+                    {
+                        if( (Cend[i] = Cini[i] + rho * dC[i]) < zero ) ok=false;
+
+                    }
+                } while( !ok );
+                Y_XML_COMMENT(xml,"cut @" << rho.str());
+            }
+
+            {
+
+                OutputFile fp("rate.pro");
+                const size_t np=100;
+                for(size_t i=0;i<=np;++i)
+                {
+                    const real_t u = real_t(i)/np;
+                    const real_t f = real_t((*this)(u));
+                    fp("%.15g %.15g\n",u,f);
+                }
+            }
+
+            const xreal_t Stry = optimize1D(S0);
+            Y_XMLOG(xml, "Stry=" << Stry.str() << " / S0=" << S0.str() );
 
         }
 
