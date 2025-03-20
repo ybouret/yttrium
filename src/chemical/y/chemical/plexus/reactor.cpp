@@ -261,6 +261,8 @@ namespace Yttrium
                 }
             }
 
+
+
         }
 
         void Reactor:: operator()(XMLog &           xml,
@@ -270,6 +272,8 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Reactor");
             initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             ameliorate(xml);
+            queryRates(xml);
+
         }
 
 
@@ -280,9 +284,14 @@ namespace Yttrium
             rate.forEach( & XAdd::free );
             for(const OutNode *node=running.head;node;node=node->next)
             {
-                
+                const Outcome       &out = **node;
+                const Components    &eq  = out.eq;
+                const xreal_t       pxi  = out.xi;
+                const xreal_t       rxi  = -pxi;
+                for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rxi,a->nu);
+                for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
             }
-
+            std::cerr << "rate=" << rate << std::endl;
         }
 
     }

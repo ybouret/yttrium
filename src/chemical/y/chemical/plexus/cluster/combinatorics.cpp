@@ -193,7 +193,7 @@ namespace Yttrium
             }
         }
 
-        void ClusterCombinatorics:: makeGlobalTopology(XMLog &xml)
+        void ClusterCombinatorics:: setClusterTopology(XMLog &xml)
         {
             Y_XML_SECTION(xml,"makeGlobalTopology");
             {
@@ -221,7 +221,7 @@ namespace Yttrium
             Y_XML_SECTION(xml, "ClusterCombinatorics");
             assert(ptr->equilibria->size>0);
             createCombinations(xml,eqs,tlK);
-            makeGlobalTopology(xml);
+            setClusterTopology(xml);
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

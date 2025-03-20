@@ -57,7 +57,8 @@ namespace Yttrium
             void createCombinations(XMLog      &xml,
                                     Equilibria &eqs,
                                     XWritable  &tlK);
-            void makeGlobalTopology(XMLog &xml);
+            void setClusterTopology(XMLog &xml);
+
         };
 
     }
