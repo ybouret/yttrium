@@ -92,7 +92,7 @@ namespace Yttrium
             xreal_t         queryRates(XMLog &xml, const xreal_t S0);
             real_t          optimize1D(const xreal_t Sini);        //!< with Sini @Cini and loaded Cend
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
-
+            void            saveCurrentProfile(const String &, const size_t);    //!< save Cini->Cend, change Ctry!!
 
         };
 

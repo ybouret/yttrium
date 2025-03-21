@@ -156,6 +156,17 @@ namespace Yttrium
         }
 
 
+        void Reactor:: saveCurrentProfile(const String &fn, const size_t np)
+        {
+            OutputFile fp(fn);
+            for(size_t i=0;i<=np;++i)
+            {
+                const real_t u = real_t(i)/np;
+                const real_t f = real_t((*this)(u));
+                fp("%.15g %.15g\n",u,f);
+            }
+        }
+
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml, "Ameliorate", "running=" << running.size);
@@ -180,16 +191,9 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 cluster.transfer(Cend,SubLevel,out.cc, out.lv);
 
-                if(false)
+                if(true)
                 {
-                    OutputFile fp(*out.eq.name+".pro");
-                    const size_t np=100;
-                    for(size_t i=0;i<=np;++i)
-                    {
-                        const real_t u = real_t(i)/np;
-                        const real_t f = real_t((*this)(u));
-                        fp("%.15g %.15g\n",u,f);
-                    }
+                    saveCurrentProfile(*out.eq.name+".pro", 100);
                 }
 
                 //--------------------------------------------------------------
@@ -263,6 +267,7 @@ namespace Yttrium
                     }
                 }
             }
+
 
             Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
             return Sn;
@@ -338,15 +343,7 @@ namespace Yttrium
             }
 
             {
-
-                OutputFile fp("rate.pro");
-                const size_t np=100;
-                for(size_t i=0;i<=np;++i)
-                {
-                    const real_t u = real_t(i)/np;
-                    const real_t f = real_t((*this)(u));
-                    fp("%.15g %.15g\n",u,f);
-                }
+                saveCurrentProfile("rate.pro",1000);
             }
 
             const xreal_t Sr = optimize1D(S0);
