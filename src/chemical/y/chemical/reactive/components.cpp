@@ -292,6 +292,32 @@ namespace Yttrium
         }
 
 
+        xreal_t Components:: jacobian(XWritable &xjac, const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const
+        {
+            assert(!reac.critical(C,L));
+            assert(!prod.critical(C,L));
+            xadd.free();
+            xadd << K.log();
+            for(const Actor *ac=reac->head;ac;ac=ac->next)
+            {
+                const size_t  j = ac->sp.indx[L];
+                const xreal_t c = C[j];
+                const xreal_t l = c.log();
+                xadd.insert(l,ac->nu);
+            }
+
+
+            for(const Actor *ac=prod->head;ac;ac=ac->next)
+            {
+                const size_t  j = ac->sp.indx[L];
+                const xreal_t c = C[j];
+                const xreal_t l = -c.log();
+                xadd.insert(l,ac->nu);
+            }
+            return xadd.sum();
+        }
+
+
     }
 
 }

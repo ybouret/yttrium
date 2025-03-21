@@ -23,7 +23,8 @@ namespace Yttrium
         qMetrics(cluster->species->size),
         qVCache( new QVector::Cache(qMetrics) ),
         qFamily( qVCache ),
-        rate(cluster->species->size)
+        rate(cluster->species->size),
+        tracing(4,AsCapacity)
         {
             running.proxy->reserve(Ceq.rows);
         }
@@ -100,6 +101,8 @@ namespace Yttrium
             const xreal_t S0 = getRunning(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             const xreal_t Sn = narrowDown(xml,S0);
             const xreal_t Sr = queryRates(xml,S0);
+            const xreal_t Sx = generateNR(xml,S0,K0);
+
 
             if(Trace) emitGnuPlotTracing(std::cerr);
         }

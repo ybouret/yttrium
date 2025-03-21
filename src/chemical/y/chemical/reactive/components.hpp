@@ -165,6 +165,11 @@ namespace Yttrium
                              const XReadable &source,
                              const Level      sourceLevel) const;
 
+
+            //! compute jacobian and return affinity, assuming zeroed array initially
+            xreal_t jacobian(XWritable &xjac, const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
+
+
             //__________________________________________________________________
             //
             //
