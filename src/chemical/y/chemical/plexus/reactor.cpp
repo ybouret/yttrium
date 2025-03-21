@@ -156,7 +156,7 @@ namespace Yttrium
         }
 
 
-        xreal_t Reactor:: ameliorate(XMLog &xml, const xreal_t S0)
+        xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml, "Ameliorate", "running=" << running.size);
 
@@ -168,7 +168,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            xreal_t Sx = S0;
+            xreal_t Sn = S0;
             for(OutNode *node=running.head;node;node=node->next)
             {
                 Outcome &out = **node;
@@ -209,7 +209,7 @@ namespace Yttrium
                     out.ax = out.xi.abs();
                     out.sc = Stry;
                     Y_XMLOG(xml,"[*] " << out);
-                    InSituMin(Sx,Stry);
+                    InSituMin(Sn,Stry);
                 }
                 else
                 {
@@ -264,8 +264,8 @@ namespace Yttrium
                 }
             }
 
-            Y_XMLOG(xml, "Sx = " << Sx.str() << " // S0=" << S0.str() );
-            return Sx;
+            Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
+            return Sn;
         }
 
         void Reactor:: operator()(XMLog &           xml,
@@ -274,7 +274,7 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml, "Reactor");
             const xreal_t S0 = initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
-            const xreal_t Sx = ameliorate(xml,S0);
+            const xreal_t Sn = narrowDown(xml,S0);
             const xreal_t Sr = queryRates(xml,S0);
         }
 
