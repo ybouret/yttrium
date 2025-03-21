@@ -101,6 +101,9 @@ namespace Yttrium
 
             real_t          optimize1D(const xreal_t Sini);        //!< with Sini @Cini and loaded Cend
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
+
+            void            increaseRates(const xreal_t x, const Components &eq);
+
             void            saveCurrentProfile(const String &, const size_t);    //!< save Cini->Cend, change Ctry!!
             void            eraseOlderProfiles() noexcept;
             static void     EmitGnuPlotTracing(std::ostream &os, const String &baseName);

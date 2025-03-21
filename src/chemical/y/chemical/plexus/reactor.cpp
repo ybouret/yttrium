@@ -108,6 +108,13 @@ namespace Yttrium
         }
 
 
+        void Reactor:: increaseRates(const xreal_t px, const Components &eq)
+        {
+            for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(px,a->nu);
+            const xreal_t rx = -px;
+            for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rx,a->nu);
+
+        }
 
       
 

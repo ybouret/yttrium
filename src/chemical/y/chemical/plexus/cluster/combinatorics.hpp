@@ -48,8 +48,9 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
-            const iMatrix Nu;         //!< full topology
-            const ELists  order;     //!< equilibria ranked by order
+            const iMatrix iNu;      //!< full topology, integer
+            const XMatrix xNu;      //!< full topology, xreal_t
+            const ELists  order;    //!< equilibria ranked by order
 
 
         private:

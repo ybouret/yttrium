@@ -10,19 +10,27 @@ namespace Yttrium
             static const char fn[] = "QueryRates";
             Y_XML_SECTION(xml,fn);
 
+            //------------------------------------------------------------------
+            //
+            //
             // accumulate virtual rates
+            //
+            //
+            //------------------------------------------------------------------
             rate.forEach( & XAdd::free );
             for(const OutNode *node=running.head;node;node=node->next)
             {
                 const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
-                const Components    &eq  = out.eq;
-                const xreal_t       pxi  = out.xi;
-                const xreal_t       rxi  = -pxi;
-                for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rxi,a->nu);
-                for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
+                increaseRates(out.xi,out.eq);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
             // construct increment
+            //
+            //
+            //------------------------------------------------------------------
             const xreal_t zero = 0;
             xreal_t       rho  = 10;
             bool          cut  = false;

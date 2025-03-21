@@ -48,8 +48,8 @@ namespace Yttrium
                     size_t j=1;
                     for(const ENode *en=basis.head;en;en=en->next,++j)
                     {
-                        const Equilibrium   &eq = **en;
-                        const Readable<int> &nu = eq(cluster.Nu,SubLevel);
+                        const Equilibrium  &eq = **en;
+                        const XReadable    &nu = eq(cluster.xNu,SubLevel);
                         jac[j] = x_score.dot(phi,nu);
                     }
                 }
@@ -66,6 +66,17 @@ namespace Yttrium
 
             lu.solve(J,xi);
             std::cerr << "xi=" << xi << std::endl;
+
+
+            // compute dC as rates
+            rate.forEach( & XAdd::free );
+            {
+                size_t i=1;
+                for(const ENode *en=basis.head;en;en=en->next,++i)
+                    increaseRates(xi[i],**en);
+            }
+
+            std::cerr << "rate=" << rate << std::endl;
 
 
 

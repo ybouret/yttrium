@@ -78,7 +78,7 @@ namespace Yttrium
             for(const OutNode *node=running.head;node;node=node->next)
             {
                 const Equilibrium   &eq = (**node).eq;
-                const Readable<int> &nu = eq(cluster.Nu,SubLevel);
+                const Readable<int> &nu = eq(cluster.iNu,SubLevel);
                 if(qFamily.welcomes(nu))
                 {
                     (void) qFamily.increase();

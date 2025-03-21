@@ -197,14 +197,17 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,"makeGlobalTopology");
             {
-                iMatrix &topo = Coerce(Nu);
+                iMatrix &topo = Coerce(iNu);
+                XMatrix &topx = Coerce(xNu);
                 const EList &equilibria = *((**this).equilibria);
                 topo.make(equilibria.size,M);
+                topx.make(equilibria.size,M);
                 for(const ENode *en=equilibria.head;en;en=en->next)
                 {
                     const Equilibrium &eq = Coerce(**en);
                     Writable<int>     &nu = eq(topo,SubLevel);
                     eq.fillTopology(nu, SubLevel);
+                    eq.fillTopology(eq(topx,SubLevel), SubLevel);
                     Y_XMLOG(xml,nu << " // " << eq.name);
                 }
             }
@@ -215,7 +218,8 @@ namespace Yttrium
                                                     Equilibria                    &eqs,
                                                     XWritable                     &tlK) :
         ClusterConservations(xml,ptr),
-        Nu(),
+        iNu(),
+        xNu(),
         order(0)
         {
             Y_XML_SECTION(xml, "ClusterCombinatorics");
