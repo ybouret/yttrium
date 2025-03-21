@@ -9,10 +9,10 @@ namespace Yttrium
 
         using namespace MKL;
 
+        const char * const Reactor:: GenerateNR = "GenerateNR";
 
         xreal_t Reactor:: generateNR(XMLog &xml, const xreal_t S0, const XReadable & K0)
         {
-            static const char fn[] = "GenerateNR";
 
             //__________________________________________________________________
             //
@@ -21,7 +21,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             const size_t      n = basis.size;
-            Y_XML_SECTION_OPT(xml, fn, "|basis|=" << n);
+            Y_XML_SECTION_OPT(xml, GenerateNR, "|basis|=" << n);
 
             if(n<=0) {
                 Y_XML_COMMENT(xml, "empty basis");
@@ -70,7 +70,6 @@ namespace Yttrium
                     }
                 }
             }
-            std::cerr << "J=" << J << std::endl;
 
             //__________________________________________________________________
             //
@@ -92,9 +91,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             lu.solve(J,xi);
-            std::cerr << "xi=" << xi << std::endl;
-
-
+            
             //__________________________________________________________________
             //
             //

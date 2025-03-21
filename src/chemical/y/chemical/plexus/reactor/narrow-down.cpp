@@ -4,10 +4,12 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Reactor:: NarrowDown = "NarrowDown";
+
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
-            static const char fn[] = "NarrowDown";
-            Y_XML_SECTION_OPT(xml,fn, "running=" << running.size);
+            Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
 
 
             //------------------------------------------------------------------
@@ -104,7 +106,7 @@ namespace Yttrium
                 }
             }
 
-            Y_XML_COMMENT(xml, fn << " result");
+            Y_XML_COMMENT(xml, NarrowDown << " result");
             Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
             return Sn;
         }

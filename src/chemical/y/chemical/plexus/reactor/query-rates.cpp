@@ -5,10 +5,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        const char * const Reactor:: QueryRates = "QueryRates";
+
         xreal_t Reactor:: queryRates(XMLog &xml, const xreal_t S0)
         {
-            static const char fn[] = "QueryRates";
-            Y_XML_SECTION(xml,fn);
+            Y_XML_SECTION(xml,QueryRates);
 
             //------------------------------------------------------------------
             //

@@ -46,7 +46,11 @@ namespace Yttrium
         public:
             static const char * const ProfileExt; //!< "pro"
             static bool               Trace;      //!< default to false
-
+            static const char * const GetRunning; //!< "GetRunning"
+            static const char * const NarrowDown; //!< "NarrowDown"
+            static const char * const QueryRates; //!< "QueryRates"
+            static const char * const GenerateNR; //!< "GenerateNR"
+            
             //__________________________________________________________________
             //
             //
@@ -82,6 +86,7 @@ namespace Yttrium
             XArray          Cend;      //!< final   state
             XArray          Ctry;      //!< trial   state
             XArray          dC;        //!< trial    deltaC
+            XArray          Cwin;      //!< store wining state
             const QMetrics  qMetrics;  //!< |species|
             QVCache         qVCache;   //!< for vectors
             QFamily         qFamily;   //!< for building basis
@@ -94,11 +99,16 @@ namespace Yttrium
             static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
             static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
+
             //! RMS of running affinities
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
 
+            //! make best effort to decrease
+            xreal_t         bestEffort(XMLog &xml, XWritable &C0, const XReadable &K0);
+
             //! evaluate running after removing crucial
             xreal_t         getRunning(XMLog &xml, XWritable &C0, const XReadable &K0);
+
 
             //! narrow down running extents to optized score
             xreal_t         narrowDown(XMLog &xml, const xreal_t S0);
@@ -120,7 +130,12 @@ namespace Yttrium
 
             //! rates + x * Nu_eq
             void            increaseRates(const xreal_t x, const Components &eq);
-
+            void            finalize(XMLog &xml, XWritable &C0);
+            bool            converged(XMLog &            xml,
+                                      const xreal_t      Stry,
+                                      const char * const Mtry,
+                                      xreal_t      &     Swin,
+                                      const char * &     Mwin);
 
             void            saveCurrentProfile(const String &, const size_t);             //!< save Cini->Cend, change Ctry!!
             void            eraseOlderProfiles() noexcept;                                //!< remove .pro

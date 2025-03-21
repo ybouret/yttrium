@@ -4,6 +4,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        const char * const Reactor:: GetRunning = "GetRunning";
+
         xreal_t Reactor:: getRunning(XMLog &           xml,
                                      XWritable &       C0,
                                      const XReadable & K0)
@@ -11,7 +14,7 @@ namespace Yttrium
             size_t cycle = 0;
         CYCLE:
             ++cycle;
-            Y_XML_SECTION_OPT(xml,"GetRunning", "cycle="<<cycle);
+            Y_XML_SECTION_OPT(xml,GetRunning, "cycle="<<cycle);
             {
                 running.free();
                 bool emergency = false;
