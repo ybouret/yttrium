@@ -30,8 +30,8 @@ namespace Yttrium
         typedef Apex::Ortho::VCache           QVCache;  //!< alias
         typedef Apex::Ortho::Metrics          QMetrics; //!< alias
 
-        typedef CxxArray<XAdd,MemoryModel>    Summator;
-        typedef Vector<String,Memory::Pooled> Strings;
+        typedef CxxArray<XAdd,MemoryModel>    Summator; //!< alias
+        typedef Vector<String,Memory::Pooled> Strings;  //!< alias
 
         //______________________________________________________________________
         //
@@ -44,7 +44,7 @@ namespace Yttrium
         class Reactor
         {
         public:
-            static const char * const ProfileExt; //! "pro"
+            static const char * const ProfileExt; //!< "pro"
             static bool               Trace;      //!< default to false
 
             //__________________________________________________________________
@@ -94,20 +94,38 @@ namespace Yttrium
             static SignType ByDecreasingAX(const OutNode * const lhs, const OutNode * const rhs) noexcept;
             static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
-            xreal_t         getRunning(XMLog &xml, XWritable &C0, const XReadable &K0);
-            xreal_t         narrowDown(XMLog &xml, const xreal_t S0);
-            xreal_t         queryRates(XMLog &xml, const xreal_t S0);
-            xreal_t         generateNR(XMLog &xml, const xreal_t S0, const XReadable & K0);
-
-            real_t          optimize1D(const xreal_t Sini);        //!< with Sini @Cini and loaded Cend
+            //! RMS of running affinities
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
 
+            //! evaluate running after removing crucial
+            xreal_t         getRunning(XMLog &xml, XWritable &C0, const XReadable &K0);
+
+            //! narrow down running extents to optized score
+            xreal_t         narrowDown(XMLog &xml, const xreal_t S0);
+
+            //! using optimized xi as virtual rates
+            xreal_t         queryRates(XMLog &xml, const xreal_t S0);
+
+            //! using Newton-Raphson algorithm
+            xreal_t         generateNR(XMLog &xml, const xreal_t S0, const XReadable & K0);
+
+            //! optimize with Sini @Cini and prepared Cend
+            xreal_t         optimize1D(const xreal_t Sini);
+
+            //! convert rates into dC and build optimized Cend = Cini + rho * dC, clipping rho
+            xreal_t         optimizedC(XMLog &            xml,
+                                       const xreal_t      S0,
+                                       xreal_t            rho,
+                                       const char * const uid);
+
+            //! rates + x * Nu_eq
             void            increaseRates(const xreal_t x, const Components &eq);
 
-            void            saveCurrentProfile(const String &, const size_t);    //!< save Cini->Cend, change Ctry!!
-            void            eraseOlderProfiles() noexcept;
-            static void     EmitGnuPlotTracing(std::ostream &os, const String &baseName);
-            void            emitGnuPlotTracing(std::ostream &os) const;
+
+            void            saveCurrentProfile(const String &, const size_t);             //!< save Cini->Cend, change Ctry!!
+            void            eraseOlderProfiles() noexcept;                                //!< remove .pro
+            static void     EmitGnuPlotTracing(std::ostream &os, const String &baseName); //!< helper
+            void            emitGnuPlotTracing(std::ostream &os) const;                   //!< emit command line
         };
 
 

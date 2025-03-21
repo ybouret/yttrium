@@ -13,11 +13,17 @@ namespace Yttrium
         xreal_t Reactor:: generateNR(XMLog &xml, const xreal_t S0, const XReadable & K0)
         {
             static const char fn[] = "GenerateNR";
+
+            //__________________________________________________________________
+            //
+            //
+            // get resources
+            //
+            //__________________________________________________________________
             const size_t      n = basis.size;
             Y_XML_SECTION_OPT(xml, fn, "|basis|=" << n);
 
-            if(n<=0)
-            {
+            if(n<=0) {
                 Y_XML_COMMENT(xml, "empty basis");
                 return S0;
             }
@@ -28,6 +34,12 @@ namespace Yttrium
             Phi.ld(0);
             xi.ld(0);
 
+            //__________________________________________________________________
+            //
+            //
+            // get jacobian and opposite of affinities
+            //
+            //__________________________________________________________________
             {
                 size_t  i=1;
                 for(const ENode *en=basis.head;en;en=en->next,++i)
@@ -36,9 +48,13 @@ namespace Yttrium
                     xi[i] = -eq.jacobian(Phi[i], eq(K0,TopLevel), x_score, Cini, SubLevel);
                 }
             }
-            std::cerr << "Phi =  " << Phi << std::endl;
-            std::cerr << "A   = -" << xi << std::endl;
 
+            //__________________________________________________________________
+            //
+            //
+            // J = Phi * Nu'
+            //
+            //__________________________________________________________________
             XMatrix J(n,n);
             for(size_t i=n;i>0;--i)
             {
@@ -56,19 +72,35 @@ namespace Yttrium
             }
             std::cerr << "J=" << J << std::endl;
 
+            //__________________________________________________________________
+            //
+            //
+            // evaluate J^(-1)
+            //
+            //__________________________________________________________________
             LU<xreal_t> lu(n);
-
             if( !lu.build(J) )
             {
                 Y_XML_COMMENT(xml, "singular system");
                 return S0;
             }
 
+            //__________________________________________________________________
+            //
+            //
+            // evaluate xi
+            //
+            //__________________________________________________________________
             lu.solve(J,xi);
             std::cerr << "xi=" << xi << std::endl;
 
 
-            // compute dC as rates
+            //__________________________________________________________________
+            //
+            //
+            // compute rates = Nu'*xi
+            //
+            //__________________________________________________________________
             rate.forEach( & XAdd::free );
             {
                 size_t i=1;
@@ -76,12 +108,7 @@ namespace Yttrium
                     increaseRates(xi[i],**en);
             }
 
-            std::cerr << "rate=" << rate << std::endl;
-
-
-
-            return S0;
-
+            return optimizedC(xml, S0, 2.0, "nr");
         }
 
     }

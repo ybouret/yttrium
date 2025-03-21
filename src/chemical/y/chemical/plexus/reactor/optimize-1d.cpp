@@ -10,7 +10,7 @@ namespace Yttrium
         using namespace MKL;
 
 
-        real_t Reactor:: optimize1D(const xreal_t Sini)
+        xreal_t Reactor:: optimize1D(const xreal_t Sini)
         {
             Reactor &self = *this;
             XTriplet U    = { 0,    0,  1 };
