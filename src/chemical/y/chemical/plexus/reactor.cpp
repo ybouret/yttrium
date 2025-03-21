@@ -58,9 +58,7 @@ namespace Yttrium
 
         xreal_t Reactor:: operator()(const xreal_t u)
         {
-
             const xreal_t v   = xreal_t(1)-u;
-
             for(size_t i=Ctry.size();i>0;--i)
             {
                 const xreal_t cv = Cini[i];
@@ -104,8 +102,6 @@ namespace Yttrium
             const xreal_t Sr = queryRates(xml,S0);
 
             if(Trace) emitGnuPlotTracing(std::cerr);
-
-
         }
 
 
