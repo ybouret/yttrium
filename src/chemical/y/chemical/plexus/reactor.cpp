@@ -89,168 +89,9 @@ namespace Yttrium
 
 
 
-        xreal_t Reactor:: getRunning(XMLog &           xml,
-                                     XWritable &       C0,
-                                     const XReadable & K0)
-        {
-            size_t cycle = 0;
-        CYCLE:
-            ++cycle;
-            Y_XML_SECTION_OPT(xml,"GetRunning", "cycle="<<cycle);
-            {
-                running.free();
-                bool emergency = false;
-                for(const ENode *en=cluster->equilibria->head;en;en=en->next)
-                {
-                    const Equilibrium & eq  = **en;
-                    const xreal_t       eK  = eq(K0,TopLevel);
-                    XWritable        &  cc  = cluster.gather(Ceq[running.size+1],C0);
-                    const Outcome       out = solve1D(eq,eK,cc,SubLevel,C0,TopLevel);
-                    switch(out.st)
-                    {
-                        case Blocked:
-                            Y_XMLOG(xml,out);
-                            continue;
+     
 
-                        case Crucial:
-                            Y_XMLOG(xml,out);
-                            emergency = true;
-                            running << out;
-                            continue;
-
-                        case Running:
-                            if(emergency) continue; // discard in case or emergency
-                            Y_XMLOG(xml,out);
-                            running << out;
-                            continue;
-                    }
-                }
-                if(emergency)
-                {
-                    MergeSort::Call(running.removeIf(IsRunning),ByDecreasingAX);
-                    const Outcome &worst = **running.head;
-                    Y_XML_COMMENT(xml,"using crucial " << worst.eq.name);
-                    cluster.expand(C0,worst.cc);
-                    if(xml.verbose)
-                    {
-                        cluster.show(*xml << "C0=", TopLevel,"\t[", C0, "]", xreal_t::ToString) << std::endl;
-                    }
-                    goto CYCLE;
-                }
-            }
-            const xreal_t S0 = score( cluster.gather(Cini,C0),SubLevel);
-            Y_XML_COMMENT(xml, "|active| = " << running.size << "/" << cluster->equilibria->size);
-            Y_XMLOG(xml, "S0 = " << S0.str() );
-            return S0;
-        }
-
-      
-
-      
-
-        xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
-        {
-            static const char fn[] = "NarrowDown";
-            Y_XML_SECTION_OPT(xml,fn, "running=" << running.size);
-
-
-            //------------------------------------------------------------------
-            //
-            //
-            // optimize each 1D
-            //
-            //
-            //------------------------------------------------------------------
-            xreal_t Sn = S0;
-            for(OutNode *node=running.head;node;node=node->next)
-            {
-                Outcome &out = **node;
-
-                //--------------------------------------------------------------
-                //
-                // Cend = cc
-                //
-                //--------------------------------------------------------------
-                cluster.transfer(Cend,SubLevel,out.cc, out.lv);
-
-                if(Trace) saveCurrentProfile(*out.eq.name, 100);
-
-
-                //--------------------------------------------------------------
-                //
-                // global optimize on Cini:Cend
-                //
-                //--------------------------------------------------------------
-                const  xreal_t Stry = optimize1D(S0);
-
-                if(Stry<S0)
-                {
-                    //----------------------------------------------------------
-                    // better: update
-                    //----------------------------------------------------------
-                    cluster.transfer(out.cc,out.lv,Ctry,SubLevel);
-                    out.xi = out.eq.extent(x_score, out.cc, out.lv, Cini, SubLevel);
-                    out.ax = out.xi.abs();
-                    out.sc = Stry;
-                    Y_XMLOG(xml,"[*] " << out);
-                    InSituMin(Sn,Stry);
-                }
-                else
-                {
-                    //--------------------------------------------------------------
-                    // not better: pinned down
-                    //--------------------------------------------------------------
-                    cluster.transfer(out.cc,out.lv,Cini,SubLevel);
-                    out.xi = 0;
-                    out.ax = 0;
-                    out.sc = S0;
-                    Y_XMLOG(xml,"[0] " << out);
-                }
-            }
-
-            //------------------------------------------------------------------
-            //
-            //
-            // build local basis
-            //
-            //
-            //------------------------------------------------------------------
-            MergeSort::Call(running,ByIncreasingSC);
-            const size_t dof = cluster.N;
-            qFamily.clear();
-            basis.free();
-            for(const OutNode *node=running.head;node;node=node->next)
-            {
-                const Equilibrium   &eq = (**node).eq;
-                const Readable<int> &nu = eq(cluster.Nu,SubLevel);
-                if(qFamily.welcomes(nu))
-                {
-                    (void) qFamily.increase();
-                    basis << eq;
-                    if(qFamily->size>=dof) break;
-                }
-            }
-
-
-            if(xml.verbose)
-            {
-                Y_XML_COMMENT(xml, "Basis and Dependents");
-                for(const OutNode *node=running.head;node;node=node->next)
-                {
-                    const Equilibrium &eq = (**node).eq;
-                    if(basis.has(eq)) {
-                        Y_XMLOG(xml, "(*) " << **node);
-                    }
-                    else {
-                        Y_XMLOG(xml, "    " << **node);
-                    }
-                }
-            }
-
-            Y_XML_COMMENT(xml, fn << " result");
-            Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
-            return Sn;
-        }
+        
 
         void Reactor:: operator()(XMLog &           xml,
                                   XWritable &       C0,
@@ -261,78 +102,15 @@ namespace Yttrium
             const xreal_t S0 = getRunning(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             const xreal_t Sn = narrowDown(xml,S0);
             const xreal_t Sr = queryRates(xml,S0);
+
+            if(Trace) emitGnuPlotTracing(std::cerr);
+
+
         }
 
 
 
-        xreal_t Reactor:: queryRates(XMLog &xml, const xreal_t S0)
-        {
-            static const char fn[] = "QueryRates";
-            Y_XML_SECTION(xml,fn);
-
-            // accumulate virtual rates
-            rate.forEach( & XAdd::free );
-            for(const OutNode *node=running.head;node;node=node->next)
-            {
-                const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
-                const Components    &eq  = out.eq;
-                const xreal_t       pxi  = out.xi;
-                const xreal_t       rxi  = -pxi;
-                for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rxi,a->nu);
-                for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
-            }
-
-            // construct increment
-            const xreal_t zero = 0;
-            xreal_t       rho  = 10;
-            bool          cut  = false;
-
-            for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
-            {
-                const Species &sp  = **sn;
-                const xreal_t  c0  = sp(Cini,SubLevel); assert(c0>=0.0);
-                xreal_t &      dc  = sp(dC,  SubLevel) = sp(rate,SubLevel).sum();
-
-                if(dc<zero) {
-                    const xreal_t fac = (-c0)/dc;
-                    if(fac<=rho)
-                    {
-                        cut = true;
-                        rho = fac;
-                    }
-                }
-                if(xml.verbose)
-                {
-                    cluster->sformat.pad( xml() << "[" << sp.name << "]",sp)
-                    << " = "  << std::setw(24) << c0.str()
-                    << " + (" << std::setw(24) << dc.str() << ") * " << rho.str()
-                    << std::endl;
-                }
-            }
-
-            if(cut) rho *= 0.99;
-
-            {
-            EVAL_Cend:
-                for(size_t i=Cend.size();i>0;--i)
-                {
-                    if( (Cend[i] = Cini[i] + rho * dC[i]) < zero )
-                    {
-                        rho *= 0.99;
-                        goto EVAL_Cend;
-                    }
-                }
-            }
-
-            if(Trace) saveCurrentProfile("rate",1000);
-
-
-            const xreal_t Sr = optimize1D(S0);
-            Y_XML_COMMENT(xml, fn << " result");
-            Y_XMLOG(xml, "Sr=" << Sr.str() << " // S0=" << S0.str() );
-
-            return Sr;
-        }
+      
 
     }
 
