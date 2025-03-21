@@ -130,7 +130,7 @@ namespace Yttrium
 
             //! rates + x * Nu_eq
             void            increaseRates(const xreal_t x, const Components &eq);
-            void            finalize(XMLog &xml, XWritable &C0);
+            void            finalize(XMLog &xml, XWritable &C0, const bool exact);
             bool            converged(XMLog &            xml,
                                       const xreal_t      Stry,
                                       const char * const Mtry,

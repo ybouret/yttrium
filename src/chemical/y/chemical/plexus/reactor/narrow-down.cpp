@@ -11,7 +11,6 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
 
-
             //------------------------------------------------------------------
             //
             //

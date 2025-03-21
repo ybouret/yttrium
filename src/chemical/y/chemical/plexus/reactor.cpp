@@ -1,5 +1,6 @@
 #include "y/chemical/plexus/reactor.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/text/boolean.hpp"
 
 namespace Yttrium
 {
@@ -92,14 +93,16 @@ namespace Yttrium
 
 
         void Reactor:: finalize(XMLog     &xml,
-                                XWritable &C0)
+                                XWritable &C0,
+                                const bool exact)
         {
+            Y_XML_SECTION_OPT(xml,"Finalize", "exact=" << BooleanTo::text(exact));
             cluster.expand(C0,Cwin);
         }
 
 
 #define Y_ChemicalReactor(CALL,UUID) do {\
-/**/ const xreal_t Stmp = CALL; if( converged(xml,Stmp,UUID,Swin,Mwin) ) return finalize(xml,C0);\
+/**/ const xreal_t Stmp = CALL; if( converged(xml,Stmp,UUID,Swin,Mwin) ) return finalize(xml,C0,true);\
 } while(false)
 
 
@@ -127,7 +130,7 @@ namespace Yttrium
                 const char *  Mwin = GetRunning;
 
                 if(Trace && cycle<=0) {
-                    AppendFile fp(fn); fp("%u ", cycle) << S0.str() << "\n";
+                    AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << " #" << Mwin << "\n";
                 }
                 ++cycle;
 
@@ -141,17 +144,16 @@ namespace Yttrium
                 if(Trace)
                 {
                     emitGnuPlotTracing(std::cerr);
-                    AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << "\n";
+                    AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << " #" << Mwin << "\n";
                 }
 
                 if(Swin>=S0)
                 {
-                    std::cerr << "No Improvement!" << std::endl;
-                    return;
+                    return finalize(xml,C0,false);
                 }
 
                 cluster.expand(C0,Cwin);
-                if(cycle<8) goto CYCLE;
+                if(cycle<100) goto CYCLE;
             }
 
         }
