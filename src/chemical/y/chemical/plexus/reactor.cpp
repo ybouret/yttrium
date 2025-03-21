@@ -1,13 +1,12 @@
-
 #include "y/chemical/plexus/reactor.hpp"
-#include "y/mkl/opt/minimize.hpp"
-
 #include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+
         using namespace MKL;
 
         Reactor:: Reactor(const Cluster &persistentCluster) :
@@ -90,14 +89,14 @@ namespace Yttrium
 
 
 
-        xreal_t Reactor:: initialize(XMLog &           xml,
+        xreal_t Reactor:: getRunning(XMLog &           xml,
                                      XWritable &       C0,
                                      const XReadable & K0)
         {
             size_t cycle = 0;
         CYCLE:
             ++cycle;
-            Y_XML_SECTION_OPT(xml,"Initialize", "cycle="<<cycle);
+            Y_XML_SECTION_OPT(xml,"GetRunning", "cycle="<<cycle);
             {
                 running.free();
                 bool emergency = false;
@@ -145,31 +144,14 @@ namespace Yttrium
             return S0;
         }
 
-        real_t Reactor:: optimize1D(const xreal_t Sini)
-        {
-            Reactor &self = *this;
-            XTriplet U    = { 0,    0,  1 };
-            XTriplet S    = { Sini, 0,  score(Cend,SubLevel) };
-            const xreal_t Uopt = Minimize<xreal_t>::Locate(Minimizing::Inside,self,U,S);
-            const xreal_t Sopt = self(Uopt);
-            return Sopt;
-        }
+      
 
-
-        void Reactor:: saveCurrentProfile(const String &fn, const size_t np)
-        {
-            OutputFile fp(fn);
-            for(size_t i=0;i<=np;++i)
-            {
-                const real_t u = real_t(i)/np;
-                const real_t f = real_t((*this)(u));
-                fp("%.15g %.15g\n",u,f);
-            }
-        }
+      
 
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
-            Y_XML_SECTION_OPT(xml, "Ameliorate", "running=" << running.size);
+            static const char fn[] = "NarrowDown";
+            Y_XML_SECTION_OPT(xml,fn, "running=" << running.size);
 
 
             //------------------------------------------------------------------
@@ -191,10 +173,8 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 cluster.transfer(Cend,SubLevel,out.cc, out.lv);
 
-                if(true)
-                {
-                    saveCurrentProfile(*out.eq.name+".pro", 100);
-                }
+                if(Trace) saveCurrentProfile(*out.eq.name, 100);
+
 
                 //--------------------------------------------------------------
                 //
@@ -235,7 +215,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-           // Y_XML_COMMENT(xml, "Extract Basis");
             MergeSort::Call(running,ByIncreasingSC);
             const size_t dof = cluster.N;
             qFamily.clear();
@@ -268,7 +247,7 @@ namespace Yttrium
                 }
             }
 
-
+            Y_XML_COMMENT(xml, fn << " result");
             Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
             return Sn;
         }
@@ -278,7 +257,8 @@ namespace Yttrium
                                   const XReadable & K0)
         {
             Y_XML_SECTION(xml, "Reactor");
-            const xreal_t S0 = initialize(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
+            if(Trace) eraseOlderProfiles();
+            const xreal_t S0 = getRunning(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
             const xreal_t Sn = narrowDown(xml,S0);
             const xreal_t Sr = queryRates(xml,S0);
         }
@@ -287,7 +267,8 @@ namespace Yttrium
 
         xreal_t Reactor:: queryRates(XMLog &xml, const xreal_t S0)
         {
-            Y_XML_SECTION(xml,"QueryRates");
+            static const char fn[] = "QueryRates";
+            Y_XML_SECTION(xml,fn);
 
             // accumulate virtual rates
             rate.forEach( & XAdd::free );
@@ -301,6 +282,7 @@ namespace Yttrium
                 for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(pxi,a->nu);
             }
 
+            // construct increment
             const xreal_t zero = 0;
             xreal_t       rho  = 10;
             bool          cut  = false;
@@ -342,11 +324,11 @@ namespace Yttrium
                 }
             }
 
-            {
-                saveCurrentProfile("rate.pro",1000);
-            }
+            if(Trace) saveCurrentProfile("rate",1000);
+
 
             const xreal_t Sr = optimize1D(S0);
+            Y_XML_COMMENT(xml, fn << " result");
             Y_XMLOG(xml, "Sr=" << Sr.str() << " // S0=" << S0.str() );
 
             return Sr;

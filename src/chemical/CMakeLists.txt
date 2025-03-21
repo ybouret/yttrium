@@ -11,6 +11,7 @@ chemical/weasel/equilibrium
 chemical/plexus
 chemical/plexus/conservation
 chemical/plexus/cluster
+chemical/plexus/reactor
 )
 
 add_subdirectory(tests)
