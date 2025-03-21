@@ -9,6 +9,7 @@
 #include "y/chemical/reactive/aftermath.hpp"
 #include "y/apex/api/ortho/family.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/mkl/algebra/lu.hpp"
 
 namespace Yttrium
 {

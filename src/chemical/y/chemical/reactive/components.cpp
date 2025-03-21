@@ -304,6 +304,7 @@ namespace Yttrium
                 const xreal_t c = C[j];
                 const xreal_t l = c.log();
                 xadd.insert(l,ac->nu);
+                xjac[j] = c/ac->xn;
             }
 
 
@@ -313,6 +314,7 @@ namespace Yttrium
                 const xreal_t c = C[j];
                 const xreal_t l = -c.log();
                 xadd.insert(l,ac->nu);
+                xjac[j] = -c/ac->xn;
             }
             return xadd.sum();
         }
