@@ -18,14 +18,17 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            xreal_t Sn = S0;
+            xreal_t          Snd = S0;
+            const XReadable *ptr = 0;         // save best concentration
+            Level            lvl = SubLevel;  // save best level
+
             for(OutNode *node=running.head;node;node=node->next)
             {
                 Outcome &out = **node;
 
                 //--------------------------------------------------------------
                 //
-                // Cend = cc
+                // load Cend with out.cc
                 //
                 //--------------------------------------------------------------
                 cluster.transfer(Cend,SubLevel,out.cc, out.lv);
@@ -35,7 +38,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // global optimize on Cini:Cend
+                // optimize on [Cini:Cend]
                 //
                 //--------------------------------------------------------------
                 const  xreal_t Stry = optimize1D(S0);
@@ -43,14 +46,19 @@ namespace Yttrium
                 if(Stry<S0)
                 {
                     //----------------------------------------------------------
-                    // better: update
+                    // better: update with Ctry
                     //----------------------------------------------------------
                     cluster.transfer(out.cc,out.lv,Ctry,SubLevel);
                     out.xi = out.eq.extent(x_score, out.cc, out.lv, Cini, SubLevel);
                     out.ax = out.xi.abs();
                     out.sc = Stry;
                     Y_XMLOG(xml,"[*] " << out);
-                    InSituMin(Sn,Stry);
+                    if(Stry<Snd)
+                    {
+                        Snd =  Stry;
+                        ptr = &out.cc;
+                        lvl =  out.lv;
+                    }
                 }
                 else
                 {
@@ -105,9 +113,15 @@ namespace Yttrium
                 }
             }
 
+            if(0!=ptr)
+            {
+                assert(Snd<S0);
+                cluster.transfer(Ctry,SubLevel,*ptr,lvl);
+            }
+
             Y_XML_COMMENT(xml, NarrowDown << " result");
-            Y_XMLOG(xml, "Sx = " << Sn.str() << " // S0=" << S0.str() );
-            return Sn;
+            Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
+            return Snd;
         }
     }
 

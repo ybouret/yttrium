@@ -153,7 +153,7 @@ namespace Yttrium
                 }
 
                 cluster.expand(C0,Cwin);
-                if(cycle<100) goto CYCLE;
+                if(cycle<8) goto CYCLE;
             }
 
         }
