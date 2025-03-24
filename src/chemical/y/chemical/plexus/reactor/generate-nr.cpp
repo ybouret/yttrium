@@ -28,9 +28,10 @@ namespace Yttrium
                 return S0;
             }
 
-            const size_t m = cluster->species->size;
-            XMatrix Phi(n,m);
-            XArray  xi(n);
+            const size_t m   = cluster->species->size;
+            XArray  &    xi  = xiArr[n];   assert(n==xi.size());
+            XMatrix &    Phi = phiArr[n];  assert(n==Phi.rows); assert(m==Phi.cols);
+
             Phi.ld(0);
             xi.ld(0);
 

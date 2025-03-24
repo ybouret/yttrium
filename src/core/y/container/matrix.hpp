@@ -63,6 +63,13 @@ namespace Yttrium
             create();
         }
 
+        //! setup from MatrixMetrics
+        inline explicit Matrix(const MatrixMetrics &userMetrics) :
+        Y_MATRIX( (userMetrics) )
+        {
+            create();
+        }
+
         //! copy
         inline Matrix(const Matrix &other) :
         Y_MATRIX( (other) )

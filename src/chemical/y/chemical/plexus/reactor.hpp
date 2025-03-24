@@ -93,10 +93,10 @@ namespace Yttrium
             const QMetrics  qMetrics;  //!< |species|
             QVCache         qVCache;   //!< for vectors
             QFamily         qFamily;   //!< for building basis
-            Summator         rate;      //!< for computing rates
-            MKL::LU<xreal_t> lu;
-            XArrays          xiArr;     //!< xiArr[[1:1],...,[1:n]]
-
+            Summator         rate;     //!< for computing rates
+            MKL::LU<xreal_t> lu;       //!< solver
+            XArrays          xiArr;    //!< xiArr[[1:1],...,[1:n]]
+            XMatrices        phiArr;   //!< phiArr[ [1:m],...[n:m] ]
             Strings         profiles;  //!< save guess names
             Reactor *       next;
             Reactor *       prev;

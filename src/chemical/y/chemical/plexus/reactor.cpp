@@ -14,7 +14,10 @@ namespace Yttrium
 
         bool Reactor:: MonitorScore = false;
 
-        static size_t ZeroDims = 0;
+        namespace
+        {
+            static inline size_t Identity(const size_t i) noexcept { return i; }
+        }
 
         Reactor:: Reactor(const Cluster &persistentCluster) :
         cluster(persistentCluster),
@@ -33,7 +36,8 @@ namespace Yttrium
         qFamily( qVCache ),
         rate(cluster->species->size),
         lu(cluster.N),
-        xiArr(cluster.N,CopyOf,ZeroDims),
+        xiArr(cluster.N,Procedural,Identity),
+        phiArr(cluster.N),
         profiles(4,AsCapacity),
         next(0),
         prev(0)
@@ -42,9 +46,11 @@ namespace Yttrium
             qVCache->reserve(Ceq.rows);
             for(size_t n=1;n<=cluster.N;++n)
             {
-                XArray _(n);
-                xiArr[n].swapWith(_);
+                assert( n == xiArr[n].size() );
+                phiArr[n].make(n,cluster.M);
             }
+
+
 
         }
 
