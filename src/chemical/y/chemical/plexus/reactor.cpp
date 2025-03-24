@@ -11,6 +11,9 @@ namespace Yttrium
 
         using namespace MKL;
 
+
+        bool Reactor:: MonitorScore = false;
+        
         Reactor:: Reactor(const Cluster &persistentCluster) :
         cluster(persistentCluster),
         solve1D(),
@@ -27,7 +30,7 @@ namespace Yttrium
         qVCache( new QVector::Cache(qMetrics) ),
         qFamily( qVCache ),
         rate(cluster->species->size),
-        tracing(4,AsCapacity)
+        profiles(4,AsCapacity)
         {
             running.proxy->reserve(Ceq.rows);
         }
@@ -129,7 +132,8 @@ namespace Yttrium
             static const char fn[] = "reactor.dat";
             Y_XML_SECTION(xml, "Reactor");
 
-            if(Trace)
+
+            if(MonitorScore)
             {
                 OutputFile::Overwrite(fn);
             }
@@ -139,13 +143,13 @@ namespace Yttrium
             {
                 Y_XML_COMMENT(xml, "*** BestEffort#" << cycle+1 << " ***");
 
-                if(Trace) eraseOlderProfiles();
-                
+                if(EmitProfiles) eraseOlderProfiles();
+
                 const xreal_t S0   = getRunning(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
                 xreal_t       Swin = S0; Cwin.ld(Cini);
                 const char *  Mwin = GetRunning;
 
-                if(Trace && cycle<=0) {
+                if(MonitorScore && cycle<=0) {
                     AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << " #" << Mwin << "\n";
                 }
                 ++cycle;
@@ -157,9 +161,13 @@ namespace Yttrium
                 Y_ChemicalReactor(generateNR(xml,S0,K0), GenerateNR);
 
 
-                if(Trace)
+                if(EmitProfiles)
                 {
                     emitGnuPlotTracing(std::cerr);
+                }
+
+                if(MonitorScore)
+                {
                     AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << " #" << Mwin << "\n";
                 }
 

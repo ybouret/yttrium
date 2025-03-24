@@ -80,7 +80,9 @@ Y_UTEST(plexus)
         }
     }
 
-    Reactor::Trace = true;
+    //Reactor::EmitProfiles = true;
+    Reactor::MonitorScore = true;
+
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         Library::Concentrations(C0,ran,0.5);

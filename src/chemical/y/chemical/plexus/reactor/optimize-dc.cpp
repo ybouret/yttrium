@@ -70,10 +70,10 @@ namespace Yttrium
                 }
             }
 
-            if(Trace) {
+            if(EmitProfiles) {
                 const String baseName = uid;
                 saveCurrentProfile(baseName,100);
-                tracing << baseName;
+                profiles << baseName;
             }
 
             //------------------------------------------------------------------

@@ -34,7 +34,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 cluster.transfer(Cend,SubLevel,out.cc, out.lv);
 
-                if(Trace) saveCurrentProfile(*out.eq.name, 100);
+                if(EmitProfiles) saveCurrentProfile(*out.eq.name, 100);
 
 
                 //--------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace Yttrium
                 }
             }
 
-            if(basis.size) tracing << *(**basis.head).name;
+            if(basis.size) profiles << *(**basis.head).name;
 
             if(xml.verbose)
             {

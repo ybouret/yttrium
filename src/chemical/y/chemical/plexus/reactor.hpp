@@ -45,13 +45,14 @@ namespace Yttrium
         class Reactor
         {
         public:
-            static const char * const ProfileExt; //!< "pro"
-            static bool               Trace;      //!< default to false
-            static const char * const GetRunning; //!< "GetRunning"
-            static const char * const NarrowDown; //!< "NarrowDown"
-            static const char * const QueryRates; //!< "QueryRates"
-            static const char * const GenerateNR; //!< "GenerateNR"
-            
+            static const char * const ProfileExt;   //!< "pro"
+            static bool               EmitProfiles; //!< default to false, emit profiles
+            static bool               MonitorScore; //!< default to false, monitor score
+            static const char * const GetRunning;   //!< "GetRunning"
+            static const char * const NarrowDown;   //!< "NarrowDown"
+            static const char * const QueryRates;   //!< "QueryRates"
+            static const char * const GenerateNR;   //!< "GenerateNR"
+
             //__________________________________________________________________
             //
             //
@@ -92,7 +93,7 @@ namespace Yttrium
             QVCache         qVCache;   //!< for vectors
             QFamily         qFamily;   //!< for building basis
             Summator        rate;      //!< for computing rates
-            Strings         tracing;   //!< save guess names
+            Strings         profiles;  //!< save guess names
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);

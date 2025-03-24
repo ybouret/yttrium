@@ -8,13 +8,12 @@ namespace Yttrium
     namespace Chemical
     {
 
-        bool Reactor::Trace = false;
-
+        bool Reactor::EmitProfiles = false;
         const char * const Reactor:: ProfileExt = "pro";
 
         void Reactor:: eraseOlderProfiles() noexcept
         {
-            tracing.free();
+            profiles.free();
             Lingo::LocalFileSystem::TryRemoveExtension::In(".",ProfileExt);
         }
 
@@ -38,17 +37,17 @@ namespace Yttrium
 
         void Reactor:: emitGnuPlotTracing(std::ostream &os) const
         {
-            os << "# Gnuplot Tracing" << std::endl;
-            if(tracing.size()>0)
+            os << "# Gnuplot Profiles" << std::endl;
+            if(profiles.size()>0)
             {
-                EmitGnuPlotTracing(os << "plot ",tracing[1]);
-                for(size_t i=2;i<=tracing.size();++i)
-                    EmitGnuPlotTracing(os << ", ",tracing[i]);
+                EmitGnuPlotTracing(os << "plot ",profiles[1]);
+                for(size_t i=2;i<=profiles.size();++i)
+                    EmitGnuPlotTracing(os << ", ",profiles[i]);
                 os << std::endl;
             }
             else
             {
-                os << "# no tracing!" << std::endl;
+                os << "# no profiles!" << std::endl;
             }
         }
 
