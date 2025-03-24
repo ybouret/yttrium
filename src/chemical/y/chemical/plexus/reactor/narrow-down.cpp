@@ -70,7 +70,6 @@ namespace Yttrium
                         ptr = &out.cc;
                         lvl =  out.lv;
                     }
-                    tighten << out;
                 }
                 else
                 {
@@ -93,18 +92,19 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             MergeSort::Call(running,ByIncreasingSC);
-            MergeSort::Call(tighten,ByIncreasingSC);
             const size_t dof = cluster.N;
             qFamily.clear();
             basis.free();
             for(const OutNode *node=running.head;node;node=node->next)
             {
-                const Equilibrium   &eq = (**node).eq;
+                const Outcome       &out = **node;
+                const Equilibrium   &eq = out.eq;
                 const Readable<int> &nu = eq(cluster.iNu,SubLevel);
                 if(qFamily.welcomes(nu))
                 {
                     (void) qFamily.increase();
-                    basis << eq;
+                    basis   << eq;
+                    tighten << out;
                     if(qFamily->size>=dof) break;
                 }
             }
@@ -113,7 +113,7 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                Y_XML_COMMENT(xml, "Basis and Dependents");
+                Y_XML_COMMENT(xml, "Basis and Tighten");
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
                     const Equilibrium &eq = (**node).eq;
