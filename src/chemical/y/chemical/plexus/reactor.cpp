@@ -45,7 +45,7 @@ namespace Yttrium
         xreal_t Reactor:: score(const XReadable &C,
                                 const Level      L)
         {
-            assert(running.size>0);
+            if(running.size<=0) return 0;
             x_score.free();
             for(const OutNode *node=running.head;node;node=node->next)
             {
@@ -157,7 +157,7 @@ namespace Yttrium
                 }
 
                 cluster.expand(C0,Cwin);
-                if(cycle<8) goto CYCLE;
+                if(cycle<1) goto CYCLE;
             }
 
         }

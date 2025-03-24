@@ -54,8 +54,8 @@ namespace Yttrium
                     goto CYCLE;
                 }
             }
-            const xreal_t S0 = score( cluster.gather(Cini,C0),SubLevel);
             Y_XML_COMMENT(xml, "|active| = " << running.size << "/" << cluster->equilibria->size);
+            const xreal_t S0 = score(cluster.gather(Cini,C0),SubLevel);
             Y_XMLOG(xml, "S0 = " << S0.str() );
             return S0;
         }
