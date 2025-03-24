@@ -46,13 +46,14 @@ namespace Yttrium
         class Reactor : public Quantized
         {
         public:
-            static const char * const ProfileExt;   //!< "pro"
-            static bool               EmitProfiles; //!< default to false, emit profiles
-            static bool               MonitorScore; //!< default to false, monitor score
-            static const char * const GetRunning;   //!< "GetRunning"
-            static const char * const NarrowDown;   //!< "NarrowDown"
-            static const char * const QueryRates;   //!< "QueryRates"
-            static const char * const GenerateNR;   //!< "GenerateNR"
+            static const char * const  ProfileExt;   //!< "pro"
+            static bool                EmitProfiles; //!< default to false, emit profiles
+            static bool                MonitorScore; //!< default to false, monitor score
+            static const char * const  GetRunning;   //!< "GetRunning"
+            static const char * const  NarrowDown;   //!< "NarrowDown"
+            static const char * const  QueryRates;   //!< "QueryRates"
+            static const char * const  GenerateNR;   //!< "GenerateNR"
+            typedef CxxListOf<Reactor> List;
 
             //__________________________________________________________________
             //
