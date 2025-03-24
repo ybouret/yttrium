@@ -8,8 +8,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-        bool Reactor::EmitProfiles = false;
-        const char * const Reactor:: ProfileExt = "pro";
+        bool               Reactor:: EmitProfiles = false;
+        const char * const Reactor:: ProfileExt   = "pro";
 
         void Reactor:: eraseOlderProfiles() noexcept
         {

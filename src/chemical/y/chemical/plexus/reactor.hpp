@@ -99,8 +99,8 @@ namespace Yttrium
             XMatrices        phiArr;   //!< phiArr[ [1:m],...,[n:m] ]
             XMatrices        jacArr;   //!< jacArr[ [1:1],...,[n:n]  ]
             Strings         profiles;  //!< save guess names
-            Reactor *       next;
-            Reactor *       prev;
+            Reactor *       next;      //!< for list
+            Reactor *       prev;      //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);

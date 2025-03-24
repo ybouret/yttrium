@@ -93,12 +93,13 @@ namespace Yttrium
                 if(qFamily.welcomes(nu))
                 {
                     (void) qFamily.increase();
-                    basis   << eq;
+                    basis << eq;
+                    Coerce(eq.indx[AuxLevel]) = basis.size;
                     if(qFamily->size>=dof) break;
                 }
             }
 
-            if(basis.size) profiles << *(**basis.head).name;
+            if(basis.size>0) profiles << *(**basis.head).name;
 
             if(xml.verbose)
             {

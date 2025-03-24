@@ -67,6 +67,7 @@ namespace Yttrium
                 return true;
             }
 
+            
             //! comparison by TopLevel index
             static inline SignType Compare(const NodeType * const lhs, const NodeType *const rhs) noexcept
             {
@@ -169,11 +170,13 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! set proper indices after a change
-            virtual void update() noexcept
+            inline virtual void update() noexcept
             {
                 size_t idx = 1;
-                for(NodeType *node=this->list.head;node;node=node->next)
+                for(NodeType *node=this->list.head;node;node=node->next) {
                     Coerce( (**node).indx[LEVEL] ) = idx++;
+                    std::cerr << "coding " << (**node).name << " => " << (**node).indx[LEVEL] << std::endl;
+                }
             }
         private:
             Y_DISABLE_ASSIGN(CodingList);
@@ -300,7 +303,7 @@ namespace Yttrium
             }
 
             //! fusion of two disting lists
-            void fusion(OrthoList &rhs) noexcept
+            inline void fusion(OrthoList &rhs) noexcept
             {
                 OrthoList &lhs = *this;
                 assert( CoreList::AreDistinct(lhs,rhs) );
@@ -308,6 +311,10 @@ namespace Yttrium
                 lhs.update();
             }
 
+            inline void free() noexcept
+            {
+                this->list.free();
+            }
 
         private:
             Y_DISABLE_ASSIGN(OrthoList);
@@ -317,7 +324,7 @@ namespace Yttrium
         typedef ParaList<SubLevel,SList>  SubSList; //!< alias
         typedef OrthoList<SubLevel,EList> SubEList; //!< alias
         typedef ParaList<AuxLevel,SList>  AuxSList; //!< alias
-
+        typedef OrthoList<AuxLevel,ESolo> AuxEList; //!< alias for basis
     }
 
 }

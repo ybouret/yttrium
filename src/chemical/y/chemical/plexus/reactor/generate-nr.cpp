@@ -28,11 +28,12 @@ namespace Yttrium
                 return S0;
             }
 
-            const size_t m   = cluster->species->size;
             XArray  &    xi  = xiArr[n];   assert(n==xi.size());
-            XMatrix &    Phi = phiArr[n];  assert(n==Phi.rows); assert(m==Phi.cols);
+            XMatrix &    Phi = phiArr[n];  assert(n==Phi.rows); assert(cluster.M==Phi.cols);
+            XMatrix &    J   = jacArr[n];  assert(n==J.rows);   assert(n==J.cols);
 
             Phi.ld(0);
+            
             //__________________________________________________________________
             //
             //
@@ -54,10 +55,9 @@ namespace Yttrium
             // J = Phi * Nu'
             //
             //__________________________________________________________________
-            XMatrix &J = jacArr[n]; assert(n==J.rows); assert(n==J.cols);
             for(size_t i=n;i>0;--i)
             {
-                const XReadable &phi = Phi[i]; assert(m==phi.size());
+                const XReadable &phi = Phi[i]; assert(cluster.M==phi.size());
                 XWritable       &jac = J[i];
                 {
                     size_t j=1;
@@ -78,7 +78,7 @@ namespace Yttrium
             //__________________________________________________________________
             if( !lu.build(J) )
             {
-                Y_XML_COMMENT(xml, "singular system");
+                Y_XML_COMMENT(xml, "singular system composition");
                 return S0;
             }
 
@@ -102,7 +102,7 @@ namespace Yttrium
                 for(const ENode *en=basis.head;en;en=en->next,++i)
                     increaseRates(xi[i],**en);
             }
-
+            
             return optimizedC(xml, S0, 2.0, "nr");
         }
 
