@@ -80,7 +80,6 @@ Y_UTEST(plexus)
         }
     }
 
-    //Reactor::EmitProfiles = true;
     Reactor::MonitorScore = true;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)

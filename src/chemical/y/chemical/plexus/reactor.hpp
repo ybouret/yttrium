@@ -42,7 +42,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Reactor
+        class Reactor : public Quantized
         {
         public:
             static const char * const ProfileExt;   //!< "pro"
@@ -94,6 +94,8 @@ namespace Yttrium
             QFamily         qFamily;   //!< for building basis
             Summator        rate;      //!< for computing rates
             Strings         profiles;  //!< save guess names
+            Reactor *       next;
+            Reactor *       prev;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
