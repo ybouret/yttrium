@@ -1,4 +1,3 @@
-
 //! \file
 
 
@@ -31,9 +30,11 @@ namespace Yttrium
         typedef Apex::Ortho::Metrics          QMetrics; //!< alias
 
         typedef CxxArray<XAdd,MemoryModel>    Summator; //!< alias
-        typedef Vector<String,Memory::Pooled> Strings;  //!< alias
+        typedef Vector<String,MemoryModel>    Strings;  //!< alias
 
-        
+        typedef CxxArray<XArray,MemoryModel>  XArrays;   //!< alias
+        typedef CxxArray<XMatrix,MemoryModel> XMatrices; //!< alias
+
         //______________________________________________________________________
         //
         //
@@ -92,7 +93,10 @@ namespace Yttrium
             const QMetrics  qMetrics;  //!< |species|
             QVCache         qVCache;   //!< for vectors
             QFamily         qFamily;   //!< for building basis
-            Summator        rate;      //!< for computing rates
+            Summator         rate;      //!< for computing rates
+            MKL::LU<xreal_t> lu;
+            XArrays          xiArr;     //!< xiArr[[1:1],...,[1:n]]
+
             Strings         profiles;  //!< save guess names
             Reactor *       next;
             Reactor *       prev;

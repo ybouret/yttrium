@@ -76,6 +76,7 @@ namespace Yttrium
                     Vector *query();                         //!< query/create
                     void    store(Vector * const) noexcept;  //!< store and reset
                     Vector *query(const Vector &);           //!< duplicate
+                    void    reserve(size_t n);
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Cache);

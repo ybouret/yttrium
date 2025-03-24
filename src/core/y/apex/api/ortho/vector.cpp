@@ -166,6 +166,13 @@ namespace Yttrium
                 return my.size <= 0 ? new Vector(*this) : my.query();
             }
 
+            void Vector::Cache:: reserve(size_t n)
+            {
+                while(n-- >0) my.store( new Vector(*this) );
+            }
+
+
+
             void Vector:: Cache:: store(Vector * const v) noexcept
             {
                 assert(0!=v);

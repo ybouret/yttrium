@@ -39,7 +39,7 @@ namespace Yttrium
             // C++
             //
             //__________________________________________________________________
-            const size_t  N;           //!< |equilibria|
+            const size_t  N;           //!< primary |equilibria|
             const size_t  M;           //!< |species|
             const iMatrix topology;    //!< N x M
             const iMatrix topologyT;   //!< transpose(topology)
