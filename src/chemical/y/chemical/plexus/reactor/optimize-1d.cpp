@@ -86,7 +86,7 @@ namespace Yttrium
                 }
             }
 
-            throw Exception("need to finish");
+           // throw Exception("need to finish");
 
             return S0;
         }

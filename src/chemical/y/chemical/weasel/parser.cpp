@@ -113,7 +113,7 @@ namespace Yttrium
 
             (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
             (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
-            render();
+            //render();
         }
 
 

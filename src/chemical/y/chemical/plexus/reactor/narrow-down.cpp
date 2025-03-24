@@ -7,7 +7,7 @@ namespace Yttrium
 
         const char * const Reactor:: NarrowDown = "NarrowDown";
 
-
+#if 0
         static inline bool IsAmong(const OutList &list, const Equilibrium &eq) noexcept
         {
             for(const OutNode *node=list.head;node;node=node->next)
@@ -16,7 +16,8 @@ namespace Yttrium
             }
             return false;
         }
-
+#endif
+        
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
@@ -116,9 +117,10 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "Basis and Tighten");
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
-                    const Equilibrium &eq = (**node).eq;
+                    const Outcome     &out = **node;
+                    const Equilibrium &eq  = out.eq;
                     const char * const mark1 = basis.has(eq) ? "#" : " ";
-                    const char * const mark2 = IsAmong(tighten,eq) ? "*" : "0";
+                    const char * const mark2 = (out.sc < S0) ? "*" : "0";
                     Y_XMLOG(xml,"(" << mark1 << mark2 << ") " << **node);
                 }
             }
