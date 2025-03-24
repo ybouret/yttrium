@@ -18,10 +18,13 @@ namespace Yttrium
             explicit Reactors(const Clusters &);
             virtual ~Reactors() noexcept;
 
+            void operator()(XMLog &xml, XWritable &C0);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactors);
             Y_PROXY_DECL();
-            Reactor::List my;
+            Reactor::List   my;
+            const Clusters &clusters;
 
         };
     }

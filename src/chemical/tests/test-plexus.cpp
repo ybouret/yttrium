@@ -1,7 +1,6 @@
 
 
-#include "y/chemical/plexus/clusters.hpp"
-#include "y/chemical/plexus/reactor.hpp"
+#include "y/chemical/plexus/reactors.hpp"
 
 #include "y/chemical/weasel.hpp"
 #include "y/sequence/vector.hpp"
@@ -11,18 +10,6 @@
 #include "y/random/mt19937.hpp"
 
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
-
-
-
-      
-
-    }
-
-}
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -63,32 +50,16 @@ Y_UTEST(plexus)
     XVector      C0(m,0);
     XVector      C(m,0);
 
-    if(false)
-    {
-        Library::Concentrations(C0,ran);
-        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-        Aftermath am;
-        for(Equilibria::ConstIterator it=eqs->begin();it!=eqs->end();++it)
-        {
-            const Equilibrium &eq = **it;
-            const xreal_t      eK = eq(cls.K,TopLevel);
-            std::cerr << "solving " << eq.name << std::endl;
-            lib.Concentrations(C0,ran);
-            C.ld(C0);
-            am(eq,eK,C,TopLevel,C0,TopLevel);
-        }
-    }
 
     Reactor::MonitorScore = true;
+    Reactor::EmitProfiles = true;
+    
+    Reactors cs(cls);
+    Library::Concentrations(C0,ran,0.5);
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+    
+    cs(xml,C0);
 
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-    {
-        Library::Concentrations(C0,ran,0.5);
-        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-        Reactor reactor(*cl);
-        reactor(xml,C0,cls.K);
-    }
 
 
 

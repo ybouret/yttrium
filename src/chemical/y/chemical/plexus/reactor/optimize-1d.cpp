@@ -1,6 +1,7 @@
 
 #include "y/chemical/plexus/reactor.hpp"
 #include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/opt/bracket.hpp"
 
 
 namespace Yttrium
@@ -12,6 +13,9 @@ namespace Yttrium
 
         xreal_t Reactor:: optimize1D(const xreal_t Sini)
         {
+            MKL::Bracketing::Verbose = true;
+            MKL::Minimizing::Verbose = true;
+            
             Reactor &self = *this;
             XTriplet U    = { 0,    0,  1 };
             XTriplet S    = { Sini, 0,  score(Cend,SubLevel) };
