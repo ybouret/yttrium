@@ -68,6 +68,8 @@ namespace Yttrium
 
             Y_XML_SECTION_OPT(xml, "zHierarchy", "|tighten|=" << tighten.size);
 
+            assert(tighten.isSortedBy(ByIncreasingSC));
+
             if(tighten.size>=2)
             {
                 //Wander wander = { **(tighten.tail->prev), **(tighten.tail), *this };

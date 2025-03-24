@@ -16,7 +16,9 @@
 \title{Steady-State pH profile}
 \maketitle
 
+\section{System}
 
+\subsection{Reaction/Diffusion}
 \begin{equation}
 \begin{array}{rclcl}
 	\partial_t [H^+]  & = & D_H \Delta [H^+]     &+&\chi_w+\chi_a\\
@@ -27,6 +29,7 @@
 \end{array}
 \end{equation}
 
+\subsection{Asymptotic}
 \begin{equation}
 	\begin{array}{rcll}
 	H_2O  & \rightleftharpoons & H^+ + HO^-, & K_w\\
@@ -34,14 +37,24 @@
 	\end{array}
 \end{equation}
 
+\subsection{Spatial Conservations}
+
+\begin{itemize}
+\item matter:
 \begin{equation}
-	C_a = [AH] + [A^-]
+	C_a(t,\vec r) = [AH] + [A^-]
 \end{equation}
 
+\item charge:
 \begin{equation}
 	[H^+]-[HO^-]-[A^-]+Q\equiv0
 \end{equation}
 
+\end{itemize}
+
+\section{Solving}
+
+Transport properties:
 \begin{equation}
 	\lambda_{AH} = \dfrac{D_{AH}}{D_{AH}+D_A}, \;\; \lambda_{A} = \dfrac{D_{A}}{D_{AH}+D_A}
 \end{equation}
@@ -53,7 +66,7 @@ We get
 
 and we solve:
 \begin{equation}
-	\Lambda = \lambda_{AH} [AH] + \lambda_{A} [A^-]
+	\Lambda(t,\vec r) = \lambda_{AH} [AH] + \lambda_{A} [A^-]
 \end{equation}	
 	
 Locally:
@@ -70,12 +83,13 @@ We replace
 	C_a = \dfrac{[H^+]+K_a}{\lambda_{AH} [H^+] + \lambda_{A} K_a} \Lambda
 \end{equation}
 
+And we finally get:
 \begin{equation}
 	[A^-] = \dfrac{K_a}{\lambda_{AH} [H^+] + \lambda_{A} K_a} \Lambda
 \end{equation}
 
 \begin{equation}
-	h - \dfrac{K_w}{h} - \dfrac{K_a}{\lambda_{AH} h + \lambda_{A} K_a} \Lambda + Q = 0
+	h(t,\vec r) - \dfrac{K_w}{h(t, \vec r)} - \dfrac{K_a}{\lambda_{AH} h(t,\vec r) + \lambda_{A} K_a} \Lambda(t,\vec r) + Q(t,\vec r) = 0
 \end{equation}
 
 
