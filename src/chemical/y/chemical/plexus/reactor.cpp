@@ -1,6 +1,7 @@
 #include "y/chemical/plexus/reactor.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/text/boolean.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
@@ -100,7 +101,18 @@ namespace Yttrium
             cluster.expand(C0,Cwin);
             if(xml.verbose)
             {
-                cluster.show(xml(), TopLevel, "\t[", C0, "]", xreal_t::ToString);
+                Y_XML_COMMENT(xml, "current concentration" << Plural::s(cluster->species->size) );
+                for(const SNode *sn = cluster->species->head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    cluster->sformat.pad( xml() << "[" << sp.name << "]", sp) << " = " << sp(C0,TopLevel).str() << std::endl;
+                }
+                Y_XML_COMMENT(xml, "running equilibri" << Plural::aum(running.size) );
+                for(const OutNode *node=running.head;node;node=node->next)
+                {
+                    const Outcome &out = **node;
+                    cluster->display(xml(), out.eq)  << std::setw(24) << out.activity(solve1D.xmul, C0, TopLevel).str() <<  std::endl;
+                }
             }
         }
 
@@ -141,7 +153,6 @@ namespace Yttrium
 
 
                 Y_ChemicalReactor(narrowDown(xml,S0),    NarrowDown);
-                //zHierarchy(xml,S0);
                 Y_ChemicalReactor(queryRates(xml,S0),    QueryRates);
                 Y_ChemicalReactor(generateNR(xml,S0,K0), GenerateNR);
 
@@ -158,6 +169,7 @@ namespace Yttrium
                 }
 
                 cluster.expand(C0,Cwin);
+                goto CYCLE;
                 if(cycle<1) goto CYCLE;
             }
 

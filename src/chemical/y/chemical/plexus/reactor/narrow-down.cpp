@@ -102,7 +102,7 @@ namespace Yttrium
 
             if(xml.verbose)
             {
-                Y_XML_COMMENT(xml, "Basis and Tighten");
+                Y_XML_COMMENT(xml, "Basis");
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
                     const Outcome     &out = **node;

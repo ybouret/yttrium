@@ -52,6 +52,9 @@ namespace Yttrium
             //! evaluate affinity from given state
             xreal_t      affinity(XAdd &xadd, const XReadable &C, const Level L) const;
 
+            //! evaluate activity from given state
+            xreal_t      activity(XMul &xmul, const XReadable &C, const Level L) const;
+
             //__________________________________________________________________
             //
             //

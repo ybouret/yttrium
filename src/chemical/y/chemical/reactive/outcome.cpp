@@ -51,6 +51,12 @@ namespace Yttrium
             return eq.affinity(eK,xadd,C,L);
         }
 
+        xreal_t Outcome:: activity(XMul &xmul, const XReadable &C, const Level L) const
+        {
+            return eq.activity(eK,xmul,C,L);
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Outcome &out)
         {
 #if 0

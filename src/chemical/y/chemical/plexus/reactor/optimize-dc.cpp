@@ -72,7 +72,7 @@ namespace Yttrium
 
             if(Trace) {
                 const String baseName = uid;
-                saveCurrentProfile(baseName,1000);
+                saveCurrentProfile(baseName,100);
                 tracing << baseName;
             }
 
