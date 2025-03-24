@@ -19,13 +19,16 @@ bool Bracket<real_t>:: Inside(Triplet<real_t>   &x,
     real_t width = Fabs<real_t>::Of(x.c-x.a);
 
 PROBE:
+    //--------------------------------------------------------------------------
+    // beginning of probe: f.aa <= f.c
+    //--------------------------------------------------------------------------
     assert(f.a<=f.c);
     real_t xmin = x.a;
     real_t xmax = x.c;
     if(xmin>xmax) Swap(xmin,xmax);
     f.b = F( x.b = Clamp(xmin,half*(xmin+xmax),xmax) );
 
-    Y_BRACKET_PRINT("probe @x=" << x << " f=" << f <<" width=" << width);
+    Y_BRACKET_PRINT("probe @x=" << x << " f=" << f <<" width=" << width << " heigh=" << Fabs<real_t>::Of(f.c-f.a));
 
 
     if(f.b <= f.a)
@@ -37,15 +40,15 @@ PROBE:
             Swap(x.a,x.c);
             Swap(f.a,f.c);
         }
-        //x.makeIncreasingWith(f);
-        //std::cerr << "x=" << x << std::endl;
-        //std::cerr << "f=" << f << std::endl;
         assert(x.isIncreasing());
         assert(f.isLocalMinimum());
         Y_BRACKET_PRINT("found @x=" << x << " f=" << f);
         Y_BRACKET_PRINT("<Inside/>");
         return true;
     }
+
+    assert(f.b>f.a);
+    std::cerr << "Still Working...fb-fa=" << f.b-f.a << " / f.c-f.b=" << f.c-f.b << std::endl;
 
     f.c = f.b;
     x.c = x.b;
@@ -61,8 +64,6 @@ PROBE:
 
     width = newWidth;
     goto PROBE;
-
-
 }
 
 

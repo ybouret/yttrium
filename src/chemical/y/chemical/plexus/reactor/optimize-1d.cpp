@@ -15,7 +15,7 @@ namespace Yttrium
         {
             MKL::Bracketing::Verbose = true;
             MKL::Minimizing::Verbose = true;
-            
+
             Reactor &self = *this;
             XTriplet U    = { 0,    0,  1 };
             XTriplet S    = { Sini, 0,  score(Cend,SubLevel) };
