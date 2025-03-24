@@ -7,22 +7,11 @@ namespace Yttrium
 
         const char * const Reactor:: NarrowDown = "NarrowDown";
 
-#if 0
-        static inline bool IsAmong(const OutList &list, const Equilibrium &eq) noexcept
-        {
-            for(const OutNode *node=list.head;node;node=node->next)
-            {
-                if( &eq == & (**node).eq )  return true;
-            }
-            return false;
-        }
-#endif
-        
+
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
 
-            assert(tighten.size<=0);
             //------------------------------------------------------------------
             //
             //
@@ -105,7 +94,6 @@ namespace Yttrium
                 {
                     (void) qFamily.increase();
                     basis   << eq;
-                    tighten << out;
                     if(qFamily->size>=dof) break;
                 }
             }
@@ -132,13 +120,12 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            if(0!=ptr)
-            {
+            if(0!=ptr) {
                 assert(Snd<S0);
                 cluster.transfer(Ctry,SubLevel,*ptr,lvl);
             }
 
-            Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size << " |tighten|=" << tighten.size);
+            Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size );
             Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
             return Snd;
         }

@@ -11,7 +11,6 @@ namespace Yttrium
                                      XWritable &       C0,
                                      const XReadable & K0)
         {
-            tighten.free();
             size_t cycle = 0;
         CYCLE:
             ++cycle;

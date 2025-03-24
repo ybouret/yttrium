@@ -71,8 +71,7 @@ namespace Yttrium
             //! solve topLevel
             void operator()(XMLog &xml, XWritable &C0, const XReadable &K0);
 
-            //! RMS of running affinities
-            xreal_t         score(const XReadable &, const Level); 
+
 
             //! score(Ctry=Cini*(1-u)+Cend*u);
             xreal_t operator()(const xreal_t u);
@@ -82,7 +81,6 @@ namespace Yttrium
             Aftermath       solve1D;   //!< computing 1D solution
             XAdd            x_score;   //!< helper to compute score
             OutList         running;   //!< running equilibria
-            OutList         tighten;   //!< running AND decreasing
             ESolo           basis;     //!< basis of running equilibria
             XMatrix         Ceq;       //!< workspace to store 1D solution
             XArray          Cini;      //!< initial state
@@ -103,10 +101,9 @@ namespace Yttrium
             static SignType ByIncreasingSC(const OutNode * const lhs, const OutNode * const rhs) noexcept;
 
 
-
-
-            //! make best effort to decrease
-
+            //! RMS of running affinities
+            xreal_t         score(const XReadable &, const Level);
+            
             //! evaluate running after removing crucial
             xreal_t         getRunning(XMLog &xml, XWritable &C0, const XReadable &K0);
 
@@ -117,7 +114,6 @@ namespace Yttrium
             //! using optimized xi as virtual rates
             xreal_t         queryRates(XMLog &xml, const xreal_t S0);
 
-            xreal_t         zHierarchy(XMLog &xml, const xreal_t S0);
 
             //! using Newton-Raphson algorithm
             xreal_t         generateNR(XMLog &xml, const xreal_t S0, const XReadable & K0);

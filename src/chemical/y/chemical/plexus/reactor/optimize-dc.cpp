@@ -24,6 +24,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             const xreal_t zero = 0;
+            const xreal_t safe = 0.99;
             bool          cut  = false;
             for(const SNode *sn=cluster->species->head;sn;sn=sn->next)
             {
@@ -55,7 +56,7 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            if(cut) rho *= 0.99;
+            if(cut) rho *= safe; // no zero active species...
 
             {
             EVAL_Cend:
@@ -63,7 +64,7 @@ namespace Yttrium
                 {
                     if( (Cend[i] = Cini[i] + rho * dC[i]) < zero )
                     {
-                        rho *= 0.99;
+                        rho *= safe;
                         goto EVAL_Cend;
                     }
                 }
