@@ -104,8 +104,7 @@ namespace Yttrium
             xreal_t         score(const XReadable &, const Level); //!< RMS(affinities)
 
             //! make best effort to decrease
-            xreal_t         bestEffort(XMLog &xml, XWritable &C0, const XReadable &K0);
-
+            
             //! evaluate running after removing crucial
             xreal_t         getRunning(XMLog &xml, XWritable &C0, const XReadable &K0);
 

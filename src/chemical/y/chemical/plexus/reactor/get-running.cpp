@@ -50,9 +50,7 @@ namespace Yttrium
                     Y_XML_COMMENT(xml,"using crucial " << worst.eq.name);
                     cluster.expand(C0,worst.cc);
                     if(xml.verbose)
-                    {
                         cluster.show(*xml << "C0=", TopLevel,"\t[", C0, "]", xreal_t::ToString) << std::endl;
-                    }
                     goto CYCLE;
                 }
             }

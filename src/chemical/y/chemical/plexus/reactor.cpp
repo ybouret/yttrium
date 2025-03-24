@@ -98,6 +98,10 @@ namespace Yttrium
         {
             Y_XML_SECTION_OPT(xml,"Finalize", "exact=" << BooleanTo::text(exact));
             cluster.expand(C0,Cwin);
+            if(xml.verbose)
+            {
+                cluster.show(xml(), TopLevel, "\t[", C0, "]", xreal_t::ToString);
+            }
         }
 
 
@@ -124,7 +128,7 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "*** BestEffort#" << cycle+1 << " ***");
 
                 if(Trace) eraseOlderProfiles();
-
+                
                 const xreal_t S0   = getRunning(xml,C0,K0); if(running.size<=0) { Y_XML_COMMENT(xml, "All Blocked"); return; }
                 xreal_t       Swin = S0; Cwin.ld(Cini);
                 const char *  Mwin = GetRunning;
@@ -161,7 +165,10 @@ namespace Yttrium
 
         void Reactor:: increaseRates(const xreal_t px, const Components &eq)
         {
+            // apply product extent
             for(const Actor *a=eq.prod->head;a;a=a->next) a->sp(rate,SubLevel).insert(px,a->nu);
+
+            // apply reactant extent
             const xreal_t rx = -px;
             for(const Actor *a=eq.reac->head;a;a=a->next) a->sp(rate,SubLevel).insert(rx,a->nu);
         }
