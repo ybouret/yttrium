@@ -27,8 +27,8 @@ namespace Yttrium
             return optimizedC(xml,S0,10.0,"vr");
         }
 
+        
 
-      
 
 
     }

@@ -141,6 +141,7 @@ namespace Yttrium
 
 
                 Y_ChemicalReactor(narrowDown(xml,S0),    NarrowDown);
+                zHierarchy(xml,S0);
                 Y_ChemicalReactor(queryRates(xml,S0),    QueryRates);
                 Y_ChemicalReactor(generateNR(xml,S0,K0), GenerateNR);
 

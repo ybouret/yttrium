@@ -7,10 +7,21 @@ namespace Yttrium
 
         const char * const Reactor:: NarrowDown = "NarrowDown";
 
+
+        static inline bool IsAmong(const OutList &list, const Equilibrium &eq) noexcept
+        {
+            for(const OutNode *node=list.head;node;node=node->next)
+            {
+                if( &eq == & (**node).eq )  return true;
+            }
+            return false;
+        }
+
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
 
+            assert(tighten.size<=0);
             //------------------------------------------------------------------
             //
             //
@@ -59,6 +70,7 @@ namespace Yttrium
                         ptr = &out.cc;
                         lvl =  out.lv;
                     }
+                    tighten << out;
                 }
                 else
                 {
@@ -81,6 +93,7 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             MergeSort::Call(running,ByIncreasingSC);
+            MergeSort::Call(tighten,ByIncreasingSC);
             const size_t dof = cluster.N;
             qFamily.clear();
             basis.free();
@@ -104,12 +117,9 @@ namespace Yttrium
                 for(const OutNode *node=running.head;node;node=node->next)
                 {
                     const Equilibrium &eq = (**node).eq;
-                    if(basis.has(eq)) {
-                        Y_XMLOG(xml, "(*) " << **node);
-                    }
-                    else {
-                        Y_XMLOG(xml, "    " << **node);
-                    }
+                    const char * const mark1 = basis.has(eq) ? "#" : " ";
+                    const char * const mark2 = IsAmong(tighten,eq) ? "*" : "0";
+                    Y_XMLOG(xml,"(" << mark1 << mark2 << ") " << **node);
                 }
             }
 
@@ -126,7 +136,7 @@ namespace Yttrium
                 cluster.transfer(Ctry,SubLevel,*ptr,lvl);
             }
 
-            Y_XML_COMMENT(xml, NarrowDown << " result");
+            Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size << " |tighten|=" << tighten.size);
             Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
             return Snd;
         }
