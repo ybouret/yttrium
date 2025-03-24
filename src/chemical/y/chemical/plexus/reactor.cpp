@@ -38,6 +38,7 @@ namespace Yttrium
         lu(cluster.N),
         xiArr(cluster.N,Procedural,Identity),
         phiArr(cluster.N),
+        jacArr(cluster.N),
         profiles(4,AsCapacity),
         next(0),
         prev(0)
@@ -48,6 +49,7 @@ namespace Yttrium
             {
                 assert( n == xiArr[n].size() );
                 phiArr[n].make(n,cluster.M);
+                jacArr[n].make(n,n);
             }
 
 

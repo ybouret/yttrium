@@ -33,8 +33,6 @@ namespace Yttrium
             XMatrix &    Phi = phiArr[n];  assert(n==Phi.rows); assert(m==Phi.cols);
 
             Phi.ld(0);
-            xi.ld(0);
-
             //__________________________________________________________________
             //
             //
@@ -56,7 +54,7 @@ namespace Yttrium
             // J = Phi * Nu'
             //
             //__________________________________________________________________
-            XMatrix J(n,n);
+            XMatrix &J = jacArr[n]; assert(n==J.rows); assert(n==J.cols);
             for(size_t i=n;i>0;--i)
             {
                 const XReadable &phi = Phi[i]; assert(m==phi.size());
@@ -78,7 +76,6 @@ namespace Yttrium
             // evaluate J^(-1)
             //
             //__________________________________________________________________
-            LU<xreal_t> lu(n);
             if( !lu.build(J) )
             {
                 Y_XML_COMMENT(xml, "singular system");
