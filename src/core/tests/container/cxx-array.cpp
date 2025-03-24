@@ -9,6 +9,8 @@ using namespace Yttrium;
 
 
 
+static inline size_t TheProc(size_t indx) { return indx*2; }
+
 Y_UTEST(container_cxx_array)
 {
     typedef CxxArray<apn,Memory::Pooled> IArray;
@@ -47,6 +49,10 @@ Y_UTEST(container_cxx_array)
         std::cerr << "B=" << B << std::endl;
     }
 
+    {
+        CxxArray<size_t> arr(7,Procedural,TheProc);
+        std::cerr << "Procedural = " << arr << std::endl;
+    }
 
 }
 Y_UDONE()

@@ -5,6 +5,7 @@
 #include "y/container/writable.hpp"
 #include "y/type/destruct.hpp"
 #include "y/type/copy.hpp"
+#include "y/type/procedural.hpp"
 #include <typeinfo>
 
 namespace Yttrium
@@ -125,7 +126,7 @@ namespace Yttrium
         inline virtual ~Operating() noexcept { }
 
         //! setup numBlocks objects with default constructor
-        inline explicit Operating(void        *workspace,
+        inline explicit Operating(void * const workspace,
                                   const size_t numBlocks) :
         Core::Operating(workspace,numBlocks,sizeof(T),SelfBuild,0,SelfSmash)
         {
@@ -133,7 +134,7 @@ namespace Yttrium
 
         //! setup numblocks with 1-argument constructor
         template <typename U>
-        inline explicit Operating(void        *workspace,
+        inline explicit Operating(void * const workspace,
                                   const size_t numBlocks,
                                   U           &arguments) :
         Core::Operating(workspace,numBlocks,sizeof(T),SelfBuild1<U>,(void*)&arguments,SelfSmash)
@@ -142,19 +143,31 @@ namespace Yttrium
 
         //! copy objects with [copy|manual]
         template <typename U>
-        inline explicit Operating(void *target, const Operating<U> &source) :
+        inline explicit Operating(void * const        target,
+                                  const Operating<U> &source) :
         Core::Operating(target,sizeof(T),source,XCopyAny<U>,SelfSmash)
         {
         }
 
         //! building from a (foreign) sequence
         template <typename SEQUENCE>
-        inline explicit Operating(void *target, const CopyOf_ &, SEQUENCE &source) :
-        Core::Operating(target,source.size(),sizeof(T),XProcAny<SEQUENCE>,(void*) &source,SelfSmash)
+        inline explicit Operating(void * const   target,
+                                  const CopyOf_ &,
+                                  SEQUENCE &     source) :
+        Core::Operating(target,source.size(),sizeof(T),XDuplicate<SEQUENCE>,(void*) &source,SelfSmash)
         {
 
         }
 
+        //! building with proc(indx)
+        template <typename PROC>
+        inline explicit Operating(void * const workspace,
+                                  const size_t numBlocks,
+                                  const Procedural_ &,
+                                  PROC &       function) :
+        Core::Operating(workspace,numBlocks,sizeof(T),XProcedural<PROC>,(void*)&function,SelfSmash)
+        {
+        }
 
         //______________________________________________________________________
         //
@@ -198,7 +211,7 @@ namespace Yttrium
         }
 
         template <typename SEQUENCE>
-        static inline void XProcAny(void *addr, void *user, const size_t indx)
+        static inline void XDuplicate(void *addr, void *user, const size_t indx)
         {
             assert(0!=addr);
             assert(0!=user);
@@ -208,6 +221,16 @@ namespace Yttrium
             assert(indx<=source.size());
             new (addr) MutableType( source[indx] );
         }
+
+        template <typename PROC>
+        static inline void XProcedural(void *addr, void *user, const size_t indx)
+        {
+            assert(0!=addr);
+            assert(0!=user);
+            PROC &proc = *(PROC *)(user);
+            new (addr) MutableType( proc(indx) );
+        }
+
 
 
     };

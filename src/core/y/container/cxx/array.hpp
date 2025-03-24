@@ -136,6 +136,17 @@ count( COUNT )
         {
         }
 
+        //! procedural constructor
+        template <typename PROC>
+        inline explicit CxxArray(const size_t       n,
+                                 const Procedural_ &procedural,
+                                 PROC              &function ) :
+        Y_CxxArray_Prolog(n),
+        OpsType(this->workspace,n,procedural,function),
+        Y_CxxArray_Epilog(n)
+        {
+        }
+
         //! cleanup
         inline virtual ~CxxArray() noexcept {}
 
