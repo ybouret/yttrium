@@ -52,7 +52,7 @@ Y_UTEST(plexus)
 
 
     Reactor::MonitorScore = true;
-    Reactor::EmitProfiles = true;
+    //Reactor::EmitProfiles = true;
     
     Reactors cs(cls);
     Library::Concentrations(C0,ran,0.5);

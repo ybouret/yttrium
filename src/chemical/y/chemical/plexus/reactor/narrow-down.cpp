@@ -1,4 +1,5 @@
 #include "y/chemical/plexus/reactor.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -128,6 +129,8 @@ namespace Yttrium
 
             Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size );
             Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
+
+            throw Exception("Stopping Now");
             return Snd;
         }
     }

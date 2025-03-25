@@ -44,7 +44,7 @@ Y_UTEST(opt_bracket)
     }
 
 
-    
+
     {
         Triplet<double> x = { 0, 0, 0.5 };
 

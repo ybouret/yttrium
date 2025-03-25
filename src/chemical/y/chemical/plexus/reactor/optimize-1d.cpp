@@ -13,8 +13,8 @@ namespace Yttrium
 
         xreal_t Reactor:: optimize1D(const xreal_t Sini)
         {
-            MKL::Bracketing::Verbose = true;
-            MKL::Minimizing::Verbose = true;
+            //MKL::Bracketing::Verbose = true;
+            //MKL::Minimizing::Verbose = true;
 
             Reactor &self = *this;
             XTriplet U    = { 0,    0,  1 };
