@@ -33,14 +33,16 @@ namespace Yttrium
                 }
 
 
-                void increase(XTriplet &xi, XTriplet &ff)
+                void increaseXi(XTriplet &xi, XTriplet &ff)
                 {
+                    assert(xi.c>0.0);
                     Activator &F = *this;
                     while( (ff.c=F(xi.c)).mantissa > 0.0 ) xi.c += xi.c;
                 }
 
-                void decrease(XTriplet &xi, XTriplet &ff)
+                void decreaseXi(XTriplet &xi, XTriplet &ff)
                 {
+                    assert(xi.c<0.0);
                     Activator &F = *this;
                     while( (ff.c=F(xi.c)).mantissa < 0.0 ) xi.c += xi.c;
                 }
@@ -118,7 +120,7 @@ namespace Yttrium
                         case __Zero__: return zero;
                         case Positive:
                             xi.c = K.pow(prod.kxp); //prod.scaling(K);
-                            F.increase(xi,ff);
+                            F.increaseXi(xi,ff);
                             break;
                         case Negative:
                             xi.c = -prod.limiting(C,L);
@@ -146,7 +148,7 @@ namespace Yttrium
 
                         case Negative:
                             xi.c = -K.pow(-reac.kxp);
-                            F.decrease(xi,ff);
+                            F.decreaseXi(xi,ff);
                             break;
                     }
                     break;
