@@ -2,6 +2,7 @@
 
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/api.hpp"
+#include "y/mkl/numeric.hpp"
 #include "y/type/utils.hpp"
 #include "y/system/exception.hpp"
 
