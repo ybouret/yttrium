@@ -11,6 +11,15 @@ namespace Yttrium
         {
             Y_XML_SECTION(xml,QueryRates);
 
+            x_score.free();
+            for(const OutNode *node=running.head;node;node=node->next)
+            {
+                const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
+                x_score << out.wr;
+            }
+            const xreal_t sumWr = x_score.sum();
+            Y_XML_COMMENT(xml, "sum of weights=" << sumWr.str() );
+
             //------------------------------------------------------------------
             //
             //
@@ -22,7 +31,9 @@ namespace Yttrium
             for(const OutNode *node=running.head;node;node=node->next)
             {
                 const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
-                increaseRates(out.xi,out.eq);
+                const xreal_t        cof = out.wr/sumWr;
+                Y_XMLOG(xml, "weight: " << cof.str() << " @" << out.eq.name);
+                increaseRates(out.xi * cof,out.eq);
             }
             return optimizedC(xml,S0,10.0,"vr");
         }

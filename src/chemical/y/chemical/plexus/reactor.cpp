@@ -2,6 +2,7 @@
 #include "y/stream/libc/output.hpp"
 #include "y/text/boolean.hpp"
 #include "y/text/plural.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -162,7 +163,7 @@ namespace Yttrium
             unsigned cycle = 0;
         CYCLE:
             {
-                Y_XML_COMMENT(xml, "*** BestEffort#" << cycle+1 << " ***");
+                Y_XML_COMMENT(xml, " -- BestEffort#" << cycle+1 << " --");
 
                 if(EmitProfiles) eraseOlderProfiles();
 
@@ -198,8 +199,9 @@ namespace Yttrium
                 }
 
                 cluster.expand(C0,Cwin);
+
+                throw Exception("Need to work..");
                 goto CYCLE;
-                if(cycle<1) goto CYCLE;
             }
 
         }

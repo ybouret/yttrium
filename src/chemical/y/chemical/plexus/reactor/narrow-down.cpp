@@ -54,6 +54,7 @@ namespace Yttrium
                     out.xi = out.eq.extent(x_score, out.cc, out.lv, Cini, SubLevel);
                     out.ax = out.xi.abs();
                     out.sc = Stry;
+                    out.wr = S0-Stry;
                     Y_XMLOG(xml,"[*] " << out);
                     if(Stry<Snd)
                     {
@@ -71,6 +72,7 @@ namespace Yttrium
                     out.xi = 0;
                     out.ax = 0;
                     out.sc = S0;
+                    out.wr = 0;
                     Y_XMLOG(xml,"[0] " << out);
                 }
             }
@@ -130,7 +132,6 @@ namespace Yttrium
             Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size );
             Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
 
-            throw Exception("Stopping Now");
             return Snd;
         }
     }

@@ -19,7 +19,8 @@ namespace Yttrium
         lv(_lv),
         xi(_xi),
         ax(xi.abs()),
-        sc(0)
+        sc(0),
+        wr(0)
         {
         }
 
@@ -32,7 +33,8 @@ namespace Yttrium
         lv(_.lv),
         xi(_.xi),
         ax(_.ax),
-        sc(_.sc)
+        sc(_.sc),
+        wr(_.wr)
         {}
 
 

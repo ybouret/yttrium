@@ -69,6 +69,8 @@ namespace Yttrium
             xreal_t             xi; //!< extent from original concentrations
             xreal_t             ax; //!< |xi|
             xreal_t             sc; //!< score
+            xreal_t             wr; //!< weight for rates
+
         private:
             Y_DISABLE_ASSIGN(Outcome);
         };
