@@ -40,24 +40,8 @@ Y_UTEST(plexus)
     Clusters       cls(xml,eqs,0.0);
 
     std::cerr << "lib=" << lib << std::endl;
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-    {
-        std::cerr << *cl << std::endl;
-        //GraphViz::Vizible::DotToPngEx( Formatted::Get("cluster%u.dot",cl->uuid), *cl, order1);
-        const String dotFile = Formatted::Get("cluster%u.dot",cl->uuid);
-        {
-            OutputFile fp( dotFile );
-            GraphViz::Vizible::Enter(fp,"G");
-            cl->viz(fp,1);
-            GraphViz::Vizible::Leave(fp);
-        }
-
-        GraphViz:: Vizible:: RenderPNG(dotFile,true);
-    }
-
     cls.graphViz("cs");
-    return 0;
-
+    
     const size_t m = lib->size();
     XVector      C0(m,0);
     XVector      C(m,0);

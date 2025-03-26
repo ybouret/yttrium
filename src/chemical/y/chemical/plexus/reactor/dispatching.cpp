@@ -89,7 +89,7 @@ namespace Yttrium
 
                 cluster.expand(C0,Cwin);
 
-                throw Exception("Need to work..");
+                //throw Exception("Need to work..");
                 goto CYCLE;
             }
 
