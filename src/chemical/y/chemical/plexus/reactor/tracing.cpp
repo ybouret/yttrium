@@ -2,11 +2,14 @@
 #include "y/chemical/plexus/reactor.hpp"
 #include "y/stream/libc/output.hpp"
 #include "y/lingo/vfs/find.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        using namespace Lingo;
 
         bool               Reactor:: EmitProfiles = false;
         const char * const Reactor:: ProfileExt   = "pro";
@@ -14,9 +17,31 @@ namespace Yttrium
         void Reactor:: eraseOlderProfiles() noexcept
         {
             profiles.free();
-            Lingo::LocalFileSystem::TryRemoveExtension::In(".",ProfileExt);
+            LocalFileSystem::TryRemoveExtension::In(".",ProfileExt);
         }
 
+        void Reactor:: EraseIfDifferentOf(const String &baseName)
+        {
+            VFS &        vfs = LocalFileSystem::Get();
+            VFS::Entries entries;
+
+            VirtualFileSystem::Find(vfs,entries, ".", ProfileExt, Lingo::Matching::Exactly,VFS::Entry::Ext);
+
+            const String target = baseName + '.' + ProfileExt;
+            bool         found  = false;
+            for(VFS::Entry *ep=entries.head;ep;ep=ep->next)
+            {
+                if(ep->base == target)
+                {
+                    found = true;
+                    continue;
+                }
+                vfs.tryRemoveFile(ep->path);
+            }
+            if(!found)
+                throw Specific::Exception(CallSign,"Missing '%s'", target.c_str());
+
+        }
 
         void Reactor:: saveCurrentProfile(const String &baseName, const size_t np)
         {

@@ -14,7 +14,7 @@ namespace Yttrium
         {
             assert(0!=uid);
             assert(rho>0.0);
-            Y_XML_SECTION_OPT(xml, "OptimizedC", "uid=" << uid);
+            Y_XML_SECTION_OPT(xml, "Optimizing", "uid=" << uid);
 
             //------------------------------------------------------------------
             //

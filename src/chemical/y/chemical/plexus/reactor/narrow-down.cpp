@@ -104,7 +104,12 @@ namespace Yttrium
                 }
             }
 
-            if(basis.size>0) profiles << *(**basis.head).name;
+            if(basis.size>0)
+            {
+                const String &uid = *(**basis.head).name;
+                profiles << uid;
+                if(EmitProfiles) EraseIfDifferentOf(uid);
+            }
 
             if(xml.verbose)
             {

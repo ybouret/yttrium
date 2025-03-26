@@ -10,11 +10,11 @@ namespace Yttrium
     {
 
 
-        //using namespace MKL;
 
 
       
-
+        const char * const  Reactor:: CallSign = "Reactor";
+        
         namespace
         {
             static inline size_t Identity(const size_t i) noexcept { return i; }

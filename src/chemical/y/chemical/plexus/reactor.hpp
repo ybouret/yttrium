@@ -46,6 +46,7 @@ namespace Yttrium
         class Reactor : public Quantized
         {
         public:
+            static const char * const  CallSign;     //!< "Reactor"
             static const char * const  ProfileExt;   //!< "pro"
             static bool                EmitProfiles; //!< default to false, emit profiles
             static bool                MonitorScore; //!< default to false, monitor score
@@ -151,6 +152,7 @@ namespace Yttrium
 
             void            saveCurrentProfile(const String &, const size_t);             //!< save Cini->Cend, change Ctry!!
             void            eraseOlderProfiles() noexcept;                                //!< remove .pro
+            void            EraseIfDifferentOf(const String &);                           //!< remove .pro not matching
             static void     EmitGnuPlotTracing(std::ostream &os, const String &baseName); //!< helper
             void            emitGnuPlotTracing(std::ostream &os) const;                   //!< emit command line
         };
