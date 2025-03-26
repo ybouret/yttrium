@@ -6,6 +6,7 @@
 #define Y_Chemical_Cluster_Included 1
 
 #include "y/chemical/plexus/cluster/combinatorics.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -31,6 +32,7 @@ namespace Yttrium
             //__________________________________________________________________
             static const char * const  CallSign; //!< "Cluster"
             typedef CxxListOf<Cluster> List;     //!< alias
+            typedef Vector<const String,MemoryModel> Strings;
 
             //__________________________________________________________________
             //
@@ -45,6 +47,8 @@ namespace Yttrium
             virtual ~Cluster() noexcept;          //!< cleanup
             Y_OSTREAM_PROTO(Cluster);             //!< display
 
+            void viz(OutputStream &fp,
+                     const size_t   numOrder) const;
 
             //__________________________________________________________________
             //
@@ -133,6 +137,7 @@ namespace Yttrium
             Cluster *      next; //!< for list
             Cluster *      prev; //!< for list
             const unsigned uuid; //!< indexing
+            const Strings  spColor;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

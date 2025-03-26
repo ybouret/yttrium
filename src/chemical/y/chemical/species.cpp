@@ -25,6 +25,24 @@ namespace Yttrium
             const String description = String::ReadFrom(fp,Formula::CallSign);
             return new Species(description,id);
         }
+
+
+        void Species:: viz(OutputStream &       fp,
+                           const String * const color    ,
+                           const bool           conserved) const
+        {
+            Node(fp,this) << '[';
+
+            fp << "label=< ";
+            fp << *html;
+            fp << " >";
+
+            fp << ",shape=box";
+            if(!conserved) fp << ",style=dashed";
+            if(color)      fp << ',' << *color;
+            Endl(fp<<']');
+        }
+
     }
 }
 

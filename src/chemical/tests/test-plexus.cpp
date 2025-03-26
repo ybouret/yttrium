@@ -3,13 +3,12 @@
 #include "y/chemical/plexus/reactors.hpp"
 
 #include "y/chemical/weasel.hpp"
-#include "y/sequence/vector.hpp"
 
 #include "y/utest/run.hpp"
 
 #include "y/random/mt19937.hpp"
 
-
+#include "y/stream/libc/output.hpp"
 
 using namespace Yttrium;
 using namespace Chemical;
@@ -44,7 +43,19 @@ Y_UTEST(plexus)
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         std::cerr << *cl << std::endl;
+        //GraphViz::Vizible::DotToPngEx( Formatted::Get("cluster%u.dot",cl->uuid), *cl, order1);
+        const String dotFile = Formatted::Get("cluster%u.dot",cl->uuid);
+        {
+            OutputFile fp( dotFile );
+            GraphViz::Vizible::Enter(fp,"G");
+            cl->viz(fp,1);
+            GraphViz::Vizible::Leave(fp);
+        }
+
+        GraphViz:: Vizible:: RenderPNG(dotFile,true);
     }
+
+
 
     const size_t m = lib->size();
     XVector      C0(m,0);

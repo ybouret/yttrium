@@ -8,6 +8,7 @@
 #include "y/chemical/formula.hpp"
 #include "y/chemical/type/charge.hpp"
 #include "y/data/small/light/list/bare.hpp"
+#include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
 {
@@ -29,7 +30,8 @@ namespace Yttrium
         public Charge,
         public Indexed,
         public Counted,
-        public Serializable
+        public Serializable,
+        public GraphViz:: Vizible
         {
         public:
             //__________________________________________________________________
@@ -70,8 +72,10 @@ namespace Yttrium
             //__________________________________________________________________
             virtual size_t   serialize(OutputStream &fp) const;          //!< univocal formula
             static Species * ReadFrom(InputStream &fp, const size_t id); //!< retrieve from serialized
-
-
+            void   viz(OutputStream &       fp,
+                       const String * const color     = 0,
+                       const bool           conserved = true) const;
+            
             //__________________________________________________________________
             //
             //

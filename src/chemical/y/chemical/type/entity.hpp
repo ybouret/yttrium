@@ -6,7 +6,6 @@
 #define Y_Chemical_Entity_Included 1
 
 #include "y/chemical/type/xcode.hpp"
-
 namespace Yttrium
 {
     namespace Chemical

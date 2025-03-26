@@ -13,6 +13,8 @@ namespace Yttrium
             
         }
 
+        const char * const SpeciesScheme = "set19";
+
         Cluster::Cluster( XMLog                         &xml,
                          const ClusterContent::Pointer &ptr,
                          Equilibria                    &eqs,
@@ -20,9 +22,20 @@ namespace Yttrium
         ClusterCombinatorics(xml,ptr,eqs,tlK),
         next(0),
         prev(0),
-        uuid(0)
+        uuid(0),
+        spColor( (*this)->species->size, AsCapacity )
         {
-
+            {
+                Strings &colors = Coerce(spColor);
+                for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    const String   descr = Species::Color(SpeciesScheme,sp.indx[SubLevel]);
+                    const String   color = "color=" + descr + ",textcolor=" + descr;
+                    colors << color;
+                    std::cerr << color << std::endl;
+                }
+            }
         }
         
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
@@ -40,6 +53,23 @@ namespace Yttrium
             }
             os << '}';
             return os;
+        }
+
+
+        void Cluster:: viz(OutputStream &fp,
+                           const size_t   numOrder) const
+        {
+            fp("subgraph cluster_%u",uuid) << "{\n";
+
+            for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn;
+                const String * const color = & sp(spColor,SubLevel);
+                sp.viz(fp,color);
+            }
+
+
+            fp << "}\n";
         }
     }
 
