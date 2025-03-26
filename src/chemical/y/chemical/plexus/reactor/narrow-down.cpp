@@ -12,6 +12,7 @@ namespace Yttrium
         xreal_t Reactor:: narrowDown(XMLog &xml, const xreal_t S0)
         {
             Y_XML_SECTION_OPT(xml,NarrowDown, "running=" << running.size);
+            assert(0==tighten.size);
 
             //------------------------------------------------------------------
             //
@@ -62,6 +63,7 @@ namespace Yttrium
                         ptr = &out.cc;
                         lvl =  out.lv;
                     }
+                    tighten << out;
                 }
                 else
                 {
@@ -129,7 +131,7 @@ namespace Yttrium
                 cluster.transfer(Ctry,SubLevel,*ptr,lvl);
             }
 
-            Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size );
+            Y_XML_COMMENT(xml, NarrowDown << " result: |running|=" << running.size << " |basis|=" << basis.size << " |tighten|=" << tighten.size);
             Y_XMLOG(xml, "Snd = " << Snd.str() << " // S0=" << S0.str() );
 
             return Snd;

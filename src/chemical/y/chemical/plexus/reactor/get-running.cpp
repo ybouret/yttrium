@@ -12,6 +12,7 @@ namespace Yttrium
                                      const XReadable & K0)
         {
             size_t cycle = 0;
+            tighten.free();
         CYCLE:
             ++cycle;
             Y_XML_SECTION_OPT(xml,GetRunning, "cycle="<<cycle);

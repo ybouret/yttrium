@@ -23,7 +23,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XMLOG(xml, "probing increases" );
             const xreal_t zero = 0;
             const xreal_t safe = 0.99;
             bool          cut  = false;
@@ -57,7 +56,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XMLOG(xml, "evaluate final concentration" );
             if(cut) rho *= safe; // no zero active species...
 
             {
@@ -85,7 +83,6 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            Y_XMLOG(xml, "optimizing" );
             const xreal_t Stry = optimize1D(S0);
             Y_XML_COMMENT(xml, uid << " result");
             Y_XMLOG(xml, "S" << uid << "=" << Stry.str() << " // S0=" << S0.str() );
