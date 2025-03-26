@@ -55,7 +55,7 @@ Y_UTEST(plexus)
         GraphViz:: Vizible:: RenderPNG(dotFile,true);
     }
 
-
+    cls.graphViz("cs");
     return 0;
 
     const size_t m = lib->size();

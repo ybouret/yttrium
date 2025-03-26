@@ -1,5 +1,6 @@
 #include "y/chemical/plexus/clusters.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
@@ -61,6 +62,25 @@ namespace Yttrium
             return K;
         }
 
+
+        void Clusters:: graphViz(const String &baseName) const
+        {
+            for(size_t i=1;i<=maxOrder;++i)
+            {
+                const String fn = baseName + Formatted::Get("%u", unsigned(i)) + ".dot";
+                {
+                    OutputFile fp(fn);
+                    GraphViz::Vizible::Enter(fp,"G");
+                    for(Cluster *cl=my.head;cl;cl=cl->next)
+                    {
+                        cl->viz(fp,i);
+                        fp << '\n';
+                    }
+                    GraphViz::Vizible::Leave(fp);
+                }
+                GraphViz::Vizible::RenderPNG(fn,false);
+            }
+        }
     }
 
 }

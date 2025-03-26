@@ -59,6 +59,9 @@ namespace Yttrium
             //! evaluate K(t0)
             const XReadable &operator()(const xreal_t);
 
+
+            void graphViz(const String &baseName) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Y_PROXY_DECL();
