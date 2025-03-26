@@ -6,8 +6,7 @@
 #define Y_Chemical_FormulaToText_Included 1
 
 #include "y/chemical/weasel.hpp"
-#include "y/lingo/syntax/translator.hpp"
-#include "y/sequence/vector.hpp"
+#include "y/chemical/weasel/formula/compiler.hpp"
 
 namespace Yttrium
 {
@@ -21,9 +20,11 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Weasel:: FormulaToText : public Lingo::Syntax::Translator
+        class Weasel:: FormulaToText : public FormulaCompiler
         {
         public:
+            static const char * const CallSign; //!< "FormulaToText"
+
             //__________________________________________________________________
             //
             //
@@ -39,13 +40,14 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
             //! build name and fetch
             const String *get(const XNode &node, int &z);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToText);
-            Vector<String>  str;
-            Vector<String>  cof;
+            Strings         str;
+            Strings         cof;
             Vector<char>    sgn;
             AutoPtr<String> uid;
             int             zzz;

@@ -25,8 +25,10 @@ namespace Yttrium
 #define OnTerminal(NAME) Y_Lingo_OnTerminal(FormulaToText,NAME)
 #define OnInternal(NAME) Y_Lingo_OnInternal(FormulaToText,NAME)
 
+        const char * const Weasel:: FormulaToText:: CallSign = "FormulaToText";
+
         Weasel:: FormulaToText:: FormulaToText() :
-        Lingo::Syntax::Translator("FormulaToText"),
+        FormulaCompiler(CallSign),
         str(),
         cof(),
         sgn(),

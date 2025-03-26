@@ -35,7 +35,7 @@ namespace Yttrium
             static const char * const      StringID;       //!< "String";
             class Parser;
             class FormulaToText;
-            class FormulaToSpec;
+            class FormulaToHTML;
             class Code;
 
             //__________________________________________________________________
