@@ -17,7 +17,11 @@ namespace Yttrium
 
         const String * Weasel:: FormulaToHTML:: get(const XNode &node)
         {
-
+            assert( Formula::CallSign == node.name() );
+            Translator &self = *this;
+            self.policy = Lingo::Syntax::Permissive;
+            self.verbose = true;
+            self(node);
             return new String();
         }
 

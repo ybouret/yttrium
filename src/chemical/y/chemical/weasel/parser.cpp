@@ -120,7 +120,6 @@ namespace Yttrium
 
         static inline void cleanupFormula(XNode * const formula) noexcept
         {
-            std::cerr << "cleanupFormula" << std::endl;
             assert(formula->is(Formula::CallSign));
             XList &list = formula->branch(); assert(1==list.size||2==list.size);
             if(2==list.size)
@@ -259,7 +258,7 @@ namespace Yttrium
                     if( node->is(RegExp) )
                     {
                         const String regexp = '@' + node->lexeme().toString(1,0);
-                        std::cerr << "Found RegExp = '" << regexp << "'" << std::endl;
+                        //std::cerr << "Found RegExp = '" << regexp << "'" << std::endl;
                         processRegExp(temp,regexp);
                         continue; // drop node
                     }
@@ -315,7 +314,7 @@ namespace Yttrium
                 if(matching.exactly(uuid,uuid))
                 {
                     ++count;
-                    std::cerr << "Matching '" << uuid << "'" << std::endl;
+                    //std::cerr << "Matching '" << uuid << "'" << std::endl;
                     AutoPtr<XNode> root = preprocess( Lingo::Module::OpenData(uuid,entry) ); assert( root->is(CallSign) );
                     target.mergeTail(root->branch());
                 }
