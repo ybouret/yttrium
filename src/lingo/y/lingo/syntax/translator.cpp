@@ -26,7 +26,11 @@ namespace Yttrium
             {
             }
 
-            
+            void Translator:: show() const
+            {
+
+            }
+
 
             void Translator:: operator()(const XNode &root)
             {
@@ -46,6 +50,7 @@ namespace Yttrium
                     case XNode::Terminal: pushTerminal(node->rule.name,node->lexeme()); break;
                     case XNode::Internal: callInternal(node->rule.name,node->branch()); break;
                 }
+                show();
             }
 
             std::ostream & Translator:: indent() const

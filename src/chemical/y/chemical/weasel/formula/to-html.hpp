@@ -46,8 +46,22 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FormulaToHTML);
-            Strings str;
+            Strings         str;
+            AutoPtr<String> uid;
 
+            virtual void init();
+            virtual void quit();
+            virtual void show() const;
+
+            void onName(const Lexeme &);
+            void onCoef(const Lexeme &);
+            void onPos(const Lexeme &);
+            void onNeg(const Lexeme &);
+
+            void onZ(const size_t);
+            void onMult(const size_t);
+            void onBody(const size_t);
+            void onFormula(const size_t);
         };
     }
 

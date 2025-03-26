@@ -77,8 +77,9 @@ namespace Yttrium
                 // Interface
                 //
                 //______________________________________________________________
-                virtual void init(); //!< initialize, default is do-nothing for standalone
-                virtual void quit(); //!< quit, default is do-nothing for standalone
+                virtual void init();       //!< initialize, default is do-nothing for standalone
+                virtual void quit();       //!< quit, default is do-nothing for standalone
+                virtual void show() const; //!< show during walk, default is do-nothing for standalone
 
                 //______________________________________________________________
                 //
