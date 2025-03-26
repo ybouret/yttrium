@@ -53,7 +53,8 @@ namespace Yttrium
                              const size_t i) :
             Formula(description),
             Charge(),
-            Indexed( text(Coerce(z)), i  )
+            Indexed( toText(Coerce(z)), i  ),
+            html(    toHTML() )
             {
 
             }
@@ -70,6 +71,14 @@ namespace Yttrium
             virtual size_t   serialize(OutputStream &fp) const;          //!< univocal formula
             static Species * ReadFrom(InputStream &fp, const size_t id); //!< retrieve from serialized
 
+
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            const XName html; //!< HTML label
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

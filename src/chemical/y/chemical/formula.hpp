@@ -54,7 +54,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
-            const  String * text(int &z) const; //!< build name text and fetch z
+            const  String * toText(int &z) const; //!< build name text and fetch z
+            const  String * toHTML()     const; //!< build html label
             String          uuid()       const; //!< return built name
 
         private:

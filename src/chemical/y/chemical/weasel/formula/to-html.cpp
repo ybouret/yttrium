@@ -15,6 +15,12 @@ namespace Yttrium
         {
         }
 
+        const String * Weasel:: FormulaToHTML:: get(const XNode &node)
+        {
+
+            return new String();
+        }
+
 
 
     }

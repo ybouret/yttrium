@@ -16,6 +16,7 @@ namespace Yttrium
 
 #include "y/chemical/weasel/parser.hpp"
 #include "y/chemical/weasel/formula/to-text.hpp"
+#include "y/chemical/weasel/formula/to-html.hpp"
 #include "y/lua++/function.hpp"
 #include <cstring>
 
@@ -32,6 +33,7 @@ namespace Yttrium
             inline Code() :
             parser(),
             formulaToText(),
+            formulaToHTML(),
             lvm( new Lua::State() )
             {
             }
@@ -40,6 +42,7 @@ namespace Yttrium
 
             Parser        parser;
             FormulaToText formulaToText;
+            FormulaToHTML formulaToHTML;
             Lua::VM       lvm;
 
         private:
@@ -81,6 +84,12 @@ namespace Yttrium
         {
             assert(0!=code);
             return code->formulaToText.get(*f,z);
+        }
+
+        const String * Weasel:: formulaToHTML(const Formula &f)
+        {
+            assert(0!=code);
+            return code->formulaToHTML.get(*f);
         }
 
     }
@@ -135,17 +144,23 @@ namespace Yttrium
         }
 
 
-        const String * Formula:: text(int &z) const
+        const String * Formula:: toText(int &z) const
         {
             static Weasel &weasel = Weasel::Instance();
             return weasel.formulaToText(*this,z);
+        }
+
+        const String * Formula:: toHTML() const
+        {
+            static Weasel &weasel = Weasel::Instance();
+            return weasel.formulaToHTML(*this);
         }
 
         
         String Formula:: uuid() const
         {
             int z = 0;
-            AutoPtr<const String> uuid = text(z);
+            AutoPtr<const String> uuid = toText(z);
             return *uuid;
         }
 
