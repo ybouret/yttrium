@@ -84,6 +84,7 @@ namespace Yttrium
             Aftermath       solve1D;   //!< computing 1D solution
             XAdd            x_score;   //!< helper to compute score
             OutList         running;   //!< running equilibria
+            OutList         tighten;   //!< tightening equilibria
             ESolo           basis;     //!< basis of running equilibria
             XMatrix         Ceq;       //!< workspace to store 1D solution
             XArray          Cini;      //!< initial state
@@ -103,6 +104,7 @@ namespace Yttrium
             Reactor *       next;      //!< for list
             Reactor *       prev;      //!< for list
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             static bool     IsRunning(const Outcome &) noexcept;

@@ -39,7 +39,7 @@ namespace Yttrium
             {
                 const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
                 const xreal_t        cof = out.wr/maxWr;
-                Y_XMLOG(xml, "weight: " << cof.str() << " @" << out.eq.name);
+                Y_XMLOG(xml, "weight: " << std::setw(24) << cof.str() << " @" << out.eq.name);
                 increaseRates(out.xi * cof,out.eq);
             }
             return optimizedC(xml,S0,10.0,"vr");
