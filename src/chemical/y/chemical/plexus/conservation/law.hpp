@@ -22,7 +22,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Law :  public Actors
+            class Law :  public Actors, public GraphViz::Vizible
             {
             public:
                 //______________________________________________________________
@@ -37,10 +37,20 @@ namespace Yttrium
                 //______________________________________________________________
                 //
                 //
+                // Methods
+                //
+                //______________________________________________________________
+                void viz(OutputStream &fp, const String * const color=0) const;
+
+
+                //______________________________________________________________
+                //
+                //
                 // Members
                 //
                 //______________________________________________________________
                 const unsigned norm2; //!< |*this|^2
+                const size_t   uuid;  //!< in laws per cluster
                 Law *          next;  //!< for list
                 Law *          prev;  //!< for list
                 

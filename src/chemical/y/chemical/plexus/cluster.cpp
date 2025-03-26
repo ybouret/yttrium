@@ -14,7 +14,8 @@ namespace Yttrium
         }
 
         const char * const SpScheme = "dark28";
-        const char * const EqScheme = "set18";
+        const char * const EqScheme = "set28";
+        const char * const CnScheme = "paired9";
 
         Cluster::Cluster( XMLog                         &xml,
                          const ClusterContent::Pointer &ptr,
@@ -25,7 +26,8 @@ namespace Yttrium
         prev(0),
         uuid(0),
         spColor( (*this)->species->size, AsCapacity ),
-        eqColor( (*this)->equilibria->size, AsCapacity )
+        eqColor( (*this)->equilibria->size, AsCapacity ),
+        cnColor( ordinance->size, AsCapacity)
         {
             {
                 Strings &colors = Coerce(spColor);
@@ -43,11 +45,21 @@ namespace Yttrium
                 Strings &colors = Coerce(eqColor);
                 for(const ENode *en = (*this)->equilibria->head;en;en=en->next)
                 {
-                    const Equilibrium &eq = **en;
-                    const String   descr = Species::Color(EqScheme,eq.indx[SubLevel]);
-                    const String   color = "color=" + descr + ",fontcolor=" + descr;
+                    const Equilibrium &eq   = **en;
+                    const String       descr = Species::Color(EqScheme,eq.indx[SubLevel]);
+                    const String       color = "color=" + descr + ",fontcolor=" + descr;
                     colors << color;
                     //std::cerr << color << std::endl;
+                }
+            }
+
+            {
+                Strings &colors = Coerce(cnColor);
+                for(const Conservation::Law *ln=ordinance->head;ln;ln=ln->next)
+                {
+                    const String       descr = Species::Color(CnScheme,ln->uuid);
+                    const String       color = "color=" + descr + ",fontcolor=" + descr;
+                    colors << color;
                 }
             }
 
@@ -91,6 +103,14 @@ namespace Yttrium
                     const Equilibrium &eq = **en;
                     const String * const color = & eq(eqColor,SubLevel);
                     (**en).viz(fp,color);
+                }
+
+                if(numOrder==1)
+                {
+                    for(const Conservation::Law *law=ordinance->head;law;law=law->next)
+                    {
+                        law->viz(fp,&cnColor[law->uuid]);
+                    }
                 }
 
                 fp << "}\n";

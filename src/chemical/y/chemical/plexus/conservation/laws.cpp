@@ -23,6 +23,7 @@ namespace Yttrium
             {
                 SList &L = Coerce(species);
 
+                size_t uuid=0;
                 for(;rule;rule=rule->next) {
                     Law * const law = my.pushTail( new Law(rule) ); assert(law->latched);
                     for(const Actor *a=(*law)->head;a;a=a->next)
@@ -32,6 +33,7 @@ namespace Yttrium
                         L << sp;
                     }
                     enroll(*law);
+                    Coerce(law->uuid) = ++uuid;
                 }
 
                 MetaList<SList>::Sort(L);

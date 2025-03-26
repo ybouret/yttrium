@@ -37,7 +37,7 @@ namespace Yttrium
             fp << *html;
             fp << " >";
 
-            fp << ",shape=box";
+            fp << ",shape=ellipse";
             if(!conserved) fp << ",style=dashed";
             if(color)      fp << ',' << *color;
             Endl(fp<<']');

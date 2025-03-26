@@ -26,12 +26,31 @@ namespace Yttrium
             Law:: Law(Rule * const rule) :
             Actors(rule->in),
             norm2(ActorsNorm2(*rule)),
+            uuid(0),
             next(0),
             prev(0)
             {
                 Actors::Exchange(*this,*rule);
                 latch();
             }
+
+
+            void Law:: viz(OutputStream &fp, const String * const color) const
+            {
+                Node(fp,this) << '[';
+                Label(fp,*name);
+                if(color) fp << ',' << *color;
+                fp << ",shape=box,style=rounded";
+                Endl(fp << ']');
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    Arrow(fp,this,&a->sp) << '[';
+                    fp << "arrowhead=odot";
+                    if(color) fp << ',' << *color;
+                    Endl(fp << ']');
+                }
+            }
+
         }
     }
 

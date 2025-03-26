@@ -139,7 +139,8 @@ namespace Yttrium
             const unsigned uuid; //!< indexing
             const Strings  spColor;
             const Strings  eqColor;
-
+            const Strings  cnColor;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             
