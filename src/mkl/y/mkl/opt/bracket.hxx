@@ -4,8 +4,8 @@ bool Bracket<real_t>:: Inside(Triplet<real_t>   &x,
                               Triplet<real_t>   &f,
                               FunctionType      &F)
 {
-    const real_t  half(0.5);
-    const real_t &wmin = Numeric<real_t>::MIN;
+    const        real_t  half(0.5);
+    static const real_t &wmin = Numeric<real_t>::MIN;
     Y_BRACKET_PRINT("<Inside x=" << x << " f=" << f <<">");
 
     //--------------------------------------------------------------------------

@@ -20,6 +20,13 @@ namespace Yttrium
             const xreal_t sumWr = x_score.sum();
             Y_XML_COMMENT(xml, "sum of weights=" << sumWr.str() );
 
+            xreal_t maxWr = 0;
+            for(OutNode *node=running.head;node;node=node->next)
+            {
+                Outcome &out = **node; if(out.ax.mantissa<=0) continue;
+                InSituMax(maxWr,out.wr /= sumWr);
+            }
+
             //------------------------------------------------------------------
             //
             //
@@ -31,7 +38,7 @@ namespace Yttrium
             for(const OutNode *node=running.head;node;node=node->next)
             {
                 const Outcome       &out = **node; if(out.ax.mantissa<=0) continue;
-                const xreal_t        cof = out.wr/sumWr;
+                const xreal_t        cof = out.wr/maxWr;
                 Y_XMLOG(xml, "weight: " << cof.str() << " @" << out.eq.name);
                 increaseRates(out.xi * cof,out.eq);
             }

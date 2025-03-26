@@ -146,6 +146,13 @@ namespace Yttrium
             //! shifted activity
             xreal_t   activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
 
+            //! Positive/Zeroed shifted reactant activity = K*reac.activity(C-Nu'*xi)
+            xreal_t   activityReac(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
+
+            //! Negative/Zeroed shifted product activity = -1*prod.activity(C+Nu'*xi)
+            xreal_t   activityProd(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const;
+
+
             //! current situation
             Situation situation(const XReadable &C, const Level L) const noexcept;
 

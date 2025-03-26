@@ -188,8 +188,27 @@ namespace Yttrium
             return lhs-rhs;
         }
 
+
+        xreal_t Components:: activityReac(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
+        {
+            X.free();
+            X << K;
+            reac.activity(X,C,L,-xi);
+            return X.product();
+        }
+
+        xreal_t Components:: activityProd(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
+        {
+            X.free();
+            X << -1.0;
+            prod.activity(X,C,L,xi);
+            return X.product();
+        }
+
+
         xreal_t Components:: activity(const xreal_t K, XMul &X, const XReadable &C, const Level L, const xreal_t xi) const
         {
+            return activityReac(K,X,C,L,xi)+activityProd(X,C,L,xi);
             X.free();
             X << K;
             reac.activity(X,C,L,-xi);
