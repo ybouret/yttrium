@@ -164,17 +164,13 @@ namespace Yttrium
                     switch( Sign::Of(ff.a) )
                     {
                         case __Zero__: return zero;
-                        case Positive: ff.c = F( xi.c =  reac.limiting(C,L) ); break;
-                        case Negative: ff.c = F( xi.c = -prod.limiting(C,L) ); break;
+                        case Positive: ff.c = E.activityProd(xmul,  C,L, xi.c=  reac.limiting(C,L)); break;
+                        case Negative: ff.c = E.activityReac(K,xmul,C,L, xi.c= -prod.limiting(C,L)); break;
                     }
                     break;
             }
-
-            //Core::Display(std::cerr << "xi=", &xi.a, 3, xreal_t::ToString) << std::endl;
-            //Core::Display(std::cerr << "ff=", &ff.a, 3, xreal_t::ToString) << std::endl;
-
             root(F,xi,ff);
-            //std::cerr << real_t(ff.c) << " @" << real_t(xi.c) << std::endl;
+            
             const xreal_t x = xi.c;
             E.safeMove(C,L,xi.c);
             return xi.c;
