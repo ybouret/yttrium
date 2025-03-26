@@ -12,12 +12,35 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Reactors per each cluster of Clusters
+        //
+        //
+        //______________________________________________________________________
         class Reactors : public Proxy<const Reactor::List>
         {
         public:
-            explicit Reactors(const Clusters &);
-            virtual ~Reactors() noexcept;
 
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Reactors(const Clusters &); //!< setup
+            virtual ~Reactors()        noexcept; //!< cleanup
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+
+            //! solve system with current clusters K
             void operator()(XMLog &xml, XWritable &C0);
 
         private:

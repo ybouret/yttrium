@@ -54,7 +54,7 @@ namespace Yttrium
             static const char * const  NarrowDown;   //!< "NarrowDown"
             static const char * const  QueryRates;   //!< "QueryRates"
             static const char * const  GenerateNR;   //!< "GenerateNR"
-            typedef CxxListOf<Reactor> List;
+            typedef CxxListOf<Reactor> List;         //!< alias
 
             //__________________________________________________________________
             //
