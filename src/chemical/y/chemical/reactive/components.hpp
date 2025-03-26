@@ -88,7 +88,10 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Components : public Indexed, public Proxy<const ComponentsType>
+        class Components :
+        public Indexed,
+        public Proxy<const ComponentsType>,
+        public GraphViz::Vizible
         {
         public:
             //__________________________________________________________________
@@ -100,7 +103,6 @@ namespace Yttrium
             static const char * const             Symbol;          //!< "<=>";
             static const char                     Separator = ':'; //!< for parser
             typedef ComponentsType::ConstIterator ConstIterator;   //!< alias
-
 
 
 
@@ -176,6 +178,8 @@ namespace Yttrium
             //! compute jacobian and return affinity, assuming zeroed array initially
             xreal_t jacobian(XWritable &xjac, const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
+            void viz(OutputStream &fp,
+                     const String * const color = 0) const;
 
             //__________________________________________________________________
             //

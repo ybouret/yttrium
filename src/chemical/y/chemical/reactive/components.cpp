@@ -338,6 +338,52 @@ namespace Yttrium
             return xadd.sum();
         }
 
+        static inline
+        void decorateArrow(OutputStream &fp,
+                           const Actor  * const a,
+                           const String * const color)
+        {
+            fp << '[';
+            if(color)
+            {
+                fp << *color;
+            }
+            else
+            {
+                fp << "color=black";
+            }
+            const unsigned nu = a->nu;
+            if(nu>1)
+            {
+                fp(",label=\"%u\"",nu);
+            }
+            fp << ']';
+        }
+
+        void Components:: viz(OutputStream &fp,
+                              const String * const color) const
+        {
+            Node(fp,this) << '[';
+            Label(fp,*name);
+            fp << ",shape=box";
+            if(color) fp << ',' << *color;
+            fp << ",style=bold";
+            Endl(fp << ']');
+
+            for(const Actor *a=prod->head;a;a=a->next)
+            {
+                Arrow(fp,this,&a->sp);
+                decorateArrow(fp,a,color);
+                Endl(fp);
+            }
+
+            for(const Actor *a=reac->head;a;a=a->next)
+            {
+                Arrow(fp,&a->sp,this);
+                decorateArrow(fp,a,color);
+                Endl(fp);
+            }
+        }
 
     }
 

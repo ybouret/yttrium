@@ -15,6 +15,24 @@ namespace Yttrium
         using namespace MKL;
       
        
+        static inline void MakeELists(const size_t maxOrder,
+                                      ClusterCombinatorics::ELists &slot,
+                                      const SubEList &equilibria )
+        {
+            assert(maxOrder>0);
+
+            {
+                ClusterCombinatorics::ELists _(maxOrder);
+                _.swapWith(slot);
+            }
+
+            EList &primary = slot[1];
+            for(ENode *en=equilibria->head;en;en=en->next)
+            {
+                primary << **en;
+            }
+
+        }
 
         void ClusterCombinatorics:: createCombinations(XMLog &xml, Equilibria &eqs, XWritable &tlK)
         {
@@ -30,6 +48,7 @@ namespace Yttrium
             SubEList       &  equilibria = content.equilibria;
             const SList    &  species    = *content.species;
             size_t            maxOrder   = 1;
+            ELists         &  slot = Coerce(order);
             {
                 //--------------------------------------------------------------
                 //
@@ -41,6 +60,7 @@ namespace Yttrium
                 const IntegerSurvey survey(xml,topologyT,0);
                 if(survey->size<=0) {
                     Y_XML_COMMENT(xml,"no mixed equilibrium");
+                    MakeELists(maxOrder,slot,equilibria);
                     return;
                 }
 
@@ -114,18 +134,11 @@ namespace Yttrium
             //
             //
             //------------------------------------------------------------------
-            ELists &slot = Coerce(order);
-            {
-                ELists _(maxOrder);
-                _.swapWith(slot);
-            }
+            MakeELists(maxOrder,slot,equilibria);
             assert(order.size()==maxOrder);
             assert(N==equilibria->size);
+            assert(N==order[1].size);
 
-            for(ENode *en=equilibria->head;en;en=en->next)
-            {
-                slot[1] << **en;
-            }
 
             //------------------------------------------------------------------
             //

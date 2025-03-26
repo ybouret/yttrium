@@ -19,7 +19,8 @@ namespace Yttrium
                             const xreal_t t0) :
         my(),
         tlK(),
-        K(tlK)
+        K(tlK),
+        maxOrder(0)
         {
             const size_t ini = eqs->size();
             Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << ini);
@@ -33,7 +34,15 @@ namespace Yttrium
                     Coerce(my.pushTail( new Cluster(xml,clc,eqs,tlK) )->uuid) = idx++;
                 }
             }
-            Y_XML_COMMENT(xml, "|eqs|=" << eqs->size() << " from " << ini);
+
+            for(const Cluster *cl=my.head;cl;cl=cl->next)
+            {
+                InSituMax( Coerce(maxOrder), cl->order.size() );
+            }
+
+
+            Y_XML_COMMENT(xml, "|eqs|    = " << eqs->size() << " from " << ini);
+            Y_XML_COMMENT(xml, "maxOrder = " << maxOrder );
             tlK.adjust(eqs->size(),0);
             (void) (*this)(t0);
         }

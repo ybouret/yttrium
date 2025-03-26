@@ -67,7 +67,7 @@ namespace Yttrium
 
         public:
             const XReadable &K; //!< last computed constant
-
+            const size_t     maxOrder;
         };
 
     }

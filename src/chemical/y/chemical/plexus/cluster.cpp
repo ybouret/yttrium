@@ -13,7 +13,8 @@ namespace Yttrium
             
         }
 
-        const char * const SpeciesScheme = "set19";
+        const char * const SpScheme = "dark28";
+        const char * const EqScheme = "set18";
 
         Cluster::Cluster( XMLog                         &xml,
                          const ClusterContent::Pointer &ptr,
@@ -23,19 +24,34 @@ namespace Yttrium
         next(0),
         prev(0),
         uuid(0),
-        spColor( (*this)->species->size, AsCapacity )
+        spColor( (*this)->species->size, AsCapacity ),
+        eqColor( (*this)->equilibria->size, AsCapacity )
         {
             {
                 Strings &colors = Coerce(spColor);
                 for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn;
-                    const String   descr = Species::Color(SpeciesScheme,sp.indx[SubLevel]);
-                    const String   color = "color=" + descr + ",textcolor=" + descr;
+                    const String   descr = Species::Color(SpScheme,sp.indx[SubLevel]);
+                    const String   color = "color=" + descr + ",fontcolor=" + descr;
                     colors << color;
-                    std::cerr << color << std::endl;
+                    //std::cerr << color << std::endl;
                 }
             }
+
+            {
+                Strings &colors = Coerce(eqColor);
+                for(const ENode *en = (*this)->equilibria->head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const String   descr = Species::Color(EqScheme,eq.indx[SubLevel]);
+                    const String   color = "color=" + descr + ",fontcolor=" + descr;
+                    colors << color;
+                    //std::cerr << color << std::endl;
+                }
+            }
+
+            
         }
         
         std::ostream & operator<<(std::ostream &os, const Cluster &cl)
@@ -59,17 +75,26 @@ namespace Yttrium
         void Cluster:: viz(OutputStream &fp,
                            const size_t   numOrder) const
         {
-            fp("subgraph cluster_%u",uuid) << "{\n";
-
-            for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
+            if(numOrder<=order.size())
             {
-                const Species &sp = **sn;
-                const String * const color = & sp(spColor,SubLevel);
-                sp.viz(fp,color);
+                fp("subgraph cluster_%u",uuid) << "{\n";
+                
+                for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
+                {
+                    const Species &      sp    = **sn;
+                    const String * const color = & sp(spColor,SubLevel);
+                    sp.viz(fp,color,conserved.has(sp));
+                }
+                
+                for(const ENode *en=order[numOrder].head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    const String * const color = & eq(eqColor,SubLevel);
+                    (**en).viz(fp,color);
+                }
+
+                fp << "}\n";
             }
-
-
-            fp << "}\n";
         }
     }
 

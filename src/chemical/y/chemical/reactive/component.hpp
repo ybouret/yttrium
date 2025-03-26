@@ -35,7 +35,7 @@ namespace Yttrium
         //
         //
         //______________________________________________________________________
-        class Component :  public Proxy<const Actor>
+        class Component :  public Proxy<const Actor> 
         {
         public:
             //__________________________________________________________________
@@ -57,6 +57,7 @@ namespace Yttrium
             const String &      key()          const noexcept; //!< species key
             const char *        roleText()     const noexcept; //!< human readable role
             static const char * RoleText(const Role) noexcept; //!< human readable role
+            
 
             //__________________________________________________________________
             //

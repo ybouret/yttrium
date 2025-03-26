@@ -138,6 +138,7 @@ namespace Yttrium
             Cluster *      prev; //!< for list
             const unsigned uuid; //!< indexing
             const Strings  spColor;
+            const Strings  eqColor;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
