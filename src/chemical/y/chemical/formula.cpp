@@ -18,6 +18,7 @@ namespace Yttrium
         }
 
         Formula:: Formula(const XCode &_) noexcept :
+        Proxy<const XNode>(),
         code(_)
         {
             assert(code->defines<Formula>());
@@ -25,6 +26,7 @@ namespace Yttrium
 
 
         Formula:: Formula(XNode * const _) noexcept :
+        Proxy<const XNode>(),
         code(_)
         {
             assert(code->defines<Formula>());
@@ -32,6 +34,7 @@ namespace Yttrium
 
 
         Formula:: Formula(const Formula &_) noexcept :
+        Proxy<const XNode>(),
         code(_.code)
         {
             assert(code->defines<Formula>());
