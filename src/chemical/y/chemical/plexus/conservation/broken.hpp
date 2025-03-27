@@ -42,9 +42,9 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Law &law; //!< the law
-                xreal_t    xs;  //!< excess
-                XWritable &cc;  //!< AuxLevel projection
+                const Law & law; //!< the law
+                xreal_t     xs;  //!< excess
+                XWritable & cc;  //!< AuxLevel projection
 
             private:
                 Y_DISABLE_ASSIGN(Broken);
