@@ -122,7 +122,6 @@ namespace Yttrium
                                 }
                             }
                         }
-                        std::cerr << "\txadd=" << xadd << std::endl;
                         I->sp(Cp,L) = xadd.sum()/denom;
                     }
                 }

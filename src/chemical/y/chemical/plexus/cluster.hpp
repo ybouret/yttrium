@@ -65,12 +65,7 @@ namespace Yttrium
             TARGET & transfer(TARGET &target, const Level targetLevel,
                               SOURCE &source, const Level sourceLevel) const
             {
-                for(const SNode *sn=(*this)->species->head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    sp(target,targetLevel) = sp(source,sourceLevel);
-                }
-                return target;
+                return TransferList(*((*this)->species),target,targetLevel,source,sourceLevel);
             }
 
 

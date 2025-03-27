@@ -116,10 +116,11 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     blist.free();
+                    canon.transfer(c0,AuxLevel,C0,L0);
                     for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
                         const Law &   law = **ln;
-                        const xreal_t xs  = law.excess(xadd, canon.transfer(c0,AuxLevel,C0,L0), AuxLevel);
+                        const xreal_t xs  = law.excess(xadd,c0,AuxLevel);
                         if(xs>zero)
                         {
                             XWritable &cc = cproj[blist.size+1].ld(c0);
@@ -156,12 +157,13 @@ namespace Yttrium
                         MergeSort::Call(blist,CompareBroken);
                         {
                             Broken &best = **blist.head;
-                            Y_XML_COMMENT(xml,"best: " << best.law.name << " / " << best.law.proj);
+                            Y_XML_COMMENT(xml,"best: " << best.law.name);
                             const Law &law = best.law;
-                            Core::Display(std::cerr << "c0=", &c0[1], c0.size(), xreal_t::ToString) << std::endl;
+
+                            // set c0 to new value
                             c0.ld(best.cc);
-                            //law.transfer(c0,best.cc,AuxLevel);
-                            Core::Display(std::cerr << "c1=", &c0[1], c0.size(), xreal_t::ToString) << std::endl;
+
+                            // update injected
                             for(const Actor *a=law->head;a;a=a->next)
                             {
                                 const xreal_t delta = (a->xn * best.xs) / law.denom;
@@ -174,7 +176,7 @@ namespace Yttrium
                         // keep still broken laws
                         //
                         //------------------------------------------------------
-                        blist.cutHead();
+                        blist.cutHead(); // discard
                         for(BNode *node=blist.head;node;)
                         {
                             BNode * const next = node->next;
@@ -188,7 +190,7 @@ namespace Yttrium
                             }
                             else
                             {
-                                Y_XML_COMMENT(xml, "keep: " << curr.law.name << " @" << curr.xs.str());
+                                Y_XML_COMMENT(xml, "keep: " << curr.law.name);
                                 curr.law.project(xadd, curr.cc, c0, AuxLevel );
                             }
                             node=next;
@@ -204,11 +206,11 @@ namespace Yttrium
                     }
                 }
 
-                Y_XML_COMMENT(xml, "injected");
-                if(xml.verbose)
-                    canon.show( xml() << "injected=",injected);
+                if(xml.verbose) canon.show( xml() << "injected=",injected);
 
+                canon.show(std::cerr, c0, xreal_t::ToString) << std::endl;
                 canon.transfer(C0,L0,c0,AuxLevel);
+                cluster.show(std::cerr, SubLevel, "[", C0, "]", xreal_t::ToString) << std::endl;
 
             }
         }

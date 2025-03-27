@@ -12,6 +12,20 @@ namespace Yttrium
     namespace Chemical
     {
 
+        template <typename LIST, typename TARGET, typename SOURCE> inline
+        TARGET & TransferList(const LIST &list,
+                              TARGET &target, const Level targetLevel,
+                              SOURCE &source, const Level sourceLevel)
+        {
+            for(const typename LIST::NodeType *node=list.head;node;node=node->next)
+            {
+                const Indexed & _ = **node;
+                _(target,targetLevel) = _(source,sourceLevel);
+            }
+            return target;
+        }
+
+
         //! show list of indexed entities
         template <typename LIST, typename ARRAY, typename PROC> inline
         std::ostream & ShowList(std::ostream   &   os,
@@ -29,12 +43,13 @@ namespace Yttrium
                 os << std::endl;
                 for(const typename LIST::NodeType *node=lst.head;node;node=node->next)
                 {
+                    const Indexed & _ = **node;
                     if(pfx) os << pfx;
-                    os << (**node).name;
+                    os << _.name;
                     if(sfx) os << sfx;
-                    fmt.pad(os,**node);
+                    fmt.pad(os,_);
                     os << " = ";
-                    os << fcn( (**node)(arr,lvl) );
+                    os << fcn( _(arr,lvl) );
                     os << std::endl;
                 }
             }

@@ -7,7 +7,7 @@
 #include "y/chemical/plexus/conservation/law.hpp"
 #include "y/chemical/type/assembly.hpp"
 #include "y/chemical/type/meta-list.hpp"
-#include "y/chemical/type/show-list.hpp"
+#include "y/chemical/type/thru-list.hpp"
 
 namespace Yttrium
 {
@@ -62,25 +62,20 @@ namespace Yttrium
                 TARGET & transfer(TARGET &target, const Level targetLevel,
                                   SOURCE &source, const Level sourceLevel) const
                 {
-                    for(const SNode *sn=species->head;sn;sn=sn->next)
-                    {
-                        const Species &sp = **sn;
-                        sp(target,targetLevel) = sp(source,sourceLevel);
-                    }
-                    return target;
+                    return TransferList(*species,target, targetLevel, source, sourceLevel);
                 }
 
                 template <typename ARRAY> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr) const
                 {
-                    return ShowList(os,*species,sformat,AuxLevel, "[", arr, "]");
+                    return ShowList(os,*species,sformat,AuxLevel, "\t[", arr, "]");
                 }
 
 
                 template <typename ARRAY, typename PROC> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr, PROC &fcn ) const
                 {
-                    return ShowList(os,*species,sformat,AuxLevel, "[", arr, "]"),fcn;
+                    return ShowList(os,*species,sformat,AuxLevel, "\t[", arr, "]",fcn);
                 }
 
                 //______________________________________________________________
