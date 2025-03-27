@@ -129,6 +129,7 @@ namespace Yttrium
             static Pattern * Exact(const String &);      //!< And'd chars
             static Pattern * Among(const char * const);  //!< alias
             static Pattern * Exact(const char * const);  //!< alias
+            static String    ToRegularExpression(const String &); //!< translated
 
             bool isBasic() const noexcept; //!< one of the basic pattern
             bool isLogic() const noexcept; //!< And, Or, Node

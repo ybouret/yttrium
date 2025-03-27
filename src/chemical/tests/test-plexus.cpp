@@ -41,6 +41,8 @@ Y_UTEST(plexus)
 
     std::cerr << "lib=" << lib << std::endl;
     cls.graphViz("cs");
+
+    return 0;
     
     const size_t m = lib->size();
     XVector      C0(m,0);

@@ -84,6 +84,13 @@ namespace Yttrium
             Leave(fp);
         }
 
+
+        String Pattern:: ToRegularExpression(const String &text)
+        {
+            const AutoPtr<const Pattern> p = Exact(text);
+            return p->regularExpression();
+        }
+
     }
 
 }

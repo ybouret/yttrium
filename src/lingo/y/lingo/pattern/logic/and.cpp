@@ -112,6 +112,7 @@ namespace Yttrium
             return p.yield();
         }
 
+        
 
         void And:: viz(OutputStream &fp) const
         {

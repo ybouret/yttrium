@@ -125,6 +125,7 @@ namespace Yttrium
             };
 
             typedef TryRemove<VFS::Entry::Ext>    TryRemoveExtension; //!< alias
+            typedef TryRemove<VFS::Entry::Base>   TryRemoveBaseName;  //!< alias
             typedef TryRemove<VFS::Entry::BaseWE> TryRemoveRootName;  //!< alias
 
 

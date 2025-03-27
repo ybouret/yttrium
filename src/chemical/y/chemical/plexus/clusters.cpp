@@ -11,10 +11,10 @@ namespace Yttrium
 
         Clusters:: ~Clusters() noexcept
         {
-            
+
         }
 
-        
+
         Clusters:: Clusters(XMLog      &xml,
                             Equilibria &eqs,
                             const xreal_t t0) :
@@ -63,8 +63,26 @@ namespace Yttrium
         }
 
 
+    }
+
+}
+
+
+#include "y/lingo/vfs/find.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        using namespace Lingo;
+        
         void Clusters:: graphViz(const String &baseName) const
         {
+            {
+                const String rx = Pattern::ToRegularExpression(baseName) + "[:digit:]+[.](dot|png)";
+                LocalFileSystem::TryRemoveBaseName::In(".",rx);
+            }
+
             for(size_t i=1;i<=maxOrder;++i)
             {
                 const String fn = baseName + Formatted::Get("%u", unsigned(i)) + ".dot";
