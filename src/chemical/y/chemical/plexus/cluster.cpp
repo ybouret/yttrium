@@ -22,6 +22,7 @@ namespace Yttrium
                          Equilibria                    &eqs,
                          XWritable                     &tlK) :
         ClusterCombinatorics(xml,ptr,eqs,tlK),
+        canons(*ordinance),
         next(0),
         prev(0),
         uuid(0),

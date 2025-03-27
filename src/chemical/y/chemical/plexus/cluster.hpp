@@ -6,6 +6,7 @@
 #define Y_Chemical_Cluster_Included 1
 
 #include "y/chemical/plexus/cluster/combinatorics.hpp"
+#include "y/chemical/plexus/conservation/canons.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace Yttrium
@@ -133,7 +134,7 @@ namespace Yttrium
             }
 
 
-
+            const Conservation::Canons   canons;
             Cluster *      next; //!< for list
             Cluster *      prev; //!< for list
             const unsigned uuid; //!< indexing

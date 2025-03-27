@@ -11,6 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
         //______________________________________________________________________
         //
         //
@@ -22,6 +23,7 @@ namespace Yttrium
         class ClusterConservations : public ClusterTopology
         {
         public:
+            //typedef AutoPtr<const Conservation::Canons> CanonsPointer;
             explicit ClusterConservations(XMLog &, const ClusterContent::Pointer &); //!< setup
             virtual ~ClusterConservations() noexcept;                                //!< setup
 
@@ -30,7 +32,6 @@ namespace Yttrium
             const SList             &conserved; //!< conserved species
             const SList              unbounded; //!< unbounded species
 
-            //ComponentsTier tierOf(const Components &) const noexcept;
             bool   areAllUnbounded(const Actors &) const noexcept; //!< are all actors unbounded ?
             bool   gotAnyConserved(const Actors &) const noexcept; //!< is at least one actor conserved ?
 
