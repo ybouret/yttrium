@@ -75,7 +75,7 @@ namespace Yttrium
     namespace Chemical
     {
         using namespace Lingo;
-        
+
         void Clusters:: graphViz(const String &baseName) const
         {
             {
