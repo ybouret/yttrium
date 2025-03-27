@@ -45,6 +45,9 @@ namespace Yttrium
                 void    project(XAdd &xadd,
                                 XWritable &       Cp, const Level Lp,
                                 const XReadable & C0, const Level L0) const;
+
+                bool hasCommonActorWith(const Law &other) const noexcept;
+
                 //______________________________________________________________
                 //
                 //

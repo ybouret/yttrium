@@ -123,6 +123,16 @@ namespace Yttrium
                 }
             }
 
+            bool Law:: hasCommonActorWith(const Law &other) const noexcept
+            {
+                for(const Actor *a=other->head;a;a=a->next)
+                {
+                    if( has(a->sp) ) return true;
+                }
+                return false;
+            }
+
+
         }
     }
 
