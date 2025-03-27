@@ -1,5 +1,7 @@
 
 #include "y/chemical/plexus/reactors.hpp"
+#include "y/chemical/plexus/conservation/broken.hpp"
+
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
 #include "y/random/mt19937.hpp"
@@ -15,40 +17,7 @@ namespace Yttrium
         namespace Conservation
         {
 
-            class Broken
-            {
-            public:
-                Broken( const Law &   _law,
-                       const xreal_t _xs,
-                       XWritable &   _cc) noexcept :
-                law(_law),
-                xs(_xs),
-                cc(_cc)
-
-                {
-                }
-
-                ~Broken() noexcept
-                {
-                }
-
-                Broken(const Broken &_) noexcept :
-                law(_.law),
-                xs(_.xs),
-                cc(_.cc)
-                {
-                }
-
-                const Law &law; //!< the law
-                xreal_t    xs;  //!< excess
-                XWritable &cc;  //!< AuxLevel cc
-
-            private:
-                Y_DISABLE_ASSIGN(Broken);
-            };
-
-            typedef Small::SoloHeavyList<Broken> BList;
-            typedef BList::NodeType              BNode;
+           
 
             class Warden
             {
