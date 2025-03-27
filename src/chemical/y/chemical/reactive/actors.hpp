@@ -56,7 +56,18 @@ namespace Yttrium
             bool    critical(const XReadable &C, const Level L)                   const noexcept; //!< at least one zero concentration
             xreal_t limiting(const XReadable &C, const Level L)                   const noexcept; //!< fast limiting extent
             void    safeMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update
-            
+
+            template <typename TARGET, typename SOURCE> inline
+            TARGET & transfer(TARGET &target, SOURCE &source, const Level L) const
+            {
+                for(const Actor *a=my.head;a;a=a->next)
+                {
+                    const size_t i = a->sp.indx[L];
+                    target[i] = source[i];
+                }
+                return target;
+            }
+
             //__________________________________________________________________
             //
             //

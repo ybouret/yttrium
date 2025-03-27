@@ -100,33 +100,69 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Warden", "|canon|=" << canon.size);
                 const xreal_t zero;
 
-                Y_XML_COMMENT(xml,"initialize");
-                blist.free();
-                for(const LNode *ln=canon.head;ln;ln=ln->next)
+
                 {
-                    const Law &   law = **ln;
-                    const xreal_t xs  = law.excess(xadd, cluster.transfer(c0,SubLevel,C0,L0), SubLevel);
-                    if(xs>zero)
+                    Y_XML_SECTION(xml,"Initialize");
+                    blist.free();
+                    for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
-                        XWritable &cc = cproj[blist.size+1].ld(c0);
-                        law.project(xadd,cc,c0,SubLevel);
-                        const Broken broken(law,xs,cc);
-                        blist << broken;
-                        if(xml.verbose) display(   xml() << "[broken] ", broken) << std::endl;
-                    }
-                    else {
-                        if(xml.verbose) canon.pad( xml() << "[ -ok- ] " << law.name,law) << std::endl;
+                        const Law &   law = **ln;
+                        const xreal_t xs  = law.excess(xadd, cluster.transfer(c0,SubLevel,C0,L0), SubLevel);
+                        if(xs>zero)
+                        {
+                            XWritable &cc = cproj[blist.size+1].ld(c0);
+                            law.project(xadd,cc,c0,SubLevel);
+                            const Broken broken(law,xs,cc);
+                            blist << broken;
+                            if(xml.verbose) display(   xml() << "[broken] ", broken) << std::endl;
+                        }
+                        else {
+                            if(xml.verbose) canon.pad( xml() << "[ -ok- ] " << law.name,law) << std::endl;
+                        }
                     }
                 }
 
-                Y_XML_COMMENT(xml,"iterate...");
-                while(blist.size>0)
                 {
-                    MergeSort::Call(blist,CompareBroken);
-                    Y_XML_COMMENT(xml,"selected : " << (**blist.head).law.name );
+                    size_t iter = 0;
+                    while(blist.size>0)
+                    {
+                        Y_XML_SECTION_OPT(xml, "MendBroken", "iteration=" << ++iter);
+                        MergeSort::Call(blist,CompareBroken);
+                        {
+                            Broken &best = **blist.head;
+                            Y_XML_COMMENT(xml,"best: " << best.law.name );
+                            best.law.transfer(c0,best.cc,SubLevel);
+                        }
+                        blist.cutHead();
+                        for(BNode *node=blist.head;node;)
+                        {
+                            BNode * const next = node->next;
+                            Broken &      curr = **node;
+                            curr.xs = curr.law.excess(xadd,c0, SubLevel);
+                            if(curr.xs<=zero)
+                            {
+                                Y_XML_COMMENT(xml, "drop: " << curr.law.name);
+                                blist.cutNode(node);
+                                node=0;
+                            }
+                            else
+                            {
+                                Y_XML_COMMENT(xml, "keep: " << curr.law.name << " @" << curr.xs.str());
+                                curr.law.project(xadd, curr.cc, c0, SubLevel );
+                            }
+                            node=next;
+                        }
 
-                    throw Exception("Need To Work...");
+                        if(xml.verbose)
+                        {
+                            for(const BNode *node=blist.head;node;node=node->next)
+                            {
+                                display(   xml() << "[broken] ", **node) << std::endl;
+                            }
+                        }
+                    }
                 }
+                throw Exception("Need To Work...");
 
             }
         }
