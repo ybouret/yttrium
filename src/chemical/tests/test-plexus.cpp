@@ -53,6 +53,7 @@ namespace Yttrium
             class Warden
             {
             public:
+
                 explicit Warden(const Cluster &_cluster,
                                 const Canon   &_canon) :
                 cluster(_cluster),
@@ -60,7 +61,8 @@ namespace Yttrium
                 xadd(),
                 blist(canon.size),
                 cproj(canon.size+1,cluster->species->size),
-                c0(cproj[canon.size+1])
+                c0(cproj[canon.size+1]),
+                injected(cluster->species->size)
                 {
                 }
 
@@ -68,7 +70,9 @@ namespace Yttrium
                 {
                 }
 
-                void operator()(XMLog &xml,XWritable &C0,const Level L0);
+                void operator()(XMLog      &xml,
+                                XWritable  &C0,
+                                const Level L0);
 
                 std::ostream & display(std::ostream &os, const Broken &b) const
                 {
@@ -82,6 +86,7 @@ namespace Yttrium
                 BList          blist;
                 XMatrix        cproj;
                 XWritable     &c0;
+                Summator       injected;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -100,9 +105,16 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Warden", "|canon|=" << canon.size);
                 const xreal_t zero;
 
-
+                injected.forEach(& XAdd::free );
                 {
                     Y_XML_SECTION(xml,"Initialize");
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // populate list of broken laws
+                    //
+                    //
+                    //----------------------------------------------------------
                     blist.free();
                     for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
@@ -123,16 +135,41 @@ namespace Yttrium
                 }
 
                 {
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // reduce list of broken laws by iterative mending
+                    //
+                    //
+                    //----------------------------------------------------------
                     size_t iter = 0;
                     while(blist.size>0)
                     {
                         Y_XML_SECTION_OPT(xml, "MendBroken", "iteration=" << ++iter);
+
+                        //------------------------------------------------------
+                        //
+                        // find the smallest increase
+                        //
+                        //------------------------------------------------------
                         MergeSort::Call(blist,CompareBroken);
                         {
                             Broken &best = **blist.head;
                             Y_XML_COMMENT(xml,"best: " << best.law.name );
-                            best.law.transfer(c0,best.cc,SubLevel);
+                            const Law &law = best.law;
+                            law.transfer(c0,best.cc,SubLevel);
+                            for(const Actor *a=law->head;a;a=a->next)
+                            {
+                                const xreal_t delta = (a->xn * best.xs) / law.denom;
+                                a->sp(injected,SubLevel) << delta;
+                            }
                         }
+
+                        //------------------------------------------------------
+                        //
+                        // keep still broken laws
+                        //
+                        //------------------------------------------------------
                         blist.cutHead();
                         for(BNode *node=blist.head;node;)
                         {
@@ -162,7 +199,13 @@ namespace Yttrium
                         }
                     }
                 }
-                throw Exception("Need To Work...");
+
+                if(xml.verbose)
+                {
+                    cluster.show(xml() << "injected=", SubLevel, "\td[", injected,"]") << std::endl;
+                }
+                cluster.transfer(C0, L0, c0, SubLevel);
+                //throw Exception("Need To Work...");
 
             }
         }
@@ -218,6 +261,8 @@ Y_UTEST(plexus)
             warden(xml,C0,TopLevel);
         }
     }
+
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     return 0;
 

@@ -28,7 +28,8 @@ namespace Yttrium
         typedef Matrix<xreal_t,MemoryModel>   XMatrix;   //!< alias
         typedef CxxArray<xreal_t,MemoryModel> XArray;    //!< alias
 
-        typedef MKL::Triplet<xreal_t>        XTriplet; //!< alias
+        typedef MKL::Triplet<xreal_t>         XTriplet; //!< alias
+        typedef CxxArray<XAdd,MemoryModel>    Summator; //!< alias
 
     }
 

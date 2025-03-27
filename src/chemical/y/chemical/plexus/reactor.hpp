@@ -29,7 +29,6 @@ namespace Yttrium
         typedef Apex::Ortho::VCache           QVCache;  //!< alias
         typedef Apex::Ortho::Metrics          QMetrics; //!< alias
 
-        typedef CxxArray<XAdd,MemoryModel>    Summator; //!< alias
         typedef Vector<String,MemoryModel>    Strings;  //!< alias
 
         typedef CxxArray<XArray,MemoryModel>  XArrays;   //!< alias
