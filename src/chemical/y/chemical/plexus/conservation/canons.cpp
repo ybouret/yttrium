@@ -57,7 +57,7 @@ namespace Yttrium
 
                 for(Canon *canon=head;canon;canon=canon->next)
                 {
-                    canon->update();
+                    canon->compile();
                 }
 
             }

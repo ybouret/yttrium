@@ -97,18 +97,7 @@ namespace Yttrium
                                 const char  *sfx) const
             {
                 const ClusterContent &self = **this;
-                os << "{" << std::endl;
-                for(const SNode *it=self.species->head;it;it=it->next)
-                {
-                    if(pfx) os << pfx;
-                    const Species &sp = **it;
-                    os << sp.name;
-                    if(sfx) os << sfx;
-                    self.sformat.pad(os,sp) << " = " << sp(arr,lvl);
-                    os << std::endl;
-                }
-                os << "}";
-                return os;
+                return ShowList(os,*self.species,self.sformat,lvl,pfx,arr,sfx);
             }
 
             //! display associated proc(array) and level
@@ -121,18 +110,7 @@ namespace Yttrium
                                 PROC        &proc) const
             {
                 const ClusterContent &self = **this;
-                os << "{" << std::endl;
-                for(const SNode *it=self.species->head;it;it=it->next)
-                {
-                    if(pfx) os << pfx;
-                    const Species &sp = **it;
-                    os << sp.name;
-                    if(sfx) os << sfx;
-                    self.sformat.pad(os,sp) << " = " << proc(sp(arr,lvl));
-                    os << std::endl;
-                }
-                os << "}";
-                return os;
+                return ShowList(os,*self.species,self.sformat,lvl,pfx,arr,sfx,proc);
             }
 
 

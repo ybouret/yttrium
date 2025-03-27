@@ -40,11 +40,20 @@ namespace Yttrium
                 return false;
             }
 
-            void Canon::update() noexcept
+            void Canon:: compile()  
             {
-                Coerce(maxNameLength) = 0;
+                assert( 0 == maxNameLength );
+                assert( 0 == species->size );
+
                 for(const LNode *l=head;l;l=l->next)
-                    enroll( **l );
+                {
+                    const Law &law = **l; enroll( law );
+                    for(const Actor *a=law->head;a;a=a->next)
+                    {
+                        Coerce(species) << a->sp;
+                        Coerce(sformat).enroll(a->sp);
+                    }
+                }
             }
 
         }

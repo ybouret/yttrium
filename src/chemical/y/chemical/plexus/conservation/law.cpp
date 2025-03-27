@@ -105,9 +105,9 @@ namespace Yttrium
                 const Actors &self = *this;
                 {
                     size_t               i   = 1;
-                    const Readable<int> &P_i = proj[i];
                     for(const Actor *I=self->head;I;I=I->next,++i)
                     {
+                        const Readable<int> &P_i = proj[i];
                         xadd.free();
                         {
                             size_t j=1;
@@ -117,11 +117,12 @@ namespace Yttrium
                                 switch( Sign::Of(P_ij) )
                                 {
                                     case __Zero__: break;
-                                    case Positive: xadd.insert(J->sp(C0,L), P_ij); break;
-                                    case Negative: xadd.insert(J->sp(C0,L),-P_ij); break;
+                                    case Positive: xadd.insert( J->sp(C0,L), P_ij); break;
+                                    case Negative: xadd.insert(-J->sp(C0,L),-P_ij); break;
                                 }
                             }
                         }
+                        std::cerr << "\txadd=" << xadd << std::endl;
                         I->sp(Cp,L) = xadd.sum()/denom;
                     }
                 }

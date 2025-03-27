@@ -41,7 +41,7 @@ namespace Yttrium
 
                 const Law &law; //!< the law
                 xreal_t    xs;  //!< excess
-                XWritable &cc;  //!< SubLevel cc
+                XWritable &cc;  //!< AuxLevel cc
 
             private:
                 Y_DISABLE_ASSIGN(Broken);
@@ -60,9 +60,9 @@ namespace Yttrium
                 canon(_canon),
                 xadd(),
                 blist(canon.size),
-                cproj(canon.size+1,cluster->species->size),
+                cproj(canon.size+1,canon.species->size),
                 c0(cproj[canon.size+1]),
-                injected(cluster->species->size)
+                injected(canon.species->size)
                 {
                 }
 
@@ -119,11 +119,11 @@ namespace Yttrium
                     for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
                         const Law &   law = **ln;
-                        const xreal_t xs  = law.excess(xadd, cluster.transfer(c0,SubLevel,C0,L0), SubLevel);
+                        const xreal_t xs  = law.excess(xadd, canon.transfer(c0,AuxLevel,C0,L0), AuxLevel);
                         if(xs>zero)
                         {
                             XWritable &cc = cproj[blist.size+1].ld(c0);
-                            law.project(xadd,cc,c0,SubLevel);
+                            law.project(xadd,cc,c0,AuxLevel);
                             const Broken broken(law,xs,cc);
                             blist << broken;
                             if(xml.verbose) display(   xml() << "[broken] ", broken) << std::endl;
@@ -133,6 +133,7 @@ namespace Yttrium
                         }
                     }
                 }
+
 
                 {
                     //----------------------------------------------------------
@@ -155,13 +156,16 @@ namespace Yttrium
                         MergeSort::Call(blist,CompareBroken);
                         {
                             Broken &best = **blist.head;
-                            Y_XML_COMMENT(xml,"best: " << best.law.name );
+                            Y_XML_COMMENT(xml,"best: " << best.law.name << " / " << best.law.proj);
                             const Law &law = best.law;
-                            law.transfer(c0,best.cc,SubLevel);
+                            Core::Display(std::cerr << "c0=", &c0[1], c0.size(), xreal_t::ToString) << std::endl;
+                            c0.ld(best.cc);
+                            //law.transfer(c0,best.cc,AuxLevel);
+                            Core::Display(std::cerr << "c1=", &c0[1], c0.size(), xreal_t::ToString) << std::endl;
                             for(const Actor *a=law->head;a;a=a->next)
                             {
                                 const xreal_t delta = (a->xn * best.xs) / law.denom;
-                                a->sp(injected,SubLevel) << delta;
+                                a->sp(injected,AuxLevel) << delta;
                             }
                         }
 
@@ -175,7 +179,7 @@ namespace Yttrium
                         {
                             BNode * const next = node->next;
                             Broken &      curr = **node;
-                            curr.xs = curr.law.excess(xadd,c0, SubLevel);
+                            curr.xs = curr.law.excess(xadd,c0,AuxLevel);
                             if(curr.xs<=zero)
                             {
                                 Y_XML_COMMENT(xml, "drop: " << curr.law.name);
@@ -185,7 +189,7 @@ namespace Yttrium
                             else
                             {
                                 Y_XML_COMMENT(xml, "keep: " << curr.law.name << " @" << curr.xs.str());
-                                curr.law.project(xadd, curr.cc, c0, SubLevel );
+                                curr.law.project(xadd, curr.cc, c0, AuxLevel );
                             }
                             node=next;
                         }
@@ -200,12 +204,11 @@ namespace Yttrium
                     }
                 }
 
+                Y_XML_COMMENT(xml, "injected");
                 if(xml.verbose)
-                {
-                    cluster.show(xml() << "injected=", SubLevel, "\td[", injected,"]") << std::endl;
-                }
-                cluster.transfer(C0, L0, c0, SubLevel);
-                //throw Exception("Need To Work...");
+                    canon.show( xml() << "injected=",injected);
+
+                canon.transfer(C0,L0,c0,AuxLevel);
 
             }
         }
@@ -274,10 +277,10 @@ Y_UTEST(plexus)
 
 
 
-
+    
     Y_SIZEOF(Cluster);
     Y_SIZEOF(ClusterContent);
-    
+
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);
     Y_SIZEOF(Conservation::Canon);

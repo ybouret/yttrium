@@ -6,6 +6,8 @@
 
 #include "y/chemical/plexus/conservation/law.hpp"
 #include "y/chemical/type/assembly.hpp"
+#include "y/chemical/type/meta-list.hpp"
+#include "y/chemical/type/show-list.hpp"
 
 namespace Yttrium
 {
@@ -53,15 +55,44 @@ namespace Yttrium
                 //______________________________________________________________
                 bool     accepts(const Law &)  const noexcept; //!< if common actor
                 bool     accepts(const Canon&) const noexcept; //!< if common actor
-                void     update()                    noexcept; //!< update assembly
+                void     compile();                            //!< compile assembly or laws/species
+
+                //! transfer according to species using '=' semantics
+                template <typename TARGET, typename SOURCE> inline
+                TARGET & transfer(TARGET &target, const Level targetLevel,
+                                  SOURCE &source, const Level sourceLevel) const
+                {
+                    for(const SNode *sn=species->head;sn;sn=sn->next)
+                    {
+                        const Species &sp = **sn;
+                        sp(target,targetLevel) = sp(source,sourceLevel);
+                    }
+                    return target;
+                }
+
+                template <typename ARRAY> inline
+                std::ostream & show(std::ostream &os, ARRAY &arr) const
+                {
+                    return ShowList(os,*species,sformat,AuxLevel, "[", arr, "]");
+                }
+
+
+                template <typename ARRAY, typename PROC> inline
+                std::ostream & show(std::ostream &os, ARRAY &arr, PROC &fcn ) const
+                {
+                    return ShowList(os,*species,sformat,AuxLevel, "[", arr, "]"),fcn;
+                }
+
                 //______________________________________________________________
                 //
                 //
                 // Members
                 //
                 //______________________________________________________________
-                Canon * next; //!< for list
-                Canon * prev; //!< for list
+                const AuxSList species; //!< Aux Level
+                const Assembly sformat; //!< for species
+                Canon *        next;    //!< for list
+                Canon *        prev;    //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canon);
