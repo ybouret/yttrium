@@ -175,7 +175,7 @@ namespace Yttrium
                 size_t idx = 1;
                 for(NodeType *node=this->list.head;node;node=node->next) {
                     Coerce( (**node).indx[LEVEL] ) = idx++;
-                    std::cerr << "coding " << (**node).name << " => " << (**node).indx[LEVEL] << std::endl;
+                    //std::cerr << "coding " << (**node).name << " => " << (**node).indx[LEVEL] << std::endl;
                 }
             }
         private:

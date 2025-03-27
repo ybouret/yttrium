@@ -92,11 +92,21 @@ namespace Yttrium
 
         void Library:: Concentrations(XWritable    &C,
                                       Random::Bits &ran,
-                                      const real_t probaZero) noexcept
+                                      const real_t probaZero,
+                                      const real_t probaNeg) noexcept
         {
             for(size_t i=C.size();i>0;--i)
             {
-                if( ran.to<real_t>() <= probaZero ) C[i] = 0; else C[i] = Concentration(ran);
+                if( ran.to<real_t>() <= probaZero )
+                    C[i] = 0;
+                else
+                {
+                    C[i] = Concentration(ran);
+                    if(ran.to<real_t>() <= probaNeg)
+                    {
+                        C[i] = -C[i];
+                    }
+                }
             }
         }
     }

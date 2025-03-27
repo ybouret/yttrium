@@ -14,11 +14,9 @@ namespace Yttrium
             Canons:: Canons(const ListOf<Law> &laws) :
             CxxListOf<Canon>()
             {
-                std::cerr << "\t---- Building Canons ----" << std::endl;
                 for(const Law *law=laws.head;law;law=law->next)
                 {
 
-                    std::cerr << "using " << law->name << std::endl;
                     for(Canon *canon=head;canon;canon=canon->next)
                     {
                         assert(!canon->has(*law));
@@ -57,7 +55,10 @@ namespace Yttrium
                     }
                 }
 
-                std::cerr << "|canons|=" << size << std::endl;
+                for(Canon *canon=head;canon;canon=canon->next)
+                {
+                    canon->update();
+                }
 
             }
 

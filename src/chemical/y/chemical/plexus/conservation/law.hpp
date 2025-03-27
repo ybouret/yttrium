@@ -47,10 +47,11 @@ namespace Yttrium
                 //! compute POSITIVE excess, Zero meaning law is followed
                 xreal_t excess(XAdd &xadd, const XReadable &C, const Level L) const;
 
-                //! project unfollowed C0 onto followed Cp
+                //! project unfollowed C0 onto followed Cp, initialized with C0
                 void    project(XAdd &            xadd,
-                                XWritable &       Cp, const Level Lp,
-                                const XReadable & C0, const Level L0) const;
+                                XWritable &       Cp,
+                                const XReadable & C0,
+                                const Level       L) const;
 
                 //! check if common actor(s)
                 bool hasCommonActorWith(const Law &other) const noexcept;

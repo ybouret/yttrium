@@ -45,6 +45,12 @@ namespace Yttrium
             //! setup empty
             inline explicit SoloHeavyList() noexcept : ListType() {}
 
+            //! setup with capacity
+            inline explicit SoloHeavyList(const size_t n) noexcept : ListType()
+            {
+                this->proxy->reserve(n);
+            }
+
             //! copy
             inline explicit SoloHeavyList(const SoloHeavyList &_) : ListType(_) {}
 

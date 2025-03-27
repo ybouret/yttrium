@@ -58,7 +58,8 @@ namespace Yttrium
             //! fill array with random concentrations
             static void      Concentrations(XWritable    &,
                                             Random::Bits &,
-                                            const real_t probaZero = 0) noexcept;
+                                            const real_t probaZero = 0,
+                                            const real_t probaNeg  = 0) noexcept;
 
 
             //__________________________________________________________________

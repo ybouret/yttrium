@@ -39,6 +39,14 @@ namespace Yttrium
                 }
                 return false;
             }
+
+            void Canon::update() noexcept
+            {
+                Coerce(maxNameLength) = 0;
+                for(const LNode *l=head;l;l=l->next)
+                    enroll( **l );
+            }
+
         }
 
     }

@@ -5,6 +5,7 @@
 #define Y_Chemical_Conservation_Canon_Included 1
 
 #include "y/chemical/plexus/conservation/law.hpp"
+#include "y/chemical/type/assembly.hpp"
 
 namespace Yttrium
 {
@@ -32,7 +33,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Canon : public Object, public LList
+            class Canon : public Object, public LList, public Assembly
             {
             public:
                 //______________________________________________________________
@@ -52,7 +53,7 @@ namespace Yttrium
                 //______________________________________________________________
                 bool     accepts(const Law &)  const noexcept; //!< if common actor
                 bool     accepts(const Canon&) const noexcept; //!< if common actor
-
+                void     update()                    noexcept; //!< update assembly
                 //______________________________________________________________
                 //
                 //

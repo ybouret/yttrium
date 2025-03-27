@@ -65,7 +65,7 @@ namespace Yttrium
                         }
                     }
                 }
-                //std::cerr << "proj=" << proj << std::endl;
+                std::cerr << "proj=" << proj << std::endl;
                 latch();
             }
 
@@ -97,28 +97,32 @@ namespace Yttrium
             }
 
             void Law:: project(XAdd      &       xadd,
-                               XWritable &       Cp, const Level Lp,
-                               const XReadable & C0, const Level L0) const
+                               XWritable &       Cp,
+                               const XReadable & C0,
+                               const Level       L) const
             {
+                
                 const Actors &self = *this;
                 {
                     size_t               i   = 1;
                     const Readable<int> &P_i = proj[i];
                     for(const Actor *I=self->head;I;I=I->next,++i)
                     {
-                        size_t j=1;
                         xadd.free();
-                        for(const Actor *J=self->head;J;J=J->next,++J)
                         {
-                            const int P_ij = P_i[j];
-                            switch(P_ij)
+                            size_t j=1;
+                            for(const Actor *J=self->head;J;J=J->next,++j)
                             {
-                                case __Zero__: break;
-                                case Positive: xadd.insert(J->sp(C0,L0), P_ij); break;
-                                case Negative: xadd.insert(J->sp(C0,L0),-P_ij); break;
+                                const int P_ij = P_i[j];
+                                switch( Sign::Of(P_ij) )
+                                {
+                                    case __Zero__: break;
+                                    case Positive: xadd.insert(J->sp(C0,L), P_ij); break;
+                                    case Negative: xadd.insert(J->sp(C0,L),-P_ij); break;
+                                }
                             }
                         }
-                        I->sp(Cp,Lp) = xadd.sum()/denom;
+                        I->sp(Cp,L) = xadd.sum()/denom;
                     }
                 }
             }
