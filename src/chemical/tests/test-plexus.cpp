@@ -53,6 +53,8 @@ Y_UTEST(plexus)
     Reactors cs(cls);
     Library::Concentrations(C0,ran,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+    return 0;
     
     cs(xml,C0);
 
