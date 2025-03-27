@@ -117,6 +117,7 @@ namespace Yttrium
                     //----------------------------------------------------------
                     blist.free();
                     canon.transfer(c0,AuxLevel,C0,L0);
+
                     for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
                         const Law &   law = **ln;
@@ -184,14 +185,16 @@ namespace Yttrium
                             curr.xs = curr.law.excess(xadd,c0,AuxLevel);
                             if(curr.xs<=zero)
                             {
+                                // drop
                                 Y_XML_COMMENT(xml, "drop: " << curr.law.name);
                                 blist.cutNode(node);
                                 node=0;
                             }
                             else
                             {
+                                // keep with RELOADING before projection
                                 Y_XML_COMMENT(xml, "keep: " << curr.law.name);
-                                curr.law.project(xadd, curr.cc, c0, AuxLevel );
+                                curr.law.project(xadd, curr.cc.ld(c0), c0, AuxLevel );
                             }
                             node=next;
                         }
@@ -206,11 +209,12 @@ namespace Yttrium
                     }
                 }
 
-                if(xml.verbose) canon.show( xml() << "injected=",injected);
+                if(xml.verbose)
+                {
+                    canon.show( xml() << "injected=",injected);
+                }
 
-                canon.show(std::cerr, c0, xreal_t::ToString) << std::endl;
                 canon.transfer(C0,L0,c0,AuxLevel);
-                cluster.show(std::cerr, SubLevel, "[", C0, "]", xreal_t::ToString) << std::endl;
 
             }
         }
