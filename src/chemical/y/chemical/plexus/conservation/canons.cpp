@@ -39,9 +39,19 @@ namespace Yttrium
                         CxxListOf<Canon> store;
                         while(size>0)
                         {
-                            AutoPtr<Canon> lhs = popHead();
+                            AutoPtr<Canon> rhs = popHead();
+                            for(Canon *lhs=store.head;lhs;lhs=lhs->next)
+                            {
+                                if(lhs->accepts(*rhs))
+                                {
+                                    lhs->mergeTail(*rhs);
+                                    rhs.erase();
+                                    break;
+                                }
+                            }
 
-                            store.pushTail(lhs.yield());
+                            if(rhs.isValid())
+                                store.pushTail(rhs.yield());
                         }
                         swapWith(store);
                     }

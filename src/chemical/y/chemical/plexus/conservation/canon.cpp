@@ -29,6 +29,16 @@ namespace Yttrium
                 }
                 return false;
             }
+
+
+            bool Canon:: accepts(const Canon &rhs) const noexcept
+            {
+                for(const LNode *l=head;l;l=l->next)
+                {
+                    if(rhs.accepts(**l)) return true;
+                }
+                return false;
+            }
         }
 
     }

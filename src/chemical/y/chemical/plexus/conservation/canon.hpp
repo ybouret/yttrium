@@ -13,18 +13,54 @@ namespace Yttrium
         namespace Conservation
         {
 
-            typedef Small::BareLightList<const Law> LList;
-            typedef LList::NodeType                 LNode;
+            //__________________________________________________________________
+            //
+            //
+            //
+            // definition for group of laws
+            //
+            //
+            //__________________________________________________________________
+            typedef Small::BareLightList<const Law> LList; //!< alias
+            typedef LList::NodeType                 LNode; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! list of interdependent laws
+            //
+            //
+            //__________________________________________________________________
             class Canon : public Object, public LList
             {
             public:
-                explicit Canon(const Law &first);
-                virtual ~Canon() noexcept;
-                bool     accepts(const Law &) const noexcept; //!< if common actor
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Canon(const Law &first); //!< setup with first law
+                virtual ~Canon() noexcept;        //!< cleanup
 
-                Canon * next;
-                Canon * prev;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                bool     accepts(const Law &)  const noexcept; //!< if common actor
+                bool     accepts(const Canon&) const noexcept; //!< if common actor
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Canon * next; //!< for list
+                Canon * prev; //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canon);

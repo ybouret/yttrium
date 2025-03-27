@@ -54,8 +54,8 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    return 0;
-    
+    //return 0;
+
     cs(xml,C0);
 
 
@@ -67,8 +67,8 @@ Y_UTEST(plexus)
     
     Y_SIZEOF(Conservation::Law);
     Y_SIZEOF(Conservation::Laws);
-    //Y_SIZEOF(Conservation::Canon);
-    //Y_SIZEOF(Conservation::Canons);
+    Y_SIZEOF(Conservation::Canon);
+    Y_SIZEOF(Conservation::Canons);
 
     Y_SIZEOF(Reactor);
 
