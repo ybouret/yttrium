@@ -59,7 +59,7 @@ namespace Yttrium
             //! evaluate K(t0)
             const XReadable &operator()(const xreal_t);
 
-
+            //! output all orders in basename[1..maxOrder].png
             void graphViz(const String &baseName) const;
 
         private:
@@ -69,8 +69,8 @@ namespace Yttrium
             XVector         tlK;
 
         public:
-            const XReadable &K; //!< last computed constant
-            const size_t     maxOrder;
+            const XReadable &K;        //!< last computed constant
+            const size_t     maxOrder; //!< max order size thru clusters
         };
 
     }

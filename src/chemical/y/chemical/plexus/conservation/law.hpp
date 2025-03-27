@@ -40,12 +40,19 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! emit GraphViz code once species are emitted
                 void    viz(OutputStream &fp, const String * const color=0) const;
+
+                //! compute POSITIVE excess, Zero meaning law is followed
                 xreal_t excess(XAdd &xadd, const XReadable &C, const Level L) const;
-                void    project(XAdd &xadd,
+
+                //! project unfollowed C0 onto followed Cp
+                void    project(XAdd &            xadd,
                                 XWritable &       Cp, const Level Lp,
                                 const XReadable & C0, const Level L0) const;
 
+                //! check if common actor(s)
                 bool hasCommonActorWith(const Law &other) const noexcept;
 
                 //______________________________________________________________
@@ -56,7 +63,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const unsigned norm2; //!< |*this|^2
                 const xreal_t  denom; //!< norm2
-                const iMatrix  proj;
+                const iMatrix  proj;  //!< compact projection matrix
                 const size_t   uuid;  //!< in laws per cluster
                 Law *          next;  //!< for list
                 Law *          prev;  //!< for list

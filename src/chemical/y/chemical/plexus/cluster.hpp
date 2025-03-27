@@ -31,9 +31,9 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const char * const  CallSign; //!< "Cluster"
-            typedef CxxListOf<Cluster> List;     //!< alias
-            typedef Vector<const String,MemoryModel> Strings;
+            static const char * const                CallSign; //!< "Cluster"
+            typedef CxxListOf<Cluster>               List;     //!< alias
+            typedef Vector<const String,MemoryModel> Strings;  //!< alias
 
             //__________________________________________________________________
             //
@@ -48,8 +48,7 @@ namespace Yttrium
             virtual ~Cluster() noexcept;          //!< cleanup
             Y_OSTREAM_PROTO(Cluster);             //!< display
 
-            void viz(OutputStream &fp,
-                     const size_t   numOrder) const;
+
 
             //__________________________________________________________________
             //
@@ -57,6 +56,9 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! output GrapViz code for given order
+            void viz(OutputStream &fp, const size_t numOrder) const;
 
             //! transfer according to species using '=' semantics
             template <typename TARGET, typename SOURCE> inline
@@ -134,14 +136,14 @@ namespace Yttrium
             }
 
 
-            const Conservation::Canons   canons;
-            Cluster *      next; //!< for list
-            Cluster *      prev; //!< for list
-            const unsigned uuid; //!< indexing
-            const Strings  spColor;
-            const Strings  eqColor;
-            const Strings  cnColor;
-            
+            const Conservation::Canons   canons;  //!< independent canons of dep. laws
+            Cluster *                    next;    //!< for list
+            Cluster *                    prev;    //!< for list
+            const unsigned               uuid;    //!< indexing
+            const Strings                spColor; //!< colors for species
+            const Strings                eqColor; //!< colors for equilibria
+            const Strings                cnColor; //!< colros for laws
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
             

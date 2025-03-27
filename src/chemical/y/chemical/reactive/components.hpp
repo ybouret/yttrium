@@ -178,6 +178,7 @@ namespace Yttrium
             //! compute jacobian and return affinity, assuming zeroed array initially
             xreal_t jacobian(XWritable &xjac, const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
+            //! emit GraphViz code one species are emitted
             void viz(OutputStream &fp,
                      const String * const color = 0) const;
 

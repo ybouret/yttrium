@@ -13,11 +13,19 @@ namespace Yttrium
         namespace Conservation
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Independant Canons of dependent Laws
+            //
+            //
+            //__________________________________________________________________
             class Canons : public CxxListOf<Canon>
             {
             public:
-                explicit Canons(const ListOf<Law> &laws);
-                virtual ~Canons() noexcept;
+                explicit Canons(const ListOf<Law> &laws); //!< setup
+                virtual ~Canons() noexcept;               //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canons);

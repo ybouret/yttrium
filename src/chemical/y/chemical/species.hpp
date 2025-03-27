@@ -72,6 +72,8 @@ namespace Yttrium
             //__________________________________________________________________
             virtual size_t   serialize(OutputStream &fp) const;          //!< univocal formula
             static Species * ReadFrom(InputStream &fp, const size_t id); //!< retrieve from serialized
+
+            //! emit GraphViz code
             void   viz(OutputStream &       fp,
                        const String * const color     = 0,
                        const bool           conserved = true) const;
