@@ -1,6 +1,6 @@
 
 #include "y/chemical/plexus/reactors.hpp"
-#include "y/chemical/plexus/conservation/warden.hpp"
+#include "y/chemical/plexus/conservation/wardens.hpp"
 
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
@@ -43,7 +43,8 @@ Y_UTEST(plexus)
     cls.graphViz("cs");
 
     const size_t m = lib->size();
-    XVector      C0(m,0);
+    XVector      C0(m,0); // concentration
+    XVector      I0(m,0); // injection
     XVector      C(m,0);
 
 
@@ -51,16 +52,11 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.5,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-    {
-        for(const Conservation::Canon *canon=cl->canons.head;canon;canon=canon->next)
-        {
-            Conservation::Warden warden(*cl,*canon);
-            warden(xml,C0,TopLevel);
-        }
-    }
+    Conservation::Wardens wardens(cls);
+    wardens(xml,C0,I0);
 
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+    lib.show(std::cerr << "I0=", "\t[", I0, "]", xreal_t::ToString ) << std::endl;
 
     return 0;
 
