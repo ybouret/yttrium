@@ -14,7 +14,9 @@ namespace Yttrium
             blist(canon.size),
             cproj(canon.size+1,canon.species->size),
             c0(cproj[canon.size+1]),
-            injected(canon.species->size)
+            injected(canon.species->size),
+            next(0),
+            prev(0)
             {
             }
 

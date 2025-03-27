@@ -60,7 +60,9 @@ namespace Yttrium
                 XMatrix         cproj;
                 XWritable     & c0;
                 Summator        injected;
-
+                Warden *        next;
+                Warden *        prev;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
             };
