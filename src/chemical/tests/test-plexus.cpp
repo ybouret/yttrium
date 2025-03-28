@@ -25,9 +25,14 @@ namespace Yttrium
 
             const Cluster &cluster;
             EqzBanks       banks;
-            Table          definite;
+            const size_t   nrows;
+            const size_t   ncols;
+            Table          table;
+
 
             void operator()(XMLog &xml, XWritable &C0);
+
+            void analyze(XMLog &xml, const Extents &, const XReadable &C0, const AddressBook * wanders);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
@@ -37,9 +42,11 @@ namespace Yttrium
         Equalizer:: Equalizer(const Cluster &cls) :
         cluster(cls),
         banks(),
-        definite(cluster.definite->size,CopyOf,banks)
+        nrows(cluster.definite->size),
+        ncols(cluster->species->size),
+        table(nrows,CopyOf,banks)
         {
-            assert(definite.size() == cluster.definite->size );
+
         }
 
         Equalizer:: ~Equalizer() noexcept
@@ -55,11 +62,20 @@ namespace Yttrium
             {
                 const Equilibrium &eq   = **en;
                 Y_XML_SECTION(xml,*eq.name);
-                Extents           &exts = eq(definite,AuxLevel);
+                Extents           &exts = eq(table,AuxLevel);
                 exts(eq,C0,TopLevel, & cluster.wandering );
                 Y_XMLOG(xml, "reactants :" << exts.reac);
                 Y_XMLOG(xml, "products  :" << exts.prod);
+
             }
+        }
+
+        void Equalizer:: analyze(XMLog            &  xml,
+                                 const Extents    &  exts,
+                                 const XReadable  &  C0,
+                                 const AddressBook * wanders)
+        {
+            
         }
 
 
@@ -107,7 +123,7 @@ Y_UTEST(plexus)
 
 
 
-    Library::Concentrations(C0,ran,0.1,0.8);
+    Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)

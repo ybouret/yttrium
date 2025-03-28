@@ -9,7 +9,8 @@ namespace Yttrium
 
         Extents:: Extents(const EqzBanks &banks) noexcept :
         reac(banks),
-        prod(banks)
+        prod(banks),
+        best(banks.sb)
         {
         }
 
@@ -17,7 +18,11 @@ namespace Yttrium
         {
         }
 
-        void Extents:: restart() noexcept { reac.restart(); prod.restart(); }
+        void Extents:: restart() noexcept {
+            reac.restart();
+            prod.restart();
+            best.restart();
+        }
 
 
         void Extents:: operator()(const Components &  E,
@@ -25,10 +30,21 @@ namespace Yttrium
                                   const Level         L,
                                   const AddressBook * const wanders)
         {
-            reac(E.reac,C,L,wanders);
-            prod(E.prod,C,L,wanders);
-        }
+            try
+            {
+                best.restart();
+                reac(E.reac,C,L,wanders);
+                prod(E.prod,C,L,wanders);
 
+
+            }
+            catch(...)
+            {
+                restart();
+                throw;
+            }
+
+        }
     }
 
 }

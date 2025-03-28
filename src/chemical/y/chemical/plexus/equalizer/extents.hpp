@@ -46,14 +46,18 @@ namespace Yttrium
                             const XReadable &   C,
                             const Level         L,
                             const AddressBook * const wanders);
+
+
+
             //__________________________________________________________________
             //
             //
             // Members
             //
             //__________________________________________________________________
-            Extent reac; //!< status for reactant(s)
-            Extent prod; //!< status for product(s)
+            Extent   reac; //!< status for reactant(s)
+            Extent   prod; //!< status for product(s)
+            Boundary best; //!< best effort
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extents);
