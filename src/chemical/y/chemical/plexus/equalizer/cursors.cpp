@@ -39,7 +39,7 @@ namespace Yttrium
         void Cursors:: operator()(const Species &sp, const xreal_t xi)
         {
             // get rid of trivial cases
-            std::cerr << "placing " << sp.name << "@" << xi.str() << " into " << my << std::endl;
+            //std::cerr << "placing " << sp.name << "@" << xi.str() << " into " << my << std::endl;
             switch(my.size)
             {
                 case 0: my.pushTail( crNode(sp,xi) ); assert( checked() ); return;

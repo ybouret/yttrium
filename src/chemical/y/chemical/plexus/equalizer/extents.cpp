@@ -35,7 +35,8 @@ namespace Yttrium
                 best.restart();
                 reac(E.reac,C,L,wanders);
                 prod(E.prod,C,L,wanders);
-
+                std::cerr << "reac:" << reac << std::endl;
+                std::cerr << "prod:" << prod << std::endl;
                 if(reac.required->size<=0)
                 {
 
@@ -80,7 +81,7 @@ namespace Yttrium
 
         void Extents:: findBest(const Boundary &limiting, const Cursors &required)
         {
-
+            std::cerr << "Find " << limiting << " within " << required << std::endl;
         }
 
     }
