@@ -7,7 +7,7 @@
 #include "y/random/mt19937.hpp"
 #include "y/stream/libc/output.hpp"
 
-#include "y/chemical/plexus/equalizer/restartable.hpp"
+#include "y/chemical/plexus/equalizer/boundary.hpp"
 
 #include "y/data/small/heavy/list/coop.hpp"
 
@@ -19,64 +19,7 @@ namespace Yttrium
      
       
 
-        class Boundary : public SRepo, public Restartable
-        {
-        public:
-            explicit Boundary(const SBank &sb) noexcept :
-            SRepo(sb),
-            xi(0)
-            {
-            }
-
-            virtual ~Boundary() noexcept {}
-
-            Y_OSTREAM_PROTO(Boundary);
-
-            void operator()(const Species &sp, const xreal_t xx)
-            {
-                if(size<=0)
-                {
-                    xi = xx;
-                    (*this) << sp;
-                }
-                else
-                {
-                    switch(Sign::Of(xx,xi))
-                    {
-                        case Negative: // new winner
-                            xi = xx; free(); (*this) << sp;
-                            break;
-                            
-                        case __Zero__: // ex-aequo
-                            (*this) << sp;
-                            break;
-
-                        case Positive: // discard
-                            break;
-                    }
-                }
-            }
-
-
-
-
-            virtual void restart() noexcept { free(); xi=0; }
-
-            xreal_t xi;
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Boundary);
-        };
-
-        std::ostream & operator<<(std::ostream &os, const Boundary &b)
-        {
-            if(b.size)
-            {
-                os << std::setw(Restartable::Width) << b.xi.str() << "@" << (const SRepo &)b;
-            }
-            else
-                os << std::setw(Restartable::Width) << Restartable::None;
-            return os;
-        }
+     
 
         class Cursor : public SRepo
         {
