@@ -54,6 +54,53 @@ namespace Yttrium
             }
         }
 
+        Boundary:: Boundary(const Boundary &_) :
+        SRepo(_),
+        xi(_.xi)
+        {
+        }
+
+        void Boundary:: xch(Boundary &_) noexcept
+        {
+            swapWith(_);
+            Swap(xi,_.xi);
+        }
+
+        Boundary & Boundary:: operator=(const Boundary &other)
+        {
+            Boundary tmp(other);
+            xch(tmp);
+            return *this;
+        }
+    }
+
+}
+
+#include "y/chemical/plexus/equalizer/cursor.hpp"
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        void Boundary:: add(const Cursor &cr)
+        {
+            for(const SNode *sn = cr.head;sn;sn=sn->next)
+            {
+                const Species &sp = **sn; assert(!has(sp));
+                (*this) << sp;
+            }
+        }
+
+        Boundary & Boundary:: operator=(const Cursor &cr)
+        {
+            {
+                Boundary tmp(proxy);
+                tmp.xi = cr.xi;
+                tmp.add(cr);
+                xch(tmp);
+            }
+            return *this;
+        }
+
     }
 
 }

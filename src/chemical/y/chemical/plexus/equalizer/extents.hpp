@@ -20,6 +20,8 @@ namespace Yttrium
             BadBoth
         };
 
+        const char * ResultantText(const Resultant) noexcept;
+
         //______________________________________________________________________
         //
         //
@@ -39,6 +41,7 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Extents(const EqzBanks &banks) noexcept; //!< setup empty
             virtual ~Extents() noexcept;                      //!< cleanup
+
 
             //__________________________________________________________________
             //

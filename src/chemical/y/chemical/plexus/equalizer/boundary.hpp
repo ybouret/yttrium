@@ -13,6 +13,8 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        class Cursor;
+
         //______________________________________________________________________
         //
         //
@@ -32,6 +34,9 @@ namespace Yttrium
             //__________________________________________________________________
             explicit Boundary(const SBank &) noexcept; //!< setup empty
             virtual ~Boundary()              noexcept; //!< cleanup
+            Boundary(const Boundary &);                //!< duplicate
+            Boundary&operator=(const Boundary &);      //!< assign by copy/xch
+            Boundary&operator=(const Cursor   &);      //!< duplicate and xch
             Y_OSTREAM_PROTO(Boundary);                 //!< display
 
             //__________________________________________________________________
@@ -47,6 +52,13 @@ namespace Yttrium
             //! free and xi=0
             virtual void restart() noexcept;
 
+            //! no throw exchange
+            void xch(Boundary &_) noexcept;
+
+            //! add species
+            void add(const Cursor&);
+
+
             //__________________________________________________________________
             //
             //
@@ -54,9 +66,7 @@ namespace Yttrium
             //
             //__________________________________________________________________
             xreal_t xi; //!< current extent
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Boundary);
+
         };
 
 
