@@ -51,10 +51,10 @@ namespace Yttrium
             const iMatrix iNu;      //!< full topology, integer
             const XMatrix xNu;      //!< full topology, xreal_t
             const ELists  order;    //!< equilibria ranked by order
-            const EList   definite;
-            const EList   onlyProd;
-            const EList   onlyReac;
-            const EList   nebulous;
+            const EList   definite; //!< list of definite
+            const EList   onlyProd; //!< list of onlyProd
+            const EList   onlyReac; //!< list of onlyReac
+            const EList   nebulous; //!< list of nebulous
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);

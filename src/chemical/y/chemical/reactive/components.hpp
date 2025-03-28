@@ -80,7 +80,14 @@ namespace Yttrium
             Standard  //!< both sides are populated
         };
         
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Characteristic of Components after conservations
+        //
+        //
+        //______________________________________________________________________
         enum Characteristic
         {
             Definite, //!< some conserved on at least one side
@@ -89,6 +96,7 @@ namespace Yttrium
             Nebulous  //!< all unbounded
         };
 
+        //! human readable characteristic
         const char * CharacteristicText(const Characteristic) noexcept;
 
         //______________________________________________________________________

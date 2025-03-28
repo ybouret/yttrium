@@ -289,7 +289,11 @@ namespace Yttrium
         ClusterConservations(xml,ptr),
         iNu(),
         xNu(),
-        order(0)
+        order(0),
+        definite(),
+        onlyProd(),
+        onlyReac(),
+        nebulous()
         {
             Y_XML_SECTION(xml, "ClusterCombinatorics");
             assert(ptr->equilibria->size>0);
