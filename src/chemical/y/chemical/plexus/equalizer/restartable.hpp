@@ -11,19 +11,27 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! interface for equalizing objects
+        //
+        //
+        //______________________________________________________________________
         class Restartable
         {
         public:
-            static const unsigned     Width = 22;
-            static const char * const None;
+            static const unsigned     Width = 22; //!< for display
+            static const char * const None;       //!< "none"
 
         protected:
-            explicit Restartable() noexcept;
+            explicit Restartable() noexcept; //!< setup
 
         public:
-            virtual ~Restartable() noexcept;
+            virtual ~Restartable() noexcept; //!< cleanup
 
-            virtual void restart() noexcept = 0;
+            virtual void restart() noexcept = 0; //!< should reset data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Restartable);

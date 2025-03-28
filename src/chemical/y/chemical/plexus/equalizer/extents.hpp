@@ -10,22 +10,50 @@ namespace Yttrium
 {
     namespace Chemical
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! classified extents for both sides of an equilibrium
+        //
+        //
+        //______________________________________________________________________
         class Extents : public Restartable
         {
         public:
-            explicit Extents(const EqzBanks &banks) noexcept;
-            virtual ~Extents() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Extents(const EqzBanks &banks) noexcept; //!< setup empty
+            virtual ~Extents() noexcept;                      //!< cleanup
 
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
+            //! restart all
             virtual void restart() noexcept;
 
+            //! dispatch all
             void operator()(const Components &  E,
                             const XReadable &   C,
                             const Level         L,
                             const AddressBook * const wanders);
-
-            Extent reac;
-            Extent prod;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            Extent reac; //!< status for reactant(s)
+            Extent prod; //!< status for product(s)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extents);

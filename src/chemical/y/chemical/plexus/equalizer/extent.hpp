@@ -13,15 +13,42 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! classified extent from one side of an equilibirum
+        //
+        //
+        //______________________________________________________________________
         class Extent : public Restartable
         {
         public:
-            static const char * const Limiting;
-            static const char * const Required;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            static const char * const Limiting; //!< "limiting"
+            static const char * const Required; //!< "required"
 
-            explicit Extent(const EqzBanks &banks) noexcept;
-            virtual ~Extent() noexcept;
-            Y_OSTREAM_PROTO(Extent);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Extent(const EqzBanks &banks) noexcept; //!< setup empty
+            virtual ~Extent() noexcept;                      //!< cleanup
+            Y_OSTREAM_PROTO(Extent);                         //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! restart all
             virtual void restart() noexcept;
@@ -32,9 +59,14 @@ namespace Yttrium
                             const Level         L,
                             const AddressBook * const wanders);
 
-
-            Boundary limiting;
-            Cursors  required;
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
+            Boundary limiting; //!< from positive concentrations
+            Cursors  required; //!< for negative concentrations
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extent);

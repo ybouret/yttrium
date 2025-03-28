@@ -13,19 +13,36 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! cursor at which (multiple) species vanish
+        //
+        //
+        //______________________________________________________________________
         class Cursor : public SRepo
         {
         public:
-            //! initialize
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
             explicit Cursor(const SBank   &sb,
                             const Species &sp,
-                            const xreal_t  xx);
-            Cursor(const Cursor &_);    //!< duplicate
-            virtual ~Cursor() noexcept; //!< cleanup
-            Y_OSTREAM_PROTO(Cursor);    //!< display
+                            const xreal_t  xx); //!< initialize
+            Cursor(const Cursor &_);           //!< duplicate
+            virtual ~Cursor() noexcept;        //!< cleanup
+            Y_OSTREAM_PROTO(Cursor);           //!< display
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const xreal_t xi; //!< current extent
 
         private:
@@ -34,9 +51,9 @@ namespace Yttrium
 
 
 
-        typedef Small::CoopHeavyList<Cursor> CrList;
-        typedef CrList::NodeType             CrNode;
-        typedef CrList::ProxyType            CrBank;
+        typedef Small::CoopHeavyList<Cursor> CrList; //!< alias
+        typedef CrList::NodeType             CrNode; //!< alias
+        typedef CrList::ProxyType            CrBank; //!< alias
 
     }
 

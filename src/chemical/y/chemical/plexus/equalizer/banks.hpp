@@ -11,15 +11,34 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Shared Banks for Equalizer
+        //
+        //
+        //______________________________________________________________________
         class EqzBanks
         {
         public:
-            explicit EqzBanks();
-            virtual ~EqzBanks() noexcept;
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit EqzBanks();          //!< setup
+            virtual ~EqzBanks() noexcept; //!< cleanup
 
-            SBank  sb;
-            CrBank cb;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            SBank  sb; //!< for species
+            CrBank cb; //!< for cursors
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(EqzBanks);

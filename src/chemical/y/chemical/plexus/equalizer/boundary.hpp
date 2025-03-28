@@ -13,12 +13,33 @@ namespace Yttrium
 {
     namespace Chemical
     {
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! extent shared for (multiple) species
+        //
+        //
+        //______________________________________________________________________
         class Boundary : public SRepo, public Restartable
         {
         public:
-            explicit Boundary(const SBank &) noexcept;
-            virtual ~Boundary()              noexcept;
-            Y_OSTREAM_PROTO(Boundary);
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Boundary(const SBank &) noexcept; //!< setup empty
+            virtual ~Boundary()              noexcept; //!< cleanup
+            Y_OSTREAM_PROTO(Boundary);                 //!< display
+
+            //__________________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //__________________________________________________________________
 
             //! process species with its extent
             void operator()(const Species &sp, const xreal_t xx);
@@ -26,7 +47,14 @@ namespace Yttrium
             //! free and xi=0
             virtual void restart() noexcept;
 
-            xreal_t xi;
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
+            xreal_t xi; //!< current extent
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boundary);
         };

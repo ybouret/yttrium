@@ -92,6 +92,12 @@ namespace Yttrium
             my.insertAfter(lower, crNode(sp,xi) );
             assert( checked() );
         }
+
+        CrNode * Cursors:: crNode(const Species &sp, const xreal_t xi)
+        {
+            const Cursor cr(sb,sp,xi);
+            return my.proxy->produce(cr);
+        }
     }
 
 }
