@@ -10,6 +10,22 @@ namespace Yttrium
         ComponentsType::  ComponentsType() : ComponentsDB(), Latchable() {}
         ComponentsType:: ~ComponentsType() noexcept {}
 
+
+#define Y_Chem_Case(ID) case ID : return #ID
+
+        const char * CharacteristicText(const Characteristic ch) noexcept
+        {
+            switch(ch)
+            {
+                    Y_Chem_Case(Definite);
+                    Y_Chem_Case(OnlyProd);
+                    Y_Chem_Case(OnlyReac);
+                    Y_Chem_Case(Nebulous);
+            }
+            return Core::Unknown;
+        }
+
+
     }
 
 }

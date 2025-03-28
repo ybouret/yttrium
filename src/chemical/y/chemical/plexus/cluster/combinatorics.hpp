@@ -28,8 +28,8 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            typedef CxxArray<EList,MemoryModel> ELists; //!< alias
-
+            typedef CxxArray<EList,MemoryModel>                ELists; //!< alias
+            
             //__________________________________________________________________
             //
             //
@@ -51,7 +51,10 @@ namespace Yttrium
             const iMatrix iNu;      //!< full topology, integer
             const XMatrix xNu;      //!< full topology, xreal_t
             const ELists  order;    //!< equilibria ranked by order
-
+            const EList   definite;
+            const EList   onlyProd;
+            const EList   onlyReac;
+            const EList   nebulous;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);
@@ -59,6 +62,7 @@ namespace Yttrium
                                     Equilibria &eqs,
                                     XWritable  &tlK);
             void setClusterTopology(XMLog &xml);
+            void makeCharacteristic(XMLog &xml);
 
         };
 

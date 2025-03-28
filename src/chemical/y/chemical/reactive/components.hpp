@@ -79,6 +79,17 @@ namespace Yttrium
             ProdOnly, //!< only product(s)
             Standard  //!< both sides are populated
         };
+        
+
+        enum Characteristic
+        {
+            Definite, //!< some conserved on at least one side
+            OnlyReac, //!< only reactant(s)
+            OnlyProd, //!< only product(s)
+            Nebulous  //!< all unbounded
+        };
+
+        const char * CharacteristicText(const Characteristic) noexcept;
 
         //______________________________________________________________________
         //

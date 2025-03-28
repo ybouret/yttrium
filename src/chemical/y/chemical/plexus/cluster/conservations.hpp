@@ -31,6 +31,7 @@ namespace Yttrium
             const Conservation::Laws ordinance; //!< matching laws
             const SList             &conserved; //!< conserved species
             const SList              unbounded; //!< unbounded species
+            const AddressBook        wandering; //!< dictionary of wandering species
 
             bool   areAllUnbounded(const Actors &) const noexcept; //!< are all actors unbounded ?
             bool   gotAnyConserved(const Actors &) const noexcept; //!< is at least one actor conserved ?

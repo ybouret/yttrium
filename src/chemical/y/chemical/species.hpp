@@ -8,6 +8,7 @@
 #include "y/chemical/formula.hpp"
 #include "y/chemical/type/charge.hpp"
 #include "y/data/small/light/list/bare.hpp"
+#include "y/data/small/light/list/coop.hpp"
 #include "y/graphviz/vizible.hpp"
 
 namespace Yttrium
@@ -92,8 +93,8 @@ namespace Yttrium
 
         typedef Small::BareLightList<const Species> SList; //!< alias
         typedef SList::NodeType                     SNode; //!< alias
-
-
+        typedef Small::CoopLightList<const Species> SRepo; //!< alias
+        typedef SRepo::ProxyType                    SBank; //!< alias
     }
 
 }

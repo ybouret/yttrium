@@ -114,6 +114,7 @@ namespace Yttrium
             // Members
             //
             //__________________________________________________________________
+        
             const Conservation::Canons   canons;  //!< independent canons of dep. laws
             Cluster *                    next;    //!< for list
             Cluster *                    prev;    //!< for list

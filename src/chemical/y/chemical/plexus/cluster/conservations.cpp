@@ -29,7 +29,8 @@ namespace Yttrium
         preserved(),
         ordinance(0),
         conserved(ordinance.species),
-        unbounded()
+        unbounded(),
+        wandering()
         {
             Y_XML_SECTION(xml,"ClusterConservations");
 
@@ -44,7 +45,7 @@ namespace Yttrium
                     const NaturalSurvey survey(xml,Q,0);
                     if(survey->size<=0) {
                         Y_XMLOG(xml,"no conservation found");
-                        return;
+                        goto FINALIZE;
                     }
 
                     {
@@ -80,6 +81,7 @@ namespace Yttrium
 
             }
 
+        FINALIZE:
             for(const SNode *sn=(*this)->species->head;sn;sn=sn->next)
             {
                 const Species &sp = **sn;
@@ -87,6 +89,11 @@ namespace Yttrium
             }
             assert(conserved.isStrictlySortedBy(MetaList<SList>::Compare));
             assert(unbounded.isStrictlySortedBy(MetaList<SList>::Compare));
+
+            for(const SNode *sn=unbounded.head;sn;sn=sn->next)
+            {
+                Coerce(wandering) += **sn;
+            }
 
             Y_XMLOG(xml, "topology  = " << topology);
             Y_XMLOG(xml, "preserved = " << preserved);
@@ -105,7 +112,7 @@ namespace Yttrium
                     assert( !unbounded.has(a->sp) );
                     return false;
                 }
-                assert( unbounded.has(a->sp));
+                assert( unbounded.has(a->sp) );
             }
             return true;
         }

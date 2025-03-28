@@ -226,6 +226,62 @@ namespace Yttrium
             }
         }
 
+        static inline void CharacteristicOut(XMLog &              xml,
+                                             const Characteristic chr,
+                                             const Components &   eq)
+        {
+            Y_XMLOG(xml, " (*) " << CharacteristicText(chr) << " " << eq.name );
+        }
+
+        void ClusterCombinatorics:: makeCharacteristic(XMLog &xml)
+        {
+            static const char fn[] = "makeCharacteritic";
+            Y_XML_SECTION(xml,fn);
+
+
+
+            for(const ENode *en=(*this)->equilibria->head;en;en=en->next)
+            {
+                Equilibrium &eq = Coerce(**en);
+                switch(eq.kind)
+                {
+                    case Deserted:
+                        throw Specific::Exception(fn,"Deserted '%s'", eq.name->c_str());
+
+                    case ProdOnly:
+                        assert( areAllUnbounded(eq.prod) );
+                        assert( 0 == eq.reac->size );
+                        Coerce(onlyProd) << eq;
+                        CharacteristicOut(xml,OnlyProd,eq);
+                        break;
+
+                    case ReacOnly:
+                        assert( areAllUnbounded(eq.reac) );
+                        assert( 0 == eq.prod->size );
+                        Coerce(onlyReac) << eq;
+                        CharacteristicOut(xml,OnlyReac,eq);
+                        break;
+
+
+                    case Standard:
+                        assert(eq.reac->size>0);
+                        assert(eq.prod->size>0);
+                        if( areAllUnbounded(eq.reac) && areAllUnbounded(eq.prod) )
+                        {
+                            Coerce(nebulous) << eq;
+                            CharacteristicOut(xml,Nebulous,eq);
+                        }
+                        else
+                        {
+                            Coerce(definite) << eq;
+                            CharacteristicOut(xml,Definite,eq);
+                        }
+                }
+
+            }
+        }
+
+
         ClusterCombinatorics:: ClusterCombinatorics(XMLog                         &xml,
                                                     const ClusterContent::Pointer &ptr,
                                                     Equilibria                    &eqs,
@@ -239,6 +295,7 @@ namespace Yttrium
             assert(ptr->equilibria->size>0);
             createCombinations(xml,eqs,tlK);
             setClusterTopology(xml);
+            makeCharacteristic(xml);
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

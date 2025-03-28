@@ -9,6 +9,13 @@
 
 #include "y/data/small/heavy/list/coop.hpp"
 
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        
+    }
+}
 
 using namespace Yttrium;
 using namespace Chemical;
