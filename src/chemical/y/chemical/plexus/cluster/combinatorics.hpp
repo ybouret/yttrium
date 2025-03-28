@@ -50,12 +50,12 @@ namespace Yttrium
             //__________________________________________________________________
             const iMatrix iNu;      //!< full topology, integer
             const XMatrix xNu;      //!< full topology, xreal_t
-            const ELists  order;    //!< equilibria ranked by order
-            const EList   definite; //!< list of definite
-            const EList   onlyProd; //!< list of onlyProd
-            const EList   onlyReac; //!< list of onlyReac
-            const EList   nebulous; //!< list of nebulous
-
+            const ELists   order;    //!< equilibria ranked by order
+            const AuxEList definite; //!< list of definite
+            const AuxEList onlyProd; //!< list of onlyProd
+            const AuxEList onlyReac; //!< list of onlyReac
+            const AuxEList nebulous; //!< list of nebulous
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);
             void createCombinations(XMLog      &xml,

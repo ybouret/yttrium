@@ -16,6 +16,10 @@ namespace Yttrium
 
         class Restartable
         {
+        public:
+            static const unsigned      Width = 22;
+            static const char * const None;
+
         protected:
             explicit Restartable() noexcept;
 
@@ -27,6 +31,8 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Restartable);
         };
+
+        const char * const Restartable:: None = "<none>";
 
         Restartable:: Restartable() noexcept
         {}
@@ -44,7 +50,9 @@ namespace Yttrium
             {
             }
 
-            //Boundary(const Boundary &_) : SRepo(_), xi(_.xi) {}
+            virtual ~Boundary() noexcept {}
+
+            Y_OSTREAM_PROTO(Boundary);
 
             void operator()(const Species &sp, const xreal_t xx)
             {
@@ -71,9 +79,8 @@ namespace Yttrium
                 }
             }
 
-            Y_OSTREAM_PROTO(Boundary);
 
-            virtual ~Boundary() noexcept {}
+
 
             virtual void restart() noexcept { free(); xi=0; }
 
@@ -84,7 +91,12 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Boundary &b)
         {
-            os << std::setw(24) << b.xi.str() << "@" << (const SRepo &)b;
+            if(b.size)
+            {
+                os << std::setw(Restartable::Width) << b.xi.str() << "@" << (const SRepo &)b;
+            }
+            else
+                os << std::setw(Restartable::Width) << Restartable::None;
             return os;
         }
 
@@ -114,7 +126,7 @@ namespace Yttrium
 
         std::ostream & operator<<(std::ostream &os, const Cursor &cr)
         {
-            os << std::setw(24) << cr.xi.str() << "@" << (const SRepo &)cr;
+            os << std::setw(Restartable::Width) << cr.xi.str() << "@" << (const SRepo &)cr;
             return os;
         }
 
@@ -144,12 +156,19 @@ namespace Yttrium
         public:
             explicit Cursors(const EqzBanks &banks) noexcept;
             virtual ~Cursors() noexcept;
-
             virtual void restart() noexcept;
+
+            void operator()(const Species &sp, const xreal_t xi);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cursors);
             Y_PROXY_DECL();
+            CrNode *crNode(const Species &sp, const xreal_t &xi)
+            {
+                const Cursor cr(sb,sp,xi);
+                return my.proxy->produce(cr);
+            }
             CrList my;
             SBank  sb;
         };
@@ -171,9 +190,32 @@ namespace Yttrium
 
         void Cursors:: restart() noexcept { my.free(); }
 
+
+        void Cursors:: operator()(const Species &sp, const xreal_t xi)
+        {
+            switch(my.size)
+            {
+                case 0: my.pushTail( crNode(sp,xi) ); return;
+                case 1:
+                    switch( Sign::Of(xi, (**my.head).xi) )
+                    {
+                        case __Zero__: (**my.head) << sp;            return;
+                        case Negative: my.pushHead( crNode(sp,xi) ); break;
+                        case Positive: my.pushTail( crNode(sp,xi) ); break;
+                    }
+                    assert(2==my.size);
+                    return;
+            }
+        }
+
+
+
         class Extent : public Restartable
         {
         public:
+            static const char * const Limiting;
+            static const char * const Required;
+
             explicit Extent(const EqzBanks &banks) noexcept;
             virtual ~Extent() noexcept;
 
@@ -182,14 +224,25 @@ namespace Yttrium
             void operator()(const Actors &      A,
                             const XReadable &   C,
                             const Level         L,
-                            const AddressBook & wanders)
+                            const AddressBook * const wanders)
             {
                 restart();
                 for(const Actor *a=A->head;a;a=a->next)
                 {
-                    const Species &sp = a->sp; if(wanders.has(sp)) continue;
+                    const Species &sp = a->sp; if(wanders && wanders->has(sp)) continue;
+                    const xreal_t  cc = sp(C,L);
+                    if(cc>=0.0)
+                    {
+                        limiting(sp,cc/a->xn);
+                    }
+                    else
+                    {
+                        required(sp,(-cc)/a->xn);
+                    }
                 }
             }
+
+            Y_OSTREAM_PROTO(Extent);
 
 
             Boundary limiting;
@@ -198,6 +251,10 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extent);
         };
+
+        const char * const Extent:: Limiting = "limiting";
+        const char * const Extent:: Required = "required";
+
 
         Extent:: ~Extent() noexcept
         {
@@ -212,6 +269,24 @@ namespace Yttrium
 
         void Extent:: restart() noexcept { limiting.restart(); required.restart(); }
 
+        std::ostream & operator<<(std::ostream &os, const Extent &ext)
+        {
+            os << std::endl;
+            os << "\t" << Extent::Limiting << "=" << ext.limiting << std::endl;
+            if(ext.required->size>0)
+            {
+                for(const CrNode *cn=ext.required->head;cn;cn=cn->next)
+                {
+                    os << "\t" << Extent::Required << "=" << **cn;
+                    if(cn!=ext.required->tail) os << std::endl;
+                }
+            }
+            else
+            {
+                os << "\t" << Extent::Required << "=" << std::setw(Restartable::Width) << Restartable::None;
+            }
+            return os;
+        }
 
 
         class Extents : public Restartable
@@ -220,16 +295,19 @@ namespace Yttrium
             explicit Extents(const EqzBanks &banks) noexcept;
             virtual ~Extents() noexcept;
 
+
             virtual void restart() noexcept;
 
             void operator()(const Components &  E,
                             const XReadable &   C,
                             const Level         L,
-                            const AddressBook & wanders)
+                            const AddressBook * const wanders)
             {
                 reac(E.reac,C,L,wanders);
                 prod(E.prod,C,L,wanders);
             }
+
+
 
             Extent reac;
             Extent prod;
@@ -252,15 +330,18 @@ namespace Yttrium
 
 
 
+
         class Equalizer
         {
         public:
-
             explicit Equalizer(const Cluster &cls);
             virtual ~Equalizer() noexcept;
+            typedef CxxArray<Extents,MemoryModel> Table;
+
 
             const Cluster &cluster;
             EqzBanks       banks;
+            Table          definite;
 
             void operator()(XMLog &xml, XWritable &C0);
 
@@ -271,8 +352,10 @@ namespace Yttrium
 
         Equalizer:: Equalizer(const Cluster &cls) :
         cluster(cls),
-        banks()
+        banks(),
+        definite(cluster.definite->size,CopyOf,banks)
         {
+            assert(definite.size() == cluster.definite->size );
         }
 
         Equalizer:: ~Equalizer() noexcept
@@ -282,30 +365,16 @@ namespace Yttrium
         void Equalizer:: operator()(XMLog &xml, XWritable &C0)
         {
             Y_XML_SECTION(xml, "Equalizer");
-            SBank sb;
 
-            Boundary reacBoundary(sb);
-
-            for(const ENode *en=cluster.definite.head;en;en=en->next)
+            Y_XML_COMMENT(xml,"definite");
+            for(const ENode *en=cluster.definite->head;en;en=en->next)
             {
-                const Equilibrium &eq = **en;
-
-                for(const Actor *a=eq.reac->head;a;a=a->next)
-                {
-                    const Species &sp = a->sp;
-                    const xreal_t  cc = sp(C0,TopLevel);
-                    if(cc>=0.0)
-                    {
-                        reacBoundary(sp,cc/a->xn);
-                    }
-                    else
-                    {
-
-                    }
-                }
-
-                std::cerr << "reacBoundary=" << reacBoundary << std::endl;
-
+                const Equilibrium &eq   = **en;
+                Y_XML_SECTION(xml,*eq.name);
+                Extents           &exts = eq(definite,AuxLevel);
+                exts(eq,C0,TopLevel, & cluster.wandering );
+                Y_XMLOG(xml, "reactants :" << exts.reac);
+                Y_XMLOG(xml, "products  :" << exts.prod);
             }
         }
 
