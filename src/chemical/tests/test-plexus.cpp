@@ -8,152 +8,16 @@
 #include "y/stream/libc/output.hpp"
 
 #include "y/chemical/plexus/equalizer/boundary.hpp"
+#include "y/chemical/plexus/equalizer/cursors.hpp"
 
-#include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
 
-     
-      
 
-     
-
-        class Cursor : public SRepo
-        {
-        public:
-            explicit Cursor(const SBank   &sb,
-                            const Species &sp,
-                            const xreal_t  xx) :
-            SRepo(sb),
-            xi(xx)
-            {
-                (*this) << sp;
-            }
-            Y_OSTREAM_PROTO(Cursor);
-
-
-            Cursor(const Cursor &_) : SRepo(_), xi(_.xi) {}
-
-            virtual ~Cursor() noexcept {}
-
-            const xreal_t xi;
-
-        private:
-            Y_DISABLE_ASSIGN(Cursor);
-        };
-
-        std::ostream & operator<<(std::ostream &os, const Cursor &cr)
-        {
-            os << std::setw(Restartable::Width) << cr.xi.str() << "@" << (const SRepo &)cr;
-            return os;
-        }
-
-        typedef Small::CoopHeavyList<Cursor> CrList;
-        typedef CrList::NodeType             CrNode;
-        typedef CrList::ProxyType            CrBank;
-
-        class EqzBanks
-        {
-        public:
-            explicit EqzBanks();
-            virtual ~EqzBanks() noexcept;
-
-            SBank  sb;
-            CrBank cb;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(EqzBanks);
-        };
-
-        EqzBanks:: EqzBanks() : sb(), cb() {}
-
-        EqzBanks:: ~EqzBanks() noexcept {}
-
-        class Cursors : public Proxy<const CrList>, public Restartable
-        {
-        public:
-            explicit Cursors(const EqzBanks &banks) noexcept;
-            virtual ~Cursors() noexcept;
-            virtual void restart() noexcept;
-
-            void operator()(const Species &sp, const xreal_t xi);
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Cursors);
-            Y_PROXY_DECL();
-            CrNode *crNode(const Species &sp, const xreal_t &xi)
-            {
-                const Cursor cr(sb,sp,xi);
-                return my.proxy->produce(cr);
-            }
-            CrList my;
-            SBank  sb;
-        };
-
-        Y_PROXY_IMPL(Cursors,my);
-
-        Cursors:: Cursors(const EqzBanks &banks) noexcept :
-        Proxy<const CrList>(),
-        my(banks.cb),
-        sb(banks.sb)
-        {
-
-        }
-
-        Cursors:: ~Cursors() noexcept
-        {
-
-        }
-
-        void Cursors:: restart() noexcept { my.free(); }
-
-
-        void Cursors:: operator()(const Species &sp, const xreal_t xi)
-        {
-            switch(my.size)
-            {
-                case 0: my.pushTail( crNode(sp,xi) ); return;
-                case 1:
-                    switch( Sign::Of(xi, (**my.head).xi) )
-                    {
-                        case __Zero__: (**my.head) << sp;            return;
-                        case Negative: my.pushHead( crNode(sp,xi) ); break;
-                        case Positive: my.pushTail( crNode(sp,xi) ); break;
-                    }
-                    assert(2==my.size);
-                    return;
-
-                default:
-                    break;
-            }
-
-            CrNode *lower = my.head;
-            switch(Sign::Of(xi,(**lower).xi) )
-            {
-                case Negative: my.pushHead( crNode(sp,xi) ); return;
-                case __Zero__: (**lower) << sp;              return;
-                case Positive: break;
-            }
-
-            CrNode * const upper = my.tail;
-            switch(Sign::Of(xi,(**upper).xi) )
-            {
-                case Negative: break;
-                case __Zero__: (**upper) << sp;              return;
-                case Positive: my.pushTail( crNode(sp,xi) ); return;
-            }
-
-
-            throw  Exception("Not Implemented");
-
-        }
-
-
-
+        
         class Extent : public Restartable
         {
         public:
