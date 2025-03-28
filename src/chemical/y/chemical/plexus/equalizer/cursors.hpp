@@ -22,6 +22,8 @@ namespace Yttrium
 
             void operator()(const Species &sp, const xreal_t xi);
 
+            static   SignType Compare(const CrNode * const, const CrNode * const) noexcept;
+            bool              checked() const noexcept;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cursors);
@@ -38,7 +40,7 @@ namespace Yttrium
 
 
 
-      
+
 
     }
 

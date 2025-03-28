@@ -7,61 +7,14 @@
 #include "y/random/mt19937.hpp"
 #include "y/stream/libc/output.hpp"
 
-#include "y/chemical/plexus/equalizer/extent.hpp"
+#include "y/chemical/plexus/equalizer/extents.hpp"
 
 
 namespace Yttrium
 {
     namespace Chemical
     {
-
-
         
-       
-
-
-        class Extents : public Restartable
-        {
-        public:
-            explicit Extents(const EqzBanks &banks) noexcept;
-            virtual ~Extents() noexcept;
-
-
-            virtual void restart() noexcept;
-
-            void operator()(const Components &  E,
-                            const XReadable &   C,
-                            const Level         L,
-                            const AddressBook * const wanders)
-            {
-                reac(E.reac,C,L,wanders);
-                prod(E.prod,C,L,wanders);
-            }
-
-
-
-            Extent reac;
-            Extent prod;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Extents);
-        };
-
-        Extents:: Extents(const EqzBanks &banks) noexcept :
-        reac(banks),
-        prod(banks)
-        {
-        }
-
-        Extents:: ~Extents() noexcept
-        {
-        }
-
-        void Extents:: restart() noexcept { reac.restart(); prod.restart(); }
-
-
-
-
         class Equalizer
         {
         public:
@@ -154,7 +107,7 @@ Y_UTEST(plexus)
 
 
 
-    Library::Concentrations(C0,ran,0.1,0.5);
+    Library::Concentrations(C0,ran,0.1,0.8);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
