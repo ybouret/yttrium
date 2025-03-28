@@ -12,6 +12,7 @@ chemical/plexus
 chemical/plexus/conservation
 chemical/plexus/cluster
 chemical/plexus/reactor
+chemical/plexus/equalizer
 )
 
 add_subdirectory(tests)

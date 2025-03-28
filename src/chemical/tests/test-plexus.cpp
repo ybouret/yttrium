@@ -7,6 +7,8 @@
 #include "y/random/mt19937.hpp"
 #include "y/stream/libc/output.hpp"
 
+#include "y/chemical/plexus/equalizer/restartable.hpp"
+
 #include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
@@ -14,32 +16,8 @@ namespace Yttrium
     namespace Chemical
     {
 
-        class Restartable
-        {
-        public:
-            static const unsigned      Width = 22;
-            static const char * const None;
-
-        protected:
-            explicit Restartable() noexcept;
-
-        public:
-            virtual ~Restartable() noexcept;
-
-            virtual void restart() noexcept = 0;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Restartable);
-        };
-
-        const char * const Restartable:: None = "<none>";
-
-        Restartable:: Restartable() noexcept
-        {}
-
-        Restartable:: ~Restartable() noexcept
-        {}
-
+     
+      
 
         class Boundary : public SRepo, public Restartable
         {
@@ -205,7 +183,30 @@ namespace Yttrium
                     }
                     assert(2==my.size);
                     return;
+
+                default:
+                    break;
             }
+
+            CrNode *lower = my.head;
+            switch(Sign::Of(xi,(**lower).xi) )
+            {
+                case Negative: my.pushHead( crNode(sp,xi) ); return;
+                case __Zero__: (**lower) << sp;              return;
+                case Positive: break;
+            }
+
+            CrNode * const upper = my.tail;
+            switch(Sign::Of(xi,(**upper).xi) )
+            {
+                case Negative: break;
+                case __Zero__: (**upper) << sp;              return;
+                case Positive: my.pushTail( crNode(sp,xi) ); return;
+            }
+
+
+            throw  Exception("Not Implemented");
+
         }
 
 
@@ -423,7 +424,7 @@ Y_UTEST(plexus)
 
 
 
-    Library::Concentrations(C0,ran,0.5,0.5);
+    Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
