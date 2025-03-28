@@ -179,6 +179,19 @@ namespace Yttrium
 
             virtual void restart() noexcept;
 
+            void operator()(const Actors &      A,
+                            const XReadable &   C,
+                            const Level         L,
+                            const AddressBook & wanders)
+            {
+                restart();
+                for(const Actor *a=A->head;a;a=a->next)
+                {
+                    const Species &sp = a->sp; if(wanders.has(sp)) continue;
+                }
+            }
+
+
             Boundary limiting;
             Cursors  required;
 
@@ -209,6 +222,15 @@ namespace Yttrium
 
             virtual void restart() noexcept;
 
+            void operator()(const Components &  E,
+                            const XReadable &   C,
+                            const Level         L,
+                            const AddressBook & wanders)
+            {
+                reac(E.reac,C,L,wanders);
+                prod(E.prod,C,L,wanders);
+            }
+
             Extent reac;
             Extent prod;
 
@@ -228,7 +250,7 @@ namespace Yttrium
 
         void Extents:: restart() noexcept { reac.restart(); prod.restart(); }
 
-        
+
 
         class Equalizer
         {
