@@ -62,6 +62,12 @@ namespace Yttrium
             //! output all orders in basename[1..maxOrder].png
             void graphViz(const String &baseName) const;
 
+            //! set zero in TopLevel data for species
+            template <typename DATA> inline
+            void zset(DATA &data) const {
+                ZeroList(species,data,TopLevel);
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Y_PROXY_DECL();
@@ -70,6 +76,7 @@ namespace Yttrium
 
         public:
             const XReadable &K;        //!< last computed constant
+            const SList      species;  //!< all species
             const size_t     maxOrder; //!< max order size thru clusters
         };
 

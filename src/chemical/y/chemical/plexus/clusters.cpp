@@ -21,6 +21,7 @@ namespace Yttrium
         my(),
         tlK(),
         K(tlK),
+        species(),
         maxOrder(0)
         {
             const size_t ini = eqs->size();
@@ -36,14 +37,24 @@ namespace Yttrium
                 }
             }
 
+            // collect max order and species
             for(const Cluster *cl=my.head;cl;cl=cl->next)
             {
                 InSituMax( Coerce(maxOrder), cl->order.size() );
+                for(const SNode *sn=(*cl)->species->head;sn;sn=sn->next)
+                {
+                    Coerce(species) << **sn;
+                }
             }
+            MergeSort::Call( Coerce(species), MetaList<SList>::Compare );
 
 
-            Y_XML_COMMENT(xml, "|eqs|    = " << eqs->size() << " from " << ini);
-            Y_XML_COMMENT(xml, "maxOrder = " << maxOrder );
+            // summary
+            Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << ini);
+            Y_XML_COMMENT(xml, "|species| = " << species.size);
+            Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
+
+            // prepare constants
             tlK.adjust(eqs->size(),0);
             (void) (*this)(t0);
         }

@@ -15,12 +15,34 @@ namespace Yttrium
         namespace Conservation
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! manage all wardens per canons of clusters
+            //
+            //
+            //__________________________________________________________________
             class Wardens : public Proxy<const ListOf<Warden> >
             {
             public:
-                explicit Wardens(const Clusters &);
-                virtual ~Wardens() noexcept;
+                //__________________________________________________________________
+                //
+                //
+                // C++
+                //
+                //__________________________________________________________________
+                explicit Wardens(const Clusters &); //!< create all wardens
+                virtual ~Wardens() noexcept;        //!< cleanup
 
+                //__________________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //__________________________________________________________________
+
+                //! fix TopLevel C0 and set injected I0
                 void operator()(XMLog     &xml,
                                 XWritable &C0,
                                 XWritable &I0);
@@ -30,6 +52,7 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Wardens);
                 Y_PROXY_DECL();
                 CxxListOf<Warden> my;
+                const Clusters   &cs;
             };
 
 

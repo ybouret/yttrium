@@ -65,13 +65,14 @@ namespace Yttrium
                     return TransferList(*species,target, targetLevel, source, sourceLevel);
                 }
 
+                //! helper to show per specuies
                 template <typename ARRAY> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr) const
                 {
                     return ShowList(os,*species,sformat,AuxLevel, "\t[", arr, "]");
                 }
 
-
+                //! helper to show per species
                 template <typename ARRAY, typename PROC> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr, PROC &fcn ) const
                 {

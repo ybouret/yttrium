@@ -16,9 +16,10 @@ namespace Yttrium
 
             Wardens:: Wardens(const Clusters &clusters) :
             Proxy<const ListOf<Warden> >(),
-            my()
+            my(),
+            cs(clusters)
             {
-                for(const Cluster *cluster=clusters->head;cluster;cluster=cluster->next)
+                for(const Cluster *cluster=cs->head;cluster;cluster=cluster->next)
                 {
                     for(const Canon *canon = cluster->canons.head;canon;canon=canon->next)
                     {
@@ -31,6 +32,7 @@ namespace Yttrium
                                       XWritable &C0,
                                       XWritable &I0)
             {
+                cs.zset(I0);
                 for(Warden *node=my.head;node;node=node->next)
                 {
                     Warden &warden = *node;

@@ -41,10 +41,13 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! fix broken values, setup injected
                 void operator()(XMLog      &xml,
                                 XWritable  &C0,
                                 const Level L0);
 
+                //! helper to format broken value
                 std::ostream & display(std::ostream &, const Broken &) const;
 
                 //______________________________________________________________
@@ -53,15 +56,15 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const Cluster & cluster;
-                const Canon   & canon;
-                XAdd            xadd;
-                BList           blist;
-                XMatrix         cproj;
-                XWritable     & c0;
-                Summator        injected;
-                Warden *        next;
-                Warden *        prev;
+                const Cluster & cluster;  //!< parent cluster
+                const Canon   & canon;    //!< parent canon
+                XAdd            xadd;     //!< helper for additions
+                BList           blist;    //!< list of broken value
+                XMatrix         cproj;    //!< storage of projected values
+                XWritable     & c0;       //!< temporary value
+                Summator        injected; //!< injected values per species
+                Warden *        next;     //!< for list
+                Warden *        prev;     //!< for list
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);

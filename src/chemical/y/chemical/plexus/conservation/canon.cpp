@@ -11,6 +11,8 @@ namespace Yttrium
 
             Canon:: Canon(const Law &first) :
             LList(),
+            species(),
+            sformat(),
             next(0),
             prev(0)
             {
@@ -40,7 +42,19 @@ namespace Yttrium
                 return false;
             }
 
-            void Canon:: compile()  
+        }
+
+    }
+
+}
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        namespace Conservation
+        {
+            void Canon:: compile()
             {
                 assert( 0 == maxNameLength );
                 assert( 0 == species->size );
@@ -54,6 +68,7 @@ namespace Yttrium
                         Coerce(sformat).enroll(a->sp);
                     }
                 }
+
             }
 
         }

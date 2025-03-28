@@ -12,6 +12,14 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //! transfering array contents
+        /**
+         \param list        list of indexed entities
+         \param target      target array
+         \param targetLevel target level
+         \param source      source array
+         \param sourceLevel source level
+         */
         template <typename LIST, typename TARGET, typename SOURCE> inline
         TARGET & TransferList(const LIST &list,
                               TARGET &target, const Level targetLevel,
@@ -25,8 +33,37 @@ namespace Yttrium
             return target;
         }
 
+        //! apply proc(data) for each indexed species in listg
+        template <typename LIST, typename PROC, typename DATA> inline
+        void ForEachIn(const LIST &list, PROC &proc, DATA &data, const Level L)
+        {
+            for(const typename LIST::NodeType *node=list.head;node;node=node->next)
+            {
+                proc( (**node)(data,L) );
+            }
+        }
 
-        //! show list of indexed entities
+
+
+        namespace {
+
+            //! helper to zset
+            struct _Generic0 {
+                //! set argument to 0
+                template <typename T> inline
+                void operator()(T &_) const { _=0; }
+            };
+        }
+
+        //! zset data for each species in list
+        template <typename LIST, typename DATA> inline
+        void ZeroList(const LIST &list, DATA &data, const Level L) {
+            _Generic0 ld0;
+            ForEachIn(list,ld0,data,L);
+        }
+
+
+        //! show list of indexed entities with transformation
         template <typename LIST, typename ARRAY, typename PROC> inline
         std::ostream & ShowList(std::ostream   &   os,
                                 const LIST     &   lst,
