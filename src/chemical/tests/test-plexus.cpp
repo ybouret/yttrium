@@ -70,13 +70,7 @@ namespace Yttrium
             }
         }
 
-        void Equalizer:: analyze(XMLog            &  xml,
-                                 const Extents    &  exts,
-                                 const XReadable  &  C0,
-                                 const AddressBook * wanders)
-        {
-            
-        }
+        
 
 
 
@@ -108,8 +102,7 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    bool verbose = true;
-
+    bool           verbose = true;
     XMLog          xml(verbose);
     Clusters       cls(xml,eqs,0.0);
 
@@ -120,8 +113,6 @@ Y_UTEST(plexus)
     XVector      C0(m,0); // concentration
     XVector      I0(m,0); // injection
     XVector      C(m,0);
-
-
 
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;

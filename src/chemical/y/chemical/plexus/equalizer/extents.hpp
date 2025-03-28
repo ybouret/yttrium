@@ -11,6 +11,15 @@ namespace Yttrium
     namespace Chemical
     {
 
+
+        enum Resultant
+        {
+            Correct,
+            BadReac,
+            BadProd,
+            BadBoth
+        };
+
         //______________________________________________________________________
         //
         //
@@ -42,10 +51,10 @@ namespace Yttrium
             virtual void restart() noexcept;
 
             //! dispatch all
-            void operator()(const Components &  E,
-                            const XReadable &   C,
-                            const Level         L,
-                            const AddressBook * const wanders);
+            Resultant operator()(const Components &  E,
+                                 const XReadable &   C,
+                                 const Level         L,
+                                 const AddressBook * const wanders);
 
 
 
@@ -61,6 +70,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extents);
+            void findBest(const Boundary &limiting,
+                          const Cursors  &requried);
         };
 
     

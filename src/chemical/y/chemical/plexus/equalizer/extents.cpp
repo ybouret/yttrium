@@ -25,7 +25,7 @@ namespace Yttrium
         }
 
 
-        void Extents:: operator()(const Components &  E,
+        Resultant Extents:: operator()(const Components &  E,
                                   const XReadable &   C,
                                   const Level         L,
                                   const AddressBook * const wanders)
@@ -36,6 +36,38 @@ namespace Yttrium
                 reac(E.reac,C,L,wanders);
                 prod(E.prod,C,L,wanders);
 
+                if(reac.required->size<=0)
+                {
+
+                    if(prod.required->size<=0)
+                    {
+                        // no negative concerned concentration
+                        return Correct;
+                    }
+                    else
+                    {
+                        // only some negative product(s)
+                        findBest(reac.limiting,prod.required);
+                        return BadProd;
+                    }
+                }
+                else
+                {
+                    assert(reac.required->size>0);
+                    if(prod.required->size<=0)
+                    {
+                        // only some negative reactant(s)
+                        findBest(prod.limiting,reac.required);
+                        return BadReac;
+                    }
+                    else
+                    {
+                        // blocked
+                        return BadBoth;
+                    }
+                }
+
+
 
             }
             catch(...)
@@ -45,6 +77,12 @@ namespace Yttrium
             }
 
         }
+
+        void Extents:: findBest(const Boundary &limiting, const Cursors &required)
+        {
+
+        }
+
     }
 
 }
