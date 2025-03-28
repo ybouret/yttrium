@@ -108,7 +108,12 @@ namespace Yttrium
                 return ShowList(os,*self.species,self.sformat,lvl,pfx,arr,sfx,proc);
             }
 
-
+            //__________________________________________________________________
+            //
+            //
+            // Members
+            //
+            //__________________________________________________________________
             const Conservation::Canons   canons;  //!< independent canons of dep. laws
             Cluster *                    next;    //!< for list
             Cluster *                    prev;    //!< for list
