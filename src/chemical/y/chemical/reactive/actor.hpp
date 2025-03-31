@@ -71,8 +71,9 @@ namespace Yttrium
             void    activity(XMul &X, const XReadable &C, const Level L)                   const; //!< current activity
             void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const; //!< clipped
             xreal_t limiting(const XReadable &C, const Level L) const noexcept;                   //!< cc/xn
-            void    safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;     //!< update C
-            
+            void    safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;     //!< update valid  C
+            void    boldMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;     //!< update invalid C
+
             //__________________________________________________________________
             //
             //

@@ -183,6 +183,9 @@ namespace Yttrium
             //! move with forced clipping
             void      safeMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;
 
+            //! move without crossing zero
+            void      boldMove(XWritable &C, const Level L, const xreal_t xi) const noexcept;
+
             //! gather affinity with given constant
             xreal_t   affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
@@ -200,6 +203,8 @@ namespace Yttrium
             //! emit GraphViz code one species are emitted
             void viz(OutputStream &fp,
                      const String * const color = 0) const;
+
+            std::ostream & displayCompact(std::ostream &os, const XReadable &C, const Level L) const;
 
             //__________________________________________________________________
             //

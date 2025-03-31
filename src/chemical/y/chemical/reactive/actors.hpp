@@ -55,7 +55,8 @@ namespace Yttrium
             void    activity(XMul &X, const XReadable &C, const Level L, const xreal_t xi) const; //!< gather activities in prelodaed X
             bool    critical(const XReadable &C, const Level L)                   const noexcept; //!< at least one zero concentration
             xreal_t limiting(const XReadable &C, const Level L)                   const noexcept; //!< fast limiting extent
-            void    safeMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update
+            void    safeMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update valid C
+            void    boldMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update invalid C
 
             //! helper to transerf per species values
             template <typename TARGET, typename SOURCE> inline
@@ -67,6 +68,10 @@ namespace Yttrium
                 }
                 return target;
             }
+
+            std::ostream &displayCompact(std::ostream &  os,
+                                         const XReadable &C,
+                                         const Level      L) const;
 
             //__________________________________________________________________
             //

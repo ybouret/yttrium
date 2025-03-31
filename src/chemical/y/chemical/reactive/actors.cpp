@@ -113,7 +113,39 @@ namespace Yttrium
         {
             for(const Actor *a=my.head;a;a=a->next) a->safeMove(C,L,xi);
         }
-        
+
+        void Actors:: boldMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        {
+            for(const Actor *a=my.head;a;a=a->next) a->boldMove(C,L,xi);
+        }
+
+
+        static inline
+        void showActor(std::ostream &      os,
+                       const Actor * const a,
+                       const XReadable &   C,
+                       const Level         L)
+        {
+            assert(0!=a);
+            const Species &sp = a->sp;
+            os << '[' << sp.name << ']' << '=' << sp(C,L).str();
+        }
+
+        std::ostream & Actors:: displayCompact(std::ostream &  os,
+                                     const XReadable &C,
+                                     const Level      L) const
+        {
+            os << '{';
+            const Actor *a=my.head;
+            if(a)
+            {
+                showActor(os,a,C,L);
+                for(a=a->next;a;a=a->next)
+                    showActor(os << ';',a,C,L);
+            }
+            os << '}';
+            return os;
+        }
     }
 
 }

@@ -11,13 +11,18 @@ namespace Yttrium
     namespace Chemical
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! Extents analyze result
+        //
+        //______________________________________________________________________
         enum Resultant
         {
-            Correct,
-            BadReac,
-            BadProd,
-            BadBoth
+            Correct, //!< balanced
+            BadReac, //!< at least one bad reactant, products are ok
+            BadProd, //!< at least one bad product, reactants are ok
+            BadBoth  //!< at least one bad on each side
         };
 
         const char * ResultantText(const Resultant) noexcept;
@@ -59,6 +64,14 @@ namespace Yttrium
                                  const Level         L,
                                  const AddressBook * const wanders);
 
+
+            //! generate with components only, must have Ceqz=C beforehand
+            void generate(XAdd             &xadd,
+                          XWritable        &Csub,
+                          const Components &E,
+                          const XReadable  &C,
+                          const Level       L,
+                          const AddressBook * const wanders) const;
 
 
             //__________________________________________________________________

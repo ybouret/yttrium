@@ -242,6 +242,12 @@ namespace Yttrium
             reac.safeMove(C,L,-xi);
         }
 
+        void Components:: boldMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
+        {
+            prod.boldMove(C,L,xi);
+            reac.boldMove(C,L,-xi);
+        }
+
 
         xreal_t Components:: affinity(const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const
         {
@@ -399,6 +405,14 @@ namespace Yttrium
                 decorateArrow(fp,a,color);
                 Endl(fp);
             }
+        }
+
+        std::ostream & Components:: displayCompact(std::ostream &os, const XReadable &C, const Level L) const
+        {
+            reac.displayCompact(os, C, L);
+            os << Symbol;
+            prod.displayCompact(os, C, L);
+            return os;
         }
 
     }

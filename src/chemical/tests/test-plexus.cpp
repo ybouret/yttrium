@@ -28,7 +28,7 @@ namespace Yttrium
             const size_t   nrows;
             const size_t   ncols;
             Table          table;
-
+            XAdd           xadd;
 
             void operator()(XMLog &xml, XWritable &C0);
 
@@ -67,6 +67,19 @@ namespace Yttrium
                 Y_XMLOG(xml, "reactants :" << exts.reac);
                 Y_XMLOG(xml, "products  :" << exts.prod);
                 Y_XMLOG(xml, ResultantText(res) );
+
+                switch(res)
+                {
+                    case Correct: continue;
+                    case BadBoth: continue;
+                    case BadReac: break;
+                    case BadProd: break;
+                }
+
+                XArray Ceqz(ncols,0);
+                cluster.gather(Ceqz,C0);
+                exts.generate(xadd, Ceqz, eq, C0, TopLevel, &cluster.wandering);
+
 
             }
         }
