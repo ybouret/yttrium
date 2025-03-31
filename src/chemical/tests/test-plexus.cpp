@@ -32,6 +32,7 @@ namespace Yttrium
             {
             }
 
+            Y_OSTREAM_PROTO(Gain);
 
             const xreal_t     g;
             const Components &E;
@@ -40,6 +41,13 @@ namespace Yttrium
         private:
             Y_DISABLE_ASSIGN(Gain);
         };
+
+        std::ostream & operator<<(std::ostream &os, const Gain &gain)
+        {
+            os << std::setw(Restartable::Width) << gain.g.str() << " @" << gain.E.name << "=";
+            gain.E.displayCompact(os,gain.C,SubLevel);
+            return os;
+        }
 
         typedef Small::SoloHeavyList<Gain> GList;
         typedef GList::NodeType            GNode;
@@ -115,6 +123,8 @@ namespace Yttrium
                 XWritable &cc = c_eqz[gains.size+1];
                 cluster.gather(cc,C0);
                 const Gain G(exts.generate(xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
+                gains << G;
+                std::cerr << G << std::endl;
             }
         }
 
