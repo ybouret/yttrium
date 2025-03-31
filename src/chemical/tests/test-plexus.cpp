@@ -53,6 +53,25 @@ namespace Yttrium
         typedef GList_::NodeType            GNode;
         typedef GList_::ProxyType           GBank;
 
+        class KList : public ESolo
+        {
+        public:
+            explicit KList() noexcept : ESolo() {}
+            virtual ~KList() noexcept {}
+
+            void show(XMLog &xml, const char * const uuid)
+            {
+                if(!xml.verbose) return;
+                Y_XML_SECTION(xml,uuid);
+                for(const ENode *gn=head;gn;gn=gn->next)
+                {
+                    Y_XMLOG(xml, **gn);
+                }
+            }
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(KList);
+        };
+
         class GList : public GList_
         {
         public:
@@ -85,6 +104,7 @@ namespace Yttrium
             const size_t   nrows;
             const size_t   ncols;
             Extents        extents;
+            KList          klist;
             GBank          gbank;
             GList          zgain;
             GList          pgain;
@@ -106,6 +126,7 @@ namespace Yttrium
         nrows(cluster.definite->size),
         ncols(cluster->species->size),
         extents(banks),
+        klist(),
         gbank(),
         zgain(gbank),
         pgain(gbank),
@@ -120,37 +141,69 @@ namespace Yttrium
         }
 
 
-        void Equalizer:: operator()(XMLog &xml, XWritable &C0)
+        //! decreasing
+        static inline
+        SignType CompareGains(const GNode * const lhs,
+                              const GNode * const rhs) noexcept
+        {
+            const Gain &L = **lhs;
+            const Gain &R = **rhs;
+            switch( Sign::Of(L.g,R.g) )
+            {
+                case Positive: return Negative;
+                case Negative: return Positive;
+                case __Zero__: break;
+            }
+            return Sign::Of(L.E.indx[TopLevel],R.E.indx[TopLevel]);
+        }
+
+        void Equalizer:: operator()(XMLog     &xml,
+                                    XWritable &C0)
         {
             Y_XML_SECTION(xml, "Equalizer");
 
             Y_XML_COMMENT(xml,"definite");
-            zgain.free();
-            pgain.free();
-            for(const ENode *en=cluster.definite->head;en;en=en->next)
+            do
             {
-                const Equilibrium &eq   = **en;
-                Y_XML_SECTION(xml,*eq.name);
-                const Resultant    res  = extents(xml,eq,C0,TopLevel, & cluster.wandering );
+                klist.free();
+                zgain.free();
+                pgain.free();
 
-                switch(res)
+                for(const ENode *en=cluster.definite->head;en;en=en->next)
                 {
-                    case Correct: continue;
-                    case BadBoth: continue;
-                    case BadReac: break;
-                    case BadProd: break;
+                    const Equilibrium &eq   = **en;
+                    Y_XML_SECTION(xml,*eq.name);
+                    const Resultant    res  = extents(xml,eq,C0,TopLevel, & cluster.wandering );
+
+                    switch(res)
+                    {
+                        case Correct: continue;
+                        case BadBoth: klist << eq; continue;
+                        case BadReac: break;
+                        case BadProd: break;
+                    }
+
+                    XWritable &cc = c_eqz[zgain.size+pgain.size+1];
+                    cluster.gather(cc,C0);
+                    const Gain G(extents.generate(xml,xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
+                    assert(G.g.mantissa>=0);
+                    if(G.g.mantissa<=0) zgain << G; else pgain << G;
                 }
 
-                XWritable &cc = c_eqz[zgain.size+pgain.size+1];
-                cluster.gather(cc,C0);
-                const Gain G(extents.generate(xml,xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
-                assert(G.g.mantissa>=0);
-                if(G.g.mantissa<=0) zgain << G; else pgain << G;
-            }
-
-            
-            if(zgain.size) zgain.show(xml, Sign::ToText(__Zero__) );
-            if(pgain.size) pgain.show(xml, Sign::ToText(Positive) );
+                {
+                    Y_XML_SECTION(xml,"Status");
+                    MergeSort::Call(pgain,CompareGains);
+                    klist.show(xml, Sign::ToText(Negative) );
+                    zgain.show(xml, Sign::ToText(__Zero__) );
+                    pgain.show(xml, Sign::ToText(Positive) );
+                }
+                if(pgain.size)
+                {
+                    const Gain &winner = **pgain.head;
+                    cluster.expand(C0,winner.C);
+                }
+            } while(pgain.size>0);
+            cluster.show(std::cerr, TopLevel, "[", C0, "]", xreal_t::ToString) << std::endl;
 
         }
 
@@ -191,7 +244,7 @@ Y_UTEST(plexus)
     Clusters       cls(xml,eqs,0.0);
 
     std::cerr << "lib=" << lib << std::endl;
-    cls.graphViz("cs");
+    //cls.graphViz("cs");
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
