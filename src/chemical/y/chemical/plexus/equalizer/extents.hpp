@@ -25,6 +25,8 @@ namespace Yttrium
             BadBoth  //!< at least one bad on each side
         };
 
+
+        //! Human Readable Resultant
         const char * ResultantText(const Resultant) noexcept;
 
         //______________________________________________________________________
@@ -69,7 +71,7 @@ namespace Yttrium
             /**
              - compute when best.size>0
              \param xadd    for additions
-             \param CSub    SubLevel concenrtations, initialized to C
+             \param Csub    SubLevel concenrtations, initialized to C
              \param E       equilibrium
              \param C       original concentrations
              \param L       original level

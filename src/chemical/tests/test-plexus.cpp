@@ -14,7 +14,37 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+
+        class Gain
+        {
+        public:
+            Gain(const xreal_t      _g,
+                 const Components & _E,
+                 const XReadable  & _C) noexcept :
+            g(_g), E(_E), C(_C)
+            {
+            }
+
+            ~Gain() noexcept {}
+
+            Gain(const Gain &_) noexcept :
+            g(_.g), E(_.E), C(_.C)
+            {
+            }
+
+
+            const xreal_t     g;
+            const Components &E;
+            const XReadable  &C;
+
+        private:
+            Y_DISABLE_ASSIGN(Gain);
+        };
+
+        typedef Small::SoloHeavyList<Gain> GList;
+        typedef GList::NodeType            GNode;
+
+
         class Equalizer
         {
         public:
@@ -27,7 +57,9 @@ namespace Yttrium
             EqzBanks       banks;
             const size_t   nrows;
             const size_t   ncols;
+            GList          gains;
             Table          table;
+            XMatrix        c_eqz;
             XAdd           xadd;
 
             void operator()(XMLog &xml, XWritable &C0);
@@ -44,7 +76,10 @@ namespace Yttrium
         banks(),
         nrows(cluster.definite->size),
         ncols(cluster->species->size),
-        table(nrows,CopyOf,banks)
+        gains(nrows),
+        table(nrows,CopyOf,banks),
+        c_eqz(nrows,nrows>0?ncols:nrows),
+        xadd()
         {
 
         }
@@ -58,6 +93,7 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Equalizer");
 
             Y_XML_COMMENT(xml,"definite");
+            gains.free();
             for(const ENode *en=cluster.definite->head;en;en=en->next)
             {
                 const Equilibrium &eq   = **en;
@@ -76,11 +112,9 @@ namespace Yttrium
                     case BadProd: break;
                 }
 
-                XArray Ceqz(ncols,0);
-                cluster.gather(Ceqz,C0);
-                exts.generate(xadd, Ceqz, eq, C0, TopLevel, &cluster.wandering);
-
-
+                XWritable &cc = c_eqz[gains.size+1];
+                cluster.gather(cc,C0);
+                const Gain G(exts.generate(xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
             }
         }
 

@@ -204,6 +204,7 @@ namespace Yttrium
             void viz(OutputStream &fp,
                      const String * const color = 0) const;
 
+            //! display as compact lists
             std::ostream & displayCompact(std::ostream &os, const XReadable &C, const Level L) const;
 
             //__________________________________________________________________
