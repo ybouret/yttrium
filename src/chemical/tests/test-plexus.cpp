@@ -172,7 +172,7 @@ namespace Yttrium
                 for(const ENode *en=cluster.definite->head;en;en=en->next)
                 {
                     const Equilibrium &eq   = **en;
-                    Y_XML_SECTION(xml,*eq.name);
+                    //Y_XML_SECTION(xml,*eq.name);
                     const Resultant    res  = extents(xml,eq,C0,TopLevel, & cluster.wandering );
 
                     switch(res)

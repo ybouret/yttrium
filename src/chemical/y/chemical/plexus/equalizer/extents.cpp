@@ -1,6 +1,7 @@
 
 #include "y/chemical/plexus/equalizer/extents.hpp"
 #include "y/exception.hpp"
+#include "y/type/momentary.hpp"
 
 namespace Yttrium
 {
@@ -44,6 +45,7 @@ namespace Yttrium
                                        const Level         L,
                                        const AddressBook * const wanders)
         {
+            volatile Momentary::Off turnOff( Coerce(xml.verbose) );
             Y_XML_SECTION_OPT(xml, "Extents", E.name);
             try
             {
@@ -107,6 +109,8 @@ namespace Yttrium
             static const char partial[] = "partial : ";
             static const char reached[] = "reached : ";
 
+            volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+
             Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
             assert(required->size>0);
             assert(0==best.size);
@@ -150,6 +154,9 @@ namespace Yttrium
                                    const Level       L,
                                    const AddressBook * const wanders) const
         {
+
+            volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+
             Y_XML_SECTION_OPT(xml, "Gaining", E.name);
 
             assert(best.size>0);

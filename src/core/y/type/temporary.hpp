@@ -22,11 +22,11 @@ namespace Yttrium
         Y_ARGS_DECL(T,Type); //!< aliases
 
         //! saving old value, assigning new one, assuming no exception
-        inline Temporary(Type &target, ParamType value) noexcept :
+        inline explicit Temporary(Type &target, ParamType value) noexcept :
         host(target), save(target) { target  = value; }
 
         //! restore saved value
-        inline ~Temporary() noexcept { host = save; }
+        inline virtual ~Temporary() noexcept { host = save; }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(Temporary);
