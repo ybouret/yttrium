@@ -63,6 +63,7 @@ namespace Yttrium
                 XMatrix         cproj;    //!< storage of projected values
                 XWritable     & c0;       //!< temporary value
                 Summator        injected; //!< injected values per species
+                AddressBook     manifest; //!< manifest of species to be zeroed
                 Warden *        next;     //!< for list
                 Warden *        prev;     //!< for list
                 

@@ -15,6 +15,7 @@ namespace Yttrium
             cproj(canon.size+1,canon.species->size),
             c0(cproj[canon.size+1]),
             injected(canon.species->size),
+            manifest(),
             next(0),
             prev(0)
             {
@@ -44,6 +45,8 @@ namespace Yttrium
                 const xreal_t zero;
 
                 injected.forEach(& XAdd::free );
+                manifest.free();
+
                 {
                     Y_XML_SECTION(xml,"Initialize");
                     //----------------------------------------------------------
@@ -102,11 +105,13 @@ namespace Yttrium
                             // set c0 to new value
                             c0.ld(best.cc);
 
-                            // update injected
+                            // update injected and manifest
                             for(const Actor *a=law->head;a;a=a->next)
                             {
-                                const xreal_t delta = (a->xn * best.xs) / law.denom;
-                                a->sp(injected,AuxLevel) << delta;
+                                const xreal_t  dc = (a->xn * best.xs) / law.denom;
+                                const Species &sp = a->sp;
+                                sp(injected,AuxLevel) << dc;
+                                manifest |= sp;
                             }
                         }
 
@@ -149,7 +154,8 @@ namespace Yttrium
 
                 if(xml.verbose)
                 {
-                    canon.show( xml() << "injected=",injected);
+                    canon.show( xml() << "injected=",injected) << std::endl;
+                    manifest.display<Species>( xml() << "manifest=") << std::endl;
                 }
 
                 canon.transfer(C0,L0,c0,AuxLevel);

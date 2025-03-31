@@ -62,7 +62,7 @@ namespace Yttrium
             void show(XMLog &xml, const char * const uuid)
             {
                 if(!xml.verbose) return;
-                Y_XML_SECTION(xml,uuid);
+                Y_XML_SECTION_OPT(xml,"Gain","is " << uuid);
                 for(const ENode *gn=head;gn;gn=gn->next)
                 {
                     Y_XMLOG(xml, (**gn).name);
@@ -81,7 +81,7 @@ namespace Yttrium
             void show(XMLog &xml, const char * const uuid)
             {
                 if(!xml.verbose) return;
-                Y_XML_SECTION(xml,uuid);
+                Y_XML_SECTION_OPT(xml,"Gain","is " << uuid);
                 for(const GNode *gn=head;gn;gn=gn->next)
                 {
                     Y_XMLOG(xml, **gn);
@@ -205,6 +205,8 @@ namespace Yttrium
             } while(pgain.size>0);
             cluster.show(std::cerr, TopLevel, "[", C0, "]", xreal_t::ToString) << std::endl;
 
+            if(klist.size||zgain.size) throw Exception("Equalize: not finished");
+
         }
 
         
@@ -240,6 +242,7 @@ Y_UTEST(plexus)
     bool           verbose = true;
     XMLog          xml(verbose);
     Clusters       cls(xml,eqs,0.0);
+    Conservation::Wardens wardens(cls);
 
     std::cerr << "lib=" << lib << std::endl;
     //cls.graphViz("cs");
@@ -249,18 +252,20 @@ Y_UTEST(plexus)
     XVector      I0(m,0); // injection
     XVector      C(m,0);
 
-    Library::Concentrations(C0,ran,0.1,0.5);
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-    Conservation::Wardens wardens(cls);
-    wardens(xml,C0);
-
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    for(size_t iter=0;iter<100;++iter)
     {
-        Equalizer            eqz(*cl);
-        eqz(xml,C0);
+        Library::Concentrations(C0,ran,0.1,0.5);
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+        wardens(xml,C0);
+
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+        for(const Cluster *cl=cls->head;cl;cl=cl->next)
+        {
+            Equalizer            eqz(*cl);
+            eqz(xml,C0);
+        }
     }
 
 
