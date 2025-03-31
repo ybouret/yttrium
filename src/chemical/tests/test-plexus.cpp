@@ -20,8 +20,8 @@ namespace Yttrium
         public:
             Gain(const xreal_t      _g,
                  const Components & _E,
-                 const XReadable  & _C) noexcept :
-            g(_g), E(_E), C(_C)
+                 const XReadable  & _c) noexcept :
+            g(_g), E(_E), C(_c)
             {
             }
 
@@ -254,7 +254,7 @@ Y_UTEST(plexus)
 
     Conservation::Wardens wardens(cls);
     wardens(xml,C0);
-    
+
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
