@@ -56,6 +56,7 @@ namespace Yttrium
 
         Boundary:: Boundary(const Boundary &_) :
         SRepo(_),
+        Restartable(),
         xi(_.xi)
         {
         }
