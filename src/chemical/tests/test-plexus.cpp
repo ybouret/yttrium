@@ -210,8 +210,6 @@ namespace Yttrium
         
 
 
-
-
     }
 }
 
@@ -254,17 +252,20 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
+    Conservation::Wardens wardens(cls);
+    wardens(xml,C0);
+    
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        Equalizer eqz(*cl);
+        Equalizer            eqz(*cl);
         eqz(xml,C0);
     }
 
 
     return 0;
 
-    Conservation::Wardens wardens(cls);
-    wardens(xml,C0,I0);
 
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
     lib.show(std::cerr << "I0=", "\t[", I0, "]", xreal_t::ToString ) << std::endl;

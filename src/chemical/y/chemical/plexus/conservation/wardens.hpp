@@ -42,10 +42,8 @@ namespace Yttrium
                 //
                 //__________________________________________________________________
 
-                //! fix TopLevel C0 and set injected I0
-                void operator()(XMLog     &xml,
-                                XWritable &C0,
-                                XWritable &I0);
+                //! fix TopLevel C0 and accumulate injected
+                void operator()(XMLog &xml, XWritable &C0);
 
 
             private:

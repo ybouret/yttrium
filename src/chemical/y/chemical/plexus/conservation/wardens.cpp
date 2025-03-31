@@ -29,19 +29,20 @@ namespace Yttrium
             }
 
             void Wardens:: operator()(XMLog     &xml,
-                                      XWritable &C0,
-                                      XWritable &I0)
+                                      XWritable &C0)
             {
-                cs.zset(I0);
+                //cs.zset(I0);
                 for(Warden *node=my.head;node;node=node->next)
                 {
                     Warden &warden = *node;
                     warden(xml,C0,TopLevel);
+                    /*
                     for(const SNode *sn=warden.canon.species->head;sn;sn=sn->next)
                     {
                         const Species &sp = **sn;
                         sp(I0,TopLevel) = sp(warden.injected,AuxLevel).sum();
                     }
+                     */
 
                 }
             }

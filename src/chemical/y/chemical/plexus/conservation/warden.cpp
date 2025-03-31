@@ -153,7 +153,6 @@ namespace Yttrium
                 }
 
                 canon.transfer(C0,L0,c0,AuxLevel);
-
             }
 
         }
