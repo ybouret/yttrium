@@ -117,7 +117,7 @@ namespace Yttrium
             best = **(required->tail);
         }
 
-        void Extents:: generate(XAdd             &xadd,
+        xreal_t Extents:: generate(XAdd             &xadd,
                                 XWritable        &Csub,
                                 const Components &E,
                                 const XReadable  &C,
@@ -158,7 +158,7 @@ namespace Yttrium
             }
             const xreal_t gain = Max(xadd.sum(),zero);
             std::cerr << "gain=" << gain.str() << std::endl;
-            
+            return gain;
         }
 
     }

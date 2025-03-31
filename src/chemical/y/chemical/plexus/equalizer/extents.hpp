@@ -65,13 +65,23 @@ namespace Yttrium
                                  const AddressBook * const wanders);
 
 
-            //! generate with components only, must have Ceqz=C beforehand
-            void generate(XAdd             &xadd,
-                          XWritable        &Csub,
-                          const Components &E,
-                          const XReadable  &C,
-                          const Level       L,
-                          const AddressBook * const wanders) const;
+            //! generate with components only
+            /**
+             - compute when best.size>0
+             \param xadd    for additions
+             \param CSub    SubLevel concenrtations, initialized to C
+             \param E       equilibrium
+             \param C       original concentrations
+             \param L       original level
+             \param wanders for testing wandering species
+             \return positive or zero gain
+             */
+            xreal_t generate(XAdd             &xadd,
+                             XWritable        &Csub,
+                             const Components &E,
+                             const XReadable  &C,
+                             const Level       L,
+                             const AddressBook * const wanders) const;
 
 
             //__________________________________________________________________
