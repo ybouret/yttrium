@@ -95,13 +95,7 @@ namespace Yttrium
 
         void Actor:: boldMove(XWritable &C, const Level L, const xreal_t xi) const noexcept
         {
-            const xreal_t zero;
-            const xreal_t delta = xn * xi;
-            const xreal_t cc    = sp(C,L);
-            if(cc>=zero)
-                sp(C,L) = Max(cc+delta,zero);
-            else
-                sp(C,L) = Min(cc+delta,zero);
+            sp(C,L) += xn*xi;
         }
 
 

@@ -149,4 +149,17 @@ namespace Yttrium
         }
         return '0';
     }
+
+#define Y_Case(ID) case ID: return #ID
+
+    const char * Sign:: ToText(const SignType s) noexcept
+    {
+        switch(s)
+        {
+                Y_Case(__Zero__);
+                Y_Case(Positive);
+                Y_Case(Negative);
+        }
+        return Core::Unknown;
+    }
 }

@@ -49,9 +49,29 @@ namespace Yttrium
             return os;
         }
 
-        typedef Small::SoloHeavyList<Gain> GList;
-        typedef GList::NodeType            GNode;
+        typedef Small::CoopHeavyList<Gain>  GList_;
+        typedef GList_::NodeType            GNode;
+        typedef GList_::ProxyType           GBank;
 
+        class GList : public GList_
+        {
+        public:
+            explicit GList(const GBank &_) noexcept : GList_(_) {}
+            virtual ~GList() noexcept {}
+
+            void show(XMLog &xml, const char * const uuid)
+            {
+                if(!xml.verbose) return;
+                Y_XML_SECTION(xml,uuid);
+                for(const GNode *gn=head;gn;gn=gn->next)
+                {
+                    Y_XMLOG(xml, **gn);
+                }
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(GList);
+        };
 
         class Equalizer
         {
@@ -65,7 +85,9 @@ namespace Yttrium
             const size_t   nrows;
             const size_t   ncols;
             Extents        extents;
-            GList          gains;
+            GBank          gbank;
+            GList          zgain;
+            GList          pgain;
             XMatrix        c_eqz;
             XAdd           xadd;
 
@@ -84,24 +106,27 @@ namespace Yttrium
         nrows(cluster.definite->size),
         ncols(cluster->species->size),
         extents(banks),
-        gains(nrows),
+        gbank(),
+        zgain(gbank),
+        pgain(gbank),
         c_eqz(nrows,nrows>0?ncols:nrows),
         xadd()
         {
-
+            gbank->reserve(nrows);
         }
 
         Equalizer:: ~Equalizer() noexcept
         {
         }
 
-        
+
         void Equalizer:: operator()(XMLog &xml, XWritable &C0)
         {
             Y_XML_SECTION(xml, "Equalizer");
 
             Y_XML_COMMENT(xml,"definite");
-            gains.free();
+            zgain.free();
+            pgain.free();
             for(const ENode *en=cluster.definite->head;en;en=en->next)
             {
                 const Equilibrium &eq   = **en;
@@ -116,13 +141,16 @@ namespace Yttrium
                     case BadProd: break;
                 }
 
-                XWritable &cc = c_eqz[gains.size+1];
+                XWritable &cc = c_eqz[zgain.size+pgain.size+1];
                 cluster.gather(cc,C0);
                 const Gain G(extents.generate(xml,xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
-                gains << G;
-                //std::cerr << G << std::endl;
+                assert(G.g.mantissa>=0);
+                if(G.g.mantissa<=0) zgain << G; else pgain << G;
             }
 
+            
+            if(zgain.size) zgain.show(xml, Sign::ToText(__Zero__) );
+            if(pgain.size) pgain.show(xml, Sign::ToText(Positive) );
 
         }
 

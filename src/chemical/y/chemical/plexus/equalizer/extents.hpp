@@ -72,6 +72,7 @@ namespace Yttrium
             //! generate with components only
             /**
              - compute when best.size>0
+             \param xml     for output
              \param xadd    for additions
              \param Csub    SubLevel concenrtations, initialized to C
              \param E       equilibrium
