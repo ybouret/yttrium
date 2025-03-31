@@ -38,10 +38,11 @@ namespace Yttrium
         }
 
 
-        Resultant Extents:: operator()(const Components &  E,
-                                  const XReadable &   C,
-                                  const Level         L,
-                                  const AddressBook * const wanders)
+        Resultant Extents:: operator()(XMLog&              xml,
+                                       const Components &  E,
+                                       const XReadable  &  C,
+                                       const Level         L,
+                                       const AddressBook * const wanders)
         {
             try
             {

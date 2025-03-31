@@ -107,7 +107,7 @@ namespace Yttrium
                 const Equilibrium &eq   = **en;
                 Y_XML_SECTION(xml,*eq.name);
                 Extents           &exts = eq(table,AuxLevel);
-                const Resultant    res  = exts(eq,C0,TopLevel, & cluster.wandering );
+                const Resultant    res  = exts(xml,eq,C0,TopLevel, & cluster.wandering );
                 Y_XMLOG(xml, "reactants :" << exts.reac);
                 Y_XMLOG(xml, "products  :" << exts.prod);
                 Y_XMLOG(xml, ResultantText(res) );

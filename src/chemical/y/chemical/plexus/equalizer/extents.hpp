@@ -5,6 +5,7 @@
 
 #include "y/chemical/plexus/equalizer/extent.hpp"
 #include "y/chemical/reactive/components.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -61,7 +62,8 @@ namespace Yttrium
             virtual void restart() noexcept;
 
             //! dispatch all
-            Resultant operator()(const Components &  E,
+            Resultant operator()(XMLog &             xml,
+                                 const Components &  E,
                                  const XReadable &   C,
                                  const Level         L,
                                  const AddressBook * const wanders);
