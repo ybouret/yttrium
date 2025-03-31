@@ -125,7 +125,7 @@ namespace Yttrium
                                 const AddressBook * const wanders) const
         {
             assert(best.size>0);
-
+            std::cerr << "best=" << best << std::endl;
             E.displayCompact( std::cerr << "bad = ", Csub, SubLevel) << std::endl;
 
             // move according to best
@@ -138,25 +138,25 @@ namespace Yttrium
             }
             E.displayCompact( std::cerr << "eqz = ", Csub, SubLevel) << std::endl;
 
-            // compute gain
+            // compute gain for not wandering species
             const xreal_t zero;
             xadd.free();
             {
                 size_t n = E->size();
                 for(Components::ConstIterator it=E->begin();n-- > 0;++it)
                 {
-                    const Species &sp = (**it).sp;
-                    if(wanders && wanders->has(sp)) continue;
+                    const Species &sp = (**it).sp; if(wanders && wanders->has(sp)) continue;
                     const xreal_t c_old = sp(C,L);
                     if(c_old<zero)
                     {
+                        const xreal_t c_new = sp(Csub,SubLevel);
                         const xreal_t start = -c_old;
-                        xadd << sp(Csub,SubLevel);
+                        xadd << c_new;
                         xadd << start;
                     }
                 }
             }
-            const xreal_t gain = xadd.sum();
+            const xreal_t gain = Max(xadd.sum(),zero);
             std::cerr << "gain=" << gain.str() << std::endl;
             
         }
