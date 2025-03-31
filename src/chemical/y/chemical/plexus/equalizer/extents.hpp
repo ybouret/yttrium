@@ -80,7 +80,8 @@ namespace Yttrium
              \param wanders for testing wandering species
              \return positive or zero gain
              */
-            xreal_t generate(XAdd             &xadd,
+            xreal_t generate(XMLog            &xml,
+                             XAdd             &xadd,
                              XWritable        &Csub,
                              const Components &E,
                              const XReadable  &C,
@@ -100,7 +101,8 @@ namespace Yttrium
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Extents);
-            void findBest(const Boundary &limiting,
+            void findBest(XMLog &xml,
+                          const Boundary &limiting,
                           const Cursors  &requried);
         };
 

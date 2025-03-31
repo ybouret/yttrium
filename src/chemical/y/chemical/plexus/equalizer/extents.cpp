@@ -44,12 +44,16 @@ namespace Yttrium
                                        const Level         L,
                                        const AddressBook * const wanders)
         {
+            Y_XML_SECTION_OPT(xml, "Extents", E.name);
             try
             {
                 best.restart();
                 reac(E.reac,C,L,wanders);
                 prod(E.prod,C,L,wanders);
-               // std::cerr << "reac:" << reac << std::endl;
+                Y_XMLOG(xml, "(*) reactants :" << reac);
+                Y_XMLOG(xml, "(*) products  :" << prod);
+
+                // std::cerr << "reac:" << reac << std::endl;
                 //std::cerr << "prod:" << prod << std::endl;
                 if(reac.required->size<=0)
                 {
@@ -57,13 +61,14 @@ namespace Yttrium
                     if(prod.required->size<=0)
                     {
                         // no negative concerned concentration
+                        Y_XML_COMMENT(xml, ResultantText(Correct) );
                         return Correct;
                     }
                     else
                     {
                         // only some negative product(s)
-                        findBest(reac.limiting,prod.required);
-                        //std::cerr << "best=" << best << std::endl;
+                        Y_XML_COMMENT(xml, ResultantText(BadProd) );
+                        findBest(xml,reac.limiting,prod.required);
                         return BadProd;
                     }
                 }
@@ -73,14 +78,15 @@ namespace Yttrium
                     if(prod.required->size<=0)
                     {
                         // only some negative reactant(s)
-                        findBest(prod.limiting,reac.required);
+                        Y_XML_COMMENT(xml, ResultantText(BadReac) );
+                        findBest(xml,prod.limiting,reac.required);
                         best.xi.neg();
-                        //std::cerr << "best=" << best << std::endl;
                         return BadReac;
                     }
                     else
                     {
                         // blocked
+                        Y_XML_COMMENT(xml, ResultantText(BadBoth) );
                         return BadBoth;
                     }
                 }
@@ -96,9 +102,12 @@ namespace Yttrium
 
         }
 
-        void Extents:: findBest(const Boundary &limiting, const Cursors &required)
+        void Extents:: findBest(XMLog &xml, const Boundary &limiting, const Cursors &required)
         {
-            std::cerr << "Find " << limiting << " within " << required << std::endl;
+            static const char partial[] = "partial : ";
+            static const char reached[] = "reached : ";
+
+            Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
             assert(required->size>0);
             assert(0==best.size);
 
@@ -108,26 +117,43 @@ namespace Yttrium
                 const Cursor &cr = **cn;
                 switch( Sign::Of(limiting.xi, cr.xi) )
                 {
-                    case Negative: best = limiting;               return; //
-                    case __Zero__: best = limiting; best.add(cr); return; // special partial/full
+                    case Negative: best = limiting;
+                        Y_XMLOG(xml, partial << best);
+                        return; // partial
+
+                    case __Zero__:
+                        best = limiting;
+                        best.add(cr);
+                        if(required->tail==cn)
+                        {
+                            Y_XMLOG(xml, reached << best);
+                        }
+                        else
+                        {
+                            Y_XMLOG(xml, partial << best);
+                        }
+                        return; // special partial/full
                     case Positive: continue;
                 }
             }
 
             // full
             best = **(required->tail);
+            Y_XMLOG(xml, reached << best);
         }
 
-        xreal_t Extents:: generate(XAdd             &xadd,
-                                XWritable        &Csub,
-                                const Components &E,
-                                const XReadable  &C,
-                                const Level       L,
-                                const AddressBook * const wanders) const
+        xreal_t Extents:: generate(XMLog            &xml,
+                                   XAdd             &xadd,
+                                   XWritable        &Csub,
+                                   const Components &E,
+                                   const XReadable  &C,
+                                   const Level       L,
+                                   const AddressBook * const wanders) const
         {
+            Y_XML_SECTION_OPT(xml, "Gaining", E.name);
+
             assert(best.size>0);
-            std::cerr << "best=" << best << std::endl;
-            E.displayCompact( std::cerr << "bad = ", Csub, SubLevel) << std::endl;
+            if(xml.verbose) E.displayCompact( xml() << "bad = ", Csub, SubLevel) << std::endl;
 
             // move according to best
             E.boldMove(Csub, SubLevel, best.xi);
@@ -137,7 +163,7 @@ namespace Yttrium
             {
                 (**sn)(Csub,SubLevel) = 0;
             }
-            E.displayCompact( std::cerr << "eqz = ", Csub, SubLevel) << std::endl;
+            if(xml.verbose) E.displayCompact( xml() << "eqz = ", Csub, SubLevel) << std::endl;
 
             // compute gain for not wandering species
             const xreal_t zero;
@@ -158,7 +184,7 @@ namespace Yttrium
                 }
             }
             const xreal_t gain = Max(xadd.sum(),zero);
-            std::cerr << "gain=" << gain.str() << std::endl;
+            Y_XMLOG(xml,"gain = " << gain.str());
             return gain;
         }
 

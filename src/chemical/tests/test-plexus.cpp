@@ -58,15 +58,14 @@ namespace Yttrium
         public:
             explicit Equalizer(const Cluster &cls);
             virtual ~Equalizer() noexcept;
-            typedef CxxArray<Extents,MemoryModel> Table;
 
 
             const Cluster &cluster;
             EqzBanks       banks;
             const size_t   nrows;
             const size_t   ncols;
+            Extents        extents;
             GList          gains;
-            Table          table;
             XMatrix        c_eqz;
             XAdd           xadd;
 
@@ -84,8 +83,8 @@ namespace Yttrium
         banks(),
         nrows(cluster.definite->size),
         ncols(cluster->species->size),
+        extents(banks),
         gains(nrows),
-        table(nrows,CopyOf,banks),
         c_eqz(nrows,nrows>0?ncols:nrows),
         xadd()
         {
@@ -96,6 +95,7 @@ namespace Yttrium
         {
         }
 
+        
         void Equalizer:: operator()(XMLog &xml, XWritable &C0)
         {
             Y_XML_SECTION(xml, "Equalizer");
@@ -106,11 +106,7 @@ namespace Yttrium
             {
                 const Equilibrium &eq   = **en;
                 Y_XML_SECTION(xml,*eq.name);
-                Extents           &exts = eq(table,AuxLevel);
-                const Resultant    res  = exts(xml,eq,C0,TopLevel, & cluster.wandering );
-                Y_XMLOG(xml, "reactants :" << exts.reac);
-                Y_XMLOG(xml, "products  :" << exts.prod);
-                Y_XMLOG(xml, ResultantText(res) );
+                const Resultant    res  = extents(xml,eq,C0,TopLevel, & cluster.wandering );
 
                 switch(res)
                 {
@@ -122,10 +118,12 @@ namespace Yttrium
 
                 XWritable &cc = c_eqz[gains.size+1];
                 cluster.gather(cc,C0);
-                const Gain G(exts.generate(xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
+                const Gain G(extents.generate(xml,xadd, cc, eq, C0, TopLevel, &cluster.wandering),eq,cc);
                 gains << G;
-                std::cerr << G << std::endl;
+                //std::cerr << G << std::endl;
             }
+
+
         }
 
         
