@@ -56,7 +56,7 @@ namespace Yttrium
                 lookup(x,f,FW);
             }
             
-            //! return true if initial value is zero, oherwise set handles accordinly
+            //! return true if initial value is zero, oherwise set handles accordingly
             bool found(Handle &xp, Handle &fp, Triplet<T> &x, Triplet<T> &f, FunctionType &F);
 
             //__________________________________________________________________

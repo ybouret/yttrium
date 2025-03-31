@@ -7,5 +7,6 @@ Y_UTEST_DECL(32)
         Y_UTEST(cm);
         Y_UTEST(eqs);
         Y_UTEST(plexus);
+        Y_UTEST(fluo);
 }
 Y_UTEST_EXEC()

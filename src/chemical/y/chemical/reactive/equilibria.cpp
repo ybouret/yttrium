@@ -102,6 +102,19 @@ namespace Yttrium
             os << '}';
             return os;
         }
+
+        const Equilibrium & Equilibria:: operator[](const String &eid) const
+        {
+            const Equilibrium::Pointer * const pp = db.search(eid);
+            if(!pp) throw Specific::Exception(CallSign,"no equilibrium '%s'", eid.c_str());
+            return **pp;
+        }
+
+        const Equilibrium & Equilibria:: operator[](const char * const eid) const
+        {
+            const String _(eid);
+            return (*this)[_];
+        }
     }
 
 }
