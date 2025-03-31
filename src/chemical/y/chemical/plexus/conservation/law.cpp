@@ -65,7 +65,7 @@ namespace Yttrium
                         }
                     }
                 }
-                std::cerr << "proj=" << proj << std::endl;
+                //std::cerr << "proj=" << proj << std::endl;
                 latch();
             }
 

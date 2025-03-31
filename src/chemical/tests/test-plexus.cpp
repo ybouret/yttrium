@@ -65,7 +65,7 @@ namespace Yttrium
                 Y_XML_SECTION(xml,uuid);
                 for(const ENode *gn=head;gn;gn=gn->next)
                 {
-                    Y_XMLOG(xml, **gn);
+                    Y_XMLOG(xml, (**gn).name);
                 }
             }
         private:
