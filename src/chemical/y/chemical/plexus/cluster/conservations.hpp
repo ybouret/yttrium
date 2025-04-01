@@ -23,7 +23,6 @@ namespace Yttrium
         class ClusterConservations : public ClusterTopology
         {
         public:
-            //typedef AutoPtr<const Conservation::Canons> CanonsPointer;
             explicit ClusterConservations(XMLog &, const ClusterContent::Pointer &); //!< setup
             virtual ~ClusterConservations() noexcept;                                //!< setup
 

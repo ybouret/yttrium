@@ -103,7 +103,7 @@ namespace Yttrium
                 {
                     const Equilibrium &eq = **en;
                     const String * const color = & eq(eqColor,SubLevel);
-                    (**en).viz(fp,color);
+                    eq.viz(fp,color,characterize(eq));
                 }
 
                 if(numOrder==1)

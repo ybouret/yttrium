@@ -75,7 +75,7 @@ namespace Yttrium
                 Node(fp,this) << '[';
                 Label(fp,*name);
                 if(color) fp << ',' << *color;
-                fp << ",shape=box,style=rounded";
+                fp << ",shape=box,style=diagonals";
                 Endl(fp << ']');
                 for(const Actor *a=(*this)->head;a;a=a->next)
                 {

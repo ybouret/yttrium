@@ -306,6 +306,16 @@ namespace Yttrium
         {
 
         }
+
+        Characteristic ClusterCombinatorics:: characterize(const Equilibrium &eq) const noexcept
+        {
+            if( definite->has(eq) ) return Definite;
+            if( onlyProd->has(eq) ) return OnlyProd;
+            if( onlyReac->has(eq) ) return OnlyReac;
+            assert(nebulous->has(eq));
+            return Nebulous;
+        }
+
     }
 
 }

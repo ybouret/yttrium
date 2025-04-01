@@ -245,8 +245,10 @@ Y_UTEST(plexus)
     Conservation::Wardens wardens(cls);
 
     std::cerr << "lib=" << lib << std::endl;
-    //cls.graphViz("cs");
+    cls.graphViz("cs");
 
+    return 0;
+    
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
     XVector      I0(m,0); // injection

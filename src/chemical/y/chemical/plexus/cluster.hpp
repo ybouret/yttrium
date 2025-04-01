@@ -121,7 +121,7 @@ namespace Yttrium
             const unsigned               uuid;    //!< indexing
             const Strings                spColor; //!< colors for species
             const Strings                eqColor; //!< colors for equilibria
-            const Strings                cnColor; //!< colros for laws
+            const Strings                cnColor; //!< colors for laws
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);

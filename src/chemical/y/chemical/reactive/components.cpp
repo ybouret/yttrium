@@ -383,13 +383,21 @@ namespace Yttrium
         }
 
         void Components:: viz(OutputStream &fp,
-                              const String * const color) const
+                              const String * const color,
+                              const Characteristic which) const
         {
             Node(fp,this) << '[';
             Label(fp,*name);
-            fp << ",shape=box";
+
             if(color) fp << ',' << *color;
-            fp << ",style=bold";
+            fp << ",shape=";
+            switch(which)
+            {
+                case Definite: fp << "box,style=bold"; break;
+                case OnlyProd: fp << "trapezium,style=bold"; break;
+                case OnlyReac: fp << "invtrapezium,style=bold"; break;
+                case Nebulous: fp << "box,style=\"bold,rounded\""; break;
+            }
             Endl(fp << ']');
 
             for(const Actor *a=prod->head;a;a=a->next)
