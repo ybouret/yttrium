@@ -52,6 +52,7 @@ namespace Yttrium
 
 #include "y/text/plural.hpp"
 #include "y/mkl/algebra/rank.hpp"
+#include "y/counting/combination.hpp"
 
 namespace Yttrium
 {
@@ -127,8 +128,9 @@ namespace Yttrium
                     apn total = 0;
                     for(size_t k=1;k<=rank;++k)
                     {
-                        const apn nk = apn::Comb(size,k);
-                        Y_XML_COMMENT(xml,"projection@rank" << k << " : " << nk);
+                        Combination comb(size,k);
+                        Y_XML_COMMENT(xml,"projection@rank" << k << " : " << comb.total);
+
                     }
 
                 }
