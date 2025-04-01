@@ -8,6 +8,7 @@
 #include "y/chemical/type/assembly.hpp"
 #include "y/chemical/type/meta-list.hpp"
 #include "y/chemical/type/thru-list.hpp"
+#include "y/stream/xmlog.hpp"
 
 namespace Yttrium
 {
@@ -55,7 +56,7 @@ namespace Yttrium
                 //______________________________________________________________
                 bool     accepts(const Law &)  const noexcept; //!< if common actor
                 bool     accepts(const Canon&) const noexcept; //!< if common actor
-                void     compile(const EList &definite);       //!< compile assembly or laws/species
+                void     compile(XMLog &xml, const EList &definite);       //!< compile assembly or laws/species
 
                 //! transfer according to species using '=' semantics
                 template <typename TARGET, typename SOURCE> inline

@@ -76,8 +76,8 @@ namespace Yttrium
             //! insertion of a new, VALID and LATCHED equilibrium
             void operator()(const Equilibrium::Pointer &eq);
 
-            const Equilibrium & operator[](const String &)    const;
-            const Equilibrium & operator[](const char *const) const;
+            const Equilibrium & operator[](const String &)    const; //!< get by name
+            const Equilibrium & operator[](const char *const) const; //!< get by name
 
             size_t   nextIndex() const noexcept; //!< db.size()+1
             Iterator begin()           noexcept; //!< alias

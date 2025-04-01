@@ -49,6 +49,8 @@ namespace Yttrium
             // Methods
             //
             //__________________________________________________________________
+
+            //! find where equilibria is
             Characteristic characterize(const Equilibrium &) const noexcept;
 
 

@@ -150,6 +150,8 @@ namespace Yttrium
 
             //! check if species is in components
             bool got(const Species &) const noexcept;
+
+            //! check if any of the species is in components
             bool gotAnyOf(const SList &) const noexcept;
 
             //! fill compatible topology

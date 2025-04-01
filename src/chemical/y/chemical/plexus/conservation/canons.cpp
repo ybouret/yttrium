@@ -1,4 +1,5 @@
 #include "y/chemical/plexus/conservation/canons.hpp"
+#include "y/text/plural.hpp"
 
 namespace Yttrium
 {
@@ -11,10 +12,12 @@ namespace Yttrium
             {
             }
 
-            Canons:: Canons(const ListOf<Law> &laws,
+            Canons:: Canons(XMLog &            xml,
+                            const ListOf<Law> &laws,
                             const EList       &definite) :
             CxxListOf<Canon>()
             {
+                Y_XML_SECTION_OPT(xml, "Conservations::Canons", "|laws|=" << laws.size);
                 for(const Law *law=laws.head;law;law=law->next)
                 {
 
@@ -56,10 +59,10 @@ namespace Yttrium
                     }
                 }
 
+                Y_XML_COMMENT(xml, "compiling " << size << " canon" << Plural::s(size));
                 for(Canon *canon=head;canon;canon=canon->next)
-                {
-                    canon->compile(definite);
-                }
+                    canon->compile(xml,definite);
+
 
             }
 

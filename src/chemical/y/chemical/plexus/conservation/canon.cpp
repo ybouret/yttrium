@@ -49,21 +49,26 @@ namespace Yttrium
 
 }
 
+#include "y/text/plural.hpp"
 namespace Yttrium
 {
     namespace Chemical
     {
         namespace Conservation
         {
-            void Canon:: compile(const EList &definite)
+            void Canon:: compile(XMLog       & xml,
+                                 const EList & definite)
             {
+                Y_XML_SECTION_OPT(xml, "Conservation::Canon", "size=" << size);
                 assert( 0 == maxNameLength );
                 assert( 0 == species->size );
                 
                 // collect species
+                Y_XML_COMMENT(xml, "law" << Plural::s(size));
                 for(const LNode *l=head;l;l=l->next)
                 {
                     const Law &law = **l; enroll( law );
+                    Y_XMLOG(xml,"(+) " <<law.name);
                     for(const Actor *a=law->head;a;a=a->next)
                     {
                         Coerce(species) << a->sp;
@@ -71,13 +76,22 @@ namespace Yttrium
                     }
                 }
 
+                Y_XML_COMMENT(xml, "species");;
+                Y_XMLOG(xml, "(#) " << species);
+
+
                 // collect definite into anxious
+                Y_XML_COMMENT(xml, "anxious");
                 for(const ENode *en=definite.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
                     if(eq.gotAnyOf(*species))
+                    {
                         Coerce(anxious) << eq;
+                        Y_XMLOG(xml, "(*) " << eq);
+                    }
                 }
+
             }
 
         }

@@ -24,7 +24,9 @@ namespace Yttrium
             class Canons : public CxxListOf<Canon>
             {
             public:
-                explicit Canons(const ListOf<Law> &laws, const EList &definite); //!< setup
+                explicit Canons(XMLog &xml,
+                                const ListOf<Law> &laws,
+                                const EList &definite); //!< setup
                 virtual ~Canons() noexcept;                                      //!< cleanup
 
             private:
