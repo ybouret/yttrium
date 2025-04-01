@@ -182,6 +182,7 @@ So the next set of concentration is given by the solution of:
 
 \subsection{Conservation}
 
+\subsubsection{One Bad Law}
 A conservation law is a vector of {\bf positive} coefficients $\vec \alpha$ such that:
 \begin{equation}
 	\langle \vec \alpha \vert \vec C \rangle \geq 0
@@ -205,7 +206,62 @@ To preserve numeric symmetry
 	\vec C_{new} = \vec C + \delta \vec C = \dfrac{1}{\vec \alpha^2}\left[\vec \alpha^2 \bm{I} - \vert \vec \alpha \rangle \langle \vec \alpha \vert \right] \vec C
 \end{equation}
 
- 	
+\subsection{Multiple Bad Laws}
+
+We assume that we have $n$ {\bf independent} broken laws:
+\begin{equation}
+	\forall i \in [1:n], \; \langle \vec \alpha_i \vert \vec C \rangle = -X_i
+\end{equation} 	
+
+We look for minimal $\delta \vec C$ such that:
+\begin{equation}
+	\forall i, \; 0 =  \langle \vec \alpha_i \vert \vec C + \delta \vec C\rangle = \langle \vec \alpha_i \vert \delta \vec C \rangle -X_i
+\end{equation}
+
+We want to minimize:
+\begin{equation}
+	\dfrac{1}{2} \delta \vec C ^2 - \sum_i \lambda_i \left( \langle \vec \alpha_i \vert \delta \vec C \rangle -X_i \right) 
+\end{equation}
+
+\begin{equation}
+	\delta \vec C = \sum_j \lambda_j \vec \alpha_j
+\end{equation}
+
+We define:
+\begin{equation}
+	\bm{A} =  
+    \begin{bmatrix}
+	\vdots\\
+	\langle \vec \alpha_i \vert\\
+	\vdots\\
+	\end{bmatrix}
+ \end{equation}
+
+\begin{equation}
+	\delta \vec C = \bm{A}^T \vec\lambda
+\end{equation}
+
+\begin{equation}
+	\left(\bm{A}\bm{A}^T\right) \vec\lambda = - \bm{A} \vec{C}
+\end{equation}
+
+\begin{equation}
+	\vec\lambda  = - \left(\bm{A}\bm{A}^T\right)^{-1} \bm{A} \vec{C}
+\end{equation}
+
+\begin{equation}
+	\delta	\vec C = - \bm{A}^T \left(\bm{A}\bm{A}^T\right)^{-1} \bm{A} \vec{C}
+\end{equation}
+
+The new concentration is
+\begin{equation}
+	\vec C + \delta \vec C = \left[\bm{I}_n - \bm{A}^T \left(\bm{A}\bm{A}^T\right)^{-1} \bm{A}\right] \vec{C}
+\end{equation}
+or
+\begin{equation}
+	\vec C + \delta \vec C = \dfrac{1}{\det\left(\bm{A}\bm{A}^T\right)}
+	\left[ \det\left(\bm{A}\bm{A}^T\right) \bm{I}_n - \bm{A}^T \left(\bm{A}\bm{A}^T\right)^\ast \bm{A}\right] \vec{C}
+\end{equation}
 
 \section{Diffusion/Migration}
 

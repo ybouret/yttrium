@@ -11,6 +11,7 @@ namespace Yttrium
 
             Canon:: Canon(const Law &first) :
             LList(),
+            rank(0),
             species(),
             anxious(),
             sformat(),
@@ -50,6 +51,8 @@ namespace Yttrium
 }
 
 #include "y/text/plural.hpp"
+#include "y/mkl/algebra/rank.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -76,9 +79,29 @@ namespace Yttrium
                     }
                 }
 
+
+
                 Y_XML_COMMENT(xml, "species");;
                 Y_XMLOG(xml, "(#) " << species);
 
+                {
+                    Y_XML_COMMENT(xml, "rank");
+                    Matrix<apq> Q(size,species->size);
+                    {
+                        size_t i=1;
+                        for(const LNode *ln=head;ln;ln=ln->next,++i)
+                        {
+                            const Law &law = **ln;
+                            for(const Actor *a=law->head;a;a=a->next)
+                            {
+                                a->sp(Q[i],AuxLevel) = a->nu;
+                            }
+                        }
+                    }
+                    Y_XMLOG(xml, "Q   =" << Q);
+                    Coerce(rank) = MKL::Rank::Compute(Q);
+                    Y_XMLOG(xml, "rank=" << rank);
+                }
 
                 // collect definite into anxious
                 Y_XML_COMMENT(xml, "anxious");

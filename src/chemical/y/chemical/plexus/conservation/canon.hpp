@@ -66,7 +66,9 @@ namespace Yttrium
                     return TransferList(*species,target, targetLevel, source, sourceLevel);
                 }
 
-                //! helper to show per specuies
+
+
+                //! helper to show per species
                 template <typename ARRAY> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr) const
                 {
@@ -86,6 +88,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
+                const size_t   rank;    //!< rank
                 const AuxSList species; //!< Aux Level
                 const EList    anxious; //!< definite with species
                 const Assembly sformat; //!< for species
