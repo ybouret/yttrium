@@ -5,6 +5,7 @@
 #define Y_Chemical_Conservation_Broken_Included 1
 
 #include "y/chemical/plexus/conservation/law.hpp"
+#include "y/chemical/type/assembly.hpp"
 
 namespace Yttrium
 {
@@ -35,6 +36,14 @@ namespace Yttrium
                        XWritable &   _cc) noexcept; //!< setup
                 ~Broken()                 noexcept; //!< cleanup
                 Broken(const Broken &_)   noexcept; //!< duplicate
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                std::ostream & show(std::ostream &os, const Assembly &assembly) const;
 
                 //______________________________________________________________
                 //

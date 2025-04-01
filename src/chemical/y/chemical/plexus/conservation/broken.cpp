@@ -29,6 +29,13 @@ namespace Yttrium
             {
             }
 
+            std::ostream & Broken:: show(std::ostream &os, const Assembly &assembly) const
+            {
+                assembly.pad( os << law.name, law) << " @" << std::setw(22) << xs.str();
+                law.displayCompact(os << " | ", cc, AuxLevel);
+                return os;
+            }
+
         }
 
     }

@@ -9,6 +9,8 @@
 
 #include "y/chemical/plexus/equalizer/extents.hpp"
 
+#include "y/chemical/plexus/conservation/broken.hpp"
+
 
 namespace Yttrium
 {
@@ -214,13 +216,89 @@ namespace Yttrium
         namespace Conservation
         {
 
-            class Janitor
+
+
+            class Janitor : public Quantized
             {
             public:
+                explicit Janitor(const Canon &_);
+                virtual ~Janitor() noexcept;
+
+                const Canon &canon;
+                XMatrix      cproj;
+                XArray       cinit;
+                BList        blist;
+                XAdd         xadd;
+
+                void fix(XMLog &xml, XWritable &C0, const Level L0);
 
             private:
-                
+                Y_DISABLE_COPY_AND_ASSIGN(Janitor);
             };
+
+            Janitor:: Janitor(const Canon &_) :
+            canon(_),
+            cproj(canon.size,canon.species->size),
+            cinit(canon.species->size),
+            blist()
+            {
+            }
+
+            Janitor:: ~Janitor() noexcept
+            {
+
+            }
+
+            static inline
+            SignType CompareBroken(const BNode * const lhs, const BNode * const rhs) noexcept
+            {
+                return Sign::Of( (**rhs).xs, (**lhs).xs ); // decreasing
+            }
+
+            void Janitor:: fix(XMLog &xml, XWritable &C0, const Level L0)
+            {
+                Y_XML_SECTION(xml,"Janitor::Fix");
+                const xreal_t zero;
+
+                canon.transfer( cinit, AuxLevel, C0, L0);
+                if(xml.verbose) canon.show(xml() << "C0=",cinit,xreal_t::ToString) << std::endl;
+
+                Y_XML_COMMENT(xml, "detect broken");
+                blist.free();
+                for(const LNode *ln=canon.head;ln;ln=ln->next)
+                {
+                    const Law &   law = **ln;
+                    const xreal_t xs  = law.excess(xadd, cinit, AuxLevel);
+                    if(xs<=zero) {
+                        Y_XMLOG(xml, "(-) " << law.name);
+                        continue;
+                    }
+                    XWritable &cc =  cproj[blist.size+1].ld(cinit);
+                    law.project(xadd, cc, cinit, AuxLevel);
+                    const Broken broken(law,xs,cc);
+                    blist << broken;
+                    if( xml.verbose) broken.show( xml() << "(+) ",canon) << std::endl;
+                }
+
+
+                while(blist.size>0)
+                {
+                    Y_XML_COMMENT(xml, "fixing broken");
+                    MergeSort::Call(blist,CompareBroken);
+                    if(xml.verbose) {
+                        for(const BNode *bn=blist.head;bn;bn=bn->next)
+                        {
+                            (**bn).show(xml(),canon)<<std::endl;
+                        }
+                    }
+                    break;
+                }
+
+
+
+            }
+
+
         }
 
 
@@ -259,10 +337,25 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     cls.graphViz("cs");
 
-    return 0;
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
+
+    Library::Concentrations(C0,ran,0.1,0.5);
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+    for(const Cluster *cl=cls->head;cl;cl=cl->next)
+    {
+        for(const Conservation::Canon *canon=cl->canons.head;canon;canon=canon->next)
+        {
+            Conservation::Janitor janitor(*canon);
+            janitor.fix(xml,C0,TopLevel);
+        }
+    }
+
+
+    return 0;
+
     XVector      I0(m,0); // injection
     XVector      C(m,0);
 
