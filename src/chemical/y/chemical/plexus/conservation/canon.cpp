@@ -65,8 +65,14 @@ namespace Yttrium
                 Y_XML_SECTION_OPT(xml, "Conservation::Canon", "size=" << size);
                 assert( 0 == maxNameLength );
                 assert( 0 == species->size );
-                
-                // collect species
+
+                //--------------------------------------------------------------
+                //
+                //
+                // collect species and make AuxLevel
+                //
+                //
+                //--------------------------------------------------------------
                 Y_XML_COMMENT(xml, "law" << Plural::s(size));
                 for(const LNode *l=head;l;l=l->next)
                 {
@@ -84,6 +90,13 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, "species");;
                 Y_XMLOG(xml, "(#) " << species);
 
+                //--------------------------------------------------------------
+                //
+                //
+                // compute the rank of the local matrix
+                //
+                //
+                //--------------------------------------------------------------
                 {
                     Y_XML_COMMENT(xml, "rank");
                     Matrix<apq> Q(size,species->size);
@@ -103,7 +116,32 @@ namespace Yttrium
                     Y_XMLOG(xml, "rank=" << rank);
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // compute all possibilities
+                //
+                //
+                //--------------------------------------------------------------
+                {
+                    apn total = 0;
+                    for(size_t k=1;k<=rank;++k)
+                    {
+                        const apn nk = apn::Comb(size,k);
+                        Y_XML_COMMENT(xml,"projection@rank" << k << " : " << nk);
+                    }
+
+                }
+
+
+
+                //--------------------------------------------------------------
+                //
+                //
                 // collect definite into anxious
+                //
+                //
+                //--------------------------------------------------------------
                 Y_XML_COMMENT(xml, "anxious");
                 for(const ENode *en=definite.head;en;en=en->next)
                 {
