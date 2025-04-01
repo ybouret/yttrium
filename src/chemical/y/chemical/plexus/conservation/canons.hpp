@@ -24,8 +24,8 @@ namespace Yttrium
             class Canons : public CxxListOf<Canon>
             {
             public:
-                explicit Canons(const ListOf<Law> &laws); //!< setup
-                virtual ~Canons() noexcept;               //!< cleanup
+                explicit Canons(const ListOf<Law> &laws, const EList &definite); //!< setup
+                virtual ~Canons() noexcept;                                      //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canons);

@@ -148,6 +148,10 @@ namespace Yttrium
             //! check connected by species
             static bool AreConnected(const Components &lhs, const Components &rhs);
 
+            //! check if species is in components
+            bool got(const Species &) const noexcept;
+            bool gotAnyOf(const SList &) const noexcept;
+
             //! fill compatible topology
             template <typename ARRAY> inline
             void fillTopology(ARRAY &topo, const Level level) const

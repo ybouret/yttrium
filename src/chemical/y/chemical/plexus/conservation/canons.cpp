@@ -11,7 +11,8 @@ namespace Yttrium
             {
             }
 
-            Canons:: Canons(const ListOf<Law> &laws) :
+            Canons:: Canons(const ListOf<Law> &laws,
+                            const EList       &definite) :
             CxxListOf<Canon>()
             {
                 for(const Law *law=laws.head;law;law=law->next)
@@ -57,7 +58,7 @@ namespace Yttrium
 
                 for(Canon *canon=head;canon;canon=canon->next)
                 {
-                    canon->compile();
+                    canon->compile(definite);
                 }
 
             }

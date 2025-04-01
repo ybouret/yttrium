@@ -12,6 +12,7 @@ namespace Yttrium
             Canon:: Canon(const Law &first) :
             LList(),
             species(),
+            anxious(),
             sformat(),
             next(0),
             prev(0)
@@ -54,11 +55,12 @@ namespace Yttrium
     {
         namespace Conservation
         {
-            void Canon:: compile()
+            void Canon:: compile(const EList &definite)
             {
                 assert( 0 == maxNameLength );
                 assert( 0 == species->size );
-
+                
+                // collect species
                 for(const LNode *l=head;l;l=l->next)
                 {
                     const Law &law = **l; enroll( law );
@@ -69,6 +71,13 @@ namespace Yttrium
                     }
                 }
 
+                // collect definite into anxious
+                for(const ENode *en=definite.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(eq.gotAnyOf(*species))
+                        Coerce(anxious) << eq;
+                }
             }
 
         }

@@ -300,6 +300,9 @@ namespace Yttrium
             createCombinations(xml,eqs,tlK);
             setClusterTopology(xml);
             makeCharacteristic(xml);
+
+            
+
         }
 
         ClusterCombinatorics:: ~ClusterCombinatorics() noexcept

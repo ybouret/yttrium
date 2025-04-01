@@ -22,7 +22,7 @@ namespace Yttrium
                          Equilibria                    &eqs,
                          XWritable                     &tlK) :
         ClusterCombinatorics(xml,ptr,eqs,tlK),
-        canons(*ordinance),
+        canons(*ordinance,*definite),
         next(0),
         prev(0),
         uuid(0),
@@ -38,7 +38,6 @@ namespace Yttrium
                     const String   descr = Species::Color(SpScheme,sp.indx[SubLevel]);
                     const String   color = "color=" + descr + ",fontcolor=" + descr;
                     colors << color;
-                    //std::cerr << color << std::endl;
                 }
             }
 
@@ -50,7 +49,6 @@ namespace Yttrium
                     const String       descr = Species::Color(EqScheme,eq.indx[SubLevel]);
                     const String       color = "color=" + descr + ",fontcolor=" + descr;
                     colors << color;
-                    //std::cerr << color << std::endl;
                 }
             }
 

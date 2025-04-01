@@ -182,6 +182,21 @@ namespace Yttrium
             return false;
         }
 
+
+        bool Components:: got(const Species &sp) const noexcept
+        {
+            return 0 != db.search(sp.key());
+        }
+
+        bool Components:: gotAnyOf(const SList &list) const noexcept
+        {
+            for(const SNode *sn=list.head;sn;sn=sn->next) {
+                if( got(**sn) ) return true;
+            }
+            return false;
+        }
+
+
         void Components:: gatherSpeciesIn(AddressBook &book) const
         {
             for(ConstIterator it=db.begin();it!=db.end();++it)

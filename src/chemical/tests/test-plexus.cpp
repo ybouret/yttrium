@@ -14,7 +14,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+#if 0
         class Gain
         {
         public:
@@ -209,7 +209,19 @@ namespace Yttrium
 
         }
 
-        
+#endif
+
+        namespace Conservation
+        {
+
+            class Janitor
+            {
+            public:
+
+            private:
+                
+            };
+        }
 
 
     }
@@ -248,7 +260,7 @@ Y_UTEST(plexus)
     cls.graphViz("cs");
 
     return 0;
-    
+
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
     XVector      I0(m,0); // injection
@@ -259,14 +271,14 @@ Y_UTEST(plexus)
         Library::Concentrations(C0,ran,0.1,0.5);
         lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-        wardens(xml,C0);
+        //wardens(xml,C0);
 
         lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
         for(const Cluster *cl=cls->head;cl;cl=cl->next)
         {
-            Equalizer            eqz(*cl);
-            eqz(xml,C0);
+            //Equalizer            eqz(*cl);
+            //eqz(xml,C0);
         }
     }
 

@@ -55,7 +55,7 @@ namespace Yttrium
                 //______________________________________________________________
                 bool     accepts(const Law &)  const noexcept; //!< if common actor
                 bool     accepts(const Canon&) const noexcept; //!< if common actor
-                void     compile();                            //!< compile assembly or laws/species
+                void     compile(const EList &definite);       //!< compile assembly or laws/species
 
                 //! transfer according to species using '=' semantics
                 template <typename TARGET, typename SOURCE> inline
@@ -86,6 +86,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const AuxSList species; //!< Aux Level
+                const EList    anxious; //!< definite with species
                 const Assembly sformat; //!< for species
                 Canon *        next;    //!< for list
                 Canon *        prev;    //!< for list
