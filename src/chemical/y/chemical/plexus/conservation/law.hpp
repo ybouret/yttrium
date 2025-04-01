@@ -62,10 +62,11 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
+                const size_t   auxId; //!< in canon
                 const unsigned norm2; //!< |*this|^2
                 const xreal_t  denom; //!< norm2
                 const iMatrix  proj;  //!< compact projection matrix
-                const size_t   uuid;  //!< in laws per cluster
+                const size_t   uuid;  //!< identifier in cluster
                 Law *          next;  //!< for list
                 Law *          prev;  //!< for list
                 

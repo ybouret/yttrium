@@ -69,6 +69,14 @@ namespace Yttrium
                 return target;
             }
 
+            //! fill array with coefficient, assuming array is zeroed
+            template <typename ARRAY> inline
+            void fillArray(ARRAY &arr, const Level L) const
+            {
+                for(const Actor *a=my.head;a;a=a->next) a->sp(arr,L) = a->nu;
+            }
+
+
             //! display as compact list
             std::ostream &displayCompact(std::ostream &  os,
                                          const XReadable &C,

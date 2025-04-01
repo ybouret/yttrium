@@ -179,11 +179,20 @@ namespace Yttrium
             Coerce(numer).ldz();
         }
 
+        static const char badAPQ[] = " a non-integer rational";
         Integer & Integer:: operator=(const Rational &q)
         {
-            if(q.denom!=1) throw Specific::Exception(CallSign, "assign a non-integer rational");
+            if(q.denom!=1) throw Specific::Exception(CallSign, "assign%s",badAPQ);
             Integer &self = *this;
             return self = q.numer;
+        }
+
+        Integer:: Integer(const Rational &q) :
+        Castable(),
+        s(q.numer.s),
+        n(q.numer.n)
+        {
+            if(q.denom!=1) throw Specific::Exception(CallSign, "duplicate%s",badAPQ);
         }
 
     }

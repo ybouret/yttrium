@@ -26,6 +26,7 @@ namespace Yttrium
 
             Law:: Law(Rule * const rule) :
             Actors(rule->in),
+            auxId(0),
             norm2(ActorsNorm2(*rule)),
             denom(norm2),
             proj((*rule)->size,(*rule)->size),

@@ -100,6 +100,7 @@ Y_Apex_Integer_Unary_Operators(OP,FCN)
             Integer(const Natural &);                 //!< setup
             Integer(const SignType, const Natural &); //!< setup
             Integer(const String &);                  //!< parse/assign
+            Integer(const Rational &);                //!< rational with unit denom
             Integer & operator=(const Integer  &);    //!< assign
             Integer & operator=(const integer_t ) noexcept; //!< assign
             Integer & operator=(const Natural  &);    //!< assign
