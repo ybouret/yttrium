@@ -70,8 +70,11 @@ namespace Yttrium
                             Y_XMLOG(xml,"(+) " << coef);
                         }
 
-
+                        std::cerr << "Cm=" << Cm << std::endl;
                         std::cerr << "rank=" << MKL::Rank::Of(Cm) << std::endl;
+
+                        
+
 
                         std::cerr << sizeof(Coven::SArray<apn>) << std::endl;
                         std::cerr << sizeof(Coven::SArray<apz>) << std::endl;
