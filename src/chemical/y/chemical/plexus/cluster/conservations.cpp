@@ -3,11 +3,13 @@
 #include "y/chemical/plexus/conservation/rule.hpp"
 
 #include "y/mkl/algebra/ortho-space.hpp"
+#include "y/mkl/algebra/rank.hpp"
 #include "y/system/exception.hpp"
 
 #include "y/apex/api/ortho/coven/survey/natural.hpp"
 #include "y/apex/api/count-non-zero.hpp"
 #include "y/text/plural.hpp"
+
 
 namespace Yttrium
 {
@@ -23,6 +25,8 @@ namespace Yttrium
         {
 
         }
+
+
 
         ClusterConservations:: ClusterConservations( XMLog &xml, const ClusterContent::Pointer &ptr) :
         ClusterTopology(xml,ptr),
@@ -49,6 +53,36 @@ namespace Yttrium
                     }
 
                     {
+                        size_t  cidx=1;
+                        uMatrix Cm(survey->size,M);
+                        for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
+                        {
+                            const NaturalSurvey::ArrayType  & coef = *node; assert(CountNonZero(coef)>=2);
+                            Writable<unsigned>              & cons = Cm[cidx];
+                            for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
+                            {
+                                const Species &sp = **sn;
+                                const size_t   sj = sp.indx[SubLevel];
+                                unsigned &     cf = cons[sj];
+                                if( !coef[sj].tryCast(cf) )
+                                    throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
+                            }
+                            Y_XMLOG(xml,"(+) " << coef);
+                        }
+
+
+                        std::cerr << "rank=" << MKL::Rank::Of(Cm) << std::endl;
+
+                        std::cerr << sizeof(Coven::SArray<apn>) << std::endl;
+                        std::cerr << sizeof(Coven::SArray<apz>) << std::endl;
+
+
+
+                        throw Exception("must study survey");
+                    }
+
+
+                    {
                         uMatrix &Cm = Coerce(preserved);
                         Cm.make(survey->size,M);
 
@@ -71,7 +105,7 @@ namespace Yttrium
                                     (*claw)(cf,sp);
                                 }
                             }
-                            std::cerr << " (+) " << claw->name << std::endl;
+                            Y_XMLOG(xml,"(+) " << claw->name);
                             rules.pushTail(claw.yield());
                         }
                     }

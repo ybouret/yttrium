@@ -464,7 +464,7 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
                 if(!tryCast(res)) raiseCastOverflowFor(variable);
                 return res;
             }
-
+            
             static Natural FFT(const Natural &lhs, const Natural &rhs); //!< FFT product
             Natural(Block * const, const AsBlock_ &);                   //!< manual setting
 

@@ -1,5 +1,6 @@
 
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
+#include "y/apex/api/count-non-zero.hpp"
 
 namespace Yttrium
 {

@@ -4,7 +4,7 @@
 #define Y_Apex_Ortho_Coven_SArray_Included 1
 
 #include "y/apex/api/ortho/vector.hpp"
-#include "y/apex/api/count-non-zero.hpp"
+#include "y/apex/api/natural-part.hpp"
 
 namespace Yttrium
 {
@@ -44,10 +44,12 @@ namespace Yttrium
                     //! setup from vector
                     explicit SArray(const Vector &v) :
                     SArrayType(CopyOf,v),
-                    ncof(CountNonZero(*this)),
+                    ncof(0),
+                    nrm1(0),
                     next(0),
                     prev(0)
                     {
+                        setup();
                     }
 
                     //! cleanup
@@ -60,7 +62,7 @@ namespace Yttrium
                     std::ostream & operator<<(std::ostream &os, const SArray &arr)
                     {
                         const SArrayType &self = arr;
-                        os << self << " //#" << arr.ncof;
+                        os << self << " // |#" << arr.ncof << "| =" << arr.nrm1;
                         return os;
                     }
 
@@ -74,7 +76,7 @@ namespace Yttrium
                     //! extended lexicographic comparison
                     static inline
                     SignType Compare(const SArray * const lhs,
-                                     const SArray * const rhs) noexcept
+                                     const SArray * const rhs)  
                     {
                         assert(0!=lhs);
                         assert(0!=rhs);
@@ -88,6 +90,15 @@ namespace Yttrium
                             case Positive: return Positive;
                             case __Zero__: break;
                         }
+
+                        switch( Sign::Of(L.nrm1,R.nrm1) )
+                        {
+                            case Negative: return Negative;
+                            case Positive: return Positive;
+                            case __Zero__: break;
+                        }
+
+
 
                         const size_t n = L.size();
                         for(size_t i=1;i<=n;++i)
@@ -110,6 +121,7 @@ namespace Yttrium
                     //
                     //__________________________________________________________
                     const size_t ncof; //!< number of coefficients
+                    const apn    nrm1; //!< ||*this||_1
                     SArray *     next; //!< for list
                     SArray *     prev; //!< for list
 
@@ -117,6 +129,21 @@ namespace Yttrium
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(SArray);
+                    inline void setup()
+                    {
+                        {
+                            const Readable<T> &self = *this;
+                            for(size_t i=self.size();i>0;--i)
+                            {
+                                const apn &n = NaturalPart::Of( self[i] );
+                                if(n->bits>0) {
+                                    Coerce(ncof)++;
+                                    Coerce(nrm1) += n;
+                                }
+                            }
+                        }
+                        assert(ncof>=2);
+                    }
                 };
             }
 
