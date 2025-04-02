@@ -89,16 +89,16 @@ namespace Yttrium
 
                 //! generate a random family
                 void                 generate(Random::Bits &ran, const size_t dim, const size_t bits);
-                void                 recreate(const Family &);    //!< duplicate
-                bool                 includes(const Family &);    //!< check if sub-family is included in this span
+                void                 recreate(const Family &);        //!< duplicate
+                bool                 includes(const Family &);        //!< check if sub-family is included in this span
                 bool                 isIdenticalTo(const Family &);   //!< check exact same basis
                 bool                 isAnalogousTo(const Family &);   //!< check exact same spam
                 bool                 hasSameSpanThan(const Family &); //!< identical or analogous
-                const Vector *       increase();                  //!< increase with latest valid workspace
-                void                 clear()  noexcept;           //!< free vectors
-                void                 prune()  noexcept;           //!< clear workspace
-                void                 reset()  noexcept;           //!< free/trim
-                const Apex::Natural &weight() const noexcept;     //!< norm2.n
+                const Vector *       increase();                      //!< increase with latest valid workspace
+                void                 clear()  noexcept;               //!< free vectors
+                void                 prune()  noexcept;               //!< clear workspace
+                void                 reset()  noexcept;               //!< free/trim
+                const Apex::Natural &weight() const noexcept;         //!< norm2.n
 
                 //______________________________________________________________
                 //

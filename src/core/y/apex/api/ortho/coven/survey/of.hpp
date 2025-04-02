@@ -66,6 +66,9 @@ namespace Yttrium
                         return os;
                     }
 
+                    
+
+
                 protected:
                     //! setup empty
                     inline explicit SurveyOf() noexcept : my()

@@ -6,6 +6,9 @@
 #include "y/mkl/algebra/rank.hpp"
 #include "y/system/exception.hpp"
 
+#include "y/apex/api/ortho/architect.hpp"
+
+
 #include "y/apex/api/ortho/coven/survey/natural.hpp"
 #include "y/apex/api/count-non-zero.hpp"
 #include "y/text/plural.hpp"
@@ -53,6 +56,8 @@ namespace Yttrium
                     }
 
                     {
+                        uMatrix toto;
+                        
                         size_t  cidx=1;
                         uMatrix Cm(survey->size,M);
                         for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
@@ -70,15 +75,18 @@ namespace Yttrium
                             Y_XMLOG(xml,"(+) " << coef);
                         }
 
-                        std::cerr << "Cm=" << Cm << std::endl;
-                        std::cerr << "rank=" << MKL::Rank::Of(Cm) << std::endl;
-
-                        
+                        std::cerr << "Cm="   << Cm << std::endl;
+                        const size_t  CmRank = MKL::Rank::Of(Cm);
+                        std::cerr << "rank=" << CmRank << std::endl;
 
 
                         std::cerr << sizeof(Coven::SArray<apn>) << std::endl;
                         std::cerr << sizeof(Coven::SArray<apz>) << std::endl;
 
+                        Ortho::Architect architect(M);
+                        uMatrix basis;
+                        architect.extract(basis,Cm,CmRank);
+                        std::cerr << "basis=" << basis << std::endl;
 
 
                         throw Exception("must study survey");
