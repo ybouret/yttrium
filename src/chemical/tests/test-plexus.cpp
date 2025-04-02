@@ -283,7 +283,7 @@ namespace Yttrium
 
                 while(blist.size>0)
                 {
-                    Y_XML_COMMENT(xml, "fixing broken");
+                    Y_XML_COMMENT(xml, "fixing " << blist.size << "/" << canon.size << " broken");
                     MergeSort::Call(blist,CompareBroken);
                     if(xml.verbose) {
                         for(const BNode *bn=blist.head;bn;bn=bn->next)

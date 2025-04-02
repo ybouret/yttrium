@@ -219,6 +219,8 @@ namespace Yttrium
                     Y_XMLOG(xml, "rank=" << rank);
                 }
 
+                return;
+
                 //--------------------------------------------------------------
                 //
                 //
@@ -226,7 +228,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                LU<apq> lu(rank);
+                LU<apq>      lu(rank);
                 const size_t n = size;
                 const size_t m = species->size;
                 const apq    q0;

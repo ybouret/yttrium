@@ -55,9 +55,9 @@ namespace Yttrium
                         goto FINALIZE;
                     }
 
+#if 0
                     {
-                        uMatrix toto;
-                        
+
                         size_t  cidx=1;
                         uMatrix Cm(survey->size,M);
                         for(const NaturalSurvey::ArrayType *node=survey->head;node;node=node->next,++cidx)
@@ -91,6 +91,7 @@ namespace Yttrium
 
                         throw Exception("must study survey");
                     }
+#endif
 
 
                     {
@@ -103,7 +104,7 @@ namespace Yttrium
                         {
                             const Readable<apn> &       coef = *node; assert(CountNonZero(coef)>=2);
                             Writable<unsigned>  &       cons = Cm[cidx];
-                            AutoPtr<Conservation::Rule> claw = new Conservation::Rule();
+                            AutoPtr<Conservation::Rule> rule = new Conservation::Rule();
                             for(const SNode *sn = (*this)->species->head; sn; sn=sn->next)
                             {
                                 const Species &sp = **sn;
@@ -113,17 +114,16 @@ namespace Yttrium
                                     throw Specific::Exception(CallSign, "conservation coefficient overflow for [%s]", sp.name->c_str());
                                 if(0!=cf)
                                 {
-                                    (*claw)(cf,sp);
+                                    (*rule)(cf,sp);
                                 }
                             }
-                            Y_XMLOG(xml,"(+) " << claw->name);
-                            rules.pushTail(claw.yield());
+                            Y_XMLOG(xml,"(+) " << rule->name);
+                            rules.pushTail(rule.yield());
                         }
                     }
                 }
                 Conservation::Laws laws(rules.head);
                 Coerce(ordinance).xch(laws);
-
             }
 
         FINALIZE:
@@ -176,45 +176,6 @@ namespace Yttrium
         }
 
 
-        
-#if 0
-        ComponentsTier ClusterConservations:: tierOf(const Components &eq) const noexcept
-        {
-            if(eq.reac->size>0)
-            {
-                if(eq.prod->size>0)
-                {
-                    if(gotAnyConserved(eq.reac) && gotAnyConserved(eq.prod) )
-                    {
-                        return Standard;
-                    }
-                    else
-                    {
-                        return Nebulous;
-                    }
-                }
-                else
-                {
-                    assert(areAllUnbounded(eq.reac));
-                    return ReacOnly;
-                }
-            }
-            else
-            {
-                if(eq.prod->size>0)
-                {
-
-                    assert(areAllUnbounded(eq.prod));
-                    return ProdOnly;
-                }
-                else
-                {
-                    return Deserted;
-                }
-            }
-        }
-#endif
-        
     }
 
 }
