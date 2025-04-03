@@ -10,14 +10,16 @@ using namespace Yttrium;
 
 namespace  {
 
+    static const unit_t Max2D = 64;
+
     template <typename T>
     static inline
     void Test2D()
     {
         std::cerr << "Testing 2D with " << RTTI::Name<T>() << std::endl;
-        for(unit_t nx=1;nx<=32;nx*=2)
+        for(unit_t nx=1;nx<=Max2D;nx*=2)
         {
-            for(unit_t ny=1;ny<=32;ny*=2)
+            for(unit_t ny=1;ny<=Max2D;ny*=2)
             {
                 Field::Format2D  L = new Field::Layout2D( Field::Coord2D(1,1), Field::Coord2D(nx,ny) );
 
@@ -61,17 +63,18 @@ namespace  {
         std::cerr << std::endl;
     }
 
+    static const unit_t Max3D = 64;
 
     template <typename T>
     static inline
     void Test3D()
     {
         std::cerr << "Testing 3D with " << RTTI::Name<T>() << std::endl;
-        for(unit_t nx=1;nx<=32;nx*=2)
+        for(unit_t nx=1;nx<=Max3D;nx*=2)
         {
-            for(unit_t ny=1;ny<=32;ny*=2)
+            for(unit_t ny=1;ny<=Max3D;ny*=2)
             {
-                for(unit_t nz=1;nz<=32;nz*=2)
+                for(unit_t nz=1;nz<=Max3D;nz*=2)
                 {
                     Field::Format3D  L = new Field::Layout3D( Field::Coord3D(1,1,1), Field::Coord3D(nx,ny,ny) );
                     typedef Field::In3D< Complex<T>, Memory::Dyadic > F3D;
@@ -86,7 +89,6 @@ namespace  {
                             {
                                 F[k][j][i].re = i+j;
                                 F[k][j][i].im = j+k;
-
                             }
                         }
                     }
@@ -118,6 +120,7 @@ namespace  {
             }
 
         }
+        std::cerr << std::endl;
     }
 
 }
