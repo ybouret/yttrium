@@ -62,7 +62,7 @@ namespace Yttrium
                 const size_t ip2   = ip1*n;
                 const size_t ip3   = ip2*nrem;
                 {
-                    size_t       i2rev = 1;
+                    size_t i2rev = 1;
                     for(size_t i2=1;i2<=ip2;i2+=ip1)
                     {
                         if(i2<i2rev) {
@@ -85,15 +85,15 @@ namespace Yttrium
 
                 size_t ifp1  = ip1;
                 size_t iln2  = 0;
-                while (ifp1 < ip2)
+                while(ifp1<ip2)
                 {
                     const size_t ifp2   = ifp1 << 1;
                     const size_t iln2p1 = iln2+1;
-                    long_T       wtemp = SinTable[iln2p1];
-                    long_T       wpr   = DFT::Table<long_T>::CosMinusOne[iln2];
-                    long_T       wpi   = SinTable[iln2];
-                    long_T       wr    = _1;
-                    long_T       wi    = _0;;
+                    long_T       wtemp  = SinTable[iln2p1];
+                    long_T       wpr    = DFT::Table<long_T>::CosMinusOne[iln2];
+                    long_T       wpi    = SinTable[iln2];
+                    long_T       wr     = _1;
+                    long_T       wi     = _0;;
                     for(size_t i3=1;i3<=ifp1;i3+=ip1)
                     {
                         const size_t i1max = i3+ip1-2;
