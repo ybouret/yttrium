@@ -84,7 +84,9 @@ namespace Yttrium
                 while (ifp1 < ip2)
                 {
                     const size_t ifp2  = ifp1 << 1;
-                    const long_T theta = isign*6.28318530717959/(ifp2/ip1);
+                    const size_t iden  = ifp2/ip1;
+                    //const long_T theta = isign*6.28318530717959/(ifp2/ip1);
+                    const long_T theta = isign*6.28318530717959/iden;
                     long_T       wtemp = sin(0.5*theta);
                     long_T wpr = -2.0*wtemp*wtemp;
                     long_T wpi = sin(theta);
