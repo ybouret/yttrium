@@ -48,6 +48,9 @@ namespace Yttrium
                        const typename DFT_Real<T>::Type * const SinTable) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
+            static const long_T _0 = 0;
+            static const long_T _1 = 1;
+
             assert(0!=SinTable);
             const size_t ntot = Prod(nn,dims);
             size_t       nprv = 1;
@@ -62,16 +65,16 @@ namespace Yttrium
                     size_t       i2rev = 1;
                     for(size_t i2=1;i2<=ip2;i2+=ip1)
                     {
-                        if (i2 < i2rev)
-                        {
-                            for (size_t i1=i2;i1<=i2+ip1-2;i1+=2)
+                        if(i2<i2rev) {
+                            const size_t i1max=i2+ip1-2;
+                            for (size_t i1=i2;i1<=i1max;i1+=2)
                             {
                                 for (size_t i3=i1;i3<=ip3;i3+=ip2)
                                     DFT::Swap2(data+i3,data+i2rev+i3-i2);
                             }
                         }
                         size_t ibit=ip2 >> 1;
-                        while (ibit >= ip1 && i2rev > ibit) {
+                        while(ibit >= ip1 && i2rev > ibit) {
                             i2rev -= ibit;
                             ibit >>= 1;
                         }
@@ -89,8 +92,8 @@ namespace Yttrium
                     long_T       wtemp = SinTable[iln2p1];
                     long_T       wpr   = DFT::Table<long_T>::CosMinusOne[iln2];
                     long_T       wpi   = SinTable[iln2];
-                    long_T       wr    = 1.0;
-                    long_T       wi    = 0.0;
+                    long_T       wr    = _1;
+                    long_T       wi    = _0;;
                     for(size_t i3=1;i3<=ifp1;i3+=ip1)
                     {
                         const size_t i1max = i3+ip1-2;
