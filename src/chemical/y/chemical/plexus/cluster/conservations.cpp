@@ -30,8 +30,7 @@ namespace Yttrium
         }
 
 
-
-        ClusterConservations:: ClusterConservations( XMLog &xml, const ClusterContent::Pointer &ptr) :
+        ClusterConservations:: ClusterConservations(XMLog &xml, const ClusterContent::Pointer &ptr) :
         ClusterTopology(xml,ptr),
         preserved(),
         ordinance(0),

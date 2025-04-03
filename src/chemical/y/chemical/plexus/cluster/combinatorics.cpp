@@ -223,6 +223,7 @@ namespace Yttrium
                     eq.fillTopology(eq(topx,SubLevel), SubLevel);
                     Y_XMLOG(xml,nu << " // " << eq.name);
                 }
+                Y_XMLOG(xml, "Nu=" << iNu);
             }
         }
 
