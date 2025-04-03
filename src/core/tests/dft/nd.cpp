@@ -40,8 +40,8 @@ namespace  {
 
                 const size_t  nn[] = { 0, F->width.y, F->width.x };
                 T * const data = (&F[1][1].re) - 1;
-                DFTN::Transform(data, nn, 2, 1);
-                DFTN::Transform(data, nn, 2, -1);
+                DFTN::Forward(data, nn, 2);
+                DFTN::Reverse(data, nn, 2);
 
                 //std::cerr << std::endl;
                 static const T half = 0.5;
@@ -76,7 +76,7 @@ namespace  {
             {
                 for(unit_t nz=1;nz<=Max3D;nz*=2)
                 {
-                    Field::Format3D  L = new Field::Layout3D( Field::Coord3D(1,1,1), Field::Coord3D(nx,ny,ny) );
+                    Field::Format3D  L = new Field::Layout3D( Field::Coord3D(1,1,1), Field::Coord3D(nx,ny,nz) );
                     typedef Field::In3D< Complex<T>, Memory::Dyadic > F3D;
                     F3D F("F3D",L);
                     std::cerr << F << std::endl;
@@ -96,10 +96,8 @@ namespace  {
                     const size_t  nn[] = { 0, F->width.z, F->width.y, F->width.x };
                     T * const     data = (&F[1][1][1].re) - 1;
 
-
-
-                    DFTN::Transform(data, nn, 3,  1);
-                    DFTN::Transform(data, nn, 3, -1);
+                    DFTN::Forward(data, nn, 3);
+                    DFTN::Reverse(data, nn, 3);
 
                     static const T half = 0.5;
                     for(unit_t k=F->lower.z;k<=F->upper.z;++k)

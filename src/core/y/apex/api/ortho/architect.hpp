@@ -17,17 +17,43 @@ namespace Yttrium
         namespace Ortho
         {
 
-
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! extract basis from row-major matrices
+            //
+            //
+            //__________________________________________________________________
             class Architect : public Metrics
             {
             public:
-                typedef Small::SoloHeavyList<size_t> List;
-                typedef List::NodeType               Node;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Small::SoloHeavyList<size_t> List; //!< alias
+                typedef List::NodeType               Node; //!< alias
 
-                explicit Architect(const size_t);
-                virtual ~Architect() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Architect(const size_t); //!< setup with metrics
+                virtual ~Architect() noexcept;    //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! extract indices of the first rows of M that form a basis up to maxRank
                 template <typename MATRIX> inline
                 const List & extract(const MATRIX &M, const size_t maxRank)
                 {
@@ -35,7 +61,6 @@ namespace Yttrium
                     clear();
                     const size_t n = M.rows;
                     const size_t d = Min(maxRank,dimensions);
-
 
                     for(size_t i=1;i<=n;++i)
                     {
@@ -47,6 +72,7 @@ namespace Yttrium
                     return ivList;
                 }
 
+                //! format target from extracted source
                 template <typename TARGET, typename SOURCE> inline
                 void extract(TARGET &      target,
                              const SOURCE &source,
@@ -60,8 +86,8 @@ namespace Yttrium
                         target[i].ld( source[ **node ] );
                 }
 
-
-                void clear() noexcept { family.reset(); ivList.free(); }
+                //! clear all
+                void clear() noexcept;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Architect);

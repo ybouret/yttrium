@@ -31,23 +31,24 @@ namespace Yttrium
             return prod;
         }
 
+
         //! Apply Transform
         /**
-         Replaces data by its ndim-dimensional discrete Fourier transform, if isign is input as 1.
-         nn[1..ndim] is an integer array containing the lengths of each dimension (number of complex
-         values), which MUST all be powers of 2. data is a real array of length twice the product of
+         - Replaces data by its ndim-dimensional discrete Fourier transform, if table = PositiveSin
+         - nn[1..ndim] is an integer array containing the lengths of each dimension (number of complex
+         values), which MUST all be powers of 2.
+         - data is a real array of length twice the product of
          these lengths, in which the data are stored as in a multidimensional complex array: real and
-         imaginary parts of each element are in consecutive locations, and the rightmost index of the
-         array increases most rapidly as one proceeds along data. For a two-dimensional array, this is
-         equivalent to storing the array by rows. If isign is input as−1, data is replaced by its inverse
+         imaginary parts of each element are in consecutive locations, in a row-major mode
          */
         template <typename T> static inline
         void Transform(T * const      data,
                        const size_t   nn[],
                        const unsigned dims,
-                       const int      isign)
+                       const typename DFT_Real<T>::Type * const SinTable) noexcept
         {
             typedef typename DFT_Real<T>::Type long_T;
+            assert(0!=SinTable);
             const size_t ntot = Prod(nn,dims);
             size_t       nprv = 1;
             for(unsigned idim=dims;idim>0;--idim)
@@ -66,9 +67,7 @@ namespace Yttrium
                             for (size_t i1=i2;i1<=i2+ip1-2;i1+=2)
                             {
                                 for (size_t i3=i1;i3<=ip3;i3+=ip2)
-                                {
                                     DFT::Swap2(data+i3,data+i2rev+i3-i2);
-                                }
                             }
                         }
                         size_t ibit=ip2 >> 1;
@@ -80,20 +79,22 @@ namespace Yttrium
                     }
                 }
 
-                size_t ifp1=ip1;
+
+                size_t ifp1  = ip1;
+                size_t iln2  = 0;
                 while (ifp1 < ip2)
                 {
-                    const size_t ifp2  = ifp1 << 1;
-                    //const long_T theta = isign*6.28318530717959/(ifp2/ip1);
-                    const long_T theta = isign*3.14159265358979323846264338327950288419716939937510582/(ifp1/ip1);
-                    long_T       wtemp = sin(0.5*theta);
-                    long_T wpr = -2.0*wtemp*wtemp;
-                    long_T wpi = sin(theta);
-                    long_T wr  = 1.0;
-                    long_T wi  = 0.0;
+                    const size_t ifp2   = ifp1 << 1;
+                    const size_t iln2p1 = iln2+1;
+                    long_T       wtemp = SinTable[iln2p1];
+                    long_T       wpr   = DFT::Table<long_T>::CosMinusOne[iln2];
+                    long_T       wpi   = SinTable[iln2];
+                    long_T       wr    = 1.0;
+                    long_T       wi    = 0.0;
                     for(size_t i3=1;i3<=ifp1;i3+=ip1)
                     {
-                        for (size_t i1=i3;i1<=i3+ip1-2;i1+=2)
+                        const size_t i1max = i3+ip1-2;
+                        for (size_t i1=i3;i1<=i1max;i1+=2)
                         {
                             for(size_t i2=i1;i2<=ip3;i2+=ifp2)
                             {
@@ -114,10 +115,32 @@ namespace Yttrium
                         wi=wi*wpr+wtemp*wpi+wi;
                     }
                     ifp1=ifp2;
+                    iln2=iln2p1;
                 }
                 nprv *= n;
             }
         }
+
+        //! Forward Transform
+        template <typename T> static inline
+        void Forward(T * const      data,
+                     const size_t   nn[],
+                     const unsigned dims) noexcept
+        {
+            typedef typename DFT_Real<T>::Type long_T;
+            Transform(data,nn,dims,DFT::Table<long_T>::PositiveSin);
+        }
+
+        //! Reverse Transform
+        template <typename T> static inline
+        void Reverse(T * const      data,
+                     const size_t   nn[],
+                     const unsigned dims) noexcept
+        {
+            typedef typename DFT_Real<T>::Type long_T;
+            Transform(data,nn,dims,DFT::Table<long_T>::NegativeSin);
+        }
+
     };
 
 }

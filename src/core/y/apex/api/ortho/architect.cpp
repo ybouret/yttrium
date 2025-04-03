@@ -34,6 +34,7 @@ namespace Yttrium
             }
 
 
+            void Architect:: clear() noexcept { family.reset(); ivList.free(); }
 
         }
 
