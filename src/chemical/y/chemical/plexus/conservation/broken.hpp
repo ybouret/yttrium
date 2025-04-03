@@ -43,6 +43,8 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
+
+                //! pretty show
                 std::ostream & show(std::ostream &os, const Assembly &assembly) const;
 
                 //______________________________________________________________

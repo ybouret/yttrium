@@ -10,10 +10,11 @@ namespace Yttrium
 {
     namespace Apex
     {
+        //! retrieving Natural Part for Natural/Integer
         struct NaturalPart
         {
-            static const Natural & Of(const Natural &) noexcept;
-            static const Natural & Of(const Integer &) noexcept;
+            static const Natural & Of(const Natural &_) noexcept; //!< return _
+            static const Natural & Of(const Integer &_) noexcept; //!< return _.n
 
         };
     }

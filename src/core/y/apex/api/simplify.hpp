@@ -11,14 +11,24 @@ namespace Yttrium
     namespace Apex
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Simplification of Array/denom
+        //
+        //
+        //______________________________________________________________________
         struct Simplify
         {
 
+            //! forward to overloaded function
             template <typename  T> static inline
             const Natural & Get(const T &_) noexcept {
                 return NaturalPart::Of(_);
             }
 
+            //! simplify array
             template <
             typename ARRAY,
             typename DENOM> static inline
