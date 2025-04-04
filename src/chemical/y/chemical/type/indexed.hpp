@@ -12,6 +12,11 @@ namespace Yttrium
     namespace Chemical
     {
 
+        // Top
+        // Sub
+        // Law
+        // Run
+
         //______________________________________________________________________
         //
         //
@@ -24,8 +29,8 @@ namespace Yttrium
         {
             TopLevel,  //!< global system
             SubLevel,  //!< sub systems
-            AuxLevel,  //!< auxiliary systems
-            SatLevel   //!< satellite systems
+            LawLevel,  //!< for canon of laws
+            RunLevel   //!< for characteristic
         };
 
         //______________________________________________________________________
@@ -45,7 +50,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t MaxLevel = SatLevel+1; //!< number of description levels
+            static const size_t MaxLevel = RunLevel+1; //!< number of description levels
 
 
             //__________________________________________________________________

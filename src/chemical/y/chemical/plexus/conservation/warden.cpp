@@ -57,16 +57,16 @@ namespace Yttrium
                     //
                     //----------------------------------------------------------
                     blist.free();
-                    canon.transfer(c0,AuxLevel,C0,L0);
+                    canon.transfer(c0,LawLevel,C0,L0);
 
                     for(const LNode *ln=canon.head;ln;ln=ln->next)
                     {
                         const Law &   law = **ln;
-                        const xreal_t xs  = law.excess(xadd,c0,AuxLevel);
+                        const xreal_t xs  = law.excess(xadd,c0,LawLevel);
                         if(xs>zero)
                         {
                             XWritable &cc = cproj[blist.size+1].ld(c0);
-                            law.project(xadd,cc,c0,AuxLevel);
+                            law.project(xadd,cc,c0,LawLevel);
                             const Broken broken(law,xs,cc);
                             blist << broken;
                             if(xml.verbose) display(   xml() << "[broken] ", broken) << std::endl;
@@ -110,7 +110,7 @@ namespace Yttrium
                             {
                                 const xreal_t  dc = (a->xn * best.xs) / law.denom;
                                 const Species &sp = a->sp;
-                                sp(injected,AuxLevel) << dc;
+                                sp(injected,LawLevel) << dc;
                                 manifest |= sp;
                             }
                         }
@@ -125,7 +125,7 @@ namespace Yttrium
                         {
                             BNode * const next = node->next;
                             Broken &      curr = **node;
-                            curr.xs = curr.law.excess(xadd,c0,AuxLevel);
+                            curr.xs = curr.law.excess(xadd,c0,LawLevel);
                             if(curr.xs<=zero)
                             {
                                 // drop
@@ -137,7 +137,7 @@ namespace Yttrium
                             {
                                 // keep with RELOADING before projection
                                 Y_XML_COMMENT(xml, "keep: " << curr.law.name);
-                                curr.law.project(xadd, curr.cc.ld(c0), c0, AuxLevel );
+                                curr.law.project(xadd, curr.cc.ld(c0), c0, LawLevel );
                             }
                             node=next;
                         }
@@ -158,7 +158,7 @@ namespace Yttrium
                     manifest.display<Species>( xml() << "manifest=") << std::endl;
                 }
 
-                canon.transfer(C0,L0,c0,AuxLevel);
+                canon.transfer(C0,L0,c0,LawLevel);
             }
 
         }

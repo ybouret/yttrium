@@ -72,14 +72,14 @@ namespace Yttrium
                 template <typename ARRAY> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr) const
                 {
-                    return ShowList(os,*species,sformat,AuxLevel, "\t[", arr, "]");
+                    return ShowList(os,*species,sformat,LawLevel, "\t[", arr, "]");
                 }
 
                 //! helper to show per species
                 template <typename ARRAY, typename PROC> inline
                 std::ostream & show(std::ostream &os, ARRAY &arr, PROC &fcn ) const
                 {
-                    return ShowList(os,*species,sformat,AuxLevel, "\t[", arr, "]",fcn);
+                    return ShowList(os,*species,sformat,LawLevel, "\t[", arr, "]",fcn);
                 }
 
                 //______________________________________________________________
@@ -89,8 +89,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const size_t   rank;    //!< rank
-                const AuxSList species; //!< Aux Level
-                const SatEList anxious; //!< definite with species
+                const LawSList species; //!< concerned species
+                const LawEList anxious; //!< definite with species
                 const Assembly sformat; //!< for species
                 Canon *        next;    //!< for list
                 Canon *        prev;    //!< for list

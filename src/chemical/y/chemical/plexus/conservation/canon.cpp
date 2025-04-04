@@ -211,7 +211,7 @@ namespace Yttrium
                         for(const LNode *ln=head;ln;ln=ln->next,++i)
                         {
                             const Law &law = **ln;
-                            law.fillArray(Q[i],AuxLevel);
+                            law.fillArray(Q[i],LawLevel);
                         }
                     }
                     Y_XMLOG(xml, "Q   =" << Q);
@@ -236,6 +236,14 @@ namespace Yttrium
                         Y_XMLOG(xml, "(*) " << eq);
                     }
                 }
+
+                iMatrix Nu(anxious->size,species->size);
+                for(const ENode *en=anxious->head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    eq.fillTopology( eq(Nu,LawLevel), LawLevel);
+                }
+                Y_XMLOG(xml, "Nu=" << Nu);
 
                 return;
 

@@ -63,11 +63,11 @@ namespace Yttrium
             const iMatrix  iNu;      //!< full topology, integer
             const XMatrix  xNu;      //!< full topology, xreal_t
             const ELists   order;    //!< equilibria ranked by order
-            const AuxEList definite; //!< list of definite
-            const AuxEList onlyProd; //!< list of onlyProd
-            const AuxEList onlyReac; //!< list of onlyReac
-            const AuxEList nebulous; //!< list of nebulous
-            
+            const RunEList definite; //!< list of definite
+            const RunEList onlyProd; //!< list of onlyProd
+            const RunEList onlyReac; //!< list of onlyReac
+            const RunEList nebulous; //!< list of nebulous
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ClusterCombinatorics);
             void createCombinations(XMLog      &xml,

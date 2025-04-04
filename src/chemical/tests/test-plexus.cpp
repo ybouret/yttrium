@@ -260,7 +260,7 @@ namespace Yttrium
                 Y_XML_SECTION(xml,"Janitor::Fix");
                 const xreal_t zero;
 
-                canon.transfer( cinit, AuxLevel, C0, L0);
+                canon.transfer( cinit, LawLevel, C0, L0);
                 if(xml.verbose) canon.show(xml() << "C0=",cinit,xreal_t::ToString) << std::endl;
 
                 Y_XML_COMMENT(xml, "detect broken");
@@ -268,13 +268,13 @@ namespace Yttrium
                 for(const LNode *ln=canon.head;ln;ln=ln->next)
                 {
                     const Law &   law = **ln;
-                    const xreal_t xs  = law.excess(xadd, cinit, AuxLevel);
+                    const xreal_t xs  = law.excess(xadd, cinit, LawLevel);
                     if(xs<=zero) {
                         Y_XMLOG(xml, "(-) " << law.name);
                         continue;
                     }
                     XWritable &cc =  cproj[blist.size+1].ld(cinit);
-                    law.project(xadd, cc, cinit, AuxLevel);
+                    law.project(xadd, cc, cinit, LawLevel);
                     const Broken broken(law,xs,cc);
                     blist << broken;
                     if( xml.verbose) broken.show( xml() << "(+) ",canon) << std::endl;

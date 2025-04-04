@@ -99,7 +99,7 @@ namespace Yttrium
                 {
                     (void) qFamily.increase();
                     basis << eq;
-                    Coerce(eq.indx[AuxLevel]) = basis.size;
+                    //Coerce(eq.indx[LawLevel]) = basis.size;
                     if(qFamily->size>=dof) break;
                 }
             }
