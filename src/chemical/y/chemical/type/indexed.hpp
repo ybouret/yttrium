@@ -29,7 +29,7 @@ namespace Yttrium
         {
             TopLevel,  //!< global system
             SubLevel,  //!< sub systems
-            LawLevel,  //!< for canon of laws
+            AuxLevel,  //!< for canon of laws
             RunLevel   //!< for characteristic
         };
 

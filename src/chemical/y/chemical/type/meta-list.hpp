@@ -325,8 +325,8 @@ namespace Yttrium
         typedef ParaList<SubLevel,SList>  SubSList; //!< alias
         typedef OrthoList<SubLevel,EList> SubEList; //!< alias
 
-        typedef ParaList<LawLevel,SList>  LawSList; //!< alias
-        typedef OrthoList<LawLevel,EList> LawEList; //!< alias
+        typedef ParaList<AuxLevel,SList>  AuxSList; //!< alias
+        typedef OrthoList<AuxLevel,EList> AuxEList; //!< alias
 
         typedef OrthoList<RunLevel,EList> RunEList; //!< alias
 
