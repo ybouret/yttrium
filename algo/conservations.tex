@@ -1,0 +1,61 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+\usepackage{mathptmx}
+\usepackage{bookman}
+\usepackage{esint}
+\usepackage{xfrac}  	 
+	 
+\newcommand{\half}{\frac{1}{2}}
+	 
+\begin{document}
+
+\section{Conservations}
+
+\subsection{One Conservation}
+
+Let us assume that the conservation $\vec \alpha \in \mathbb{N}_\ast^M$ is not fulfilled:
+
+\begin{equation}
+	\langle \vec \alpha \vert \vec C \rangle = - X_s, \; X_s > 0
+\end{equation}
+
+We also assume that this conservation concerned a set of $N$ equilibrium(a) (with possible combination(s))
+with a topology:
+\begin{equation}
+	\bm \nu \in \mathcal{M}_{N,M}  \end{equation}
+and:
+
+\begin{equation}
+	 \bm \nu ^T \vec \alpha = \vec 0
+\end{equation}
+
+The conservation correction is:
+\begin{equation}
+	\delta \vec C =  \dfrac{X_s}{\vec\alpha^2} \vec \alpha
+\end{equation}
+and we obtain:
+\begin{equation}
+	\vec C ' = \vec C + \delta \vec{C}
+\end{equation}
+	
+Now we want to build a new concentrations with zeroed species
+that are involved with $\vec \alpha$:
+\begin{equation}
+	\vec C '' = \vec C' + \bm\nu^T \vec \xi = 
+	\left\lbrace
+	\begin{array}{rl}
+	0 & \iff \alpha_j=0\\
+	C'_j + .. & \iff \alpha_j>0\\
+	 \end{array}
+	\right.
+\end{equation}
+
+ 
+
+
+\end{document}

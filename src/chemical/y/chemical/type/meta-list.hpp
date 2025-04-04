@@ -327,6 +327,7 @@ namespace Yttrium
 
         typedef ParaList<AuxLevel,SList>  AuxSList; //!< alias
         typedef OrthoList<AuxLevel,EList> AuxEList; //!< alias
+        typedef OrthoList<SatLevel,EList> SatEList; //!< alias
 
     }
 

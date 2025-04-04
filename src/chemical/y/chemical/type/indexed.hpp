@@ -22,9 +22,10 @@ namespace Yttrium
         //______________________________________________________________________
         enum Level
         {
-            TopLevel, //!< global system
-            SubLevel, //!< sub systems
-            AuxLevel  //!< aux systems
+            TopLevel,  //!< global system
+            SubLevel,  //!< sub systems
+            AuxLevel,  //!< auxiliary systems
+            SatLevel   //!< satellite systems
         };
 
         //______________________________________________________________________
@@ -44,7 +45,7 @@ namespace Yttrium
             // Definitions
             //
             //__________________________________________________________________
-            static const size_t MaxLevel = AuxLevel+1; //!< number of description levels
+            static const size_t MaxLevel = SatLevel+1; //!< number of description levels
 
 
             //__________________________________________________________________

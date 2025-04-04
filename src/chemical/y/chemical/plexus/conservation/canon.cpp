@@ -219,8 +219,27 @@ namespace Yttrium
                     Y_XMLOG(xml, "rank=" << rank);
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // collect definite into anxious
+                //
+                //
+                //--------------------------------------------------------------
+                Y_XML_COMMENT(xml, "anxious");
+                for(const ENode *en=definite.head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    if(eq.gotAnyOf(*species))
+                    {
+                        Coerce(anxious) << eq;
+                        Y_XMLOG(xml, "(*) " << eq);
+                    }
+                }
+
                 return;
 
+#if 0
                 //--------------------------------------------------------------
                 //
                 //
@@ -352,26 +371,10 @@ namespace Yttrium
 
 
                 }
+#endif
 
 
 
-                //--------------------------------------------------------------
-                //
-                //
-                // collect definite into anxious
-                //
-                //
-                //--------------------------------------------------------------
-                Y_XML_COMMENT(xml, "anxious");
-                for(const ENode *en=definite.head;en;en=en->next)
-                {
-                    const Equilibrium &eq = **en;
-                    if(eq.gotAnyOf(*species))
-                    {
-                        Coerce(anxious) << eq;
-                        Y_XMLOG(xml, "(*) " << eq);
-                    }
-                }
 
             }
 

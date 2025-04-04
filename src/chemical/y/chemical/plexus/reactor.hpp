@@ -100,9 +100,9 @@ namespace Yttrium
             XArrays          xiArr;    //!< xiArr[[1:1],...,[1:n]]
             XMatrices        phiArr;   //!< phiArr[ [1:m],...,[n:m] ]
             XMatrices        jacArr;   //!< jacArr[ [1:1],...,[n:n]  ]
-            Strings         profiles;  //!< save guess names
-            Reactor *       next;      //!< for list
-            Reactor *       prev;      //!< for list
+            Strings          profiles;  //!< save guess names
+            Reactor *        next;      //!< for list
+            Reactor *        prev;      //!< for list
 
             
         private:

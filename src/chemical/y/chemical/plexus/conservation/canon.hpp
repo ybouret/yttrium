@@ -90,7 +90,7 @@ namespace Yttrium
                 //______________________________________________________________
                 const size_t   rank;    //!< rank
                 const AuxSList species; //!< Aux Level
-                const EList    anxious; //!< definite with species
+                const SatEList anxious; //!< definite with species
                 const Assembly sformat; //!< for species
                 Canon *        next;    //!< for list
                 Canon *        prev;    //!< for list
