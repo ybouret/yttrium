@@ -102,6 +102,47 @@ namespace Yttrium
 
             }
 
+            static inline
+            SignType CompareBroken(const BNode * const lhs,
+                                   const BNode * const rhs) noexcept
+            {
+                const xreal_t zero;
+                const Broken &L = **lhs;
+                const Broken &R = **rhs;
+                const xreal_t lxs = L.xs;
+                const xreal_t rxs = R.xs;
+                
+                if(lxs<=zero)
+                {
+                    if(rxs<=zero)
+                    {
+                        // then ordered by index
+                        return Sign::Of(L.law.auxId,R.law.auxId);
+                    }
+                    else
+                    {
+                        assert(lxs<rxs);
+                        return Positive;
+                    }
+                }
+                else
+                {
+                    // lxs >  0
+                    if(rxs<=zero)
+                    {
+                        assert(rxs<lxs);
+                        return Negative;
+                    }
+                    else
+                    {
+                        // decreasing comparison
+                        return Sign::Of(rxs,lxs);
+                    }
+                }
+
+            }
+
+
             void Warden:: fix(XMLog     &  xml,
                               XWritable &  C0,
                               const Level  L0,
@@ -109,26 +150,47 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,"Warden::Fix");
                 const xreal_t zero;
+
+                // initialize
                 blist.free();
                 basis.free();
                 qfamily.reset();
 
-                Y_XML_COMMENT(xml,"probing...");
+                // probe
+                size_t numBroken = 0;
                 for(const LNode *ln=canon.head;ln;ln=ln->next)
                 {
-                    const Law &  law = **ln;
-                    const xreal_t xs = law.excess(xadd, C0, L0); if(xs<=zero) continue;
-                    blist << Broken(xs,law);
-                    if(xml.verbose) (**blist.tail).show( xml() << "(+) ",canon) << std::endl;
-                    law.sendTo(vanishing);
+                    const Law &   law = **ln;
+                    const xreal_t lxs = law.excess(xadd, C0, L0);
+                    if(lxs>zero)
+                    {
+                        ++numBroken;
+                        law.sendTo(vanishing);
+                    }
+                    const Broken broken(lxs,law);
+                    blist << broken;
+                }
+                assert(canon.size==blist.size);
+
+                // sort
+                MergeSort::Call(blist,CompareBroken);
+                Y_XML_COMMENT(xml, "broken " << numBroken << " / " << canon.size );
+                if(xml.verbose)
+                {
+                    for(const BNode *bn=blist.head;bn;bn=bn->next)
+                    {
+                        const Broken &     broken = **bn;
+                        const char * const prefix = (broken.xs<=zero) ? "(+)" : "(-)";
+                        (**bn).show( xml() << prefix << ' ',canon) << std::endl;
+                    }
                 }
 
+                if(numBroken<=0) return;
 
-                Y_XML_COMMENT(xml, "broken " << blist.size << " / " << canon.size );
-                if(blist.size<=0) return;
 
-                const size_t     dof = Min(canon.rank,blist.size);
-                Y_XML_COMMENT(xml,"extract basis with max d.o.f= " << dof << " / " << canon.rank);
+
+                Y_XML_COMMENT(xml,"extract basis");
+
                 for(const BNode *bn  = blist.head;bn;bn=bn->next)
                 {
                     const Broken &broken = **bn;
@@ -136,10 +198,9 @@ namespace Yttrium
                     if(qfamily.welcomes( canon.iAlpha[law.auxId]) )
                     {
                         if(xml.verbose) broken.show( xml() << "(*) ",canon) << std::endl;
-
                         qfamily.increase();
                         basis << broken;
-                        if(qfamily->size>=dof) goto FOUND_BASIS;
+                        if(qfamily->size>=canon.rank) goto FOUND_BASIS;
                     }
 
                 }
@@ -182,6 +243,7 @@ namespace Yttrium
                 MKL::LU<xreal_t> lu(canon.rank);
 
                 if(!lu.build(AA)) throw Specific::Exception("Warden","corrupted singular");
+
                 lu.solve(AA,X);
                 for(const SNode *sn=canon.species->head;sn;sn=sn->next)
                 {
@@ -195,18 +257,12 @@ namespace Yttrium
                     Cj = xadd.sum();
                 }
 
-
-
                 for(const LNode *ln=canon.head;ln;ln=ln->next)
                 {
                     const Law &   law = **ln;
                     const xreal_t xs  = law.excess(xadd,C0,L0);
-
                     canon.pad(std::cerr << law.name, law) << " @" << xs.str() << std::endl;
-                    
-
                 }
-
 
 
 
