@@ -72,7 +72,7 @@ Y_UTEST(plexus)
                 eqz.fix(xml, C0, TopLevel, vanishing);
             }
         }
-        vanishing.display<Species>(std::cerr) << std::endl;
+        //vanishing.display<Species>(std::cerr) << std::endl;
     }
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
