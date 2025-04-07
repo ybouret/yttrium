@@ -6,7 +6,7 @@
 
 #include "y/mkl/complex.hpp"
 #include "y/calculus/exact-shift.hpp"
-
+#include "y/memory/out-of-reach.hpp"
 #include "y/dft/fmt/_4.hpp"
 #include "y/dft/fmt/_8.hpp"
 #include "y/dft/fmt/_16.hpp"
@@ -140,7 +140,7 @@ namespace Yttrium
         template <typename T, typename FMT> static inline
         size_t Format(T data[]) noexcept
         {
-            static const SwapInfo * const InfoTab = (const SwapInfo *)& FMT::Table[0][0];
+            static const SwapInfo * const InfoTab = (const SwapInfo *) Memory::OutOfReach::Addr(& FMT::Table[0][0]);
             static const size_t           Request = 2 * sizeof(T);
             void         *                tmp[ Y_WORDS_GEQ(Request) ];
 
@@ -165,7 +165,7 @@ namespace Yttrium
         template <typename T, typename FMT> static inline
         size_t Format(T data1[], T data2[]) noexcept
         {
-            static const SwapInfo * const InfoTab = (const SwapInfo *)& FMT::Table[0][0];
+            static const SwapInfo * const InfoTab = (const SwapInfo *) Memory::OutOfReach::Addr(& FMT::Table[0][0]);
             static const size_t           Request = 2 * sizeof(T);
             const void         *          tmp[ Y_WORDS_GEQ(Request) ];
 
