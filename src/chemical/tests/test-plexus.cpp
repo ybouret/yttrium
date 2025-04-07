@@ -332,7 +332,9 @@ Y_UTEST(plexus)
     bool           verbose = true;
     XMLog          xml(verbose);
     Clusters       cls(xml,eqs,0.0);
-    Conservation::Wardens wardens(cls);
+
+
+    //Conservation::Wardens wardens(cls);
 
     std::cerr << "lib=" << lib << std::endl;
     cls.graphViz("cs");

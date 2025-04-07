@@ -36,20 +36,52 @@ and:
 
 The conservation correction is:
 \begin{equation}
-	\delta \vec C =  \dfrac{X_s}{\vec\alpha^2} \vec \alpha
+	\delta \vec C =  \dfrac{X_s}{\vec\alpha^2} \vec \alpha  
 \end{equation}
 and we obtain:
 \begin{equation}
 	\vec C ' = \vec C + \delta \vec{C}
 \end{equation}
-	
-Now we want to build a new concentrations with zeroed species
-that are involved with $\vec \alpha$:
+ 
+\subsection{Multiple Conservations}
+
 \begin{equation}
-	\vec C '' = \vec C' + \bm\nu^T \vec \xi 
+	\forall i \in [1:n], \; \langle \vec \alpha_i \vert \vec C \rangle = -X_i, \; X_i > 0
 \end{equation}
 
- 
+We look for the minimal $\delta \vec  C$ such that:
 
+\begin{equation}
+	\forall i \in [1:n], \; \langle \vec \alpha_i \vert \vec C + \delta \vec C \rangle = 0 = \langle \vec \alpha_i \vert \delta \vec C \rangle - X_i
+\end{equation}
+
+\begin{equation}
+	L(\delta \vec C) = \dfrac{1}{2} \delta \vec C ^2 - \sum_i\lambda_i \left( \langle \vec \alpha_i \vert \delta \vec C \rangle - X_i\right)
+\end{equation}
+
+\begin{equation}
+	\vec 0 = \delta \vec C - \sum_i \lambda_i \vec\alpha_i
+\end{equation}
+
+\begin{equation}
+	\bm{A} = 
+	\begin{bmatrix}
+	\vdots\\
+	\langle \vec \alpha_i \vert \\
+	\vdots
+	\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+	\delta \vec C = \bm{A}^T \vec \lambda
+\end{equation}
+
+\begin{equation}
+	\bm{A} \delta \vec C = \vec X = \left(\bm{A} \bm{A}^T\right) \lambda
+\end{equation}
+
+\begin{equation}
+	\delta \vec{C} = \bm{A}^T \left(\bm{A} \bm{A}^T\right)^{-1} \vec{X} = \bm{A}^T \left(\bm{A} \bm{A}^T\right)^{-1} \bm{A} \vec{C}
+\end{equation}
 
 \end{document}
