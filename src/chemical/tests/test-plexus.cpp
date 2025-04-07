@@ -8,32 +8,8 @@
 
 
 #include "y/chemical/plexus/conservation/warden.hpp"
+#include "y/chemical/plexus/equalizer.hpp"
 
-#include "y/chemical/plexus/equalizer/extents.hpp"
-#include "y/system/exception.hpp"
-
-
-
-
-namespace Yttrium
-{
-    namespace Chemical
-    {
-
-        namespace Conservation
-        {
-
-         
-         
-
-
-
-
-        }
-
-    }
-
-}
 
 
 

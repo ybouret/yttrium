@@ -1,4 +1,17 @@
 
+//! \file
+
+
+#ifndef Y_Chemical_Reactor_Included
+#define Y_Chemical_Reactor_Included 1
+
+
+#include "y/chemical/plexus/cluster.hpp"
+#include "y/chemical/plexus/extents.hpp"
+
+
+
+
 namespace Yttrium
 {
     namespace Chemical
@@ -204,3 +217,6 @@ namespace Yttrium
 
     }
 }
+
+
+#endif
