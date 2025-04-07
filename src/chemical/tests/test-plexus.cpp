@@ -6,8 +6,14 @@
 #include "y/random/mt19937.hpp"
 #include "y/stream/libc/output.hpp"
 
+
+#include "y/chemical/plexus/conservation/broken.hpp"
+
 #include "y/chemical/plexus/equalizer/extents.hpp"
 #include "y/system/exception.hpp"
+
+
+
 
 namespace Yttrium
 {
@@ -17,47 +23,7 @@ namespace Yttrium
         namespace Conservation
         {
 
-            class Broken
-            {
-            public:
-                Broken(const xreal_t &_xs,
-                       const Law     &_law) noexcept;
-                ~Broken() noexcept;
-                Broken(const Broken &) noexcept;
-
-                std::ostream & show(std::ostream &os, const Assembly &fmt) const
-                {
-                    fmt.pad(os << law.name, law) << " @" << xs.str();
-                    return os;
-                }
-
-                const xreal_t  xs;
-                const Law    &law;
-
-            private:
-                Y_DISABLE_ASSIGN(Broken);
-            };
-
-            Broken:: Broken(const xreal_t &_xs,
-                            const Law     &_law) noexcept :
-            xs(_xs),
-            law(_law)
-            {
-            }
-
-
-            Broken:: Broken(const Broken &_) noexcept :
-            xs(_.xs),
-            law(_.law)
-            {
-            }
-
-            Broken:: ~Broken() noexcept {}
-
-            typedef Small::CoopHeavyList<Broken> BList;
-            typedef BList::NodeType              BNode;
-            typedef BList::ProxyType             BBank;
-
+         
             class Warden
             {
             public:
