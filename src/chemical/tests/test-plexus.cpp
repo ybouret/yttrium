@@ -203,7 +203,7 @@ namespace Yttrium
                     const xreal_t xs  = law.excess(xadd,C0,L0);
 
                     canon.pad(std::cerr << law.name, law) << " @" << xs.str() << std::endl;
-
+                    
 
                 }
 
