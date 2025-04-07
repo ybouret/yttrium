@@ -4,9 +4,9 @@
 #ifndef Y_Chemical_Reactor_Included
 #define Y_Chemical_Reactor_Included 1
 
-#include "y/chemical/plexus/cluster.hpp"
+#include "y/chemical/type/ortho.hpp"
 #include "y/chemical/reactive/aftermath.hpp"
-#include "y/apex/api/ortho/family.hpp"
+#include "y/chemical/plexus/cluster.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/algebra/lu.hpp"
 
@@ -24,10 +24,7 @@ namespace Yttrium
         //______________________________________________________________________
         typedef Small::SoloHeavyList<Outcome> OutList;  //!< alias
         typedef OutList::NodeType             OutNode;  //!< alias
-        typedef Apex::Ortho::Vector           QVector;  //!< alias
-        typedef Apex::Ortho::Family           QFamily;  //!< alias
-        typedef Apex::Ortho::VCache           QVCache;  //!< alias
-        typedef Apex::Ortho::Metrics          QMetrics; //!< alias
+    
 
         typedef Vector<String,MemoryModel>    Strings;  //!< alias
 

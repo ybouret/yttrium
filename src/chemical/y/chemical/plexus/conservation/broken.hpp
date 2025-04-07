@@ -2,7 +2,7 @@
 
 //! \file
 
-#ifndef Y_Chemical_Conservation_Borken_Included
+#ifndef Y_Chemical_Conservation_Broken_Included
 #define Y_Chemical_Conservation_Broken_Included 1
 
 #include "y/chemical/plexus/conservation/canon.hpp"
@@ -25,7 +25,7 @@ namespace Yttrium
                 ~Broken() noexcept;
                 Broken(const Broken &) noexcept;
 
-                //! show witch canon for format
+                //! show with canon for format
                 std::ostream & show(std::ostream &, const Assembly &) const;
 
                 const xreal_t  xs;
