@@ -55,14 +55,22 @@ Y_UTEST(plexus)
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     AddressBook vanishing;
+    EqzBanks    banks;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
         vanishing.free();
         for(const Conservation::Canon *canon=cl->canons.head;canon;canon=canon->next)
         {
-            Conservation::Warden warden(*cl,*canon);
-            warden.fix(xml, C0, I0, TopLevel, vanishing);
+            {
+                Conservation::Warden warden(*cl,*canon);
+                warden.fix(xml, C0, I0, TopLevel, vanishing);
+            }
+
+            {
+                CanonEqualizer eqz(*cl,*canon,banks);
+                eqz.fix(xml, C0, TopLevel, vanishing);
+            }
         }
         vanishing.display<Species>(std::cerr) << std::endl;
     }

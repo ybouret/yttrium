@@ -2,20 +2,81 @@
 //! \file
 
 
-#ifndef Y_Chemical_Reactor_Included
-#define Y_Chemical_Reactor_Included 1
+#ifndef Y_Chemical_Equalizer_Included
+#define Y_Chemical_Equalizer_Included 1
 
 
 #include "y/chemical/plexus/cluster.hpp"
-#include "y/chemical/plexus/extents.hpp"
-
-
-
+#include "y/chemical/plexus/equalizer/extents.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        class CanonEqualizer
+        {
+        public:
+
+            explicit CanonEqualizer(const Cluster               &_cluster,
+                                    const Conservation::Canon   &_canon,
+                                    const EqzBanks              &banks) :
+            cluster( _cluster ),
+            canon( _canon ),
+            extents(banks),
+            nrows( canon.anxious->size ),
+            ncols( cluster->species->size)
+            {
+
+            }
+
+            virtual ~CanonEqualizer() noexcept
+            {
+
+            }
+
+            void fix(XMLog             &xml,
+                     XWritable         &C0,
+                     const Level        L0,
+                     const AddressBook &vanishing);
+
+
+            const Cluster &             cluster;
+            const Conservation::Canon & canon;
+            Extents                     extents;
+            const size_t                nrows;
+            const size_t                ncols;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(CanonEqualizer);
+        };
+
+
+        void CanonEqualizer:: fix(XMLog             &xml,
+                                  XWritable         &C0,
+                                  const Level        L0,
+                                  const AddressBook &vanishing)
+        {
+            for(const ENode *en=cluster.definite->head;en;en=en->next)
+            {
+                const Equilibrium &eq   = **en;
+                const Resultant    res  = extents(xml,eq,C0,L0, & cluster.wandering );
+
+
+                switch(res)
+                {
+                    case Correct: continue;
+                    case BadBoth: continue;
+                    case BadReac: break;
+                    case BadProd: break;
+                }
+
+            }
+
+
+        }
+
+
 #if 0
         class Gain
         {
