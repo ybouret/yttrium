@@ -205,17 +205,18 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 {
                     Y_XML_COMMENT(xml, "rank");
-                    Matrix<apq> Q(size,species->size);
+                    iMatrix    &iA = Coerce(iAlpha);
+                    XMatrix    &xA = Coerce(xAlpha);
+                    iA.make(size,species->size);
+                    xA.make(size,species->size);
+                    for(const LNode *ln=head;ln;ln=ln->next)
                     {
-                        size_t i=1;
-                        for(const LNode *ln=head;ln;ln=ln->next,++i)
-                        {
-                            const Law &law = **ln;
-                            law.fillArray(Q[i],AuxLevel);
-                        }
+                        const Law &law = **ln;
+                        law.iFillArray(iA[law.auxId], AuxLevel);
+                        law.xFillArray(xA[law.auxId], AuxLevel);
                     }
-                    Y_XMLOG(xml, "Q   =" << Q);
-                    Coerce(rank) = Rank::Compute(Q);
+                    Y_XMLOG(xml, "A   =" << iA);
+                    Coerce(rank) = Rank::Of(iA);
                     Y_XMLOG(xml, "rank=" << rank);
                 }
 
@@ -237,146 +238,7 @@ namespace Yttrium
                     }
                 }
                 
-
-                return;
-
-#if 0
-                //--------------------------------------------------------------
-                //
-                //
-                // compute all possibilities
-                //
-                //
-                //--------------------------------------------------------------
-                LU<apq>      lu(rank);
-                const size_t n = size;
-                const size_t m = species->size;
-                const apq    q0;
-
-                for(size_t k=1;k<=rank;++k)
-                {
-                    Matrix<apz> A(k,m);
-                    Matrix<apq> A2(k,k);
-                    Matrix<apq> Q2(k,k); // to test rank
-                    Matrix<apq> adjA2(k,k);
-                    Matrix<apz> A3(k,m); // adjA2 * A
-                    Matrix<apz> A4(m,m); // A' * A3
-
-                    LightArray<apz> tab = A4.asArray();
-
-                    ProjectionMap pmap;
-
-                    size_t      nmat = 0;
-                    size_t      ndif = 0;
-                    Combination comb(n,k);
-                    Y_XML_SECTION_OPT(xml,"Projection", "rank=" << k << " maxi=" << comb.total);
-
-                    do
-                    {
-                        A.ld(q0);
-                        for(size_t i=1;i<=k;++i)
-                        {
-                            const Law &law = **fetch( comb[i] );
-                            law.fillArray(A[i],AuxLevel);
-                        }
-
-                        for(size_t i=k;i>0;--i)
-                        {
-                            const Readable<apz> &Ai = A[i];
-                            for(size_t j=i;j>0;--j)
-                            {
-                                const Readable<apz> &Aj = A[j];
-                                apz sum = 0; for(size_t l=m;l>0;--l) sum += Ai[l] * Aj[l];
-                                A2[i][j] = A2[j][i] = sum;
-                            }
-                        }
-
-                        Q2.assign(A2);
-                        if(k!=Rank::Compute(Q2))
-                        {
-                            std::cerr << "// drop " << comb << std::endl;
-                            continue;
-                        }
-                        ++nmat;
-
-                        //std::cerr << "A="  << A  << std::endl;
-                        //std::cerr << "A2=" << A2 << std::endl;
-                        lu.adjoint(adjA2,A2);
-                        if(!lu.build(A2)) throw Specific::Exception("Chemical::Canon","corrupted Gram Matrix!!");
-                        const apz detA2 = lu.determinant(A2);
-                        //std::cerr << "adjA2=" << adjA2 << std::endl;
-                        //std::cerr << "detA2=" << detA2 << std::endl;
-
-                        for(size_t i=k;i>0;--i)
-                        {
-                            for(size_t j=m;j>0;--j)
-                            {
-                                apz sum = 0;
-                                for(size_t l=k;l>0;--l)
-                                {
-                                    sum += adjA2[i][l].numer * A[l][j];
-                                }
-                                A3[i][j] = sum;
-                            }
-                        }
-                        //std::cerr << "A3=" << A3 << std::endl;
-
-                        for(size_t i=m;i>0;--i)
-                        {
-                            for(size_t j=i;j>0;--j)
-                            {
-                                apz sum = 0;
-                                for(size_t l=k;l>0;--l)
-                                {
-                                    sum -= A[l][i] * A3[l][j];
-                                }
-                                if(i==j) sum += detA2;
-                                A4[i][j] = A4[j][i] = sum;
-                            }
-                        }
-                        Apex::Simplify::Array(tab,detA2);
-                        std::cerr << "A4=" << A4 << "/" << detA2 << " //" << comb << std::endl;
-
-                        const ProjectionMatrix::Pointer lhs( new ProjectionMatrix(A4,detA2));
-                        const ProjectionKey             key = comb;
-                        //std::cerr << comb << "=>"; key.displayHexadecimal(std::cerr) << std::endl;
-
-                        bool found = false;
-                        for(ProjectionMap::Iterator it=pmap.begin();it!=pmap.end();++it)
-                        {
-                            const ProjectionMatrix::Pointer &rhs = *it;
-                            if( *lhs == *rhs )
-                            {
-                                found = true;
-                                if(!pmap.insert(key,rhs)) throw Exception("couldn't insert");
-                                break;
-                            }
-                        }
-
-                        if(!found)
-                        {
-                            if(!pmap.insert(key,lhs)) throw Exception("couldn't insert");
-                            ++ndif;
-                        }
-
-
-
-
-
-
-                    } while( comb.next() );
-                    Y_XML_COMMENT(xml, "found " << nmat << " / " << comb.total << " ==> " << ndif );
-                    //Y_XML_COMMENT(xml, "sizeof ProjectionMatrix = " << sizeof(ProjectionMatrix) );
-                    //Y_XML_COMMENT(xml, "sizeof ProjectionKey    = " << sizeof(ProjectionKey) );
-
-
-
-                }
-#endif
-
-
-
-
+                
             }
 
         }

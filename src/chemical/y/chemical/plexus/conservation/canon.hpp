@@ -92,6 +92,8 @@ namespace Yttrium
                 const AuxSList species; //!< concerned species
                 const AuxEList anxious; //!< definite with species
                 const Assembly sformat; //!< for species
+                const iMatrix  iAlpha;  //!< alpha(size,species->size)
+                const XMatrix  xAlpha;  //!< using xreal_t
                 Canon *        next;    //!< for list
                 Canon *        prev;    //!< for list
 

@@ -7,7 +7,7 @@
 #include "y/stream/libc/output.hpp"
 
 #include "y/chemical/plexus/equalizer/extents.hpp"
-
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -54,15 +54,15 @@ namespace Yttrium
 
             Broken:: ~Broken() noexcept {}
 
-            typedef Small::SoloHeavyList<Broken> BList;
+            typedef Small::CoopHeavyList<Broken> BList;
             typedef BList::NodeType              BNode;
-
+            typedef BList::ProxyType             BBank;
 
             class Warden
             {
             public:
-                explicit Warden(const Cluster &_cluster,
-                                const Canon   &_canon);
+                explicit Warden(const Cluster  &_cluster,
+                                const Canon    &_canon);
 
                 virtual ~Warden() noexcept;
 
@@ -73,8 +73,13 @@ namespace Yttrium
 
                 const Cluster &cluster;
                 const Canon   &canon;
+                BBank          bbank;
                 BList          blist;
+                BList          basis;
                 XAdd           xadd;
+                const QMetrics metrics;
+                QVCache        qvcache;
+                QFamily        qfamily;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
@@ -86,8 +91,13 @@ namespace Yttrium
                             const Canon   &_canon) :
             cluster(_cluster),
             canon(_canon),
-            blist(),
-            xadd()
+            bbank(),
+            blist(bbank),
+            basis(bbank),
+            xadd(),
+            metrics( canon.species->size ),
+            qvcache( new QVector::Cache(metrics) ),
+            qfamily(qvcache)
             {
 
             }
@@ -99,18 +109,109 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,"Warden::Fix");
                 const xreal_t zero;
-
                 blist.free();
+                basis.free();
+                qfamily.reset();
+
+                Y_XML_COMMENT(xml,"probing...");
                 for(const LNode *ln=canon.head;ln;ln=ln->next)
                 {
                     const Law &  law = **ln;
                     const xreal_t xs = law.excess(xadd, C0, L0); if(xs<=zero) continue;
                     blist << Broken(xs,law);
-                    //const size_t  ii = vanishing.size+1;
-                    //law.fillArray(A[ii], AuxLevel);
                     if(xml.verbose) (**blist.tail).show( xml() << "(+) ",canon) << std::endl;
                     law.sendTo(vanishing);
                 }
+
+
+                Y_XML_COMMENT(xml, "broken " << blist.size << " / " << canon.size );
+                if(blist.size<=0) return;
+
+                const size_t     dof = Min(canon.rank,blist.size);
+                Y_XML_COMMENT(xml,"extract basis with max d.o.f= " << dof << " / " << canon.rank);
+                for(const BNode *bn  = blist.head;bn;bn=bn->next)
+                {
+                    const Broken &broken = **bn;
+                    const Law    &law    = broken.law;
+                    if(qfamily.welcomes( canon.iAlpha[law.auxId]) )
+                    {
+                        if(xml.verbose) broken.show( xml() << "(*) ",canon) << std::endl;
+
+                        qfamily.increase();
+                        basis << broken;
+                        if(qfamily->size>=dof) goto FOUND_BASIS;
+                    }
+
+                }
+
+            FOUND_BASIS:
+                const size_t n = basis.size;
+                const size_t m = metrics.dimensions;
+                XMatrix      A(n,m);
+                XMatrix      AT(m,n);
+                XMatrix      AA(n,n);
+                XArray       X(n,zero);
+                {
+                    size_t i=1;
+                    for(const BNode *lhs=basis.head;lhs;lhs=lhs->next,++i)
+                    {
+                        const Broken     & L       = **lhs;
+                        XMatrix::RowType & AA_i    = AA[i];
+                        const XReadable  & alpha_i = canon.xAlpha[ L.law.auxId];
+                        A[i].ld(alpha_i);
+                        X[i]  = L.xs;
+                        {
+                            size_t j=i;
+                            for(const BNode *rhs=lhs;rhs;rhs=rhs->next,++j)
+                            {
+                                const Broken     & R       = **rhs;
+                                const XReadable  & alpha_j = canon.xAlpha[ R.law.auxId];
+                                AA[j][i] = AA_i[j] = xadd.dot(alpha_i,alpha_j);
+                            }
+                        }
+                    }
+                }
+
+                AT.assign(TransposeOf,A);
+
+                std::cerr << "A =" << A  << std::endl;
+                std::cerr << "AA=" << AA << std::endl;
+                std::cerr << "X="  << X << std::endl;
+                std::cerr << "dC=A'*inv(AA)*X" << std::endl;
+
+                MKL::LU<xreal_t> lu(canon.rank);
+
+                if(!lu.build(AA)) throw Specific::Exception("Warden","corrupted singular");
+                lu.solve(AA,X);
+                for(const SNode *sn=canon.species->head;sn;sn=sn->next)
+                {
+                    const Species   &sp  = **sn;
+                    const size_t     j   = sp.indx[AuxLevel];
+                    const XReadable &lhs = AT[j];
+                    xreal_t         &Cj  = sp(C0,L0);
+                    xadd.free();
+                    xadd << Cj;
+                    for(size_t i=n;i>0;--i) xadd << (lhs[i]*X[i]);
+                    Cj = xadd.sum();
+                }
+
+
+
+                for(const LNode *ln=canon.head;ln;ln=ln->next)
+                {
+                    const Law &   law = **ln;
+                    const xreal_t xs  = law.excess(xadd,C0,L0);
+
+                    canon.pad(std::cerr << law.name, law) << " @" << xs.str() << std::endl;
+
+
+                }
+
+
+
+
+
+
 
             }
 

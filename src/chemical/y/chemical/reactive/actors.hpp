@@ -70,12 +70,20 @@ namespace Yttrium
                 return target;
             }
 
-            //! fill array with coefficient, assuming array is zeroed
+            //! fill array with coefficients, assuming array is zeroed
             template <typename ARRAY> inline
-            void fillArray(ARRAY &arr, const Level L) const
+            void iFillArray(ARRAY &arr, const Level L) const
             {
                 for(const Actor *a=my.head;a;a=a->next) a->sp(arr,L) = a->nu;
             }
+
+            //! fill array with coefficients, assuming array is zeroed
+            template <typename ARRAY> inline
+            void xFillArray(ARRAY &arr, const Level L) const
+            {
+                for(const Actor *a=my.head;a;a=a->next) a->sp(arr,L) = a->xn;
+            }
+
 
 
             //! display as compact list
