@@ -17,6 +17,17 @@ namespace Yttrium
         const char * const EqScheme = "set28";
         const char * const CnScheme = "paired9";
 
+
+        static inline void
+        addToColors(const Cluster::Strings &    colors,
+                    const char * const          scheme,
+                    const size_t                cindex)
+        {
+            const String   descr = GraphViz::Vizible::Color(scheme,cindex);
+            const String   color = "color=" + descr + ",fontcolor=" + descr;
+            Coerce(colors) << color;
+        }
+
         Cluster::Cluster( XMLog                         &xml,
                          const ClusterContent::Pointer &ptr,
                          Equilibria                    &eqs,
@@ -30,38 +41,15 @@ namespace Yttrium
         eqColor( (*this)->equilibria->size, AsCapacity ),
         cnColor( ordinance->size, AsCapacity)
         {
-            {
-                Strings &colors = Coerce(spColor);
-                for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
-                {
-                    const Species &sp = **sn;
-                    const String   descr = Species::Color(SpScheme,sp.indx[SubLevel]);
-                    const String   color = "color=" + descr + ",fontcolor=" + descr;
-                    colors << color;
-                }
-            }
 
-            {
-                Strings &colors = Coerce(eqColor);
-                for(const ENode *en = (*this)->equilibria->head;en;en=en->next)
-                {
-                    const Equilibrium &eq   = **en;
-                    const String       descr = Species::Color(EqScheme,eq.indx[SubLevel]);
-                    const String       color = "color=" + descr + ",fontcolor=" + descr;
-                    colors << color;
-                }
-            }
+            for(const SNode *sn = (*this)->species->head;sn;sn=sn->next)
+                addToColors(spColor,SpScheme, (**sn).indx[SubLevel]);
 
-            {
-                Strings &colors = Coerce(cnColor);
-                for(const Conservation::Law *ln=ordinance->head;ln;ln=ln->next)
-                {
-                    const String       descr = Species::Color(CnScheme,ln->uuid);
-                    const String       color = "color=" + descr + ",fontcolor=" + descr;
-                    colors << color;
-                }
-            }
+            for(const ENode *en = (*this)->equilibria->head;en;en=en->next)
+                addToColors(eqColor,EqScheme,(**en).indx[SubLevel]);
 
+            for(const Conservation::Law *ln=ordinance->head;ln;ln=ln->next)
+                addToColors(cnColor,CnScheme,ln->subId);
             
         }
         
@@ -108,7 +96,7 @@ namespace Yttrium
                 {
                     for(const Conservation::Law *law=ordinance->head;law;law=law->next)
                     {
-                        law->viz(fp,&cnColor[law->uuid]);
+                        law->viz(fp,&cnColor[law->subId]);
                     }
                 }
 

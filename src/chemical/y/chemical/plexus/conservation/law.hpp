@@ -47,11 +47,7 @@ namespace Yttrium
                 //! compute POSITIVE excess, Zero meaning law is followed
                 xreal_t excess(XAdd &xadd, const XReadable &C, const Level L) const;
 
-                //! project unfollowed C0 onto followed Cp, initialized with C0
-                void    project(XAdd &            xadd,
-                                XWritable &       Cp,
-                                const XReadable & C0,
-                                const Level       L) const;
+                
 
                 //! check if common actor(s)
                 bool hasCommonActorWith(const Law &other) const noexcept;
@@ -62,11 +58,10 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
-                const size_t   auxId; //!< in canon
                 const unsigned norm2; //!< |*this|^2
                 const xreal_t  denom; //!< norm2
-                const iMatrix  proj;  //!< compact projection matrix
-                const size_t   uuid;  //!< identifier in cluster
+                const size_t   auxId; //!< in canon
+                const size_t   subId; //!< identifier in cluster
                 Law *          next;  //!< for list
                 Law *          prev;  //!< for list
                 

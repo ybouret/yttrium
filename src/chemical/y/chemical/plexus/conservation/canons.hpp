@@ -24,10 +24,10 @@ namespace Yttrium
             class Canons : public CxxListOf<Canon>
             {
             public:
-                explicit Canons(XMLog &xml,
-                                const ListOf<Law> &laws,
-                                const EList &definite); //!< setup
-                virtual ~Canons() noexcept;                                      //!< cleanup
+                explicit Canons(XMLog             & xml,
+                                const ListOf<Law> & laws,
+                                const EList       & definite); //!< setup
+                virtual ~Canons() noexcept;                    //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canons);

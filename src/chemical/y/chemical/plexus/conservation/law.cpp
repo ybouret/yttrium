@@ -26,14 +26,16 @@ namespace Yttrium
 
             Law:: Law(Rule * const rule) :
             Actors(rule->in),
-            auxId(0),
             norm2(ActorsNorm2(*rule)),
             denom(norm2),
-            proj((*rule)->size,(*rule)->size),
-            uuid(0),
+            auxId(0),
+            subId(0),
             next(0),
             prev(0)
             {
+                Actors &self = *this;
+                Actors::Exchange(self,*rule);
+#if 0
                 static const char msg[] = "projection coefficient";
                 {
                     Actors      &self = *this; Actors::Exchange(self,*rule);
@@ -67,6 +69,7 @@ namespace Yttrium
                     }
                 }
                 //std::cerr << "proj=" << proj << std::endl;
+#endif
                 latch();
             }
 
@@ -91,12 +94,13 @@ namespace Yttrium
             {
                 xadd.free();
                 for(const Actor *a=(*this)->head;a;a=a->next)
-                    xadd.insert( a->sp(C,L), a->nu );
+                    xadd.insert( a->sp(C,L) * a->xn );
                 const xreal_t xs = xadd.sum();
                 const xreal_t _0;
                 if(xs<_0) return -xs; else return _0;
             }
 
+#if 0
             void Law:: project(XAdd      &       xadd,
                                XWritable &       Cp,
                                const XReadable & C0,
@@ -127,6 +131,7 @@ namespace Yttrium
                     }
                 }
             }
+#endif
 
             bool Law:: hasCommonActorWith(const Law &other) const noexcept
             {

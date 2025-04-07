@@ -7,6 +7,7 @@
 
 #include "y/chemical/reactive/actor.hpp"
 #include "y/chemical/type/latchable.hpp"
+#include "y/associative/address-book.hpp"
 
 namespace Yttrium
 {
@@ -81,6 +82,9 @@ namespace Yttrium
             std::ostream &displayCompact(std::ostream &  os,
                                          const XReadable &C,
                                          const Level      L) const;
+
+            //! append species
+            void sendTo(AddressBook &) const;
 
             //__________________________________________________________________
             //

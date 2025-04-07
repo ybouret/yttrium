@@ -146,6 +146,13 @@ namespace Yttrium
             os << '}';
             return os;
         }
+
+
+        void Actors:: sendTo(AddressBook &book) const
+        {
+            for(const Actor *a=my.head;a;a=a->next)
+                book |= a->sp;
+        }
     }
 
 }
