@@ -73,7 +73,7 @@ Y_UTEST(plexus)
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
-    XVector      I0(m,0); // injected
+    Summator     I0(m);
 
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
@@ -118,7 +118,7 @@ Y_UTEST(plexus)
 
 
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-    lib.show(std::cerr << "I0=", "\t[", I0, "]", xreal_t::ToString ) << std::endl;
+    //lib.show(std::cerr << "I0=", "\t[", I0, "]", xreal_t::ToString ) << std::endl;
 
     return 0;
 

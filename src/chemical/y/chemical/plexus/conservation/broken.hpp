@@ -16,20 +16,46 @@ namespace Yttrium
 
         namespace Conservation
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! broken law and excess
+            //
+            //
+            //__________________________________________________________________
             class Broken
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 Broken(const xreal_t &_xs,
-                       const Law     &_law) noexcept;
-                ~Broken() noexcept;
-                Broken(const Broken &) noexcept;
+                       const Law     &_law) noexcept; //!< setup
+                ~Broken()                   noexcept; //!< cleanup
+                Broken(const Broken &)      noexcept; //!< duplicate
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
                 //! show with canon for format
                 std::ostream & show(std::ostream &, const Assembly &) const;
 
-                const xreal_t  xs;
-                const Law    &law;
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const xreal_t  xs; //!< excess for law
+                const Law    &law; //!< the broken law
 
             private:
                 Y_DISABLE_ASSIGN(Broken);
