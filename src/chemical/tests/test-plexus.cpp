@@ -45,8 +45,7 @@ Y_UTEST(plexus)
     
     std::cerr << "lib=" << lib << std::endl;
 
-    return 0;
-    
+
     cls.graphViz("cs");
 
 
@@ -69,6 +68,8 @@ Y_UTEST(plexus)
                 Conservation::Warden warden(*cl,*canon);
                 warden.fix(xml, C0, I0, TopLevel, vanishing);
             }
+
+            continue;
 
             {
                 CanonEqualizer eqz(*cl,*canon,banks);

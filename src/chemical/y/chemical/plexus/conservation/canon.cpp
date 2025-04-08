@@ -67,6 +67,7 @@ namespace Yttrium
         {
             using namespace MKL;
 
+#if 0
             class QMat : public Matrix<apq>
             {
             public:
@@ -119,7 +120,8 @@ namespace Yttrium
                 }
                 return res;
             }
-
+#endif
+            
             void Canon:: compile(XMLog       & xml,
                                  const EList & definite)
             {
@@ -197,6 +199,7 @@ namespace Yttrium
                 }
                 Y_XML_COMMENT(xml, std::setw(4) << anxious->size <<  " = #anxious");
 
+#if 0
                 {
                     QMatList        qmat;
                     const size_t    n = size;
@@ -209,6 +212,7 @@ namespace Yttrium
                     Matrix<apq>      AA(k,k);
                     Matrix<apq>      II(k,k);
                     MKL::LU<apq>     lu(k);
+                    Matrix<apq>      AT(m,k);
                     //Matrix<unsigned> AT(m,k);
                     do
                     {
@@ -232,68 +236,20 @@ namespace Yttrium
                         //std::cerr << "AA=" << AA << std::endl;
                         if(!lu.build(AA)) continue;
                         lu.invert(AA,II);
-                        std::cerr << "II=" << II << std::endl;
+                        //std::cerr << "II=" << II << std::endl;
                         if(qmat.has(II)) continue;
-
                         qmat.pushTail( new QMat(AA) );
+                        AT.assign(TransposeOf,A);
+
+                        (std::cerr << comb << " #" << qmat.size << "     \r").flush();
+
 
                     }
                     while(comb.next());
+                    std::cerr << std::endl;
                     Y_XML_COMMENT(xml, "matrices: " << qmat.size << " / " << comb.total);
-
-
-#if 0
-                    Matrix<apq>  AA(k,k);
-                    XAdd         xadd;
-                    do
-                    {
-                        const Readable<size_t> &sched = comb;
-                        for(size_t i=1;i<=k;++i)
-                        {
-                            const size_t I = sched[i];
-                            const Readable<unsigned> &aI = uAlpha[I];
-                            for(size_t j=1;j<=k;++j)
-                            {
-                                const size_t J = sched[j];
-                                const Readable<unsigned> &aJ = uAlpha[J];
-                                apn sum = 0;
-                                for(size_t l=species->size;l>0;--l)
-                                {
-                                    const apn x = aI[l];
-                                    const apn y = aJ[l];
-                                    sum += x*y;
-                                }
-                                AA[i][j] = sum;
-                            }
-                        }
-                        const size_t ar = MKL::Rank::Of(AA);
-                        if(k!=ar) continue;
-
-                        bool found = false;
-                        for(const QMat *lhs=qmat.head;lhs;lhs=lhs->next)
-                        {
-                            if(*lhs==AA)
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if(found)
-                        {
-                            std::cerr << "[multiple]" << std::endl;
-                        }
-                        else
-                        {
-                            qmat.pushTail( new QMat(AA) );
-                            std::cerr << "AA" << qmat.size << "=" << AA << std::endl;
-                        }
-
-                    } while(comb.next());
-                    Y_XML_COMMENT(xml, "matrices: " << qmat.size << " / " << comb.total);
-#endif
-
                 }
-
+#endif
             }
 
         }

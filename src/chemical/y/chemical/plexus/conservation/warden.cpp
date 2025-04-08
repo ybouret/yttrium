@@ -33,6 +33,7 @@ namespace Yttrium
             AA(n,n),
             Xs(n)
             {
+                // reserving resources
                 assert(cluster.canons.owns(&canon));
                 bbank->reserve(canon.size+canon.rank);
                 qvcache->reserve(canon.rank);
@@ -99,7 +100,7 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // probe
+                // probe all laws
                 //
                 //--------------------------------------------------------------
                 size_t numBroken = 0;
@@ -119,12 +120,12 @@ namespace Yttrium
 
                 //--------------------------------------------------------------
                 //
-                // sort
+                // sort and check
                 //
                 //--------------------------------------------------------------
                 MergeSort::Call(blist,CompareBroken);
                 Y_XML_COMMENT(xml, "broken " << numBroken << " / " << canon.size );
-                if(xml.verbose)
+                if(xml.verbose && numBroken>0)
                 {
                     for(const BNode *bn=blist.head;bn;bn=bn->next)
                     {
@@ -132,8 +133,10 @@ namespace Yttrium
                         const char * const prefix = (broken.xs<=zero) ? "(+)" : "(-)";
                         (**bn).show( xml() << prefix << ' ',canon) << std::endl;
                     }
+                    vanishing.display<Species>( xml() << "(#) vanishing=") << std::endl;
                 }
                 if(numBroken<=0) return;
+
 
 
                 //--------------------------------------------------------------
@@ -169,7 +172,7 @@ namespace Yttrium
                     {
                         const Broken     & L       = **lhs;
                         XMatrix::RowType & AA_i    = AA[i];
-                        const XReadable  & alpha_i = canon.xAlpha[ L.law.auxId];
+                        const XReadable  & alpha_i = canon.xAlpha[L.law.auxId];
                         A[i].ld(alpha_i);
                         Xs[i] = L.xs;
                         {
@@ -177,7 +180,7 @@ namespace Yttrium
                             for(const BNode *rhs=lhs;rhs;rhs=rhs->next,++j)
                             {
                                 const Broken     & R       = **rhs;
-                                const XReadable  & alpha_j = canon.xAlpha[ R.law.auxId];
+                                const XReadable  & alpha_j = canon.xAlpha[R.law.auxId];
                                 AA[j][i] = AA_i[j] = xadd.dot(alpha_i,alpha_j);
                             }
                         }
@@ -199,6 +202,7 @@ namespace Yttrium
                 // increase concentrations
                 //
                 //--------------------------------------------------------------
+                Y_XML_COMMENT(xml,"upgrade");
                 lu.solve(AA,Xs);
                 for(const SNode *sn=canon.species->head;sn;sn=sn->next)
                 {
@@ -213,9 +217,7 @@ namespace Yttrium
                     const xreal_t c1 = Cj = xadd.sum();
                     const xreal_t delta = c1-c0;
                     sp(I0,L0) << delta;
-                    if(xml.verbose) {
-                        cluster->sformat.pad( xml() << "d[" << sp.name << "]",sp) << " = " << delta.str() << std::endl;
-                    }
+                    if(xml.verbose) cluster->sformat.pad( xml() << "d[" << sp.name << "]",sp) << " = " << delta.str() << std::endl;
                 }
                 
                 for(const LNode *ln=canon.head;ln;ln=ln->next)
