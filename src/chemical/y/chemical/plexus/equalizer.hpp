@@ -99,7 +99,7 @@ namespace Yttrium
                                   const Banks                 &banks) :
                 cluster( _cluster ),
                 canon( _canon ),
-                extents(banks),
+                probe(banks),
                 nrows( canon.anxious->size ),
                 ncols( cluster->species->size),
                 gbank(),
@@ -124,7 +124,7 @@ namespace Yttrium
 
                 const Cluster &             cluster;
                 const Conservation::Canon & canon;
-                Extents                     extents;
+                Extents                     probe;
                 const size_t                nrows;
                 const size_t                ncols;
                 GBank                       gbank;
@@ -176,7 +176,7 @@ namespace Yttrium
                 for(const ENode *en=cluster.definite->head;en;en=en->next)
                 {
                     const Equilibrium &eq   = **en;
-                    const Resultant    res  = extents(xml,eq,C0,L0, & cluster.wandering );
+                    const Resultant    res  = probe(xml,eq,C0,L0, & cluster.wandering );
 
 
                     switch(res)
@@ -189,7 +189,7 @@ namespace Yttrium
 
                     XWritable &cc = c_eqz[zgain.size+pgain.size+1];
                     cluster.transfer(cc,SubLevel,C0,L0);
-                    const Gain G(extents.generate(xml,xadd,cc,eq,C0,L0, &cluster.wandering),eq,cc);
+                    const Gain G(probe.generate(xml,xadd,cc,eq,C0,L0, &cluster.wandering),eq,cc);
                     assert(G.g.mantissa>=0);
                     if(G.g.mantissa<=0) zgain << G; else pgain << G;
 
