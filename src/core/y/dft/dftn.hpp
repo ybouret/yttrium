@@ -34,7 +34,7 @@ namespace Yttrium
 
         //! Apply Transform
         /**
-         - Replaces data by its ndim-dimensional discrete Fourier transform, if table = PositiveSin
+         - Replaces data by its dims-dimensional discrete Fourier transform, if table = PositiveSin
          - nn[1..ndim] is an integer array containing the lengths of each dimension (number of complex
          values), which MUST all be powers of 2.
          - data is a real array of length twice the product of
@@ -67,10 +67,11 @@ namespace Yttrium
                     {
                         if(i2<i2rev) {
                             const size_t i1max=i2+ip1-2;
+                            const size_t delta=i2rev-i2;
                             for (size_t i1=i2;i1<=i1max;i1+=2)
                             {
                                 for (size_t i3=i1;i3<=ip3;i3+=ip2)
-                                    DFT::Swap2(data+i3,data+i2rev+i3-i2);
+                                    DFT::Swap2(data+i3,data+delta+i3);
                             }
                         }
                         size_t ibit=ip2 >> 1;
