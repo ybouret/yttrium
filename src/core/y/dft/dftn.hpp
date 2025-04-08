@@ -68,10 +68,11 @@ namespace Yttrium
                         if(i2<i2rev) {
                             const size_t i1max=i2+ip1-2;
                             const size_t delta=i2rev-i2;
+                            T * const    data2=data+delta;
                             for (size_t i1=i2;i1<=i1max;i1+=2)
                             {
                                 for (size_t i3=i1;i3<=ip3;i3+=ip2)
-                                    DFT::Swap2(data+i3,data+delta+i3);
+                                    DFT::Swap2(data+i3,data2+i3);
                             }
                         }
                         size_t ibit=ip2 >> 1;
