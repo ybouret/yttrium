@@ -91,12 +91,12 @@ namespace Yttrium
             };
 
 
-            class CanonEqualizer
+            class Ordinary
             {
             public:
-                explicit CanonEqualizer(const Cluster               &_cluster,
-                                        const Conservation::Canon   &_canon,
-                                        const Banks                 &banks) :
+                explicit Ordinary(const Cluster               &_cluster,
+                                  const Conservation::Canon   &_canon,
+                                  const Banks                 &banks) :
                 cluster( _cluster ),
                 canon( _canon ),
                 extents(banks),
@@ -111,7 +111,7 @@ namespace Yttrium
                     gbank->reserve(nrows);
                 }
 
-                virtual ~CanonEqualizer() noexcept
+                virtual ~Ordinary() noexcept
                 {
 
                 }
@@ -135,7 +135,7 @@ namespace Yttrium
                 XAdd                        xadd;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(CanonEqualizer);
+                Y_DISABLE_COPY_AND_ASSIGN(Ordinary);
             };
 
 
@@ -156,13 +156,13 @@ namespace Yttrium
             }
 
 
-            void CanonEqualizer:: fix(XMLog             &xml,
-                                      XWritable         &C0,
-                                      const Level        L0,
-                                      const AddressBook &vanishing)
+            void Ordinary:: fix(XMLog             &xml,
+                                XWritable         &C0,
+                                const Level        L0,
+                                const AddressBook &vanishing)
             {
 
-                Y_XML_SECTION(xml,"CanonEqualizer");
+                Y_XML_SECTION(xml,"Equalizer::Ordinary");
                 if(xml.verbose)
                 {
                     vanishing.display<Species>(xml() << "vanishing: ") << std::endl;

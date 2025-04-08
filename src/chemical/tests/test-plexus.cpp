@@ -72,7 +72,7 @@ Y_UTEST(plexus)
             continue;
 
             {
-                Equalizer::CanonEqualizer eqz(*cl,*canon,banks);
+                Equalizer::Ordinary eqz(*cl,*canon,banks);
                 eqz.fix(xml, C0, TopLevel, vanishing);
             }
         }
