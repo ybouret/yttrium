@@ -48,6 +48,14 @@ namespace Yttrium
                 Compress(target,source.begin(),source.size());
             }
 
+            template <typename TARGET, typename T> static inline
+            void Tableau(TARGET &target, const T * const arr, const size_t num)
+            {
+                assert( Good(arr,num) );
+                Compress(target,arr,num);
+            }
+
+
 
 
             const uint16_t size;      //!< encoded (2 bytes)

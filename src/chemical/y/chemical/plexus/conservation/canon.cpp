@@ -15,7 +15,7 @@ namespace Yttrium
             species(),
             anxious(),
             sformat(),
-            iAlpha(),
+            uAlpha(),
             xAlpha(),
             next(0),
             prev(0)
@@ -57,7 +57,7 @@ namespace Yttrium
 #include "y/mkl/algebra/lu.hpp"
 #include "y/counting/combination.hpp"
 #include "y/system/exception.hpp"
-
+#include "y/sequence/vector.hpp"
 
 namespace Yttrium
 {
@@ -66,6 +66,24 @@ namespace Yttrium
         namespace Conservation
         {
             using namespace MKL;
+
+            class QMat : public Matrix<apq>
+            {
+            public:
+                explicit QMat(const Matrix<apq> &M) :
+                Matrix<apq>(M),
+                next(0),
+                prev(0)
+                {
+                }
+
+                virtual ~QMat() noexcept {}
+
+                QMat *next;
+                QMat *prev;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(QMat);
+            };
 
 
             void Canon:: compile(XMLog       & xml,
@@ -111,18 +129,18 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 {
-                    iMatrix    &iA = Coerce(iAlpha);
+                    uMatrix    &uA = Coerce(uAlpha);
                     XMatrix    &xA = Coerce(xAlpha);
-                    iA.make(size,species->size);
+                    uA.make(size,species->size);
                     xA.make(size,species->size);
                     for(const LNode *ln=head;ln;ln=ln->next)
                     {
                         const Law &law = **ln;
-                        law.iFillArray(iA[law.auxId], AuxLevel);
+                        law.iFillArray(uA[law.auxId], AuxLevel);
                         law.xFillArray(xA[law.auxId], AuxLevel);
                     }
                     //Y_XMLOG(xml, "A   =" << iA);
-                    Coerce(rank) = Rank::Of(iA);
+                    Coerce(rank) = Rank::Of(uA);
                     //Y_XMLOG(xml, "rank=" << rank);
                     Y_XML_COMMENT(xml, std::setw(4) << rank << " = rank");
                 }
@@ -146,10 +164,59 @@ namespace Yttrium
                 Y_XML_COMMENT(xml, std::setw(4) << anxious->size <<  " = #anxious");
 
                 {
-                    const size_t n = size;
-                    const size_t k = rank;
+                    CxxListOf<QMat> qmat;
+                    const size_t    n = size;
+                    const size_t    k = rank;
                     Combination comb(n,k);
                     std::cerr << "#matrices(" << n << "," << k << ")=" << comb.total << std::endl;
+                    Matrix<apq>  AA(k,k);
+                    XAdd         xadd;
+                    do
+                    {
+                        const Readable<size_t> &sched = comb;
+                        for(size_t i=1;i<=k;++i)
+                        {
+                            const size_t I = sched[i];
+                            const Readable<unsigned> &aI = uAlpha[I];
+                            for(size_t j=1;j<=k;++j)
+                            {
+                                const size_t J = sched[j];
+                                const Readable<unsigned> &aJ = uAlpha[J];
+                                apn sum = 0;
+                                for(size_t l=species->size;l>0;--l)
+                                {
+                                    const apn x = aI[l];
+                                    const apn y = aJ[l];
+                                    sum += x*y;
+                                }
+                                AA[i][j] = sum;
+                            }
+                        }
+                        const size_t ar = MKL::Rank::Of(AA);
+                        if(k!=ar) continue;
+
+                        bool found = false;
+                        for(const QMat *lhs=qmat.head;lhs;lhs=lhs->next)
+                        {
+                            if(*lhs==AA)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(found)
+                        {
+                            std::cerr << "[multiple]" << std::endl;
+                        }
+                        else
+                        {
+                            qmat.pushTail( new QMat(AA) );
+                            std::cerr << "AA" << qmat.size << "=" << AA << std::endl;
+                        }
+
+                    } while(comb.next());
+                    Y_XML_COMMENT(xml, "matrices: " << qmat.size << " / " << comb.total);
+
                 }
 
             }

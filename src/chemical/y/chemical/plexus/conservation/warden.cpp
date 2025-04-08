@@ -146,7 +146,7 @@ namespace Yttrium
                 {
                     const Broken &broken = **bn;
                     const Law    &law    = broken.law;
-                    if(qfamily.welcomes( canon.iAlpha[law.auxId]) )
+                    if(qfamily.welcomes( canon.uAlpha[law.auxId]) )
                     {
                         if(xml.verbose) broken.show( xml() << "(*) ",canon) << std::endl;
                         qfamily.increase();
