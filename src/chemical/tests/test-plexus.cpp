@@ -44,6 +44,9 @@ Y_UTEST(plexus)
 
     
     std::cerr << "lib=" << lib << std::endl;
+
+    return 0;
+    
     cls.graphViz("cs");
 
 

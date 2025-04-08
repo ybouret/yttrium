@@ -57,7 +57,6 @@ namespace Yttrium
 #include "y/mkl/algebra/lu.hpp"
 #include "y/counting/combination.hpp"
 #include "y/system/exception.hpp"
-#include "y/apex/api/simplify.hpp"
 
 
 namespace Yttrium
@@ -88,7 +87,8 @@ namespace Yttrium
                     size_t auxId = 0;
                     for(const LNode *l=head;l;l=l->next)
                     {
-                        const Law &law = **l; enroll( law );
+                        const Law &law = **l;
+                        enroll( law );
                         Coerce(law.auxId) = ++auxId;
                         Y_XMLOG(xml,"(+) " <<law.name);
                         for(const Actor *a=law->head;a;a=a->next)
@@ -101,8 +101,7 @@ namespace Yttrium
 
 
 
-                Y_XML_COMMENT(xml, "species");;
-                Y_XMLOG(xml, "(#) " << species);
+                Y_XML_COMMENT(xml, "# " << species << " = " << species->size);
 
                 //--------------------------------------------------------------
                 //
@@ -112,7 +111,6 @@ namespace Yttrium
                 //
                 //--------------------------------------------------------------
                 {
-                    Y_XML_COMMENT(xml, "rank");
                     iMatrix    &iA = Coerce(iAlpha);
                     XMatrix    &xA = Coerce(xAlpha);
                     iA.make(size,species->size);
@@ -123,19 +121,19 @@ namespace Yttrium
                         law.iFillArray(iA[law.auxId], AuxLevel);
                         law.xFillArray(xA[law.auxId], AuxLevel);
                     }
-                    Y_XMLOG(xml, "A   =" << iA);
+                    //Y_XMLOG(xml, "A   =" << iA);
                     Coerce(rank) = Rank::Of(iA);
-                    Y_XMLOG(xml, "rank=" << rank);
+                    //Y_XMLOG(xml, "rank=" << rank);
+                    Y_XML_COMMENT(xml, "rank=" << rank);
                 }
 
                 //--------------------------------------------------------------
                 //
                 //
-                // collect definite into anxious
+                // collect concerned definite into anxious
                 //
                 //
                 //--------------------------------------------------------------
-                Y_XML_COMMENT(xml, "anxious");
                 for(const ENode *en=definite.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
@@ -145,8 +143,15 @@ namespace Yttrium
                         Y_XMLOG(xml, "(*) " << eq);
                     }
                 }
-                
-                
+                Y_XML_COMMENT(xml, "anxious=" << anxious->size);
+
+                {
+                    const size_t n = size;
+                    const size_t k = rank;
+                    Combination comb(n,k);
+                    std::cerr << "#matrices(" << n << "," << k << ")=" << comb.total << std::endl;
+                }
+
             }
 
         }
