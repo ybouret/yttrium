@@ -54,7 +54,7 @@ namespace Yttrium
                 if(bits>=8) emit(code,bits);
             }
             assert(bits==dataBits%8);
-            if(bits)
+            if(bits>0)
                 emit(code,bits);
         }
 

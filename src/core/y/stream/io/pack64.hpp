@@ -31,6 +31,25 @@ namespace Yttrium
             static size_t   Emit(OutputStream &, const uint64_t);         //!< pack and emit, return written bytes
             static uint64_t Read(InputStream  &, const char * const ctx); //!< return unpacked value
 
+
+            template <typename TARGET, typename ITERATOR> static inline
+            void Compress(TARGET &target, ITERATOR it, size_t n)
+            {
+                while(n-- > 0) {
+                    const Pack64 p(*it); ++it;
+                    for(size_t i=0;i<p.size;++i) target << p.data[i];
+                }
+            }
+
+            //! pack each integral or target and append them to source
+            template <typename TARGET, typename SOURCE> static inline
+            void Compress(TARGET &target,SOURCE &source)
+            {
+                Compress(target,source.begin(),source.size());
+            }
+
+
+
             const uint16_t size;      //!< encoded (2 bytes)
             const uint8_t  data[14];  //!< data : need 9 bytes, rounded to 14 => sizeof(Pack64) = 16
 

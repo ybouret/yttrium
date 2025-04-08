@@ -10,6 +10,8 @@
 #include "y/random/bits.hpp"
 #include "y/stream/data/input.hpp"
 
+#include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace Yttrium;
 
@@ -21,7 +23,7 @@ Y_UTEST(io_pack64)
 
     for(unsigned ibit=0;ibit<=64;++ibit)
     {
-        const uint64_t qw = ran.to<uint64_t>(ibit); Y_CHECK(ibit==BitCount::For(qw));
+        const uint64_t qw = ran.to<uint64_t>(ibit); Y_ASSERT(ibit==BitCount::For(qw));
         OutputFile    fp("max64.dat");
         const size_t     nw = IO::Pack64::Emit(fp,qw);
         std::cerr << ibit << " => " << nw << std::endl;
@@ -43,7 +45,7 @@ Y_UTEST(io_pack64)
             {
                 InputFile fp("pack64.dat");
                 const uint64_t ld = IO::Pack64::Read(fp, "trial");
-                std::cerr << "ld:" << Hexadecimal(ld) << std::endl;
+                //std::cerr << "ld:" << Hexadecimal(ld) << std::endl;
                 Y_ASSERT(ld==qw);
             }
         }
@@ -68,6 +70,20 @@ Y_UTEST(io_pack64)
 
     }
 
+
+    {
+        Vector<uint8_t> target;
+        Vector<size_t>  source;
+        source << 1 << 2 << 3;
+        IO::Pack64::Compress(target,source);
+        std::cerr << "source=" << source << std::endl;
+
+        std::cerr << "source=";
+        Hexadecimal::Display(std::cerr, &source[1], source.size() ) << std::endl;
+
+        std::cerr << "target=";
+        Hexadecimal::Display(std::cerr, &target[1], target.size() ) << std::endl;
+    }
 
 
 }
