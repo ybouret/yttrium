@@ -5,9 +5,11 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        EqzBanks:: EqzBanks() : sb(), cb() {}
-        EqzBanks:: ~EqzBanks() noexcept {}
-        
+        namespace Equalizer
+        {
+            Banks:: Banks() : sb(), cb() {}
+            Banks:: ~Banks() noexcept {}
+        }
     }
 
 }

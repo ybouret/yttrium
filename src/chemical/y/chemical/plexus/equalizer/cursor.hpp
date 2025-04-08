@@ -13,48 +13,51 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! cursor at which (multiple) species vanish
-        //
-        //
-        //______________________________________________________________________
-        class Cursor : public SRepo
+        namespace Equalizer
         {
-        public:
             //__________________________________________________________________
             //
             //
-            // C++
+            //
+            //! cursor at which (multiple) species vanish
+            //
             //
             //__________________________________________________________________
-            explicit Cursor(const SBank   &sb,
-                            const Species &sp,
-                            const xreal_t  xx); //!< initialize
-            Cursor(const Cursor &_);           //!< duplicate
-            virtual ~Cursor() noexcept;        //!< cleanup
-            Y_OSTREAM_PROTO(Cursor);           //!< display
+            class Cursor : public SRepo
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Cursor(const SBank   &sb,
+                                const Species &sp,
+                                const xreal_t  xx); //!< initialize
+                Cursor(const Cursor &_);           //!< duplicate
+                virtual ~Cursor() noexcept;        //!< cleanup
+                Y_OSTREAM_PROTO(Cursor);           //!< display
 
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            const xreal_t xi; //!< current extent
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const xreal_t xi; //!< current extent
 
-        private:
-            Y_DISABLE_ASSIGN(Cursor);
-        };
+            private:
+                Y_DISABLE_ASSIGN(Cursor);
+            };
 
 
 
-        typedef Small::CoopHeavyList<Cursor> CrList; //!< alias
-        typedef CrList::NodeType             CrNode; //!< alias
-        typedef CrList::ProxyType            CrBank; //!< alias
+            typedef Small::CoopHeavyList<Cursor> CrList; //!< alias
+            typedef CrList::NodeType             CrNode; //!< alias
+            typedef CrList::ProxyType            CrBank; //!< alias
 
+        }
     }
 
 }

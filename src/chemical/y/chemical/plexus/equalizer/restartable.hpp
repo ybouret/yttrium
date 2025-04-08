@@ -11,32 +11,35 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! interface for equalizing objects
-        //
-        //
-        //______________________________________________________________________
-        class Restartable
+        namespace Equalizer
         {
-        public:
-            static const unsigned     Width = 22; //!< for display
-            static const char * const None;       //!< "none"
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! interface for equalizing objects
+            //
+            //
+            //__________________________________________________________________
+            class Restartable
+            {
+            public:
+                static const unsigned     Width = 22; //!< for display
+                static const char * const None;       //!< "none"
 
-        protected:
-            explicit Restartable() noexcept; //!< setup
+            protected:
+                explicit Restartable() noexcept; //!< setup
 
-        public:
-            virtual ~Restartable() noexcept; //!< cleanup
+            public:
+                virtual ~Restartable() noexcept; //!< cleanup
 
-            virtual void restart() noexcept = 0; //!< should reset data
+                virtual void restart() noexcept = 0; //!< should reset data
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Restartable);
-        };
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Restartable);
+            };
 
+        }
     }
 
 }

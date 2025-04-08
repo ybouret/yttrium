@@ -12,51 +12,53 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! ordered cursors
-        //
-        //
-        //______________________________________________________________________
-        class Cursors : public Proxy<const CrList>, public Restartable
+        namespace Equalizer
         {
-        public:
             //__________________________________________________________________
             //
             //
-            // C++
+            //
+            //! ordered cursors
+            //
             //
             //__________________________________________________________________
-            explicit Cursors(const EqzBanks &banks) noexcept; //!< setup empty
-            virtual ~Cursors() noexcept;                      //!< cleanup
+            class Cursors : public Proxy<const CrList>, public Restartable
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Cursors(const Banks &banks) noexcept; //!< setup empty
+                virtual ~Cursors() noexcept;                   //!< cleanup
 
-            //__________________________________________________________________
-            //
-            //
-            // Mehthods
-            //
-            //__________________________________________________________________
-            virtual void restart() noexcept; //!< restart all
+                //______________________________________________________________
+                //
+                //
+                // Mehthods
+                //
+                //______________________________________________________________
+                virtual void restart() noexcept; //!< restart all
 
-            //! dispatch species and vanishing extent
-            void operator()(const Species &sp, const xreal_t xi);
+                //! dispatch species and vanishing extent
+                void operator()(const Species &sp, const xreal_t xi);
 
 
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Cursors);
-            Y_PROXY_DECL();
-            static   SignType Compare(const CrNode * const, const CrNode * const) noexcept;
-            bool              checked() const noexcept;
-            CrNode *          crNode(const Species &sp, const xreal_t xi); //!< create new cursor
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Cursors);
+                Y_PROXY_DECL();
+                static   SignType Compare(const CrNode * const, const CrNode * const) noexcept;
+                bool              checked() const noexcept;
+                CrNode *          crNode(const Species &sp, const xreal_t xi); //!< create new cursor
 
-            CrList my;
-            SBank  sb;
-        };
+                CrList my;
+                SBank  sb;
+            };
 
+        }
 
 
 

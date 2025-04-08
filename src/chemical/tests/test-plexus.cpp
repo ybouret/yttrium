@@ -56,8 +56,8 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    AddressBook vanishing;
-    EqzBanks    banks;
+    AddressBook      vanishing;
+    Equalizer::Banks banks;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
@@ -72,7 +72,7 @@ Y_UTEST(plexus)
             continue;
 
             {
-                CanonEqualizer eqz(*cl,*canon,banks);
+                Equalizer::CanonEqualizer eqz(*cl,*canon,banks);
                 eqz.fix(xml, C0, TopLevel, vanishing);
             }
         }

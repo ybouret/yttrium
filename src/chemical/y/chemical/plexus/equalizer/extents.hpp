@@ -11,103 +11,105 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        //______________________________________________________________________
-        //
-        //
-        //! Extents analyze result
-        //
-        //______________________________________________________________________
-        enum Resultant
+        namespace Equalizer
         {
-            Correct, //!< balanced
-            BadReac, //!< at least one bad reactant, products are ok
-            BadProd, //!< at least one bad product, reactants are ok
-            BadBoth  //!< at least one bad on each side
-        };
-
-
-        //! Human Readable Resultant
-        const char * ResultantText(const Resultant) noexcept;
-
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! classified extents for both sides of an equilibrium
-        //
-        //
-        //______________________________________________________________________
-        class Extents : public Restartable
-        {
-        public:
             //__________________________________________________________________
             //
             //
-            // C++
+            //! Extents analyze result
             //
             //__________________________________________________________________
-            explicit Extents(const EqzBanks &banks) noexcept; //!< setup empty
-            virtual ~Extents() noexcept;                      //!< cleanup
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Methods
-            //
-            //__________________________________________________________________
-
-            //! restart all
-            virtual void restart() noexcept;
-
-            //! dispatch all
-            Resultant operator()(XMLog &             xml,
-                                 const Components &  E,
-                                 const XReadable &   C,
-                                 const Level         L,
-                                 const AddressBook * const wanders);
-
-
-            //! generate with components only
-            /**
-             - compute when best.size>0
-             \param xml     for output
-             \param xadd    for additions
-             \param Csub    SubLevel concentrations, initialized to C
-             \param E       equilibrium
-             \param C       original concentrations
-             \param L       original level
-             \param wanders for testing wandering species
-             \return positive or zero gain
-             */
-            xreal_t generate(XMLog            &xml,
-                             XAdd             &xadd,
-                             XWritable        &Csub,
-                             const Components &E,
-                             const XReadable  &C,
-                             const Level       L,
-                             const AddressBook * const wanders) const;
-
-
+            enum Resultant
+            {
+                Correct, //!< balanced
+                BadReac, //!< at least one bad reactant, products are ok
+                BadProd, //!< at least one bad product, reactants are ok
+                BadBoth  //!< at least one bad on each side
+            };
+            
+            
+            //! Human Readable Resultant
+            const char * ResultantText(const Resultant) noexcept;
+            
             //__________________________________________________________________
             //
             //
-            // Members
+            //
+            //! classified extents for both sides of an equilibrium
+            //
             //
             //__________________________________________________________________
-            Extent   reac; //!< status for reactant(s)
-            Extent   prod; //!< status for product(s)
-            Boundary best; //!< best effort
+            class Extents : public Restartable
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Extents(const Banks &banks) noexcept; //!< setup empty
+                virtual ~Extents() noexcept;                   //!< cleanup
+                
+                
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Extents);
-            void findBest(XMLog &xml,
-                          const Boundary &limiting,
-                          const Cursors  &requried);
-        };
+                //! restart all
+                virtual void restart() noexcept;
+                
+                //! dispatch all
+                Resultant operator()(XMLog &             xml,
+                                     const Components &  E,
+                                     const XReadable &   C,
+                                     const Level         L,
+                                     const AddressBook * const wanders);
+                
+                
+                //! generate with components only
+                /**
+                 - compute when best.size>0
+                 \param xml     for output
+                 \param xadd    for additions
+                 \param Csub    SubLevel concentrations, initialized to C
+                 \param E       equilibrium
+                 \param C       original concentrations
+                 \param L       original level
+                 \param wanders for testing wandering species
+                 \return positive or zero gain
+                 */
+                xreal_t generate(XMLog            &xml,
+                                 XAdd             &xadd,
+                                 XWritable        &Csub,
+                                 const Components &E,
+                                 const XReadable  &C,
+                                 const Level       L,
+                                 const AddressBook * const wanders) const;
+                
+                
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Extent   reac; //!< status for reactant(s)
+                Extent   prod; //!< status for product(s)
+                Boundary best; //!< best effort
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Extents);
+                void findBest(XMLog &xml,
+                              const Boundary &limiting,
+                              const Cursors  &requried);
+            };
+            
+        }
 
-    
     }
 
 }

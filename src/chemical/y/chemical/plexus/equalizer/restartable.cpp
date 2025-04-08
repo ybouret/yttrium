@@ -5,13 +5,16 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        const char * const Restartable:: None = "<-- none -->";
-
-        Restartable:: Restartable() noexcept
-        {}
-
-        Restartable:: ~Restartable() noexcept
-        {}
+        namespace Equalizer
+        {
+            const char * const Restartable:: None = "<-- none -->";
+            
+            Restartable:: Restartable() noexcept
+            {}
+            
+            Restartable:: ~Restartable() noexcept
+            {}
+        }
 
     }
 }

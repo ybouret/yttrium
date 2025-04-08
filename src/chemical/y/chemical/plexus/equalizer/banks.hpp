@@ -11,38 +11,42 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        //______________________________________________________________________
-        //
-        //
-        //
-        //! Shared Banks for Equalizer
-        //
-        //
-        //______________________________________________________________________
-        class EqzBanks
+
+        namespace Equalizer
         {
-        public:
             //__________________________________________________________________
             //
             //
-            // C++
+            //
+            //! Shared Banks for Equalizer
+            //
             //
             //__________________________________________________________________
-            explicit EqzBanks();          //!< setup
-            virtual ~EqzBanks() noexcept; //!< cleanup
+            class Banks
+            {
+            public:
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Banks();          //!< setup
+                virtual ~Banks() noexcept; //!< cleanup
 
-            //__________________________________________________________________
-            //
-            //
-            // Members
-            //
-            //__________________________________________________________________
-            SBank  sb; //!< for species
-            CrBank cb; //!< for cursors
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(EqzBanks);
-        };
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                SBank  sb; //!< for species
+                CrBank cb; //!< for cursors
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Banks);
+            };
+        }
 
      
     }
