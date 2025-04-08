@@ -101,7 +101,7 @@ namespace Yttrium
 
 
 
-                Y_XML_COMMENT(xml, "# " << species << " = " << species->size);
+                Y_XML_COMMENT(xml, std::setw(4) << species->size << " = # " << species);
 
                 //--------------------------------------------------------------
                 //
@@ -124,7 +124,7 @@ namespace Yttrium
                     //Y_XMLOG(xml, "A   =" << iA);
                     Coerce(rank) = Rank::Of(iA);
                     //Y_XMLOG(xml, "rank=" << rank);
-                    Y_XML_COMMENT(xml, "rank=" << rank);
+                    Y_XML_COMMENT(xml, std::setw(4) << rank << " = rank");
                 }
 
                 //--------------------------------------------------------------
@@ -143,7 +143,7 @@ namespace Yttrium
                         Y_XMLOG(xml, "(*) " << eq);
                     }
                 }
-                Y_XML_COMMENT(xml, "anxious=" << anxious->size);
+                Y_XML_COMMENT(xml, std::setw(4) << anxious->size <<  " = #anxious");
 
                 {
                     const size_t n = size;
