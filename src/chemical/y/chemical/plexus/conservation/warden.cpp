@@ -186,23 +186,15 @@ namespace Yttrium
                         }
                     }
                 }
-                AT.assign(TransposeOf,A);
-
-#if 0
-                std::cerr << "A =" << A  << std::endl;
-                std::cerr << "AA=" << AA << std::endl;
-                std::cerr << "Xs="  << Xs << std::endl;
-                std::cerr << "dC=A'*inv(AA)*Xs" << std::endl;
-#endif
 
                 if(!lu.build(AA)) throw Specific::Exception(CallSign,"Corrupted constraint basis!!");
-
                 //--------------------------------------------------------------
                 //
                 // increase concentrations
                 //
                 //--------------------------------------------------------------
                 Y_XML_COMMENT(xml,"upgrade");
+                AT.assign(TransposeOf,A);
                 lu.solve(AA,Xs);
                 for(const SNode *sn=canon.species->head;sn;sn=sn->next)
                 {
@@ -214,19 +206,23 @@ namespace Yttrium
                     xadd.free();
                     xadd << Cj;
                     for(size_t i=n;i>0;--i) xadd << (lhs[i]*Xs[i]);
-                    const xreal_t c1 = Cj = xadd.sum();
+                    const xreal_t c1    = Cj = xadd.sum();
                     const xreal_t delta = c1-c0;
                     sp(I0,L0) << delta;
                     if(xml.verbose) cluster->sformat.pad( xml() << "d[" << sp.name << "]",sp) << " = " << delta.str() << std::endl;
                 }
-                
-                for(const LNode *ln=canon.head;ln;ln=ln->next)
-                {
-                    const Law &   law = **ln;
-                    const xreal_t xs  = law.excess(xadd,C0,L0);
-                    canon.pad(std::cerr << law.name, law) << " @" << xs.str() << std::endl;
-                }
 
+                if(xml.verbose)
+                {
+                    Y_XML_COMMENT(xml, "checking");
+                    for(const LNode *ln=canon.head;ln;ln=ln->next)
+                    {
+                        const Law &   law = **ln;
+                        const xreal_t xs  = law.excess(xadd,C0,L0);
+                        canon.pad( xml()  << law.name, law) << " @" << xs.str() << std::endl;
+                    }
+                }
+                Y_XML_COMMENT(xml, "all fixed");
 
             }
         }
