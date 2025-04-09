@@ -89,15 +89,16 @@ namespace Yttrium
             public:
                 explicit TwoSided(const Cluster               &_cluster,
                                   const Conservation::Canon   &_canon,
-                                  const Banks                 &banks) :
+                                  const Banks                 &_banks) :
                 cluster( _cluster ),
                 canon( _canon ),
-                probe(banks),
+                probe( _banks),
                 nrows( canon.anxious->size ),
                 ncols( cluster->species->size),
                 gbank(),
                 zgain(gbank),
                 pgain(gbank),
+                klist(),
                 c_eqz(nrows,ncols),
                 xadd()
                 {
