@@ -68,9 +68,7 @@ Y_UTEST(plexus)
                 Conservation::Warden warden(*cl,*canon);
                 warden.fix(xml, C0, I0, TopLevel, vanishing);
             }
-
-            continue;
-
+            
             {
                 Equalizer::TwoSided eqz(*cl,*canon,banks);
                 eqz.fix(xml, C0, TopLevel, vanishing);

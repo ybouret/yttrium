@@ -42,12 +42,7 @@ namespace Yttrium
                 Y_DISABLE_ASSIGN(Gain);
             };
 
-            std::ostream & operator<<(std::ostream &os, const Gain &gain)
-            {
-                os << std::setw(Restartable::Width) << gain.g.str() << " @" << gain.E.name << "=";
-                gain.E.displayCompact(os,gain.C,SubLevel);
-                return os;
-            }
+          
 
             typedef Small::CoopHeavyList<Gain>  GList_;
             typedef GList_::NodeType            GNode;
