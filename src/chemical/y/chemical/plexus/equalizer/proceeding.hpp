@@ -29,10 +29,13 @@ namespace Yttrium
                 virtual ~Proceeding() noexcept;
 
                 //! equalize cluster
+                /**
+                 \param I0 must be initialized
+                 */
                 void session(XMLog     &  xml,
                              XWritable &  C0,
                              Summator  &  I0);
-
+                
                 Watcher::List     watchers;
                 TwoSided::List    twoSided;
                 OneSided          oneSided;

@@ -34,7 +34,7 @@ namespace Yttrium
                                       XWritable &  C0,
                                       Summator  &  I0)
             {
-                I0.forEach( & XAdd::free );
+                Y_XML_SECTION(xml,"Equalizer::Proceeding");
                 {
                     Watcher  *cw = watchers.head;
                     TwoSided *ts = twoSided.head;

@@ -46,7 +46,7 @@ namespace Yttrium
                                            const Level         L,
                                            const AddressBook  &wanders)
             {
-                //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+                volatile Momentary::Off turnOff( Coerce(xml.verbose) );
                 Y_XML_SECTION_OPT(xml, "Extents", E.name);
                 try
                 {

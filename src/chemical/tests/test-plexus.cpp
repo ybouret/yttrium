@@ -7,7 +7,6 @@
 #include "y/stream/libc/output.hpp"
 
 
-#include "y/chemical/plexus/conservation/warden.hpp"
 #include "y/chemical/plexus/equalizer.hpp"
 
 
@@ -56,6 +55,9 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
+    Equalizer::Proceedings eqz(cls);
+
+#if 0
     Equalizer::Banks banks;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
@@ -63,6 +65,9 @@ Y_UTEST(plexus)
         Equalizer::Proceeding eqz(*cl,banks);
         eqz.session(xml,C0,I0);
     }
+#endif
+
+    eqz.session(xml, C0, I0);
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
