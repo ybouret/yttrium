@@ -51,7 +51,8 @@ namespace Yttrium
         //______________________________________________________________________
         Y_ARGS_DECL(T,Type);                                     //!< aliases
         Y_ARGS_DECL(KEY,Key);                                    //!< aliases
-        typedef Blanks<NODE> NodePool;                           //!< alias
+        typedef Blanks<NODE>                 NodePool;           //!< alias
+        typedef AssociativeNodeSorting<NODE> Ordering;           //!< alias
         static const size_t  LoadFactor = HashTable::LoadFactor; //!< alias
 
         //______________________________________________________________________
@@ -65,11 +66,11 @@ namespace Yttrium
 
         //! create with initial capacity
         inline explicit HashLinked(const size_t nmin) :
-        INTERFACE(), BASE(), nodes(), table(nmin/LoadFactor), kpool(nmin), npool(nmin), hashr() {}
+        INTERFACE(), BASE(), Ordering(), nodes(), table(nmin/LoadFactor), kpool(nmin), npool(nmin), hashr() {}
 
         //! duplicate
         inline HashLinked(const HashLinked &other) :
-        Identifiable(), Collection(), INTERFACE(), BASE(),
+        Identifiable(), Collection(), INTERFACE(), BASE(), Ordering(),
         nodes(),
         table(other.nodes.size/LoadFactor),
         kpool(other.nodes.size),

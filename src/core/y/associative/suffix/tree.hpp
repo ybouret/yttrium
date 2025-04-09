@@ -6,6 +6,7 @@
 
 #include "y/associative/suffix/pool.hpp"
 #include "y/associative/suffix/core/tree.hpp"
+#include "y/associative/node/sorting.hpp"
 #include "y/data/list.hpp"
 #include "y/container/iterator/linked.hpp"
 
@@ -20,7 +21,7 @@ namespace Yttrium
     //
     //__________________________________________________________________________
     template <class KEY, class T, class NODE>
-    class SuffixTree
+    class SuffixTree :  public AssociativeNodeSorting<NODE>
     {
     public:
         //______________________________________________________________________
@@ -29,13 +30,13 @@ namespace Yttrium
         // Definitions
         //
         //______________________________________________________________________
-        Y_ARGS_DECL(T,Type);                     //!< aliases
-        Y_ARGS_DECL(KEY,Key);                    //!< aliases
-        typedef NODE                   NodeType; //!< aliases
-        typedef ListOf<NODE>           ListType; //!< aliases
-        typedef SuffixPool<NODE>       PoolType; //!< aliases
-        typedef Memory::ReadOnlyBuffer PathType; //!< aliases
-
+        Y_ARGS_DECL(T,Type);                           //!< aliases
+        Y_ARGS_DECL(KEY,Key);                          //!< aliases
+        typedef NODE                         NodeType; //!< alias
+        typedef ListOf<NODE>                 ListType; //!< alias
+        typedef SuffixPool<NODE>             PoolType; //!< alias
+        typedef Memory::ReadOnlyBuffer       PathType; //!< alias
+        typedef AssociativeNodeSorting<NODE> Ordering; //!< alias
         //______________________________________________________________________
         //
         //
@@ -112,7 +113,8 @@ namespace Yttrium
         PoolType         pool; //!< memory pool
         Core::SuffixTree tree; //!< internal tree
 
-        
+        inline virtual ListOf<NODE> & getList() noexcept { return list; }
+
         //______________________________________________________________________
         //
         //! release all possible memory
