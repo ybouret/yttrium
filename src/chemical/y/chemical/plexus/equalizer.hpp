@@ -16,6 +16,13 @@ namespace Yttrium
         namespace Equalizer
         {
             
+            class Proceedings
+            {
+            public:
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Proceedings);
+            };
 
         }
 

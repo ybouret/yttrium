@@ -7,7 +7,7 @@ namespace Yttrium
         namespace Equalizer
         {
 
-
+            
         }
 
     }
