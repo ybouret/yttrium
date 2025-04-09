@@ -26,6 +26,10 @@ namespace Yttrium
             return new Species(description,id);
         }
 
+        SignType Species:: Compare(const Species &lhs, const Species &rhs) noexcept
+        {
+            return Sign::Of( lhs.indx[TopLevel], rhs.indx[TopLevel] );
+        }
 
         void Species:: viz(OutputStream &       fp,
                            const String * const color    ,

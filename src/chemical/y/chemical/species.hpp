@@ -78,6 +78,8 @@ namespace Yttrium
             void   viz(OutputStream &       fp,
                        const String * const color     = 0,
                        const bool           conserved = true) const;
+
+            static SignType Compare(const Species &, const Species &) noexcept;
             
             //__________________________________________________________________
             //

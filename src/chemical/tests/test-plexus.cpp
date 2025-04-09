@@ -68,13 +68,15 @@ Y_UTEST(plexus)
                 Conservation::Warden warden(*cl,*canon);
                 warden.fix(xml, C0, I0, TopLevel, vanishing);
             }
-            
+
+            vanishing.sort( Type2Type<Species>(), Species::Compare );
+
             {
                 Equalizer::TwoSided eqz(*cl,*canon,banks);
                 eqz.fix(xml, C0, TopLevel, vanishing);
             }
         }
-        //vanishing.display<Species>(std::cerr) << std::endl;
+        vanishing.display<Species>(std::cerr) << std::endl;
     }
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
