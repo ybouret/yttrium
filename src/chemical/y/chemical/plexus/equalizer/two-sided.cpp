@@ -14,7 +14,7 @@ namespace Yttrium
                 gain.E.displayCompact(os,gain.C,SubLevel);
                 return os;
             }
-            
+
 
             //! decreasing gain then increasing index
             static inline
@@ -46,7 +46,10 @@ namespace Yttrium
                 }
 
 
+                size_t cycle = 0;
             CYCLE:
+                ++cycle;
+                Y_XML_COMMENT(xml, "[[ Fix Cycle #" << std::setw(4) << cycle << " ]]");
                 zgain.free();
                 pgain.free();
                 klist.free();
