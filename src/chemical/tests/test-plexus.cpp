@@ -72,7 +72,7 @@ Y_UTEST(plexus)
             continue;
 
             {
-                Equalizer::Ordinary eqz(*cl,*canon,banks);
+                Equalizer::TwoSided eqz(*cl,*canon,banks);
                 eqz.fix(xml, C0, TopLevel, vanishing);
             }
         }
@@ -81,26 +81,7 @@ Y_UTEST(plexus)
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    return 0;
-
-    XVector      C(m,0);
-
-    for(size_t iter=0;iter<100;++iter)
-    {
-        Library::Concentrations(C0,ran,0.1,0.5);
-        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-        //wardens(xml,C0);
-
-        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-        for(const Cluster *cl=cls->head;cl;cl=cl->next)
-        {
-            //Equalizer            eqz(*cl);
-            //eqz(xml,C0);
-        }
-    }
-
+    
 
     return 0;
 

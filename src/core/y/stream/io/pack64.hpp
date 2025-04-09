@@ -32,6 +32,7 @@ namespace Yttrium
             static uint64_t Read(InputStream  &, const char * const ctx); //!< return unpacked value
 
 
+            //! append range converted into packed byte to target
             template <typename TARGET, typename ITERATOR> static inline
             void Compress(TARGET &target, ITERATOR it, size_t n)
             {
@@ -48,6 +49,7 @@ namespace Yttrium
                 Compress(target,source.begin(),source.size());
             }
 
+            //! compress array of integral types
             template <typename TARGET, typename T> static inline
             void Tableau(TARGET &target, const T * const arr, const size_t num)
             {

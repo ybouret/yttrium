@@ -31,7 +31,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const CallSign;
+                static const char * const CallSign; //!< "Conservation::Warden"
 
                 //______________________________________________________________
                 //
@@ -54,7 +54,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! fix broken laws, append increment and note vanishing species
+                //! fix broken laws, append increment and record vanishing species
                 void fix(XMLog     &  xml,
                          XWritable &  C0,
                          Summator  &  I0,

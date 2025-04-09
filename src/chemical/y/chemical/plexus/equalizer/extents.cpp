@@ -162,18 +162,34 @@ namespace Yttrium
                 
                 assert(best.size>0);
                 if(xml.verbose) E.displayCompact( xml() << "bad = ", Csub, SubLevel) << std::endl;
-                
+
+                //______________________________________________________________
+                //
+                //
                 // move according to best
+                //
+                //______________________________________________________________
+
                 E.boldMove(Csub, SubLevel, best.xi);
-                
+
+                //______________________________________________________________
+                //
+                //
                 // ensure vanishing
+                //
+                //______________________________________________________________
                 for(const SNode *sn=best.head;sn;sn=sn->next)
                 {
                     (**sn)(Csub,SubLevel) = 0;
                 }
                 if(xml.verbose) E.displayCompact( xml() << "eqz = ", Csub, SubLevel) << std::endl;
-                
-                // compute gain for not wandering species
+
+                //______________________________________________________________
+                //
+                //
+                // compute gain for selected species
+                //
+                //______________________________________________________________
                 const xreal_t zero;
                 xadd.free();
                 {
