@@ -97,6 +97,7 @@ sequence
 ordered
 ordered/core
 associative
+associative/node
 associative/suffix
 associative/suffix/core
 associative/suffix/map

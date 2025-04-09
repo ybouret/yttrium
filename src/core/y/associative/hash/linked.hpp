@@ -5,9 +5,9 @@
 #define Y_Associative_Hash_Linked_Included 1
 
 #include "y/associative/hash/table.hpp"
+#include "y/associative/node/sorting.hpp"
 #include "y/container/iterator/linked.hpp"
 #include "y/type/utils.hpp"
-#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -40,7 +40,7 @@ namespace Yttrium
     typename NODE,
     typename KEY_HASHER,
     class    BASE>
-    class HashLinked : public INTERFACE, public BASE
+    class HashLinked : public INTERFACE, public BASE, public AssociativeNodeSorting<NODE>
     {
     public:
         //______________________________________________________________________
@@ -144,6 +144,7 @@ namespace Yttrium
         inline ConstIterator begin() const noexcept { return ConstIterator(nodes.head); }  //!< begin const forward
         inline ConstIterator end()   const noexcept { return ConstIterator(0);          }  //!< end   const forward
 
+#if 0
         //! sort node by content
         template <typename COMPARE_TYPES> inline
         void sortByValue(COMPARE_TYPES &proc)
@@ -159,7 +160,7 @@ namespace Yttrium
             CompareByKey<COMPARE_KEYS> comparison = { proc };
             MergeSort::Call(nodes,comparison);
         }
-
+#endif
 
 
 
@@ -178,6 +179,9 @@ namespace Yttrium
         NodePool           npool; //!< pool of nodes
         mutable KEY_HASHER hashr; //!< key hasher
 
+        inline virtual ListOf<NODE> & getList() noexcept { return nodes; }
+
+#if 0
         template <typename PROC>
         struct CompareByValue
         {
@@ -197,6 +201,7 @@ namespace Yttrium
                 return proc(lhs->key,rhs->key);
             }
         };
+#endif
 
 
         //! insert for map
