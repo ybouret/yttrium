@@ -52,14 +52,16 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! restart all
-                virtual void restart() noexcept;
+
+                virtual void restart()      noexcept; //! restart all
+                bool         online() const noexcept; //! if any of the list is populated
 
                 //! dispatch according to C signs
                 void operator()(const Actors &      A,
                                 const XReadable &   C,
                                 const Level         L,
-                                const AddressBook * const wanders);
+                                const AddressBook  &wanders);
+
 
                 //______________________________________________________________
                 //

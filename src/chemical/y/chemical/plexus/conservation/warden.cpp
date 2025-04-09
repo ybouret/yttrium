@@ -31,7 +31,9 @@ namespace Yttrium
             A(n,m),
             AT(m,n),
             AA(n,n),
-            Xs(n)
+            Xs(n),
+            next(0),
+            prev(0)
             {
                 // reserving resources
                 assert(cluster.canons.owns(&canon));

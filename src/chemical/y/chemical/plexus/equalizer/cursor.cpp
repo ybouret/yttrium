@@ -9,7 +9,7 @@ namespace Yttrium
 
         namespace Equalizer
         {
-            Cursor:: Cursor(const Cursor &_) : SRepo(_), xi(_.xi) {}
+            Cursor:: Cursor(const Cursor &_) : Hauler(_), xi(_.xi) {}
 
 
             Cursor:: ~Cursor() noexcept {}
@@ -23,12 +23,16 @@ namespace Yttrium
             Cursor:: Cursor(const SBank   &sb,
                             const Species &sp,
                             const xreal_t  xx) :
-            SRepo(sb),
+            Hauler(sb),
             xi(xx)
             {
                 (*this) << sp;
             }
 
+            xreal_t Cursor:: getXi() const noexcept
+            {
+                return xi;
+            }
         }
         
     }

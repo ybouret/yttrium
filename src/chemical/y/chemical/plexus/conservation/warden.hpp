@@ -22,7 +22,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Warden
+            class Warden : public Quantized
             {
             public:
                 //______________________________________________________________
@@ -32,7 +32,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const char * const CallSign; //!< "Conservation::Warden"
-
+                typedef CxxListOf<Warden> List;
+                
                 //______________________________________________________________
                 //
                 //
@@ -83,7 +84,9 @@ namespace Yttrium
                 XMatrix          AT;      //!< transpose(A)
                 XMatrix          AA;      //!< A*A'
                 XArray           Xs;      //!< excess vector
-
+                Warden *         next;
+                Warden *         prev;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
             };

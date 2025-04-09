@@ -7,6 +7,7 @@
 
 
 #include "y/stream/xmlog.hpp"
+#include "y/quantized.hpp"
 
 namespace Yttrium
 {
@@ -23,7 +24,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class GainList
+            class GainList : public Quantized
             {
             public:
                 //______________________________________________________________

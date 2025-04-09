@@ -6,8 +6,7 @@
 #define Y_Chemical_Boundary_Included 1
 
 #include "y/chemical/plexus/equalizer/restartable.hpp"
-#include "y/chemical/type/defs.hpp"
-#include "y/chemical/species.hpp"
+#include "y/chemical/plexus/equalizer/hauler.hpp"
 
 namespace Yttrium
 {
@@ -25,7 +24,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Boundary : public SRepo, public Restartable
+            class Boundary : public Hauler, public Restartable
             {
             public:
                 //______________________________________________________________
@@ -48,6 +47,10 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! return xi
+                virtual xreal_t getXi() const noexcept;
+
+
                 //! process species with its extent
                 void operator()(const Species &sp, const xreal_t xx);
                 
@@ -60,7 +63,7 @@ namespace Yttrium
                 //! add species
                 void add(const Cursor&);
                 
-                
+
                 //______________________________________________________________
                 //
                 //

@@ -56,32 +56,22 @@ Y_UTEST(plexus)
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    AddressBook      vanishing;
     Equalizer::Banks banks;
 
     for(const Cluster *cl=cls->head;cl;cl=cl->next)
     {
-        vanishing.free();
-        for(const Conservation::Canon *canon=cl->canons.head;canon;canon=canon->next)
-        {
-            {
-                Conservation::Warden warden(*cl,*canon);
-                warden.fix(xml, C0, I0, TopLevel, vanishing);
-            }
-
-            vanishing.sort( Type2Type<Species>(), Species::Compare );
-
-            {
-                Equalizer::TwoSided eqz(*cl,*canon,banks);
-                eqz.fix(xml, C0, I0, TopLevel, vanishing);
-            }
-        }
-        vanishing.display<Species>(std::cerr) << std::endl;
+        Equalizer::Proceeding eqz(*cl,banks);
+        eqz.session(xml,C0,I0);
     }
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    
+    Y_SIZEOF(Conservation::Warden);
+    Y_SIZEOF(Equalizer::TwoSided);
+    Y_SIZEOF(Equalizer::OneSided);
+    Y_SIZEOF(Equalizer::KList);
+    Y_SIZEOF(Equalizer::GList);
+    Y_SIZEOF(Equalizer::Proceeding);
 
     return 0;
 

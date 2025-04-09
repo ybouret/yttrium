@@ -67,7 +67,7 @@ namespace Yttrium
                                      const Components &  E,
                                      const XReadable &   C,
                                      const Level         L,
-                                     const AddressBook * const wanders);
+                                     const AddressBook & wanders);
                 
                 
                 //! generate with components only
@@ -88,7 +88,7 @@ namespace Yttrium
                                  const Components &E,
                                  const XReadable  &C,
                                  const Level       L,
-                                 const AddressBook * const wanders) const;
+                                 const AddressBook &wanders) const;
                 
                 
                 //______________________________________________________________

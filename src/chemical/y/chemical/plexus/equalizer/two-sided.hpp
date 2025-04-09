@@ -48,9 +48,10 @@ namespace Yttrium
             typedef GList_::NodeType            GNode;
             typedef GList_::ProxyType           GBank;
 
-            class GList : public GainList, public GList_
+            class GList :  public GainList, public GList_
             {
             public:
+                typedef AutoPtr<GList> Pointer;
                 explicit GList(const GBank &_) noexcept : GList_(_) {}
                 virtual ~GList() noexcept {}
 
@@ -66,6 +67,8 @@ namespace Yttrium
             class KList : public GainList, public ESolo
             {
             public:
+                typedef AutoPtr<KList> Pointer;
+
                 explicit KList() noexcept : ESolo() {}
                 virtual ~KList() noexcept {}
 
@@ -79,9 +82,11 @@ namespace Yttrium
             };
 
 
-            class TwoSided
+            class TwoSided : public Quantized
             {
             public:
+                typedef CxxListOf<TwoSided> List;
+                
                 explicit TwoSided(const Cluster               &_cluster,
                                   const Conservation::Canon   &_canon,
                                   const Banks                 &_banks) :
@@ -91,11 +96,13 @@ namespace Yttrium
                 nrows( canon.anxious->size ),
                 ncols( cluster->species->size),
                 gbank(),
-                zgain(gbank),
-                pgain(gbank),
-                klist(),
+                zgain( new GList(gbank) ),
+                pgain( new GList(gbank) ),
+                klist( new KList()      ),
                 c_eqz(nrows,ncols),
-                xadd()
+                xadd(),
+                next(0),
+                prev(0)
                 {
                     gbank->reserve(nrows);
                 }
@@ -118,12 +125,14 @@ namespace Yttrium
                 const size_t                nrows;
                 const size_t                ncols;
                 GBank                       gbank;
-                GList                       zgain;
-                GList                       pgain;
-                KList                       klist;
+                GList::Pointer              zgain;
+                GList::Pointer              pgain;
+                KList::Pointer              klist;
                 XMatrix                     c_eqz;
                 XAdd                        xadd;
-
+                TwoSided *                  next;
+                TwoSided *                  prev;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TwoSided);
             };

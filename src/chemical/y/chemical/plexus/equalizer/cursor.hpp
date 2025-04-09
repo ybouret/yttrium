@@ -5,8 +5,7 @@
 #ifndef Y_Chemical_Cursor_Included
 #define Y_Chemical_Cursor_Included 1
 
-#include "y/chemical/type/defs.hpp"
-#include "y/chemical/species.hpp"
+#include "y/chemical/plexus/equalizer/hauler.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
@@ -23,7 +22,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Cursor : public SRepo
+            class Cursor : public Hauler
             {
             public:
                 //______________________________________________________________
@@ -38,6 +37,14 @@ namespace Yttrium
                 Cursor(const Cursor &_);           //!< duplicate
                 virtual ~Cursor() noexcept;        //!< cleanup
                 Y_OSTREAM_PROTO(Cursor);           //!< display
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                virtual xreal_t getXi() const noexcept;
 
                 //______________________________________________________________
                 //

@@ -44,17 +44,17 @@ namespace Yttrium
                                            const Components &  E,
                                            const XReadable  &  C,
                                            const Level         L,
-                                           const AddressBook * const wanders)
+                                           const AddressBook  &wanders)
             {
-                volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+                //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
                 Y_XML_SECTION_OPT(xml, "Extents", E.name);
                 try
                 {
                     best.restart();
                     reac(E.reac,C,L,wanders);
                     prod(E.prod,C,L,wanders);
-                    Y_XMLOG(xml, "(*) reactants :" << reac);
-                    Y_XMLOG(xml, "(*) products  :" << prod);
+                    if(reac.online()) Y_XMLOG(xml, "(*) reactants :" << reac);
+                    if(prod.online()) Y_XMLOG(xml, "(*) products  :" << prod);
                     
                     // std::cerr << "reac:" << reac << std::endl;
                     //std::cerr << "prod:" << prod << std::endl;
@@ -110,41 +110,52 @@ namespace Yttrium
                 static const char partial[] = "partial : ";
                 static const char reached[] = "reached : ";
                 
-                volatile Momentary::Off turnOff( Coerce(xml.verbose) );
-                
-                Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
+                //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+
                 assert(required->size>0);
                 assert(0==best.size);
-                
-                // look for partial solution
-                for(const CrNode *cn=required->head;cn;cn=cn->next)
+
+                if(limiting.size>0)
                 {
-                    const Cursor &cr = **cn;
-                    switch( Sign::Of(limiting.xi, cr.xi) )
+                    Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
+                    // look for partial solution
+                    for(const CrNode *cn=required->head;cn;cn=cn->next)
                     {
-                        case Negative: best = limiting;
-                            Y_XMLOG(xml, partial << best);
-                            return; // partial
-                            
-                        case __Zero__:
-                            best = limiting;
-                            best.add(cr);
-                            if(required->tail==cn)
-                            {
-                                Y_XMLOG(xml, reached << best);
-                            }
-                            else
-                            {
+                        const Cursor &cr = **cn;
+                        switch( Sign::Of(limiting.xi, cr.xi) )
+                        {
+                            case Negative: best = limiting;
                                 Y_XMLOG(xml, partial << best);
-                            }
-                            return; // special partial/full
-                        case Positive: continue;
+                                return; // partial
+
+                            case __Zero__:
+                                best = limiting;
+                                best.add(cr);
+                                if(required->tail==cn)
+                                {
+                                    Y_XMLOG(xml, reached << best);
+                                }
+                                else
+                                {
+                                    Y_XMLOG(xml, partial << best);
+                                }
+                                return; // special partial/full
+                            case Positive: continue;
+                        }
                     }
+
+                    // full
+                    best = **(required->tail);
+                    Y_XMLOG(xml, reached << best);
                 }
-                
-                // full
-                best = **(required->tail);
-                Y_XMLOG(xml, reached << best);
+                else
+                {
+                    Y_XML_COMMENT(xml,"only required " << required);
+
+                    //! automatically full
+                    best = **(required->tail);
+                    Y_XMLOG(xml, reached << best);
+                }
             }
             
             xreal_t Extents:: generate(XMLog            &xml,
@@ -153,7 +164,7 @@ namespace Yttrium
                                        const Components &E,
                                        const XReadable  &C,
                                        const Level       L,
-                                       const AddressBook * const wanders) const
+                                       const AddressBook &wanders) const
             {
                 
                 volatile Momentary::Off turnOff( Coerce(xml.verbose) );
@@ -169,19 +180,7 @@ namespace Yttrium
                 // move according to best
                 //
                 //______________________________________________________________
-
-                E.boldMove(Csub, SubLevel, best.xi);
-
-                //______________________________________________________________
-                //
-                //
-                // ensure vanishing
-                //
-                //______________________________________________________________
-                for(const SNode *sn=best.head;sn;sn=sn->next)
-                {
-                    (**sn)(Csub,SubLevel) = 0;
-                }
+                best.zforward(E, Csub, SubLevel);
                 if(xml.verbose) E.displayCompact( xml() << "eqz = ", Csub, SubLevel) << std::endl;
 
                 //______________________________________________________________
@@ -196,7 +195,7 @@ namespace Yttrium
                     size_t n = E->size();
                     for(Components::ConstIterator it=E->begin();n-- > 0;++it)
                     {
-                        const Species &sp = (**it).sp; if(wanders && wanders->has(sp)) continue;
+                        const Species &sp = (**it).sp; if(wanders.has(sp)) continue;
                         const xreal_t c_old = sp(C,L);
                         if(c_old<zero)
                         {

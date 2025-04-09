@@ -45,13 +45,13 @@ namespace Yttrium
 
 
                 {
-                    const AddressBook * const book = & cluster.wandering;
+                    const AddressBook &wanders = cluster.wandering;
                     size_t cycle = 0;
                 CYCLE:
                     ++cycle;
-                    zgain.free();
-                    pgain.free();
-                    klist.free();
+                    zgain->free();
+                    pgain->free();
+                    klist->free();
                     for(const ENode *en=cluster.definite->head;en;en=en->next)
                     {
                         //______________________________________________________
@@ -61,7 +61,7 @@ namespace Yttrium
                         //
                         //______________________________________________________
                         const Equilibrium &eq   = **en;
-                        const Resultant    res  = probe(xml,eq,C0,L0,book);
+                        const Resultant    res  = probe(xml,eq,C0,L0,wanders);
 
                         //______________________________________________________
                         //
@@ -72,7 +72,7 @@ namespace Yttrium
                         switch(res)
                         {
                             case Correct: continue;              // nothing to do
-                            case BadBoth: klist << eq; continue; // blocked...
+                            case BadBoth: *klist << eq; continue; // blocked...
                             case BadReac: break;
                             case BadProd: break;
                         }
@@ -83,21 +83,20 @@ namespace Yttrium
                         // prepare a correction and dispatch according to gain
                         //
                         //______________________________________________________
-                        XWritable &cc = c_eqz[zgain.size+pgain.size+1];
-                        cluster.transfer(cc,SubLevel,C0,L0);
-                        const Gain G(probe.generate(xml,xadd,cc,eq,C0,L0,book),eq,cc); assert(G.g.mantissa>=0);
+                        XWritable &cc = cluster.transfer(c_eqz[zgain->size+pgain->size+1],SubLevel,C0,L0);
+                        const Gain G(probe.generate(xml,xadd,cc,eq,C0,L0,wanders),eq,cc); assert(G.g.mantissa>=0);
                         if(G.g.mantissa<=0)
-                            zgain << G;
+                            *zgain << G;
                         else
-                            pgain << G;
+                            *pgain << G;
                     }
 
                     {
                         Y_XML_SECTION_OPT(xml,"Status","cycle=" << cycle);
-                        MergeSort::Call(pgain,CompareGains);
-                        klist.show(xml, Sign::ToText(Negative) );
-                        zgain.show(xml, Sign::ToText(__Zero__) );
-                        pgain.show(xml, Sign::ToText(Positive) );
+                        MergeSort::Call(*pgain,CompareGains);
+                        klist->show(xml, Sign::ToText(Negative) );
+                        zgain->show(xml, Sign::ToText(__Zero__) );
+                        pgain->show(xml, Sign::ToText(Positive) );
                     }
 
                     //______________________________________________________
@@ -106,9 +105,9 @@ namespace Yttrium
                     // apply the best gain
                     //
                     //______________________________________________________
-                    if(pgain.size>0)
+                    if(pgain->size>0)
                     {
-                        const Gain &winner = **pgain.head;
+                        const Gain &winner = **pgain->head;
                         cluster.transfer(C0,L0,winner.C,SubLevel);
                         goto CYCLE;
                     }

@@ -8,7 +8,7 @@ namespace Yttrium
         namespace Equalizer
         {
             Boundary:: Boundary(const SBank &sb) noexcept :
-            SRepo(sb),
+            Hauler(sb),
             xi(0)
             {
             }
@@ -57,7 +57,7 @@ namespace Yttrium
             }
 
             Boundary:: Boundary(const Boundary &_) :
-            SRepo(_),
+            Hauler(_),
             Restartable(),
             xi(_.xi)
             {
@@ -75,6 +75,13 @@ namespace Yttrium
                 xch(tmp);
                 return *this;
             }
+
+            xreal_t Boundary:: getXi() const noexcept
+            {
+                return xi;
+            }
+
+            
         }
     }
 }

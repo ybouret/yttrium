@@ -47,12 +47,12 @@ namespace Yttrium
             void Extent:: operator()(const Actors &      A,
                                      const XReadable &   C,
                                      const Level         L,
-                                     const AddressBook * const wanders)
+                                     const AddressBook  &wanders)
             {
                 restart();
                 for(const Actor *a=A->head;a;a=a->next)
                 {
-                    const Species &sp = a->sp; if(wanders && wanders->has(sp)) continue;
+                    const Species &sp = a->sp; if( wanders.has(sp) ) continue;
                     const xreal_t  cc = sp(C,L);
                     if(cc>=0.0)
                     {
@@ -63,6 +63,11 @@ namespace Yttrium
                         required(sp,(-cc)/a->xn);
                     }
                 }
+            }
+
+            bool Extent:: online() const noexcept
+            {
+                return limiting.size>0 || required->size>0;
             }
 
         }
