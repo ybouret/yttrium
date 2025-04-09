@@ -73,7 +73,7 @@ Y_UTEST(plexus)
 
             {
                 Equalizer::TwoSided eqz(*cl,*canon,banks);
-                eqz.fix(xml, C0, TopLevel, vanishing);
+                eqz.fix(xml, C0, I0, TopLevel, vanishing);
             }
         }
         vanishing.display<Species>(std::cerr) << std::endl;

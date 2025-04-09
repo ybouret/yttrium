@@ -107,6 +107,7 @@ namespace Yttrium
 
                 void fix(XMLog             &xml,
                          XWritable         &C0,
+                         Summator          &I0,
                          const Level        L0,
                          const AddressBook &vanishing);
 

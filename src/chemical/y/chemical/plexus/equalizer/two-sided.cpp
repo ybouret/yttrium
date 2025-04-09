@@ -35,83 +35,84 @@ namespace Yttrium
 
             void TwoSided:: fix(XMLog             &xml,
                                 XWritable         &C0,
+                                Summator          &I0,
                                 const Level        L0,
                                 const AddressBook &vanishing)
             {
 
-                Y_XML_SECTION(xml,"Equalizer::Ordinary");
-                if(xml.verbose)
+                Y_XML_SECTION(xml,"Equalizer::TwoSided");
+                if(xml.verbose) vanishing.display<Species>(xml() << "vanishing: ") << std::endl;
+
+
                 {
-                    vanishing.display<Species>(xml() << "vanishing: ") << std::endl;
-                }
-
-
-                size_t cycle = 0;
-            CYCLE:
-                ++cycle;
-                Y_XML_COMMENT(xml, "[[ Fix Cycle #" << std::setw(4) << cycle << " ]]");
-                zgain.free();
-                pgain.free();
-                klist.free();
-                for(const ENode *en=cluster.definite->head;en;en=en->next)
-                {
-                    //__________________________________________________________
-                    //
-                    //
-                    // probe status
-                    //
-                    //__________________________________________________________
-                    const Equilibrium &eq   = **en;
-                    const Resultant    res  = probe(xml,eq,C0,L0, & cluster.wandering );
-
-                    //__________________________________________________________
-                    //
-                    //
-                    // take action
-                    //
-                    //__________________________________________________________
-                    switch(res)
+                    const AddressBook * const book = & cluster.wandering;
+                    size_t cycle = 0;
+                CYCLE:
+                    ++cycle;
+                    zgain.free();
+                    pgain.free();
+                    klist.free();
+                    for(const ENode *en=cluster.definite->head;en;en=en->next)
                     {
-                        case Correct: continue;              // nothing to do
-                        case BadBoth: klist << eq; continue; // blocked...
-                        case BadReac: break;
-                        case BadProd: break;
+                        //______________________________________________________
+                        //
+                        //
+                        // probe status
+                        //
+                        //______________________________________________________
+                        const Equilibrium &eq   = **en;
+                        const Resultant    res  = probe(xml,eq,C0,L0,book);
+
+                        //______________________________________________________
+                        //
+                        //
+                        // take action
+                        //
+                        //______________________________________________________
+                        switch(res)
+                        {
+                            case Correct: continue;              // nothing to do
+                            case BadBoth: klist << eq; continue; // blocked...
+                            case BadReac: break;
+                            case BadProd: break;
+                        }
+
+                        //______________________________________________________
+                        //
+                        //
+                        // prepare a correction and dispatch according to gain
+                        //
+                        //______________________________________________________
+                        XWritable &cc = c_eqz[zgain.size+pgain.size+1];
+                        cluster.transfer(cc,SubLevel,C0,L0);
+                        const Gain G(probe.generate(xml,xadd,cc,eq,C0,L0,book),eq,cc); assert(G.g.mantissa>=0);
+                        if(G.g.mantissa<=0)
+                            zgain << G;
+                        else
+                            pgain << G;
                     }
 
-                    //__________________________________________________________
-                    //
-                    //
-                    // prepare a correction and dispatch according to gain
-                    //
-                    //__________________________________________________________
-                    XWritable &cc = c_eqz[zgain.size+pgain.size+1];
-                    cluster.transfer(cc,SubLevel,C0,L0);
-                    const Gain G(probe.generate(xml,xadd,cc,eq,C0,L0, &cluster.wandering),eq,cc); assert(G.g.mantissa>=0);
-                    if(G.g.mantissa<=0)
-                        zgain << G;
-                    else
-                        pgain << G;
-                }
+                    {
+                        Y_XML_SECTION_OPT(xml,"Status","cycle=" << cycle);
+                        MergeSort::Call(pgain,CompareGains);
+                        klist.show(xml, Sign::ToText(Negative) );
+                        zgain.show(xml, Sign::ToText(__Zero__) );
+                        pgain.show(xml, Sign::ToText(Positive) );
+                    }
 
-                {
-                    Y_XML_SECTION(xml,"Status");
-                    MergeSort::Call(pgain,CompareGains);
-                    klist.show(xml, Sign::ToText(Negative) );
-                    zgain.show(xml, Sign::ToText(__Zero__) );
-                    pgain.show(xml, Sign::ToText(Positive) );
-                }
+                    //______________________________________________________
+                    //
+                    //
+                    // apply the best gain
+                    //
+                    //______________________________________________________
+                    if(pgain.size>0)
+                    {
+                        const Gain &winner = **pgain.head;
+                        cluster.transfer(C0,L0,winner.C,SubLevel);
+                        goto CYCLE;
+                    }
 
-                //______________________________________________________________
-                //
-                //
-                // apply the best gain
-                //
-                //______________________________________________________________
-                if(pgain.size>0)
-                {
-                    const Gain &winner = **pgain.head;
-                    cluster.transfer(C0,L0,winner.C,SubLevel);
-                    goto CYCLE;
                 }
 
                 //______________________________________________________________
@@ -120,11 +121,24 @@ namespace Yttrium
                 // no more positive gain, apply vanishing
                 //
                 //______________________________________________________________
+                {
+                    const xreal_t zero;
+                    for(const SNode *sn=canon.species->head;sn;sn=sn->next)
+                    {
+                        const Species & sp = **sn;
+                        xreal_t       & cc = sp(C0,L0);
+                        if(vanishing.has(sp) || cc < zero)
+                        {
+                            sp(I0,L0) << -cc;
+                            cc = zero;
+                        }
+                        assert(cc>=zero);
+                    }
+                }
 
+                cluster.show(std::cerr << "Ceqz=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
+                cluster.show(std::cerr << "Cinj=", L0, "\t[", I0, "]") << std::endl;
 
-                cluster.show(std::cerr << "Ceqz=", L0, "[", C0, "]", xreal_t::ToString) << std::endl;
-
-                if(klist.size||zgain.size) throw Exception("Equalize: not finished");
 
 
             }

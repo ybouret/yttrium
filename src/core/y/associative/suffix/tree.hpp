@@ -46,7 +46,7 @@ namespace Yttrium
         //______________________________________________________________________
 
         //! setup empty
-        inline explicit SuffixTree() : list(), pool(), tree() {}
+        inline explicit SuffixTree() : Ordering(), list(), pool(), tree() {}
 
         //! cleanup
         inline virtual ~SuffixTree() noexcept {
@@ -55,7 +55,7 @@ namespace Yttrium
 
         //! duplicate
         inline          SuffixTree(const SuffixTree &other) :
-        list(), pool(), tree() { duplicate_(other); }
+        Ordering(), list(), pool(), tree() { duplicate_(other); }
 
         //______________________________________________________________________
         //

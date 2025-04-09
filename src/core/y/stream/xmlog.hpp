@@ -90,7 +90,7 @@ do if( (HOST).verbose)  { (*HOST << ' ' << OPTIONS) <<  Yttrium::XMLog::RANGLE <
             }
             else
             {
-                Y_XML_SECTION_OPT(*this,name, " size='" << n << "'");
+                Y_XML_SECTION_OPT(*this,name, "size='" << n << "'");
                 for(const typename LIST::NodeType *node=list.head;node;node=node->next)
                 {
                     Y_XMLOG(*this,**node);
