@@ -113,13 +113,29 @@ namespace Yttrium
         //! same size and contains each other
         friend bool operator==(const AddressBook &lhs, const AddressBook &rhs) noexcept;
 
-
+        //! sort by value
+        template <typename T, typename PROC> inline
+        void sort(const Type2Type<T>, PROC &proc)
+        {
+            Comparison<typename TypeTraits<T>::MutableType,PROC> comparison = { proc };
+            sortByValue(comparison);
+        }
 
 
     private:
         Y_DISABLE_ASSIGN(AddressBook);
         void throwSameAddress(const void *p) const;
-        
+
+        template <typename T, typename PROC>
+        struct Comparison
+        {
+            PROC &proc;
+            inline SignType operator()(const void * const lhs, const void * const rhs)
+            {
+                return proc( *static_cast<const T*>(lhs), *static_cast<const T *>(rhs) );
+            }
+        };
+
         template <typename T> static inline
         void Display(std::ostream &os, const ConstIterator &it)
         {

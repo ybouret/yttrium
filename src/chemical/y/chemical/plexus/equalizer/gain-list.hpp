@@ -15,14 +15,37 @@ namespace Yttrium
         namespace Equalizer
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! base class to display gain lists
+            //
+            //
+            //__________________________________________________________________
             class GainList
             {
             public:
-                virtual ~GainList() noexcept;
-                virtual void show(XMLog &, const char * const) const = 0;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit GainList() noexcept; //!< setup
+                virtual ~GainList() noexcept; //!< cleanup
+
+                //______________________________________________________________
+                //
+                //
+                // Interface
+                //
+                //______________________________________________________________
+                virtual void show(XMLog &, const char * const) const = 0; //!< display
 
             protected:
-                explicit GainList() noexcept;
+
+                //! helper for any compatible list
                 template <typename LIST> static inline
                 void Show(XMLog &xml, const char * const uuid, const LIST &self)
                 {

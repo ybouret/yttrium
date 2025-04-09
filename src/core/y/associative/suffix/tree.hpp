@@ -37,6 +37,7 @@ namespace Yttrium
         typedef SuffixPool<NODE>             PoolType; //!< alias
         typedef Memory::ReadOnlyBuffer       PathType; //!< alias
         typedef AssociativeNodeSorting<NODE> Ordering; //!< alias
+
         //______________________________________________________________________
         //
         //
@@ -113,7 +114,6 @@ namespace Yttrium
         PoolType         pool; //!< memory pool
         Core::SuffixTree tree; //!< internal tree
 
-        inline virtual ListOf<NODE> & getList() noexcept { return list; }
 
         //______________________________________________________________________
         //
@@ -138,6 +138,9 @@ namespace Yttrium
 
     private:
         Y_DISABLE_ASSIGN(SuffixTree);
+
+        inline virtual ListOf<NODE> & getList() noexcept { return list; }
+
 
         inline bool insert__(NODE *node)
         {

@@ -145,25 +145,6 @@ namespace Yttrium
         inline ConstIterator begin() const noexcept { return ConstIterator(nodes.head); }  //!< begin const forward
         inline ConstIterator end()   const noexcept { return ConstIterator(0);          }  //!< end   const forward
 
-#if 0
-        //! sort node by content
-        template <typename COMPARE_TYPES> inline
-        void sortByValue(COMPARE_TYPES &proc)
-        {
-            CompareByValue<COMPARE_TYPES> comparison = { proc };
-            MergeSort::Call(nodes,comparison);
-        }
-
-        //! sort node by content
-        template <typename COMPARE_KEYS> inline
-        void sortByKey(COMPARE_KEYS &proc)
-        {
-            CompareByKey<COMPARE_KEYS> comparison = { proc };
-            MergeSort::Call(nodes,comparison);
-        }
-#endif
-
-
 
         //______________________________________________________________________
         //
@@ -171,8 +152,6 @@ namespace Yttrium
         // Members
         //
         //______________________________________________________________________
-
-
     protected:
         ListOf<NODE>       nodes; //!< actual data
         HashTable          table; //!< current table
@@ -180,29 +159,7 @@ namespace Yttrium
         NodePool           npool; //!< pool of nodes
         mutable KEY_HASHER hashr; //!< key hasher
 
-        inline virtual ListOf<NODE> & getList() noexcept { return nodes; }
 
-#if 0
-        template <typename PROC>
-        struct CompareByValue
-        {
-            PROC &proc;
-            inline SignType operator()(const NODE * const lhs, const NODE * const rhs) const
-            {
-                return proc(**lhs,**rhs);
-            }
-        };
-
-        template <typename PROC>
-        struct CompareByKey
-        {
-            PROC &proc;
-            inline SignType operator()(const NODE * const lhs, const NODE * const rhs) const
-            {
-                return proc(lhs->key,rhs->key);
-            }
-        };
-#endif
 
 
         //! insert for map
@@ -232,6 +189,7 @@ namespace Yttrium
     private:
         Y_DISABLE_ASSIGN(HashLinked);
 
+        inline virtual ListOf<NODE> & getList() noexcept { return nodes; }
 
         //! free content, keep memory
         inline void free_() noexcept

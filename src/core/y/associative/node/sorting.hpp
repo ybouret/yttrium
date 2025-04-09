@@ -4,19 +4,37 @@
 #define Y_Associative_Node_Sorting_Included 1
 
 #include "y/sort/merge.hpp"
+#include "y/random/shuffle.hpp"
 
 namespace Yttrium
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //
+    //! Base class to allowe sorting of internal lists
+    //
+    //
+    //__________________________________________________________________________
     template <typename NODE>
     class AssociativeNodeSorting
     {
-    protected:
-        inline explicit AssociativeNodeSorting() noexcept {}
-
-
     public:
-        inline virtual ~AssociativeNodeSorting() noexcept {}
+        //______________________________________________________________________
+        //
+        //
+        // C++
+        //
+        //______________________________________________________________________
+        inline explicit AssociativeNodeSorting() noexcept {} //!< setup
+        inline virtual ~AssociativeNodeSorting() noexcept {} //!< cleanup
+
+        //______________________________________________________________________
+        //
+        //
+        // Methods
+        //
+        //______________________________________________________________________
 
         //! sort list of nodes by value
         template <typename PROC> inline
@@ -34,12 +52,19 @@ namespace Yttrium
             MergeSort::Call(getList(),comparison);
         }
 
+        //! shuffle internal list
+        inline void shuffle(Random::Bits &ran)
+        {
+            Random::Shuffle::List( getList(), ran);
+        }
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(AssociativeNodeSorting);
 
+        //! get internal compatible list
         virtual ListOf<NODE> & getList() noexcept = 0;
 
-
+        //! wrapper to forward call on nodes value
         template <typename PROC>
         struct CompareByValue
         {
@@ -50,6 +75,7 @@ namespace Yttrium
             }
         };
 
+        //! wrapper to forwad code on nodes key
         template <typename PROC>
         struct CompareByKey
         {

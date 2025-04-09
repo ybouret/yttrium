@@ -77,6 +77,9 @@ Y_UTEST(associative_hash_set)
             Y_ASSERT(pset.insert(ptr));
         }
 
+        
+
+
         {
             HashSet<String,Dummy>  hcpy(hset);
             Y_CHECK(hcpy.size()==hset.size());

@@ -45,6 +45,14 @@ Y_UTEST(associative_suffix_map)
             std::cerr << myCpy << std::endl;
         }
 
+        myMap.shuffle(ran);
+        std::cerr << "ran=" << myMap << std::endl;
+
+        myMap.sortByKey(String::Compare);
+        std::cerr << "srt=" << myMap << std::endl;
+
+
+
         std::cerr << "Checking Keys" << std::endl;
         if(keys.size()>0)
         {
