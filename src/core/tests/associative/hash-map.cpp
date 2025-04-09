@@ -37,7 +37,8 @@ Y_UTEST(associative_hash_map)
             if(found) continue;
             keys << line;
             ++count;
-            Y_ASSERT(hmap.insert(line,count));
+            const apn value(ran,12);
+            Y_ASSERT(hmap.insert(line,value));
             Y_ASSERT(hmap.search(line));
         }
         std::cerr << "count=" << count << std::endl;
@@ -53,6 +54,21 @@ Y_UTEST(associative_hash_map)
         }
 
         std::cerr << "Iterator:" << std::endl;
+        for(HashMap<String,apn>::Iterator it=hmap.begin();it!=hmap.end();++it)
+        {
+            std::cerr << *it << " <- " << it->key << std::endl;
+        }
+        std::cerr << "Sorting By Value:" << std::endl;
+        hmap.sortByValue(Comparison::Increasing<apn>);
+        
+        for(HashMap<String,apn>::Iterator it=hmap.begin();it!=hmap.end();++it)
+        {
+            std::cerr << *it << " <- " << it->key << std::endl;
+        }
+
+        std::cerr << "Sorting By Key:" << std::endl;
+        hmap.sortByKey(String::Compare);
+
         for(HashMap<String,apn>::Iterator it=hmap.begin();it!=hmap.end();++it)
         {
             std::cerr << *it << " <- " << it->key << std::endl;

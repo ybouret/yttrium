@@ -107,13 +107,20 @@ namespace Yttrium
                 // apply the best gain
                 //
                 //______________________________________________________________
-
                 if(pgain.size>0)
                 {
                     const Gain &winner = **pgain.head;
                     cluster.transfer(C0,L0,winner.C,SubLevel);
                     goto CYCLE;
                 }
+
+                //______________________________________________________________
+                //
+                //
+                // no more positive gain, apply vanishing
+                //
+                //______________________________________________________________
+
 
                 cluster.show(std::cerr << "Ceqz=", L0, "[", C0, "]", xreal_t::ToString) << std::endl;
 

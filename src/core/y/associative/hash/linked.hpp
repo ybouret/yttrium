@@ -7,6 +7,7 @@
 #include "y/associative/hash/table.hpp"
 #include "y/container/iterator/linked.hpp"
 #include "y/type/utils.hpp"
+#include "y/sort/merge.hpp"
 
 namespace Yttrium
 {
@@ -143,6 +144,24 @@ namespace Yttrium
         inline ConstIterator begin() const noexcept { return ConstIterator(nodes.head); }  //!< begin const forward
         inline ConstIterator end()   const noexcept { return ConstIterator(0);          }  //!< end   const forward
 
+        //! sort node by content
+        template <typename COMPARE_TYPES> inline
+        void sortByValue(COMPARE_TYPES &proc)
+        {
+            CompareByValue<COMPARE_TYPES> comparison = { proc };
+            MergeSort::Call(nodes,comparison);
+        }
+
+        //! sort node by content
+        template <typename COMPARE_KEYS> inline
+        void sortByKey(COMPARE_KEYS &proc)
+        {
+            CompareByKey<COMPARE_KEYS> comparison = { proc };
+            MergeSort::Call(nodes,comparison);
+        }
+
+
+
 
         //______________________________________________________________________
         //
@@ -159,7 +178,27 @@ namespace Yttrium
         NodePool           npool; //!< pool of nodes
         mutable KEY_HASHER hashr; //!< key hasher
 
-       
+        template <typename PROC>
+        struct CompareByValue
+        {
+            PROC &proc;
+            inline SignType operator()(const NODE * const lhs, const NODE * const rhs) const
+            {
+                return proc(**lhs,**rhs);
+            }
+        };
+
+        template <typename PROC>
+        struct CompareByKey
+        {
+            PROC &proc;
+            inline SignType operator()(const NODE * const lhs, const NODE * const rhs) const
+            {
+                return proc(lhs->key,rhs->key);
+            }
+        };
+
+
         //! insert for map
         inline bool insert_(ParamKey k, ParamType t)
         {
