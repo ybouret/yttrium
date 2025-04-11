@@ -11,7 +11,7 @@ namespace Yttrium
             const char * const OneSided:: CallSign = "Equalizer::OneSided";
 
             OneSided:: OneSided(const Cluster & _cluster,
-                                const Banks   & _banks) :
+                                const Banks   & _banks) noexcept :
             cluster(_cluster),
             cursors(_banks)
             {

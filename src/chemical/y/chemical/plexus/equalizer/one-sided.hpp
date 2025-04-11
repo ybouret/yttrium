@@ -15,22 +15,55 @@ namespace Yttrium
     {
         namespace Equalizer
         {
+            //______________________________________________________________
+            //
+            //
+            //
+            //! Helper to fix a negative concentration for only[Reac|Prod]
+            //
+            //
+            //______________________________________________________________
             class OneSided
             {
             public:
-                static const char * const CallSign;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                static const char * const CallSign; //!< "Equalizer::OneSided"
 
-                explicit OneSided(const Cluster &_cluster,
-                                  const Banks   &_banks);
-                virtual ~OneSided() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit OneSided(const Cluster&, const Banks&) noexcept; //!< setup
+                virtual ~OneSided() noexcept;                             //!< cleanup
 
-                const Cluster &cluster;
-                Cursors        cursors;
 
-                void fix(XMLog &xml,
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+
+                //! fix using only[Reac|Prod] of cluster
+                void fix(XMLog &     xml,
                          XWritable & C0,
                          const Level L0);
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Cluster &cluster; //!< persistent cluster
+                Cursors        cursors; //!< cursors to select extent/species
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OneSided);

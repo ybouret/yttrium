@@ -32,7 +32,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 static const char * const CallSign; //!< "Conservation::Warden"
-                typedef CxxListOf<Warden> List;
+                typedef CxxListOf<Warden> List;     //!< alias
                 
                 //______________________________________________________________
                 //
@@ -41,7 +41,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
-                //! setup from cluster and canon
+                //! setup from persistent cluster and canon
                 explicit Warden(const Cluster  &_cluster,
                                 const Canon    &_canon);
 
@@ -84,9 +84,9 @@ namespace Yttrium
                 XMatrix          AT;      //!< transpose(A)
                 XMatrix          AA;      //!< A*A'
                 XArray           Xs;      //!< excess vector
-                Warden *         next;
-                Warden *         prev;
-                
+                Warden *         next;    //!< for list
+                Warden *         prev;    //!< for list
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Warden);
             };

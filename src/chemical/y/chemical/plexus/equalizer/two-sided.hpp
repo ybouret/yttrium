@@ -7,7 +7,7 @@
 
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/chemical/plexus/equalizer/extents.hpp"
-#include "y/chemical/plexus/equalizer/gain-list.hpp"
+#include "y/chemical/plexus/equalizer/two-sided/gain-list.hpp"
 
 namespace Yttrium
 {

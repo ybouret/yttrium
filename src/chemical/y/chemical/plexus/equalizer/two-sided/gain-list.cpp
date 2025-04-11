@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/gain-list.hpp"
+#include "y/chemical/plexus/equalizer/two-sided/gain-list.hpp"
 
 namespace Yttrium
 {

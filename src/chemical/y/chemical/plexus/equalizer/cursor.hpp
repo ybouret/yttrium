@@ -44,7 +44,7 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                virtual xreal_t getXi() const noexcept;
+                virtual xreal_t getXi() const noexcept; //!< return xi
 
                 //______________________________________________________________
                 //

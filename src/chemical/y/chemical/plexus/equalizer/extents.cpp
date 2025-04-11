@@ -21,25 +21,25 @@ namespace Yttrium
                 }
                 return Core::Unknown;
             }
-            
+
             Extents:: Extents(const Banks &banks) noexcept :
             reac(banks),
             prod(banks),
             best(banks.sb)
             {
             }
-            
+
             Extents:: ~Extents() noexcept
             {
             }
-            
+
             void Extents:: restart() noexcept {
                 reac.restart();
                 prod.restart();
                 best.restart();
             }
-            
-            
+
+
             Resultant Extents:: operator()(XMLog&              xml,
                                            const Components &  E,
                                            const XReadable  &  C,
@@ -53,14 +53,14 @@ namespace Yttrium
                     best.restart();
                     reac(E.reac,C,L,wanders);
                     prod(E.prod,C,L,wanders);
-                    if(reac.online()) Y_XMLOG(xml, "(*) reactants :" << reac);
-                    if(prod.online()) Y_XMLOG(xml, "(*) products  :" << prod);
-                    
+                    Y_XMLOG(xml, "(*) reactants :" << reac);
+                    Y_XMLOG(xml, "(*) products  :" << prod);
+
                     // std::cerr << "reac:" << reac << std::endl;
                     //std::cerr << "prod:" << prod << std::endl;
                     if(reac.required->size<=0)
                     {
-                        
+
                         if(prod.required->size<=0)
                         {
                             // no negative concerned concentration
@@ -93,62 +93,62 @@ namespace Yttrium
                             return BadBoth;
                         }
                     }
-                    
-                    
-                    
+
+
+
                 }
                 catch(...)
                 {
                     restart();
                     throw;
                 }
-                
+
             }
-            
+
             void Extents:: findBest(XMLog &xml, const Boundary &limiting, const Cursors &required)
             {
                 static const char partial[] = "partial : ";
                 static const char reached[] = "reached : ";
-                
+
                 //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
 
+                assert(limiting.size>0);
                 assert(required->size>0);
                 assert(0==best.size);
 
-                if(limiting.size>0)
+
+                Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
+                // look for partial solution
+                for(const CrNode *cn=required->head;cn;cn=cn->next)
                 {
-                    Y_XML_COMMENT(xml,"find " << limiting << " within " << required);
-                    // look for partial solution
-                    for(const CrNode *cn=required->head;cn;cn=cn->next)
+                    const Cursor &cr = **cn;
+                    switch( Sign::Of(limiting.xi, cr.xi) )
                     {
-                        const Cursor &cr = **cn;
-                        switch( Sign::Of(limiting.xi, cr.xi) )
-                        {
-                            case Negative: best = limiting;
+                        case Negative: best = limiting;
+                            Y_XMLOG(xml, partial << best);
+                            return; // partial
+
+                        case __Zero__:
+                            best = limiting;
+                            best.add(cr);
+                            if(required->tail==cn)
+                            {
+                                Y_XMLOG(xml, reached << best);
+                            }
+                            else
+                            {
                                 Y_XMLOG(xml, partial << best);
-                                return; // partial
-
-                            case __Zero__:
-                                best = limiting;
-                                best.add(cr);
-                                if(required->tail==cn)
-                                {
-                                    Y_XMLOG(xml, reached << best);
-                                }
-                                else
-                                {
-                                    Y_XMLOG(xml, partial << best);
-                                }
-                                return; // special partial/full
-                            case Positive: continue;
-                        }
+                            }
+                            return; // special partial/full
+                        case Positive: continue;
                     }
-
-                    // full
-                    best = **(required->tail);
-                    Y_XMLOG(xml, reached << best);
                 }
-                else
+
+                // full
+                best = **(required->tail);
+                Y_XMLOG(xml, reached << best);
+
+#if 0
                 {
                     Y_XML_COMMENT(xml,"only required " << required);
 
@@ -156,8 +156,9 @@ namespace Yttrium
                     best = **(required->tail);
                     Y_XMLOG(xml, reached << best);
                 }
+#endif
             }
-            
+
             xreal_t Extents:: generate(XMLog            &xml,
                                        XAdd             &xadd,
                                        XWritable        &Csub,
@@ -166,11 +167,11 @@ namespace Yttrium
                                        const Level       L,
                                        const AddressBook &wanders) const
             {
-                
+
                 volatile Momentary::Off turnOff( Coerce(xml.verbose) );
-                
+
                 Y_XML_SECTION_OPT(xml, "Gaining", E.name);
-                
+
                 assert(best.size>0);
                 if(xml.verbose) E.displayCompact( xml() << "bad = ", Csub, SubLevel) << std::endl;
 
@@ -210,9 +211,9 @@ namespace Yttrium
                 Y_XMLOG(xml,"gain = " << gain.str());
                 return gain;
             }
-            
+
         }
-        
+
     }
 }
 
