@@ -9,15 +9,15 @@ namespace Yttrium
         {
             TwoSided:: TwoSided(const Cluster               &_cluster,
                                 const Conservation::Canon   &_canon,
-                                const Banks                 &_banks) :
+                                const Banks                 &_banks,
+                                const GBank                 &_gbank) :
             cluster( _cluster ),
             canon( _canon ),
             probe( _banks),
             nrows( canon.anxious->size ),
             ncols( cluster->species->size),
-            gbank(),
-            zgain( new GList(gbank) ),
-            pgain( new GList(gbank) ),
+            zgain( new GList(_gbank) ),
+            pgain( new GList(_gbank) ),
             klist( new KList()      ),
             c_eqz(nrows,ncols),
             xadd(),

@@ -32,6 +32,7 @@ namespace Yttrium
                 Y_PROXY_DECL();
                 CxxListOf<Proceeding> proc;
                 Banks                 banks;
+                GBank                 gbank;
             };
 
         }

@@ -46,7 +46,8 @@ namespace Yttrium
                 //! setup
                 explicit TwoSided(const Cluster               &_cluster,
                                   const Conservation::Canon   &_canon,
-                                  const Banks                 &_banks);
+                                  const Banks                 &_banks,
+                                  const GBank                 &_gbank);
 
                 virtual ~TwoSided() noexcept;
 

@@ -13,7 +13,8 @@ namespace Yttrium
 
 
             Proceeding:: Proceeding(const Cluster & cluster,
-                                    const Banks   & banks) :
+                                    const Banks   & banks,
+                                    const GBank   & gbank) :
             watchers(),
             twoSided(),
             oneSided(cluster,banks),
@@ -24,8 +25,8 @@ namespace Yttrium
                 for(const Conservation::Canon *pc=cluster.canons.head;pc;pc=pc->next)
                 {
                     const Conservation::Canon &canon = *pc;
-                    watchers.pushTail( new Watcher(cluster,canon)        );
-                    twoSided.pushTail( new TwoSided(cluster,canon,banks) );
+                    watchers.pushTail( new Watcher(cluster,canon)              );
+                    twoSided.pushTail( new TwoSided(cluster,canon,banks,gbank) );
                 }
                 assert(watchers.size==twoSided.size);
             }

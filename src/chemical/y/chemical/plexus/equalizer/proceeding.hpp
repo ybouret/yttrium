@@ -20,28 +20,69 @@ namespace Yttrium
         namespace Equalizer
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Proceeding for negative concentrations in one cluster
+            //
+            //
+            //__________________________________________________________________
             class Proceeding : public Quantized
             {
             public:
-                typedef Conservation::Warden Watcher;;
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef Conservation::Warden Watcher; //!< alias
 
-                explicit Proceeding(const Cluster &, const Banks &);
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
+                explicit Proceeding(const Cluster &,
+                                    const Banks   &,
+                                    const GBank   &);
+
+                //! cleanup
                 virtual ~Proceeding() noexcept;
+
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
                 //! equalize cluster
                 /**
-                 \param I0 must be initialized
+                 \param xml for output
+                 \param C0  TopLevel concentratiopns
+                 \param I0  TopLevel injected, must be initialized
                  */
                 void session(XMLog     &  xml,
                              XWritable &  C0,
                              Summator  &  I0);
-                
-                Watcher::List     watchers;
-                TwoSided::List    twoSided;
-                OneSided          oneSided;
-                AddressBook       vanishing;
-                Proceeding *      next;
-                Proceeding *      prev;
+
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                Watcher::List     watchers;    //!< fix conservations
+                TwoSided::List    twoSided;    //!< fix two-sided
+                OneSided          oneSided;    //!< fix one-sided
+                AddressBook       vanishing;   //!< comms watchers to twoSided
+                Proceeding *      next;        //!< for list
+                Proceeding *      prev;        //!< for list
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Proceeding);

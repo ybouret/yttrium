@@ -14,10 +14,11 @@ namespace Yttrium
             Proceedings:: Proceedings(const Clusters &cls) :
             Proxy< const ListOf<Proceeding> >(),
             proc(),
-            banks()
+            banks(),
+            gbank()
             {
                 for(const Cluster *cl=cls->head;cl;cl=cl->next)
-                    proc.pushTail( new Proceeding(*(cls->head),banks) );
+                    proc.pushTail( new Proceeding(*(cls->head),banks,gbank) );
             }
 
             Y_PROXY_IMPL(Proceedings,proc)
