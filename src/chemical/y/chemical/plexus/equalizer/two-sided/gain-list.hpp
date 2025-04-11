@@ -2,8 +2,8 @@
 //! \file
 
 
-#ifndef Y_Chemical_Equalizer_GainList_Included
-#define Y_Chemical_Equalizer_GainList_Included 1
+#ifndef Y_Chemical_Plexus_Equalizer_GainList_Included
+#define Y_Chemical_Plexus_Equalizer_GainList_Included 1
 
 
 #include "y/stream/xmlog.hpp"

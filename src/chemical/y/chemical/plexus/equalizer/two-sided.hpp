@@ -7,7 +7,8 @@
 
 #include "y/chemical/plexus/cluster.hpp"
 #include "y/chemical/plexus/equalizer/extents.hpp"
-#include "y/chemical/plexus/equalizer/two-sided/gain-list.hpp"
+#include "y/chemical/plexus/equalizer/two-sided/glist.hpp"
+#include "y/chemical/plexus/equalizer/two-sided/klist.hpp"
 
 namespace Yttrium
 {
@@ -15,124 +16,74 @@ namespace Yttrium
     {
         namespace Equalizer
         {
-            class Gain
-            {
-            public:
-                Gain(const xreal_t      _g,
-                     const Components & _E,
-                     const XReadable  & _c) noexcept :
-                g(_g), E(_E), C(_c)
-                {
-                }
-
-                ~Gain() noexcept {}
-
-                Gain(const Gain &_) noexcept :
-                g(_.g), E(_.E), C(_.C)
-                {
-                }
-
-                Y_OSTREAM_PROTO(Gain);
-
-                const xreal_t     g;
-                const Components &E;
-                const XReadable  &C;
-
-            private:
-                Y_DISABLE_ASSIGN(Gain);
-            };
-
-          
-
-            typedef Small::CoopHeavyList<Gain>  GList_;
-            typedef GList_::NodeType            GNode;
-            typedef GList_::ProxyType           GBank;
-
-            class GList :  public GainList, public GList_
-            {
-            public:
-                typedef AutoPtr<GList> Pointer;
-                explicit GList(const GBank &_) noexcept : GList_(_) {}
-                virtual ~GList() noexcept {}
-
-                virtual void show(XMLog &xml, const char * const uuid) const
-                {
-                    Show(xml,uuid,*this);
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(GList);
-            };
-
-            class KList : public GainList, public ESolo
-            {
-            public:
-                typedef AutoPtr<KList> Pointer;
-
-                explicit KList() noexcept : ESolo() {}
-                virtual ~KList() noexcept {}
-
-                virtual void show(XMLog &xml, const char * const uuid) const
-                {
-                    Show(xml,uuid,*this);
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(KList);
-            };
-
-
+           
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Handling Two Sided unbalanced equilbri[um|a]
+            //
+            //
+            //__________________________________________________________________
             class TwoSided : public Quantized
             {
             public:
-                typedef CxxListOf<TwoSided> List;
-                
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef CxxListOf<TwoSided> List; //!< alias
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup
                 explicit TwoSided(const Cluster               &_cluster,
                                   const Conservation::Canon   &_canon,
-                                  const Banks                 &_banks) :
-                cluster( _cluster ),
-                canon( _canon ),
-                probe( _banks),
-                nrows( canon.anxious->size ),
-                ncols( cluster->species->size),
-                gbank(),
-                zgain( new GList(gbank) ),
-                pgain( new GList(gbank) ),
-                klist( new KList()      ),
-                c_eqz(nrows,ncols),
-                xadd(),
-                next(0),
-                prev(0)
-                {
-                    gbank->reserve(nrows);
-                }
+                                  const Banks                 &_banks);
 
-                virtual ~TwoSided() noexcept
-                {
+                virtual ~TwoSided() noexcept;
 
-                }
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
 
+                //! fix C0
                 void fix(XMLog             &xml,
                          XWritable         &C0,
                          Summator          &I0,
                          const Level        L0,
                          const AddressBook &vanishing);
 
+                //______________________________________________________________
+                //
+                //
+                // Members
+                //
+                //______________________________________________________________
+                const Cluster &             cluster; //!< persistent cluster
+                const Conservation::Canon & canon;   //!< persistent canon
+                Extents                     probe;   //!< probe extents
+                const size_t                nrows;   //!< canon.size
+                const size_t                ncols;   //!< cluster->species->size
+                GBank                       gbank;   //!< shared banks
+                GList::Pointer              zgain;   //!< zero-gain list
+                GList::Pointer              pgain;   //!< positive gain list
+                KList::Pointer              klist;   //!< blocked list
+                XMatrix                     c_eqz;   //!< storage
+                XAdd                        xadd;    //!< helper
+                TwoSided *                  next;    //!< for list
+                TwoSided *                  prev;    //!< for list
 
-                const Cluster &             cluster;
-                const Conservation::Canon & canon;
-                Extents                     probe;
-                const size_t                nrows;
-                const size_t                ncols;
-                GBank                       gbank;
-                GList::Pointer              zgain;
-                GList::Pointer              pgain;
-                KList::Pointer              klist;
-                XMatrix                     c_eqz;
-                XAdd                        xadd;
-                TwoSided *                  next;
-                TwoSided *                  prev;
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TwoSided);
             };
@@ -140,10 +91,6 @@ namespace Yttrium
 
          
         }
-
-
-
-
 
     }
 }

@@ -7,14 +7,28 @@ namespace Yttrium
     {
         namespace Equalizer
         {
-
-            std::ostream & operator<<(std::ostream &os, const Gain &gain)
+            TwoSided:: TwoSided(const Cluster               &_cluster,
+                                const Conservation::Canon   &_canon,
+                                const Banks                 &_banks) :
+            cluster( _cluster ),
+            canon( _canon ),
+            probe( _banks),
+            nrows( canon.anxious->size ),
+            ncols( cluster->species->size),
+            gbank(),
+            zgain( new GList(gbank) ),
+            pgain( new GList(gbank) ),
+            klist( new KList()      ),
+            c_eqz(nrows,ncols),
+            xadd(),
+            next(0),
+            prev(0)
             {
-                os << std::setw(Restartable::Width) << gain.g.str() << " @" << gain.E.name << "=";
-                gain.E.displayCompact(os,gain.C,SubLevel);
-                return os;
+                gbank->reserve(nrows);
             }
 
+
+            TwoSided:: ~TwoSided() noexcept {}
 
             //! decreasing gain then increasing index
             static inline
