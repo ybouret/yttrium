@@ -8,6 +8,7 @@ namespace Yttrium
         namespace Equalizer
         {
             GList:: GList(const GBank &_) noexcept : GList_(_) {}
+
             GList:: ~GList() noexcept {}
 
             void GList:: show(XMLog &xml, const char * const uuid) const

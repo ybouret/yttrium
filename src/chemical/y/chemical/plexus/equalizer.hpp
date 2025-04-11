@@ -16,13 +16,35 @@ namespace Yttrium
     {
         namespace Equalizer
         {
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Proceedings for each cluster
+            //
+            //
+            //__________________________________________________________________
             class Proceedings : public Proxy< const ListOf<Proceeding> >
             {
             public:
-                explicit Proceedings(const Clusters &);
-                virtual ~Proceedings() noexcept;
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+                explicit Proceedings(const Clusters &); //!< setup
+                virtual ~Proceedings() noexcept;        //!< cleanup
 
+                //______________________________________________________________
+                //
+                //
+                // Metohods
+                //
+                //______________________________________________________________
+
+                //! initialize I0 and apply each proceeding
                 void session(XMLog     &  xml,
                              XWritable &  C0,
                              Summator  &  I0);

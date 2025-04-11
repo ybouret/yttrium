@@ -79,6 +79,7 @@ namespace Yttrium
                        const String * const color     = 0,
                        const bool           conserved = true) const;
 
+            //! compare by TopLevel index
             static SignType Compare(const Species &, const Species &) noexcept;
             
             //__________________________________________________________________
