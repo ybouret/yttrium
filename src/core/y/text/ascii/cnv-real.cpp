@@ -85,6 +85,7 @@ namespace Yttrium
                         case '8': res *= ten; res += 8; break;
                         case '9': res *= ten; res += 9; break;
                         case '.':
+                        case ',':
                             goto FRACTIONAL_PART;
 
                         case 'e':
