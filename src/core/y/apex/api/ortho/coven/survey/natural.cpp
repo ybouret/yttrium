@@ -25,7 +25,7 @@ namespace Yttrium
                     if(numPositive>=2)
                     {
                         my.pushTail(new ArrayType(v) );
-                        std::cerr << "\t(keep) " << *my.tail << std::endl;
+                        //std::cerr << "\t(keep) " << *my.tail << std::endl;
                     }
                 }
 
