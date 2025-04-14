@@ -58,6 +58,7 @@ namespace Yttrium
             xreal_t limiting(const XReadable &C, const Level L)                   const noexcept; //!< fast limiting extent
             void    safeMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update valid C
             void    boldMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update invalid C
+            
 
             //! helper to transerf per species values
             template <typename TARGET, typename SOURCE> inline
