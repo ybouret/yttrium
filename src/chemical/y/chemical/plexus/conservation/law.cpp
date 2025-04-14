@@ -35,41 +35,6 @@ namespace Yttrium
             {
                 Actors &self = *this;
                 Actors::Exchange(self,*rule);
-#if 0
-                static const char msg[] = "projection coefficient";
-                {
-                    Actors      &self = *this; Actors::Exchange(self,*rule);
-                    iMatrix     &P    = Coerce(proj);
-                    const apn    a2   = norm2;
-                    {
-                        size_t i=1;
-                        for(const Actor *I=self->head;I;I=I->next,++i)
-                        {
-                            const apn alpha_i = I->nu;
-                            size_t j=1;
-                            for(const Actor *J=self->head;J;J=J->next,++j)
-                            {
-                                const apn alpha_j = J->nu;
-                                const apn aa = alpha_i * alpha_j;
-                                if(i==j)
-                                {
-                                    switch( Sign::Of(a2,aa) )
-                                    {
-                                        case __Zero__: P[i][j] = 0; break;
-                                        case Positive: { const apn delta = a2-aa; P[i][j] = delta.cast<int>(msg); } break;
-                                        case Negative: { const apn delta = aa-a2; P[i][j] = delta.cast<int>(msg); } break;
-                                    }
-                                }
-                                else
-                                {
-                                    P[i][j] = -aa.cast<int>(msg);
-                                }
-                            }
-                        }
-                    }
-                }
-                //std::cerr << "proj=" << proj << std::endl;
-#endif
                 latch();
             }
 
@@ -100,39 +65,7 @@ namespace Yttrium
                 if(xs<_0) return -xs; else return _0;
             }
 
-#if 0
-            void Law:: project(XAdd      &       xadd,
-                               XWritable &       Cp,
-                               const XReadable & C0,
-                               const Level       L) const
-            {
-                
-                const Actors &self = *this;
-                {
-                    size_t               i   = 1;
-                    for(const Actor *I=self->head;I;I=I->next,++i)
-                    {
-                        const Readable<int> &P_i = proj[i];
-                        xadd.free();
-                        {
-                            size_t j=1;
-                            for(const Actor *J=self->head;J;J=J->next,++j)
-                            {
-                                const int P_ij = P_i[j];
-                                switch( Sign::Of(P_ij) )
-                                {
-                                    case __Zero__: break;
-                                    case Positive: xadd.insert( J->sp(C0,L), P_ij); break;
-                                    case Negative: xadd.insert(-J->sp(C0,L),-P_ij); break;
-                                }
-                            }
-                        }
-                        I->sp(Cp,L) = xadd.sum()/denom;
-                    }
-                }
-            }
-#endif
-
+            
             bool Law:: hasCommonActorWith(const Law &other) const noexcept
             {
                 for(const Actor *a=other->head;a;a=a->next)

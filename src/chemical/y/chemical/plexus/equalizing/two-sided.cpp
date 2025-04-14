@@ -148,8 +148,11 @@ namespace Yttrium
                     }
                 }
 
-                cluster.show(std::cerr << "Ceqz=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
-                cluster.show(std::cerr << "Cinj=", SubLevel, "\t[", II, "]") << std::endl;
+                if(xml.verbose)
+                {
+                    cluster.show( xml() << "Ceqz=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
+                    cluster.show( xml() << "Cinj=", SubLevel, "\t[", II, "]") << std::endl;
+                }
 
 
 

@@ -56,8 +56,7 @@ namespace Yttrium
                     Y_XMLOG(xml, "(*) reactants :" << reac);
                     Y_XMLOG(xml, "(*) products  :" << prod);
 
-                    // std::cerr << "reac:" << reac << std::endl;
-                    //std::cerr << "prod:" << prod << std::endl;
+                    
                     if(reac.required->size<=0)
                     {
 

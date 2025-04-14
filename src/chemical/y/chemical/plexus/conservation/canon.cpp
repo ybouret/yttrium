@@ -54,10 +54,7 @@ namespace Yttrium
 
 #include "y/text/plural.hpp"
 #include "y/mkl/algebra/rank.hpp"
-#include "y/mkl/algebra/lu.hpp"
-#include "y/counting/combination.hpp"
-#include "y/system/exception.hpp"
-#include "y/sequence/vector.hpp"
+
 
 namespace Yttrium
 {
@@ -67,61 +64,7 @@ namespace Yttrium
         {
             using namespace MKL;
 
-#if 0
-            class QMat : public Matrix<apq>
-            {
-            public:
-                explicit QMat(const Matrix<apq> &M) :
-                Matrix<apq>(M),
-                next(0),
-                prev(0)
-                {
-                }
 
-                virtual ~QMat() noexcept {}
-
-                QMat *next;
-                QMat *prev;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(QMat);
-            };
-
-
-            class QMatList : public CxxListOf<QMat>
-            {
-            public:
-                explicit QMatList() noexcept : CxxListOf<QMat>() {}
-                virtual ~QMatList() noexcept {}
-
-                bool has(const Matrix<apq> &M) const noexcept
-                {
-                    for(const QMat *mine=head;mine;mine=mine->next)
-                    {
-                        if( *mine == M ) return true;
-                    }
-                    return false;
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(QMatList);
-            };
-
-
-            static inline apq Dot(const Readable<unsigned> &lhs,
-                                  const Readable<unsigned> &rhs)
-            {
-                assert(lhs.size()==rhs.size());
-                apn res = 0;
-                for(size_t i=lhs.size();i>0l;--i)
-                {
-                    const apn l = lhs[i];
-                    const apn r = rhs[i];
-                    res += l*r;
-                }
-                return res;
-            }
-#endif
-            
             void Canon:: compile(XMLog       & xml,
                                  const EList & definite)
             {
@@ -199,57 +142,7 @@ namespace Yttrium
                 }
                 Y_XML_COMMENT(xml, std::setw(4) << anxious->size <<  " = #anxious");
 
-#if 0
-                {
-                    QMatList        qmat;
-                    const size_t    n = size;
-                    const size_t    k = rank;
-                    const size_t    m = species->size;
-                    Combination comb(n,k);
-                    std::cerr << "#matrices(" << n << "," << k << ")=" << comb.total << std::endl;
 
-                    Matrix<unsigned> A(k,m);
-                    Matrix<apq>      AA(k,k);
-                    Matrix<apq>      II(k,k);
-                    MKL::LU<apq>     lu(k);
-                    Matrix<apq>      AT(m,k);
-                    //Matrix<unsigned> AT(m,k);
-                    do
-                    {
-                        // load basis
-                        for(size_t i=k;i>0;--i)
-                            A[i].ld( uAlpha[ comb[i] ]);
-
-                        // gram
-                        for(size_t i=k;i>0;--i)
-                        {
-                            const Readable<unsigned> &Ai = A[i];
-                            for(size_t j=i;j>0;--j)
-                            {
-                                const Readable<unsigned> &Aj= A[j];
-                                if(i!=j)
-                                    AA[j][i] = AA[i][j] = Dot(Ai,Aj);
-                                else
-                                    AA[i][i] = Dot(Ai,Aj);
-                            }
-                        }
-                        //std::cerr << "AA=" << AA << std::endl;
-                        if(!lu.build(AA)) continue;
-                        lu.invert(AA,II);
-                        //std::cerr << "II=" << II << std::endl;
-                        if(qmat.has(II)) continue;
-                        qmat.pushTail( new QMat(AA) );
-                        AT.assign(TransposeOf,A);
-
-                        (std::cerr << comb << " #" << qmat.size << "     \r").flush();
-
-
-                    }
-                    while(comb.next());
-                    std::cerr << std::endl;
-                    Y_XML_COMMENT(xml, "matrices: " << qmat.size << " / " << comb.total);
-                }
-#endif
             }
 
         }
