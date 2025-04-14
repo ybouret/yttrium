@@ -30,6 +30,19 @@ namespace Yttrium
 
         }
 
+        void Equalizer:: query(XWritable &dC)
+        {
+            for(Equalizing::Proceeding *p=proc.head;p;p=p->next)
+            {
+                for(const SNode *sn = p->cluster()->species->head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn;
+                    sp(dC,TopLevel) = sp(p->injected,SubLevel).sum();
+                }
+            }
+        }
+
+
     }
 
 }

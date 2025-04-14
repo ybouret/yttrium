@@ -32,6 +32,13 @@ namespace Yttrium
                 assert(watchers.size==twoSided.size);
             }
 
+            const Cluster & Proceeding:: cluster() const noexcept
+            {
+                return oneSided.cluster;
+            }
+
+
+
             void Proceeding:: fix(XMLog     &  xml,
                                   XWritable &  C0)
             {

@@ -49,6 +49,9 @@ namespace Yttrium
             void operator()(XMLog     &  xml,
                             XWritable &  C0);
 
+            //! query all TopLevel, injected matter
+            void query(XWritable &dC);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
             Y_PROXY_DECL();
