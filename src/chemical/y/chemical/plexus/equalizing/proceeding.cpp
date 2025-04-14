@@ -15,6 +15,7 @@ namespace Yttrium
             Proceeding:: Proceeding(const Cluster & cluster,
                                     const Banks   & banks,
                                     const GBank   & gbank) :
+            injected(cluster->species->size),
             watchers(),
             twoSided(),
             oneSided(cluster,banks),
@@ -32,10 +33,10 @@ namespace Yttrium
             }
 
             void Proceeding:: fix(XMLog     &  xml,
-                                  XWritable &  C0,
-                                  Summator  &  I0)
+                                  XWritable &  C0)
             {
                 Y_XML_SECTION(xml,"Equalizing::Proceeding");
+                injected.forEach( & XAdd::free );
                 {
                     Watcher  *cw = watchers.head;
                     TwoSided *ts = twoSided.head;
@@ -44,8 +45,8 @@ namespace Yttrium
                         assert(0!=cw);
                         assert(0!=ts);
                         vanishing.free();
-                        cw->fix(xml, C0, I0, TopLevel, vanishing);
-                        ts->fix(xml, C0, I0, TopLevel, vanishing);
+                        cw->fix(xml, C0, TopLevel, injected, vanishing);
+                        ts->fix(xml, C0, TopLevel, injected, vanishing);
                     }
                 }
                 oneSided.fix(xml,C0,TopLevel);

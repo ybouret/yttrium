@@ -63,13 +63,16 @@ namespace Yttrium
 
                 //! equalize cluster
                 /**
+                 - initialize injected
+                 - check conservations  (may change injected)
+                 - apply two-sided      (may change injected)
+                 - apply one-sided
+                 
                  \param xml for output
                  \param C0  TopLevel concentratiopns
-                 \param I0  TopLevel injected, must be initialized
                  */
                 void fix(XMLog     &  xml,
-                         XWritable &  C0,
-                         Summator  &  I0);
+                         XWritable &  C0);
 
                 //______________________________________________________________
                 //
@@ -77,6 +80,7 @@ namespace Yttrium
                 // Members
                 //
                 //______________________________________________________________
+                Summator          injected;    //!< for cluster
                 Watcher::List     watchers;    //!< fix conservations
                 TwoSided::List    twoSided;    //!< fix two-sided
                 OneSided          oneSided;    //!< fix one-sided

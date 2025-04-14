@@ -48,8 +48,8 @@ namespace Yttrium
 
             void TwoSided:: fix(XMLog             &xml,
                                 XWritable         &C0,
-                                Summator          &I0,
                                 const Level        L0,
+                                Summator          &II,
                                 const AddressBook &vanishing)
             {
 
@@ -141,7 +141,7 @@ namespace Yttrium
                         xreal_t       & cc = sp(C0,L0);
                         if(vanishing.has(sp) || cc < zero)
                         {
-                            sp(I0,L0) << -cc;
+                            sp(II,SubLevel) << -cc;
                             cc = zero;
                         }
                         assert(cc>=zero);
@@ -149,7 +149,7 @@ namespace Yttrium
                 }
 
                 cluster.show(std::cerr << "Ceqz=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
-                cluster.show(std::cerr << "Cinj=", L0, "\t[", I0, "]") << std::endl;
+                cluster.show(std::cerr << "Cinj=", SubLevel, "\t[", II, "]") << std::endl;
 
 
 

@@ -22,13 +22,11 @@ namespace Yttrium
         Y_PROXY_IMPL(Equalizer,proc)
 
         void Equalizer:: operator()(XMLog     &xml,
-                                    XWritable &C0,
-                                    Summator  &I0)
+                                    XWritable &C0)
         {
             Y_XML_SECTION(xml, "Equalizer");
-            I0.forEach( & XAdd::free );
             for(Equalizing::Proceeding *p=proc.head;p;p=p->next)
-                p->fix(xml, C0, I0);
+                p->fix(xml, C0);
 
         }
 

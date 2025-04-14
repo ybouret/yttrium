@@ -61,8 +61,8 @@ namespace Yttrium
                 //! fix C0
                 void fix(XMLog             &xml,
                          XWritable         &C0,
-                         Summator          &I0,
                          const Level        L0,
+                         Summator          &II,
                          const AddressBook &vanishing);
 
                 //______________________________________________________________

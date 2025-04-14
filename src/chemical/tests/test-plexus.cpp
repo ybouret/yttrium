@@ -50,13 +50,12 @@ Y_UTEST(plexus)
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
-    Summator     I0(m);
 
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
     Equalizer eqz(cls);
-    eqz(xml, C0, I0);
+    eqz(xml,C0);
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 

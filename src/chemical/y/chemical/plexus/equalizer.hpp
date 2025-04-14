@@ -42,10 +42,12 @@ namespace Yttrium
             //
             //__________________________________________________________________
 
-            //! initialize I0 and apply each proceeding
+            //!  apply each proceeding
+            /**
+
+             */
             void operator()(XMLog     &  xml,
-                            XWritable &  C0,
-                            Summator  &  I0);
+                            XWritable &  C0);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equalizer);

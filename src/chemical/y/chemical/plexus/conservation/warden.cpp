@@ -84,8 +84,8 @@ namespace Yttrium
 
             void Warden:: fix(XMLog     &  xml,
                               XWritable &  C0,
-                              Summator  &  I0,
                               const Level  L0,
+                              Summator    &II,
                               AddressBook &vanishing)
             {
                 Y_XML_SECTION(xml,CallSign);
@@ -210,7 +210,7 @@ namespace Yttrium
                     for(size_t i=n;i>0;--i) xadd << (lhs[i]*Xs[i]);
                     const xreal_t c1    = Cj = xadd.sum();
                     const xreal_t delta = c1-c0;
-                    sp(I0,L0) << delta;
+                    sp(II,SubLevel) << delta;
                     if(xml.verbose) cluster->sformat.pad( xml() << "d[" << sp.name << "]",sp) << " = " << delta.str() << std::endl;
                 }
 

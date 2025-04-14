@@ -58,8 +58,8 @@ namespace Yttrium
                 //! fix broken laws, append increment and record vanishing species
                 void fix(XMLog     &  xml,
                          XWritable &  C0,
-                         Summator  &  I0,
                          const Level  L0,
+                         Summator  &  II,
                          AddressBook &vanishing);
 
                 //______________________________________________________________
