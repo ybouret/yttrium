@@ -49,6 +49,8 @@ namespace Yttrium
         nu( _nu ),
         xn(  nu ),
         sp( _sp ),
+        nm1(nu-1),
+        xn2(nu*nu),
         next(0),
         prev(0)
         {
@@ -60,6 +62,8 @@ namespace Yttrium
         nu(_.nu),
         xn(_.xn),
         sp(_.sp),
+        nm1(_.nm1),
+        xn2(_.xn2),
         next(0),
         prev(0)
         {

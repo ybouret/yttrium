@@ -83,6 +83,8 @@ namespace Yttrium
             const unsigned    nu;   //!< coefficient
             const xreal_t     xn;   //!< nu as xreal_t
             const Species &   sp;   //!< persistent species
+            const unsigned    nm1;  //!< nu-1
+            const xreal_t     xn2;  //!< xn^2
             Actor *           next; //!< for list
             Actor *           prev; //!< for list
 
