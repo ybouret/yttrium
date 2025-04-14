@@ -22,13 +22,13 @@ namespace Yttrium
 
         }
 
-        void Reactors:: operator()(XMLog &xml, XWritable &C0)
+        void Reactors:: operator()(XMLog &xml, XWritable &C0, ReactorProc * const cb)
         {
             Y_XML_SECTION_OPT(xml,"Reactors","count=" << my.size);
 
             for(Reactor *p=my.head;p;p=p->next)
             {
-                p->mix(xml,C0,clusters.K);
+                p->mix(xml,C0,clusters.K,cb);
             }
         }
 

@@ -14,6 +14,7 @@ chemical/plexus/cluster
 chemical/plexus/reactor
 chemical/plexus/equalizing
 chemical/plexus/equalizing/two-sided
+chemical/plexus/initial
 )
 
 add_subdirectory(tests)

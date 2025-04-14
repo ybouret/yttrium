@@ -31,6 +31,9 @@ namespace Yttrium
         typedef CxxArray<XArray,MemoryModel>  XArrays;   //!< alias
         typedef CxxArray<XMatrix,MemoryModel> XMatrices; //!< alias
 
+        typedef TL2(const XReadable &,xreal_t) ReactorArgs;
+        typedef Functor<void,ReactorArgs>      ReactorProc;
+
         //______________________________________________________________________
         //
         //
@@ -69,8 +72,11 @@ namespace Yttrium
             //__________________________________________________________________
 
             //! solve topLevel
-            void mix(XMLog &xml, XWritable &C0, const XReadable &K0);
-            
+            void mix(XMLog           &xml,
+                     XWritable       &C0,
+                     const XReadable &K0,
+                     ReactorProc * const cb);
+
 
 
 

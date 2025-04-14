@@ -15,30 +15,28 @@ namespace Yttrium
 
             while(list.size>0)
             {
+
+                AutoPtr<XNode> node = list.popHead();
+
+
+                if(node->defines<Formula>())
                 {
-                    AutoPtr<XNode> node = list.popHead();
-
-
-                    if(node->defines<Formula>())
-                    {
-                        // append/check new species in library
-                        const Formula formula( node.yield() );
-                        const String  uuid = formula.uuid();
-                        (void) lib(uuid);
-                        continue;
-                    }
-
-                    if(node->defines<Equilibrium>())
-                    {
-                        // compile and append equilibrium to eqs
-                        const Equilibrium::Pointer eq( compile(lib,& *node,eqs.nextIndex()) );
-                        eqs(eq);
-                        continue;
-                    }
-
+                    // append/check new species in library
+                    const Formula formula( node.yield() );
+                    const String  uuid = formula.uuid();
+                    (void) lib(uuid);
+                    continue;
                 }
 
-                temp.pushTail( list.popHead() );
+                if(node->defines<Equilibrium>())
+                {
+                    // compile and append equilibrium to eqs
+                    const Equilibrium::Pointer eq( compile(lib,& *node,eqs.nextIndex()) );
+                    eqs(eq);
+                    continue;
+                }
+
+                temp.pushTail( node.yield() );
             }
 
             list.swapWith(temp);

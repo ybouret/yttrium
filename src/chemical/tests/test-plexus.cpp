@@ -15,7 +15,17 @@
 using namespace Yttrium;
 using namespace Chemical;
 
-
+namespace
+{
+    struct Display
+    {
+        void operator()(const XReadable &C0,
+                        const xreal_t    S0)
+        {
+            std::cerr << "score=" << std::setw(24) << S0.str() << " @" << C0 << std::endl;
+        }
+    };
+}
 
 Y_UTEST(plexus)
 {
@@ -66,7 +76,10 @@ Y_UTEST(plexus)
     Reactor::EmitProfiles = true;
     Reactor::EmitProfiles = false;
     Reactors cs(cls);
-    cs(xml,C0);
+
+    Display     display;
+    ReactorProc cb = display;
+    cs(xml,C0,&cb);
 
     lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 

@@ -46,9 +46,10 @@ namespace Yttrium
 } while(false)
 
 
-        void Reactor:: mix(XMLog &           xml,
-                           XWritable &       C0,
-                           const XReadable & K0)
+        void Reactor:: mix(XMLog &             xml,
+                           XWritable &         C0,
+                           const XReadable &   K0,
+                           ReactorProc * const cb)
         {
             static const char fn[] = "reactor.dat";
             Y_XML_SECTION(xml, "Reactor");
@@ -79,6 +80,7 @@ namespace Yttrium
                 Y_ChemicalReactor(generateNR(xml,S0,K0), GenerateNR);
 
 
+
                 if(EmitProfiles) emitGnuPlotTracing(std::cerr);
                 
                 if(MonitorScore) {
@@ -89,6 +91,7 @@ namespace Yttrium
 
 
                 cluster.expand(C0,Cwin);
+                if(cb) (*cb)(C0,Swin);
 
                 goto CYCLE;
             }

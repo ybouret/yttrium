@@ -65,7 +65,7 @@ namespace Yttrium
                     zgain->free();
                     pgain->free();
                     klist->free();
-                    for(const ENode *en=cluster.definite->head;en;en=en->next)
+                    for(const ENode *en=canon.anxious->head;en;en=en->next)
                     {
                         //______________________________________________________
                         //

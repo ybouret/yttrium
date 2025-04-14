@@ -9,6 +9,8 @@
 
 #include "y/apex/natural.hpp"
 
+#include "y/chemical/plexus/initial/wish.hpp"
+
 namespace Yttrium
 {
     namespace Chemical
@@ -107,13 +109,32 @@ namespace Yttrium
             //------------------------------------------------------------------
             STATEMENT<< term(RegExp,"%[-+[:word:].*?\\\\\\(\\)&|]+");;
 
+
+            //------------------------------------------------------------------
+            //
+            // Create Wish
+            //
+            //------------------------------------------------------------------
+            {
+                Agg &WISH = agg(Wish::CallSign);
+                WISH << '#';
+
+                Agg &LINEAR_WISH = agg("LinearWish");
+
+                LINEAR_WISH << SPACE << '=' << SPACE << STRING;
+
+                WISH << pick(LINEAR_WISH,STRING);
+
+                STATEMENT << WISH;
+            }
+
             //------------------------------------------------------------------
             // Lexical Only
             //------------------------------------------------------------------
 
             (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
             (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
-            //render();
+            render();
         }
 
 
@@ -240,6 +261,7 @@ namespace Yttrium
 
                 while(mine.size>0)
                 {
+                    assert(0!=mine.head);
                     AutoPtr<XNode> node = mine.popHead();
 
                     if( node->is(Equilibrium::CallSign) )
@@ -258,12 +280,11 @@ namespace Yttrium
                     if( node->is(RegExp) )
                     {
                         const String regexp = '@' + node->lexeme().toString(1,0);
-                        //std::cerr << "Found RegExp = '" << regexp << "'" << std::endl;
                         processRegExp(temp,regexp);
                         continue; // drop node
                     }
 
-                    // unprocessed...
+                    std::cerr << "unprocessed " << node->name() << std::endl;
 
                 PUSH:
                     temp.pushTail(node.yield());
@@ -274,6 +295,7 @@ namespace Yttrium
 
             }
 
+            GraphViz::Vizible::DotToPng("ast.dot", *ast);
 
             return ast.yield();
         }
