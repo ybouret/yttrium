@@ -18,7 +18,7 @@ namespace Yttrium
                     if(l.size>1 && CountNonZero(v) >= 2)
                     {
                         my.pushTail(new ArrayType(v) );
-                        std::cerr << "\t(comb) " << *my.tail << std::endl;
+                        //std::cerr << "\t(comb) " << *my.tail << std::endl;
                     }
                 }
             }

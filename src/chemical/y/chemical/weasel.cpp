@@ -106,8 +106,8 @@ namespace Yttrium
         Formula Weasel:: parseFormula1(Lingo::Module * const inputModule)
         {
             static const char func[] = "parseFormula1";
-            AutoPtr<XNode>    node = parse(inputModule); assert(node->is(Weasel::CallSign));
-            XList &           list = node->branch();
+            AutoPtr<XNode>    node   = parse(inputModule); assert(node->is(Weasel::CallSign));
+            XList &           list   = node->branch();
 
             if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",func);
             if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",func,list.head->name().c_str());
@@ -117,8 +117,8 @@ namespace Yttrium
         XNode * Weasel:: singleFormula(Lingo::Module * const inputModule)
         {
             static const char func[] = "singleFormula";
-            AutoPtr<XNode>    node = parse(inputModule); assert(node->is(Weasel::CallSign));
-            XList &           list = node->branch();
+            AutoPtr<XNode>    node   = parse(inputModule); assert(node->is(Weasel::CallSign));
+            XList &           list   = node->branch();
 
             if(1!=list.size)                       throw Specific::Exception(CallSign,"%s(forbidden multiple entries)",func);
             if(!list.head->is(Formula::CallSign))  throw Specific::Exception(CallSign,"%s(forbidden '%s'')",func,list.head->name().c_str());
@@ -268,7 +268,7 @@ namespace Yttrium
             XList &list = root->branch(); assert(4==list.size);
 
             const String &data = list.tail->lexeme().toString();
-            std::cerr << "data=" << data << std::endl;
+            //std::cerr << "data=" << data << std::endl;
             if(data.size()<=0)
             {
                 const String  uuid = list.head->lexeme().toString(1,0);

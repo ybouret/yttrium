@@ -15,7 +15,7 @@ namespace Yttrium
             const XList &       xlist = eNode->branch(); assert(xlist.size==4);
             const XNode * const label = xlist.head;      assert(label->is(Equilibrium::Label));
             const String        xname = label->lexeme().toString(1,0);
-            std::cerr << "returning '" << xname << "'" << std::endl;
+            //std::cerr << "returning '" << xname << "'" << std::endl;
             return new String(xname);
         }
 
@@ -51,7 +51,8 @@ namespace Yttrium
                 {
                     assert(1==actor.size);
                     const apn Nu = actor.head->lexeme().toNatural();
-                    if(!Nu.tryCast(nu)) throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
+                    if(!Nu.tryCast(nu))
+                        throw Specific::Exception(Equilibrium::CallSign, "coefficient overflow for %s '%s'", Component::RoleText(role), uuid.c_str());
                     assert(nu>0);
                 }
                 assert(nu>0);
