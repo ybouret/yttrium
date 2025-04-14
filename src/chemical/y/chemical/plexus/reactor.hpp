@@ -70,6 +70,7 @@ namespace Yttrium
 
             //! solve topLevel
             void mix(XMLog &xml, XWritable &C0, const XReadable &K0);
+            
 
 
 
