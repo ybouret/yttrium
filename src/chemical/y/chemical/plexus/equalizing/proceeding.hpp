@@ -67,9 +67,9 @@ namespace Yttrium
                  \param C0  TopLevel concentratiopns
                  \param I0  TopLevel injected, must be initialized
                  */
-                void session(XMLog     &  xml,
-                             XWritable &  C0,
-                             Summator  &  I0);
+                void fix(XMLog     &  xml,
+                         XWritable &  C0,
+                         Summator  &  I0);
 
                 //______________________________________________________________
                 //

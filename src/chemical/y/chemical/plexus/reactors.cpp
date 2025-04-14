@@ -28,7 +28,7 @@ namespace Yttrium
 
             for(Reactor *p=my.head;p;p=p->next)
             {
-                (*p)(xml,C0,clusters.K);
+                p->mix(xml,C0,clusters.K);
             }
         }
 

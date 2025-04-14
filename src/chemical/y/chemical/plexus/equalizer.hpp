@@ -14,50 +14,46 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizing
+
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! Proceedings for each cluster
+        //
+        //
+        //______________________________________________________________________
+        class Equalizer : public Proxy< const ListOf<Equalizing::Proceeding> >
         {
+        public:
+            //__________________________________________________________________
+            //
+            //
+            // C++
+            //
+            //__________________________________________________________________
+            explicit Equalizer(const Clusters &); //!< setup
+            virtual ~Equalizer() noexcept;        //!< cleanup
 
             //__________________________________________________________________
             //
             //
-            //
-            //! Proceedings for each cluster
-            //
+            // Metohods
             //
             //__________________________________________________________________
-            class Proceedings : public Proxy< const ListOf<Proceeding> >
-            {
-            public:
-                //______________________________________________________________
-                //
-                //
-                // C++
-                //
-                //______________________________________________________________
-                explicit Proceedings(const Clusters &); //!< setup
-                virtual ~Proceedings() noexcept;        //!< cleanup
 
-                //______________________________________________________________
-                //
-                //
-                // Metohods
-                //
-                //______________________________________________________________
+            //! initialize I0 and apply each proceeding
+            void operator()(XMLog     &  xml,
+                            XWritable &  C0,
+                            Summator  &  I0);
 
-                //! initialize I0 and apply each proceeding
-                void session(XMLog     &  xml,
-                             XWritable &  C0,
-                             Summator  &  I0);
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Proceedings);
-                Y_PROXY_DECL();
-                CxxListOf<Proceeding> proc;
-                Banks                 banks;
-                GBank                 gbank;
-            };
-
-        }
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Equalizer);
+            Y_PROXY_DECL();
+            CxxListOf<Equalizing::Proceeding> proc;
+            Equalizing::Banks                 banks;
+            Equalizing::GBank                 gbank;
+        };
 
     }
 

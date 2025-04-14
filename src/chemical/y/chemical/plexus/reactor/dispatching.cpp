@@ -10,7 +10,7 @@ namespace Yttrium
     namespace Chemical
     {
         bool Reactor:: MonitorScore = false;
-        
+
         void Reactor:: finalize(XMLog     &xml,
                                 XWritable &C0,
                                 const bool exact)
@@ -45,10 +45,10 @@ namespace Yttrium
 /**/ const xreal_t Stmp = CALL; if( converged(xml,Stmp,UUID,Swin,Mwin) ) return finalize(xml,C0,true);\
 } while(false)
 
-        
-        void Reactor:: operator()(XMLog &           xml,
-                                  XWritable &       C0,
-                                  const XReadable & K0)
+
+        void Reactor:: mix(XMLog &           xml,
+                           XWritable &       C0,
+                           const XReadable & K0)
         {
             static const char fn[] = "reactor.dat";
             Y_XML_SECTION(xml, "Reactor");

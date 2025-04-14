@@ -31,9 +31,9 @@ namespace Yttrium
                 assert(watchers.size==twoSided.size);
             }
 
-            void Proceeding:: session(XMLog     &  xml,
-                                      XWritable &  C0,
-                                      Summator  &  I0)
+            void Proceeding:: fix(XMLog     &  xml,
+                                  XWritable &  C0,
+                                  Summator  &  I0)
             {
                 Y_XML_SECTION(xml,"Equalizing::Proceeding");
                 {
@@ -49,7 +49,6 @@ namespace Yttrium
                     }
                 }
                 oneSided.fix(xml,C0,TopLevel);
-
             }
 
 
