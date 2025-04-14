@@ -64,6 +64,7 @@ Y_UTEST(plexus)
 
     Reactor::MonitorScore = true;
     Reactor::EmitProfiles = true;
+    Reactor::EmitProfiles = false;
     Reactors cs(cls);
     cs(xml,C0);
 

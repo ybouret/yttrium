@@ -80,6 +80,7 @@ namespace Yttrium
 
 
                 if(EmitProfiles) emitGnuPlotTracing(std::cerr);
+                
                 if(MonitorScore) {
                     AppendFile fp(fn); fp("%u ", cycle) << Swin.str() << " #" << Mwin << "\n";
                 }
@@ -89,7 +90,6 @@ namespace Yttrium
 
                 cluster.expand(C0,Cwin);
 
-                //throw Exception("Need to work..");
                 goto CYCLE;
             }
 
