@@ -24,13 +24,12 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-                gbank->reserve(nrows);
             }
 
 
             TwoSided:: ~TwoSided() noexcept {}
 
-            //! decreasing gain then increasing index
+            //! by decreasing gain then by increasing index
             static inline
             SignType CompareGains(const GNode * const lhs,
                                   const GNode * const rhs) noexcept

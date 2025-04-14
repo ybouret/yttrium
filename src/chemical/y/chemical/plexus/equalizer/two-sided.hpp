@@ -76,7 +76,6 @@ namespace Yttrium
                 Extents                     probe;   //!< probe extents
                 const size_t                nrows;   //!< canon.size
                 const size_t                ncols;   //!< cluster->species->size
-                GBank                       gbank;   //!< shared banks
                 GList::Pointer              zgain;   //!< zero-gain list
                 GList::Pointer              pgain;   //!< positive gain list
                 KList::Pointer              klist;   //!< blocked list
