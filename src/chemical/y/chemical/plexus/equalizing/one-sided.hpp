@@ -13,7 +13,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             //______________________________________________________________
             //
@@ -32,7 +32,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const CallSign; //!< "Equalizer::OneSided"
+                static const char * const CallSign; //!< "Equalizing::OneSided"
 
                 //______________________________________________________________
                 //

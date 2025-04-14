@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             Gain:: Gain(const xreal_t      _g,
                  const Components & _E,

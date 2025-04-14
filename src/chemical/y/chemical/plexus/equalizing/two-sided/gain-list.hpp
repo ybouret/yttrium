@@ -13,7 +13,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
 
             //__________________________________________________________________

@@ -4,7 +4,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
 
             Proceedings:: ~Proceedings() noexcept
@@ -27,7 +27,7 @@ namespace Yttrium
                                        XWritable &C0,
                                        Summator  &I0)
             {
-                Y_XML_SECTION(xml, "Equalizer::Proceedings");
+                Y_XML_SECTION(xml, "Equalizing::Proceedings");
                 I0.forEach( & XAdd::free );
                 for(Proceeding *p=proc.head;p;p=p->next)
                 {

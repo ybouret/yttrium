@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             Boundary:: Boundary(const SBank &sb) noexcept :
             Hauler(sb),
@@ -91,7 +91,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             void Boundary:: add(const Cursor &cr)
             {

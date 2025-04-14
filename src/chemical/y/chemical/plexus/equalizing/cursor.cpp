@@ -7,7 +7,7 @@ namespace Yttrium
     namespace Chemical
     {
 
-        namespace Equalizer
+        namespace Equalizing
         {
             Cursor:: Cursor(const Cursor &_) : Hauler(_), xi(_.xi) {}
 

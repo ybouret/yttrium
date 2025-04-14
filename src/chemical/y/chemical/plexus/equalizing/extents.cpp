@@ -7,7 +7,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
 #define Y_Case(ID) case ID: return #ID
             const char * ResultantText(const Resultant res) noexcept

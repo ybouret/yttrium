@@ -6,7 +6,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             Y_PROXY_IMPL(Cursors,my);
 

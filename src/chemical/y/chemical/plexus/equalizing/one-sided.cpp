@@ -6,9 +6,9 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
-            const char * const OneSided:: CallSign = "Equalizer::OneSided";
+            const char * const OneSided:: CallSign = "Equalizing::OneSided";
 
             OneSided:: OneSided(const Cluster & _cluster,
                                 const Banks   & _banks) noexcept :
@@ -46,7 +46,7 @@ namespace Yttrium
                                 XWritable & C0,
                                 const Level L0)
             {
-                Y_XML_SECTION(xml,"Equalizer::OneSided");
+                Y_XML_SECTION(xml,CallSign);
                 for(const ENode *en=cluster.onlyProd->head;en;en=en->next)
                 {
                     const Equilibrium &E = **en;

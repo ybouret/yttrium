@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             const char * const Extent:: Limiting = "limiting";
             const char * const Extent:: Required = "required";

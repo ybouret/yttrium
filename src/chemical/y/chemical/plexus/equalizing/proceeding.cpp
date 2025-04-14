@@ -4,7 +4,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
 
             Proceeding:: ~Proceeding() noexcept
@@ -35,7 +35,7 @@ namespace Yttrium
                                       XWritable &  C0,
                                       Summator  &  I0)
             {
-                Y_XML_SECTION(xml,"Equalizer::Proceeding");
+                Y_XML_SECTION(xml,"Equalizing::Proceeding");
                 {
                     Watcher  *cw = watchers.head;
                     TwoSided *ts = twoSided.head;

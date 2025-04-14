@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             TwoSided:: TwoSided(const Cluster               &_cluster,
                                 const Conservation::Canon   &_canon,
@@ -53,7 +53,7 @@ namespace Yttrium
                                 const AddressBook &vanishing)
             {
 
-                Y_XML_SECTION(xml,"Equalizer::TwoSided");
+                Y_XML_SECTION(xml,"Equalizing::TwoSided");
                 if(xml.verbose) vanishing.display<Species>(xml() << "vanishing: ") << std::endl;
 
 

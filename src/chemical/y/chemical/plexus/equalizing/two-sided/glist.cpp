@@ -5,7 +5,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        namespace Equalizer
+        namespace Equalizing
         {
             GList:: GList(const GBank &_) noexcept : GList_(_) {}
 

@@ -12,13 +12,13 @@ namespace Yttrium
     namespace Chemical
     {
 
-        namespace Equalizer
+        namespace Equalizing
         {
             //__________________________________________________________________
             //
             //
             //
-            //! Shared Banks for Equalizer
+            //! Shared Banks for Equalizing
             //
             //
             //__________________________________________________________________
