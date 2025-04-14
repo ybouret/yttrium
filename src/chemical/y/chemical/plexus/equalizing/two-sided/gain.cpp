@@ -1,6 +1,6 @@
 
-#include "y/chemical/plexus/equalizer/two-sided/gain.hpp"
-#include "y/chemical/plexus/equalizer/restartable.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/gain.hpp"
+#include "y/chemical/plexus/equalizing/restartable.hpp"
 
 namespace Yttrium
 {

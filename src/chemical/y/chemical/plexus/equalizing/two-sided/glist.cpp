@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/two-sided/glist.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/glist.hpp"
 
 namespace Yttrium
 {

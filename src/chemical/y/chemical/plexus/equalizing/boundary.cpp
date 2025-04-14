@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/boundary.hpp"
+#include "y/chemical/plexus/equalizing/boundary.hpp"
 
 namespace Yttrium
 {
@@ -86,7 +86,7 @@ namespace Yttrium
     }
 }
 
-#include "y/chemical/plexus/equalizer/cursor.hpp"
+#include "y/chemical/plexus/equalizing/cursor.hpp"
 namespace Yttrium
 {
     namespace Chemical

@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/restartable.hpp"
+#include "y/chemical/plexus/equalizing/restartable.hpp"
 
 namespace Yttrium
 {

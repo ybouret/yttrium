@@ -1,4 +1,4 @@
-#include "y/chemical/plexus/equalizer/two-sided.hpp"
+#include "y/chemical/plexus/equalizing/two-sided.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium

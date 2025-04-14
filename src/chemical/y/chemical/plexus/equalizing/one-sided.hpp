@@ -7,7 +7,7 @@
 
 
 #include "y/chemical/plexus/cluster.hpp"
-#include "y/chemical/plexus/equalizer/cursors.hpp"
+#include "y/chemical/plexus/equalizing/cursors.hpp"
 
 namespace Yttrium
 {

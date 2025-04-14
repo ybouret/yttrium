@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/hauler.hpp"
+#include "y/chemical/plexus/equalizing/hauler.hpp"
 
 namespace Yttrium
 {

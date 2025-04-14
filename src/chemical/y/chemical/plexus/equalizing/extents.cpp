@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/extents.hpp"
+#include "y/chemical/plexus/equalizing/extents.hpp"
 #include "y/exception.hpp"
 #include "y/type/momentary.hpp"
 

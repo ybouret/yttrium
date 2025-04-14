@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/extent.hpp"
+#include "y/chemical/plexus/equalizing/extent.hpp"
 
 namespace Yttrium
 {

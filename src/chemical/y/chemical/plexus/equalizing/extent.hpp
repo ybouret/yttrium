@@ -4,8 +4,8 @@
 #ifndef Y_Chemical_Extent_Included
 #define Y_Chemical_Extent_Included 1
 
-#include "y/chemical/plexus/equalizer/cursors.hpp"
-#include "y/chemical/plexus/equalizer/boundary.hpp"
+#include "y/chemical/plexus/equalizing/cursors.hpp"
+#include "y/chemical/plexus/equalizing/boundary.hpp"
 #include "y/chemical/reactive/actors.hpp"
 #include "y/associative/address-book.hpp"
 

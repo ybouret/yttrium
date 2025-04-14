@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/cursors.hpp"
+#include "y/chemical/plexus/equalizing/cursors.hpp"
 #include "y/exception.hpp"
 
 namespace Yttrium

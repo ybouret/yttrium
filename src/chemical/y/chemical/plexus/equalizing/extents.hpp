@@ -3,7 +3,7 @@
 #ifndef Y_Chemical_Extents_Included
 #define Y_Chemical_Extents_Included 1
 
-#include "y/chemical/plexus/equalizer/extent.hpp"
+#include "y/chemical/plexus/equalizing/extent.hpp"
 #include "y/chemical/reactive/components.hpp"
 #include "y/stream/xmlog.hpp"
 

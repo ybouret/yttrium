@@ -5,8 +5,8 @@
 #ifndef Y_Chemical_Boundary_Included
 #define Y_Chemical_Boundary_Included 1
 
-#include "y/chemical/plexus/equalizer/restartable.hpp"
-#include "y/chemical/plexus/equalizer/hauler.hpp"
+#include "y/chemical/plexus/equalizing/restartable.hpp"
+#include "y/chemical/plexus/equalizing/hauler.hpp"
 
 namespace Yttrium
 {

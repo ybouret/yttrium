@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/banks.hpp"
+#include "y/chemical/plexus/equalizing/banks.hpp"
 
 namespace Yttrium
 {

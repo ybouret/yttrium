@@ -1,12 +1,12 @@
 
-
 //! \file
 
-#ifndef Y_Chemical_Plexus_Equalizer_TwoSided_KList_Included
-#define Y_Chemical_Plexus_Equalizer_TwoSided_KList_Included 1
+#ifndef Y_Chemical_Plexus_Equalizer_TwoSided_GList_Included
+#define Y_Chemical_Plexus_Equalizer_TwoSided_GList_Included 1
 
-#include "y/chemical/plexus/equalizer/two-sided/gain-list.hpp"
-#include "y/chemical/reactive/equilibrium.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/gain-list.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/gain.hpp"
+#include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
 {
@@ -14,16 +14,25 @@ namespace Yttrium
     {
         namespace Equalizer
         {
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            typedef Small ::CoopHeavyList<Gain>  GList_; //!< alias
+            typedef GList_::NodeType             GNode;  //!< alias
+            typedef GList_::ProxyType            GBank;  //!< alias
 
             //__________________________________________________________________
             //
             //
             //
-            //! list of blocked equilibri[um|a]
+            //! list of gains
             //
             //
             //__________________________________________________________________
-            class KList : public GainList, public ESolo
+            class GList :  public GainList, public GList_
             {
             public:
                 //______________________________________________________________
@@ -32,7 +41,7 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                typedef AutoPtr<KList> Pointer; //!< alias
+                typedef AutoPtr<GList> Pointer; //!< alias
 
                 //______________________________________________________________
                 //
@@ -40,8 +49,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit KList() noexcept; //!< setup
-                virtual ~KList() noexcept; //!< cleanup
+                explicit GList(const GBank &_) noexcept; //!< setup
+                virtual ~GList() noexcept;               //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -52,13 +61,13 @@ namespace Yttrium
                 virtual void show(XMLog &xml, const char * const uuid) const; //!< display
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(KList);
+                Y_DISABLE_COPY_AND_ASSIGN(GList);
             };
+
         }
 
     }
-
 }
 
 #endif
-
+    

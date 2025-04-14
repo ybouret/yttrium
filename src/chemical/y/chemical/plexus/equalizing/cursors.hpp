@@ -5,8 +5,8 @@
 #ifndef Y_Chemical_Cursors_Included
 #define Y_Chemical_Cursors_Included 1
 
-#include "y/chemical/plexus/equalizer/banks.hpp"
-#include "y/chemical/plexus/equalizer/restartable.hpp"
+#include "y/chemical/plexus/equalizing/banks.hpp"
+#include "y/chemical/plexus/equalizing/restartable.hpp"
 
 namespace Yttrium
 {

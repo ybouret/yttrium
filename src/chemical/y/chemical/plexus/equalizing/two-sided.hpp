@@ -6,9 +6,9 @@
 
 
 #include "y/chemical/plexus/cluster.hpp"
-#include "y/chemical/plexus/equalizer/extents.hpp"
-#include "y/chemical/plexus/equalizer/two-sided/glist.hpp"
-#include "y/chemical/plexus/equalizer/two-sided/klist.hpp"
+#include "y/chemical/plexus/equalizing/extents.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/glist.hpp"
+#include "y/chemical/plexus/equalizing/two-sided/klist.hpp"
 
 namespace Yttrium
 {

@@ -1,4 +1,4 @@
-#include "y/chemical/plexus/equalizer/proceeding.hpp"
+#include "y/chemical/plexus/equalizing/proceeding.hpp"
 
 namespace Yttrium
 {

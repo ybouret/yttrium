@@ -1,6 +1,6 @@
 
-#include "y/chemical/plexus/equalizer/cursor.hpp"
-#include "y/chemical/plexus/equalizer/restartable.hpp"
+#include "y/chemical/plexus/equalizing/cursor.hpp"
+#include "y/chemical/plexus/equalizing/restartable.hpp"
 
 namespace Yttrium
 {

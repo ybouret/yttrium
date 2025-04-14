@@ -7,8 +7,8 @@
 #define Y_Chemical_Equalizer_Proceeding_Included 1
 
 #include "y/chemical/plexus/conservation/warden.hpp"
-#include "y/chemical/plexus/equalizer/two-sided.hpp"
-#include "y/chemical/plexus/equalizer/one-sided.hpp"
+#include "y/chemical/plexus/equalizing/two-sided.hpp"
+#include "y/chemical/plexus/equalizing/one-sided.hpp"
 
 
 

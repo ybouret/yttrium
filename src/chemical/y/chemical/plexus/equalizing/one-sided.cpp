@@ -1,5 +1,5 @@
 
-#include "y/chemical/plexus/equalizer/one-sided.hpp"
+#include "y/chemical/plexus/equalizing/one-sided.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium

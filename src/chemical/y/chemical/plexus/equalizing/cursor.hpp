@@ -5,7 +5,7 @@
 #ifndef Y_Chemical_Cursor_Included
 #define Y_Chemical_Cursor_Included 1
 
-#include "y/chemical/plexus/equalizer/hauler.hpp"
+#include "y/chemical/plexus/equalizing/hauler.hpp"
 #include "y/data/small/heavy/list/coop.hpp"
 
 namespace Yttrium
