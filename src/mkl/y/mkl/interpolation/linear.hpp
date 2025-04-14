@@ -12,14 +12,23 @@ namespace Yttrium
     namespace MKL
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //
+        //! performing Linear Interpolation
+        //
+        //
+        //______________________________________________________________________
+
         template <typename T>
         class LinearInterpolation
         {
         public:
+            explicit LinearInterpolation() noexcept; //!< setup
+            virtual ~LinearInterpolation() noexcept; //!< cleanup
 
-            explicit LinearInterpolation() noexcept;
-            virtual ~LinearInterpolation() noexcept;
-
+            //! locate and interpolate
             T operator()(const T            x,
                          const Readable<T> &xa,
                          const Readable<T> &ya) const;
