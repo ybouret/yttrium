@@ -45,7 +45,7 @@ namespace Yttrium
 /**/ const xreal_t Stmp = CALL; if( converged(xml,Stmp,UUID,Swin,Mwin) ) return finalize(xml,C0,true);\
 } while(false)
 
-
+        
         void Reactor:: operator()(XMLog &           xml,
                                   XWritable &       C0,
                                   const XReadable & K0)

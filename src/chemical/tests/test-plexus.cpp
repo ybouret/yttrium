@@ -71,39 +71,16 @@ Y_UTEST(plexus)
 
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    Y_SIZEOF(Conservation::Warden);
-    Y_SIZEOF(Equalizer::TwoSided);
-    Y_SIZEOF(Equalizer::OneSided);
-    Y_SIZEOF(Equalizer::KList);
-    Y_SIZEOF(Equalizer::GList);
-    Y_SIZEOF(Equalizer::Proceeding);
-
-    return 0;
 
 
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-    //lib.show(std::cerr << "I0=", "\t[", I0, "]", xreal_t::ToString ) << std::endl;
-
-    return 0;
 
     Reactor::MonitorScore = true;
     Reactor::EmitProfiles = true;
     Reactors cs(cls);
     cs(xml,C0);
 
+    lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-
-
-    
-    Y_SIZEOF(Cluster);
-    Y_SIZEOF(ClusterContent);
-
-    Y_SIZEOF(Conservation::Law);
-    Y_SIZEOF(Conservation::Laws);
-    Y_SIZEOF(Conservation::Canon);
-    Y_SIZEOF(Conservation::Canons);
-
-    Y_SIZEOF(Reactor);
 
 
 }
