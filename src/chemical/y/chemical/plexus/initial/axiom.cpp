@@ -16,6 +16,14 @@ namespace Yttrium
             }
 
             Y_PROXY_IMPL(Axiom,my)
+
+            Axiom:: Axiom(const XNode &root, Library &lib) :
+            Quantized(),
+            Entity( new String() ),
+            value(0)
+            {
+            }
+            
         }
 
     }

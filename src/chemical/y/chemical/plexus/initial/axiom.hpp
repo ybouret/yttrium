@@ -25,8 +25,7 @@ namespace Yttrium
                 virtual ~Axiom() noexcept;
                 const xreal_t value;
 
-                Axiom * next;
-                Axiom * prev;
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
