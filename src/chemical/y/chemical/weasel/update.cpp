@@ -35,7 +35,14 @@ namespace Yttrium
                     eqs(eq);
                     continue;
                 }
-                
+
+                if(node->defines<Initial::Design>())
+                {
+                    const Initial::Design::Pointer design( compileDesign(*node,lib) );
+                    std::cerr << "Found Design '" << design->name << "'" << std::endl;
+                }
+
+
 
                 temp.pushTail( node.yield() );
             }

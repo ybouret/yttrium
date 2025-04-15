@@ -19,6 +19,7 @@ namespace Yttrium
 #include "y/chemical/weasel/formula/to-html.hpp"
 #include "y/lua++/function.hpp"
 #include <cstring>
+#include "y/chemical/weasel/initial/compiler.hpp"
 
 namespace Yttrium
 {
@@ -40,9 +41,10 @@ namespace Yttrium
 
             inline ~Code() noexcept {}
 
-            Parser        parser;
-            FormulaToText formulaToText;
-            FormulaToHTML formulaToHTML;
+            Parser            parser;
+            FormulaToText     formulaToText;
+            FormulaToHTML     formulaToHTML;
+            Initial::Compiler initialCompiler;
             Lua::VM       lvm;
 
         private:
@@ -92,6 +94,11 @@ namespace Yttrium
             return code->formulaToHTML.get(*f);
         }
 
+        Initial::Design * Weasel:: compileDesign(const XNode &root, Library &lib)
+        {
+            assert(0!=code);
+            return code->initialCompiler(root,lib);
+        }
     }
 
 }
