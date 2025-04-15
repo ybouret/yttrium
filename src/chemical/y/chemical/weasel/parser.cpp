@@ -117,7 +117,8 @@ namespace Yttrium
             //------------------------------------------------------------------
             Agg & WISH = agg(Wish::CallSign);
             {
-                WISH << SPACE << STRING;
+                const Rule &CONC = grp("Conc") << '[' << FORMULA << ']';
+                WISH << SPACE << pick(STRING,CONC);
             }
 
             //------------------------------------------------------------------
@@ -130,17 +131,18 @@ namespace Yttrium
                 DESIGN << term(Design::Logo,Design::LogoExpr);
                 DESIGN << SPACE << '=';
                 {
-                    const Compound &NoWish = grp("NoWish") << '{' << SPACE << '}';
-                    const Compound &Wishes = grp("Wishes") << '{' << WISH << extra(',',WISH) <<  SPACE << '}';
+                    const Rule &NoWish = grp("NoWish") << '{' << SPACE << '}';
+                    const Rule &Wishes = grp("Wishes") << '{' << WISH << extra(',',WISH) <<  SPACE << '}';
                     DESIGN << SPACE << pick(NoWish,Wishes);
                 }
                 STATEMENT << DESIGN;
             }
 
             //------------------------------------------------------------------
+            //
             // Lexical Only
+            //
             //------------------------------------------------------------------
-
             (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
             (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
 
