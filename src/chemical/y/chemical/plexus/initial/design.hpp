@@ -10,20 +10,23 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
-        class Design : public Quantized, public Counted, public Entity
+        namespace Initial
         {
-        public:
-            static const char * const CallSign;
-            static const char * const LogoExpr;
-            static const char * const Logo;
-
-            explicit Design(const String * const pName) noexcept;
-            virtual ~Design() noexcept;
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Design);
-        };
+            class Design : public Quantized, public Counted, public Entity
+            {
+            public:
+                static const char * const CallSign;
+                static const char * const LogoExpr;
+                static const char * const Logo;
+                
+                explicit Design(const String * const pName) noexcept;
+                virtual ~Design() noexcept;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Design);
+            };
+            
+        }
 
     }
 }

@@ -131,8 +131,8 @@ namespace Yttrium
             //
             //------------------------------------------------------------------
             {
-                Agg &DESIGN = agg(Design::CallSign);
-                DESIGN << term(Design::Logo,Design::LogoExpr);
+                Agg &DESIGN = agg(Initial::Design::CallSign);
+                DESIGN << term(Initial::Design::Logo,Initial::Design::LogoExpr);
                 DESIGN << SPACE << '=';
                 {
                     const Rule &EmptyDesign = grp("EmptyDesign") << '{' << SPACE << '}';
@@ -247,7 +247,7 @@ namespace Yttrium
         static inline void cleanupEquilibrium(XNode * const node) noexcept
         {
             assert(0!=node);
-            assert( node->is(Equilibrium::CallSign) );
+            assert( node->defines<Equilibrium>() );
             XList &list = node->branch(); assert(4==list.size);
             {
                 XNode * const reac = list.fetch(2); assert( reac->is(Equilibrium::Reac)   );
@@ -260,6 +260,62 @@ namespace Yttrium
             }
 
             cleanupString(list.tail);
+        }
+
+
+        static inline void cleanupPlayer(XNode * const node) noexcept
+        {
+            assert(0!=node);
+            assert(Initial::Player::First==node->name() || Initial::Player::Extra==node->name());
+            XList &list = node->branch(); assert(list.size>0);
+            assert(list.tail->defines<Formula>());
+            cleanupFormula(list.tail);
+        }
+
+        static inline void cleanupAxiom(XNode * const node) noexcept
+        {
+            assert(0!=node);
+            assert(node->defines<Initial::Axiom>());
+            XList & list = node->branch(); assert(list.size>0);
+            XNode * curr = list.tail;      assert(0!=curr); assert(Weasel::StringID == curr->name() );
+            cleanupString(curr);
+            for(curr=curr->prev;curr;curr=curr->prev)
+            {
+                assert(Initial::Player::First==curr->name() || Initial::Player::Extra==curr->name());
+                cleanupPlayer(curr);
+            }
+        }
+
+        static inline void cleanupDesign(XNode * const node)
+        {
+            assert(0!=node);
+            assert(node->defines<Initial::Design>());
+            XList & list = node->branch(); assert(list.size>0);
+            XNode * curr = list.head;      assert(0!=curr); assert(curr->is(Initial::Design::Logo));
+            {
+                Lingo::Token &logo = curr->lexeme(); assert(logo.size>1);
+                delete logo.popHead(); //std::cerr << "-- logo='" << logo << "'" << std::endl;
+            }
+            for(curr=curr->next;curr;curr=curr->next)
+            {
+                const String &name = curr->name();
+                if(Weasel::StringID == name)
+                {
+                    cleanupString(curr);
+                    //std::cerr << "\t" << curr->lexeme() << std::endl;
+                    continue;
+                }
+
+                if(curr->defines<Initial::Axiom>())
+                {
+                    cleanupAxiom(curr);
+                    continue;
+                }
+
+                throw Specific::Exception(Weasel::CallSign,"cleanupDesign unexpected '%s'", name.c_str());
+
+            }
+
         }
 
 
@@ -280,13 +336,13 @@ namespace Yttrium
                     assert(0!=mine.head);
                     AutoPtr<XNode> node = mine.popHead();
 
-                    if( node->is(Equilibrium::CallSign) )
+                    if( node->defines<Equilibrium>() )
                     {
                         cleanupEquilibrium(& *node);
                         goto PUSH;
                     }
 
-                    if( node->is(Formula::CallSign) )
+                    if( node->defines<Formula>() )
                     {
                         cleanupFormula( & *node);
                         goto PUSH;
@@ -300,8 +356,15 @@ namespace Yttrium
                         continue; // drop node
                     }
 
-                    std::cerr << "unprocessed " << node->name() << std::endl;
+                    if( node->defines<Initial::Design>() )
+                    {
+                        std::cerr << "Processing " << node->name() << std::endl;
+                        cleanupDesign(& *node);
+                        goto PUSH;
+                    }
 
+
+                    
                 PUSH:
                     temp.pushTail(node.yield());
 

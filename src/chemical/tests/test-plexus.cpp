@@ -86,6 +86,7 @@ Y_UTEST(plexus)
 
     Y_SIZEOF(Initial::Player);
     Y_SIZEOF(Initial::Axiom);
+    Y_SIZEOF(Initial::Design);
 
 }
 Y_UDONE()

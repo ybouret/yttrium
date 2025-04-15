@@ -66,7 +66,14 @@ namespace Yttrium
             //__________________________________________________________________
             Equilibrium  * compile(Library &     lib,
                                    XNode * const eNode,
-                                   const size_t  eIndx); //!< compile equilibrium from parse node
+                                   const size_t  eIndx); //!< compile equilibrium from parsed node
+
+            //__________________________________________________________________
+            //
+            //
+            // High-Level API
+            //
+            //__________________________________________________________________
 
             //! use root's content to update library and equilibria
             void     update(Library    &  lib,
