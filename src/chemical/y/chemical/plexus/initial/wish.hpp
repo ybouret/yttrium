@@ -23,7 +23,6 @@ namespace Yttrium
                 virtual ~Wish() noexcept;
                 
                 
-                const xreal_t target;
                 Wish * next;
                 Wish * prev;
                 

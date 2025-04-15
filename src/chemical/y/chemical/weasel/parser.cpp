@@ -115,14 +115,14 @@ namespace Yttrium
             // Create Wish for Design: String as Instruction or full Axiom
             //
             //------------------------------------------------------------------
-            Agg & WISH = agg(Initial::Wish::CallSign);
+            Compound & INSTR = grp("INSTR");
             {
                 const Rule &CONC         = grp("Conc") << '[' << FORMULA << ']';
                 const Rule &FIRST_PLAYER = agg(Initial::Player::First) << opt(SIGN) << SPACE << OPT_COEF << SPACE << CONC;
                 const Rule &EXTRA_PLAYER = agg(Initial::Player::Extra) << SPACE << SIGN << SPACE << OPT_COEF << SPACE << CONC;
                 const Rule &PLAYERS      = grp("Players") << FIRST_PLAYER << zom(EXTRA_PLAYER);
                 const Rule &AXIOM        = agg(Initial::Axiom::CallSign) << PLAYERS << SPACE << '=' << STRING;
-                WISH << SPACE << pick(STRING,AXIOM);
+                INSTR << SPACE << pick(AXIOM,STRING);
             }
 
             //------------------------------------------------------------------
@@ -135,9 +135,9 @@ namespace Yttrium
                 DESIGN << term(Design::Logo,Design::LogoExpr);
                 DESIGN << SPACE << '=';
                 {
-                    const Rule &NoWish = grp("NoWish") << '{' << SPACE << '}';
-                    const Rule &Wishes = grp("Wishes") << '{' << WISH << extra(',',WISH) <<  SPACE << '}';
-                    DESIGN << SPACE << pick(NoWish,Wishes);
+                    const Rule &EmptyDesign = grp("EmptyDesign") << '{' << SPACE << '}';
+                    const Rule &HeavyDesign = grp("HeavyDesign") << '{' << INSTR << extra(',',INSTR) <<  SPACE << '}';
+                    DESIGN << SPACE << pick(EmptyDesign,HeavyDesign);
                 }
                 STATEMENT << DESIGN;
             }
