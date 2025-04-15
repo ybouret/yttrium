@@ -118,8 +118,8 @@ namespace Yttrium
             Agg & WISH = agg(Initial::Wish::CallSign);
             {
                 const Rule &CONC         = grp("Conc") << '[' << FORMULA << ']';
-                const Rule &FIRST_PLAYER = agg("FirstPlayer") << opt(SIGN) << SPACE << OPT_COEF << SPACE << CONC;
-                const Rule &EXTRA_PLAYER = agg("ExtraPlayer") << SPACE << SIGN << SPACE << OPT_COEF << SPACE << CONC;
+                const Rule &FIRST_PLAYER = agg(Initial::Player::First) << opt(SIGN) << SPACE << OPT_COEF << SPACE << CONC;
+                const Rule &EXTRA_PLAYER = agg(Initial::Player::Extra) << SPACE << SIGN << SPACE << OPT_COEF << SPACE << CONC;
                 const Rule &PLAYERS      = grp("Players") << FIRST_PLAYER << zom(EXTRA_PLAYER);
                 const Rule &AXIOM        = agg(Initial::Axiom::CallSign) << PLAYERS << SPACE << '=' << STRING;
                 WISH << SPACE << pick(STRING,AXIOM);

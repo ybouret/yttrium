@@ -5,6 +5,7 @@
 #define Y_Plexus_Initial_Axiom_Included 1
 
 #include "y/chemical/plexus/initial/player.hpp"
+#include "y/chemical/library.hpp"
 #include "y/chemical/type/defs.hpp"
 #include "y/chemical/type/xcode.hpp"
 
@@ -20,7 +21,7 @@ namespace Yttrium
             public:
                 static const char * const CallSign;
 
-                explicit Axiom(const XNode &root);
+                explicit Axiom(const XNode &root, Library &lib);
                 virtual ~Axiom() noexcept;
                 const xreal_t value;
 

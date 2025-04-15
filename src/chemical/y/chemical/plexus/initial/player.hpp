@@ -13,7 +13,7 @@ namespace Yttrium
     {
         namespace Initial
         {
-            class Player : public Quantized
+            class Player : public Object
             {
             public:
                 static const char * const First;
