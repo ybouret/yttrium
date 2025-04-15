@@ -112,19 +112,28 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
+            // Create Wish for Design
+            //
+            //------------------------------------------------------------------
+            Agg & WISH = agg(Wish::CallSign);
+            {
+                WISH << SPACE << STRING;
+            }
+
+            //------------------------------------------------------------------
+            //
             // Create Design
             //
             //------------------------------------------------------------------
             {
                 Agg &DESIGN = agg(Design::CallSign);
+                DESIGN << term(Design::Logo,Design::LogoExpr);
+                DESIGN << SPACE << '=';
                 {
-                    String rx = Design::Prefix;
-                    rx       += "[[:word:]_]+";
-                    DESIGN << term(Design::Logo,rx);
+                    const Compound &NoWish = grp("NoWish") << '{' << SPACE << '}';
+                    const Compound &Wishes = grp("Wishes") << '{' << WISH << SPACE << '}';
+                    DESIGN << SPACE << pick(NoWish,Wishes);
                 }
-                DESIGN << SPACE << '=' << SPACE << '{';
-
-                DESIGN << SPACE << '}';
                 STATEMENT << DESIGN;
             }
 
