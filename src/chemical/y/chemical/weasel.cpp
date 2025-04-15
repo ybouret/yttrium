@@ -35,6 +35,7 @@ namespace Yttrium
             parser(),
             formulaToText(),
             formulaToHTML(),
+            initialCompiler(),
             lvm( new Lua::State() )
             {
             }
@@ -45,7 +46,7 @@ namespace Yttrium
             FormulaToText     formulaToText;
             FormulaToHTML     formulaToHTML;
             Initial::Compiler initialCompiler;
-            Lua::VM       lvm;
+            Lua::VM           lvm;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Code);
