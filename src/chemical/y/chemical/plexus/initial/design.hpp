@@ -18,8 +18,11 @@ namespace Yttrium
                 static const char * const CallSign;
                 static const char * const LogoExpr;
                 static const char * const Logo;
-                
-                explicit Design(const String * const pName) noexcept;
+
+                typedef ArcPtr<const Design>      Pointer;
+                typedef SuffixSet<String,Pointer> Set;
+
+                explicit Design();
                 virtual ~Design() noexcept;
                 
             private:

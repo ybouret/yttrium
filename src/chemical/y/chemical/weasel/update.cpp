@@ -35,6 +35,7 @@ namespace Yttrium
                     eqs(eq);
                     continue;
                 }
+                
 
                 temp.pushTail( node.yield() );
             }

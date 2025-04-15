@@ -8,6 +8,7 @@ chemical/reactive/equilibrium
 chemical/weasel
 chemical/weasel/formula
 chemical/weasel/equilibrium
+chemical/weasel/design
 chemical/plexus
 chemical/plexus/conservation
 chemical/plexus/cluster
