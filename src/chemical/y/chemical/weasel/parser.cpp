@@ -131,7 +131,7 @@ namespace Yttrium
                 DESIGN << SPACE << '=';
                 {
                     const Compound &NoWish = grp("NoWish") << '{' << SPACE << '}';
-                    const Compound &Wishes = grp("Wishes") << '{' << WISH << SPACE << '}';
+                    const Compound &Wishes = grp("Wishes") << '{' << WISH << extra(',',WISH) <<  SPACE << '}';
                     DESIGN << SPACE << pick(NoWish,Wishes);
                 }
                 STATEMENT << DESIGN;
