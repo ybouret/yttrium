@@ -9,7 +9,7 @@
 
 #include "y/apex/natural.hpp"
 
-#include "y/chemical/plexus/initial/wish.hpp"
+#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
@@ -112,20 +112,13 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // Create Wish
+            // Create Design
             //
             //------------------------------------------------------------------
             {
-                Agg &WISH = agg(Wish::CallSign);
-                WISH << '#';
-
-                Agg &LINEAR_WISH = agg("LinearWish");
-
-                LINEAR_WISH << SPACE << '=' << SPACE << STRING;
-
-                WISH << pick(LINEAR_WISH,STRING);
-
-                STATEMENT << WISH;
+                Agg &DESIGN = agg(Design::CallSign);
+                DESIGN << term("DUID","#[:word:]+");
+                STATEMENT << DESIGN;
             }
 
             //------------------------------------------------------------------
@@ -134,7 +127,8 @@ namespace Yttrium
 
             (void) lexer.plug<Lingo::Lexical::CPlusPlusComment>("Comment++");
             (void) lexer.plug<Lingo::Lexical::C_Comment>("Comment");
-            render();
+
+            //render();
         }
 
 

@@ -6,6 +6,17 @@ namespace Yttrium
     namespace Chemical
     {
         const char * const Wish:: CallSign = "Wish";
+
+
+        Wish:: ~Wish() noexcept
+        {
+        }
+
+        Wish:: Wish() :
+        Entity( new String() )
+        {
+            
+        }
     }
 
 }
