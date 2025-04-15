@@ -112,13 +112,17 @@ namespace Yttrium
 
             //------------------------------------------------------------------
             //
-            // Create Wish for Design
+            // Create Wish for Design: String as Instruction or full Axiom
             //
             //------------------------------------------------------------------
-            Agg & WISH = agg(Wish::CallSign);
+            Agg & WISH = agg(Initial::Wish::CallSign);
             {
-                const Rule &CONC = grp("Conc") << '[' << FORMULA << ']';
-                WISH << SPACE << pick(STRING,CONC);
+                const Rule &CONC         = grp("Conc") << '[' << FORMULA << ']';
+                const Rule &FIRST_PLAYER = agg("FirstPlayer") << opt(SIGN) << SPACE << OPT_COEF << SPACE << CONC;
+                const Rule &EXTRA_PLAYER = agg("ExtraPlayer") << SPACE << SIGN << SPACE << OPT_COEF << SPACE << CONC;
+                const Rule &PLAYERS      = grp("Players") << FIRST_PLAYER << zom(EXTRA_PLAYER);
+                const Rule &AXIOM        = agg(Initial::Axiom::CallSign) << PLAYERS << SPACE << '=' << STRING;
+                WISH << SPACE << pick(STRING,AXIOM);
             }
 
             //------------------------------------------------------------------
