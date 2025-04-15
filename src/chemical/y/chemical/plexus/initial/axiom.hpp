@@ -21,7 +21,8 @@ namespace Yttrium
             public:
                 static const char * const CallSign;
 
-                explicit Axiom(const XNode &root, Library &lib);
+                explicit Axiom(const XNode &root, Library &lib); //!< parse
+                explicit Axiom(Library &lib);                    //!< electroneutrality
                 virtual ~Axiom() noexcept;
                 const xreal_t value;
 

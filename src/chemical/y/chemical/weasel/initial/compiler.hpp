@@ -26,11 +26,12 @@ namespace Yttrium
                 explicit Compiler();
                 virtual ~Compiler() noexcept;
 
-                Design * operator()(const XNode &root,
-                                    Library     &lib);
+                Design * operator()(const XNode   &root,
+                                    const Library &lib);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
+                void onInstr(const String &instr, Design &design, Library &eq);
             };
 
         }

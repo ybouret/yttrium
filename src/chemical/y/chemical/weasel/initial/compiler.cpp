@@ -1,5 +1,6 @@
 
 #include "y/chemical/weasel/initial/compiler.hpp"
+#include "y/chemical/weasel.hpp"
 
 namespace Yttrium
 {
@@ -19,8 +20,8 @@ namespace Yttrium
 
             }
 
-            Design * Compiler:: operator()(const XNode &root,
-                                           Library     &lib)
+            Design * Compiler:: operator()(const XNode   &root,
+                                           const Library &lib)
             {
                 assert(root.defines<Design>());
 
@@ -32,15 +33,30 @@ namespace Yttrium
                         String   name = curr->lexeme().toString();
                         Coerce(*(design->name)).swapWith(name);
                     }
-                    
+                    std::cerr << "Design '" << design->name << "'" << std::endl;
+
                     for(curr=curr->next;curr;curr=curr->next)
                     {
+                        if(curr->is(Weasel::StringID))
+                        {
+                            const String instr = curr->lexeme().toString();
+                            std::cerr << "Instruction='" << instr << "'" << std::endl;
+                            continue;
+                        }
+
+                        if(curr->defines<Axiom>())
+                        {
+                            
+                        }
 
                     }
                 }
 
                 return design.yield();
             }
+
+
+
         }
 
     }
