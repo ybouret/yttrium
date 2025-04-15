@@ -117,7 +117,14 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Agg &DESIGN = agg(Design::CallSign);
-                DESIGN << term("DUID","#[:word:]+");
+                {
+                    String rx = Design::Prefix;
+                    rx       += "[[:word:]_]+";
+                    DESIGN << term(Design::Logo,rx);
+                }
+                DESIGN << SPACE << '=' << SPACE << '{';
+
+                DESIGN << SPACE << '}';
                 STATEMENT << DESIGN;
             }
 

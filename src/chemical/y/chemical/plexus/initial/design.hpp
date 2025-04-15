@@ -15,7 +15,9 @@ namespace Yttrium
         {
         public:
             static const char * const CallSign;
-            
+            static const char         Prefix = '.';
+            static const char * const Logo;
+
             explicit Design(const String * const pName) noexcept;
             virtual ~Design() noexcept;
 

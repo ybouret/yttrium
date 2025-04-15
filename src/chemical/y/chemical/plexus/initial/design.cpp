@@ -7,6 +7,7 @@ namespace Yttrium
     {
 
         const char * const Design:: CallSign = "Design";
+        const char * const Design:: Logo     = "Logo";
 
         Design:: Design(const String * const pName) noexcept :
         Quantized(), Counted(), Entity(pName)
