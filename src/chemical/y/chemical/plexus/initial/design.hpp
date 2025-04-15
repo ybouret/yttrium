@@ -4,7 +4,7 @@
 #ifndef Y_Plexus_Initial_Design_Included
 #define Y_Plexus_Initial_Design_Included 1
 
-#include "y/chemical/plexus/initial/wish.hpp"
+#include "y/chemical/plexus/initial/axiom.hpp"
 
 namespace Yttrium
 {
