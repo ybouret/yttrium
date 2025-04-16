@@ -49,7 +49,7 @@ namespace Yttrium
         void Reactor:: mix(XMLog &             xml,
                            XWritable &         C0,
                            const XReadable &   K0,
-                           ReactorProc * const cb)
+                           Proc *        const cb)
         {
             static const char fn[] = "reactor.dat";
             Y_XML_SECTION(xml, "Reactor");

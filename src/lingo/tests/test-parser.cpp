@@ -106,13 +106,17 @@ namespace
 {
     struct XCall
     {
-        inline Syntax::XWalk::Result display(Syntax::XNode &node, const size_t deep)
+        inline void display(Syntax::XNode &node, const size_t deep)
         {
             Core::Indent(std::cerr,deep) << " display [" << node.name() << "]" << std::endl;
-            //return Syntax::XWalk::Dive;
-            return Syntax::XWalk::Stop;
         }
     };
+
+    static inline void XDisp(Syntax::XNode &node, const size_t deep)
+    {
+        Core::Indent(std::cerr,deep) << " x_disp  [" << node.name() << "]" << std::endl;
+
+    }
 }
 
 Y_UTEST(parser)
@@ -124,6 +128,7 @@ Y_UTEST(parser)
     Syntax::XWalk xwalk;
     XCall         call;
     xwalk.on("Pair", call, & XCall::display);
+    xwalk.on("String", XDisp);
 
     if(argc>1)
     {

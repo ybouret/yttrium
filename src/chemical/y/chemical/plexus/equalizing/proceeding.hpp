@@ -74,6 +74,7 @@ namespace Yttrium
                 void fix(XMLog     &  xml,
                          XWritable &  C0);
 
+                //! get cluster
                 const Cluster & cluster() const noexcept;
 
                 //______________________________________________________________

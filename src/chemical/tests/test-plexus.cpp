@@ -1,7 +1,5 @@
-
 #include "y/chemical/plexus/reactors.hpp"
 #include "y/chemical/plexus/equalizer.hpp"
-//#include "y/chemical/plexus/initial/design.hpp"
 
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
@@ -11,6 +9,13 @@
 #include "y/string/env.hpp"
 
 
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        
+    }
+}
 
 
 using namespace Yttrium;
@@ -78,8 +83,8 @@ Y_UTEST(plexus)
     Reactor::EmitProfiles = false;
     Reactors cs(cls);
 
-    Display     display;
-    ReactorProc cb = display;
+    Display            display;
+    Reactor::Proc cb = display;
     cs(xml,C0,&cb);
 
     lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;

@@ -22,24 +22,28 @@ namespace Yttrium
 
                 inline virtual ~Code() noexcept {}
 
-                inline Result process(XNode * const node,
-                                      const size_t  deep) const
+                inline void process(XNode * const node,
+                                    const size_t  deep) const
                 {
                     assert(0!=node);
 
-                    switch(node->type)
+                    if(verbose)
                     {
-                        case XNode::Internal: Core::Indent(std::cerr,deep) << node->name()   << std::endl; break;
-                        case XNode::Terminal: Core::Indent(std::cerr,deep) << node->lexeme() << std::endl; break;
+                        switch(node->type)
+                        {
+                            case XNode::Internal: Core::Indent(std::cerr,deep) << node->name()   << std::endl; break;
+                            case XNode::Terminal: Core::Indent(std::cerr,deep) << node->lexeme() << std::endl; break;
+                        }
+
                     }
 
                     const Proc * const pp = db.search(node->name());
-                    if(!pp) return Dive;
-                    return Coerce(*pp)(*node,deep);
+                    if(0!=pp) Coerce(*pp)(*node,deep);
                 }
 
 
                 SuffixMap<String,Proc> db;
+                bool                   verbose;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
@@ -47,9 +51,11 @@ namespace Yttrium
 
 
 
-            XWalk:: XWalk() : code( new Code() )
+            XWalk:: XWalk(const bool verbosity) :
+            code( new Code() ),
+            verbose(code->verbose)
             {
-
+                verbose = verbosity;
             }
 
             XWalk:: ~XWalk() noexcept
@@ -62,7 +68,7 @@ namespace Yttrium
             {
                 walk(&root,0);
             }
-
+            
 
             void XWalk:: record(const String &key, const Proc &proc)
             {
@@ -82,32 +88,14 @@ namespace Yttrium
                               size_t        deep) const
             {
                 assert(0!=node);
-
-                // process current
-                const Result result = code->process(node,deep);
-
-                // intercept terminal
+                code->process(node,deep);
                 switch(node->type)
                 {
-                    case XNode::Terminal:  return; // result has no effect
-                    case XNode::Internal:  break;
+                    case XNode::Terminal: return;
+                    case XNode::Internal: ++deep; break;
                 }
-
-                // intercept result
-                switch(result)
-                {
-                    case Stop: return;
-                    case Dive: break;
-
-                }
-                
-                ++deep;
-                XList &list = node->branch();
-                for(XNode *curr=list.head;curr;curr=curr->next)
-                {
+                for(XNode *curr= node->branch().head;curr;curr=curr->next)
                     walk(curr,deep);
-                }
-
             }
         }
     }

@@ -31,8 +31,7 @@ namespace Yttrium
         typedef CxxArray<XArray,MemoryModel>  XArrays;   //!< alias
         typedef CxxArray<XMatrix,MemoryModel> XMatrices; //!< alias
 
-        typedef TL2(const XReadable &,xreal_t) ReactorArgs;
-        typedef Functor<void,ReactorArgs>      ReactorProc;
+
 
         //______________________________________________________________________
         //
@@ -45,15 +44,17 @@ namespace Yttrium
         class Reactor : public Quantized
         {
         public:
-            static const char * const  CallSign;     //!< "Reactor"
-            static const char * const  ProfileExt;   //!< "pro"
-            static bool                EmitProfiles; //!< default to false, emit profiles
-            static bool                MonitorScore; //!< default to false, monitor score
-            static const char * const  GetRunning;   //!< "GetRunning"
-            static const char * const  NarrowDown;   //!< "NarrowDown"
-            static const char * const  QueryRates;   //!< "QueryRates"
-            static const char * const  GenerateNR;   //!< "GenerateNR"
-            typedef CxxListOf<Reactor> List;         //!< alias
+            static const char * const  CallSign;         //!< "Reactor"
+            static const char * const  ProfileExt;       //!< "pro"
+            static bool                EmitProfiles;     //!< default to false, emit profiles
+            static bool                MonitorScore;     //!< default to false, monitor score
+            static const char * const  GetRunning;       //!< "GetRunning"
+            static const char * const  NarrowDown;       //!< "NarrowDown"
+            static const char * const  QueryRates;       //!< "QueryRates"
+            static const char * const  GenerateNR;       //!< "GenerateNR"
+            typedef CxxListOf<Reactor>             List; //!< alias
+            typedef TL2(const XReadable &,xreal_t) Args; //!< alias
+            typedef Functor<void,Args>             Proc; //!< alias
 
             //__________________________________________________________________
             //
@@ -75,7 +76,7 @@ namespace Yttrium
             void mix(XMLog           &xml,
                      XWritable       &C0,
                      const XReadable &K0,
-                     ReactorProc * const cb);
+                     Proc * const     cb);
 
 
 

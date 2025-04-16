@@ -22,7 +22,7 @@ namespace Yttrium
 
         }
 
-        void Reactors:: operator()(XMLog &xml, XWritable &C0, ReactorProc * const cb)
+        void Reactors:: operator()(XMLog &xml, XWritable &C0, Reactor::Proc * const cb)
         {
             Y_XML_SECTION_OPT(xml,"Reactors","count=" << my.size);
 
