@@ -5,6 +5,7 @@
 #include "y/lingo/lexical/add-on/jstring.hpp"
 
 #include "y/lingo/syntax/translator.hpp"
+#include "y/lingo/syntax/xwalk.hpp"
 
 using namespace Yttrium;
 using namespace Lingo;
@@ -101,11 +102,28 @@ namespace
 }
 
 
+namespace
+{
+    struct XCall
+    {
+        inline Syntax::XWalk::Result display(Syntax::XNode &node, const size_t deep)
+        {
+            Core::Indent(std::cerr,deep) << " display [" << node.name() << "]" << std::endl;
+            //return Syntax::XWalk::Dive;
+            return Syntax::XWalk::Stop;
+        }
+    };
+}
+
 Y_UTEST(parser)
 {
 
     JParser J;
     J.printRules();
+
+    Syntax::XWalk xwalk;
+    XCall         call;
+    xwalk.on("Pair", call, & XCall::display);
 
     if(argc>1)
     {
@@ -123,6 +141,9 @@ Y_UTEST(parser)
         tr.verbose = true;
         tr.policy  = Syntax::Permissive;
         tr(*xnode);
+
+        std::cerr << "Walking..." << std::endl;
+        xwalk(*xnode);
     }
 }
 Y_UDONE()
