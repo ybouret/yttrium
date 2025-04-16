@@ -13,7 +13,109 @@ namespace Yttrium
 {
     namespace Chemical
     {
-        
+
+        namespace Initial
+        {
+
+            class Axiom
+            {
+            protected:
+                explicit Axiom(const xreal_t value) noexcept;
+
+            public:
+                virtual ~Axiom() noexcept;
+
+                virtual int   weight(const Species &sp) const noexcept = 0;
+                const xreal_t amount;
+
+                Axiom *next;
+                Axiom *prev;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Axiom);
+            };
+
+            Axiom:: Axiom(const xreal_t value) noexcept :
+            amount(value),
+            next(0),
+            prev(0)
+            {
+            }
+
+            Axiom:: ~Axiom() noexcept
+            {
+            }
+
+            class FixedConcentration : public Axiom
+            {
+            public:
+                explicit FixedConcentration(const Species &sp,
+                                            const xreal_t  C0) noexcept;
+                virtual ~FixedConcentration() noexcept;
+
+                virtual int weight(const Species &sp) const noexcept;
+
+
+                const Species &species;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(FixedConcentration);
+            };
+
+
+            FixedConcentration:: ~FixedConcentration() noexcept
+            {
+            }
+
+            FixedConcentration:: FixedConcentration(const Species &sp,
+                                                    const xreal_t  C0) noexcept :
+            Axiom(C0),
+            species(sp)
+            {
+            }
+
+
+            int FixedConcentration:: weight(const Species &sp) const noexcept
+            {
+                return ( &sp == &species ) ? 1 : 0;
+            }
+
+
+
+            class ElectroNeutrality : public Axiom
+            {
+            public:
+                explicit ElectroNeutrality() noexcept;
+                virtual ~ElectroNeutrality() noexcept;
+
+                virtual int weight(const Species &sp) const noexcept;
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(ElectroNeutrality);
+            };
+
+
+            ElectroNeutrality:: ~ElectroNeutrality() noexcept
+            {
+            }
+
+            ElectroNeutrality:: ElectroNeutrality() noexcept :
+            Axiom(0)
+            {
+            }
+
+
+            int ElectroNeutrality:: weight(const Species &sp) const noexcept
+            {
+                return sp.z;
+            }
+
+
+
+
+        }
+
     }
 }
 
