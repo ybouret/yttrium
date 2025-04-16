@@ -8,14 +8,12 @@ chemical/reactive/equilibrium
 chemical/weasel
 chemical/weasel/formula
 chemical/weasel/equilibrium
-chemical/weasel/initial
 chemical/plexus
 chemical/plexus/conservation
 chemical/plexus/cluster
 chemical/plexus/reactor
 chemical/plexus/equalizing
 chemical/plexus/equalizing/two-sided
-chemical/plexus/initial
 )
 
 add_subdirectory(tests)

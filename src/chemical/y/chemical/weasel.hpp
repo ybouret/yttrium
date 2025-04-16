@@ -6,7 +6,6 @@
 
 #include "y/chemical/formula.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
-#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
@@ -70,24 +69,7 @@ namespace Yttrium
                                    XNode * const eNode,
                                    const size_t  eIndx); //!< compile equilibrium from parsed node
 
-            //__________________________________________________________________
-            //
-            //
-            // Design
-            //
-            //__________________________________________________________________
-            Initial::Design * initialDesign(const XNode * const node,
-                                            Library            &lib);
-
-
-            //__________________________________________________________________
-            //
-            //
-            // Design
-            //
-            //__________________________________________________________________
-            Initial::Design * compileDesign(const XNode    &root,
-                                            Library        &lib);
+            
 
             //__________________________________________________________________
             //

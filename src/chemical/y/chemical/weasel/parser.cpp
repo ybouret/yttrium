@@ -264,6 +264,7 @@ namespace Yttrium
         }
 
 
+#if 0
         static inline void cleanupPlayer(XNode * const node) noexcept
         {
             assert(0!=node);
@@ -318,6 +319,8 @@ namespace Yttrium
             }
 
         }
+#endif
+
 
 
         XNode * Weasel::Parser:: preprocess(Lingo::Module * const inputModule)
@@ -357,12 +360,14 @@ namespace Yttrium
                         continue; // drop node
                     }
 
+#if 0
                     if( node->defines<Initial::Design>() )
                     {
                         std::cerr << "Processing " << node->name() << std::endl;
                         cleanupDesign(& *node);
                         goto PUSH;
                     }
+#endif
 
 
                     

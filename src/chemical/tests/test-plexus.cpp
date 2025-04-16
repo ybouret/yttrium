@@ -1,7 +1,7 @@
 
 #include "y/chemical/plexus/reactors.hpp"
 #include "y/chemical/plexus/equalizer.hpp"
-#include "y/chemical/plexus/initial/design.hpp"
+//#include "y/chemical/plexus/initial/design.hpp"
 
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
@@ -84,10 +84,7 @@ Y_UTEST(plexus)
 
     lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    Y_SIZEOF(Initial::Player);
-    Y_SIZEOF(Initial::Axiom);
-    Y_SIZEOF(Initial::Design);
-
+    
 }
 Y_UDONE()
 
