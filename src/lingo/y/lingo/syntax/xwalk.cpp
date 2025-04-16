@@ -16,7 +16,7 @@ namespace Yttrium
             class XWalk:: Code : public Quantized
             {
             public:
-                inline explicit Code() : db()
+                inline explicit Code() : Quantized(), db(), verbose(false)
                 {
                 }
 
