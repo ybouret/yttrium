@@ -9,7 +9,7 @@
 
 #include "y/apex/natural.hpp"
 
-#include "y/chemical/plexus/initial/design.hpp"
+//#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
@@ -109,7 +109,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             STATEMENT<< term(RegExp,"%[-+[:word:].*?\\\\\\(\\)&|]+");;
 
-
+#if 0
             //------------------------------------------------------------------
             //
             // Create Wish for Design: String as Instruction or full Axiom
@@ -141,6 +141,7 @@ namespace Yttrium
                 }
                 STATEMENT << DESIGN;
             }
+#endif
 
             //------------------------------------------------------------------
             //
