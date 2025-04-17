@@ -112,6 +112,14 @@ namespace Yttrium
             }
 
 
+            class Design : public Proxy< ListOf<Axiom> >
+            {
+            public:
+                
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Design);
+            };
 
 
         }
