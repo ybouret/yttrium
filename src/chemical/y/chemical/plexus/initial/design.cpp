@@ -94,21 +94,24 @@ namespace Yttrium
                 Matrix<apq> iBB(n,n);
                 lu.invert(BB,iBB);
                 const Matrix<apq> BT(TransposeOf,B);
-                Matrix<apq> B3(m,n);
+                Matrix<xreal_t> B3(m,n);
                 for(size_t j=1;j<=m;++j)
                 {
                     for(size_t i=1;i<=n;++i)
                     {
-                        B3[j][i] = Dot(BT[j],BB[i]);
+                        const apq q = Dot(BT[j],BB[i]);
+                        B3[j][i] = q.to<real_t>();
                     }
                 }
                 std::cerr << "B3="  << B3  << std::endl;
                 std::cerr << "rhs=" << rhs << std::endl;
+                XAdd  xadd;
                 for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
                 {
                     const Species &sp = **it;
-                    //sp(B_i,TopLevel) = axiom->weight(sp);
+                    sp(C0,TopLevel) = xadd.dot(sp(B3,TopLevel),rhs);
                 }
+                
             }
 
         }

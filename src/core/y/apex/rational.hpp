@@ -193,10 +193,10 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             // Additions
             //
             //__________________________________________________________________
-            Rational operator+() const; //!< unary +
-            void incr();                //!< +=1
-            Rational &      operator ++ ();                     //!< ++this
-            Rational        operator ++ (int);                  //!< this++
+            Rational operator+() const;   //!< unary +
+            void incr();                  //!< +=1
+            Rational & operator ++ ();    //!< ++this
+            Rational   operator ++ (int); //!< this++
 
             //__________________________________________________________________
             //
@@ -204,10 +204,27 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             // Subtractions
             //
             //__________________________________________________________________
-            Rational operator-() const;     //!< unary -
-            void decr();                    //!< +=1
-            Rational &      operator -- ();       //!< --this
-            Rational        operator -- (int);    //!< this--
+            Rational operator-() const;   //!< unary -
+            void decr();                  //!< +=1
+            Rational & operator -- ();    //!< --this
+            Rational   operator -- (int); //!< this--
+
+            //__________________________________________________________________
+            //
+            //
+            // Conversions
+            //
+            //__________________________________________________________________
+            template <typename T> inline
+            T to() const {
+                switch(numer.s)
+                {
+                    case Negative: return -Natural::Ratio<T>(numer.n,denom);
+                    case Positive: return  Natural::Ratio<T>(numer.n,denom);
+                    case __Zero__: break;
+                }
+                return 0;
+            }
 
 
             //__________________________________________________________________
