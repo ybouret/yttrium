@@ -9,7 +9,12 @@
 #include "y/string/env.hpp"
 
 #include "y/data/list/cloneable.hpp"
-#include "y/system/exception.hpp"
+
+
+#include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
+#include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
+#include "y/chemical/plexus/initial/design.hpp"
+
 
 namespace Yttrium
 {
@@ -18,249 +23,8 @@ namespace Yttrium
 
         namespace Initial
         {
-
-#define Y_Chemical_Axiom_Interface() \
-virtual Axiom * clone() const;\
-virtual int     weight(const Species &) const noexcept
-
-            class Axiom : public Quantized
-            {
-            protected:
-                explicit Axiom(const xreal_t value) noexcept;
-                explicit Axiom(const Axiom &)       noexcept;
-
-            public:
-                virtual ~Axiom() noexcept;
-
-                virtual Axiom *clone()                   const          = 0;
-                virtual int    weight(const Species &sp) const noexcept = 0;
-                const xreal_t  amount;
-
-                Axiom *next;
-                Axiom *prev;
-
-            private:
-                Y_DISABLE_ASSIGN(Axiom);
-            };
-
-            Axiom:: Axiom(const xreal_t value) noexcept :
-            Quantized(),
-            amount(value),
-            next(0),
-            prev(0)
-            {
-            }
-
-            Axiom:: Axiom(const Axiom &_) noexcept :
-            Quantized(),
-            amount(_.amount),
-            next(0),
-            prev(0)
-            {
-            }
-
-
-            Axiom:: ~Axiom() noexcept
-            {
-            }
-
-            class FixedConcentration : public Axiom
-            {
-            public:
-                explicit FixedConcentration(const Species &sp,
-                                            const xreal_t  C0) noexcept;
-                virtual ~FixedConcentration() noexcept;
-
-
-
-                const Species &species;
-
-            private:
-                Y_DISABLE_ASSIGN(FixedConcentration);
-                FixedConcentration(const FixedConcentration &) noexcept;
-                Y_Chemical_Axiom_Interface();
-            };
-
-
-
-            FixedConcentration:: FixedConcentration(const Species &sp,
-                                                    const xreal_t  C0) noexcept :
-            Axiom(C0),
-            species(sp)
-            {
-            }
-
-            FixedConcentration:: FixedConcentration(const FixedConcentration &_) noexcept :
-            Axiom(_),
-            species(_.species)
-            {
-            }
-
-            FixedConcentration:: ~FixedConcentration() noexcept
-            {
-            }
-
-
-
-            Axiom * FixedConcentration:: clone() const
-            {
-                return new FixedConcentration(*this);
-            }
-
-            int FixedConcentration:: weight(const Species &sp) const noexcept
-            {
-                return ( &sp == &species ) ? 1 : 0;
-            }
-
-
-
-            class ElectroNeutrality : public Axiom
-            {
-            public:
-                explicit ElectroNeutrality() noexcept;
-                virtual ~ElectroNeutrality() noexcept;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(ElectroNeutrality);
-                Y_Chemical_Axiom_Interface();
-            };
-
-
-            ElectroNeutrality:: ~ElectroNeutrality() noexcept
-            {
-            }
-
-            ElectroNeutrality:: ElectroNeutrality() noexcept :
-            Axiom(0)
-            {
-            }
-
-
-            int ElectroNeutrality:: weight(const Species &sp) const noexcept
-            {
-                return sp.z;
-            }
-
-            Axiom * ElectroNeutrality:: clone() const
-            {
-                return new ElectroNeutrality();
-            }
-
-
-            class Design : public Quantized, public Entity, public Proxy< ListOf<Axiom> >
-            {
-            public:
-                typedef Proxy< ListOf<Axiom> > BaseType;
-                typedef ArkPtr<String,Design>  Pointer;
-
-                template <typename UUID>
-                explicit Design(const UUID &uuid) :
-                Entity( new String(uuid) ),
-                BaseType(),
-                my()
-                {
-                }
-
-                template <typename UUID>
-                explicit Design(const UUID &uuid, const Design &root) :
-                Entity( new String(uuid) ),
-                BaseType(),
-                my(root.my)
-                {
-                }
-
-                virtual ~Design() noexcept;
-
-                void add(Axiom * const) noexcept;
-
-                void build(XWritable &C0, const Library &lib)
-                {
-
-                    // TODO: sanity check
-                    std::cerr << "lib=" << lib << std::endl;
-                    lib.ldz(C0);
-                    const size_t                 m    = lib->size();
-                    const size_t                 n    = my.size;
-
-                    Matrix<apq>  B(n,m);
-                    XArray       rhs(n);
-                    {
-                        size_t i=1;
-                        for(const Axiom *axiom=my.head;axiom;axiom=axiom->next,++i)
-                        {
-                            Writable<apq> &B_i = B[i];
-                            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                            {
-                                const Species &sp = **it;
-                                sp(B_i,TopLevel) = axiom->weight(sp);
-                            }
-                            rhs[i] = axiom->amount;
-                        }
-                    }
-
-                    std::cerr << "B=" << B << std::endl;
-                    Matrix<apq> BB(n,n);
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        for(size_t j=1;j<=i;++j)
-                        {
-                            BB[i][j] = BB[j][i] = Dot(B[i],B[j]);
-                        }
-                    }
-                    std::cerr << "BB=" << BB << std::endl;
-                    MKL::LU<apq> lu(n);
-                    if(!lu.build(BB)) throw Specific::Exception("Initial::Design","singular description");
-                    Matrix<apq> iBB(n,n);
-                    lu.invert(BB,iBB);
-                    std::cerr << "iBB=" << iBB << std::endl;
-                    const Matrix<apq> BT(TransposeOf,B);
-                    Matrix<apq> B3(m,n);
-                    for(size_t j=1;j<=m;++j)
-                    {
-                        for(size_t i=1;i<=n;++i)
-                        {
-                            B3[j][i] = Dot(BT[j],BB[i]);
-                        }
-                    }
-                    std::cerr << "B3=" << B3 << std::endl;
-                    std::cerr << "rhs=" << rhs << std::endl;
-                }
-
-                static  apq Dot(const Readable<apq> &a, const Readable<apq> &b)
-                {
-                    assert(a.size()==b.size());
-                    apq res = 0;
-                    for(size_t i=a.size();i>0;--i)
-                    {
-                        res += a[i] * b[i];
-                    }
-                    return res;
-                }
-
-
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Design);
-                Y_PROXY_DECL();
-                ListOfCloneable<Axiom> my;
-            };
-
-            Y_PROXY_IMPL(Design,my)
-
-
-            Design:: ~Design() noexcept
-            {
-
-            }
-
-            void Design:: add(Axiom * const axiom) noexcept
-            {
-                assert(0!=axiom);
-                assert(!my.owns(axiom));
-                my.pushTail(axiom);
-            }
-
+            
+           
 
 
         }
@@ -350,7 +114,7 @@ Y_UTEST(plexus)
     design.add(new Initial::ElectroNeutrality());
     design.add(new Initial::FixedConcentration(lib["Na^+"],0.1) );
 
-    design.build(C0,lib);
+    design.build(xml,C0,lib);
 
 
 
