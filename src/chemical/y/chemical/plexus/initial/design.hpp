@@ -15,13 +15,35 @@ namespace Yttrium
     {
         namespace Initial
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Design an initial concentration from prescribed Axioms
+            //
+            //
+            //__________________________________________________________________
             class Design : public Quantized, public Entity, public Proxy< ListOf<Axiom> >
             {
             public:
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
                 static const char * const          CallSign; //!< "Initial::Design"
-                typedef Proxy< ListOf<Axiom> >     BaseType;
-                typedef ArkPtr<String,Design>      Pointer;
+                typedef Proxy< ListOf<Axiom> >     BaseType; //!< alias
+                typedef ArkPtr<String,Design>      Pointer;  //!< alias
 
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
+
+                //! setup with identifier
                 template <typename UUID>
                 explicit Design(const UUID &uuid) :
                 Entity( new String(uuid) ),
@@ -30,6 +52,7 @@ namespace Yttrium
                 {
                 }
 
+                //! duplicate a design with a new identfier
                 template <typename UUID>
                 explicit Design(const UUID &uuid, const Design &root) :
                 Entity( new String(uuid) ),
@@ -38,9 +61,18 @@ namespace Yttrium
                 {
                 }
 
+                //! cleanup
                 virtual ~Design() noexcept;
 
-                void add(Axiom * const) noexcept;
+                //______________________________________________________________
+                //
+                //
+                // Methods
+                //
+                //______________________________________________________________
+                void add(Axiom * const) noexcept; //!< add a new AXiom
+
+                //! build
                 void build(XMLog          &xml,
                            XWritable      &C0,
                            const Library  &lib,

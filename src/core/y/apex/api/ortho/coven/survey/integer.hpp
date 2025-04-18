@@ -42,6 +42,7 @@ namespace Yttrium
                      \param xml  for output
                      \param data original rows
                      \param ncof minimal number of non-zero coefficients
+                     \param pEll optional time counter
                      */
                     template <typename MATRIX> inline
                     explicit IntegerSurvey(XMLog        &   xml,

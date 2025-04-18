@@ -97,20 +97,27 @@ namespace Yttrium
                 std::cerr << "p=" << p << std::endl;
                 if(info<M)
                 {
+
                     Matrix<apz> iQ;
                     if(!MKL::OrthoSpace::Make(iQ,P))
                     {
                         throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
                     }
                     std::cerr << "iQ=" << iQ << std::endl;
-                    {
-                        Apex::Ortho::Coven::AutoSurvey<apn,1> survey(xml,iQ,NULL);
-                        std::cerr << survey << std::endl;
-                    }
 
+                    //if(false)
                     {
-                        Apex::Ortho::Coven::AutoSurvey<apz,1> survey(xml,iQ,NULL);
-                        std::cerr << survey << std::endl;
+                        Coerce(xml.verbose) = false;
+                        {
+                            Apex::Ortho::Coven::AutoSurvey<apn,1> survey(xml,iQ,NULL);
+                            std::cerr << survey << std::endl;
+                        }
+
+                        //if(false)
+                        {
+                            Apex::Ortho::Coven::AutoSurvey<apz,1> survey(xml,iQ,NULL);
+                            std::cerr << survey << std::endl;
+                        }
                     }
                 }
 

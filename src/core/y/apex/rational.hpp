@@ -215,6 +215,8 @@ Y_Apex_Rational_Unary_Operators(OP,FCN)
             // Conversions
             //
             //__________________________________________________________________
+
+            //! convert to [float|double|long double]
             template <typename T> inline
             T to() const {
                 switch(numer.s)

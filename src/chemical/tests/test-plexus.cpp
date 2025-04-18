@@ -114,6 +114,7 @@ Y_UTEST(plexus)
 
     design.add(new Initial::ElectroNeutrality());
     design.add(new Initial::FixedConcentration(lib["Na^+"],0.001) );
+    //design.add(new Initial::FixedConcentration(lib["Cl^-"],0.00) );
 
     design.build(xml,C0,lib,cls);
 

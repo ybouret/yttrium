@@ -39,6 +39,7 @@ namespace Yttrium
                      \param xml  for output
                      \param data original rows
                      \param ncof minmal number of positive coefficients
+                     \param pEll optional time counter
                      */
                     template <typename MATRIX> inline
                     explicit NaturalSurvey(XMLog        &   xml,

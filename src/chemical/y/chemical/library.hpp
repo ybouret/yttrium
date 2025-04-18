@@ -87,6 +87,7 @@ namespace Yttrium
                 return setup(sp);
             }
 
+            //! get existing species by checked name
             template <typename NAME> inline
             const Species & operator[](const NAME &name) const
             {
@@ -143,6 +144,7 @@ namespace Yttrium
                 return os;
             }
 
+            //! initialize TopLevel part of array
             template <typename ARRAY>
             void ldz(ARRAY &arr) const
             {

@@ -12,11 +12,19 @@ namespace Yttrium
     {
         namespace Initial
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Electroneutrality Axion
+            //
+            //
+            //__________________________________________________________________
             class ElectroNeutrality : public Axiom
             {
             public:
-                explicit ElectroNeutrality() noexcept;
-                virtual ~ElectroNeutrality() noexcept;
+                explicit ElectroNeutrality() noexcept; //!< setup
+                virtual ~ElectroNeutrality() noexcept; //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ElectroNeutrality);

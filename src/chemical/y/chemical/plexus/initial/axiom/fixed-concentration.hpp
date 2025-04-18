@@ -12,16 +12,24 @@ namespace Yttrium
     {
         namespace Initial
         {
+            //__________________________________________________________________
+            //
+            //
+            //
+            //! Fixed concentration Axiom
+            //
+            //
+            //__________________________________________________________________
             class FixedConcentration : public Axiom
             {
             public:
+                //! setup
                 explicit FixedConcentration(const Species &sp,
                                             const xreal_t  C0) noexcept;
-                virtual ~FixedConcentration() noexcept;
+                virtual ~FixedConcentration() noexcept; //!< cleanup
 
 
-
-                const Species &species;
+                const Species &species; //!< species with concentration to fix
 
             private:
                 Y_DISABLE_ASSIGN(FixedConcentration);
@@ -31,34 +39,6 @@ namespace Yttrium
 
 
 
-            FixedConcentration:: FixedConcentration(const Species &sp,
-                                                    const xreal_t  C0) noexcept :
-            Axiom(C0),
-            species(sp)
-            {
-            }
-
-            FixedConcentration:: FixedConcentration(const FixedConcentration &_) noexcept :
-            Axiom(_),
-            species(_.species)
-            {
-            }
-
-            FixedConcentration:: ~FixedConcentration() noexcept
-            {
-            }
-
-
-
-            Axiom * FixedConcentration:: clone() const
-            {
-                return new FixedConcentration(*this);
-            }
-
-            int FixedConcentration:: weight(const Species &sp) const noexcept
-            {
-                return ( &sp == &species ) ? 1 : 0;
-            }
         }
 
     }
