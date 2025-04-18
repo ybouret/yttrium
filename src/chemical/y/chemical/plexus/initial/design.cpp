@@ -58,60 +58,75 @@ namespace Yttrium
                     return;
                 }
 
-                Y_XML_COMMENT(xml, "compiling " << n << " axiom" << Plural::s(n));
                 lib.ldz(C0);
-                Matrix<apq>  B(n,m);
+                Matrix<xreal_t> B3(m,n);
                 XArray       rhs(n);
                 {
-                    size_t i=1;
-                    for(const Axiom *axiom=my.head;axiom;axiom=axiom->next,++i)
+                    Y_XML_COMMENT(xml, "compiling " << n << " axiom" << Plural::s(n));
+                    Matrix<apq>  B(n,m);
                     {
-                        Writable<apq> &B_i = B[i];
-                        for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                        size_t i=1;
+                        for(const Axiom *axiom=my.head;axiom;axiom=axiom->next,++i)
                         {
-                            const Species &sp = **it;
-                            sp(B_i,TopLevel) = axiom->weight(sp);
+                            Writable<apq> &B_i = B[i];
+                            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                            {
+                                const Species &sp = **it;
+                                sp(B_i,TopLevel) = axiom->weight(sp);
+                            }
+                            rhs[i] = axiom->amount;
+                            Y_XMLOG(xml, std::setw(8) << rhs[i].str() << " @" << B_i);
                         }
-                        rhs[i] = axiom->amount;
-                        //Y_XMLOG(xml, std::setw(8) << rhs[i].str() << " @" << B_i);
+
+                    }
+
+                    Y_XML_COMMENT(xml, "computing pseudo-inverse");
+                    {
+                        Matrix<apq> BB(n,n);
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            for(size_t j=1;j<=i;++j)
+                            {
+                                BB[i][j] = BB[j][i] = Dot(B[i],B[j]);
+                            }
+                        }
+                        Y_XMLOG(xml, "B     = " << B);
+                        Y_XMLOG(xml, "GramB = " << BB);
+                        Matrix<apq> iBB(n,n);
+                        {
+                            MKL::LU<apq> lu(n);
+                            if(!lu.build(BB))
+                                throw Specific::Exception(CallSign,"singular description");
+                            lu.invert(BB,iBB);
+                        }
+                        Y_XMLOG(xml, "iBB   = " << iBB);
+                        Y_XML_COMMENT(xml, "finalizing dispatch matrix");
+                        const Matrix<apq> BT(TransposeOf,B);
+                        for(size_t j=1;j<=m;++j)
+                        {
+                            for(size_t i=1;i<=n;++i)
+                            {
+                                const apq q = Dot(BT[j],iBB[i]);
+                                B3[j][i] = q.to<real_t>();
+                            }
+                        }
+                    }
+                }
+                Y_XMLOG(xml,"mat=" << B3);
+                Y_XMLOG(xml,"rhs=" << rhs);
+
+                {
+                    XAdd  xadd;
+                    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                    {
+                        const Species &sp = **it;
+                        sp(C0,TopLevel) = xadd.dot(sp(B3,TopLevel),rhs);
                     }
                 }
 
-                Y_XML_COMMENT(xml, "computing pseudo-inverse");
-                Matrix<apq> BB(n,n);
-                for(size_t i=1;i<=n;++i)
-                {
-                    for(size_t j=1;j<=i;++j)
-                    {
-                        BB[i][j] = BB[j][i] = Dot(B[i],B[j]);
-                    }
-                }
-                MKL::LU<apq> lu(n);
-                if(!lu.build(BB))
-                    throw Specific::Exception(CallSign,"singular description");
+                lib.show(std::cerr << "Cini=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-                Y_XML_COMMENT(xml, "finalizing dispatch matrix");
-                Matrix<apq> iBB(n,n);
-                lu.invert(BB,iBB);
-                const Matrix<apq> BT(TransposeOf,B);
-                Matrix<xreal_t> B3(m,n);
-                for(size_t j=1;j<=m;++j)
-                {
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        const apq q = Dot(BT[j],BB[i]);
-                        B3[j][i] = q.to<real_t>();
-                    }
-                }
-                std::cerr << "B3="  << B3  << std::endl;
-                std::cerr << "rhs=" << rhs << std::endl;
-                XAdd  xadd;
-                for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                {
-                    const Species &sp = **it;
-                    sp(C0,TopLevel) = xadd.dot(sp(B3,TopLevel),rhs);
-                }
-                
+
             }
 
         }
