@@ -116,6 +116,8 @@ Y_UTEST(plexus)
 
     design.build(xml,C0,lib);
 
+    //eqz(xml,C0);
+
 
 
 
