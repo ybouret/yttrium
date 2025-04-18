@@ -87,6 +87,14 @@ namespace Yttrium
                 return setup(sp);
             }
 
+            template <typename NAME> inline
+            const Species & operator[](const NAME &name) const
+            {
+                const Formula formula(name);
+                const String  uuid = formula.uuid();
+                return query(uuid);
+            }
+
             virtual size_t serialize(OutputStream &) const;        //!< [Serializable] all species
             void           readFrom(InputStream &);                //!< retrieve all species
             size_t         nextIndex() const noexcept;             //!< for species creation
@@ -135,6 +143,16 @@ namespace Yttrium
                 return os;
             }
 
+            template <typename ARRAY>
+            void ldz(ARRAY &arr) const
+            {
+                for(ConstIterator it=db.begin();it!=db.end();++it)
+                {
+                    const Species &sp = **it;
+                    sp(arr,TopLevel) = 0;
+                }
+            }
+
 
 
         private:
@@ -143,7 +161,7 @@ namespace Yttrium
             LibraryType db;
 
             const Species & setup(const Species::Pointer &sp);
-
+            const Species & query(const String &id) const;
         };
 
 

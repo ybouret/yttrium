@@ -9,6 +9,7 @@
 #include "y/string/env.hpp"
 
 #include "y/data/list/cloneable.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -172,8 +173,69 @@ virtual int     weight(const Species &) const noexcept
 
                 void add(Axiom * const) noexcept;
 
-                void build(XWritable &C0, const Library &lib);
-                
+                void build(XWritable &C0, const Library &lib)
+                {
+
+                    // TODO: sanity check
+                    std::cerr << "lib=" << lib << std::endl;
+                    lib.ldz(C0);
+                    const size_t                 m    = lib->size();
+                    const size_t                 n    = my.size;
+
+                    Matrix<apq>  B(n,m);
+                    XArray       rhs(n);
+                    {
+                        size_t i=1;
+                        for(const Axiom *axiom=my.head;axiom;axiom=axiom->next,++i)
+                        {
+                            Writable<apq> &B_i = B[i];
+                            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                            {
+                                const Species &sp = **it;
+                                sp(B_i,TopLevel) = axiom->weight(sp);
+                            }
+                            rhs[i] = axiom->amount;
+                        }
+                    }
+
+                    std::cerr << "B=" << B << std::endl;
+                    Matrix<apq> BB(n,n);
+                    for(size_t i=1;i<=n;++i)
+                    {
+                        for(size_t j=1;j<=i;++j)
+                        {
+                            BB[i][j] = BB[j][i] = Dot(B[i],B[j]);
+                        }
+                    }
+                    std::cerr << "BB=" << BB << std::endl;
+                    MKL::LU<apq> lu(n);
+                    if(!lu.build(BB)) throw Specific::Exception("Initial::Design","singular description");
+                    Matrix<apq> iBB(n,n);
+                    lu.invert(BB,iBB);
+                    std::cerr << "iBB=" << iBB << std::endl;
+                    const Matrix<apq> BT(TransposeOf,B);
+                    Matrix<apq> B3(m,n);
+                    for(size_t j=1;j<=m;++j)
+                    {
+                        for(size_t i=1;i<=n;++i)
+                        {
+                            B3[j][i] = Dot(BT[j],BB[i]);
+                        }
+                    }
+                    std::cerr << "B3=" << B3 << std::endl;
+                    std::cerr << "rhs=" << rhs << std::endl;
+                }
+
+                static  apq Dot(const Readable<apq> &a, const Readable<apq> &b)
+                {
+                    assert(a.size()==b.size());
+                    apq res = 0;
+                    for(size_t i=a.size();i>0;--i)
+                    {
+                        res += a[i] * b[i];
+                    }
+                    return res;
+                }
 
 
 
@@ -282,6 +344,16 @@ Y_UTEST(plexus)
     Y_SIZEOF(Initial::FixedConcentration);
     Y_SIZEOF(Initial::ElectroNeutrality);
     Y_SIZEOF(Initial::Design);
+
+    Initial::Design design("init");
+
+    design.add(new Initial::ElectroNeutrality());
+    design.add(new Initial::FixedConcentration(lib["Na^+"],0.1) );
+
+    design.build(C0,lib);
+
+
+
 
 }
 Y_UDONE()

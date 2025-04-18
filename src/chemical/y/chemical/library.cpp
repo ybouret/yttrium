@@ -35,7 +35,7 @@ namespace Yttrium
                 const Species::Pointer * const pp = db.search(id);
                 if(0!=pp) return **pp;
             }
-            
+
             if(latched)
                 throw Specific::Exception(CallSign,"latched while creating '%s'", id.c_str());
 
@@ -49,6 +49,15 @@ namespace Yttrium
 
             enroll(*sp);
             return *sp;
+        }
+
+        const Species & Library:: query(const String &id) const
+        {
+            {
+                const Species::Pointer * const pp = db.search(id);
+                if(0!=pp) return **pp;
+            }
+            throw Specific::Exception(CallSign,"'%s' not found",id.c_str());
         }
 
         std::ostream & operator<<(std::ostream &os, const Library &lib)
