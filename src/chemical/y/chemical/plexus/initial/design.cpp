@@ -3,6 +3,8 @@
 #include "y/system/exception.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/text/plural.hpp"
+#include "y/mkl/algebra/ortho-space.hpp"
+#include "y/apex/api/ortho/coven/survey/api.hpp"
 
 namespace Yttrium
 {
@@ -28,6 +30,7 @@ namespace Yttrium
                 my.pushTail(axiom);
             }
 
+            
             static  inline apq Dot(const Readable<apq> &a, const Readable<apq> &b)
             {
                 assert(a.size()==b.size());
@@ -39,28 +42,90 @@ namespace Yttrium
                 return res;
             }
 
-            
-            void Design:: build(XMLog &xml,XWritable &C0, const Library &lib) const
+
+            template <typename MATRIX>
+            static inline void fillDesignMatrix(MATRIX              &P,
+                                                XWritable           &p,
+                                                const ListOf<Axiom> &axm,
+                                                const Library       &lib)
+            {
+                assert(P.rows==axm.size);
+                assert(P.cols==lib->size());
+                size_t i = 1;
+                for(const Axiom *axiom=axm.head;axiom;axiom=axiom->next,++i)
+                {
+                    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                    {
+                        const Species &sp = **it;
+                        sp(P[i],TopLevel) = axiom->weight(sp);
+                    }
+                    p[i] = axiom->amount;
+                }
+            }
+
+
+            void Design:: build(XMLog          &xml,
+                                XWritable      &C0,
+                                const Library  &lib,
+                                const Clusters &cls) const
             {
 
-                const size_t                 m    = lib->size();
-                const size_t                 n    = my.size;
+                lib.ldz(C0);
+                const size_t N    = cls.primary;
+                const size_t M    = lib->size();
+                const size_t Nc   = my.size;
+                const size_t info = N+Nc;
 
-                Y_XML_SECTION_OPT(xml,CallSign," |library|=" << m << " |axiom|=" << n);
-                if(m<=0) {
-                    Y_XML_COMMENT(xml, "no registered species");
-                    return;
-                }
-
-                if(n<=0)
+                Y_XML_SECTION_OPT(xml,
+                                  CallSign,
+                                  "equilibri" << Plural::aum(N) << "=" << N
+                                  << " species=" << M
+                                  << " axiom" << Plural::s(Nc) << "=" << Nc
+                                  << " info=" << info << "/" << M
+                                  );
+                if(info>M) throw Specific::Exception(CallSign,"too much information");
+                if(Nc<=0)
                 {
-                    Y_XML_COMMENT(xml, "no registered axiom");
-                    return;
+                    Y_XML_COMMENT(xml, "no axiom");
                 }
+
+                Matrix<apq> P(Nc,M);
+                XArray      p(Nc);
+                fillDesignMatrix(P, p, my, lib);
+
+                std::cerr << "P=" << P << std::endl;
+                std::cerr << "p=" << p << std::endl;
+                if(info<M)
+                {
+                    Matrix<apz> iQ;
+                    if(!MKL::OrthoSpace::Make(iQ,P))
+                    {
+                        throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
+                    }
+                    std::cerr << "iQ=" << iQ << std::endl;
+                    {
+                        Apex::Ortho::Coven::AutoSurvey<apn,1> survey(xml,iQ,NULL);
+                        std::cerr << survey << std::endl;
+                    }
+
+                    {
+                        Apex::Ortho::Coven::AutoSurvey<apz,1> survey(xml,iQ,NULL);
+                        std::cerr << survey << std::endl;
+                    }
+                }
+
+
+
+
+
+            }
+
+
+#if 0
 
                 lib.ldz(C0);
                 Matrix<xreal_t> B3(m,n);
-                XArray       rhs(n);
+                XArray          rhs(n);
                 {
                     Y_XML_COMMENT(xml, "compiling " << n << " axiom" << Plural::s(n));
                     Matrix<apq>  B(n,m);
@@ -79,6 +144,18 @@ namespace Yttrium
                         }
 
                     }
+
+                    Matrix<apz> P;
+                    if(!MKL::OrthoSpace::Make(P,B))
+                    {
+                        throw Specific::Exception(CallSign, "no Ortho Space");
+                    }
+
+                    std::cerr << "B=" << B << std::endl;
+                    std::cerr << "P=" << P << std::endl;
+
+
+
 
                     Y_XML_COMMENT(xml, "computing pseudo-inverse");
                     {
@@ -124,10 +201,8 @@ namespace Yttrium
                     }
                 }
 
-                lib.show(std::cerr << "Cini=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+#endif
 
-
-            }
 
         }
 

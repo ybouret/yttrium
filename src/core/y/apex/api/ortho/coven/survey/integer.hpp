@@ -38,16 +38,20 @@ namespace Yttrium
 
                     //! construct survey from original data
                     /**
-                     keep only vectors of two or more non-zero values
+                     keep only vectors of ncof or more non-zero values
                      \param xml  for output
                      \param data original rows
-                     \param pEll optional ellapsed ticks
+                     \param ncof minimal number of non-zero coefficients
                      */
                     template <typename MATRIX> inline
                     explicit IntegerSurvey(XMLog        &   xml,
                                            const MATRIX &   data,
-                                           uint64_t * const pEll)
+                                           const size_t     ncof,
+                                           uint64_t * const pEll) :
+                    SurveyOf<Integer>(),
+                    minNonZeroCount(ncof)
                     {
+                        assert(ncof>0);
                         Wayfarer::Explore(xml, proc, data, pEll);
                         finalize();
                     }
@@ -55,6 +59,7 @@ namespace Yttrium
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(IntegerSurvey);
                     virtual void study(const IList &l, const Vector &v);
+                    const size_t minNonZeroCount;
                 };
             }
 

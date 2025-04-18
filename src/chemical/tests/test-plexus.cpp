@@ -78,6 +78,7 @@ Y_UTEST(plexus)
 
     cls.graphViz("cs");
 
+    
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
@@ -114,7 +115,7 @@ Y_UTEST(plexus)
     design.add(new Initial::ElectroNeutrality());
     design.add(new Initial::FixedConcentration(lib["Na^+"],0.001) );
 
-    design.build(xml,C0,lib);
+    design.build(xml,C0,lib,cls);
 
     //eqz(xml,C0);
 

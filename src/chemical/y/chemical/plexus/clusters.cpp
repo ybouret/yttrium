@@ -21,11 +21,12 @@ namespace Yttrium
         my(),
         tlK(),
         K(tlK),
+        primary(eqs->size()),
         species(),
         maxOrder(0)
         {
-            const size_t ini = eqs->size();
-            Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << ini);
+            assert(!eqs.latched);
+            Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << primary);
 
             {
                 ClusterBuilder cls(xml,eqs);
@@ -50,13 +51,15 @@ namespace Yttrium
 
 
             // summary
-            Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << ini);
+            Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << primary);
             Y_XML_COMMENT(xml, "|species| = " << species.size);
             Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
 
             // prepare constants
             tlK.adjust(eqs->size(),0);
             (void) (*this)(t0);
+            assert(!eqs.latched);
+            eqs.latch();
         }
 
         const XReadable & Clusters:: operator()(const xreal_t t0)

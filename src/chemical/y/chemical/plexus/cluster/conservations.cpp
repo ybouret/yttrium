@@ -48,7 +48,7 @@ namespace Yttrium
                         throw Specific::Exception(CallSign, "no orthogonal space (singular equilibri%s)", Plural::aum(N));
 
 
-                    const NaturalSurvey survey(xml,Q,0);
+                    const NaturalSurvey survey(xml,Q,2,NULL);
                     if(survey->size<=0) {
                         Y_XMLOG(xml,"no conservation found");
                         goto FINALIZE;

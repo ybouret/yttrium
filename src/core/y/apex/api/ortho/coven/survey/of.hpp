@@ -71,7 +71,8 @@ namespace Yttrium
 
                 protected:
                     //! setup empty
-                    inline explicit SurveyOf() noexcept : my()
+                    inline explicit SurveyOf() noexcept :
+                    my()
                     {
                     }
 

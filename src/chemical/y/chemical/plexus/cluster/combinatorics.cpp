@@ -57,7 +57,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                const IntegerSurvey survey(xml,topologyT,0);
+                const IntegerSurvey survey(xml,topologyT,2,NULL);
                 if(survey->size<=0) {
                     Y_XML_COMMENT(xml,"no mixed equilibrium");
                     MakeELists(maxOrder,slot,equilibria);

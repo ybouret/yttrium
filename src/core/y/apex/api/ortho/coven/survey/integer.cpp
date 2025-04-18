@@ -15,10 +15,9 @@ namespace Yttrium
                 
                 void IntegerSurvey:: study(const IList &l, const Vector &v)
                 {
-                    if(l.size>1 && CountNonZero(v) >= 2)
+                    if(l.size>1 && CountNonZero(v) >= minNonZeroCount)
                     {
                         my.pushTail(new ArrayType(v) );
-                        //std::cerr << "\t(comb) " << *my.tail << std::endl;
                     }
                 }
             }
