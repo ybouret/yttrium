@@ -5,6 +5,7 @@
 #include "y/text/plural.hpp"
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/apex/api/ortho/coven/survey/api.hpp"
+#include "y/apex/api/ortho/architect.hpp"
 
 namespace Yttrium
 {
@@ -97,13 +98,16 @@ namespace Yttrium
                 std::cerr << "p=" << p << std::endl;
                 if(info<M)
                 {
-
+                    const size_t dof = M-info;
                     Matrix<apz> iQ;
                     if(!MKL::OrthoSpace::Make(iQ,P))
                     {
                         throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
                     }
                     std::cerr << "iQ=" << iQ << std::endl;
+                    std::cerr << "dof=" << dof << std::endl;
+                    Matrix<apz> Q;
+
 
                     //if(false)
                     {
