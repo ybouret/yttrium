@@ -13,6 +13,8 @@
 
 namespace Yttrium
 {
+    namespace Lingo { class Matching; }
+
     namespace Chemical
     {
 
@@ -81,7 +83,10 @@ namespace Yttrium
 
             //! compare by TopLevel index
             static SignType Compare(const Species &, const Species &) noexcept;
-            
+
+            //! matching expression
+            bool matches(Lingo::Matching&) const;
+
             //__________________________________________________________________
             //
             //

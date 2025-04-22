@@ -51,3 +51,19 @@ namespace Yttrium
 }
 
 
+#include "y/lingo/pattern/matching.hpp"
+
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+
+        bool Species:: matches(Lingo::Matching &m) const
+        {
+            return m.exactly(*name,*name);
+        }
+
+    }
+
+}
