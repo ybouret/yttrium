@@ -77,7 +77,7 @@ namespace Yttrium
         public:
             const XReadable &K;        //!< last computed constant
             const size_t     primary;  //!< primary equilibria
-            const SList      species;  //!< all species
+            const SList      species;  //!< all REACTIVE species
             const size_t     maxOrder; //!< max order size thru clusters
         };
 

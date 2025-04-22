@@ -71,6 +71,13 @@ namespace Yttrium
                                 const Clusters &cls) const
             {
 
+                //--------------------------------------------------------------
+                //
+                //
+                // initialize
+                //
+                //
+                //--------------------------------------------------------------
                 lib.ldz(C0);
                 const size_t N    = cls.primary;
                 const size_t M    = lib->size();
@@ -84,12 +91,22 @@ namespace Yttrium
                                   << " axiom" << Plural::s(Nc) << "=" << Nc
                                   << " info=" << info << "/" << M
                                   );
-                if(info>M) throw Specific::Exception(CallSign,"too much information");
-                if(Nc<=0)
-                {
+
+                //--------------------------------------------------------------
+                //
+                //
+                // check status
+                //
+                //
+                //--------------------------------------------------------------
+                if(info>M)
+                    throw Specific::Exception(CallSign,"too much information");
+
+                if(Nc<=0) {
                     Y_XML_COMMENT(xml, "no axiom");
                     return;
                 }
+
 
                 Matrix<apq> P(Nc,M);
                 XArray      p(Nc);   fillDesignMatrix(P, p, my, lib);
@@ -135,23 +152,31 @@ namespace Yttrium
 
 
 
-#if 0
+#if 1
                 if(info<M)
                 {
                     const size_t dof = M-info;
-                    Matrix<apz> iQ;
+                    Matrix<apz>  iQ;
                     if(!MKL::OrthoSpace::Make(iQ,P))
                     {
                         throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
                     }
                     std::cerr << "iQ=" << iQ << std::endl;
                     std::cerr << "dof=" << dof << std::endl;
+
+                    for(size_t i=1;i<=M;++i)
+                    {
+                        
+                    }
+
                     Matrix<apz> Q;
 
 
-                    //if(false)
+
+                    if(false)
                     {
                         Coerce(xml.verbose) = false;
+                        //if(false)
                         {
                             Apex::Ortho::Coven::AutoSurvey<apn,1> survey(xml,iQ,NULL);
                             std::cerr << survey << std::endl;
