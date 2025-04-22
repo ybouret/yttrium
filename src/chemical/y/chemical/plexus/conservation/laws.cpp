@@ -2,6 +2,7 @@
 #include "y/chemical/plexus/conservation/laws.hpp"
 #include "y/chemical/plexus/conservation/rule.hpp"
 #include "y/chemical/type/meta-list.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -62,10 +63,38 @@ namespace Yttrium
                 return os;
             }
 
-            
+
+            const Law * Laws:: preserving(Lingo::Matching &m) const
+            {
+                const Law * res = 0;
+
+                // find first result
+                for(const Law *law=my.head;law;law=law->next)
+                {
+                    if(law->conserves(m)) {
+                        res = law;
+                        break;
+                    }
+                }
+
+                // ensure no multiple result
+                if(0!=res)
+                {
+                    for(const Law *law=res->next;law;law=law->next)
+                    {
+                        if(law->conserves(m)) {
+                            throw Specific::Exception("Laws","multiple preserved expression");
+                        }
+                    }
+                }
+
+                return res;
+
+            }
         }
 
     }
 }
+
 
 

@@ -174,7 +174,10 @@ namespace Yttrium
             return false;
         }
 
-
+        const Conservation:: Law * ClusterConservations:: preserving(Lingo::Matching &m) const
+        {
+            return ordinance.preserving(m);
+        }
     }
 
 }

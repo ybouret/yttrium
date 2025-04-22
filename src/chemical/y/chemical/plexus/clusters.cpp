@@ -1,6 +1,7 @@
 #include "y/chemical/plexus/clusters.hpp"
 #include "y/chemical/plexus/cluster/builder.hpp"
 #include "y/stream/libc/output.hpp"
+#include "y/system/exception.hpp"
 
 namespace Yttrium
 {
@@ -14,6 +15,7 @@ namespace Yttrium
 
         }
 
+        const char * const Clusters:: CallSign = "Chemical::Clusters";
 
         Clusters:: Clusters(XMLog      &xml,
                             Equilibria &eqs,
@@ -75,6 +77,26 @@ namespace Yttrium
             }
             return K;
         }
+
+        const Conservation::Law * Clusters:: preserving(Lingo::Matching &m) const
+        {
+
+            for(const Cluster *curr=my.head;curr;curr=curr->next)
+            {
+                const Conservation::Law *law = curr->preserving(m);
+                if(0!=law)
+                {
+
+                    for(curr=curr->next;curr;curr=curr->next) {
+                        if(0!=curr->preserving(m)) throw Specific::Exception(CallSign,"multiple preserving pattern");
+                    }
+                    return law;
+                }
+            }
+
+            return 0;
+        }
+
 
 
     }

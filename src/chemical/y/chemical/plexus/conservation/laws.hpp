@@ -41,8 +41,12 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void xch( Laws &other ) noexcept; //!< exchagne laws and assembly
 
+                //! exchange laws and assembly
+                void xch( Laws &other ) noexcept;
+
+                //! find law preserving matching expression, must be uniq
+                const Law *preserving(Lingo::Matching &) const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Laws);

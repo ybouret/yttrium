@@ -28,6 +28,13 @@ namespace Yttrium
         class Clusters : public Proxy<const Cluster::List>
         {
         public:
+            //__________________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //__________________________________________________________________
+            static const char * const CallSign; //!< Chemical::Clusters
 
             //__________________________________________________________________
             //
@@ -67,6 +74,9 @@ namespace Yttrium
             void zset(DATA &data) const {
                 ZeroList(species,data,TopLevel);
             }
+
+            //! find unique law preseserving matching expression
+            const Conservation::Law *preserving(Lingo::Matching &) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);

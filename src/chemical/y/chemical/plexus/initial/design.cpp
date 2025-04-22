@@ -31,7 +31,9 @@ namespace Yttrium
                 my.pushTail(axiom);
             }
 
-            
+
+
+
             static  inline apq Dot(const Readable<apq> &a, const Readable<apq> &b)
             {
                 assert(a.size()==b.size());
@@ -146,8 +148,6 @@ namespace Yttrium
                     const Species &sp = **it;
                     sp(C0,TopLevel) = xadd.dot( sp(P3,TopLevel), p);
                 }
-                std::cerr << "Cs=" << C0 << std::endl;
-                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
 
@@ -190,6 +190,8 @@ namespace Yttrium
                     }
                 }
 #endif
+                std::cerr << "Cs=" << C0 << std::endl;
+                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
 
@@ -201,4 +203,29 @@ namespace Yttrium
 
     }
 
+}
+
+
+#include "y/lingo/pattern/matching.hpp"
+#include "y/chemical/plexus/initial/axiom/steady-conservation.hpp"
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        namespace Initial
+        {
+
+            void Design:: add(Clusters &     clusters,
+                              const String & expr,
+                              const xreal_t  Ctot)
+            {
+                Lingo::Matching                 m(expr,0);
+                const Conservation::Law * const law = clusters.preserving(m);
+                if(0==law) throw Specific::Exception(CallSign, "no conservation matching '%s' in %s", expr.c_str(), Clusters::CallSign);
+                my.pushTail( new SteadyConservation(*law,Ctot) );
+            }
+
+        }
+
+    }
 }

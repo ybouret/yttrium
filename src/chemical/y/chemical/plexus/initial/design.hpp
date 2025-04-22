@@ -72,6 +72,12 @@ namespace Yttrium
                 //______________________________________________________________
                 void add(Axiom * const) noexcept; //!< add a new AXiom
 
+                //! add a new species conservation
+                void add(Clusters     &clusters,
+                         const String &expr,
+                         const xreal_t Ctot);
+                
+
                 //! build
                 void build(XMLog          &xml,
                            XWritable      &C0,

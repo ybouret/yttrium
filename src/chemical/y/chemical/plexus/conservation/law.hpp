@@ -52,6 +52,9 @@ namespace Yttrium
                 //! check if common actor(s)
                 bool hasCommonActorWith(const Law &other) const noexcept;
 
+                //! check if all species are matching expression
+                bool conserves(Lingo::Matching &) const;
+
                 //______________________________________________________________
                 //
                 //

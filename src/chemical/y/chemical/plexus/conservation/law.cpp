@@ -75,6 +75,15 @@ namespace Yttrium
                 return false;
             }
 
+            bool Law:: conserves(Lingo::Matching &m) const
+            {
+                for(const Actor *a=(*this)->head;a;a=a->next)
+                {
+                    if(!a->sp.matches(m)) return false;
+                }
+                return true;
+            }
+
 
         }
     }
