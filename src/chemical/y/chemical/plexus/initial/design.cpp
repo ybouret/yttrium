@@ -6,6 +6,7 @@
 #include "y/mkl/algebra/ortho-space.hpp"
 #include "y/apex/api/ortho/coven/survey/api.hpp"
 #include "y/apex/api/ortho/architect.hpp"
+#include "y/mkl/algebra/rank.hpp"
 
 namespace Yttrium
 {
@@ -131,6 +132,7 @@ namespace Yttrium
                     }
                     std::cerr << "iPP=" << iPP << std::endl;
                 }
+                std::cerr << "// rank(P)=" << MKL::Rank::Of(P) << " / " << Nc << std::endl;
                 Matrix<xreal_t> P3(M,Nc);
                 for(size_t i=1;i<=M;++i)
                 {
@@ -161,7 +163,7 @@ namespace Yttrium
                     {
                         throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
                     }
-                    std::cerr << "iQ=" << iQ << std::endl;
+                    std::cerr << "Q=" << iQ << std::endl;
                     std::cerr << "dof=" << dof << std::endl;
 
                     for(size_t i=1;i<=M;++i)
