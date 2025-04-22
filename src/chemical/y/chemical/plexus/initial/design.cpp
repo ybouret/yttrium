@@ -88,14 +88,54 @@ namespace Yttrium
                 if(Nc<=0)
                 {
                     Y_XML_COMMENT(xml, "no axiom");
+                    return;
                 }
 
                 Matrix<apq> P(Nc,M);
-                XArray      p(Nc);
-                fillDesignMatrix(P, p, my, lib);
+                XArray      p(Nc);   fillDesignMatrix(P, p, my, lib);
+                Matrix<apq> PT(TransposeOf,P);
+                Matrix<apq> iPP(Nc,Nc);
+                {
+                    Matrix<apq> PP(Nc,Nc);
+                    for(size_t i=1;i<=Nc;++i)
+                    {
+                        for(size_t j=1;j<=i;++j)
+                            PP[i][j] = PP[j][i] = Dot(P[i],P[j]);
+                    }
+                    std::cerr << "P=" << P << std::endl;
+                    std::cerr << "p=" << p << std::endl;
+                    std::cerr << "PP=" << PP << std::endl;
+                    {
+                        MKL::LU<apq> lu(Nc);
+                        if(!lu.build(PP)) throw Specific::Exception(CallSign,"singular axiom%s",Plural::s(Nc));
+                        lu.invert(PP,iPP);
+                    }
+                    std::cerr << "iPP=" << iPP << std::endl;
+                }
+                Matrix<xreal_t> P3(M,Nc);
+                for(size_t i=1;i<=M;++i)
+                {
+                    for(size_t j=1;j<=Nc;++j)
+                    {
+                        const apq q = Dot(PT[i],iPP[j]);
+                        P3[i][j] = q.to<real_t>();
+                    }
+                }
+                std::cerr << "P3=" << P3 << std::endl;
 
-                std::cerr << "P=" << P << std::endl;
-                std::cerr << "p=" << p << std::endl;
+                XAdd xadd;
+                for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                {
+                    const Species &sp = **it;
+                    sp(C0,TopLevel) = xadd.dot( sp(P3,TopLevel), p);
+                }
+                std::cerr << "Cs=" << C0 << std::endl;
+                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+
+
+
+#if 0
                 if(info<M)
                 {
                     const size_t dof = M-info;
@@ -124,95 +164,12 @@ namespace Yttrium
                         }
                     }
                 }
-
+#endif
 
 
 
 
             }
-
-
-#if 0
-
-                lib.ldz(C0);
-                Matrix<xreal_t> B3(m,n);
-                XArray          rhs(n);
-                {
-                    Y_XML_COMMENT(xml, "compiling " << n << " axiom" << Plural::s(n));
-                    Matrix<apq>  B(n,m);
-                    {
-                        size_t i=1;
-                        for(const Axiom *axiom=my.head;axiom;axiom=axiom->next,++i)
-                        {
-                            Writable<apq> &B_i = B[i];
-                            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                            {
-                                const Species &sp = **it;
-                                sp(B_i,TopLevel) = axiom->weight(sp);
-                            }
-                            rhs[i] = axiom->amount;
-                            Y_XMLOG(xml, std::setw(8) << rhs[i].str() << " @" << B_i);
-                        }
-
-                    }
-
-                    Matrix<apz> P;
-                    if(!MKL::OrthoSpace::Make(P,B))
-                    {
-                        throw Specific::Exception(CallSign, "no Ortho Space");
-                    }
-
-                    std::cerr << "B=" << B << std::endl;
-                    std::cerr << "P=" << P << std::endl;
-
-
-
-
-                    Y_XML_COMMENT(xml, "computing pseudo-inverse");
-                    {
-                        Matrix<apq> BB(n,n);
-                        for(size_t i=1;i<=n;++i)
-                        {
-                            for(size_t j=1;j<=i;++j)
-                            {
-                                BB[i][j] = BB[j][i] = Dot(B[i],B[j]);
-                            }
-                        }
-                        Y_XMLOG(xml, "B     = " << B);
-                        Y_XMLOG(xml, "GramB = " << BB);
-                        Matrix<apq> iBB(n,n);
-                        {
-                            MKL::LU<apq> lu(n);
-                            if(!lu.build(BB))
-                                throw Specific::Exception(CallSign,"singular description");
-                            lu.invert(BB,iBB);
-                        }
-                        Y_XMLOG(xml, "iBB   = " << iBB);
-                        Y_XML_COMMENT(xml, "finalizing dispatch matrix");
-                        const Matrix<apq> BT(TransposeOf,B);
-                        for(size_t j=1;j<=m;++j)
-                        {
-                            for(size_t i=1;i<=n;++i)
-                            {
-                                const apq q = Dot(BT[j],iBB[i]);
-                                B3[j][i] = q.to<real_t>();
-                            }
-                        }
-                    }
-                }
-                Y_XMLOG(xml,"mat=" << B3);
-                Y_XMLOG(xml,"rhs=" << rhs);
-
-                {
-                    XAdd  xadd;
-                    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                    {
-                        const Species &sp = **it;
-                        sp(C0,TopLevel) = xadd.dot(sp(B3,TopLevel),rhs);
-                    }
-                }
-
-#endif
 
 
         }
