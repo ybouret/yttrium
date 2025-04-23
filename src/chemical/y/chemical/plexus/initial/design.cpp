@@ -3,10 +3,9 @@
 #include "y/system/exception.hpp"
 #include "y/mkl/algebra/lu.hpp"
 #include "y/text/plural.hpp"
-#include "y/mkl/algebra/ortho-space.hpp"
-#include "y/apex/api/ortho/coven/survey/api.hpp"
-#include "y/apex/api/ortho/architect.hpp"
 #include "y/mkl/algebra/rank.hpp"
+#include "y/apex/api/ortho/architect.hpp"
+#include "y/apex/api/univocal.hpp"
 
 namespace Yttrium
 {
@@ -68,6 +67,34 @@ namespace Yttrium
             }
 
 
+            class Prospect : public Quantized
+            {
+            public:
+                typedef CxxArray<apz,Memory::Dyadic> zArray;
+                typedef CxxArray<apq,Memory::Dyadic> qArray;
+
+                explicit Prospect(const Readable<apq> &q,
+                                  const Readable<apq> &p) :
+                Q( q.size() ),
+                P( p.size() ),
+                next(0),
+                prev(0)
+                {
+                    qArray    vec(CopyOf,q);
+                    const apn den = Apex::Univocal::Make(vec);
+                    std::cerr << q << " -> " << vec << " / " << den << std::endl;
+                }
+
+                virtual ~Prospect() noexcept {}
+
+                zArray    Q;
+                qArray    P;
+                Prospect *next;
+                Prospect *prev;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Prospect);
+            };
+
             void Design:: build(XMLog          &xml,
                                 XWritable      &C0,
                                 const Library  &lib,
@@ -107,6 +134,13 @@ namespace Yttrium
                     throw Specific::Exception(CallSign, "overdetermined design");
                 }
 
+                //--------------------------------------------------------------
+                //
+                //
+                // Computing Projection and Orthogonal Matrices
+                //
+                //
+                //--------------------------------------------------------------
                 const size_t Nq = M-Np;
                 Matrix<apq>      P(M,Np);
                 Matrix<xreal_t>  P_(M,Np);
@@ -165,133 +199,19 @@ namespace Yttrium
                 }
 
                 std::cerr << "Cs=" << C0 << std::endl;
+                std::cerr << "Np=" << Np << std::endl;
+                std::cerr << "Nq=" << Nq << std::endl;
+
                 lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
-#if 0
-                //--------------------------------------------------------------
-                //
-                //
-                // initialize
-                //
-                //
-                //--------------------------------------------------------------
-                lib.ldz(C0);
-                const size_t N    = cls.primary;
-                const size_t M    = lib->size();
-                const size_t Nc   = my.size;
-                const size_t info = N+Nc;
 
-                Y_XML_SECTION_OPT(xml,
-                                  CallSign,
-                                  "equilibri" << Plural::aum(N) << "=" << N
-                                  << " species=" << M
-                                  << " axiom" << Plural::s(Nc) << "=" << Nc
-                                  << " info=" << info << "/" << M
-                                  );
-
-                //--------------------------------------------------------------
-                //
-                //
-                // check status
-                //
-                //
-                //--------------------------------------------------------------
-                if(info>M)
-                    throw Specific::Exception(CallSign,"too much information");
-
-                if(Nc<=0) {
-                    Y_XML_COMMENT(xml, "no axiom");
-                    return;
-                }
-
-
-                Matrix<apq> P(Nc,M);
-                XArray      p(Nc);   fillDesignMatrix(P, p, my, lib);
-                Matrix<apq> PT(TransposeOf,P);
-                Matrix<apq> iPP(Nc,Nc);
                 {
-                    Matrix<apq> PP(Nc,Nc);
-                    for(size_t i=1;i<=Nc;++i)
-                    {
-                        for(size_t j=1;j<=i;++j)
-                            PP[i][j] = PP[j][i] = Dot(P[i],P[j]);
-                    }
-                    std::cerr << "P=" << P << std::endl;
-                    std::cerr << "p=" << p << std::endl;
-                    std::cerr << "PP=" << PP << std::endl;
-                    {
-                        MKL::LU<apq> lu(Nc);
-                        if(!lu.build(PP)) throw Specific::Exception(CallSign,"singular axiom%s",Plural::s(Nc));
-                        lu.invert(PP,iPP);
-                    }
-                    std::cerr << "iPP=" << iPP << std::endl;
-                }
-                std::cerr << "// rank(P)=" << MKL::Rank::Of(P) << " / " << Nc << std::endl;
-                Matrix<xreal_t> P3(M,Nc);
-                for(size_t i=1;i<=M;++i)
-                {
-                    for(size_t j=1;j<=Nc;++j)
-                    {
-                        const apq q = Dot(PT[i],iPP[j]);
-                        P3[i][j] = q.to<real_t>();
-                    }
-                }
-                std::cerr << "P3=" << P3 << std::endl;
-
-                XAdd xadd;
-                for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                {
-                    const Species &sp = **it;
-                    sp(C0,TopLevel) = xadd.dot( sp(P3,TopLevel), p);
-                }
-
-
-
-
-#if 1
-                if(info<M)
-                {
-                    const size_t dof = M-info;
-                    Matrix<apz>  iQ;
-                    if(!MKL::OrthoSpace::Make(iQ,P))
-                    {
-                        throw Specific::Exception(CallSign,"couldn't make OrthoSpace");
-                    }
-                    std::cerr << "Q=" << iQ << std::endl;
-                    std::cerr << "dof=" << dof << std::endl;
-
                     for(size_t i=1;i<=M;++i)
                     {
-                        
-                    }
-
-                    Matrix<apz> Q;
-
-
-
-                    if(false)
-                    {
-                        Coerce(xml.verbose) = false;
-                        //if(false)
-                        {
-                            Apex::Ortho::Coven::AutoSurvey<apn,1> survey(xml,iQ,NULL);
-                            std::cerr << survey << std::endl;
-                        }
-
-                        //if(false)
-                        {
-                            Apex::Ortho::Coven::AutoSurvey<apz,1> survey(xml,iQ,NULL);
-                            std::cerr << survey << std::endl;
-                        }
+                        Prospect pro(Q[i],P[i]);
                     }
                 }
-#endif
-                std::cerr << "Cs=" << C0 << std::endl;
-                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-
-#endif
 
             }
 

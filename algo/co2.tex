@@ -1,0 +1,103 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{chemarr}
+ 	 
+ 		 
+\begin{document}
+
+\title{$CO_2$ steady states}
+\maketitle
+
+\section{Equilibria}
+
+\subsection{Water}
+\begin{equation}
+\label{water}
+  H_2O \xrightleftharpoons[]{} H^+ + HO^-, \;\; K_w = [H^+][HO^-]
+\end{equation}
+
+\subsection{$CO_2$ subsystem}
+
+$CO_2$ partition:
+\begin{equation}
+\label{co2_part}
+{CO_2}_{gas} \xrightleftharpoons[]{} CO_2, \;\; K_H = \dfrac{P_{CO_2}}{[CO_2]}
+\end{equation}
+
+First dissociation:
+\begin{equation}
+\label{eq1}
+CO_2 + H_2O\xrightleftharpoons[]{}  H^+ + HCO_3^-,\;\; K_1 = \dfrac{[H^+][HCO_3^-]}{[CO_2]}
+\end{equation}
+
+Second dissociation:
+\begin{equation}
+\label{eq1}
+ HCO_3^- \xrightleftharpoons[]{} H^+ + CO_3^{2-},\;\; K_2 = \dfrac{[H^+][CO_3^{2-}]}{[HCO_3^-]}
+\end{equation}
+
+\subsection{Buffer $Y$}
+
+\begin{equation}
+\label{buffer}
+HY \xrightleftharpoons[]{} H^+ + Y^-, \;\; K_Y = \dfrac{[H^+][Y^-]}{[HY]}
+\end{equation}
+
+\section{Matter Conservation}
+
+\subsection{$CO_2$ subsystem}
+\begin{equation}
+[HCO_3^-] = \dfrac{K_1 P_{CO_2}}{K_H [H^+] } 
+\end{equation}
+
+\begin{equation}
+[CO_3^{2-}] = \dfrac{K_2}{[H^+] }  [HCO_3^-]  = \dfrac{K_1 K_2 P_{CO_2}}{K_H [H^+]^2 } 
+\end{equation}
+
+\subsection{Buffer}
+Let $C_Y$ be the initial buffer concentration:
+\begin{equation}
+	[HY] = \dfrac{[H^+]}{K_Y + [H^+]} C_Y
+\end{equation}
+
+\begin{equation}
+	[Y^-] = \dfrac{K_Y}{K_Y + [H^+]} C_Y
+\end{equation}
+
+\section{Charge Conservation}
+
+\subsection{Expression}
+
+\begin{equation}
+	[H^+] = [HO^-] + [HCO_3^-] + 2[CO3^{2-}] + [Y^-]
+\end{equation}
+
+\subsection{Equation using $h=[H^+]$}
+
+\begin{equation}
+	h = \dfrac{K_w}{h} + \dfrac{K_Y}{K_Y + h} C_Y + \dfrac{K_1 P_{CO_2}}{K_H h } \left( 1 + 2 \dfrac{K_2}{h} \right)
+\end{equation}	
+
+\subsection{Thermodynamical Data}
+
+\begin{equation}
+\begin{array}{|c|c|}
+\hline
+K_w & 10^{-14} \\
+\hline
+K_H & 29.41\text{ atm.L.mol}^{-1}\\
+\hline
+K_1 & 4.45 \cdot 10^{-7}\\
+\hline
+K_2 & 4.69 \cdot 10^{-11}\\
+\hline
+K_Y & 10^{-7.5} \text{ for HEPES}\\
+\hline
+\end{array}
+\end{equation}
+
+\end{document}
