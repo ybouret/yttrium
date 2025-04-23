@@ -4,8 +4,8 @@
 #include "y/mkl/algebra/lu.hpp"
 #include "y/text/plural.hpp"
 #include "y/mkl/algebra/rank.hpp"
-#include "y/apex/api/ortho/architect.hpp"
-#include "y/apex/api/univocal.hpp"
+#include "y/apex/api/simplify.hpp"
+#include "y/apex/api/count-non-zero.hpp"
 
 namespace Yttrium
 {
@@ -72,20 +72,32 @@ namespace Yttrium
             public:
                 typedef CxxArray<apz,Memory::Dyadic> zArray;
                 typedef CxxArray<apq,Memory::Dyadic> qArray;
+                typedef CxxListOf<Prospect>          List;
 
                 explicit Prospect(const Readable<apq> &q,
                                   const Readable<apq> &p) :
-                Q( q.size() ),
-                P( p.size() ),
+                Q(q.size()),
+                P(CopyOf,p),
                 next(0),
                 prev(0)
                 {
-                    qArray    vec(CopyOf,q);
-                    const apn den = Apex::Univocal::Make(vec);
-                    std::cerr << q << " -> " << vec << " / " << den << std::endl;
+                    qArray    tmp(CopyOf,q);
+                    const apn fac = Apex::Simplify::Array(tmp);
+                    Q.ld(tmp);
+                    for(size_t i=P.size();i>0;--i) P[i] *= fac;
+                    //std::cerr << "q=" << q << " -> " << Q << " / " << fac << std::endl;
+                    //std::cerr << "p=" << p << " -> " << P << std::endl;
                 }
 
                 virtual ~Prospect() noexcept {}
+
+                template <typename RHS> inline
+                std::ostream & display(std::ostream &os, RHS &rhs ) const
+                {
+                    os << Q << "*delta=" << P << "'*" << rhs;
+                    return os;
+                }
+
 
                 zArray    Q;
                 qArray    P;
@@ -207,9 +219,15 @@ namespace Yttrium
 
 
                 {
-                    for(size_t i=1;i<=M;++i)
+                    Prospect::List pros;
+                    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
                     {
-                        Prospect pro(Q[i],P[i]);
+                        const Species &sp = **it;
+                        const size_t   j  = sp.indx[TopLevel];
+                        const Readable<apq> &Qj = Q[j]; if(Apex::CountNonZero(Qj)<=0) continue;
+                        Prospect &pro = *pros.pushTail( new Prospect(Qj,P[j]) );
+
+                        pro.display( lib.pad(std::cerr << sp.name,sp) << " : ",b) << std::endl;
                     }
                 }
 

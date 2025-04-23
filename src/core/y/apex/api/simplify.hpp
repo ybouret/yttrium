@@ -60,7 +60,7 @@ namespace Yttrium
 
             }
 
-
+            static Natural Array(Writable<Rational> &arr);
 
 
         };
