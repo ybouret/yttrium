@@ -43,7 +43,7 @@ compute_protons(8,0,0)
 buffer_conc = np.arange(0,0.1,0.0001)
 n = len(buffer_conc)
 
-pH0=[7.5,8,8.5,9]
+pH0=[7,7.5,8,8.5,9]
 m  = len(pH0)
 
 # prepare array of pH
