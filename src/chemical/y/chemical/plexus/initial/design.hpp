@@ -96,8 +96,6 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Design);
                 Y_PROXY_DECL();
                 ListOfCloneable<Axiom> my;
-                
-
             };
 
           
