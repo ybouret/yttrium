@@ -14,6 +14,7 @@
 #include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
 #include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
 #include "y/chemical/plexus/initial/design.hpp"
+#include "y/chemical/plexus/initial/axioms.hpp"
 
 
 namespace Yttrium
@@ -109,7 +110,8 @@ Y_UTEST(plexus)
     Y_SIZEOF(Initial::FixedConcentration);
     Y_SIZEOF(Initial::ElectroNeutrality);
     Y_SIZEOF(Initial::Design);
-    
+    Y_SIZEOF(Initial::Axioms);
+
     Initial::Design design("init");
 
     //design.add(new Initial::ElectroNeutrality());
