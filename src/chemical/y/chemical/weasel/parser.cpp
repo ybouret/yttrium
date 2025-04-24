@@ -125,7 +125,11 @@ namespace Yttrium
             }
 #endif
 
+            //------------------------------------------------------------------
+            //
             // Create AXIOM
+            //
+            //------------------------------------------------------------------
             Compound & AXIOM = grp("AXIOM");
             {
                 const Rule &CONC                = grp("C") << '[' << FORMULA << ']';
@@ -133,7 +137,6 @@ namespace Yttrium
                 const Rule &STEADY_CONSERVATION = agg(Initial::Design::_SteadyConservation) << STRING << SPACE << '=' << SPACE << STRING;
                 AXIOM << SPACE << pick(FIXED_CONCENTRATION,STEADY_CONSERVATION,STRING);
             }
-#if 1
             //------------------------------------------------------------------
             //
             // Create Design
@@ -150,7 +153,6 @@ namespace Yttrium
                 }
                 STATEMENT << DESIGN;
             }
-#endif
 
             //------------------------------------------------------------------
             //
@@ -297,6 +299,27 @@ namespace Yttrium
             }
         }
 
+#endif
+
+        static inline void cleanupFixedConcentration(XNode * const node)
+        {
+            assert(0!=node);
+            assert(Initial::Design::_FixedConcentration == node->name());
+            XList &list = node->branch(); assert(2==list.size);
+            cleanupFormula(list.head);
+            cleanupString(list.tail);
+        }
+
+        static inline void cleanupSteadyConservation(XNode * const node)
+        {
+            assert(0!=node);
+            assert(Initial::Design::_SteadyConservation == node->name());
+            XList &list = node->branch(); assert(2==list.size);
+            cleanupString(list.head);
+            cleanupString(list.tail);
+
+        }
+
         static inline void cleanupDesign(XNode * const node)
         {
             assert(0!=node);
@@ -310,6 +333,8 @@ namespace Yttrium
             for(curr=curr->next;curr;curr=curr->next)
             {
                 const String &name = curr->name();
+                //std::cerr << "should clean <" << name << ">" << std::endl;
+
                 if(Weasel::StringID == name)
                 {
                     cleanupString(curr);
@@ -317,9 +342,15 @@ namespace Yttrium
                     continue;
                 }
 
-                if(curr->defines<Initial::Axiom>())
+                if(Initial::Design::_FixedConcentration == name )
                 {
-                    cleanupAxiom(curr);
+                    cleanupFixedConcentration(curr);
+                    continue;
+                }
+
+                if(Initial::Design::_SteadyConservation == name )
+                {
+                    cleanupSteadyConservation(curr);
                     continue;
                 }
 
@@ -328,7 +359,6 @@ namespace Yttrium
             }
 
         }
-#endif
 
 
 
@@ -370,16 +400,16 @@ namespace Yttrium
                     }
 
 
-#if 0
+#if 1
                     if( node->defines<Initial::Design>() )
                     {
-                        std::cerr << "Processing " << node->name() << std::endl;
+                        //std::cerr << "Processing " << node->name() << std::endl;
                         cleanupDesign(& *node);
                         goto PUSH;
                     }
 #endif
 
-                    std::cerr << "Unprocessed " << node->name() << std::endl;
+                    //std::cerr << "Unprocessed " << node->name() << std::endl;
 
                     
                 PUSH:
