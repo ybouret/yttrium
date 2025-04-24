@@ -52,16 +52,16 @@ Adjusted by $NaOH$...
 \subsection{Phosphoric Acid}
 
 \begin{equation}
-	H_3PO_4 \xrightleftharpoons[]{} H^+ + H_2PO_4^-, \;\; K_{a_1} = 10^{-2.14}
+	H_3PO_4 \xrightleftharpoons[]{} H^+ + H_2PO_4^-, \;\; K_{a_1} = 10^{-2.14} = \dfrac{[H^+][H_2PO_4^-]}{[H_3PO_4]}
 \end{equation}
 
 \begin{equation}
-	H_2PO_4^- \xrightleftharpoons[]{} H^+ + HPO_4^{2-}, \;\; K_{a_2} = 10^{-7.20}
+	H_2PO_4^- \xrightleftharpoons[]{} H^+ + HPO_4^{2-}, \;\; K_{a_2} = 10^{-7.20} = \dfrac{[H^+][HPO_4^{2-}]}{[H_2PO_4^-]}
 \end{equation}
 
 
 \begin{equation}
-	HPO_4^{2-} \xrightleftharpoons[]{} H^+ +  PO_4^{3-}, \;\; K_{a_3} = 10^{-12.37}
+	HPO_4^{2-} \xrightleftharpoons[]{} H^+ +  PO_4^{3-}, \;\; K_{a_3} = 10^{-12.37} = \dfrac{[H^+][PO_4^{3-}]}{[HPO_4^{2-}]}
 \end{equation}
 
 
@@ -86,18 +86,48 @@ Let $C_Y$ be the initial buffer concentration:
 	[Y^-] = \dfrac{K_Y}{K_Y + [H^+]} C_Y
 \end{equation}
 
+
+\subsection{Phosphoric Acid}
+
+\begin{equation}
+	[H_2PO_4^-] = [H_3PO_4] \dfrac{K_{a_1}}{[H^+]}
+\end{equation}
+
+\begin{equation}
+	[HPO_4^{2-}] = [H_2PO_4^-] \dfrac{K_{a_2}}{[H^+]} = [H_3PO_4] \dfrac{K_{a_1}K_{a_2}}{[H^+]^2}
+\end{equation}
+
+\begin{equation}
+	[PO4^{3-}] = [HPO_4^{2-}] \dfrac{K_{a_3}}{[H^+]} = [H_3PO_4] \dfrac{K_{a_1}K_{a_2}K_{a_3}}{[H^+]^3}
+\end{equation}
+
+\begin{equation}
+	C_p = [H_3PO_4] + [H_2PO_4^-] + [HPO_4^{2-}] + [PO4^{3-}] 
+\end{equation}
+
+\begin{equation}
+	C_p = [H_3PO_4] \left( 1 + \dfrac{K_{a_1}}{[H^+]} \left( 1 + \dfrac{K_{a_2}}{[H^+]}\left( 1 + \dfrac{K_{a_3}}{[H^+]} \right)  \right) \right)
+\end{equation}
+
 \section{Charge Conservation}
 
 \subsection{Expression}
 
 \begin{equation}
-	[H^+] + [Na^+] = [HO^-] + [HCO_3^-] + 2[CO3^{2-}] + [Y^-]
+	[H^+] + [Na^+] = [HO^-] + [HCO_3^-] + 2[CO3^{2-}] + [Y^-] + [H_2PO_4^-] + 2[HPO_4^{2-}] + 3[PO4^{3-}] 
 \end{equation}
 
 \subsection{Equation using $h=[H^+]$}
 
 \begin{equation}
-	h + [Na^+] = \dfrac{K_w}{h} + \dfrac{K_Y}{K_Y + h} C_Y + \dfrac{K_1 P_{CO_2}}{K_H h } \left( 1 + 2 \dfrac{K_2}{h} \right)
+\begin{array}{rcl}
+	h + [Na^+] & = & \dfrac{K_w}{h} + \dfrac{K_Y}{K_Y + h} C_Y + \dfrac{K_1 P_{CO_2}}{K_H h } \left( 1 + 2 \dfrac{K_2}{h} \right)\\
+	\\
+	& & + C_p
+	\dfrac
+	{\left( \dfrac{K_{a_1}}{[H^+]} \left(1+2\dfrac{K_{a_2}}{[H^+]}\left(1+\dfrac{3}{2}\dfrac{K_{a_3}}{[H^+]}\right)\right) \right)}
+	{\left( 1 + \dfrac{K_{a_1}}{[H^+]} \left( 1 + \dfrac{K_{a_2}}{[H^+]}\left( 1 + \dfrac{K_{a_3}}{[H^+]} \right)  \right) \right)}\\
+\end{array}
 \end{equation}	
 
 \subsection{Thermodynamical Data}
