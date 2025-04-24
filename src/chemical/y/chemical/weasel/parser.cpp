@@ -8,8 +8,7 @@
 #include <iomanip>
 
 #include "y/apex/natural.hpp"
-
-//#include "y/chemical/plexus/initial/design.hpp"
+#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
@@ -124,7 +123,14 @@ namespace Yttrium
                 const Rule &AXIOM        = agg(Initial::Axiom::CallSign) << PLAYERS << SPACE << '=' << STRING;
                 INSTR << SPACE << pick(AXIOM,STRING);
             }
+#endif
 
+            // Create AXIOM
+            Compound & AXIOM = grp("AXIOM");
+
+            AXIOM << SPACE << STRING;
+
+#if 1
             //------------------------------------------------------------------
             //
             // Create Design
@@ -136,7 +142,7 @@ namespace Yttrium
                 DESIGN << SPACE << '=';
                 {
                     const Rule &EmptyDesign = grp("EmptyDesign") << '{' << SPACE << '}';
-                    const Rule &HeavyDesign = grp("HeavyDesign") << '{' << INSTR << extra(',',INSTR) <<  SPACE << '}';
+                    const Rule &HeavyDesign = grp("HeavyDesign") << '{' << AXIOM << extra(',',AXIOM) <<  SPACE << '}';
                     DESIGN << SPACE << pick(EmptyDesign,HeavyDesign);
                 }
                 STATEMENT << DESIGN;
@@ -360,6 +366,7 @@ namespace Yttrium
                         continue; // drop node
                     }
 
+
 #if 0
                     if( node->defines<Initial::Design>() )
                     {
@@ -369,6 +376,7 @@ namespace Yttrium
                     }
 #endif
 
+                    std::cerr << "Unprocessed " << node->name() << std::endl;
 
                     
                 PUSH:
@@ -380,6 +388,7 @@ namespace Yttrium
 
             }
 
+            std::cerr << "Rendering..." << std::endl;
             GraphViz::Vizible::DotToPng("ast.dot", *ast);
 
             return ast.yield();

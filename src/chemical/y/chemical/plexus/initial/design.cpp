@@ -15,6 +15,8 @@ namespace Yttrium
         {
 
             const char * const Design:: CallSign = "Initial::Design";
+            const char * const Design:: Logo     = "Logo";
+            const char * const Design:: LogoExpr = "[.][:word:]+";
 
             Y_PROXY_IMPL(Design,my)
 
@@ -153,7 +155,7 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                const size_t Nq = M-Np;
+                const size_t     Nq = M-Np;
                 Matrix<apq>      P(M,Np);
                 Matrix<xreal_t>  P_(M,Np);
                 Matrix<apq>      Q(M,M);

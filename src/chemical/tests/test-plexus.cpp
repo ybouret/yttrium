@@ -109,11 +109,11 @@ Y_UTEST(plexus)
     Y_SIZEOF(Initial::FixedConcentration);
     Y_SIZEOF(Initial::ElectroNeutrality);
     Y_SIZEOF(Initial::Design);
-
+    
     Initial::Design design("init");
 
-    design.add(new Initial::ElectroNeutrality());
-    design.add(new Initial::FixedConcentration(lib["Na^+"],0.001) );
+    //design.add(new Initial::ElectroNeutrality());
+    //design.add(new Initial::FixedConcentration(lib["Na^+"],0.001) );
     //design.add(cls,"EtCOO.*",0.1);
     //design.add(new Initial::FixedConcentration(lib["Cl^-"],0.00) );
     //design.add(new Initial::FixedConcentration(lib["H^+"],0.001) );

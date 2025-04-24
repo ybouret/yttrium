@@ -35,7 +35,9 @@ namespace Yttrium
                 static const char * const          CallSign; //!< "Initial::Design"
                 typedef Proxy< ListOf<Axiom> >     BaseType; //!< alias
                 typedef ArkPtr<String,Design>      Pointer;  //!< alias
-
+                static const char * const          Logo;     //!< "Logo"
+                static const char * const          LogoExpr; //!< "[.][:word:]+"
+                
                 //______________________________________________________________
                 //
                 //
