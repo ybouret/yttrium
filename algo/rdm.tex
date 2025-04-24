@@ -496,8 +496,23 @@ We define
 \end{equation}
 
 
-\section{Initialization}
+\section{initialisation}
 
+We describe the initialisation of $M$ species involved in $N$ primary equilibria by a set of $N_p$ affine axioms:
 
+\begin{equation}
+	\langle \vec{\beta}_i \vert \vec C \rangle = b_i
+\end{equation}
+or
+\begin{equation}
+	\bm{B} \vec C = \vec b
+\end{equation}
+The acceptable solutions are:
+\begin{equation}
+	\vec C = \underbrace{\underbrace{\bm{B}^T \left(\bm{B} \bm{B}^T\right)^{-1}}_{\bm{P},\;\mathrm{rank}(P)=N_p} \vec b}_{\vec C^\star}
+	+ \underbrace{\left[ \bm{I}_M - \bm{B}^T \left(\bm{B} \bm{B}^T\right)^{-1} \bm{B} \right]}_{\bm{Q},\;\mathrm{rank}(Q)=N_q=M-N_p}\vec \delta
+\end{equation}
+
+The matrices $\bm{P}$ and $\bm{Q}$ are orthogonal, and $\vec\delta\in\mathbb{R}^M$.
 
 \end{document}
