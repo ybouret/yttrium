@@ -127,9 +127,11 @@ namespace Yttrium
 
             // Create AXIOM
             Compound & AXIOM = grp("AXIOM");
-
-            AXIOM << SPACE << STRING;
-
+            {
+                const Rule &CONC                = grp("C") << '[' << FORMULA << ']';
+                const Rule &FIXED_CONCENTRATION = agg(Initial::Design::_FixedConcentration) << CONC << SPACE << '=' << STRING;
+                AXIOM << SPACE << pick(STRING,FIXED_CONCENTRATION);
+            }
 #if 1
             //------------------------------------------------------------------
             //

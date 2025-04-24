@@ -37,6 +37,8 @@ namespace Yttrium
                 typedef ArkPtr<String,Design>      Pointer;  //!< alias
                 static const char * const          Logo;     //!< "Logo"
                 static const char * const          LogoExpr; //!< "[.][:word:]+"
+                static const char * const          _FixedConcentration;   //!< "FixedConcentration"
+                static const char * const          _SteadyConservation;   //!< "SteadyConservation"
                 
                 //______________________________________________________________
                 //

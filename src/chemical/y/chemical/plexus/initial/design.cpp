@@ -14,9 +14,11 @@ namespace Yttrium
         namespace Initial
         {
 
-            const char * const Design:: CallSign = "Initial::Design";
-            const char * const Design:: Logo     = "Logo";
-            const char * const Design:: LogoExpr = "[.][:word:]+";
+            const char * const Design:: CallSign            = "Initial::Design";
+            const char * const Design:: Logo                = "Logo";
+            const char * const Design:: LogoExpr            = "[.][:word:]+";
+            const char * const Design:: _FixedConcentration = "FixedConcentration";
+            const char * const Design:: _SteadyConservation = "SteadyConservation";
 
             Y_PROXY_IMPL(Design,my)
 
