@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import root_scalar
+import matplotlib as mpl
 
 # water
 K_w = 10**(-14)
@@ -56,7 +57,7 @@ def compute_initial_Na(initial_pH, initial_buffer, initial_phosphoric):
 
 
 def compute_protons(initial_pH, P_CO2, C_Y, C_p):
-    print("C_p=",C_p)
+    #print("C_p=",C_p)
     C_Na = compute_initial_Na(initial_pH, C_Y, C_p)
     res = root_scalar(electroneutrality,
                       args=(P_CO2, C_Y, C_Na, C_p),
@@ -75,27 +76,37 @@ buffer_step  = 0.0001;
 buffer_conc  = np.arange(0, buffer_maxi+buffer_step, buffer_step)
 n = len(buffer_conc)
 
-pH0 = [6.5, 7, 7.5, 8, 8.5, 9]
+pH0 = [6, 7, 8, 9]
 m = len(pH0)
 
 # prepare array of pH
-pH = np.zeros([m, n], dtype=float)
-
+pH_Y = np.zeros([m, n], dtype=float)
+pH_P = np.zeros([m, n], dtype=float)
 
 CO2 = 5.0/100
 # CO2=0.0
 for i in range(n):
     for j in range(m):
-        pH[j][i] = -np.log10(compute_protons(pH0[j], CO2, buffer_conc[i],0))
+        pH_Y[j][i] = -np.log10(compute_protons(pH0[j], CO2, buffer_conc[i],0))
+        pH_P[j][i] = -np.log10(compute_protons(pH0[j], CO2, 0,buffer_conc[i]))
+
+
+cmap   = mpl.colormaps['tab10']
+colors = cmap(np.linspace(0, 1, m))
 
 fig, ax = plt.subplots()
 description = []
 for j in range(m):
-    plt.plot(buffer_conc, pH[j])
-    description.append(f"pH0={pH0[j]:.1f}")
+    plt.plot(buffer_conc, pH_Y[j],linestyle='-',color=colors[j])
+    description.append(f"pH$_0$={pH0[j]:.1f}/$HEPES$")
+    
+for j in range(m):
+    plt.plot(buffer_conc, pH_P[j],linestyle='--',color=colors[j])
+    description.append(f"pH$_0$={pH0[j]:.1f}/$H_3PO_4$")
 
-plt.legend(description)
+plt.legend(description,fontsize='xx-small')
 plt.xlabel('[buffer] in mol/L')
 plt.ylabel('pH')
+plt.ylim(4.0,8)
 plt.grid()
 plt.show()
