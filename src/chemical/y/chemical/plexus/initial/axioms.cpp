@@ -23,13 +23,24 @@ namespace Yttrium
             Entity( extractLogoFrom(code) ),
             xcode(code)
             {
+                delete Coerce(xcode->branch()).popHead();
             }
 
+
+
+            Axioms:: Axioms(const Axioms &_) noexcept :
+            Entity(_.name),
+            xcode(_.xcode)
+            {
+            }
 
             Axioms:: ~Axioms() noexcept
             {
             }
+
+            Y_PROXY_IMPL(Axioms,xcode->branch())
             
+
         }
 
     }

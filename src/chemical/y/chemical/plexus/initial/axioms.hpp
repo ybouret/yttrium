@@ -14,15 +14,22 @@ namespace Yttrium
     {
         namespace Initial
         {
-            class Axioms : public Quantized, public Counted, public Entity
+            //! store pre-compiled axioms for design
+            class Axioms : public Entity, public Proxy<const XList>
             {
             public:
-                typedef ArkPtr<String,Axioms> Pointer;
-                explicit Axioms(const XCode &xcode);
+                typedef SuffixSet<String,const Axioms> Set;
+
+                //! setup from parsed design XNode
+                explicit Axioms(const XCode &code);
+                Axioms(const Axioms &) noexcept;
+                
+                //! cleanup
                 virtual ~Axioms() noexcept;
                 
             private:
                 XCode xcode;
+                Y_PROXY_DECL();
             };
         }
     }
