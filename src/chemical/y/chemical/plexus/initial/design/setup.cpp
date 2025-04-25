@@ -40,12 +40,11 @@ namespace Yttrium
                                            const Library & lib)
             {
 
-                const Formula formula(new XNode(*xlist.head));
-                const String  uuid  = formula.uuid();
-                const String  value = xlist.tail->lexeme().toString();
-                //std::cerr << "New FixedConcentration [" << uuid << "] = '" << value << "'" << std::endl;
-                const Species &sp = lib[uuid];
-                const xreal_t  cc = Weasel::Instance().eval(value);
+                const Formula  formula(new XNode(*xlist.head));
+                const String   uuid  = formula.uuid();
+                const String   value = xlist.tail->lexeme().toString();
+                const Species &sp    = lib[uuid];
+                const xreal_t  cc    = Weasel::Instance().eval(value);
                 design.add( new FixedConcentration(sp,cc) );
             }
 
@@ -81,6 +80,7 @@ namespace Yttrium
 
                     if(uuid == Design::_FixedConcentration)
                     {
+                        // new fixed concentration
                         processFixedConcentration(*this,node->branch(),lib);
                         continue;
                     }
@@ -88,6 +88,7 @@ namespace Yttrium
 
                     if(uuid == Design::_SteadyConservation)
                     {
+                        // new steady conservation
                         processSteadyConservation(*this,node->branch(),cls);
                         continue;
                     }
