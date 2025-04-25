@@ -19,11 +19,11 @@ namespace Yttrium
             {
             public:
                 typedef SuffixSet<String,const Axioms> Set;
-
-                //! setup from parsed design XNode
-                explicit Axioms(const XCode &code);
-                Axioms(const Axioms &) noexcept;
                 
+                explicit Axioms(const XCode &code); //!< setup from parsed design XNode
+                Axioms(const Axioms &) noexcept;    //!< noexcept duplicate
+                Y_OSTREAM_PROTO(Axioms);            //!< display
+
                 //! cleanup
                 virtual ~Axioms() noexcept;
                 

@@ -1,11 +1,15 @@
 
 #include "y/chemical/weasel.hpp"
+#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
-        void Weasel:: update(Library &lib, Equilibria &eqs, XNode *const root)
+        void Weasel:: update(Library    &lib,
+                             Equilibria &eqs,
+                             Repertory  &rep,
+                             XNode *const root)
         {
             assert(0!=root);
             assert(root->defines<Weasel>());
@@ -36,13 +40,13 @@ namespace Yttrium
                     continue;
                 }
 
-#if 0
                 if(node->defines<Initial::Design>())
                 {
-                    const Initial::Design::Pointer design( compileDesign(*node,lib) );
-                    std::cerr << "Found Design '" << design->name << "'" << std::endl;
+                    // extract code for Axioms and store into repository
+                    const XCode xcode = node.yield();
+                    rep(xcode);
+                    continue;
                 }
-#endif
 
 
                 temp.pushTail( node.yield() );
@@ -52,12 +56,13 @@ namespace Yttrium
 
         }
 
-        void Weasel:: operator()(Library    &   lib,
+        void Weasel:: operator()(Library    &    lib,
                                  Equilibria &    eqs,
+                                 Repertory  &    rep,
                                  Lingo::Module * const inputModule)
         {
             AutoPtr<XNode> root = parse(inputModule);
-            update(lib,eqs,& *root);
+            update(lib,eqs,rep,& *root);
         }
 
     }

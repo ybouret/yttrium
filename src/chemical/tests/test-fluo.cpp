@@ -46,12 +46,13 @@ Y_UTEST(fluo)
 
     Library       lib;
     Equilibria    eqs;
+    Repertory     rep;
     const xreal_t dQ = ran.to<double>() * 1e-3;
 
     for(unsigned i=0;i<sizeof(Description)/sizeof(Description[0]);++i)
     {
         const char * const data = Description[i];
-        weasel(lib,eqs,Lingo::Module::Open(data,data) );
+        weasel(lib,eqs,rep,Lingo::Module::Open(data,data) );
     }
 
     bool     verbose = true;

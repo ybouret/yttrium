@@ -6,6 +6,7 @@
 
 #include "y/chemical/formula.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
+#include "y/chemical/plexus/repertory.hpp"
 
 namespace Yttrium
 {
@@ -81,12 +82,14 @@ namespace Yttrium
             //! use root's content to update library and equilibria
             void     update(Library    &  lib,
                             Equilibria &  eqs,
+                            Repertory  &  rep,
                             XNode * const root);
 
 
             //! update from parsed module
             void operator()(Library    &  lib,
                             Equilibria &  eqs,
+                            Repertory  &  rep,
                             Lingo::Module * const);
 
             //! append Lua code to internal VM

@@ -58,11 +58,12 @@ Y_UTEST(plexus)
 
     Library    lib;
     Equilibria eqs;
+    Repertory  rep;
 
     for(int iarg=1;iarg<argc;++iarg)
     {
         const String data = argv[iarg];
-        weasel(lib,eqs,Lingo::Module::Open(data,data) );
+        weasel(lib,eqs,rep,Lingo::Module::Open(data,data) );
     }
 
     std::cerr << "lib=" << lib << std::endl;
@@ -75,7 +76,7 @@ Y_UTEST(plexus)
 
     
     std::cerr << "lib=" << lib << std::endl;
-
+    std::cerr << "rep=" << rep << std::endl;
 
     cls.graphViz("cs");
 
