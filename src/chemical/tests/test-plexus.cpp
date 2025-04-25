@@ -121,7 +121,7 @@ Y_UTEST(plexus)
     //design.add(new Initial::FixedConcentration(lib["Cl^-"],0.00) );
     //design.add(new Initial::FixedConcentration(lib["H^+"],0.001) );
 
-    design.build(xml,C0,lib,cls);
+    design.build(xml,C0,lib);
 
     //eqz(xml,C0);
 

@@ -113,8 +113,7 @@ namespace Yttrium
 
             void Design:: build(XMLog          &xml,
                                 XWritable      &C0,
-                                const Library  &lib,
-                                const Clusters &cls) const
+                                const Library  &lib) const
             {
 
                 //--------------------------------------------------------------

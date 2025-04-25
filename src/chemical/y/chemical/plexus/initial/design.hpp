@@ -32,11 +32,11 @@ namespace Yttrium
                 // Definitions
                 //
                 //______________________________________________________________
-                static const char * const          CallSign; //!< "Initial::Design"
-                typedef Proxy< ListOf<Axiom> >     BaseType; //!< alias
-                typedef ArkPtr<String,Design>      Pointer;  //!< alias
-                static const char * const          Logo;     //!< "Logo"
-                static const char * const          LogoExpr; //!< "[.][:word:]+"
+                static const char * const          CallSign;              //!< "Initial::Design"
+                typedef Proxy< ListOf<Axiom> >     BaseType;              //!< alias
+                typedef ArkPtr<String,Design>      Pointer;               //!< alias
+                static const char * const          Logo;                  //!< "Logo"
+                static const char * const          LogoExpr;              //!< "[.][:word:]+"
                 static const char * const          _FixedConcentration;   //!< "FixedConcentration"
                 static const char * const          _SteadyConservation;   //!< "SteadyConservation"
                 
@@ -85,8 +85,7 @@ namespace Yttrium
                 //! build
                 void build(XMLog          &xml,
                            XWritable      &C0,
-                           const Library  &lib,
-                           const Clusters &cls) const;
+                           const Library  &lib) const;
 
 
 
