@@ -3,6 +3,7 @@
 #include "y/chemical/weasel.hpp"
 
 #include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
+#include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
 #include "y/system/exception.hpp"
 
 namespace Yttrium
@@ -17,6 +18,8 @@ namespace Yttrium
                                     const String & instr,
                                     const Library &lib)
             {
+                std::cerr << "New Instruction <" << instr << ">" << std::endl;
+
                 if(instr=="E/N")
                 {
                     design.add( new ElectroNeutrality() );
@@ -32,8 +35,14 @@ namespace Yttrium
                                            const XList   & xlist,
                                            const Library & lib)
             {
-                //new XNode(*xlist.head);
-                const Formula formula(xlist.head);
+
+                const Formula formula(new XNode(*xlist.head));
+                const String  uuid = formula.uuid();
+                const String  expr = xlist.tail->lexeme().toString();
+                std::cerr << "New FixedConcentration [" << uuid << "] = '" << expr << "'" << std::endl;
+                const Species &sp = lib[uuid];
+                const xreal_t  cc = Weasel::Instance().eval(expr);
+                design.add( new FixedConcentration(sp,cc) );
             }
 
             Design:: Design(const Axioms   &axioms,
@@ -48,7 +57,6 @@ namespace Yttrium
                     if(uuid == Weasel::StringID) {
                         // this is an instruction
                         const String instr = node->lexeme().toString();
-                        std::cerr << "New Instruction <" << instr << ">" << std::endl;
                         processInstruction(*this,instr,lib);
                         continue;
                     }
@@ -59,6 +67,7 @@ namespace Yttrium
                         continue;
                     }
 
+                    throw Specific::Exception(CallSign,"unhandled Axiom '%s'", uuid.c_str());
                 }
             }
         }
