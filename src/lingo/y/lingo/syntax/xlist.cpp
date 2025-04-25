@@ -171,7 +171,6 @@ namespace Yttrium
             next(0),
             prev(0)
             {
-                //std::cerr << "Copy Node '" << name() << "'" << std::endl;
                 switch(type)
                 {
                     case Terminal: unit = new Lexeme( *root.unit ); break;
@@ -181,10 +180,7 @@ namespace Yttrium
                         try
                         {
                             for(const XNode *sub=root.list().head;sub;sub=sub->next)
-                            {
-                                //std::cerr << "+sub '" << sub->name() << "'" << std::endl;
                                 self.pushTail( new XNode(*sub) )->sire = this;
-                            }
                         }
                         catch(...)
                         {

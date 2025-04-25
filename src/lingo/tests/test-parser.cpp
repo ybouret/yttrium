@@ -151,7 +151,7 @@ Y_UTEST(parser)
         xwalk(*xnode);
 
         const Syntax::XNode xcopy( *xnode );
-        //Y_CHECK(xcopy == *xnode);
+        Y_CHECK(xcopy == *xnode);
     }
 }
 Y_UDONE()
