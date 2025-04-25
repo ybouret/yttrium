@@ -4,6 +4,10 @@
 
 #include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
 #include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
+#include "y/chemical/plexus/initial/axiom/steady-conservation.hpp"
+
+#include "y/lingo/pattern/matching.hpp"
+
 #include "y/system/exception.hpp"
 
 namespace Yttrium
@@ -16,9 +20,9 @@ namespace Yttrium
             static inline
             void processInstruction(Design &       design,
                                     const String & instr,
-                                    const Library &lib)
+                                    const Library &)
             {
-                std::cerr << "New Instruction <" << instr << ">" << std::endl;
+                //std::cerr << "New Instruction <" << instr << ">" << std::endl;
 
                 if(instr=="E/N")
                 {
@@ -37,12 +41,26 @@ namespace Yttrium
             {
 
                 const Formula formula(new XNode(*xlist.head));
-                const String  uuid = formula.uuid();
-                const String  expr = xlist.tail->lexeme().toString();
-                std::cerr << "New FixedConcentration [" << uuid << "] = '" << expr << "'" << std::endl;
+                const String  uuid  = formula.uuid();
+                const String  value = xlist.tail->lexeme().toString();
+                //std::cerr << "New FixedConcentration [" << uuid << "] = '" << value << "'" << std::endl;
                 const Species &sp = lib[uuid];
-                const xreal_t  cc = Weasel::Instance().eval(expr);
+                const xreal_t  cc = Weasel::Instance().eval(value);
                 design.add( new FixedConcentration(sp,cc) );
+            }
+
+            static inline
+            void processSteadyConservation(Design         & design,
+                                           const XList    & xlist,
+                                           const Clusters & cls)
+            {
+                const String                    expr = xlist.head->lexeme().toString();
+                Lingo::Matching                 match(expr,0);
+                const Conservation::Law * const law = cls.preserving(match);
+                if(!law) throw Specific::Exception(Design::CallSign,"No Conservation matching '%s'", expr.c_str());
+                const String                    value = xlist.tail->lexeme().toString();
+                const xreal_t  cc = Weasel::Instance().eval(value);
+                design.add( new SteadyConservation(*law,cc) );
             }
 
             Design:: Design(const Axioms   &axioms,
@@ -66,6 +84,14 @@ namespace Yttrium
                         processFixedConcentration(*this,node->branch(),lib);
                         continue;
                     }
+
+
+                    if(uuid == Design::_SteadyConservation)
+                    {
+                        processSteadyConservation(*this,node->branch(),cls);
+                        continue;
+                    }
+
 
                     throw Specific::Exception(CallSign,"unhandled Axiom '%s'", uuid.c_str());
                 }
