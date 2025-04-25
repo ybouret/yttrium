@@ -19,7 +19,19 @@ namespace Yttrium
             prev(0),
             info(_cntx)
             {
+
             }
+
+            Unit:: Unit(const Unit &_) :
+            Object(),
+            Entity(_),
+            Token(_),
+            next(0),
+            prev(0),
+            info(_.info)
+            {
+            }
+            
 
             std::ostream & operator<<(std::ostream &os, const Unit &unit)
             {

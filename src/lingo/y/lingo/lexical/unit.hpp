@@ -79,6 +79,8 @@ namespace Yttrium
 
                 virtual ~Unit() noexcept; //!< cleanup
                 Y_OSTREAM_PROTO(Unit);    //!< display
+                Unit(const Unit &);       //!< duplicate
+
 
                 //______________________________________________________________
                 //
@@ -99,10 +101,10 @@ namespace Yttrium
                 //______________________________________________________________
                 Unit *        next; //!< for list
                 Unit *        prev; //!< for list
-                const Context info; //!< productiom info
+                const Context info; //!< production info
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Unit);
+                Y_DISABLE_ASSIGN(Unit);
             };
         }
 

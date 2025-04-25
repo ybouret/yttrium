@@ -149,6 +149,9 @@ Y_UTEST(parser)
 
         std::cerr << "Walking..." << std::endl;
         xwalk(*xnode);
+
+        const Syntax::XNode xcopy( *xnode );
+        //Y_CHECK(xcopy == *xnode);
     }
 }
 Y_UDONE()

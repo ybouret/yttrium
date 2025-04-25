@@ -53,7 +53,7 @@ namespace Yttrium
             }
 
 
-           
+
 
             void XNode:: fusion(XNode * const node) noexcept
             {
@@ -164,10 +164,47 @@ namespace Yttrium
             }
 
 
+            XNode:: XNode(const XNode &root) :
+            rule(root.rule),
+            type(root.type),
+            sire(0),
+            next(0),
+            prev(0)
+            {
+                std::cerr << "Copy Node '" << name() << "'" << std::endl;
+                switch(type)
+                {
+                    case Terminal:
+                        unit = new Lexeme( *root.unit );
+                        std::cerr << "+unit=" << *unit << std::endl;
+                        break;
+
+                    case Internal: {
+                        XList &self = list();
+                        try
+                        {
+                            for(const XNode *sub=root.list().head;sub;sub=sub->next)
+                            {
+                                std::cerr << "+sub '" << sub->name() << "'" << std::endl;
+                               // self.pushTail( new XNode(*sub) )->sire = this;
+                            }
+                        }
+                        catch(...)
+                        {
+                            self.release();
+                            throw;
+                        }
+                    }
+                }
+                std::cerr << "...done '" << name() << "'" << std::endl;
+            }
+
         }
 
     }
 
 }
+
+
 
 

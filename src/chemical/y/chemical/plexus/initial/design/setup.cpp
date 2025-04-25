@@ -27,6 +27,15 @@ namespace Yttrium
 
             }
 
+            static inline
+            void processFixedConcentration(Design        & design,
+                                           const XList   & xlist,
+                                           const Library & lib)
+            {
+                //new XNode(*xlist.head);
+                const Formula formula(xlist.head);
+            }
+
             Design:: Design(const Axioms   &axioms,
                             const Library  &lib,
                             const Clusters &cls) :
@@ -44,6 +53,11 @@ namespace Yttrium
                         continue;
                     }
 
+                    if(uuid == Design::_FixedConcentration)
+                    {
+                        processFixedConcentration(*this,node->branch(),lib);
+                        continue;
+                    }
 
                 }
             }

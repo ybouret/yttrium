@@ -55,6 +55,8 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                explicit XNode(const XNode &node);
+
                 //! create from Syntax::Terminal rule + lexeme
                 static XNode * CreateFrom(const Syntax::Terminal &, Lexeme * const);
 
@@ -64,6 +66,9 @@ namespace Yttrium
 
                 //! create from Syntax::Internal rule
                 static XNode * CreateFrom(const Syntax::Internal &);
+
+                //! duplicate
+                static XNode * Duplicate(const XNode * const root);
 
                 //! cleanup
                 virtual ~XNode() noexcept;
@@ -137,7 +142,7 @@ namespace Yttrium
                 XNode *      prev; //!< for list
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(XNode);
+                Y_DISABLE_ASSIGN(XNode);
                 union
                 {
                     Lexeme * unit;

@@ -47,6 +47,8 @@ namespace Yttrium
             }
 
 
+          
+
             Lexeme & XNode:: lexeme() noexcept
             {
                 assert(Terminal==type);
@@ -82,6 +84,8 @@ namespace Yttrium
             {
                 return id == name();
             }
+
+           
 
         }
     }
