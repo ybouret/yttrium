@@ -14,19 +14,36 @@ namespace Yttrium
     {
         namespace Initial
         {
+            //__________________________________________________________________
+            //
+            //
+            //
             //! store pre-compiled axioms for design
+            //
+            //
+            //__________________________________________________________________
             class Axioms : public Entity, public Proxy<const XList>
             {
             public:
-                typedef SuffixSet<String,const Axioms> Set;
-                
+                //______________________________________________________________
+                //
+                //
+                // Definitions
+                //
+                //______________________________________________________________
+                typedef SuffixSet<String,const Axioms> Set; //!< alias
+
+                //______________________________________________________________
+                //
+                //
+                // C++
+                //
+                //______________________________________________________________
                 explicit Axioms(const XCode &code); //!< setup from parsed design XNode
                 Axioms(const Axioms &) noexcept;    //!< noexcept duplicate
+                virtual ~Axioms() noexcept;         //!< cleanup
                 Y_OSTREAM_PROTO(Axioms);            //!< display
 
-                //! cleanup
-                virtual ~Axioms() noexcept;
-                
             private:
                 XCode xcode;
                 Y_PROXY_DECL();

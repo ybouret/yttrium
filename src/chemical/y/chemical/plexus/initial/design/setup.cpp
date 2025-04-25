@@ -22,8 +22,6 @@ namespace Yttrium
                                     const String & instr,
                                     const Library &)
             {
-                //std::cerr << "New Instruction <" << instr << ">" << std::endl;
-
                 if(instr=="E/N")
                 {
                     design.add( new ElectroNeutrality() );

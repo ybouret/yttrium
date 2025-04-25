@@ -55,6 +55,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
 
+                //! recursive duplicate
                 explicit XNode(const XNode &node);
 
                 //! create from Syntax::Terminal rule + lexeme

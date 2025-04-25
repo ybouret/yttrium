@@ -11,24 +11,51 @@ namespace Yttrium
     namespace Chemical
     {
 
+        //__________________________________________________________________
+        //
+        //
+        //
+        //! Repertory of pre-compiled Axionms
+        //
+        //
+        //__________________________________________________________________
         class Repertory : public Proxy<const Initial::Axioms::Set>
         {
         public:
-            static const char * const CallSign;
-            typedef Initial::Axioms::Set::ConstIterator ConstIterator;
+            //______________________________________________________________
+            //
+            //
+            // Definitions
+            //
+            //______________________________________________________________
+            static const char * const                   CallSign;       //!< "Repertory"
+            typedef Initial::Axioms::Set::ConstIterator ConstIterator;  //!< alias
 
-            explicit Repertory();
-            virtual ~Repertory() noexcept;
-            Y_OSTREAM_PROTO(Repertory);
-            
+            //______________________________________________________________
+            //
+            //
+            // C++
+            //
+            //______________________________________________________________
+            explicit Repertory();           //!< setup
+            virtual ~Repertory() noexcept;  //!< cleanup
+            Y_OSTREAM_PROTO(Repertory);     //!< display
+
+            //______________________________________________________________
+            //
+            //
+            // Methods
+            //
+            //______________________________________________________________
+
+            //! store axiom from parsed code
             void operator()(const XCode &xcode);
 
+            //! get axiom by name
             template <typename NAME> inline
             const Initial::Axioms & operator[](const NAME &name) const {
                 return query(name);
             }
-
-
 
 
         private:
