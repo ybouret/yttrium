@@ -113,7 +113,13 @@ Y_UTEST(plexus)
     Y_SIZEOF(Initial::Design);
     Y_SIZEOF(Initial::Axioms);
 
-    Initial::Design design("init");
+    for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
+    {
+        const Initial::Axioms &axioms = *it;
+        std::cerr << "using: " << axioms << std::endl;
+        Initial::Design        design(axioms,lib,cls);
+    }
+    //Initial::Design design("init");
 
     //design.add(new Initial::ElectroNeutrality());
     //design.add(new Initial::FixedConcentration(lib["Na^+"],0.001) );
@@ -121,7 +127,7 @@ Y_UTEST(plexus)
     //design.add(new Initial::FixedConcentration(lib["Cl^-"],0.00) );
     //design.add(new Initial::FixedConcentration(lib["H^+"],0.001) );
 
-    design.build(xml,C0,lib);
+    //design.build(xml,C0,lib);
 
     //eqz(xml,C0);
 

@@ -44,10 +44,10 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Axioms &axioms)
             {
 
-                os << axioms.name << ':';
+                os << axioms.name;
                 for(const XNode * node=axioms->head;node;node=node->next)
                 {
-                    os << ' ';
+                    os << ':';
                     switch(node->type)
                     {
                         case XNode::Terminal: os << node->lexeme(); break;

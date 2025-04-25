@@ -6,6 +6,7 @@
 #define Y_Chemical_Initial_Design_Included 1
 
 #include "y/chemical/plexus/initial/axiom.hpp"
+#include "y/chemical/plexus/initial/axioms.hpp"
 #include "y/chemical/library.hpp"
 #include "y/chemical/plexus/clusters.hpp"
 
@@ -67,6 +68,11 @@ namespace Yttrium
 
                 //! cleanup
                 virtual ~Design() noexcept;
+
+                //! setup from pre-compiled axioms
+                explicit Design(const Axioms   &axioms,
+                                const Library  &lib,
+                                const Clusters &cls);
 
                 //______________________________________________________________
                 //

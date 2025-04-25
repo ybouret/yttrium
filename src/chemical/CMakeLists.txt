@@ -16,6 +16,7 @@ chemical/plexus/equalizing
 chemical/plexus/equalizing/two-sided
 chemical/plexus/initial
 chemical/plexus/initial/axiom
+chemical/plexus/initial/design
 )
 
 add_subdirectory(tests)
