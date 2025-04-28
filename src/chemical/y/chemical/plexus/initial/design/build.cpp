@@ -193,7 +193,7 @@ namespace Yttrium
                 std::cerr << "Np=" << Np << std::endl;
                 std::cerr << "Nq=" << Nq << std::endl;
 
-                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
 
 
 
@@ -224,6 +224,7 @@ namespace Yttrium
                     std::cerr << "Qa=" << Qa << std::endl;
                 }
 
+                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
             }
 
 
