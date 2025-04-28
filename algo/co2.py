@@ -68,45 +68,46 @@ def compute_protons(initial_pH, P_CO2, C_Y, C_p):
     return res.root
 
 
-compute_protons(8, 0, 0,0)
-
-# build and array of buffer concentration
-buffer_maxi  = 0.1
-buffer_step  = 0.0001;
-buffer_conc  = np.arange(0, buffer_maxi+buffer_step, buffer_step)
-n = len(buffer_conc)
-
-pH0 = [6, 7, 8, 9]
-m = len(pH0)
-
-# prepare array of pH
-pH_Y = np.zeros([m, n], dtype=float)
-pH_P = np.zeros([m, n], dtype=float)
-
-CO2 = 5.0/100
-# CO2=0.0
-for i in range(n):
-    for j in range(m):
-        pH_Y[j][i] = -np.log10(compute_protons(pH0[j], CO2, buffer_conc[i],0))
-        pH_P[j][i] = -np.log10(compute_protons(pH0[j], CO2, 0,buffer_conc[i]))
-
-
-cmap   = mpl.colormaps['tab10']
-colors = cmap(np.linspace(0, 1, m))
-
-fig, ax = plt.subplots()
-description = []
-for j in range(m):
-    plt.plot(buffer_conc, pH_Y[j],linestyle='-',color=colors[j])
-    description.append(f"pH$_0$={pH0[j]:.1f}/$HEPES$")
+def buffer_deps():
+    #compute_protons(8, 0, 0,0)
     
-for j in range(m):
-    plt.plot(buffer_conc, pH_P[j],linestyle='--',color=colors[j])
-    description.append(f"pH$_0$={pH0[j]:.1f}/$H_3PO_4$")
-
-plt.legend(description,fontsize='xx-small')
-plt.xlabel('[buffer] in mol/L')
-plt.ylabel('pH')
-plt.ylim(4.0,8)
-plt.grid()
-plt.show()
+    # build and array of buffer concentration
+    buffer_maxi  = 0.1
+    buffer_step  = 0.0001;
+    buffer_conc  = np.arange(0, buffer_maxi+buffer_step, buffer_step)
+    n = len(buffer_conc)
+    
+    pH0 = [6, 7, 8, 9]
+    m = len(pH0)
+    
+    # prepare array of pH
+    pH_Y = np.zeros([m, n], dtype=float)
+    pH_P = np.zeros([m, n], dtype=float)
+    
+    CO2 = 5.0/100
+    # CO2=0.0
+    for i in range(n):
+        for j in range(m):
+            pH_Y[j][i] = -np.log10(compute_protons(pH0[j], CO2, buffer_conc[i],0))
+            pH_P[j][i] = -np.log10(compute_protons(pH0[j], CO2, 0,buffer_conc[i]))
+    
+    
+    cmap   = mpl.colormaps['tab10']
+    colors = cmap(np.linspace(0, 1, m))
+    
+    fig, ax = plt.subplots()
+    description = []
+    for j in range(m):
+        plt.plot(buffer_conc, pH_Y[j],linestyle='-',color=colors[j])
+        description.append(f"pH$_0$={pH0[j]:.1f}/$HEPES$")
+        
+    for j in range(m):
+        plt.plot(buffer_conc, pH_P[j],linestyle='--',color=colors[j])
+        description.append(f"pH$_0$={pH0[j]:.1f}/$H_3PO_4$")
+    
+    plt.legend(description,fontsize='xx-small')
+    plt.xlabel('[buffer] in mol/L')
+    plt.ylabel('pH')
+    plt.ylim(4.0,8)
+    plt.grid()
+    plt.show()
