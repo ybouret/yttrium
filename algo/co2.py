@@ -115,7 +115,7 @@ def buffer_deps():
 def co2_deps():
     # variations of co2
     co2_maxi = 5.0/100
-    co2_step = 5.0/1000
+    co2_step = 5.0/10000
     co2_pres = np.arange(0,co2_maxi+co2_step,co2_step)
     n = len(co2_pres)
     
@@ -132,3 +132,27 @@ def co2_deps():
         for j in range(m):
             pH_Y[j][i] = -np.log10(compute_protons(pH0[j], co2_pres[i], C_Y,0))
             pH_P[j][i] = -np.log10(compute_protons(pH0[j], co2_pres[i], 0,C_P))
+            
+    # display all
+    cmap   = mpl.colormaps['tab10']
+    colors = cmap(np.linspace(0, 1, m))
+    
+    fig, ax = plt.subplots()
+    description = []
+   
+    for j in range(m):
+        plt.plot(co2_pres, pH_P[j],linestyle='-',color=colors[j])
+        description.append(f"pH$_0$={pH0[j]:.1f}/$H_3PO_4$")
+    
+    for j in range(m):
+        plt.plot(co2_pres, pH_Y[j],linestyle='--',color=colors[j])
+        description.append(f"pH$_0$={pH0[j]:.1f}/$HEPES$")
+        
+    plt.legend(description,fontsize='small')
+    plt.xlabel('%$CO_2$')
+    plt.ylabel('pH')
+    #plt.ylim(4.0,8)
+    plt.grid()
+    plt.show()
+    
+co2_deps()
