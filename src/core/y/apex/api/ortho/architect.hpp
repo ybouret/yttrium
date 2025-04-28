@@ -25,7 +25,7 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Architect : public Metrics
+            class Architect : public Metrics, public Proxy<const Family>
             {
             public:
                 //______________________________________________________________
@@ -91,6 +91,8 @@ namespace Yttrium
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Architect);
+                Y_PROXY_DECL();
+                
                 void record(const size_t i);
 
                 VCache vcache;

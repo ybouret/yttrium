@@ -6,6 +6,7 @@
 #include "y/mkl/algebra/rank.hpp"
 #include "y/apex/api/simplify.hpp"
 #include "y/apex/api/count-non-zero.hpp"
+#include "y/apex/api/ortho/architect.hpp"
 
 namespace Yttrium
 {
@@ -207,6 +208,22 @@ namespace Yttrium
 
                         pro.display( lib.pad(std::cerr << sp.name,sp) << " : ",b) << std::endl;
                     }
+                }
+
+                {
+                    Matrix<apq> iQ(Q);
+                    {
+                        LightArray<apq> _ = iQ.asArray();
+                        Apex::Simplify::Array(_);
+                    }
+                    std::cerr << "iQ=" << iQ << std::endl;
+
+                    Apex::Ortho::Architect architect(M);
+                    Matrix<apz> Qa;
+                    architect.extract(Qa, iQ, Nq);
+                    std::cerr << "Qa=" << Qa << std::endl;
+                    std::cerr << "arch=" << architect << std::endl;
+
                 }
 
             }

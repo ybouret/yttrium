@@ -10,6 +10,8 @@ namespace Yttrium
         namespace Ortho
         {
 
+            Y_PROXY_IMPL(Architect,family)
+
             Architect:: ~Architect() noexcept
             {
                 
