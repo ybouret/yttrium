@@ -21,6 +21,7 @@ namespace Yttrium
 
             Axioms:: Axioms(const XCode &code) :
             Entity( extractLogoFrom(code) ),
+            Proxy<const XList>(),
             xcode(code)
             {
                 delete Coerce(xcode->branch()).popHead();
@@ -30,6 +31,7 @@ namespace Yttrium
 
             Axioms:: Axioms(const Axioms &_) noexcept :
             Entity(_.name),
+            Proxy<const XList>(),
             xcode(_.xcode)
             {
             }

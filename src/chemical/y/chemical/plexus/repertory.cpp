@@ -11,7 +11,7 @@ namespace Yttrium
 
         const char * const Repertory:: CallSign = "Repertory";
 
-        Repertory:: Repertory()
+        Repertory:: Repertory() : Proxy<const Initial::Axioms::Set>(), my()
         {
         }
 

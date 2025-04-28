@@ -165,6 +165,7 @@ namespace Yttrium
 
 
             XNode:: XNode(const XNode &root) :
+            XNodeObject(), Counted(), Serializable(), GraphViz::Vizible(),
             rule(root.rule),
             type(root.type),
             sire(0),

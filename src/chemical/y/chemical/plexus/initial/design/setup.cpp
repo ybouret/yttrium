@@ -63,7 +63,9 @@ namespace Yttrium
             Design:: Design(const Axioms   &axioms,
                             const Library  &lib,
                             const Clusters &cls) :
-            Entity(axioms.name)
+            Entity(axioms.name),
+            BaseType(),
+            my()
             {
                 for(const XNode *node=axioms->head;node;node=node->next)
                 {
