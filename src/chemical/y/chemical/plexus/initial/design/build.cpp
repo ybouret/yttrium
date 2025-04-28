@@ -218,11 +218,10 @@ namespace Yttrium
                     }
                     std::cerr << "iQ=" << iQ << std::endl;
 
-                    Apex::Ortho::Architect architect(M);
+                    Apex::Ortho::Architect arch(M);
                     Matrix<apz> Qa;
-                    architect.transposeBasis(Qa, iQ, Nq);
+                    arch.transposeBasis(Qa, iQ, Nq);
                     std::cerr << "Qa=" << Qa << std::endl;
-                    std::cerr << "arch=" << architect << std::endl;
                 }
 
             }

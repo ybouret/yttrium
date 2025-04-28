@@ -5,7 +5,6 @@
 #define Y_Apex_Ortho_Architect_Included 1
 
 #include "y/apex/api/ortho/family.hpp"
-#include "y/apex/api/univocal.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
 #include "y/container/matrix.hpp"
 #include "y/type/utils.hpp"
@@ -19,25 +18,6 @@ namespace Yttrium
         namespace Ortho
         {
 
-            struct ArchitectIntegerTo_ {
-
-            };
-
-            template <typename T> struct ArchitectIntegerTo {
-                static inline T Get(const apz &z) {
-                    return z.cast<T>("basis coefficient");
-                }
-            };
-
-            template <> struct ArchitectIntegerTo<apz>
-            {
-                static inline const apz & Get(const apz &z) noexcept { return z; }
-            };
-
-            template <> struct ArchitectIntegerTo<apq>
-            {
-                static inline apq Get(const apz &z) noexcept { return apq(z); }
-            };
 
             //__________________________________________________________________
             //
@@ -58,11 +38,6 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef Small::SoloHeavyList<size_t> List; //!< alias
                 typedef List::NodeType               Node; //!< alias
-
-
-
-
-
 
 
                 //______________________________________________________________
@@ -139,7 +114,6 @@ namespace Yttrium
                                     const SOURCE &source,
                                     const size_t  maxRank)
                 {
-                    typedef ArchitectIntegerTo< typename TARGET::Type > Transform;
                     target.release();
                     Matrix<apz> B; basis(B,source,maxRank);
                     target.make(B.cols,B.rows);
@@ -147,10 +121,9 @@ namespace Yttrium
                     for(size_t j=B.cols;j>0;--j)
                     {
                         for(size_t i=B.rows;i>0;--i)
-                            target[j][i] = Transform::Get(B[i][j]);
-                        Univocal::Make(target[j]);
+                            target[j][i] = B[i][j];
                     }
-                    
+
                 }
 
 
