@@ -87,7 +87,7 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Prospect);
             };
 
-           
+
 
 
             void Design:: build(XMLog          &xml,
@@ -201,9 +201,10 @@ namespace Yttrium
                 std::cerr << "Np=" << Np << std::endl;
                 std::cerr << "Nq=" << Nq << std::endl;
 
+                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
-
+#if 0
 
                 {
                     Prospect::List pros;
@@ -232,10 +233,9 @@ namespace Yttrium
                     std::cerr << "Qa=" << Qa << std::endl;
 
                 }
+#endif
 
-                lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
             }
-
 
         }
 

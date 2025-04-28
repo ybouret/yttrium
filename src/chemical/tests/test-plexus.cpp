@@ -14,24 +14,8 @@
 #include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
 #include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
 #include "y/chemical/plexus/initial/design.hpp"
-#include "y/chemical/plexus/initial/axioms.hpp"
 
 
-namespace Yttrium
-{
-    namespace Chemical
-    {
-
-        namespace Initial
-        {
-            
-           
-
-
-        }
-
-    }
-}
 
 
 using namespace Yttrium;
