@@ -118,6 +118,7 @@ Y_UTEST(plexus)
         const Initial::Axioms &axioms = *it;
         std::cerr << "using: " << axioms << std::endl;
         Initial::Design        design(axioms,lib,cls);
+        design.build(xml,C0,lib);
     }
     //Initial::Design design("init");
 

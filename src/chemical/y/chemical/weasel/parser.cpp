@@ -275,31 +275,7 @@ namespace Yttrium
         }
 
 
-#if 0
-        static inline void cleanupPlayer(XNode * const node) noexcept
-        {
-            assert(0!=node);
-            assert(Initial::Player::First==node->name() || Initial::Player::Extra==node->name());
-            XList &list = node->branch(); assert(list.size>0);
-            assert(list.tail->defines<Formula>());
-            cleanupFormula(list.tail);
-        }
 
-        static inline void cleanupAxiom(XNode * const node) noexcept
-        {
-            assert(0!=node);
-            assert(node->defines<Initial::Axiom>());
-            XList & list = node->branch(); assert(list.size>0);
-            XNode * curr = list.tail;      assert(0!=curr); assert(Weasel::StringID == curr->name() );
-            cleanupString(curr);
-            for(curr=curr->prev;curr;curr=curr->prev)
-            {
-                assert(Initial::Player::First==curr->name() || Initial::Player::Extra==curr->name());
-                cleanupPlayer(curr);
-            }
-        }
-
-#endif
 
         static inline void cleanupFixedConcentration(XNode * const node)
         {
@@ -421,8 +397,8 @@ namespace Yttrium
 
             }
 
-            std::cerr << "Rendering..." << std::endl;
-            GraphViz::Vizible::DotToPng("ast.dot", *ast);
+            //std::cerr << "Rendering..." << std::endl;  GraphViz::Vizible::DotToPng("ast.dot", *ast);
+
 
             return ast.yield();
         }
