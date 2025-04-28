@@ -17,19 +17,21 @@ namespace Yttrium
 
         const char * const Clusters:: CallSign = "Chemical::Clusters";
 
-        Clusters:: Clusters(XMLog      &xml,
-                            Equilibria &eqs,
-                            const xreal_t t0) :
+        Clusters:: Clusters(XMLog      &   xml,
+                            Equilibria &   eqs,
+                            const Library &lib,
+                            const xreal_t  t0) :
         my(),
         tlK(),
         K(tlK),
         primary(eqs->size()),
         species(),
+        witness(),
         maxOrder(0)
         {
             assert(!eqs.latched);
             Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << primary);
-
+            if(!lib.latched) throw Specific::Exception(CallSign, "%s must be latched", Library::CallSign);
             {
                 ClusterBuilder cls(xml,eqs);
                 unsigned       idx = 1;

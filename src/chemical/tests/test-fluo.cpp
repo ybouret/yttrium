@@ -57,7 +57,7 @@ Y_UTEST(fluo)
 
     bool     verbose = true;
     XMLog    xml(verbose);
-    Clusters cls(xml,eqs,0.0);
+    Clusters cls(xml,eqs,lib,0.0);
     cls.graphViz("fluo");
 
     const size_t M  = lib->size();

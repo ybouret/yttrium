@@ -71,7 +71,7 @@ Y_UTEST(plexus)
 
     bool           verbose = Environment::Flag("VERBOSE");
     XMLog          xml(verbose);
-    Clusters       cls(xml,eqs,0.0);
+    Clusters       cls(xml,eqs,lib,0.0);
 
 
     

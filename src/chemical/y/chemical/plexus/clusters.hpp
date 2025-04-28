@@ -49,9 +49,10 @@ namespace Yttrium
              \param eqs primary equilibria
              \param t0  time to evaluate constants
              */
-            explicit Clusters(XMLog &       xml,
-                              Equilibria &  eqs,
-                              const xreal_t t0);
+            explicit Clusters(XMLog &         xml,
+                              Equilibria &    eqs,
+                              const Library & lib,
+                              const xreal_t   t0);
 
             //! cleanup
             virtual ~Clusters() noexcept;
@@ -88,6 +89,7 @@ namespace Yttrium
             const XReadable &K;        //!< last computed constant
             const size_t     primary;  //!< primary equilibria
             const SList      species;  //!< all REACTIVE species
+            const SList      witness;  //!< all SPECTATOR species
             const size_t     maxOrder; //!< max order size thru clusters
         };
 
