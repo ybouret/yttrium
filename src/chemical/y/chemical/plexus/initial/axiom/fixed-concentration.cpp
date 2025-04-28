@@ -10,7 +10,7 @@ namespace Yttrium
 
             FixedConcentration:: FixedConcentration(const Species &sp,
                                                     const xreal_t  C0) noexcept :
-            Axiom(C0),
+            Axiom(C0,UUID),
             species(sp)
             {
             }

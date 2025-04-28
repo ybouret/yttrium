@@ -24,7 +24,10 @@ namespace Yttrium
             //
             //
             //__________________________________________________________________
-            class Design : public Quantized, public Entity, public Proxy< ListOf<Axiom> >
+            class Design :
+            public Quantized,
+            public Entity,
+            public Proxy< ListOf<Axiom> >
             {
             public:
                 //______________________________________________________________
@@ -87,15 +90,16 @@ namespace Yttrium
                          const String &expr,
                          const xreal_t Ctot);
                 
+                bool foundZeroConcentration(XMLog &xml, const Clusters &cls);
 
                 //! build
                 void build(XMLog          &xml,
                            XWritable      &C0,
-                           const Library  &lib) const;
+                           const Library  &lib,
+                           const Clusters &cls);
 
-
-
-
+                
+                bool defines(const Species &sp) const noexcept;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Design);

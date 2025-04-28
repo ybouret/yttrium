@@ -119,7 +119,10 @@ Y_UTEST(plexus)
         const Initial::Axioms &axioms = *it;
         std::cerr << "using: " << axioms << std::endl;
         Initial::Design        design(axioms,lib,cls);
-        design.build(xml,C0,lib);
+        design.build(xml,C0,lib,cls);
+        eqz(xml,C0);
+        cs(xml,C0,&cb);
+        std::cerr << "eqs=" << eqs << std::endl;
     }
     //Initial::Design design("init");
 
@@ -131,7 +134,7 @@ Y_UTEST(plexus)
 
     //design.build(xml,C0,lib);
 
-    //eqz(xml,C0);
+    //
 
 
 

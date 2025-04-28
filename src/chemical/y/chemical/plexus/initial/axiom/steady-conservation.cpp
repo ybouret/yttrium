@@ -10,7 +10,7 @@ namespace Yttrium
 
             SteadyConservation:: SteadyConservation(const Conservation::Law &_law,
                                                     const xreal_t            ctot) noexcept :
-            Axiom(ctot),
+            Axiom(ctot,UUID),
             law(_law)
             {
 

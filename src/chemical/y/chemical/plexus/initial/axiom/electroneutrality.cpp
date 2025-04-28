@@ -13,7 +13,7 @@ namespace Yttrium
             }
 
             ElectroNeutrality:: ElectroNeutrality() noexcept :
-            Axiom(0)
+            Axiom(0,UUID)
             {
             }
 

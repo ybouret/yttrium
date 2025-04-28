@@ -63,6 +63,8 @@ namespace Yttrium
             //! set to unit denominator
             static Natural Array(Writable<Rational> &arr);
 
+            //! set to irreductible
+            static Natural Array(Writable<Integer> &arr);
 
         };
 

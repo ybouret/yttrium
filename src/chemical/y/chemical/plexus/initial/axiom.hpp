@@ -31,8 +31,8 @@ namespace Yttrium
                 // C++
                 //
                 //______________________________________________________________
-                explicit Axiom(const xreal_t value) noexcept; //!< initialize with prescribed value
-                explicit Axiom(const Axiom &)       noexcept; //!< duplicate
+                explicit Axiom(const xreal_t value, const uint32_t t) noexcept; //!< initialize with prescribed value
+                explicit Axiom(const Axiom &)                         noexcept; //!< duplicate
 
             public:
                 virtual ~Axiom() noexcept;                    //!< cleanup
@@ -47,6 +47,15 @@ namespace Yttrium
                 virtual Axiom *clone()                   const          = 0; //!< clone
                 virtual int    weight(const Species &sp) const noexcept = 0; //!< coefficient for given species
 
+
+                //______________________________________________________________
+                //
+                //
+                //  Methods
+                //
+                //______________________________________________________________
+                bool contains(const Species &sp) const noexcept;;
+
                 //______________________________________________________________
                 //
                 //
@@ -54,6 +63,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 const xreal_t  amount; //!< prescribed value
+                const uint32_t uuid;   //!< UUID
                 Axiom *        next;   //!< for list
                 Axiom *        prev;   //!< for list
 

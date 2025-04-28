@@ -87,9 +87,13 @@ namespace Yttrium
                 Y_DISABLE_COPY_AND_ASSIGN(Prospect);
             };
 
+           
+
+
             void Design:: build(XMLog          &xml,
                                 XWritable      &C0,
-                                const Library  &lib) const
+                                const Library  &lib,
+                                const Clusters &cls)
             {
 
                 //--------------------------------------------------------------
@@ -101,7 +105,7 @@ namespace Yttrium
                 //--------------------------------------------------------------
                 lib.ldz(C0);
                 const size_t M  = lib->size();
-                const size_t Np = my.size;
+                size_t       Np = my.size;
                 Y_XML_SECTION_OPT(xml,
                                   CallSign,
                                   "species=" << M
@@ -124,6 +128,9 @@ namespace Yttrium
                 {
                     throw Specific::Exception(CallSign, "overdetermined design");
                 }
+
+                while(Np<M && foundZeroConcentration(xml,cls)) ++Np;
+
 
                 //--------------------------------------------------------------
                 //
@@ -222,6 +229,7 @@ namespace Yttrium
                     Matrix<apz> Qa;
                     arch.transposeBasis(Qa, iQ, Nq);
                     std::cerr << "Qa=" << Qa << std::endl;
+
                 }
 
                 lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;

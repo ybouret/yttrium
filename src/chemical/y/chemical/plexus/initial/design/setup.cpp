@@ -17,6 +17,19 @@ namespace Yttrium
         namespace Initial
         {
 
+            bool Design:: foundZeroConcentration(XMLog &xml,const Clusters &cls)
+            {
+                for(const SNode *sn=cls.witness.head;sn;sn=sn->next)
+                {
+                    const Species &sp = **sn; if(defines(sp)) continue;
+                    add( new FixedConcentration(sp,0) );
+                    Y_XML_COMMENT(xml, "setting [" << sp << "]=0");
+                    assert(defines(sp));
+                    return true;
+                }
+                return false;
+            }
+
             static inline
             void processInstruction(Design &       design,
                                     const String & instr,
@@ -60,6 +73,18 @@ namespace Yttrium
                 design.add( new SteadyConservation(*law,cc) );
             }
 
+
+            bool Design:: defines(const Species &sp) const noexcept
+            {
+                for(const Axiom *a=my.head;a;a=a->next)
+                {
+                    if( FixedConcentration::UUID != a->uuid) continue;
+                    if(a->contains(sp)) return true;
+                }
+                return false;
+            }
+
+
             Design:: Design(const Axioms   &axioms,
                             const Library  &lib,
                             const Clusters &cls) :
@@ -67,6 +92,7 @@ namespace Yttrium
             BaseType(),
             my()
             {
+                // compile
                 for(const XNode *node=axioms->head;node;node=node->next)
                 {
                     const String &uuid = node->name();
@@ -93,9 +119,10 @@ namespace Yttrium
                         continue;
                     }
 
-
                     throw Specific::Exception(CallSign,"unhandled Axiom '%s'", uuid.c_str());
                 }
+
+
             }
         }
     }
