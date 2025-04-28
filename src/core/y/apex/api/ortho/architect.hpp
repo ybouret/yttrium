@@ -5,7 +5,9 @@
 #define Y_Apex_Ortho_Architect_Included 1
 
 #include "y/apex/api/ortho/family.hpp"
+#include "y/apex/api/univocal.hpp"
 #include "y/data/small/heavy/list/solo.hpp"
+#include "y/container/matrix.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
 
@@ -16,6 +18,26 @@ namespace Yttrium
 
         namespace Ortho
         {
+
+            struct ArchitectIntegerTo_ {
+
+            };
+
+            template <typename T> struct ArchitectIntegerTo {
+                static inline T Get(const apz &z) {
+                    return z.cast<T>("basis coefficient");
+                }
+            };
+
+            template <> struct ArchitectIntegerTo<apz>
+            {
+                static inline const apz & Get(const apz &z) noexcept { return z; }
+            };
+
+            template <> struct ArchitectIntegerTo<apq>
+            {
+                static inline apq Get(const apz &z) noexcept { return apq(z); }
+            };
 
             //__________________________________________________________________
             //
@@ -36,6 +58,12 @@ namespace Yttrium
                 //______________________________________________________________
                 typedef Small::SoloHeavyList<size_t> List; //!< alias
                 typedef List::NodeType               Node; //!< alias
+
+
+
+
+
+
 
                 //______________________________________________________________
                 //
@@ -78,13 +106,57 @@ namespace Yttrium
                              const SOURCE &source,
                              const size_t  maxRank)
                 {
+                    target.release();
                     const List &l = extract(source,maxRank);
-                    if(l.size<=0) { target.release(); return; }
+                    if(l.size<=0) return;
                     target.make(l.size,dimensions);
                     size_t i=1;
                     for(const Node *node=l.head;node;node=node->next,++i)
                         target[i].ld( source[ **node ] );
                 }
+
+                //! format target with family vectors
+                template <typename TARGET, typename SOURCE> inline
+                void basis(TARGET &      target,
+                           const SOURCE &source,
+                           const size_t  maxRank)
+                {
+                    target.release();
+                    const List &l = extract(source,maxRank);
+                    if(l.size<=0) return;
+                    target.make(l.size,dimensions);
+                    size_t i=1;
+                    for(const Vector *v=family->head;v;v=v->next,++i)
+                    {
+                        target[i].ld( *v );
+                    }
+                }
+
+
+
+                template <typename TARGET, typename SOURCE> inline
+                void transposeBasis(TARGET       &target,
+                                    const SOURCE &source,
+                                    const size_t  maxRank)
+                {
+                    typedef ArchitectIntegerTo< typename TARGET::Type > Transform;
+                    target.release();
+                    Matrix<apz> B; basis(B,source,maxRank);
+                    target.make(B.cols,B.rows);
+                    for(size_t i=B.rows;i>0;--i)
+                    {
+                        for(size_t j=B.cols;j>0;--j)
+                        {
+                            target[j][i] = Transform::Get(B[i][j]);
+                        }
+                    }
+
+                    for(size_t i=target.rows;i>0;--i)
+                    {
+                        Univocal::Make(target[i]);
+                    }
+                }
+
 
                 //! clear all
                 void clear() noexcept;
@@ -99,6 +171,7 @@ namespace Yttrium
                 Family family;
                 List   ivList;
             };
+
 
 
         }

@@ -220,10 +220,9 @@ namespace Yttrium
 
                     Apex::Ortho::Architect architect(M);
                     Matrix<apz> Qa;
-                    architect.extract(Qa, iQ, Nq);
+                    architect.transposeBasis(Qa, iQ, Nq);
                     std::cerr << "Qa=" << Qa << std::endl;
                     std::cerr << "arch=" << architect << std::endl;
-
                 }
 
             }
