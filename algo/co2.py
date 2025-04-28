@@ -111,3 +111,24 @@ def buffer_deps():
     plt.ylim(4.0,8)
     plt.grid()
     plt.show()
+    
+def co2_deps():
+    # variations of co2
+    co2_maxi = 5.0/100
+    co2_step = 5.0/1000
+    co2_pres = np.arange(0,co2_maxi+co2_step,co2_step)
+    n = len(co2_pres)
+    
+    # initial pHs to tests
+    pH0 = [6, 7, 8, 9]
+    m = len(pH0)
+    
+    # prepare arrays of pH
+    pH_Y = np.zeros([m, n], dtype=float)
+    pH_P = np.zeros([m, n], dtype=float)
+    C_Y  = 15/10000
+    C_P  = 15/10000
+    for i in range(n):
+        for j in range(m):
+            pH_Y[j][i] = -np.log10(compute_protons(pH0[j], co2_pres[i], C_Y,0))
+            pH_P[j][i] = -np.log10(compute_protons(pH0[j], co2_pres[i], 0,C_P))
