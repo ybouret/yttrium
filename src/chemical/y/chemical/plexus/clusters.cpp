@@ -53,12 +53,24 @@ namespace Yttrium
             }
             MergeSort::Call( Coerce(species), MetaList<SList>::Compare );
 
+            // collect witness
+            for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+            {
+                const Species &sp = **it; if(species.has(sp)) continue;
+                Coerce(witness) << sp;
+            }
+            MergeSort::Call( Coerce(witness), MetaList<SList>::Compare );
+
+
 
             // summary
-            Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << primary);
-            Y_XML_COMMENT(xml, "|species| = " << species.size);
-            Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
-
+            {
+                Y_XML_SECTION(xml, "Summary");
+                Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << primary);
+                Y_XML_COMMENT(xml, "|species| = " << species.size);
+                Y_XML_COMMENT(xml, "|witness| = " << witness.size);
+                Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
+            }
             // prepare constants
             tlK.adjust(eqs->size(),0);
             (void) (*this)(t0);

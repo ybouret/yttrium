@@ -69,6 +69,7 @@ Y_UTEST(plexus)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
+    lib.latch();
     bool           verbose = Environment::Flag("VERBOSE");
     XMLog          xml(verbose);
     Clusters       cls(xml,eqs,lib,0.0);

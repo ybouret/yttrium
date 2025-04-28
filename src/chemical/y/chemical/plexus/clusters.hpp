@@ -47,6 +47,7 @@ namespace Yttrium
             /**
              \param xml for verbosity
              \param eqs primary equilibria
+             \param lib latched library holding all species
              \param t0  time to evaluate constants
              */
             explicit Clusters(XMLog &         xml,
