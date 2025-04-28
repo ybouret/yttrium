@@ -143,18 +143,14 @@ namespace Yttrium
                     target.release();
                     Matrix<apz> B; basis(B,source,maxRank);
                     target.make(B.cols,B.rows);
-                    for(size_t i=B.rows;i>0;--i)
-                    {
-                        for(size_t j=B.cols;j>0;--j)
-                        {
-                            target[j][i] = Transform::Get(B[i][j]);
-                        }
-                    }
 
-                    for(size_t i=target.rows;i>0;--i)
+                    for(size_t j=B.cols;j>0;--j)
                     {
-                        Univocal::Make(target[i]);
+                        for(size_t i=B.rows;i>0;--i)
+                            target[j][i] = Transform::Get(B[i][j]);
+                        Univocal::Make(target[j]);
                     }
+                    
                 }
 
 
