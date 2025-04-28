@@ -23,15 +23,19 @@ namespace Yttrium
 
             }
 
-            void Design:: add(Axiom * const axiom) noexcept
+            void Design:: add(Axiom * const axiom)
             {
                 assert(0!=axiom);
                 assert(!my.owns(axiom));
+                if(latched) {
+                    delete axiom;
+                    throw Specific::Exception(CallSign,"cannot add while latched");
+                }
                 my.pushTail(axiom);
             }
 
-            
-          
+
+
         }
     }
 }
@@ -54,7 +58,7 @@ namespace Yttrium
                 Lingo::Matching                 m(expr,0);
                 const Conservation::Law * const law = clusters.preserving(m);
                 if(0==law) throw Specific::Exception(CallSign, "no conservation matching '%s' in %s", expr.c_str(), Clusters::CallSign);
-                my.pushTail( new SteadyConservation(*law,Ctot) );
+                add( new SteadyConservation(*law,Ctot) );
             }
 
         }

@@ -54,7 +54,7 @@ namespace Yttrium
                 //  Methods
                 //
                 //______________________________________________________________
-                bool contains(const Species &sp) const noexcept;;
+                bool contains(const Species &sp) const noexcept; //!< weight != 0
 
                 //______________________________________________________________
                 //

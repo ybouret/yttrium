@@ -95,6 +95,7 @@ namespace Yttrium
                                 const Library  &lib,
                                 const Clusters &cls)
             {
+                if(!latched) throw Specific::Exception(CallSign,"building only if latched!");
 
                 //--------------------------------------------------------------
                 //

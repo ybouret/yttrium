@@ -23,7 +23,9 @@ namespace Yttrium
             class ElectroNeutrality : public Axiom
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('E','/','/','N');
+
+                static const uint32_t UUID = Y_FOURCC('E','/','/','N'); //!< UUID
+
                 explicit ElectroNeutrality() noexcept; //!< setup
                 virtual ~ElectroNeutrality() noexcept; //!< cleanup
 

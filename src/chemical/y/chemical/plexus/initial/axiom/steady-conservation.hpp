@@ -25,7 +25,7 @@ namespace Yttrium
             class SteadyConservation : public Axiom
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('C','L','A','W');
+                static const uint32_t UUID = Y_FOURCC('C','L','A','W'); //!< UUID
 
                 //! setup
                 explicit SteadyConservation(const Conservation::Law &_law,

@@ -19,10 +19,11 @@ namespace Yttrium
 
             bool Design:: foundZeroConcentration(XMLog &xml,const Clusters &cls)
             {
+                assert(latched);
                 for(const SNode *sn=cls.witness.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn; if(defines(sp)) continue;
-                    add( new FixedConcentration(sp,0) );
+                    my.pushTail( new FixedConcentration(sp,0) );
                     Y_XML_COMMENT(xml, "setting [" << sp << "]=0");
                     assert(defines(sp));
                     return true;
@@ -90,6 +91,7 @@ namespace Yttrium
                             const Clusters &cls) :
             Entity(axioms.name),
             BaseType(),
+            Latchable(),
             my()
             {
                 // compile
@@ -122,6 +124,8 @@ namespace Yttrium
                     throw Specific::Exception(CallSign,"unhandled Axiom '%s'", uuid.c_str());
                 }
 
+                // latch
+                latch();
 
             }
         }

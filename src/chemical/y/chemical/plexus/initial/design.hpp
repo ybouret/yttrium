@@ -27,7 +27,8 @@ namespace Yttrium
             class Design :
             public Quantized,
             public Entity,
-            public Proxy< ListOf<Axiom> >
+            public Proxy< ListOf<Axiom> >,
+            public Latchable
             {
             public:
                 //______________________________________________________________
@@ -43,7 +44,7 @@ namespace Yttrium
                 static const char * const          LogoExpr;              //!< "[.][:word:]+"
                 static const char * const          _FixedConcentration;   //!< "FixedConcentration"
                 static const char * const          _SteadyConservation;   //!< "SteadyConservation"
-                
+
                 //______________________________________________________________
                 //
                 //
@@ -56,6 +57,7 @@ namespace Yttrium
                 explicit Design(const UUID &uuid) :
                 Entity( new String(uuid) ),
                 BaseType(),
+                Latchable(),
                 my()
                 {
                 }
@@ -65,6 +67,7 @@ namespace Yttrium
                 explicit Design(const UUID &uuid, const Design &root) :
                 Entity( new String(uuid) ),
                 BaseType(),
+                Latchable(),
                 my(root.my)
                 {
                 }
@@ -83,14 +86,12 @@ namespace Yttrium
                 // Methods
                 //
                 //______________________________________________________________
-                void add(Axiom * const) noexcept; //!< add a new AXiom
+                void add(Axiom * const); //!< add a new Axiom, mut be unlatched
 
                 //! add a new species conservation
                 void add(Clusters     &clusters,
                          const String &expr,
                          const xreal_t Ctot);
-                
-                bool foundZeroConcentration(XMLog &xml, const Clusters &cls);
 
                 //! build
                 void build(XMLog          &xml,
@@ -98,16 +99,21 @@ namespace Yttrium
                            const Library  &lib,
                            const Clusters &cls);
 
-                
+                //! check if fixed concentration for species
                 bool defines(const Species &sp) const noexcept;
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Design);
                 Y_PROXY_DECL();
                 ListOfCloneable<Axiom> my;
+
+                //! check is a species it not defined, set it to zero
+                bool foundZeroConcentration(XMLog &xml, const Clusters &cls);
             };
 
-          
+
 
         }
 

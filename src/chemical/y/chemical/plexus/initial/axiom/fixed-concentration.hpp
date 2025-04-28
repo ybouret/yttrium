@@ -23,7 +23,7 @@ namespace Yttrium
             class FixedConcentration : public Axiom
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('C','O','N','C');
+                static const uint32_t UUID = Y_FOURCC('C','O','N','C'); //!< UUID
                 
                 //! setup
                 explicit FixedConcentration(const Species &sp,
