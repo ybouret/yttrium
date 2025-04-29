@@ -20,6 +20,8 @@ namespace Yttrium
             bool Design:: foundZeroConcentration(XMLog &xml,const Clusters &cls)
             {
                 assert(latched);
+
+                // start with spectator species
                 for(const SNode *sn=cls.witness.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn; if(defines(sp)) continue;
@@ -28,6 +30,8 @@ namespace Yttrium
                     assert(defines(sp));
                     return true;
                 }
+
+                // no possible more 
                 return false;
             }
 
