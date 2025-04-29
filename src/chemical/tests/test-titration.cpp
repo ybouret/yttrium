@@ -1,6 +1,5 @@
 
-#include "y/chemical/plexus/reactors.hpp"
-#include "y/chemical/plexus/equalizer.hpp"
+#include "y/chemical/plexus.hpp"
 #include "y/chemical/plexus/initial/design.hpp"
 
 #include "y/chemical/weasel.hpp"
@@ -50,21 +49,20 @@ Y_UTEST(titration)
 
     bool           verbose = Environment::Flag("VERBOSE");
     XMLog          xml(verbose);
-    Clusters       cls(xml,eqs,lib,0.0);
-    Equalizer      eqz(cls);
-    Reactors       rxn(cls);
+    Plexus         plexus(xml,lib,eqs,0.0);
     Display            display;
     Reactor::Proc cb = display;
 
     Vector<xreal_t> Ca(lib->size(),0);
+#if 0
     Initial::Design DataA(rep["Sa"],lib,cls);
     DataA.build(xml,Ca,lib,cls);
     eqz(xml,Ca);
     rxn(xml,Ca,&cb);
     lib.show(std::cerr << "Ca=", "\t[", Ca, "]", xreal_t::ToString ) << std::endl;
+#endif
 
-
-
+    Y_SIZEOF(Plexus);
 
 }
 Y_UDONE()

@@ -32,6 +32,7 @@ namespace Yttrium
             assert(!eqs.latched);
             Y_XML_SECTION_OPT(xml, "Clusters", "|eqs|=" << primary);
             if(!lib.latched) throw Specific::Exception(CallSign, "%s must be latched", Library::CallSign);
+
             {
                 ClusterBuilder cls(xml,eqs);
                 unsigned       idx = 1;
