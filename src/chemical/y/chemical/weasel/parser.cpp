@@ -331,6 +331,15 @@ namespace Yttrium
                     continue;
                 }
 
+#if 0
+                if(Initial::Design::Logo == name )
+                {
+                    std::cerr << "? Need to implement cleanup for " << name << std::endl;
+                    std::cerr << "|_" << curr->lexeme() << std::endl;
+                    continue;
+                }
+#endif
+
                 throw Specific::Exception(Weasel::CallSign,"cleanupDesign unexpected '%s'", name.c_str());
 
             }
@@ -377,14 +386,11 @@ namespace Yttrium
                     }
 
 
-#if 1
                     if( node->defines<Initial::Design>() )
                     {
-                        //std::cerr << "Processing " << node->name() << std::endl;
                         cleanupDesign(& *node);
                         goto PUSH;
                     }
-#endif
 
                     //std::cerr << "Unprocessed " << node->name() << std::endl;
 
