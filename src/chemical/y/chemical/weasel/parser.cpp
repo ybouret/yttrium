@@ -130,7 +130,8 @@ namespace Yttrium
             // Create AXIOM
             //
             //------------------------------------------------------------------
-            Compound & AXIOM = grp("AXIOM");
+            const Rule & LOGO  = term(Initial::Design::Logo,Initial::Design::LogoExpr);
+            Compound   & AXIOM = grp("AXIOM");
             {
                 const Rule &CONC                = grp("C") << '[' << FORMULA << ']';
                 const Rule &FIXED_CONCENTRATION = agg(Initial::Design::_FixedConcentration) << CONC   << SPACE << '=' << SPACE << STRING;
@@ -144,7 +145,7 @@ namespace Yttrium
             //------------------------------------------------------------------
             {
                 Agg &DESIGN = agg(Initial::Design::CallSign);
-                DESIGN << term(Initial::Design::Logo,Initial::Design::LogoExpr);
+                DESIGN << LOGO;
                 DESIGN << SPACE << '=';
                 {
                     const Rule &EmptyDesign = grp("EmptyDesign") << '{' << SPACE << '}';

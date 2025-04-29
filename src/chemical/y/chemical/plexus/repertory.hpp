@@ -51,7 +51,7 @@ namespace Yttrium
             //! store axiom from parsed code
             void operator()(const XCode &xcode);
 
-            //! get axiom by name
+            //! get axioms by name
             template <typename NAME> inline
             const Initial::Axioms & operator[](const NAME &name) const {
                 return query(name);

@@ -5,6 +5,7 @@
 
 #include "y/chemical/plexus/equalizer.hpp"
 #include "y/chemical/plexus/reactors.hpp"
+#include "y/chemical/plexus/initial/design.hpp"
 
 namespace Yttrium
 {
@@ -22,6 +23,9 @@ namespace Yttrium
                             const xreal_t   t0);
 
             virtual ~Plexus() noexcept;
+
+            
+
 
             const Library    & lib;
             const Equilibria & eqs;

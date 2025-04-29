@@ -99,7 +99,7 @@ namespace Yttrium
                            const Library  &lib,
                            const Clusters &cls);
 
-                //! check if fixed concentration for species
+                //! check if fixed concentration is set for species
                 bool defines(const Species &sp) const noexcept;
 
 
