@@ -111,6 +111,8 @@ namespace Yttrium
 
                 //! check is a species it not defined, set it to zero
                 bool foundZeroConcentration(XMLog &xml, const Clusters &cls);
+
+                bool foundZeroConcentrationIn(XMLog &, const SList &);
             };
 
 

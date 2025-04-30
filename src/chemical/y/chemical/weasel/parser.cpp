@@ -149,7 +149,7 @@ namespace Yttrium
                 DESIGN << SPACE << '=';
                 {
                     const Rule &EmptyDesign = grp("EmptyDesign") << '{' << SPACE << '}';
-                    const Rule &HeavyDesign = grp("HeavyDesign") << '{' << AXIOM << extra(',',AXIOM) <<  SPACE << '}';
+                    const Rule &HeavyDesign = grp("HeavyDesign") << '{' << AXIOM << SPACE << extra(',',AXIOM) <<  SPACE << '}';
                     DESIGN << SPACE << pick(EmptyDesign,HeavyDesign);
                 }
                 STATEMENT << DESIGN;

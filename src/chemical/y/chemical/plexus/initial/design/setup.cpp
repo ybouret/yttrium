@@ -17,12 +17,10 @@ namespace Yttrium
         namespace Initial
         {
 
-            bool Design:: foundZeroConcentration(XMLog &xml,const Clusters &cls)
+            bool Design:: foundZeroConcentrationIn(XMLog &      xml,
+                                                   const SList &list)
             {
-                assert(latched);
-
-                // start with spectator species
-                for(const SNode *sn=cls.witness.head;sn;sn=sn->next)
+                for(const SNode *sn=list.head;sn;sn=sn->next)
                 {
                     const Species &sp = **sn; if(defines(sp)) continue;
                     my.pushTail( new FixedConcentration(sp,0) );
@@ -30,8 +28,22 @@ namespace Yttrium
                     assert(defines(sp));
                     return true;
                 }
+                return false;
+            }
 
-                // no possible more 
+
+            bool Design:: foundZeroConcentration(XMLog          &xml,
+                                                 const Clusters &cls)
+            {
+                assert(latched);
+
+                if( foundZeroConcentrationIn(xml, cls.witness.charged) )
+                    return true;
+
+
+                if( foundZeroConcentrationIn(xml, cls.conserved.charged) )
+                    return true;
+                
                 return false;
             }
 

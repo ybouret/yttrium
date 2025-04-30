@@ -17,6 +17,27 @@ namespace Yttrium
 
         typedef Vector<xreal_t,MemoryModel> XVector; //!< alias
 
+        class Listing
+        {
+        public:
+            explicit Listing() noexcept : neutral(), charged() {}
+            virtual ~Listing() noexcept {}
+
+            void   sort()
+            {
+                MergeSort::Call( Coerce(neutral), MetaList<SList>::Compare);
+                MergeSort::Call( Coerce(charged), MetaList<SList>::Compare);
+            }
+            size_t size() const noexcept { return neutral.size+charged.size; }
+
+            const SList neutral;
+            const SList charged;
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Listing);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -87,11 +108,13 @@ namespace Yttrium
             XVector         tlK;
 
         public:
-            const XReadable &K;        //!< last computed constant
-            const size_t     primary;  //!< primary equilibria
-            const SList      species;  //!< all REACTIVE species
-            const SList      witness;  //!< all SPECTATOR species
-            const size_t     maxOrder; //!< max order size thru clusters
+            const XReadable &K;         //!< last computed constant
+            const size_t     primary;   //!< primary equilibria
+            const Listing    conserved; //!< CONSERVED, REACTIVE species
+            const Listing    unbounded; //!< UNBOUNDED, REACTIVE species
+            const SList      species;   //!< all REACTIVE species
+            const Listing    witness;   //!< all SPECTATOR species
+            const size_t     maxOrder;  //!< max order size thru clusters
         };
 
     }

@@ -15,6 +15,16 @@ namespace Yttrium
 
         }
 
+        static inline
+        void CollectListing(Listing &target, const SNode * node)
+        {
+            for(;node;node=node->next)
+            {
+                const Species &sp = **node;
+                if(0!=sp.z) Coerce(target.charged) << sp; else Coerce(target.neutral) << sp;
+            }
+        }
+
         const char * const Clusters:: CallSign = "Chemical::Clusters";
 
         Clusters:: Clusters(XMLog      &   xml,
@@ -54,13 +64,28 @@ namespace Yttrium
             }
             MergeSort::Call( Coerce(species), MetaList<SList>::Compare );
 
+            // collect limited
+            for(const Cluster *cl=my.head;cl;cl=cl->next)
+            {
+                CollectListing(Coerce(conserved),cl->conserved.head);
+                CollectListing(Coerce(unbounded),cl->unbounded.head);
+            }
+            Coerce(conserved).sort();
+            Coerce(unbounded).sort();
+            
+            assert(conserved.size()+unbounded.size()==species.size);
+
+
             // collect witness
             for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
             {
                 const Species &sp = **it; if(species.has(sp)) continue;
-                Coerce(witness) << sp;
+                if(0==sp.z)
+                    Coerce(witness.neutral) << sp;
+                else
+                    Coerce(witness.charged) << sp;
             }
-            MergeSort::Call( Coerce(witness), MetaList<SList>::Compare );
+            Coerce(witness).sort();
 
 
 
@@ -69,7 +94,7 @@ namespace Yttrium
                 Y_XML_SECTION(xml, "Summary");
                 Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << primary);
                 Y_XML_COMMENT(xml, "|species| = " << species.size);
-                Y_XML_COMMENT(xml, "|witness| = " << witness.size);
+                Y_XML_COMMENT(xml, "|witness| = " << witness.size());
                 Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
             }
             // prepare constants
