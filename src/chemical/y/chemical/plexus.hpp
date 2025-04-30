@@ -24,12 +24,15 @@ namespace Yttrium
 
             virtual ~Plexus() noexcept;
 
-            
+
+            void operator()(XMLog     &xml,
+                            XWritable &C0,
+                            Reactor::Proc * const cb=0);
 
 
             const Library    & lib;
             const Equilibria & eqs;
-            const Clusters     cls;
+            Clusters           cls;
             Equalizer          eqz;
             Reactors           rxn;
             

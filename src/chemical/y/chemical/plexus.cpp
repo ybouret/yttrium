@@ -40,7 +40,13 @@ namespace Yttrium
         {
         }
         
-
+        void Plexus:: operator()(XMLog     &xml,
+                                 XWritable &C0,
+                                 Reactor::Proc * const cb)
+        {
+            eqz(xml,C0);
+            rxn(xml,C0,cb);
+        }
 
     }
 
