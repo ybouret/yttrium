@@ -33,19 +33,41 @@ namespace Yttrium
         eqz(cls),
         rxn(cls)
         {
-            
+
         }
 
         Plexus:: ~Plexus() noexcept
         {
         }
-        
+
         void Plexus:: operator()(XMLog     &xml,
                                  XWritable &C0,
-                                 Reactor::Proc * const cb)
+                                 Reactor::Proc * const callback)
         {
             eqz(xml,C0);
-            rxn(xml,C0,cb);
+            rxn(xml,C0,callback);
+        }
+
+    }
+
+}
+
+
+#include "y/chemical/plexus/initial/design.hpp"
+
+namespace Yttrium
+{
+    namespace Chemical
+    {
+        void Plexus:: operator()(XMLog     &             xml,
+                                 XWritable &             C0,
+                                 const Initial::Axioms & axioms,
+                                 Reactor::Proc * const   callback)
+        {
+            Initial::Design design(axioms,lib,cls);
+            design.build(xml,C0,lib,cls);
+
+            //(*this)(xml,C0,callback);
         }
 
     }

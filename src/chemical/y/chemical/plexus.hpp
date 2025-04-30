@@ -5,7 +5,7 @@
 
 #include "y/chemical/plexus/equalizer.hpp"
 #include "y/chemical/plexus/reactors.hpp"
-#include "y/chemical/plexus/initial/design.hpp"
+#include "y/chemical/plexus/initial/axioms.hpp"
 
 namespace Yttrium
 {
@@ -25,10 +25,14 @@ namespace Yttrium
             virtual ~Plexus() noexcept;
 
 
-            void operator()(XMLog     &xml,
-                            XWritable &C0,
-                            Reactor::Proc * const cb=0);
+            void operator()(XMLog     &           xml,
+                            XWritable &           C0,
+                            Reactor::Proc * const callback=0);
 
+            void operator()(XMLog     &             xml,
+                            XWritable &             C0,
+                            const Initial::Axioms & axioms,
+                            Reactor::Proc * const   callback=0);
 
             const Library    & lib;
             const Equilibria & eqs;

@@ -47,22 +47,16 @@ Y_UTEST(titration)
     weasel(lib,eqs,rep,Lingo::Module::OpenFile(argv[1]));
     lib.latch();
 
-    bool           verbose = Environment::Flag("VERBOSE");
-    XMLog          xml(verbose);
-    Plexus         plexus(xml,lib,eqs,0.0);
+    bool               verbose = Environment::Flag("VERBOSE");
+    XMLog              xml(verbose);
+    Plexus             plexus(xml,lib,eqs,0.0);
     Display            display;
     Reactor::Proc cb = display;
 
     Vector<xreal_t> Ca(lib->size(),0);
-#if 0
-    Initial::Design DataA(rep["Sa"],lib,cls);
-    DataA.build(xml,Ca,lib,cls);
-    eqz(xml,Ca);
-    rxn(xml,Ca,&cb);
+    plexus(xml,Ca,rep["Sa"],NULL);
     lib.show(std::cerr << "Ca=", "\t[", Ca, "]", xreal_t::ToString ) << std::endl;
-#endif
 
-    Y_SIZEOF(Plexus);
 
 }
 Y_UDONE()
