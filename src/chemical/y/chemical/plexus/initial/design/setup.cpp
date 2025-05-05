@@ -83,6 +83,7 @@ namespace Yttrium
             {
                 const String                    expr = xlist.head->lexeme().toString();
                 Lingo::Matching                 match(expr,0);
+                //GraphViz::Vizible::DotToPng("steady.dot", *match.motif);
                 const Conservation::Law * const law = cls.preserving(match);
                 if(!law) throw Specific::Exception(Design::CallSign,"No Conservation matching '%s'", expr.c_str());
                 const String                    value = xlist.tail->lexeme().toString();

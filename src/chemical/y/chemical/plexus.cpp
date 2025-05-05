@@ -67,7 +67,7 @@ namespace Yttrium
             Initial::Design design(axioms,lib,cls);
             design.build(xml,C0,lib,cls);
 
-            //(*this)(xml,C0,callback);
+            (*this)(xml,C0,callback);
         }
 
     }

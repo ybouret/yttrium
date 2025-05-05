@@ -59,42 +59,44 @@ Y_UTEST(plexus)
 
 
 
-    
+
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "rep=" << rep << std::endl;
 
     plexus.cls.graphViz("cs");
 
-    
+    Display       display;
+    Reactor::Proc callback = display;
+
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
     XVector      dC(m,0); // errors ?
 
-    Library::Concentrations(C0,ran,0.1,0.5);
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+    if(false)
+    {
+        Library::Concentrations(C0,ran,0.1,0.5);
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    plexus.eqz(xml,C0);
-    lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-    plexus.eqz.query(dC);
-    lib.show(std::cerr << "dC=", "\t[", dC, "]", xreal_t::ToString ) << std::endl;
+        plexus.eqz(xml,C0);
+        lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+        plexus.eqz.query(dC);
+        lib.show(std::cerr << "dC=", "\t[", dC, "]", xreal_t::ToString ) << std::endl;
 
-    Display       display;
-    Reactor::Proc callback = display;
 
-    plexus.rxn(xml,C0,&callback);
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+        plexus.rxn(xml,C0,&callback);
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+    }
 
-    
 
     for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
     {
         const Initial::Axioms &axioms = *it;
         std::cerr << "[[ " << axioms << " ]]" << std::endl;
         plexus(xml,C0,axioms,&callback);
+        lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
     }
 
-    //lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
 
