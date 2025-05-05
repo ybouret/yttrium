@@ -83,11 +83,9 @@ Y_UTEST(plexus)
     Reactor::Proc callback = display;
 
     plexus.rxn(xml,C0,&callback);
+    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
     
-
-    return 0;
-
-
 
     for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
     {
