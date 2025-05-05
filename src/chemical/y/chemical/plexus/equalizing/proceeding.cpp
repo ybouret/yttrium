@@ -1,4 +1,5 @@
 #include "y/chemical/plexus/equalizing/proceeding.hpp"
+#include "y/exception.hpp"
 
 namespace Yttrium
 {
@@ -53,6 +54,7 @@ namespace Yttrium
                         assert(0!=ts);
                         vanishing.free();
                         cw->fix(xml, C0, TopLevel, injected, vanishing);
+                        throw Exception("need to check");
                         ts->fix(xml, C0, TopLevel, injected, vanishing);
                     }
                 }

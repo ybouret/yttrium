@@ -84,7 +84,7 @@ namespace Yttrium
                         //______________________________________________________
                         switch(res)
                         {
-                            case Correct: continue;              // nothing to do
+                            case Correct: continue;               // nothing to do
                             case BadBoth: *klist << eq; continue; // blocked...
                             case BadReac: break;
                             case BadProd: break;
