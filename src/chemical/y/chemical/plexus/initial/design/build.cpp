@@ -118,19 +118,22 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                if(Np<=0)
                 {
-                    Y_XML_COMMENT(xml, "no axiom");
-                    return;
+                    Y_XML_SECTION(xml, "Checking");
+                    if(Np<=0)
+                    {
+                        Y_XML_COMMENT(xml, "no axiom");
+                        return;
+                    }
+
+                    if(Np>M)
+                    {
+                        Y_XML_COMMENT(xml,"too many axioms");
+                        throw Specific::Exception(CallSign, "overdetermined design");
+                    }
+
+                    while(Np<M && foundZeroConcentration(xml,cls)) ++Np;
                 }
-
-                if(Np>M)
-                {
-                    throw Specific::Exception(CallSign, "overdetermined design");
-                }
-
-                while(Np<M && foundZeroConcentration(xml,cls)) ++Np;
-
 
                 //--------------------------------------------------------------
                 //
