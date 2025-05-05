@@ -24,15 +24,22 @@ namespace Yttrium
 
             virtual ~Plexus() noexcept;
 
-
+            //! solve current solution
             void operator()(XMLog     &           xml,
                             XWritable &           C0,
                             Reactor::Proc * const callback=0);
 
+            //! initialize solution
             void operator()(XMLog     &             xml,
                             XWritable &             C0,
                             const Initial::Axioms & axioms,
                             Reactor::Proc * const   callback=0);
+
+            xreal_t mix(XMLog           &xml,
+                        XWritable       &Cm,
+                        const XReadable &Ca, const xreal_t Va,
+                        const XReadable &Cb, const xreal_t Vb,
+                        Reactor::Proc * const callback=0);
 
             const Library    & lib;
             const Equilibria & eqs;

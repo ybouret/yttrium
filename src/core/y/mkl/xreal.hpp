@@ -133,14 +133,22 @@ inline friend bool operator OP (const T      lhs, const XReal &rhs) noexcept { r
         static SignType Compare(const XReal &lhs, const T      rhs) noexcept; //!< alias
         static SignType Compare(const T      lhs, const XReal &rhs) noexcept; //!< alias
 
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
         Y_XREAL_CMP(==,  == __Zero__ )
         Y_XREAL_CMP(!=,  != __Zero__ )
         Y_XREAL_CMP(<,   == Negative )
         Y_XREAL_CMP(>,   == Positive )
         Y_XREAL_CMP(<=,  != Positive )
         Y_XREAL_CMP(>=,  != Negative )
+#endif
 
+        //______________________________________________________________________
+        //
+        //
+        // Other
+        //
+        //______________________________________________________________________
+        T p() const; //!< -log10
 
         //______________________________________________________________________
         //

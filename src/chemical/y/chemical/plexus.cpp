@@ -70,6 +70,24 @@ namespace Yttrium
             (*this)(xml,C0,callback);
         }
 
+
+        xreal_t Plexus:: mix(XMLog           &xml,
+                             XWritable       &Cm,
+                             const XReadable &Ca, const xreal_t Va,
+                             const XReadable &Cb, const xreal_t Vb,
+                             Reactor::Proc * const callback)
+        {
+            const xreal_t Vnew = Va+Vb; assert(Vnew>0.0);
+            size_t i=lib->size();
+            for(Library::ConstIterator it=lib->begin();i>0;--i,++it)
+            {
+                const Species &sp = **it;
+                sp(Cm,TopLevel) = (Va * sp(Ca,TopLevel) + Vb * sp(Cb,TopLevel))/Vnew;
+            }
+            (*this)(xml,Cm,callback);
+            return Vnew;
+        }
+
     }
 
 }
