@@ -1,5 +1,4 @@
-#include "y/chemical/plexus/reactors.hpp"
-#include "y/chemical/plexus/equalizer.hpp"
+#include "y/chemical/plexus.hpp"
 
 #include "y/chemical/weasel.hpp"
 #include "y/utest/run.hpp"
@@ -8,12 +7,8 @@
 
 #include "y/string/env.hpp"
 
-#include "y/data/list/cloneable.hpp"
 
 
-#include "y/chemical/plexus/initial/axiom/electroneutrality.hpp"
-#include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
-#include "y/chemical/plexus/initial/design.hpp"
 
 
 
@@ -56,59 +51,50 @@ Y_UTEST(plexus)
     lib.latch();
     bool           verbose = Environment::Flag("VERBOSE");
     XMLog          xml(verbose);
-    Clusters       cls(xml,eqs,lib,0.0);
+    Reactor::MonitorScore = true;
+    Reactor::EmitProfiles = true;
+    Reactor::EmitProfiles = false;
+
+    Plexus plexus(xml,lib,eqs,0.0);
+
 
 
     
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "rep=" << rep << std::endl;
 
-    cls.graphViz("cs");
+    plexus.cls.graphViz("cs");
 
     
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
+    XVector      dC(m,0); // errors ?
 
     Library::Concentrations(C0,ran,0.1,0.5);
     lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
-    Equalizer eqz(cls);
-    eqz(xml,C0);
-
+    plexus.eqz(xml,C0);
     lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+    plexus.eqz.query(dC);
+    lib.show(std::cerr << "dC=", "\t[", dC, "]", xreal_t::ToString ) << std::endl;
 
 
-
-
-    Reactor::MonitorScore = true;
-    Reactor::EmitProfiles = true;
-    Reactor::EmitProfiles = false;
-    Reactors cs(cls);
 
     Display            display;
     Reactor::Proc cb = display;
-    cs(xml,C0,&cb);
-
-    lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-    Y_SIZEOF(Initial::Axiom);
-    Y_SIZEOF(Initial::FixedConcentration);
-    Y_SIZEOF(Initial::ElectroNeutrality);
-    Y_SIZEOF(Initial::Design);
-    Y_SIZEOF(Initial::Axioms);
 
     for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
     {
         const Initial::Axioms &axioms = *it;
-        std::cerr << "using: " << axioms << std::endl;
-        Initial::Design        design(axioms,lib,cls);
-        design.build(xml,C0,lib,cls);
-        eqz(xml,C0);
-        cs(xml,C0,&cb);
-        std::cerr << "eqs=" << eqs << std::endl;
+        std::cerr << "[[ " << axioms << " ]]" << std::endl;
     }
-   
+
+    //lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+
+
+
 
 
 

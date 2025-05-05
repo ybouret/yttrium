@@ -22,8 +22,11 @@ namespace Yttrium
             {
                 for(const SNode *sn=list.head;sn;sn=sn->next)
                 {
-                    const Species &sp = **sn;
-                    if(defines(sp)) continue;
+
+                    // check if species is explicitly defined
+                    const Species &sp = **sn; if(defines(sp)) continue;
+
+                    // if not, set it to zero
                     my.pushTail( new FixedConcentration(sp,0) );
                     Y_XML_COMMENT(xml, "setting [" << sp << "]=0");
                     assert(defines(sp));
@@ -38,8 +41,9 @@ namespace Yttrium
             {
                 assert(latched);
 
-                if( foundZeroConcentrationIn(xml, cls.spectator.charged) ) return true;
                 if( foundZeroConcentrationIn(xml, cls.conserved.charged) ) return true;
+                if( foundZeroConcentrationIn(xml, cls.spectator.charged) ) return true;
+
                 return false;
             }
 

@@ -19,9 +19,7 @@ namespace Yttrium
                 assert(a.size()==b.size());
                 apq res = 0;
                 for(size_t i=a.size();i>0;--i)
-                {
                     res += a[i] * b[i];
-                }
                 return res;
             }
 
@@ -47,6 +45,7 @@ namespace Yttrium
             }
 
 
+#if 0
             class Prospect : public Quantized
             {
             public:
@@ -86,7 +85,7 @@ namespace Yttrium
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Prospect);
             };
-
+#endif
 
 
 
