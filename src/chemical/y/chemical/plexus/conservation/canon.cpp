@@ -55,7 +55,6 @@ namespace Yttrium
 #include "y/text/plural.hpp"
 #include "y/mkl/algebra/rank.hpp"
 
-
 namespace Yttrium
 {
     namespace Chemical
@@ -65,8 +64,10 @@ namespace Yttrium
             using namespace MKL;
 
 
+            
             void Canon:: compile(XMLog       & xml,
-                                 const EList & definite)
+                                 const EList & definite,
+                                 const SList & unbounded)
             {
                 Y_XML_SECTION_OPT(xml, "Conservation::Canon", "size=" << size);
                 assert( 0 == maxNameLength );
@@ -124,6 +125,12 @@ namespace Yttrium
                     Y_XML_COMMENT(xml, std::setw(4) << rank << " = rank");
                 }
 
+                const SList authorized;
+                Coerce(authorized) << unbounded << *species;
+                MetaList<SList>::Sort( Coerce(authorized)  );
+
+                //std::cerr << "Authorized=" << authorized << std::endl;
+
                 //--------------------------------------------------------------
                 //
                 //
@@ -134,7 +141,7 @@ namespace Yttrium
                 for(const ENode *en=definite.head;en;en=en->next)
                 {
                     const Equilibrium &eq = **en;
-                    if(eq.gotAnyOf(*species))
+                    if(eq.madeFrom(authorized))
                     {
                         Coerce(anxious) << eq;
                         Y_XMLOG(xml, "(*) " << eq);

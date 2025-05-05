@@ -197,6 +197,18 @@ namespace Yttrium
         }
 
 
+        bool Components:: madeFrom(const SList &authorized) const noexcept
+        {
+            ConstIterator it = db.begin();
+            for(size_t n=db.size();n>0;--n,++it)
+            {
+                if(!authorized.has( (**it).sp ) ) return false;
+            }
+            return true;
+        }
+
+
+
         void Components:: gatherSpeciesIn(AddressBook &book) const
         {
             for(ConstIterator it=db.begin();it!=db.end();++it)

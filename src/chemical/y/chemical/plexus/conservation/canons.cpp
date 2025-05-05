@@ -14,7 +14,8 @@ namespace Yttrium
 
             Canons:: Canons(XMLog &            xml,
                             const ListOf<Law> &laws,
-                            const EList       &definite) :
+                            const EList       &definite,
+                            const SList       &unbounded) :
             CxxListOf<Canon>()
             {
                 Y_XML_SECTION_OPT(xml, "Conservations::Canons", "|laws|=" << laws.size);
@@ -61,7 +62,7 @@ namespace Yttrium
 
                 Y_XML_COMMENT(xml, "compiling " << size << " canon" << Plural::s(size));
                 for(Canon *canon=head;canon;canon=canon->next)
-                    canon->compile(xml,definite);
+                    canon->compile(xml,definite,unbounded);
 
 
             }

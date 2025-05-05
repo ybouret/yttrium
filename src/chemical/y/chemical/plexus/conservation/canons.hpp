@@ -26,8 +26,9 @@ namespace Yttrium
             public:
                 explicit Canons(XMLog             & xml,
                                 const ListOf<Law> & laws,
-                                const EList       & definite); //!< setup
-                virtual ~Canons() noexcept;                    //!< cleanup
+                                const EList       & definite,
+                                const SList       &  unbounded); //!< setup
+                virtual ~Canons() noexcept;                      //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Canons);

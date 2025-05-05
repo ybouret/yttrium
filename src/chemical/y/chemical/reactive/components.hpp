@@ -154,6 +154,9 @@ namespace Yttrium
             //! check if any of the species is in components
             bool gotAnyOf(const SList &) const noexcept;
 
+            //! check if made from authorized species
+            bool madeFrom(const SList &authorized) const noexcept;
+
             //! fill compatible topology
             template <typename ARRAY> inline
             void fillTopology(ARRAY &topo, const Level level) const
