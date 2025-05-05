@@ -23,7 +23,6 @@ graphviz
 mkl
 vfs
 information
-#woven
 rtld
 field
 color
@@ -43,7 +42,7 @@ Y_LinkLibraries(test-dso)
 
 add_custom_command(TARGET dso POST_BUILD
 COMMAND test-dso $<TARGET_FILE:dso>
-DEPENDS test-dso 
+#DEPENDS test-dso 
 COMMENT "[yttrium] RTLD"
 VERBATIM)
 

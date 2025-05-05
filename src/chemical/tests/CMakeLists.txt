@@ -1,10 +1,11 @@
 Y_CreateTest(chemical)
 
 Y_LinkLibraries(test-chemical y-chemical y-lingo  y-mkl y-lua++ y-lua)
-target_sources(test-chemical PUBLIC titration1.cfg)
  
 set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
+
+target_sources(test-chemical PUBLIC ${HERE}/titration1.cfg)
 
 enable_testing()
 
