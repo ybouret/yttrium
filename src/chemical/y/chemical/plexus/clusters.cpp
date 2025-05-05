@@ -35,6 +35,8 @@ namespace Yttrium
         tlK(),
         K(tlK),
         primary(eqs->size()),
+        conserved(),
+        unbounded(),
         species(),
         witness(),
         maxOrder(0)

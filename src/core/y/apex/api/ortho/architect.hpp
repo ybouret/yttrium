@@ -108,7 +108,7 @@ namespace Yttrium
                 }
 
 
-
+                //! format target columns with family of vectors
                 template <typename TARGET, typename SOURCE> inline
                 void transposeBasis(TARGET       &target,
                                     const SOURCE &source,

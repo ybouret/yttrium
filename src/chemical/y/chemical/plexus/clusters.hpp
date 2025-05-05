@@ -7,6 +7,7 @@
 #define Y_Chemical_Clusters_Included 1
 
 #include "y/chemical/plexus/cluster.hpp"
+#include "y/chemical/plexus/cluster/listing.hpp"
 #include "y/chemical/reactive/equilibria.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -17,26 +18,7 @@ namespace Yttrium
 
         typedef Vector<xreal_t,MemoryModel> XVector; //!< alias
 
-        class Listing
-        {
-        public:
-            explicit Listing() noexcept : neutral(), charged() {}
-            virtual ~Listing() noexcept {}
-
-            void   sort()
-            {
-                MergeSort::Call( Coerce(neutral), MetaList<SList>::Compare);
-                MergeSort::Call( Coerce(charged), MetaList<SList>::Compare);
-            }
-            size_t size() const noexcept { return neutral.size+charged.size; }
-
-            const SList neutral;
-            const SList charged;
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Listing);
-        };
+   
 
         //______________________________________________________________________
         //
@@ -109,10 +91,10 @@ namespace Yttrium
 
         public:
             const XReadable &K;         //!< last computed constant
-            const size_t     primary;   //!< primary equilibria
+            const size_t     primary;   //!< number of primary equilibria
             const Listing    conserved; //!< CONSERVED, REACTIVE species
             const Listing    unbounded; //!< UNBOUNDED, REACTIVE species
-            const SList      species;   //!< all REACTIVE species
+            const SList      species;   //!< all REACTIVE species, conserved+unbounded
             const Listing    witness;   //!< all SPECTATOR species
             const size_t     maxOrder;  //!< max order size thru clusters
         };
