@@ -22,7 +22,8 @@ namespace Yttrium
             {
                 for(const SNode *sn=list.head;sn;sn=sn->next)
                 {
-                    const Species &sp = **sn; if(defines(sp)) continue;
+                    const Species &sp = **sn;
+                    if(defines(sp)) continue;
                     my.pushTail( new FixedConcentration(sp,0) );
                     Y_XML_COMMENT(xml, "setting [" << sp << "]=0");
                     assert(defines(sp));

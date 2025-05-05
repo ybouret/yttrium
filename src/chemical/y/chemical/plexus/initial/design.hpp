@@ -109,9 +109,13 @@ namespace Yttrium
                 Y_PROXY_DECL();
                 ListOfCloneable<Axiom> my;
 
-                //! check is a species it not defined, set it to zero
+                //! check if a species it not defined, set it to zero
                 bool foundZeroConcentration(XMLog &xml, const Clusters &cls);
 
+                //! check if a species of the list is defined
+                /**
+                 - if not explicitly defined, set it to zero
+                 */
                 bool foundZeroConcentrationIn(XMLog &, const SList &);
             };
 
