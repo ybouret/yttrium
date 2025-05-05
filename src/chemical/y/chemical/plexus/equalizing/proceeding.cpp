@@ -45,6 +45,37 @@ namespace Yttrium
             {
                 Y_XML_SECTION(xml,"Equalizing::Proceeding");
                 injected.forEach( & XAdd::free );
+                vanishing.free();
+
+                {
+                    Y_XML_SECTION(xml,"ForEachWarden");
+
+                    for(Watcher *cw = watchers.head; cw; cw=cw->next)
+                    {
+                        cw->fix(xml,C0,TopLevel,injected,vanishing);
+                    }
+
+                    if(xml.verbose)
+                    {
+                        vanishing.display<Species>(xml() << "vanishing: ") << std::endl;
+                        cluster().show( xml() << "Ceqz=", TopLevel, "\t\t[", C0, "]", xreal_t::ToString) << std::endl;
+                    }
+                }
+
+                throw Exception("need to check");
+
+
+
+                {
+                    Y_XML_SECTION(xml,"ApplyTwoSided");
+                    for(TwoSided *ts = twoSided.head;ts;ts=ts->next)
+                    {
+                        ts->fix(xml, C0, TopLevel, injected, vanishing);
+                    }
+                }
+
+
+
                 {
                     Watcher  *cw = watchers.head;
                     TwoSided *ts = twoSided.head;
@@ -54,7 +85,6 @@ namespace Yttrium
                         assert(0!=ts);
                         vanishing.free();
                         cw->fix(xml, C0, TopLevel, injected, vanishing);
-                        throw Exception("need to check");
                         ts->fix(xml, C0, TopLevel, injected, vanishing);
                     }
                 }
