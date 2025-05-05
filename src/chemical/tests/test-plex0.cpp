@@ -1,3 +1,4 @@
+
 #include "y/chemical/plexus.hpp"
 
 #include "y/chemical/weasel.hpp"
@@ -7,6 +8,7 @@
 
 #include "y/string/env.hpp"
 
+#include "y/counting/combination.hpp"
 
 
 
@@ -28,7 +30,7 @@ namespace
     };
 }
 
-Y_UTEST(plexus)
+Y_UTEST(plex0)
 {
 
     Random::MT19937 ran;
@@ -59,46 +61,44 @@ Y_UTEST(plexus)
 
 
 
-    
-    std::cerr << "lib=" << lib << std::endl;
-    std::cerr << "rep=" << rep << std::endl;
+
+    //std::cerr << "lib=" << lib << std::endl;
+    //std::cerr << "rep=" << rep << std::endl;
 
     plexus.cls.graphViz("cs");
 
-    
+
 
     const size_t m = lib->size();
     XVector      C0(m,0); // concentration
-    XVector      dC(m,0); // errors ?
+    XVector      C1(m,0); // errors ?
 
-    Library::Concentrations(C0,ran,0.1,0.5);
-    lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-    plexus.eqz(xml,C0);
-    lib.show(std::cerr << "C1=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-    plexus.eqz.query(dC);
-    lib.show(std::cerr << "dC=", "\t[", dC, "]", xreal_t::ToString ) << std::endl;
 
     Display       display;
     Reactor::Proc callback = display;
 
-    plexus.rxn(xml,C0,&callback);
-    
-
-    return 0;
-
-
-
-    for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
+    for(size_t k=m;k>0;--k)
     {
-        const Initial::Axioms &axioms = *it;
-        std::cerr << "[[ " << axioms << " ]]" << std::endl;
-        plexus(xml,C0,axioms,&callback);
+        Combination comb(m,k);
+        do
+        {
+            std::cerr << std::endl;
+            Library::Concentrations(C0,ran);
+            for(size_t i=comb.size();i>0;--i) C0[ comb[i] ] = 0;
+            std::cerr << C0 << std::endl;
+            C1.ld(C0);
+            plexus.rxn(xml,C1,&callback);
+            std::cerr << C0 << " -> " << C1 << std::endl;
+
+        } while(comb.next());
+
+        std::cerr << std::endl;
+        Library::Concentrations(C0,ran);
+        std::cerr << C0 << std::endl;
+        C1.ld(C0);
+        plexus.rxn(xml,C1,&callback);
+        std::cerr << C0 << " -> " << C1 << std::endl;
     }
-
-    //lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
-
-
 
 
 

@@ -16,5 +16,6 @@ add_test(eqs    test-chemical eqs)
 add_test(plexus test-chemical plexus)
 add_test(plexus test-chemical fluo)
 add_test(titration test-chemical titration)
+add_test(plex0  test-chemical plex0)
 
 

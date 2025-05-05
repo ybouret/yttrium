@@ -72,6 +72,7 @@ namespace Yttrium
 
         void Actor:: activity(XMul &X, const XReadable &C, const Level L) const
         {
+            //if(sp(C,L)<0.0) { std::cerr << "Negative [" << sp.name << "]" << std::endl; }
             assert(sp(C,L)>=0.0);
             X.insert(sp(C,L),nu);
         }
