@@ -82,12 +82,13 @@ Y_UTEST(plexus)
 
 
     Display            display;
-    Reactor::Proc cb = display;
+    Reactor::Proc callback = display;
 
     for(Repertory::ConstIterator it=rep->begin();it!=rep->end();++it)
     {
         const Initial::Axioms &axioms = *it;
         std::cerr << "[[ " << axioms << " ]]" << std::endl;
+        plexus(xml,C0,axioms,&callback);
     }
 
     //lib.show(std::cerr << "C2=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
