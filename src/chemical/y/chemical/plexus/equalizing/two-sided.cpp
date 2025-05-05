@@ -148,12 +148,14 @@ namespace Yttrium
                     }
                 }
 
+#if 1
                 if(xml.verbose)
                 {
-                    cluster.show( xml() << "Ceqz=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
-                    cluster.show( xml() << "Cinj=", SubLevel, "\t[", II, "]") << std::endl;
+                    vanishing.display<Species>(xml() << "vanishing: ") << std::endl;
+                    cluster.show( xml() << "C_ts=", L0, "\t[", C0, "]", xreal_t::ToString) << std::endl;
+                    cluster.show( xml() << "C_in=", SubLevel, "\t[", II, "]") << std::endl;
                 }
-
+#endif
 
 
             }

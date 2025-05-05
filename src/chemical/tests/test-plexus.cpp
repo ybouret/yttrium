@@ -80,7 +80,6 @@ Y_UTEST(plexus)
     lib.show(std::cerr << "dC=", "\t[", dC, "]", xreal_t::ToString ) << std::endl;
 
 
-    return 0;
     
     Display            display;
     Reactor::Proc callback = display;

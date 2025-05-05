@@ -46,7 +46,7 @@ namespace Yttrium
                                            const Level         L,
                                            const AddressBook  &wanders)
             {
-                //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+                volatile Momentary::Off turnOff( Coerce(xml.verbose) );
                 Y_XML_SECTION_OPT(xml, "Extents", E.name);
                 try
                 {
@@ -167,12 +167,12 @@ namespace Yttrium
                                        const AddressBook &wanders) const
             {
 
-                //volatile Momentary::Off turnOff( Coerce(xml.verbose) );
+                volatile Momentary::Off turnOff( Coerce(xml.verbose) );
 
                 Y_XML_SECTION_OPT(xml, "Gaining", E.name);
 
                 assert(best.size>0);
-                if(xml.verbose) E.displayCompact( xml() << "bad = ", Csub, SubLevel) << std::endl;
+                if(xml.verbose) E.displayCompact( xml() << "bad  = ", Csub, SubLevel) << std::endl;
 
                 //______________________________________________________________
                 //
@@ -181,7 +181,7 @@ namespace Yttrium
                 //
                 //______________________________________________________________
                 best.zforward(E, Csub, SubLevel);
-                if(xml.verbose) E.displayCompact( xml() << "eqz = ", Csub, SubLevel) << std::endl;
+                if(xml.verbose) E.displayCompact( xml() << "eqz  = ", Csub, SubLevel) << std::endl;
 
                 //______________________________________________________________
                 //
