@@ -27,18 +27,18 @@ namespace Yttrium
             std::ostream & operator<<(std::ostream &os, const Extent &ext)
             {
                 os << std::endl;
-                os << "\t" << Extent::Limiting << "=" << ext.limiting << std::endl;
+                os << "\t\t" << Extent::Limiting << "=" << ext.limiting << std::endl;
                 if(ext.required->size>0)
                 {
                     for(const CrNode *cn=ext.required->head;cn;cn=cn->next)
                     {
-                        os << "\t" << Extent::Required << "=" << **cn;
+                        os << "\t\t" << Extent::Required << "=" << **cn;
                         if(cn!=ext.required->tail) os << std::endl;
                     }
                 }
                 else
                 {
-                    os << "\t" << Extent::Required << "=" << std::setw(Restartable::Width) << Restartable::None;
+                    os << "\t\t" << Extent::Required << "=" << std::setw(Restartable::Width) << Restartable::None;
                 }
                 return os;
             }

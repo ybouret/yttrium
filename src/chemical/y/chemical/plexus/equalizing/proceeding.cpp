@@ -62,7 +62,6 @@ namespace Yttrium
                     }
                 }
 
-                throw Exception("need to check");
 
 
 
@@ -74,6 +73,8 @@ namespace Yttrium
                     }
                 }
 
+
+                throw Exception("need to check");
 
 
                 {
