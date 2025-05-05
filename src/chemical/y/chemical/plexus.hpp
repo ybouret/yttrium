@@ -11,7 +11,7 @@ namespace Yttrium
 {
     namespace Chemical
     {
-
+        
         class Plexus
         {
         public:

@@ -92,7 +92,7 @@ namespace Yttrium
                 for(const Axiom *a=my.head;a;a=a->next)
                 {
                     if( FixedConcentration::UUID != a->uuid) continue;
-                    if(a->contains(sp)) return true;
+                    if(a->contains(sp))                   return true;
                 }
                 return false;
             }
