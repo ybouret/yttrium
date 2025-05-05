@@ -74,10 +74,10 @@ namespace Yttrium
             //! output all orders in basename[1..maxOrder].png
             void graphViz(const String &baseName) const;
 
-            //! set zero in TopLevel data for species
+            //! set zero in TopLevel data for reactive species
             template <typename DATA> inline
             void zset(DATA &data) const {
-                ZeroList(species,data,TopLevel);
+                ZeroList(reactive,data,TopLevel);
             }
 
             //! find unique law preseserving matching expression
@@ -86,17 +86,17 @@ namespace Yttrium
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
             Y_PROXY_DECL();
-            Cluster::List   my;
-            XVector         tlK;
+            Cluster::List   my;  //!< instance
+            XVector         tlK; //!< TopLevel K[]
 
         public:
-            const XReadable &K;         //!< last computed constant
-            const size_t     primary;   //!< number of primary equilibria
-            const Listing    conserved; //!< CONSERVED, REACTIVE species
-            const Listing    unbounded; //!< UNBOUNDED, REACTIVE species
-            const SList      species;   //!< all REACTIVE species, conserved+unbounded
-            const Listing    witness;   //!< all SPECTATOR species
-            const size_t     maxOrder;  //!< max order size thru clusters
+            const XReadable &K;          //!< last computed constant
+            const size_t     primary;    //!< number of primary equilibria
+            const SList      reactive;   //!< all REACTIVE species, conserved+unbounded
+            const Listing    conserved;  //!< CONSERVED, REACTIVE species
+            const Listing    unbounded;  //!< UNBOUNDED, REACTIVE species
+            const Listing    spectator;  //!< all SPECTATOR species
+            const size_t     maxOrder;   //!< max order size thru clusters
         };
 
     }

@@ -38,13 +38,8 @@ namespace Yttrium
             {
                 assert(latched);
 
-                if( foundZeroConcentrationIn(xml, cls.witness.charged) )
-                    return true;
-
-
-                if( foundZeroConcentrationIn(xml, cls.conserved.charged) )
-                    return true;
-                
+                if( foundZeroConcentrationIn(xml, cls.spectator.charged) ) return true;
+                if( foundZeroConcentrationIn(xml, cls.conserved.charged) ) return true;
                 return false;
             }
 

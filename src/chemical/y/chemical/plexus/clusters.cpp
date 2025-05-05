@@ -35,10 +35,10 @@ namespace Yttrium
         tlK(),
         K(tlK),
         primary(eqs->size()),
+        reactive(),
         conserved(),
         unbounded(),
-        species(),
-        witness(),
+        spectator(),
         maxOrder(0)
         {
             assert(!eqs.latched);
@@ -61,10 +61,10 @@ namespace Yttrium
                 InSituMax( Coerce(maxOrder), cl->order.size() );
                 for(const SNode *sn=(*cl)->species->head;sn;sn=sn->next)
                 {
-                    Coerce(species) << **sn;
+                    Coerce(reactive) << **sn;
                 }
             }
-            MergeSort::Call( Coerce(species), MetaList<SList>::Compare );
+            MergeSort::Call( Coerce(reactive), MetaList<SList>::Compare );
 
             // collect limited
             for(const Cluster *cl=my.head;cl;cl=cl->next)
@@ -75,29 +75,29 @@ namespace Yttrium
             Coerce(conserved).sort();
             Coerce(unbounded).sort();
             
-            assert(conserved.size()+unbounded.size()==species.size);
+            assert(conserved.size()+unbounded.size()==reactive.size);
 
 
-            // collect witness
+            // collect spectators
             for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
             {
-                const Species &sp = **it; if(species.has(sp)) continue;
+                const Species &sp = **it; if(reactive.has(sp)) continue;
                 if(0==sp.z)
-                    Coerce(witness.neutral) << sp;
+                    Coerce(spectator.neutral) << sp;
                 else
-                    Coerce(witness.charged) << sp;
+                    Coerce(spectator.charged) << sp;
             }
-            Coerce(witness).sort();
+            Coerce(spectator).sort();
 
 
 
             // summary
             {
                 Y_XML_SECTION(xml, "Summary");
-                Y_XML_COMMENT(xml, "|eqs|     = " << eqs->size() << " from " << primary);
-                Y_XML_COMMENT(xml, "|species| = " << species.size);
-                Y_XML_COMMENT(xml, "|witness| = " << witness.size());
-                Y_XML_COMMENT(xml, "maxOrder  = " << maxOrder );
+                Y_XML_COMMENT(xml, "|eqs|       = " << eqs->size() << " from " << primary);
+                Y_XML_COMMENT(xml, "|reactive|  = " << reactive.size);
+                Y_XML_COMMENT(xml, "|spectator| = " << spectator.size());
+                Y_XML_COMMENT(xml, "maxOrder    = " << maxOrder );
             }
             // prepare constants
             tlK.adjust(eqs->size(),0);

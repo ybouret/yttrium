@@ -15,7 +15,7 @@ namespace Yttrium
         class Plexus
         {
         public:
-            static const char * const CallSign;
+            static const char * const CallSign; //!< "Plexus"
 
             explicit Plexus(XMLog         &  xml,
                             const Library & _lib,

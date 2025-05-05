@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_Chemical_Cluster_Listing_Included
-#define Y_Chemical_Cluster_Listing _Included 1
+#define Y_Chemical_Cluster_Listing_Included 1
 
 #include "y/chemical/species.hpp"
 #include "y/chemical/type/meta-list.hpp"
