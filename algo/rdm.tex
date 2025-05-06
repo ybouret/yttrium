@@ -496,7 +496,9 @@ We define
 \end{equation}
 
 
-\section{initialisation}
+\section{Initialisation}
+
+\subsection{Description}
 
 We describe the initialisation of $M$ species involved in $N$ primary equilibria by a set of $N_p$ affine axioms:
 
@@ -514,5 +516,26 @@ The acceptable solutions are:
 \end{equation}
 
 The matrices $\bm{P}$ and $\bm{Q}$ are orthogonal, and $\vec\delta\in\mathbb{R}^M$.
+
+\subsection{Correction}
+
+Let us assume that we start from $\vec C_0$, and we want to add the correction $\bm{P}\vec u$ such that:
+\begin{equation}
+	\bm{B}\left(\vec C_0 + \bm{P}\vec u \right) = \vec b
+\end{equation}
+
+\begin{equation}
+	 \vec u = \vec b-\bm{B} \vec C _0 
+\end{equation}
+
+\begin{equation}
+	\bm{P} \vec u = \underbrace{\bm{P} \vec b}_{\vec C^\star} - \bm{P} \bm{B} \vec C _0 
+\end{equation}
+
+\begin{equation}
+	\vec C_0' = \vec C_0 + \bm{P}\vec u = \underbrace{\bm{P} \vec b}_{\vec C^\star} + \bm{Q} \vec C_0
+\end{equation}
+
+
 
 \end{document}
