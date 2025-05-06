@@ -67,14 +67,14 @@ namespace Yttrium
                                  const Initial::Axioms & axioms,
                                  Reactor::Proc * const   callback)
         {
+            Plexus &self = *this;
             Initial::Design design(axioms,lib,cls);
-            //design.build(xml,C0,lib,cls);
 
             XArray      Cs(CopyOf,C0);
             Matrix<apq> Q;
             design.build(xml,Cs,Q,lib,cls);
 
-            (*this)(xml,Cs,callback);
+            self(xml,Cs,callback);
 
             lib.show(std::cerr << "C0=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
 
