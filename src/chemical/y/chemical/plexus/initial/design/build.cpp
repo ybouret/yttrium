@@ -7,6 +7,7 @@
 #include "y/apex/api/simplify.hpp"
 #include "y/apex/api/count-non-zero.hpp"
 #include "y/apex/api/ortho/architect.hpp"
+#include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
 
 namespace Yttrium
 {
@@ -14,6 +15,38 @@ namespace Yttrium
     {
         namespace Initial
         {
+
+            bool Design:: foundZeroConcentrationIn(XMLog &      xml,
+                                                   const SList &list)
+            {
+                for(const SNode *sn=list.head;sn;sn=sn->next)
+                {
+
+                    // check if species is explicitly defined
+                    const Species &sp = **sn; if(defines(sp)) continue;
+
+                    // if not, set it to zero
+                    my.pushTail( new FixedConcentration(sp,0) );
+                    Y_XML_COMMENT(xml, "setting [" << sp << "]=0");
+                    assert(defines(sp));
+                    return true;
+                }
+                return false;
+            }
+
+
+            bool Design:: foundZeroConcentration(XMLog          &xml,
+                                                 const Clusters &cls)
+            {
+                assert(latched);
+
+                if( foundZeroConcentrationIn(xml, cls.conserved.charged) ) return true;
+                if( foundZeroConcentrationIn(xml, cls.spectator.charged) ) return true;
+
+                return false;
+            }
+
+
             static  inline apq Dot(const Readable<apq> &a, const Readable<apq> &b)
             {
                 assert(a.size()==b.size());
@@ -43,49 +76,6 @@ namespace Yttrium
                     p[i] = axiom->amount;
                 }
             }
-
-
-#if 0
-            class Prospect : public Quantized
-            {
-            public:
-                typedef CxxArray<apz,Memory::Dyadic> zArray;
-                typedef CxxArray<apq,Memory::Dyadic> qArray;
-                typedef CxxListOf<Prospect>          List;
-
-                explicit Prospect(const Readable<apq> &q,
-                                  const Readable<apq> &p) :
-                Q(q.size()),
-                P(CopyOf,p),
-                next(0),
-                prev(0)
-                {
-                    qArray    tmp(CopyOf,q);
-                    const apn fac = Apex::Simplify::Array(tmp);
-                    Q.ld(tmp);
-                    for(size_t i=P.size();i>0;--i) P[i] *= fac;
-                    //std::cerr << "q=" << q << " -> " << Q << " / " << fac << std::endl;
-                    //std::cerr << "p=" << p << " -> " << P << std::endl;
-                }
-
-                virtual ~Prospect() noexcept {}
-
-                template <typename RHS> inline
-                std::ostream & display(std::ostream &os, RHS &rhs ) const
-                {
-                    os << Q << "*delta=" << P << "'*" << rhs;
-                    return os;
-                }
-
-
-                zArray    Q;
-                qArray    P;
-                Prospect *next;
-                Prospect *prev;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Prospect);
-            };
-#endif
 
 
 
