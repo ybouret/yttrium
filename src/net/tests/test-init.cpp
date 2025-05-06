@@ -6,10 +6,8 @@ using namespace Yttrium;
 
 Y_UTEST(init)
 {
-    Network &net = Network::Instance();
+    Network::API & net = Network::API::Instance();
     std::cerr << net.callSign() << std::endl;
-
-
 }
 Y_UDONE()
 

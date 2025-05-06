@@ -8,6 +8,60 @@
 
 namespace Yttrium
 {
+
+    namespace Network
+    {
+        const char * const API::CallSign = "Network";
+
+        bool API:: isError(const int returnValue) const noexcept
+        {
+#if defined(Y_BSD)
+            return returnValue < 0;
+#endif
+
+#if defined(Y_WIN)
+            return SOCKET_ERROR == returnValue;
+#endif
+        }
+
+
+        int API:: lastError() noexcept
+        {
+            Y_LOCK(access);
+#if defined(Y_BSD)
+            return errno;
+#endif
+
+#if defined(Y_WIN)
+            return WSAGetLastError();
+#endif
+        }
+
+
+#if defined(Y_WIN)
+        static WSADATA wsa;
+#endif
+
+        API:: API() : Singleton<API>()
+        {
+#if defined(Y_WIN)
+            memset(&wsa, 0, sizeof(wsa));
+            const int res = WSAStartup(MAKEWORD(2, 2), &wsa);
+            if (res != 0)  throw Win32::Exception(res,"WSAStartup");
+#endif
+        }
+
+        API:: ~API() noexcept
+        {
+#if defined(Y_WIN)
+            (void)WSACleanup();
+            memset(&wsa, 0, sizeof(wsa));
+#endif
+        }
+
+    }
+
+#if 0
     const char * const Network::CallSign = "Network";
 
 
@@ -105,7 +159,8 @@ namespace Yttrium
         Duration d = Max<double>(0,ns);
         (void) Network::select(0,&r,&w,&x,d);
     }
-
+#endif
+    
 
 }
 
