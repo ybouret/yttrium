@@ -314,7 +314,7 @@ namespace Yttrium
                 {
                     for(size_t j=M;j>0;--j)
                     {
-                        Qr[i][j] = Q[i][j].to<real_t>();
+                        Qr[i][j] = Q[i][j].to<xreal_t>();
                     }
                 }
 

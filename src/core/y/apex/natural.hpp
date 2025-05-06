@@ -11,6 +11,7 @@
 #include "y/type/signs.hpp"
 #include "y/string.hpp"
 #include "y/type/proxy.hpp"
+#include "y/mkl/xreal.hpp"
 #include <cfloat>
 
 namespace Yttrium
@@ -82,6 +83,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
 
         //! digits for long double
         template <> struct RealDigits<long double> { static const unsigned Count = LDBL_DIG; /*!< LDBL_DIG */};
+
+        template <typename T> struct RealDigits< XReal<T> > { static const unsigned Count = RealDigits<T>::Count; };
 
         //______________________________________________________________________
         //
