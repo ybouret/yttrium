@@ -202,7 +202,7 @@ namespace Yttrium
 
             void Design:: build(XMLog          &xml,
                                 XWritable      &Cs,
-                                Matrix<apq>    &Q,
+                                XMatrix        &Qr,
                                 const Library  &lib,
                                 const Clusters &cls)
             {
@@ -249,12 +249,13 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-                Q.make(M,M);
-                //Q.ld(0);
+                Qr.make(M,M);
+
+
                 const size_t     Nq = M-Np;
                 Matrix<apq>      P(M,Np);
                 Matrix<xreal_t>  P_(M,Np);
-                //Matrix<apq>      Q(M,M);
+                Matrix<apq>      Q(M,M);
 
                 Matrix<apq>      B(Np,M);
                 XArray           b(Np);   fillDesignMatrix(B, b, my, lib);
@@ -308,6 +309,16 @@ namespace Yttrium
                     const Species &sp = **it;
                     sp(Cs,TopLevel) = xadd.dot( sp(P_,TopLevel), b);
                 }
+
+                for(size_t i=M;i>0;--i)
+                {
+                    for(size_t j=M;j>0;--j)
+                    {
+                        Qr[i][j] = Q[i][j].to<real_t>();
+                    }
+                }
+
+
 
                 std::cerr << "Cs=" << Cs << std::endl;
                 std::cerr << "Np=" << Np << std::endl;

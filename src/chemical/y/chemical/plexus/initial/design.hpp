@@ -99,12 +99,12 @@ namespace Yttrium
                            const Library  &lib,
                            const Clusters &cls);
 
-                void build(XMLog &xml,
-                           XWritable   &Cs,
-                           Matrix<apq> &Q,
+                void build(XMLog         &xml,
+                           XWritable     &Cs,
+                           XMatrix       &Qr,
                            const Library &lib,
                            const Clusters &cls);
-                
+
 
                 //! check if fixed concentration is EXPLICITLY set for species
                 bool defines(const Species &sp) const noexcept;

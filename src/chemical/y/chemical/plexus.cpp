@@ -71,14 +71,16 @@ namespace Yttrium
             Initial::Design design(axioms,lib,cls);
 
             XArray      Cs(CopyOf,C0);
-            Matrix<apq> Q;
-            design.build(xml,Cs,Q,lib,cls);
+            XMatrix     Qr;
+            design.build(xml,Cs,Qr,lib,cls);
 
-            self(xml,Cs,callback);
+            XArray C1(CopyOf,Cs);
 
-            lib.show(std::cerr << "C0=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
+            self(xml,C1,callback);
 
-            std::cerr << "C0=" << Cs << std::endl;
+            lib.show(std::cerr << "C1=", "\t[", C1, "]", xreal_t::ToString ) << std::endl;
+
+            std::cerr << "C1=" << C1 << std::endl;
 
 
             throw Exception("emergency stop before solving");
