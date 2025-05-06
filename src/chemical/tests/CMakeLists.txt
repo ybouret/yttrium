@@ -6,7 +6,7 @@ set( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 set( DATA ${HERE}/../../../var)
 
 target_sources(test-chemical PUBLIC ${HERE}/titration1.cfg)
-target_sources(test-chemical PUBLIC ${HERE}/titration1.cfg)
+target_sources(test-chemical PUBLIC ${HERE}/titration2.cfg)
 
 enable_testing()
 
