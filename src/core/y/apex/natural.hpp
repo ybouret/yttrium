@@ -84,7 +84,8 @@ Y_Apex_Natural_Op(OP,natural_t, Natural &, MATCHES, RESULT) \
         //! digits for long double
         template <> struct RealDigits<long double> { static const unsigned Count = LDBL_DIG; /*!< LDBL_DIG */};
 
-        template <typename T> struct RealDigits< XReal<T> > { static const unsigned Count = RealDigits<T>::Count; };
+        //! digits for associated XReal
+        template <typename T> struct RealDigits< XReal<T> > { static const unsigned Count = RealDigits<T>::Count; /*!< alias */  };
 
         //______________________________________________________________________
         //

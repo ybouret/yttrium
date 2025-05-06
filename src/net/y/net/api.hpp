@@ -30,6 +30,7 @@ namespace Yttrium
         typedef Win32::Exception Exception; //!< alias
 #endif
 
+        //! API
         class API : public Singleton<API>
         {
         public:

@@ -99,6 +99,7 @@ namespace Yttrium
                            const Library  &lib,
                            const Clusters &cls);
 
+                //! build
                 void build(XMLog         &xml,
                            XWritable     &Cs,
                            XMatrix       &Qr,
