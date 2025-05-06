@@ -1,9 +1,12 @@
 #include "y/net/api.hpp"
 #include "y/system/exception.hpp"
 #include <cstring>
+#include "y/memory/buffer/of.hpp"
+
 
 #if defined(Y_BSD)
 #include <cerrno>
+#include <unistd.h>
 #endif
 
 namespace Yttrium
@@ -13,7 +16,7 @@ namespace Yttrium
     {
         const char * const API::CallSign = "Network";
 
-        bool API:: isError(const int returnValue) const noexcept
+        bool API:: IsError(const int returnValue) noexcept
         {
 #if defined(Y_BSD)
             return returnValue < 0;
@@ -25,9 +28,8 @@ namespace Yttrium
         }
 
 
-        int API:: lastError() noexcept
+        int API:: LastError() noexcept
         {
-            Y_LOCK(access);
 #if defined(Y_BSD)
             return errno;
 #endif
@@ -42,13 +44,28 @@ namespace Yttrium
         static WSADATA wsa;
 #endif
 
-        API:: API() : Singleton<API>()
+        API:: API() : Singleton<API>(), hostName()
         {
 #if defined(Y_WIN)
             memset(&wsa, 0, sizeof(wsa));
             const int res = WSAStartup(MAKEWORD(2, 2), &wsa);
             if (res != 0)  throw Win32::Exception(res,"WSAStartup");
 #endif
+
+        GETHOSTNAME:
+            {
+                size_t                                buflen = 256;
+                Memory::BufferOf<char,Memory::Pooled> membuf(buflen);
+                char * const buffer = &membuf[0];
+                assert( Memory::OutOfReach::Are0(buffer,buflen) );
+                Y_GIANT_LOCK();
+                if( IsError( gethostname(buffer,buflen)) )
+                {
+                    goto GETHOSTNAME;
+                }
+                Coerce(hostName) = buffer;
+            }
+
         }
 
         API:: ~API() noexcept

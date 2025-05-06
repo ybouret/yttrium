@@ -48,8 +48,10 @@ namespace Yttrium
             // Methods
             //
             //______________________________________________________________________
-            bool isError(const int returnValue) const noexcept; //!< returnValue to error
-            int  lastError()                          noexcept; //!< errno, WSAGetLastError()...
+            static bool IsError(const int returnValue) noexcept; //!< returnValue to error
+            static int  LastError()                    noexcept; //!< errno, WSAGetLastError()...
+
+            const String hostName;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(API);

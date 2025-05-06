@@ -241,6 +241,80 @@ namespace Yttrium
                     throw Specific::Exception(CallSign,"too many axioms");
                 }
 
+
+                //--------------------------------------------------------------
+                //
+                //
+                // Computing Projection and Orthogonal Matrices
+                //
+                //
+                //--------------------------------------------------------------
+                Q.make(M,M);
+                //Q.ld(0);
+                const size_t     Nq = M-Np;
+                Matrix<apq>      P(M,Np);
+                Matrix<xreal_t>  P_(M,Np);
+                //Matrix<apq>      Q(M,M);
+
+                Matrix<apq>      B(Np,M);
+                XArray           b(Np);   fillDesignMatrix(B, b, my, lib);
+                Matrix<apq>      BT(TransposeOf,B);
+                Matrix<apq>      iB2(Np,Np);
+                {
+                    // B2 = B*BT
+                    Matrix<apq> B2(Np,Np);
+                    for(size_t i=1;i<=Np;++i)
+                    {
+                        for(size_t j=1;j<=i;++j)
+                            B2[i][j] = B2[j][i] = Dot(B[i],B[j]);
+                    }
+                    {
+                        MKL::LU<apq> lu(Np);
+                        if(!lu.build(B2)) throw Specific::Exception(CallSign,"singular axiom%s",Plural::s(Np));
+                        lu.invert(B2,iB2);
+                    }
+                }
+
+                std::cerr << "B=" << B << std::endl;
+                std::cerr << "b=" << b << std::endl;
+                for(size_t i=1;i<=M;++i)
+                {
+                    for(size_t j=1;j<=Np;++j)
+                    {
+                        P_[i][j] = (P[i][j] = Dot(BT[i],iB2[j])).to<real_t>();
+                    }
+                }
+
+                {
+                    const apq _1 = 1;
+                    for(size_t i=1;i<=M;++i)
+                    {
+                        for(size_t j=1;j<i;++j)
+                            Q[i][j] =    - Dot(P[i],BT[j]);
+                        Q[i][i]     = _1 - Dot(P[i],BT[i]);
+                        for(size_t j=i+1;j<=M;++j)
+                            Q[i][j] =    - Dot(P[i],BT[j]);
+                    }
+                }
+                assert(Np==MKL::Rank::Of(P));
+                assert(Nq==MKL::Rank::Of(Q));
+
+                std::cerr << "P=" << P << std::endl;
+                std::cerr << "Q=" << Q << std::endl;
+
+                XAdd xadd;
+                for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
+                {
+                    const Species &sp = **it;
+                    sp(Cs,TopLevel) = xadd.dot( sp(P_,TopLevel), b);
+                }
+
+                std::cerr << "Cs=" << Cs << std::endl;
+                std::cerr << "Np=" << Np << std::endl;
+                std::cerr << "Nq=" << Nq << std::endl;
+
+                lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
+
             }
 
         }
