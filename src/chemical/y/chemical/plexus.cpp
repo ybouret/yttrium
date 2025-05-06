@@ -67,7 +67,7 @@ namespace Yttrium
             Initial::Design design(axioms,lib,cls);
             design.build(xml,C0,lib,cls);
 
-            throw Exception("need to check");
+            throw Exception("emergency stop before solving");
             (*this)(xml,C0,callback);
         }
 

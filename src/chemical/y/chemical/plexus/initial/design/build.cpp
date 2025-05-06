@@ -132,7 +132,7 @@ namespace Yttrium
                         throw Specific::Exception(CallSign, "overdetermined design");
                     }
 
-                    while(Np<M && foundZeroConcentration(xml,cls)) ++Np;
+                    //while(Np<M && foundZeroConcentration(xml,cls)) ++Np;
                 }
 
                 //--------------------------------------------------------------
