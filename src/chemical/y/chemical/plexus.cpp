@@ -65,7 +65,11 @@ namespace Yttrium
                                  Reactor::Proc * const   callback)
         {
             Initial::Design design(axioms,lib,cls);
-            design.build(xml,C0,lib,cls);
+            //design.build(xml,C0,lib,cls);
+
+            XArray      Cs(CopyOf,C0);
+            Matrix<apq> Q;
+            design.build(xml,Cs,Q,lib,cls);
 
             throw Exception("emergency stop before solving");
             (*this)(xml,C0,callback);

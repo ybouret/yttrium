@@ -196,36 +196,50 @@ namespace Yttrium
                 lib.show(std::cerr << "Cs=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
 
 
-#if 0
 
+            }
+
+
+            void Design:: build(XMLog          &xml,
+                                XWritable      &Cs,
+                                Matrix<apq>    &Q,
+                                const Library  &lib,
+                                const Clusters &cls)
+            {
+                if(!latched) throw Specific::Exception(CallSign,"building only if latched!");
+
+                assert(Cs.size()>=lib->size());
+                
+                //--------------------------------------------------------------
+                //
+                //
+                // initialize
+                //
+                //
+                //--------------------------------------------------------------
+                lib.ldz(Cs);
+                const size_t M  = lib->size();
+                const size_t N  = cls.primary;
+                size_t       Np = my.size;
+                Y_XML_SECTION_OPT(xml,
+                                  CallSign,
+                                  "species=" << M
+                                  << " equilibri" << Plural::aum(N) << "=" << N
+                                  << " axiom" << Plural::s(Np) << "=" << Np);
+
+                //--------------------------------------------------------------
+                //
+                //
+                // sorting out
+                //
+                //
+                //--------------------------------------------------------------
+                const size_t Nc = N + Np;
+                Y_XML_COMMENT(xml, Nc << " constraint" <<  Plural::s(Nc) << " for " << M << " species");
+                if(Nc>M)
                 {
-                    Prospect::List pros;
-                    for(Library::ConstIterator it=lib->begin();it!=lib->end();++it)
-                    {
-                        const Species &sp = **it;
-                        const size_t   j  = sp.indx[TopLevel];
-                        const Readable<apq> &Qj = Q[j]; if(Apex::CountNonZero(Qj)<=0) continue;
-                        Prospect &pro = *pros.pushTail( new Prospect(Qj,P[j]) );
-
-                        pro.display( lib.pad(std::cerr << sp.name,sp) << " : ",b) << std::endl;
-                    }
+                    throw Specific::Exception(CallSign,"too many axioms");
                 }
-
-                {
-                    Matrix<apq> iQ(Q);
-                    {
-                        LightArray<apq> _ = iQ.asArray();
-                        Apex::Simplify::Array(_);
-                    }
-                    std::cerr << "iQ=" << iQ << std::endl;
-
-                    Apex::Ortho::Architect arch(M);
-                    Matrix<apz> Qa;
-                    arch.transposeBasis(Qa, iQ, Nq);
-                    std::cerr << "Qa=" << Qa << std::endl;
-
-                }
-#endif
 
             }
 
