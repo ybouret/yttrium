@@ -45,7 +45,10 @@ namespace Yttrium
                                  Reactor::Proc * const callback)
         {
             eqz(xml,C0);
+            lib.show(std::cerr << "Ceqz=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
             rxn(xml,C0,callback);
+            lib.show(std::cerr << "Crxn=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
         }
 
     }
@@ -71,8 +74,15 @@ namespace Yttrium
             Matrix<apq> Q;
             design.build(xml,Cs,Q,lib,cls);
 
+            (*this)(xml,Cs,callback);
+
+            lib.show(std::cerr << "C0=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
+
+            std::cerr << "C0=" << Cs << std::endl;
+
+
             throw Exception("emergency stop before solving");
-            (*this)(xml,C0,callback);
+
         }
 
 
