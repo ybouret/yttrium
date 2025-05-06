@@ -80,7 +80,9 @@ namespace Yttrium
 
             lib.show(std::cerr << "C1=", "\t[", C1, "]", xreal_t::ToString ) << std::endl;
 
+            std::cerr << "Cs=" << Cs << std::endl;
             std::cerr << "C1=" << C1 << std::endl;
+            std::cerr << "Qr=" << Qr << std::endl;
 
 
             throw Exception("emergency stop before solving");
