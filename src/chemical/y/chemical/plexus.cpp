@@ -67,6 +67,7 @@ namespace Yttrium
             Initial::Design design(axioms,lib,cls);
             design.build(xml,C0,lib,cls);
 
+            throw Exception("need to check");
             (*this)(xml,C0,callback);
         }
 
