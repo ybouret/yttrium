@@ -57,11 +57,21 @@ namespace Yttrium
 
 
 #include "y/chemical/plexus/initial/design.hpp"
+#include "y/stream/libc/output.hpp"
 
 namespace Yttrium
 {
     namespace Chemical
     {
+
+        static inline void saveC(OutputStream &fp, const unsigned count, const XReadable &C)
+        {
+            fp("%u",count);
+            for(size_t i=1;i<=C.size();++i)
+                fp(" %.15g", double(C[i]));
+            fp << '\n';
+        }
+
         void Plexus:: operator()(XMLog     &             xml,
                                  XWritable &             C0,
                                  const Initial::Axioms & axioms,
@@ -87,6 +97,10 @@ namespace Yttrium
             XArray C2(M,0);
             self(xml,C1,callback);
 
+            unsigned   count=0;
+            OutputFile fp("init.dat");
+
+            saveC(fp,count,C1);
 
             lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
             lib.show(std::cerr << "C1=", "\t[", C1, "]", xreal_t::ToString ) << std::endl;
@@ -96,7 +110,7 @@ namespace Yttrium
             std::cerr << "C1=" << C1 << std::endl;
             std::cerr << "Qr=" << Qr << std::endl;
 
-            for(size_t iter=0;iter<5;++iter)
+            for(size_t iter=0;iter<10;++iter)
             {
                 for(size_t i=M;i>0;--i)
                 {
@@ -114,6 +128,9 @@ namespace Yttrium
                 {
                     C1[i] = C2[i];
                 }
+                ++count;
+                saveC(fp,count,C1);
+
             }
 
 
