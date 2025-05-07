@@ -67,22 +67,57 @@ namespace Yttrium
                                  const Initial::Axioms & axioms,
                                  Reactor::Proc * const   callback)
         {
-            Plexus &self = *this;
-            Initial::Design design(axioms,lib,cls);
 
-            XArray      Cs(CopyOf,C0);
+            Y_XML_SECTION(xml, "Plexus::Initial");
+
+            // construct design from axions
+            Plexus &        self = *this;
+            const size_t    M    = lib->size();
+            Initial::Design design(axioms,self.lib,self.cls);
+            const xreal_t   zero;
+
+            // initialize Cs and Qr
+            XArray      Cs(M,zero);
             XMatrix     Qr;
             design.build(xml,Cs,Qr,lib,cls);
 
-            XArray C1(CopyOf,Cs);
 
+            // create first solved solution
+            XArray C1(CopyOf,Cs); assert(M==C1.size());
+            XArray C2(M,0);
             self(xml,C1,callback);
 
+
+            lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
             lib.show(std::cerr << "C1=", "\t[", C1, "]", xreal_t::ToString ) << std::endl;
+
 
             std::cerr << "Cs=" << Cs << std::endl;
             std::cerr << "C1=" << C1 << std::endl;
             std::cerr << "Qr=" << Qr << std::endl;
+
+            for(size_t iter=0;iter<5;++iter)
+            {
+                for(size_t i=M;i>0;--i)
+                {
+                    xadd.free();
+                    xadd << Cs[i];
+                    for(size_t j=M;j>0;--j) xadd << Qr[i][j] * C1[j];
+                    C2[i] = xadd.sum();
+                }
+                self(xml,C2,callback);
+                std::cerr << "Cs=" << Cs << std::endl;
+                std::cerr << "C1=" << C1 << std::endl;
+                std::cerr << "Qr=" << Qr << std::endl;
+                std::cerr << "C2=" << C2 << std::endl;
+                for(size_t i=M;i>0;--i)
+                {
+                    C1[i] = C2[i];
+                }
+            }
+
+
+
 
 
             throw Exception("emergency stop before solving");

@@ -46,6 +46,7 @@ namespace Yttrium
             Clusters           cls;
             Equalizer          eqz;
             Reactors           rxn;
+            XAdd               xadd;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Plexus);

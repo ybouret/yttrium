@@ -217,8 +217,6 @@ namespace Yttrium
                 //
                 //
                 //--------------------------------------------------------------
-
-                
                 const size_t M  = lib->size();
                 const size_t N  = cls.primary;
                 size_t       Np = my.size;
@@ -226,7 +224,7 @@ namespace Yttrium
                                   CallSign,
                                   "species=" << M
                                   << " equilibri" << Plural::aum(N) << "=" << N
-                                  << " axiom" << Plural::s(Np) << "=" << Np);
+                                  << " axiom"     << Plural::s(Np)  << "=" << Np);
 
                 lib.ldz(Cs);
                 Qr.make(M,M); Qr.ld(0);
