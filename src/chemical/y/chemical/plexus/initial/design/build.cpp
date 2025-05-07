@@ -199,15 +199,22 @@ namespace Yttrium
                     }
                 }
 #endif
+
+#if 0
                 // compute virtual system
-                Matrix<apz> Nu(N,M);
+                Matrix<apz>      Nu(N,M);
+                XArray           K(N,0);
+                CxxArray<String> S(N);
                 {
                     size_t i=1;
                     for(const Cluster *cl=cls->head;cl;cl=cl->next)
                     {
                         for(const ENode *en = cl->order[1].head;en;en=en->next,++i)
                         {
-                            (**en).fillTopology(Nu[i],TopLevel);
+                            const Equilibrium &eq = **en;
+                            eq.fillTopology(Nu[i],TopLevel);
+                            K[i] = eq(cls.K,TopLevel);
+                            S[i] = *eq.name;
                         }
                     }
                 }
@@ -225,22 +232,26 @@ namespace Yttrium
                     }
                 }
 
+                // get virtual coefficients
                 Matrix<apq> Mu(TransposeOf,QNuT);
                 for(size_t i=N;i>0;--i)
                 {
                     (void) Apex::Simplify::Array(Mu[i]);
                 }
-
+#endif
 
                 std::cerr << "P="  << P  << std::endl;
                 std::cerr << "Q="  << Q  << std::endl;
                 std::cerr << "Cs=" << Cs << std::endl;
                 std::cerr << "Np=" << Np << std::endl;
                 std::cerr << "Nq=" << Nq << std::endl;
-                std::cerr << "Nu=" << Nu << std::endl;
-                std::cerr << "Mu=" << Mu << std::endl;
+                //std::cerr << "Nu=" << Nu << std::endl;
+                //std::cerr << "Mu=" << Mu << std::endl;
 
                 lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
+
+
+
 
             }
 
