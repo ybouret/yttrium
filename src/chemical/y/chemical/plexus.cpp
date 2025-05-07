@@ -81,11 +81,12 @@ namespace Yttrium
             Y_XML_SECTION(xml, "Plexus::Initial");
 
             // construct design from axions
-            Plexus &        self = *this;
-            const size_t    M    = lib->size();
-            Initial::Design design(axioms,self.lib,self.cls);
-            const xreal_t   zero;
+            //const size_t    M    = lib->size();
+            Initial::Design design(axioms,lib,cls);
+            design.build(xml,lib,cls);
 
+            throw Exception("emergency stop before solving");
+#if 0
             // initialize Cs and Qr
             XArray      Cs(M,zero);
             XMatrix     Qr;
@@ -160,8 +161,8 @@ namespace Yttrium
 
             }
 
-            throw Exception("emergency stop before solving");
 
+#endif
         }
 
 

@@ -93,18 +93,12 @@ namespace Yttrium
                          const String &expr,
                          const xreal_t Ctot);
 
-                //! build
-                void build(XMLog          &xml,
-                           XWritable      &C0,
-                           const Library  &lib,
-                           const Clusters &cls);
+                
 
                 //! build
-                void build(XMLog         &xml,
-                           XWritable     &Cs,
-                           XMatrix       &Qr,
-                           const Library &lib,
-                           const Clusters &cls);
+                void build(XMLog          & xml,
+                           const Library  & lib,
+                           const Clusters & cls);
 
 
                 //! check if fixed concentration is EXPLICITLY set for species
