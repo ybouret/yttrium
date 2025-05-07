@@ -24,11 +24,16 @@ namespace Yttrium
 
 #if defined(Y_BSD)
         typedef Libc::Exception  Exception; //!< alias
+        typedef int              SystemSocket;
 #endif
 
 #if defined(Y_WIN)
         typedef Win32::Exception Exception; //!< alias
+        typedef SOCKET           SystemSocket;
 #endif
+
+        
+
 
         //! API
         class API : public Singleton<API>
