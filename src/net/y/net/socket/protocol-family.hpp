@@ -11,26 +11,9 @@ namespace Yttrium
     namespace Network
     {
 
-        typedef Parameter<int> ProtocolFamilyClass;
-
-        class ProtocolFamily : public ProtocolFamilyClass
-        {
-        public:
-            typedef SuffixSet<String,const ProtocolFamily> Set;
-
-            template <typename NAME> inline
-            explicit ProtocolFamily(const int protocolFamily, const NAME &uuid) :
-            ProtocolFamilyClass(protocolFamily,uuid)
-            {
-            }
-
-            explicit ProtocolFamily(const ProtocolFamily &) noexcept;
-            virtual ~ProtocolFamily() noexcept;
+        Y_Net_Decl(ProtocolFamily,int);
 
 
-        private:
-            Y_DISABLE_ASSIGN(ProtocolFamily);
-        };
 
     }
 }

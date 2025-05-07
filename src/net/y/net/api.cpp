@@ -58,27 +58,36 @@ namespace Yttrium
         static WSADATA wsa;
 #endif
 
-        API:: API() : Singleton<API>(), hostName()
+        API:: API() :
+        Singleton<API>(),
+        hostName(),
+        unknown( new String(Core::Unknown) ),
+        pf(unknown)
         {
 #if defined(Y_WIN)
             memset(&wsa, 0, sizeof(wsa));
             const int res = WSAStartup(MAKEWORD(2, 2), &wsa);
             if (res != 0)  throw Win32::Exception(res,"WSAStartup");
 #endif
-
-        GETHOSTNAME:
+            // getting host name
             {
-                size_t                                buflen = 256;
+                size_t buflen = 256;
+            GETHOSTNAME:
                 Memory::BufferOf<char,Memory::Pooled> membuf(buflen);
-                char * const buffer = &membuf[0];
-                assert( Memory::OutOfReach::Are0(buffer,buflen) );
-                Y_GIANT_LOCK();
-                if( IsError( gethostname(buffer,buflen)) )
-                {
-                    goto GETHOSTNAME;
-                }
-                Coerce(hostName) = buffer;
+                    char * const buffer = &membuf[0];
+                    assert( Memory::OutOfReach::Are0(buffer,buflen) );
+                    Y_GIANT_LOCK();
+                    if( IsError( gethostname(buffer,buflen)) )
+                    {
+                        buflen <<= 1;
+                        goto GETHOSTNAME;
+                    }
+                    Coerce(hostName) = buffer;
             }
+
+            Y_Net_Add(pf,PF_INET);
+            Y_Net_Add(pf,PF_INET6);
+
 
         }
 

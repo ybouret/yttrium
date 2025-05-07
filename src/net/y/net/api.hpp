@@ -62,7 +62,8 @@ namespace Yttrium
 
 
             const String        hostName;
-            ProtocolFamily::Set pf;
+            const Label         unknown;
+            ProtocolFamilySet   pf;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(API);
