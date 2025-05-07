@@ -12,9 +12,6 @@
 #include <ws2tcpip.h>
 #endif
 
-#if defined(Y_BSD)
-#include <sys/select.h>
-#endif
 
 namespace Yttrium
 {
