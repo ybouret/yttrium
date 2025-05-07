@@ -91,6 +91,7 @@ namespace Yttrium
             XMatrix     Qr;
             design.build(xml,Cs,Qr,lib,cls);
 
+            throw Exception("emergency stop before solving");
 
             // create first solved solution
             XArray C1(CopyOf,Cs); assert(M==C1.size());
@@ -109,6 +110,7 @@ namespace Yttrium
             std::cerr << "Cs=" << Cs << std::endl;
             std::cerr << "C1=" << C1 << std::endl;
             std::cerr << "Qr=" << Qr << std::endl;
+
 
             for(size_t iter=0;iter<10;++iter)
             {
@@ -137,7 +139,6 @@ namespace Yttrium
 
 
 
-            throw Exception("emergency stop before solving");
 
         }
 
