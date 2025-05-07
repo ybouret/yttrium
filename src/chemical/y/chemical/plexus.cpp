@@ -91,6 +91,26 @@ namespace Yttrium
             XMatrix     Qr;
             design.build(xml,Cs,Qr,lib,cls);
 
+            for(const Cluster *cl=cls->head;cl;cl=cl->next)
+            {
+                const Cluster &cluster = *cl;
+                iMatrix        Nu(cluster.N,M);
+                const EList   &primary = cluster.order[1]; assert(Nu.rows==primary.size);
+                {
+                    size_t i=1;
+                    for(const ENode *en = primary.head; en; en=en->next,++i )
+                    {
+                        const Equilibrium &eq = **en;
+
+                        eq.fillTopology(Nu[i],TopLevel);
+                        std::cerr << "with " << eq.name << " @ " << Nu[i] << std::endl;
+                    }
+                }
+
+                std::cerr << "Nu=" << Nu << std::endl;
+            }
+
+
             throw Exception("emergency stop before solving");
 
             // create first solved solution
@@ -112,7 +132,7 @@ namespace Yttrium
             std::cerr << "Qr=" << Qr << std::endl;
 
 
-            for(size_t iter=0;iter<10;++iter)
+            for(size_t iter=0;iter<100;++iter)
             {
                 for(size_t i=M;i>0;--i)
                 {
@@ -126,19 +146,21 @@ namespace Yttrium
                 std::cerr << "C1=" << C1 << std::endl;
                 std::cerr << "Qr=" << Qr << std::endl;
                 std::cerr << "C2=" << C2 << std::endl;
+
+                bool converged = true;
                 for(size_t i=M;i>0;--i)
                 {
+                    const xreal_t dc = C1[i]-C2[i];
                     C1[i] = C2[i];
+                    if( dc.abs().mantissa > 0 ) converged = false;
                 }
+                std::cerr << "converged=" << converged << std::endl;
                 ++count;
                 saveC(fp,count,C1);
 
             }
 
-
-
-
-
+            throw Exception("emergency stop before solving");
 
         }
 
