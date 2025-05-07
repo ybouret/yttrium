@@ -62,7 +62,8 @@ namespace Yttrium
         Singleton<API>(),
         hostName(),
         unknown( new String(Core::Unknown) ),
-        pf(unknown)
+        //pf(unknown),
+        verbose(false)
         {
 #if defined(Y_WIN)
             memset(&wsa, 0, sizeof(wsa));
@@ -85,8 +86,8 @@ namespace Yttrium
                     Coerce(hostName) = buffer;
             }
 
-            Y_Net_Add(pf,PF_INET);
-            Y_Net_Add(pf,PF_INET6);
+            //Y_Net_Add(pf,PF_INET);
+            //Y_Net_Add(pf,PF_INET6);
 
 
         }
@@ -103,6 +104,10 @@ namespace Yttrium
         SystemSocket API:: socket_create(const int protocolFamily, const int type, const int protocol)
         {
             Y_GIANT_LOCK();
+            if(verbose)
+            {
+                //std::cerr << "socket(" << pf[protocolFamily] << ")" << std::endl;
+            }
             const SystemSocket s = socket(protocolFamily,type,protocol);
             if( IsInvalid(s) ) {
                 const int err = LastError();

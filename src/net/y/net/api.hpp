@@ -46,7 +46,6 @@ namespace Yttrium
             static const char * const      CallSign;                                //!< "Network"
             static const AtExit::Longevity LifeTime = AtExit::MaximumLongevity - 9; //!< Longevity
 
-
             //______________________________________________________________________
             //
             //
@@ -63,8 +62,9 @@ namespace Yttrium
 
             const String        hostName;
             const Label         unknown;
-            ProtocolFamilySet   pf;
-
+            //ProtocolFamilySet   pf;
+            bool                verbose;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(API);
             friend class Singleton<API>;

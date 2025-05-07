@@ -11,12 +11,13 @@ Y_UTEST(init)
     Network::API & net = Network::API::Instance();
     std::cerr << net.callSign() << std::endl;
     std::cerr << net.hostName   << std::endl;
+    net.verbose = true;
 
     {
         Network::SystemSocket s = net.socket_create(PF_INET,SOCK_STREAM,IPPROTO_TCP);
 
         net.socket_delete(s);
-        
+
     }
 
 

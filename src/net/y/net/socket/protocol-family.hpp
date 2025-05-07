@@ -11,7 +11,7 @@ namespace Yttrium
     namespace Network
     {
 
-        Y_Net_Decl(ProtocolFamily,int);
+        //Y_Net_Decl(ProtocolFamily,int);
 
 
 
