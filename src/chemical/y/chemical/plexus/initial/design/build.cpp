@@ -200,7 +200,7 @@ namespace Yttrium
                 }
 #endif
                 // compute virtual system
-                Matrix<apz> Nu(cls.primary,M);
+                Matrix<apz> Nu(N,M);
                 {
                     size_t i=1;
                     for(const Cluster *cl=cls->head;cl;cl=cl->next)
@@ -212,6 +212,24 @@ namespace Yttrium
                     }
                 }
 
+                Matrix<apq> QNuT(M,N);
+                for(size_t j=M;j>0;--j)
+                {
+                    for(size_t i=N;i>0;--i)
+                    {
+                        apq &sum = QNuT[j][i];
+                        for(size_t k=M;k>0;--k)
+                        {
+                            sum += Q[j][k] * Nu[i][k];
+                        }
+                    }
+                }
+
+                Matrix<apq> Mu(TransposeOf,QNuT);
+                for(size_t i=N;i>0;--i)
+                {
+                    (void) Apex::Simplify::Array(Mu[i]);
+                }
 
 
                 std::cerr << "P="  << P  << std::endl;
@@ -220,6 +238,8 @@ namespace Yttrium
                 std::cerr << "Np=" << Np << std::endl;
                 std::cerr << "Nq=" << Nq << std::endl;
                 std::cerr << "Nu=" << Nu << std::endl;
+                std::cerr << "Mu=" << Mu << std::endl;
+
                 lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
 
             }
