@@ -1,6 +1,8 @@
 #include "y/utest/run.hpp"
 #include "y/net/api.hpp"
 #include "y/system/wtime.hpp"
+//#include <sys/socket.h>
+#include <arpa/inet.h>
 
 using namespace Yttrium;
 
@@ -9,6 +11,14 @@ Y_UTEST(init)
     Network::API & net = Network::API::Instance();
     std::cerr << net.callSign() << std::endl;
     std::cerr << net.hostName   << std::endl;
+
+    {
+        Network::SystemSocket s = net.socket_create(PF_INET,SOCK_STREAM,IPPROTO_TCP);
+
+        net.socket_delete(s);
+        
+    }
+
 
 }
 Y_UDONE()

@@ -25,6 +25,7 @@ namespace Yttrium
 #if defined(Y_BSD)
         typedef Libc::Exception  Exception; //!< alias
         typedef int              SystemSocket;
+#define INVALID_SOCKET           (-1)
 #endif
 
 #if defined(Y_WIN)
@@ -54,8 +55,13 @@ namespace Yttrium
             // Methods
             //
             //______________________________________________________________________
-            static bool IsError(const int returnValue) noexcept; //!< returnValue to error
-            static int  LastError()                    noexcept; //!< errno, WSAGetLastError()...
+            static bool IsError(const int returnValue)  noexcept; //!< returnValue to error
+            static int  LastError()                     noexcept; //!< errno, WSAGetLastError()...
+            static bool IsInvalid(const SystemSocket &) noexcept;
+
+            SystemSocket socket_create(const int protocolFamily, const int type, const int protocol);
+            void         socket_delete(SystemSocket &s) noexcept;
+
 
             const String hostName;
 
