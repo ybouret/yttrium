@@ -10,7 +10,7 @@ using namespace Apex;
 #define TRY_CAST(TYPE) do { \
 /**/ std::cerr << "tryCast<" << #TYPE << ">" << std::endl;\
 /**/ TYPE t = 0; \
-/**/ if( num.tryCast<TYPE>(t) ) { std::cerr << "Success @" << t << std::endl; } else {  std::cerr << "Failure" << std::endl; } \
+/**/ if( num.tryCast<TYPE>(t) ) { std::cerr << "\tSuccess @" << t << std::endl; } else {  std::cerr << "\tFailure" << std::endl; } \
 } while(false)
 
 Y_UTEST(apex_conv)
@@ -28,6 +28,10 @@ Y_UTEST(apex_conv)
         std::cerr << " = " << Natural::Ratio<float>(num,den);
         std::cerr << " = " << Natural::Ratio<double>(num,den);
         std::cerr << " = " << Natural::Ratio<long double>(num,den);
+        std::cerr << " = " << Natural::Ratio< XReal<float> >(num,den);
+        std::cerr << " = " << Natural::Ratio< XReal<double> >(num,den);
+        std::cerr << " = " << Natural::Ratio< XReal<long double> >(num,den);
+        std::cerr << std::endl;
         std::cerr << std::endl;
 
         std::cerr << "Trying to convert " << num << std::endl;
