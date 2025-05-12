@@ -77,6 +77,11 @@ namespace Yttrium
             X.insert(sp(C,L),nu);
         }
 
+        void Actor:: drvsActivity(XMul &X, const XReadable &C, const Level L) const
+        {
+            (X << xn).insert( sp(C,L), nm1 );
+        }
+
         void Actor:: activityError(XMul &X, const XReadable &C, const Level L) const
         {
             assert(sp(C,L)>=0.0);

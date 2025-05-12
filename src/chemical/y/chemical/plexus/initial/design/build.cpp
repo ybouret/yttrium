@@ -107,6 +107,11 @@ namespace Yttrium
                                   << " axiom"     << Plural::s(Np)  << "=" << Np);
 
 
+                if(Np<=0)
+                {
+                    Y_XML_COMMENT(xml,"no axioms");
+                    return;
+                }
 
 
                 //--------------------------------------------------------------

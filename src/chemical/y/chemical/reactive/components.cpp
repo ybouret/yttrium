@@ -387,6 +387,13 @@ namespace Yttrium
             return xadd.sum();
         }
 
+
+        void Components:: drvs(XWritable &phi, const Level lvl, const xreal_t K, XMul &X, const XReadable &C, const Level L) const
+        {
+            reac.drvsActivity(phi,lvl,  K, X, C, L);
+            prod.drvsActivity(phi,lvl, -1, X, C, L);
+        }
+
         static inline
         void decorateArrow(OutputStream &fp,
                            const Actor  * const a,
@@ -449,6 +456,10 @@ namespace Yttrium
             prod.displayCompact(os, C, L);
             return os;
         }
+
+
+
+
 
     }
 

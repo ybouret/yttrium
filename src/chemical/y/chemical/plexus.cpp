@@ -82,8 +82,29 @@ namespace Yttrium
 
             // construct design from axions
             //const size_t    M    = lib->size();
+
+            lib.ldz(C0);
+            (*this)(xml,C0,0);
+            lib.show(std::cerr << "C0=", "\t[", C0, "]", xreal_t::ToString ) << std::endl;
+
+            std::cerr << "C0=" << C0 << std::endl;
+
+            XMatrix Phi(cls.primary,lib->size());
+            XMul    xmul;
+            for(const Cluster *cl=cls->head;cl;cl=cl->next)
+            {
+                for(const ENode *en=cl->order[1].head;en;en=en->next)
+                {
+                    const Equilibrium &eq = **en;
+                    eq.drvs(eq(Phi,TopLevel), TopLevel, eq(cls.K,TopLevel), xmul, C0, TopLevel);
+                }
+            }
+            std::cerr << "Phi=" << Phi << std::endl;
+
             Initial::Design design(axioms,lib,cls);
             design.build(xml,lib,cls);
+
+
 
             throw Exception("emergency stop before solving");
 #if 0

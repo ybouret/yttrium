@@ -153,6 +153,27 @@ namespace Yttrium
             for(const Actor *a=my.head;a;a=a->next)
                 book |= a->sp;
         }
+
+
+        void Actors:: drvsActivity(XWritable &      phi,
+                                   const Level      lvl,
+                                   const xreal_t    fac,
+                                   XMul            &X,
+                                   const XReadable &C,
+                                   const Level      L) const
+        {
+            for(const Actor *a=my.head;a;a=a->next)
+            {
+                X.free();
+                X << fac;
+                a->drvsActivity(X,C,L);
+                for(const Actor *b=a->prev;b;b=b->prev) b->activity(X,C,L);
+                for(const Actor *b=a->next;b;b=b->next) b->activity(X,C,L);
+                a->sp(phi,lvl) = X.product();
+            }
+        }
+
+
     }
 
 }

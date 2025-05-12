@@ -209,6 +209,10 @@ namespace Yttrium
             //! compute jacobian and return affinity, assuming zeroed array initially
             xreal_t jacobian(XWritable &xjac, const xreal_t K, XAdd &xadd, const XReadable &C, const Level L) const;
 
+            //! compute derivative of activity
+            void    drvs(XWritable &phi, const Level lvl, const xreal_t K, XMul &X, const XReadable &C, const Level L) const;
+
+
 
 
             //! display as compact lists
