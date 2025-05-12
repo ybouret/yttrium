@@ -105,6 +105,7 @@ associative/suffix/set
 associative/hash
 associative/hash/map
 associative/hash/set
+associative/named
 graphviz
 mkl
 mkl/cameo
