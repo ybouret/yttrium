@@ -58,6 +58,16 @@ namespace Yttrium
             xreal_t limiting(const XReadable &C, const Level L)                   const noexcept; //!< fast limiting extent
             void    safeMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update valid C
             void    boldMove(XWritable &C, const Level L, const xreal_t xi)       const noexcept; //!< update invalid C
+
+            //! compute gradient of activity, assumed to be zeroed before call
+            /**
+             \param phi target gradient
+             \param lvl level of of phi
+             \param fac factor to initialize multiplication
+             \param X   multiplication
+             \param C   current concentrations
+             \param L   level of C
+             */
             void    drvsActivity(XWritable &      phi,
                                  const Level      lvl,
                                  const xreal_t    fac,
