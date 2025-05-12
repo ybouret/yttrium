@@ -61,8 +61,7 @@ namespace Yttrium
 
 
             const String        hostName;
-            const Label         unknown;
-            //ProtocolFamilySet   pf;
+            ProtocolFamilySet   pf;
             bool                verbose;
             
         private:

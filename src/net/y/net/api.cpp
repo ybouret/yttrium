@@ -61,8 +61,7 @@ namespace Yttrium
         API:: API() :
         Singleton<API>(),
         hostName(),
-        unknown( new String(Core::Unknown) ),
-        //pf(unknown),
+        pf("PF_UNKNOWN",-1),
         verbose(false)
         {
 #if defined(Y_WIN)

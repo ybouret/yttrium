@@ -1,8 +1,11 @@
 #include "y/utest/run.hpp"
 #include "y/net/api.hpp"
 #include "y/system/wtime.hpp"
-//#include <sys/socket.h>
+
+#if defined(Y_BSD)
+#include <sys/socket.h>
 #include <arpa/inet.h>
+#endif
 
 using namespace Yttrium;
 

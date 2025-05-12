@@ -3,7 +3,7 @@
 #define Y_Net_Socket_Protocol_Family_Included 1
 
 
-#include "y/net/type/parameter.hpp"
+#include "y/associative/named/variables.hpp"
 
 
 namespace Yttrium
@@ -11,7 +11,8 @@ namespace Yttrium
     namespace Network
     {
 
-        //Y_Net_Decl(ProtocolFamily,int);
+        typedef Named::Variable<int>             ProtocolFamily;
+        typedef Named::Variables<ProtocolFamily> ProtocolFamilySet;
         
 
 
