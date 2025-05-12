@@ -5,6 +5,7 @@
 #if defined(Y_BSD)
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #endif
 
 using namespace Yttrium;
