@@ -280,6 +280,7 @@ add_test(associative:address-book test-core associative_addrbook)
 add_test(associative:pod-key      test-core associative_pod_key)
 add_test(associative:flexible-key test-core associative_flexible_key)
 add_test(associative:leak         test-core associative_leak)
+add_test(associative:named-vars   test-core associative_named_vars)
 
 
 #mkl

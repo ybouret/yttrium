@@ -213,6 +213,7 @@ Y_UTEST_DECL(300)
     Y_UTEST(associative_pod_key);
     Y_UTEST(associative_flexible_key);
     Y_UTEST(associative_leak);
+    Y_UTEST(associative_named_vars);
 
     Y_UTEST(mkl_numeric);
     Y_UTEST(mkl_complex);
