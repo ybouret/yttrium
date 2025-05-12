@@ -163,6 +163,8 @@ namespace Yttrium
             Code * const code;
         };
 
+#define Y_Named_Variable_Decl(VARS,VAR) ( (VARS)(#VAR,VAR) )
+
     }
 
 }
