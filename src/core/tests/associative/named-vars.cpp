@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/quantized.hpp"
 #include "y/memory/out-of-reach.hpp"
+#include "y/memory/buffer/zone.hpp"
 #include "y/associative/suffix/set.hpp"
 #include "y/type/nullify.hpp"
 
@@ -73,7 +74,7 @@ namespace Yttrium
             Y_DISABLE_ASSIGN(ByUUID);
         };
 
-        template <typename VARIABLE>
+        template < typename VARIABLE>
         class Variables
         {
         public:
@@ -90,14 +91,20 @@ namespace Yttrium
             public:
                 inline explicit Code() {}
                 inline virtual ~Code() noexcept {}
-                SetByName byName;
-                SetByUUID byUUID;
+                SetByName     byName;
+                SetByUUID     byUUID;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code);
             };
 
 
-            inline explicit Variables() : code( new Code() ) {}
+            template <typename UNKNOWN>
+            inline explicit Variables(const UNKNOWN &onUnknown, ConstType onMissing) :
+            unknown(onUnknown),
+            missing(onMissing),
+            code( new Code() )
+            {}
+
             inline virtual ~Variables() noexcept { assert(0!=code); Nullify(Coerce(code)); }
 
             const Code & operator*()  const noexcept { assert(0!=code); return *code; }
@@ -122,8 +129,33 @@ namespace Yttrium
                 return true;
             }
 
+            inline ConstType uuid(const String &key) const noexcept
+            {
+                assert(0!=code);
+                const VarByName * const var = code->byName.search(key);
+                if(0!=var) return (*var)->uuid;
+                return missing;
+            }
+
+            inline ConstType uuid(const char * const key) const
+            {
+                const String _(key); return uuid(_);
+            }
+
+            inline const String &name(ConstType byUUID) const noexcept
+            {
+                assert(0!=code);
+                const Memory::Zone      key( &byUUID, sizeof(byUUID) );
+                const VarByUUID * const var = code->byUUID.search( key );
+                if(0!=var)  return (*var)->name;
+                return unknown;
+            }
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Variables);
+            const String unknown;
+            ConstType    missing;
             Code * const code;
         };
 
@@ -145,18 +177,27 @@ Y_UTEST(associative_named_vars)
     std::cerr << blv << " / " << bvv << std::endl;
     Y_CHECK( & *blv == & *bvv );
 
-    Named::Variables<iVar> vdb;
+    typedef Named::Variables<iVar> MyVars;
+    MyVars vdb("bad",-1);
 
+#if 0
     Y_SIZEOF(Named::Variable<int>);
-    Y_SIZEOF(Named::Variables<iVar>::Code);
+    Y_SIZEOF(MyVars::Code);
+#endif
 
     Y_CHECK(vdb("one",1));
     Y_CHECK(vdb("two",2));
     Y_CHECK(vdb("hundred",100));
 
     std::cerr << vdb->byName << std::endl;
-    //std::cerr << vdb->byUUID << std::endl;
+    std::cerr << vdb.uuid("one") << std::endl;
+    std::cerr << vdb.uuid("two") << std::endl;
+    std::cerr << vdb.uuid("three") << std::endl;
+    std::cerr << vdb.uuid("hundred") << std::endl;
 
+    std::cerr << vdb.name(1) << std::endl;
+    std::cerr << vdb.name(100) << std::endl;
+    std::cerr << vdb.name(7) << std::endl;
 
 }
 Y_UDONE()
