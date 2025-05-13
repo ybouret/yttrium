@@ -31,6 +31,7 @@ namespace Yttrium
         typedef MKL::Triplet<xreal_t>         XTriplet; //!< alias
         typedef CxxArray<XAdd,MemoryModel>    Summator; //!< alias
 
+        
     }
 
 }

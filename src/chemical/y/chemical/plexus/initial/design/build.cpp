@@ -12,6 +12,7 @@
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 #include "y/apex/api/narrow.hpp"
 #include "y/counting/combination.hpp"
+#include "y/container/cxx/series.hpp"
 
 namespace Yttrium
 {
@@ -239,6 +240,13 @@ namespace Yttrium
                         fam->increase();
                     }
 
+                    for(Apex::Ortho::Family *lhs=families.head;lhs;lhs=lhs->next)
+                    {
+                        if(lhs->isIdenticalTo(*fam))
+                        {
+                            goto CONTINUE;
+                        }
+                    }
                     //std::cerr << "ok" << std::endl;
                     //std::cerr << fam << std::endl;
                     families.store( fam.yield() );
@@ -250,7 +258,24 @@ namespace Yttrium
                 }
                 while(comb.next());
                 std::cerr << families.size << " / " << comb.total << std::endl;
-                
+
+                CxxSeries<Matrix<apz>,MemoryModel> basis(families.size);
+
+                {
+                    size_t      idx=1;
+                    Matrix<apz> Qz(Nq,M);
+                    for(const Apex::Ortho::Family *lhs=families.head;lhs;lhs=lhs->next,++idx)
+                    {
+                        const Apex::Ortho::Vector *vec= (*lhs)->head;
+                        for(size_t r=1;r<=Nq;++r,vec=vec->next)
+                        {
+                            Qz[r].ld(*vec);
+                        }
+                        basis.grow(TransposeOf,Qz);
+                        std::cerr << "Q" << idx << "=" << basis.tail() << std::endl;
+                    }
+                }
+
 
 #if 0
                 {
