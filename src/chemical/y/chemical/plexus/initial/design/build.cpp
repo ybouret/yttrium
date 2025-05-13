@@ -228,23 +228,23 @@ namespace Yttrium
                 size_t count = 0;
                 do
                 {
-                    std::cerr << "\t" << comb << std::endl;
-                    Apex::Ortho::Family fam(vcache);
+                    //std::cerr << "\t" << comb << std::endl;
+                    AutoPtr<Apex::Ortho::Family>  fam = new Apex::Ortho::Family(vcache);
 
                     for(size_t i=1;i<=comb.size();++i)
                     {
                         const size_t j = comb[i];
-                        if( !fam.welcomes(Qc[j]) ) goto CONTINUE;
-                        fam.increase();
+                        if( !fam->welcomes(Qc[j]) ) goto CONTINUE;
+                        fam->increase();
                     }
-
+                    
                     ++count;
-                    std::cerr << "ok" << std::endl;
+                    //std::cerr << "ok" << std::endl;
                     std::cerr << fam << std::endl;
                     continue;
 
                 CONTINUE:
-                    std::cerr << "no" << std::endl;
+                    //std::cerr << "no" << std::endl;
                     continue;
                 }
                 while(comb.next());
