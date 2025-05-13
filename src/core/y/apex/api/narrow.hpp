@@ -90,7 +90,7 @@ namespace Yttrium
                     assert(cols>0);
                     target.make(ng,cols);
                     for(size_t i=1;i<=ng;++i)
-                        nrm2 << Univocal::Make( target[i].ld(source[good[i]]) );;
+                        nrm2 << Univocal::Make( target[i].ld(source[good[i]]) );
                 }
             }
 

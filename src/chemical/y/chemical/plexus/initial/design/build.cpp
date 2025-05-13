@@ -10,6 +10,7 @@
 #include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
 #include "y/apex/api/ortho/coven/survey/natural.hpp"
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
+#include "y/apex/api/narrow.hpp"
 
 namespace Yttrium
 {
@@ -187,7 +188,12 @@ namespace Yttrium
                 }
                 assert(Np==MKL::Rank::Of(P));
                 assert(Nq==MKL::Rank::Of(Q));
-
+                Matrix<apq> Qc;
+                {
+                    Apex::Narrow narrow;
+                    narrow.down(Qc,Q);
+                }
+                assert(Nq==MKL::Rank::Of(Qc));
 
                 XAdd xadd;
                 XArray Cs(M,0);
@@ -200,6 +206,9 @@ namespace Yttrium
 
                 std::cerr << "P="  << P  << std::endl;
                 std::cerr << "Q="  << Q  << std::endl;
+                std::cerr << "Qc=" << Qc << std::endl;
+
+
                 std::cerr << "Cs=" << Cs << std::endl;
                 std::cerr << "Np=" << Np << std::endl;
                 std::cerr << "Nq=" << Nq << std::endl;
@@ -209,7 +218,27 @@ namespace Yttrium
                 lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
 
 
+#if 0
+                {
+                    //Matrix<apq> PP(TransposeOf,P);
+                    Matrix<apq> PP(Q);
+                    {
+                        LightArray<apq> arr = PP.asArray();
+                        const apn       fac = Apex::Simplify::Array(arr);
+                        std::cerr << "fac=" << fac << std::endl;
+                    }
+                    std::cerr << "// Making Survey of " << PP << std::endl;
+                    {
+                        Apex::Ortho::Coven::NaturalSurvey survey(xml,PP,1,0);
+                        std::cerr << survey << std::endl;
+                    }
 
+                    {
+                        Apex::Ortho::Coven::IntegerSurvey survey(xml,PP,1,0);
+                        std::cerr << survey << std::endl;
+                    }
+                }
+#endif
 
             }
 
