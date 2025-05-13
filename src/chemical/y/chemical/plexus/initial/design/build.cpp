@@ -11,6 +11,7 @@
 #include "y/apex/api/ortho/coven/survey/natural.hpp"
 #include "y/apex/api/ortho/coven/survey/integer.hpp"
 #include "y/apex/api/narrow.hpp"
+#include "y/counting/combination.hpp"
 
 namespace Yttrium
 {
@@ -217,7 +218,36 @@ namespace Yttrium
 
                 lib.show(std::cerr << "Cs=", "\t[", Cs, "]", xreal_t::ToString ) << std::endl;
 
+                const size_t n = Qc.rows;
+                Combination comb(n,Nq);
 
+                std::cerr << "#comb=" << comb.total << std::endl;
+
+                const Apex::Ortho::Metrics metrics(M);
+                Apex::Ortho::VCache        vcache = new Apex::Ortho::Vector::Cache(metrics);
+                size_t count = 0;
+                do
+                {
+                    std::cerr << "\t" << comb << std::endl;
+                    Apex::Ortho::Family fam(vcache);
+
+                    for(size_t i=1;i<=comb.size();++i)
+                    {
+                        const size_t j = comb[i];
+                        if( !fam.welcomes(Qc[j]) ) goto CONTINUE;
+                        fam.increase();
+                    }
+
+                    ++count;
+                    std::cerr << "ok" << std::endl;
+                    std::cerr << fam << std::endl;
+                    continue;
+
+                CONTINUE:
+                    std::cerr << "no" << std::endl;
+                    continue;
+                }
+                while(comb.next());
 #if 0
                 {
                     //Matrix<apq> PP(TransposeOf,P);
