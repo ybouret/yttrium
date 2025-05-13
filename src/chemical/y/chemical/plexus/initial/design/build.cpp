@@ -8,6 +8,8 @@
 #include "y/apex/api/count-non-zero.hpp"
 #include "y/apex/api/ortho/architect.hpp"
 #include "y/chemical/plexus/initial/axiom/fixed-concentration.hpp"
+#include "y/apex/api/ortho/coven/survey/natural.hpp"
+#include "y/apex/api/ortho/coven/survey/integer.hpp"
 
 namespace Yttrium
 {
@@ -194,56 +196,7 @@ namespace Yttrium
                     const Species &sp = **it;
                     sp(Cs,TopLevel) = xadd.dot( sp(P_,TopLevel), b);
                 }
-
-#if 0
-                for(size_t i=M;i>0;--i)
-                {
-                    for(size_t j=M;j>0;--j)
-                    {
-                        Qr[i][j] = Q[i][j].to<xreal_t>();
-                    }
-                }
-#endif
-
-#if 0
-                // compute virtual system
-                Matrix<apz>      Nu(N,M);
-                XArray           K(N,0);
-                CxxArray<String> S(N);
-                {
-                    size_t i=1;
-                    for(const Cluster *cl=cls->head;cl;cl=cl->next)
-                    {
-                        for(const ENode *en = cl->order[1].head;en;en=en->next,++i)
-                        {
-                            const Equilibrium &eq = **en;
-                            eq.fillTopology(Nu[i],TopLevel);
-                            K[i] = eq(cls.K,TopLevel);
-                            S[i] = *eq.name;
-                        }
-                    }
-                }
-
-                Matrix<apq> QNuT(M,N);
-                for(size_t j=M;j>0;--j)
-                {
-                    for(size_t i=N;i>0;--i)
-                    {
-                        apq &sum = QNuT[j][i];
-                        for(size_t k=M;k>0;--k)
-                        {
-                            sum += Q[j][k] * Nu[i][k];
-                        }
-                    }
-                }
-
-                // get virtual coefficients
-                Matrix<apq> Mu(TransposeOf,QNuT);
-                for(size_t i=N;i>0;--i)
-                {
-                    (void) Apex::Simplify::Array(Mu[i]);
-                }
-#endif
+                
 
                 std::cerr << "P="  << P  << std::endl;
                 std::cerr << "Q="  << Q  << std::endl;

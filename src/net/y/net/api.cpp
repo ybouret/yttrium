@@ -61,7 +61,8 @@ namespace Yttrium
         API:: API() :
         Singleton<API>(),
         hostName(),
-        pf(),
+        protocolFamilySet(),
+        styleSet(),
         verbose(false)
         {
 #if defined(Y_WIN)
@@ -100,14 +101,14 @@ namespace Yttrium
         }
 
 
-        SystemSocket API:: socket_create(const int protocolFamily, const int type, const int protocol)
+        SystemSocket API:: socket_create(const int protocolFamily, const int style, const int protocol)
         {
             Y_GIANT_LOCK();
             if(verbose)
             {
                 //std::cerr << "socket(" << pf[protocolFamily] << ")" << std::endl;
             }
-            const SystemSocket s = socket(protocolFamily,type,protocol);
+            const SystemSocket s = socket(protocolFamily,style,protocol);
             if( IsInvalid(s) ) {
                 const int err = LastError();
                 throw Exception(err,"socket()");

@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_Net_Socket_Protocol_Family_Included
 #define Y_Net_Socket_Protocol_Family_Included 1

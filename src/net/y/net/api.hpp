@@ -9,6 +9,7 @@
 #include "y/net/type/exception.hpp"
 
 #include "y/net/socket/protocol-family.hpp"
+#include "y/net/socket/style.hpp"
 
 #if defined(Y_WIN)
 #include <ws2tcpip.h>
@@ -56,12 +57,13 @@ namespace Yttrium
             static int  LastError()                     noexcept; //!< errno, WSAGetLastError()...
             static bool IsInvalid(const SystemSocket &) noexcept;
 
-            SystemSocket socket_create(const int protocolFamily, const int type, const int protocol);
+            SystemSocket socket_create(const int protocolFamily, const int style, const int protocol);
             void         socket_delete(SystemSocket &s) noexcept;
 
 
             const String        hostName;
-            ProtocolFamilySet   pf;
+            ProtocolFamilySet   protocolFamilySet;
+            StyleSet            styleSet;
             bool                verbose;
             
         private:

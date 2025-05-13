@@ -19,9 +19,12 @@ Y_UTEST(init)
 
     {
         Network::SystemSocket s = net.socket_create(PF_INET,SOCK_STREAM,IPPROTO_TCP);
-
         net.socket_delete(s);
+    }
 
+    {
+        Network::SystemSocket s = net.socket_create(PF_INET,SOCK_DGRAM,IPPROTO_UDP);
+        net.socket_delete(s);
     }
 
 
