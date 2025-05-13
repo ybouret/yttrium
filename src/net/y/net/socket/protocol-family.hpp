@@ -22,8 +22,8 @@ namespace Yttrium
         class ProtocolFamilySet : public ProtocolFamilySet_
         {
         public:
-            static const char * const CallSign;
-            static const char * const Unknown;
+            static const char * const        CallSign;
+            static const char * const        Unknown;
             static ProtocolFamily::ConstType Missing;
 
             explicit ProtocolFamilySet();

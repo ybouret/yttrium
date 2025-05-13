@@ -63,6 +63,7 @@ namespace Yttrium
         hostName(),
         protocolFamilySet(),
         communicationStyleSet(),
+        protocolSet(),
         verbose(false)
         {
 #if defined(Y_WIN)
@@ -105,7 +106,12 @@ namespace Yttrium
             Y_GIANT_LOCK();
             if(verbose)
             {
-                //std::cerr << "socket(" << pf[protocolFamily] << ")" << std::endl;
+                std::cerr <<
+                "socket(" << protocolFamilySet[protocolFamily]
+                << ","    << communicationStyleSet[style]
+                << ","    << protocolSet[protocol]
+                << ")" << std::endl;
+
             }
             const SystemSocket s = socket(protocolFamily,style,protocol);
             if( IsInvalid(s) ) {

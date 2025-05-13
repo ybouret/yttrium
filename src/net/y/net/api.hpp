@@ -10,6 +10,7 @@
 
 #include "y/net/socket/protocol-family.hpp"
 #include "y/net/socket/communication-style.hpp"
+#include "y/net/socket/protocol.hpp"
 
 #if defined(Y_WIN)
 #include <ws2tcpip.h>
@@ -64,6 +65,7 @@ namespace Yttrium
             const String          hostName;
             ProtocolFamilySet     protocolFamilySet;
             CommunicationStyleSet communicationStyleSet;
+            ProtocolSet           protocolSet;
             bool                  verbose;
             
         private:

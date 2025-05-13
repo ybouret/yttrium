@@ -117,6 +117,7 @@ namespace Yttrium
             template <typename NAME> inline
             bool operator()(const NAME &name, ConstType uuid)
             {
+                std::cerr << "vars(" << name << "," << uuid << ")" << std::endl;
                 const VarByName   _( new VARIABLE(name,uuid) );
                 const KeyByName & k = _->name;
 
@@ -146,7 +147,7 @@ namespace Yttrium
                 const String _(key); return uuid(_);
             }
 
-            inline const String &name(ConstType byUUID) const noexcept
+            inline const String & operator[](ConstType byUUID) const noexcept
             {
                 assert(0!=code);
                 const Memory::Zone      key( &byUUID, sizeof(byUUID) );
@@ -163,8 +164,7 @@ namespace Yttrium
             Code * const code;
         };
 
-#define Y_Named_Variable_Decl(VARS,VAR) ( (VARS)(#VAR,VAR) )
-
+        
     }
 
 }

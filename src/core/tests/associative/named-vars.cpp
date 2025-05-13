@@ -36,9 +36,9 @@ Y_UTEST(associative_named_vars)
     std::cerr << vdb.uuid("three") << std::endl;
     std::cerr << vdb.uuid("hundred") << std::endl;
 
-    std::cerr << vdb.name(1) << std::endl;
-    std::cerr << vdb.name(100) << std::endl;
-    std::cerr << vdb.name(7) << std::endl;
+    std::cerr << vdb[1] << std::endl;
+    std::cerr << vdb[100] << std::endl;
+    std::cerr << vdb[7] << std::endl;
 
 }
 Y_UDONE()

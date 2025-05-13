@@ -14,13 +14,13 @@ namespace Yttrium
         ProtocolFamily::ConstType ProtocolFamilySet:: Missing  = -1;
 
 
-#define Y_Net_PF(NAME) do { if(!Y_Named_Variable_Decl(*this,PF_##NAME)) throw Specific::Exception(CallSign,"multiple PF_" #NAME); } while(false)
+#define Y_Net(NAME) do { if(!(*this)(#NAME,NAME)) throw Specific::Exception(CallSign,"multiple " #NAME); } while(false)
 
         ProtocolFamilySet:: ProtocolFamilySet() :
         ProtocolFamilySet_( Unknown, Missing )
         {
-            Y_Net_PF(INET);
-            Y_Net_PF(INET6);
+            Y_Net(PF_INET);
+            Y_Net(PF_INET6);
             std::cerr << (*this)->byName << std::endl;
         }
 

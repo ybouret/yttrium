@@ -16,13 +16,13 @@ namespace Yttrium
         CommunicationStyle::ConstType CommunicationStyleSet:: Missing  = -1;
 
 
-#define Y_Net_Style(NAME) do { if(!Y_Named_Variable_Decl(*this,SOCK_##NAME)) throw Specific::Exception(CallSign,"multiple SOCK_" #NAME); } while(false)
+#define Y_Net(NAME) do { if(!(*this)(#NAME,NAME)) throw Specific::Exception(CallSign,"multiple " #NAME); } while(false)
 
         CommunicationStyleSet:: CommunicationStyleSet() :
         CommunicationStyleSet_( Unknown, Missing )
         {
-            Y_Net_Style(STREAM);
-            Y_Net_Style(DGRAM);
+            Y_Net(SOCK_STREAM);
+            Y_Net(SOCK_DGRAM);
             std::cerr << (*this)->byName << std::endl;
         }
 
