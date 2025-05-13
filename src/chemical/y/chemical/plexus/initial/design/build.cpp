@@ -223,9 +223,10 @@ namespace Yttrium
 
                 std::cerr << "#comb=" << comb.total << std::endl;
 
-                const Apex::Ortho::Metrics metrics(M);
-                Apex::Ortho::VCache        vcache = new Apex::Ortho::Vector::Cache(metrics);
-                size_t count = 0;
+                const Apex::Ortho::Metrics     metrics(M);
+                Apex::Ortho::VCache            vcache = new Apex::Ortho::Vector::Cache(metrics);
+                CxxPoolOf<Apex::Ortho::Family> families;
+                
                 do
                 {
                     //std::cerr << "\t" << comb << std::endl;
@@ -237,10 +238,10 @@ namespace Yttrium
                         if( !fam->welcomes(Qc[j]) ) goto CONTINUE;
                         fam->increase();
                     }
-                    
-                    ++count;
+
                     //std::cerr << "ok" << std::endl;
-                    std::cerr << fam << std::endl;
+                    //std::cerr << fam << std::endl;
+                    families.store( fam.yield() );
                     continue;
 
                 CONTINUE:
@@ -248,6 +249,9 @@ namespace Yttrium
                     continue;
                 }
                 while(comb.next());
+                std::cerr << families.size << " / " << comb.total << std::endl;
+                
+
 #if 0
                 {
                     //Matrix<apq> PP(TransposeOf,P);
