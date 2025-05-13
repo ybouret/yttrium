@@ -62,7 +62,7 @@ namespace Yttrium
         Singleton<API>(),
         hostName(),
         protocolFamilySet(),
-        styleSet(),
+        communicationStyleSet(),
         verbose(false)
         {
 #if defined(Y_WIN)
@@ -86,8 +86,7 @@ namespace Yttrium
                     Coerce(hostName) = buffer;
             }
 
-            //Y_Net_Add(pf,PF_INET);
-            //Y_Net_Add(pf,PF_INET6);
+
 
 
         }

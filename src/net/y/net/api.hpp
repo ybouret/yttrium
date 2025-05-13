@@ -9,7 +9,7 @@
 #include "y/net/type/exception.hpp"
 
 #include "y/net/socket/protocol-family.hpp"
-#include "y/net/socket/style.hpp"
+#include "y/net/socket/communication-style.hpp"
 
 #if defined(Y_WIN)
 #include <ws2tcpip.h>
@@ -61,10 +61,10 @@ namespace Yttrium
             void         socket_delete(SystemSocket &s) noexcept;
 
 
-            const String        hostName;
-            ProtocolFamilySet   protocolFamilySet;
-            StyleSet            styleSet;
-            bool                verbose;
+            const String          hostName;
+            ProtocolFamilySet     protocolFamilySet;
+            CommunicationStyleSet communicationStyleSet;
+            bool                  verbose;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(API);
