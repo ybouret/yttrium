@@ -36,6 +36,14 @@ def compute_h0(q):
     return (np.sqrt(delta)-q)*0.5
 
 
+ca_list = [0,0.01]
+for ca in ca_list:
+    #global CA0
+    CA0 = ca
+    
+
+print(CA0)
+
 pH0 = 6
 h0 = 10**(-pH0)
 q0 = negative_charge(h0)
@@ -47,11 +55,19 @@ q1 = negative_charge(h1)
 
 u = np.linspace(0, 1, 101)
 Q = linear_mix(u, q0, q1)
-h = np.linspace(0, 1, len(u))
+h_0 = np.linspace(0, 1, len(u))
 
 for i in range(len(u)):
-    h[i] = compute_h0(Q[i])
+    h_0[i] = compute_h0(Q[i])
 
-plt.plot(u, -np.log10(h))
-# plt.plot(u,h)
+fig, plotpH = plt.subplots(figsize=(5, 4))
+plotpH.plot(u,-np.log10(h_0));
+
+plotpH.set_ylabel("pH")
+plotpH.set_xlabel("$x/L$")
+
+#plt.plot(u, -np.log10(h_0))
+#plt.plot(u,h)
+plt.tight_layout()
 plt.show()
+
